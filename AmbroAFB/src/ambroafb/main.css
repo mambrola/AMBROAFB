@@ -1,0 +1,4 @@
+@import url("../ambroafb/general/core.css");
+.menu {
+  -fx-background-color: green;
+}

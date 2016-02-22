@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+
+<Button onAction = "#goBack" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.general.back_button.BackButtonController">
+    <tooltip>
+        <Tooltip text="%back"/>
+    </tooltip>
+    <graphic>
+        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true" >
+            <Image url="/images/back.png"/>
+        </ImageView>
+    </graphic>
+</Button>

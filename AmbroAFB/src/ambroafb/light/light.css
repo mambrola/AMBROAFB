@@ -1,0 +1,5 @@
+@import url("../../ambroafb/general/core.css");
+#top {
+  -fx-pref-width: 1200;
+  -fx-background-color: red;
+}

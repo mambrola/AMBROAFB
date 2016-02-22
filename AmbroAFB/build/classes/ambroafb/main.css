@@ -1,0 +1,5 @@
+@import url("../ambroafb/general/core.css");
+.menuBar {
+  -fx-background-color: green;
+  -fx-alignment: CENTER_RIGHT;
+}

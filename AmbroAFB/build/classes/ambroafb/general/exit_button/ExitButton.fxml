@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<Button xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="ambroafb.general.exit_button.ExitButtonController" onAction="#exit">
+    <tooltip>
+        <Tooltip text="%exit" />
+    </tooltip>
+    <graphic>
+        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+           <image>
+               <Image url="/images/exit.png" />
+           </image>
+        </ImageView>
+    </graphic>
+</Button>

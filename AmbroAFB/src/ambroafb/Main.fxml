@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.*?>
+
+<AnchorPane prefHeight="750" prefWidth="1260" stylesheets="/ambroafb/main.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="ambroafb.MainController">
+    <children>
+        <MenuBar prefWidth="1500.0">
+            <menus>
+                <Menu text="%home">
+                    <items>
+                        <MenuItem onAction="#mainConfig" text="%menu_main_config" />
+                        <MenuItem onAction="#mainExit" text="%exit" />
+                    </items>
+                </Menu>
+                <Menu text="%operations">
+                    <items>
+                        <Menu text="%communal_services">
+                            <items>
+                                <MenuItem onAction="#light" text="%light" />
+                                <MenuItem text="%gas" />
+                                <MenuItem text="%water" />
+                            </items>
+                        </Menu>
+                        <Menu text="%communications">
+                            <items>
+                                <MenuItem text="%internet" />
+                                <MenuItem text="%phone" />
+                                <MenuItem text="%tv" />
+                            </items>
+                        </Menu>
+                    </items>
+                </Menu>
+                <Menu text="%reports">
+                    <items>
+                        <MenuItem onAction="#clients" text="%clients" />
+                        <MenuItem onAction="#accounts" text="%accounts" />
+                    </items>
+                </Menu>
+                <Menu text="%administrator" >
+                    <items>
+                        <MenuItem onAction="#programsCarFines" text="უსახელო" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </children>
+</AnchorPane>

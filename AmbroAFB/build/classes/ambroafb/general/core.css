@@ -1,0 +1,12 @@
+
+.root {
+    -fx-font-family: "Times New Roman GEO";
+    /*-fx-font-family: "BPG Glaho";*/
+    /*-fx-font-weight: bolder;*/
+    -fx-font-size: 13px;
+}
+
+#enter:selected {
+    -fx-background-image: url("/images/loader.gif");
+    -fx-background-size: cover;
+}

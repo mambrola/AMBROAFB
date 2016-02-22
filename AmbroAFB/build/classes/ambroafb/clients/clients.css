@@ -1,0 +1,5 @@
+@import url("../ambroafb/general/core.css");
+#clientsPane {
+  -fx-pref-width: 1200px;
+  -fx-pref-width: 600px;
+}
