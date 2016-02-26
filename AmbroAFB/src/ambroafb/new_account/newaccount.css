@@ -1,0 +1,13 @@
+@import url("../../ambroafb/general/core.css");
+.root {
+  -fx-min-width: 1000px;
+  -fx-man-width: 1000px;
+}
+.columnConstraints {
+  -fx-column-halignment: right;
+}
+.label {
+  -fx-background-color: yellow;
+  -fx-padding: 10;
+  -fx-man-width: 500px;
+}

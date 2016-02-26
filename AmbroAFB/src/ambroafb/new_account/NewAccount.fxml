@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<GridPane 
+    styleClass="communal" 
+    stylesheets="/ambroafb/new_account/newaccount.css"  
+    fx:controller="ambroafb.new_account.NewAccountController" 
+    xmlns:fx="http://javafx.com/fxml/1" 
+    gridLinesVisible="true" >
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="20" halignment="RIGHT"  />
+        <ColumnConstraints hgrow="ALWAYS" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER" />
+    </rowConstraints>
+    <padding>
+        <Insets top="10.0" left="10.0" right="10.0" bottom="10.0"  />
+    </padding>
+    <Label fx:id="ll"  text="%date" GridPane.rowIndex="0" GridPane.columnIndex="0" /> 
+    <DatePicker fx:id="openDate" GridPane.rowIndex="0" GridPane.columnIndex="1"/>  
+    <Button  text="bbb" GridPane.columnIndex="1" />  
+    <Button  text="ccc" GridPane.rowIndex="1" />  
+    <Button  text="ddd" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+</GridPane>

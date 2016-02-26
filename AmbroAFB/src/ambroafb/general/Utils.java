@@ -122,6 +122,7 @@ public class Utils {
 
         GeneralConfig conf = GeneralConfig.getInstance();
         GeneralConfig.Sizes size = conf.getSizeFor(name);
+        size = null; // მე ჩავსვი, დავადიზეიბლე კლიენტის მონაცემის გამოყენება
         if (size != null) {
             if (size.width > 0) {
                 stage.setWidth(size.width);

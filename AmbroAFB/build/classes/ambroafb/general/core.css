@@ -3,7 +3,11 @@
     -fx-font-family: "Times New Roman GEO";
     /*-fx-font-family: "BPG Glaho";*/
     /*-fx-font-weight: bolder;*/
-    -fx-font-size: 13px;
+    -fx-font-size: 12px;
+}
+
+.manu {
+    -fx-padding: 0;
 }
 
 #enter:selected {

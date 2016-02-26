@@ -275,7 +275,6 @@ VALUES
 (null, 9210, 'მოგების გადასახადი', 'Profit tax', 1, 0, TRUE),
 (null, 9220, 'გაცემული შესაწირი', '', 1, 0, FALSE);*/
 
-
 /*DROP TABLE IF EXISTS `ambro_soft_afb`.clients;
 CREATE TABLE `ambro_soft_afb`.clients (
 	`rec_id` 		  bigint(20) NOT NULL AUTO_INCREMENT,
@@ -302,7 +301,7 @@ VALUES
 (null, 'GiaLomidze@web.de', 'password', false, 'Gia', 'Lomidze', 'shtrase N', '63255', 'Celle', 'DE', false, '01024448887'); 
 */
 
-DROP TABLE IF EXISTS `ambro_soft_afb`.accounts;
+/*DROP TABLE IF EXISTS `ambro_soft_afb`.accounts;
 CREATE TABLE `ambro_soft_afb`.accounts (
 	`rec_id` 		  bigint(20) NOT NULL AUTO_INCREMENT,
 	`account` 				 int NOT NULL,
@@ -321,8 +320,84 @@ INSERT INTO `ambro_soft_afb`.accounts
 (`rec_id`, `account`, `iso`, `bal_acc_id`, `descrip`, `client_no`, `date_open`, `remark`, `flag`) 
 VALUES
 (null, 11006, 'GEL', 1110, 'სალარო', null, '2016-02-20', 'დროებითია', null), 
+(null, 11013, 'GEL', 1110, 'სალარო', null, '2016-02-20', 'დროებითია', null), 
+(null, 11020, 'GEL', 1110, 'სალარო', null, '2016-02-20', 'დროებითია', null), 
+(null, 11037, 'GEL', 1110, 'სალარო', null, '2016-02-20', 'დროებითია', null), 
 (null, 231017, 'GEL', 3120, 'კლიენტი Murman', 2, '2016-02-25', 'test', 2);
+*/
 
+/*DROP TABLE IF EXISTS `ambro_soft_afb`.products;
+CREATE TABLE `ambro_soft_afb`.products (
+	`rec_id` 		  bigint(20) NOT NULL AUTO_INCREMENT,
+	`descrip` 		varchar(255) DEFAULT NULL,
+	`remark` 		varchar(255) DEFAULT NULL,
+	PRIMARY KEY (`rec_id`),
+	UNIQUE KEY `descrip` (`descrip`)
+) 	ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+INSERT INTO `ambro_soft_afb`.products
+(`rec_id`, `descrip`, `remark`) 
+VALUES
+(null, 'auto_radar', 'auto remark'),
+(null, 'ebay_radar', 'ebay remark'),
+(null, 'expert', 'expert remark');
+*/
 
+/*DROP TABLE IF EXISTS `ambro_soft_afb`.product_prices;
+CREATE TABLE `ambro_soft_afb`.product_prices (
+	`rec_id` 		  bigint(20) NOT NULL AUTO_INCREMENT,
+    `product_id`	  bigint(20) NOT NULL,
+	`day` 			 	     int NOT NULL,
+	`price_per_month` 		decimal(8,2) NOT NULL,
+	PRIMARY KEY (`rec_id`),
+	UNIQUE KEY `product_id_day` (`product_id`, `day`)
+) 	ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+INSERT INTO `ambro_soft_afb`.product_prices
+(`rec_id`, `product_id`, `day`, `price_per_month`) 
+VALUES
+(null, 1,  28, 25.00),
+(null, 1, 365, 20.00),
+(null, 2,  28, 15.00),
+(null, 3,  28, 40.00),
+(null, 3,  89, 35.00),
+(null, 3, 181, 25.00),
+(null, 3, 365, 20.00)
+*/
+
+/*DROP TABLE IF EXISTS `ambro_soft_afb`.invoices;
+CREATE TABLE `ambro_soft_afb`.invoices (
+	`rec_id` 		  bigint(20) NOT NULL AUTO_INCREMENT,
+    `client_id`	  	  bigint(20) NOT NULL,
+	`begin_date` 		datetime NOT NULL,
+	`end_date` 			datetime NOT NULL,
+	PRIMARY KEY (`rec_id`)
+) 	ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+INSERT INTO `ambro_soft_afb`.invoices
+(`rec_id`, `client_id`, `begin_date`, `end_date`) 
+VALUES
+(null, 2, '2016-02-26', '2016-04-26'),
+(null, 3, '2016-02-26', '2016-08-26'),
+(null, 3, '2016-02-26', '2017-02-26')
+*/
+
+/*DROP TABLE IF EXISTS `ambro_soft_afb`.invoice_products;
+CREATE TABLE `ambro_soft_afb`.invoice_products (
+	`rec_id` 		  bigint(20) NOT NULL AUTO_INCREMENT,
+    `invoice_id`	  bigint(20) NOT NULL,
+    `product_id`	  bigint(20) NOT NULL,
+	PRIMARY KEY (`rec_id`),
+	UNIQUE KEY `invoice_id_product_id` (`invoice_id`, `product_id`)
+) 	ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+INSERT INTO `ambro_soft_afb`.invoice_products
+(`rec_id`, `invoice_id`, `product_id`) 
+VALUES
+(null, 1, 1),
+(null, 1, 2),
+(null, 2, 1),
+(null, 3, 1),
+(null, 3, 2),
+(null, 3, 3)
+*/

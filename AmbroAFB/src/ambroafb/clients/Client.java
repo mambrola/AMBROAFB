@@ -9,6 +9,8 @@ import ambroafb.in_out.*;
 import ambro.ATreeTableView;
 import ambro.AView;
 import java.text.DecimalFormat;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -18,13 +20,32 @@ import javafx.collections.ObservableList;
  */
 public class Client {
     
-    public Double fieldNo;
+    public int clientId;
     
-    @AView.Column(title = "%in_out_usd_form", width = "700")
-    public String descrip;
+    @AView.Column(title = "%is_jur", width = "24")
+    public SimpleBooleanProperty isJur;
     
-    @AView.Column(title = "%amount_usd", width = "120", styleClass = "amount")
-    public String amountString;
+    @AView.Column(title = "%first_name", width = "700")
+    public SimpleStringProperty first_name;
+    
+    @AView.Column(title = "%last_name", width = "700")
+    public SimpleStringProperty last_name;
+    
+    @AView.Column(title = "%last_name", width = "700")
+    public SimpleStringProperty alast_name;
+    
+    
+    
+    /*
+    `clients`.`email`,
+    `clients`.`password`,
+    `clients`.`address`,
+    `clients`.`zip_code`,
+    `clients`.`city`,
+    `clients`.`country_code`,
+    `clients`.`is_rezident`,
+    `clients`.`pass_number`
+    */
     
     public Double amount;
     

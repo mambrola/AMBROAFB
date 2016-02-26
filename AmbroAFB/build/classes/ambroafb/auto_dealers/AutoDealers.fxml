@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import ambro.* ?>
+
+<GridPane 
+    stylesheets="/ambroafb/auto_dealers/autodealers.css"  
+    fx:controller="ambroafb.auto_dealers.AutoDealersController" 
+    xmlns:fx="http://javafx.com/fxml/1" 
+    gridLinesVisible="true" >
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="20" halignment="RIGHT"  />
+        <ColumnConstraints hgrow="ALWAYS" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER" />
+    </rowConstraints>
+    <padding>
+        <Insets top="10.0" left="10.0" right="10.0" bottom="10.0"  />
+    </padding>
+    <Button onAction="#print"  text="%date"             GridPane.rowIndex="0" GridPane.columnIndex="0" /> 
+    <DatePicker fx:id="openDate"    GridPane.rowIndex="0" GridPane.columnIndex="1" /> 
+    <Label text="%client"           GridPane.rowIndex="1" GridPane.columnIndex="0" /> 
+    <ComboBox fx:id="client"        GridPane.rowIndex="1" GridPane.columnIndex="1"  />
+    <Label text="%operation"        GridPane.rowIndex="2" GridPane.columnIndex="0" /> 
+    <ComboBox fx:id="operation"     GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    
+    <ATableView fx:id="tableProducts" initializer="ambroafb.auto_dealers.Products" styleClass="unicode" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="2"  />
+        
+</GridPane>

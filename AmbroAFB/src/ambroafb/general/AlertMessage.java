@@ -28,7 +28,7 @@ public class AlertMessage extends Alert {
         setHeaderText(GeneralConfig.getInstance().getTitleFor(messageName));
         
         
-        getDialogPane().getScene().getStylesheets().add("/ambromfo/general/core.css");
+        getDialogPane().getScene().getStylesheets().add("/ambroafb/general/core.css");
         ((Stage)getDialogPane().getScene().getWindow()).initOwner(AmbroAFB.mainStage);
 
         Utils.log(messageName, ex);
