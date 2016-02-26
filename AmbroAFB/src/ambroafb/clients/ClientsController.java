@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableView;
 
 /**
  * FXML Controller class
@@ -19,16 +20,18 @@ import javafx.fxml.Initializable;
 public class ClientsController implements Initializable {
 
     @FXML
-    private void enter(ActionEvent e) {
-        
-    }
+    private TableView<Client> table;
+    
+    @FXML private void enter(ActionEvent e) {System.out.println("passed: Enter");  }
     
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        table.getItems().add(new Client(true, "Glimer", "GmbH", "GiaLomidze@web.de", "Strase st. 15", "62345", "Celle", "de", true, "P 204DE4569"));
     }    
     
 }

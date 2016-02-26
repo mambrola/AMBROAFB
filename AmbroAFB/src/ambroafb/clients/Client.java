@@ -22,53 +22,54 @@ public class Client {
     
     public int clientId;
     
-    @AView.Column(title = "%is_jur", width = "24")
+    @AView.Column(width = "24")
     public SimpleBooleanProperty isJur;
     
-    @AView.Column(title = "%first_name", width = "700")
+    @AView.Column(width = "24")
+    public SimpleBooleanProperty isRezident;
+    
+    @AView.Column(title = "%first_name", width = "120")
     public SimpleStringProperty first_name;
     
-    @AView.Column(title = "%last_name", width = "700")
+    @AView.Column(title = "%last_name", width = "120")
     public SimpleStringProperty last_name;
     
-    @AView.Column(title = "%last_name", width = "700")
-    public SimpleStringProperty alast_name;
+    @AView.Column(title = "%email", width = "150")
+    public SimpleStringProperty email;
     
+    private final String address, zip_code, city;
     
+    @AView.Column(title = "%full_address", width = "200")
+    public SimpleStringProperty fullAddress;
     
-    /*
-    `clients`.`email`,
-    `clients`.`password`,
-    `clients`.`address`,
-    `clients`.`zip_code`,
-    `clients`.`city`,
-    `clients`.`country_code`,
-    `clients`.`is_rezident`,
-    `clients`.`pass_number`
-    */
+    private final String country_code;
     
-    public Double amount;
+    @AView.Column(title = "%country", width = "70")
+    public SimpleStringProperty country;
     
-    @AView.RowStyles
-    public ObservableList<String> styles;
+    @AView.Column(title = "%pass_number", width = "100")
+    public SimpleStringProperty passNumber;
     
-    @ATreeTableView.Children
-    public ObservableList<Client> children;
-    
-    public Client(Double fn, String d, Double a){
-        fieldNo = fn;
-        descrip = d;
-        amount = a;
-        amountString = new DecimalFormat("##,##0.00").format(a);
-        children = FXCollections.observableArrayList();
-        styles = FXCollections.observableArrayList();
+    public Client(boolean ij, String fn, String ln, String e, String a, String zc, String c, String cc, boolean ir, String pn){
+        isJur = new SimpleBooleanProperty(ij);
+        first_name = new SimpleStringProperty(fn);
+        last_name = new SimpleStringProperty(ln);
+        email = new SimpleStringProperty(e);
+        address = a;
+        zip_code = zc;
+        city = c;
+        fullAddress = new SimpleStringProperty(address + ", " + zip_code  + ", " + city);
+        country_code = cc;
+        //country = new SimpleStringProperty(getCountryByCode(country_code));
+        isRezident = new SimpleBooleanProperty(ir);
+        passNumber = new SimpleStringProperty(pn);
     }
     
     
     
     @Override
     public String toString(){
-        return fieldNo+" : "+descrip+" : "+amount+" : "+styles.toString();
+        return first_name+" : "+last_name+" : "+email+" : "+fullAddress;
     }
             
 //ამის მაგალითია customTable-ში Person

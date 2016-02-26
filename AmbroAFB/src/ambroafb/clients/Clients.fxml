@@ -53,7 +53,7 @@
                     </tooltip>
                     <graphic>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                            <Image url="/images/enter.png" />
+                            <Image url="/images/refresh.png" />
                         </ImageView>
                     </graphic>
                 </ToggleButton>
