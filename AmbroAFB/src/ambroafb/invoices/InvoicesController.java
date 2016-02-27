@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.clients;
+package ambroafb.invoices;
 
+import ambroafb.invoices.Invoice;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,12 +20,12 @@ import javafx.scene.control.TableView;
  *
  * @author mambroladze
  */
-public class ClientsController implements Initializable {
+public class InvoicesController implements Initializable {
 
     @FXML
-    private TableView<Client> table;
+    private TableView<Invoice> table;
     
-    @FXML private void enter(ActionEvent e) {System.out.println("passed: Enter");  }
+    @FXML private void tm(ActionEvent e) {System.out.println("pressed: " + "Pictogram");}
     
     /**
      * Initializes the controller class.
@@ -31,7 +34,6 @@ public class ClientsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        table.getItems().add(new Client(1,true, "Glimer", "GmbH", "GiaLomidze@web.de", "Strase st. 15", "62345", "Celle", "de", true, "P 204DE4569"));
+        table.getItems().add(new Invoice(1, "2015/3-A45", 2, "Glimer", "GmbH", "GiaLomidze@web.de", new ArrayList<Integer>() {{add(4); add(2); add(3);}}));
     }    
-    
 }

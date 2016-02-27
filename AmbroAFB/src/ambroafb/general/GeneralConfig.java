@@ -297,7 +297,7 @@ public class GeneralConfig {
      */
     private static class SavedConfig implements Serializable {
 
-        public String classForName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+        public String classForName = "com.mysql.jdbc.Driver";
         public String language;
         public String database;
         public String username;
@@ -307,9 +307,9 @@ public class GeneralConfig {
 
         public SavedConfig(String lan) {
             language = lan;
-            database = "jdbc:sqlserver://212.72.144.22:1433; databaseName=LMS;";
-            username = "murmani";
-            password = "pass";
+            database = "jdbc:mysql://localhost:3306/ambro_soft_afb";
+            username = "dtm";
+            password = "Dat0Tok@Murman1";
             sizes = new HashMap<>();
         }
     }

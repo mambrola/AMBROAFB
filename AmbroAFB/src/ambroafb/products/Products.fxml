@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.collections.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.* ?>
+
+
+<BorderPane id="clientsPane" stylesheets="/ambroafb/products/products.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.products.ProductsController">
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="menu-bar" >
+            <children>
+                <fx:include fx:id="exit" source="/ambroafb/general/exit_button/ExitButton.fxml"/>
+                <ToggleButton fx:id="delete" onAction = "#tm">
+                    <tooltip>
+                        <Tooltip text="%delete" />
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="/images/delete.png" />
+                        </ImageView>
+                    </graphic>
+                </ToggleButton>
+                <ToggleButton fx:id="edit" onAction = "#tm">
+                    <tooltip>
+                        <Tooltip text="%edit" />
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="/images/edit.png" />
+                        </ImageView>
+                    </graphic>
+                </ToggleButton>
+                <ToggleButton fx:id="new" onAction = "#tm">
+                    <tooltip>
+                        <Tooltip text="%new" />
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="/images/new.png" />
+                        </ImageView>
+                    </graphic>
+                </ToggleButton>
+                <ToggleButton fx:id="enter" onAction = "#tm">
+                    <tooltip>
+                        <Tooltip text="%enter" />
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="/images/refresh.png" />
+                        </ImageView>
+                    </graphic>
+                </ToggleButton>
+            </children>
+            <padding>
+                <Insets bottom="3.0" left="10.0" top="3.0" />
+            </padding>
+        </HBox>
+    </top>
+    <center>
+        <!--<DialogPane fx:id="alert" styleClass="root"></DialogPane>-->
+        <ATableView fx:id="table" initializer="ambroafb.products.Product" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+    </center>
+</BorderPane>

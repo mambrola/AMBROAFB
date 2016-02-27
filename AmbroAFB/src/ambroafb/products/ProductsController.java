@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.clients;
+package ambroafb.products;
 
+import ambroafb.invoices.Invoice;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -17,13 +18,12 @@ import javafx.scene.control.TableView;
  *
  * @author mambroladze
  */
-public class ClientsController implements Initializable {
+public class ProductsController implements Initializable {
 
     @FXML
-    private TableView<Client> table;
+    private TableView<Product> table;
     
-    @FXML private void enter(ActionEvent e) {System.out.println("passed: Enter");  }
-    
+    @FXML private void tm(ActionEvent e) {System.out.println("pressed: " + "Pictogram");}
     /**
      * Initializes the controller class.
      * @param url
@@ -31,7 +31,12 @@ public class ClientsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        table.getItems().add(new Client(1,true, "Glimer", "GmbH", "GiaLomidze@web.de", "Strase st. 15", "62345", "Celle", "de", true, "P 204DE4569"));
+        for(Product product : Product.dbGetProducts().values()){
+            table.getItems().add(product);
+        }
+//        
+//        
+//        table.getItems().addAll(new Product(1, "auto_radar", "auto remark"), new Product(1, "ebay_radar", "ebay remark"), new Product(1, "expert", "expert remark"));
     }    
     
 }
