@@ -20,7 +20,7 @@
                 </Menu>
                 <Menu text="%operations">
                     <items>
-                        <Menu text="%clients_relationship">
+                        <Menu text="%clients">
                             <items>
                                 <MenuItem onAction="#autoDealers" text="%auto_dealers" />
                             </items>
@@ -47,6 +47,8 @@
                         <MenuItem onAction="#accounts" text="%accounts" />
                         <MenuItem onAction="#invoices" text="%invoices" />
                         <MenuItem onAction="#products" text="%products" />
+                        <SeparatorMenuItem />
+                        <MenuItem onAction="#countries" text="%countries" />
                     </items>
                 </Menu>
                 <Menu text="%reports">

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.products;
+package ambroafb.countries;
 
-import ambroafb.invoices.Invoice;
+import ambroafb.products.Product;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -16,12 +16,12 @@ import javafx.scene.control.TableView;
 /**
  * FXML Controller class
  *
- * @author mambroladze
+ * @author murman
  */
-public class ProductsController implements Initializable {
+public class CountriesController implements Initializable {
 
     @FXML
-    private TableView<Product> table;
+    private TableView<Country> table;
     
     @FXML private void tm(ActionEvent e) {System.out.println("pressed: " + "Pictogram");}
     /**
@@ -31,8 +31,8 @@ public class ProductsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Product.dbGetProducts(0).values().stream().forEach((product) -> {
-            table.getItems().add(product);
+        Country.dbGetCountries("").values().stream().forEach((country) -> {
+            table.getItems().add(country);
         });
     }    
     

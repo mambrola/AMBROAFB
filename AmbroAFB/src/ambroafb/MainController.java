@@ -162,6 +162,25 @@ public class MainController implements Initializable {
         }
     }
     
+    @FXML 
+    private void countries(ActionEvent event) {
+        try{
+            Stage stage = Utils.createStage(
+                    "/ambroafb/countries/Countries.fxml", 
+                    config.getTitleFor("countries"), 
+                    Names.IN_OUT_LOGO,
+                    AmbroAFB.mainStage
+            );
+            stage.show();
+        }catch(IOException ex){
+            Platform.runLater(() -> {
+                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
+                alert.showAlert();
+                System.out.println("errorr after");
+            });
+        }
+    }
+    
     
     @FXML private void accounts(ActionEvent event) {}
     @FXML private void balances(ActionEvent event) {}

@@ -34,6 +34,9 @@ public class InvoicesController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        table.getItems().add(new Invoice(1, "2015/3-A45", 2, "Glimer", "GmbH", "GiaLomidze@web.de", new ArrayList<Integer>() {{add(4); add(2); add(3);}}));
+//        table.getItems().addAll(Invoice.dbGetInvoice(0));
+    Invoice.dbGetInvoices(0).values().stream().forEach((invoice) -> {
+            table.getItems().add(invoice);
+        });
     }    
 }

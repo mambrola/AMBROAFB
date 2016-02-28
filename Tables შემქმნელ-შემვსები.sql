@@ -11,7 +11,7 @@ CREATE TABLE `ambro_soft_afb`.bal_accounts (
     `is_base` 		boolean,
 	PRIMARY KEY (`rec_id`),
 	UNIQUE INDEX `bal_acc_UNIQUE` (`bal_acc` ASC)
-)	ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;;
+)	ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 INSERT INTO `ambro_soft_afb`.bal_accounts
 (`rec_id`, `bal_acc`, `descrip`, `descrip_en`, `act_pas`, `level`, `is_base`) 
@@ -368,18 +368,20 @@ VALUES
 /*DROP TABLE IF EXISTS `ambro_soft_afb`.invoices;
 CREATE TABLE `ambro_soft_afb`.invoices (
 	`rec_id` 		  bigint(20) NOT NULL AUTO_INCREMENT,
+    `invoice_number`  varchar(255) DEFAULT NULL,
     `client_id`	  	  bigint(20) NOT NULL,
 	`begin_date` 		datetime NOT NULL,
 	`end_date` 			datetime NOT NULL,
-	PRIMARY KEY (`rec_id`)
+	PRIMARY KEY (`rec_id`),
+    UNIQUE KEY `invoice_number` (`invoice_number`)
 ) 	ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 INSERT INTO `ambro_soft_afb`.invoices
-(`rec_id`, `client_id`, `begin_date`, `end_date`) 
+(`rec_id`, `invoice_number`, `client_id`, `begin_date`, `end_date`) 
 VALUES
-(null, 2, '2016-02-26', '2016-04-26'),
-(null, 3, '2016-02-26', '2016-08-26'),
-(null, 3, '2016-02-26', '2017-02-26')
+(null, '2016/25', 2, '2016-02-26', '2016-04-26'),
+(null, '2016/28', 3, '2016-02-26', '2016-08-26'),
+(null, '2016/22', 3, '2016-02-26', '2017-02-26')
 */
 
 /*DROP TABLE IF EXISTS `ambro_soft_afb`.invoice_products;
@@ -394,10 +396,27 @@ CREATE TABLE `ambro_soft_afb`.invoice_products (
 INSERT INTO `ambro_soft_afb`.invoice_products
 (`rec_id`, `invoice_id`, `product_id`) 
 VALUES
-(null, 1, 1),
-(null, 1, 2),
-(null, 2, 1),
-(null, 3, 1),
+(null, 4, 4),
+(null, 4, 2),
+(null, 2, 4),
+(null, 3, 4),
 (null, 3, 2),
 (null, 3, 3)
+*/
+
+/*DROP TABLE IF EXISTS `ambro_soft_afb`.countries;
+CREATE TABLE `ambro_soft_afb`.countries (
+	`rec_code` 		  varchar(2) NOT NULL,
+    `descrip` 		varchar(255) DEFAULT NULL,
+	PRIMARY KEY (`rec_code`),
+	UNIQUE KEY `rec_code` (`rec_code`)
+) 	ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+INSERT INTO `ambro_soft_afb`.countries
+(`rec_code`, `descrip`) 
+VALUES
+('GE', 'Georgia'),
+('DE', 'Germany'),
+('RU', 'Russia'),
+('PL', 'Polska')
 */

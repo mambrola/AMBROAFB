@@ -5,19 +5,15 @@
  */
 package ambroafb.products;
 
-import ambroafb.invoices.*;
 import ambro.AView;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
 
@@ -46,20 +42,20 @@ public class Product { // ვინაიდან ეს მხოლოდ ჩ
         return descrip+" : "+remark+" : "+ productId;
     }
             
-    public static Product dbGetProduct (int productId){
-        return dbGetProducts().get(productId);
-    }
-    
     public String getDescrip() {
         return descrip.get();
     }
     
-    public static HashMap<Integer,Product> dbGetProducts (){
+    public static Product dbGetProduct (int productId){
+        return dbGetProducts(productId).get(productId);
+    }
+    
+    public static HashMap<Integer,Product> dbGetProducts (int productId){
         HashMap<Integer,Product> products = new HashMap();
-        
+        String whereTest = productId == 0 ? "" : " where rec_id = " + Integer.toString(productId);
         try {
             Connection conn = GeneralConfig.getInstance().getConnectionToDB();
-            ResultSet resultSet = conn.createStatement().executeQuery("SELECT * FROM products ORDER BY rec_id");
+            ResultSet resultSet = conn.createStatement().executeQuery("SELECT * FROM products" +  whereTest + " ORDER BY rec_id");
             while (resultSet.next()) {
                 int recId = resultSet.getInt("rec_id");
                 String descrip = resultSet.getString("descrip");
