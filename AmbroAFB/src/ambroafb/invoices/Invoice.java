@@ -9,6 +9,7 @@ import ambro.AView;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
+import ambroafb.general.Utils;
 import ambroafb.products.Product;
 import java.sql.Connection;
 import java.sql.Date;
@@ -62,6 +63,7 @@ public class Invoice { // ვინაიდან ეს მხოლოდ ჩ
         clientLastName = cln; 
         clientEmail = ce;
         client = new SimpleStringProperty(clientFirstName + " " + clientLastName + ", " + clientEmail);
+        System.out.println("objectArray: " + client);
         String[] pii = pis.split(":;:");
         productIds = new int[pii.length];
         for(int i = 0; i < pii.length; i++)
@@ -79,35 +81,11 @@ public class Invoice { // ვინაიდან ეს მხოლოდ ჩ
     }
     
     public static HashMap<Integer,Invoice> dbGetInvoices (int invoiceId){
-        
-        // აქ უნდა გამოვიყენო უნივერსალური ფუნქცია (ცხრილი ან ვიუ, whereპირობა, ორდერ პირობა) იგი დააბრუნებს ArrayList<Object>[]-ს
-        // გავივლით მთელ სიგრძეზე და შევქმნით შესაბამის ობიექტებს. გვეცოდინება რომელი ველი რა ტიპისაა და იმის მიხედვით დავკასტავთ 
-        
         HashMap<Integer,Invoice> invoices = new HashMap();
         String whereText = invoiceId == 0 ? "" : " where rec_id = " + Integer.toString(invoiceId);
-        try {
-            Connection conn = GeneralConfig.getInstance().getConnectionToDB();
-            ResultSet resultSet = conn.createStatement().executeQuery("SELECT * FROM invoices_to_java" +  whereText + " ORDER BY rec_id desc");
-            while (resultSet.next()) {
-                int recId = resultSet.getInt("rec_id");
-                int clientId = resultSet.getInt("client_id");
-                String invoiceNumber = resultSet.getString("invoice_number");
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-                String email = resultSet.getString("email");
-                Date beginDate = resultSet.getDate("begin_date");
-                Date endDate = resultSet.getDate("end_date");
-                String productIds = resultSet.getString("product_ids");
-                String productDescrips = resultSet.getString("product_descrips");
-                
-                invoices.put(recId, new Invoice(recId, invoiceNumber, clientId, beginDate, endDate, firstName, lastName, email, productIds, productDescrips));
-            }
-        }
-        catch (SQLException | NullPointerException ex) {
-            Platform.runLater(() -> {
-                new AlertMessage(Alert.AlertType.ERROR, ex, Names.SQL_ERROR).showAlert();
-            });
-        }
+        Utils.getArrayListsFromDB("SELECT * FROM invoices_to_java" +  whereText + " ORDER BY rec_id desc", new String[]{"rec_id", "invoice_number", "client_id", "begin_date", "end_date", "first_name", "last_name", "email", "product_ids", "product_descrips"}).stream().forEach((row) -> {
+            invoices.put((int) row[0], new Invoice((int) row[0], (String) row[1],(int) row[2],(Date) row[3],(Date) row[4],(String) row[5],(String) row[6],(String) row[7],(String) row[8],(String) row[9]));
+        });
         return invoices;
     }
     

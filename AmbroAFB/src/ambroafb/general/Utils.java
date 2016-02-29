@@ -5,12 +5,22 @@
  */
 package ambroafb.general;
 
+import ambro.AMySQLChanel;
 import ambroafb.AmbroAFB;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +30,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -33,10 +44,11 @@ public class Utils {
     private static Logger logger;
 
     /**
-     * აკეთებს exception-ის ლოგირებას კონსოლში და ფაილში სახელად 'error.log' 
+     * აკეთებს exception-ის ლოგირებას კონსოლში და ფაილში სახელად 'error.log'
      * რომელიც იქმნება პროექტის დირექტორიაში.
+     *
      * @param title
-     * @param e 
+     * @param e
      */
     public static void log(String title, Exception e) {
         if (logger == null) {
@@ -183,9 +195,9 @@ public class Utils {
     public static Scene createScene(String name) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(GeneralConfig.getInstance().getBundle());
-        
+
         System.out.println(name + " name: " + AmbroAFB.class.getResource(name));
-        
+
         Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
         return new Scene(root);
     }
@@ -228,8 +240,9 @@ public class Utils {
      */
     public static void exitApplication() {
         try {
-            if (AmbroAFB.socket != null)
+            if (AmbroAFB.socket != null) {
                 AmbroAFB.socket.close();
+            }
         } catch (IOException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -240,4 +253,35 @@ public class Utils {
     private static void saveConfigChanges() {
         GeneralConfig.getInstance().dump();
     }
+
+    // ბაზასთან ურთიორთობის მეთოდები:
+    // შეიძლება ღირდეს მათი ახალ ფაილში, მაგ. UtilsDB გატანა
+    public static ArrayList<Object[]> getArrayListsFromDB(String query, String[] retrievedColumnNames) {
+        ArrayList<Object[]> arrayList = new ArrayList<>();
+        try (Connection conn = GeneralConfig.getInstance().getConnectionToDB(); Statement statement = conn.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(query);
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            int columnCount = resultSetMetaData.getColumnCount();
+            ArrayList<String> columnNames = new ArrayList<>();
+            for(int i = 0; i < columnCount; i++){
+                columnNames.add(i, resultSetMetaData.getColumnName(i+1));
+            }
+            while (resultSet.next()) {
+                Object[] objectArray = new Object[columnCount];
+                for (int c = 0; c < retrievedColumnNames.length; c++) {
+                    int appropriateIndex = columnNames.indexOf(retrievedColumnNames[c]) + 1;
+                    
+                    System.out.println("aaaaaaaaa: " + resultSetMetaData.getColumnTypeName(appropriateIndex));
+                    
+                    objectArray[c] = AMySQLChanel.extractFronResultSet(resultSet, appropriateIndex, resultSetMetaData.getColumnTypeName(appropriateIndex));
+                }
+                //System.out.println("objectArray: " + Arrays.deepToString(objectArray));
+                arrayList.add(objectArray);
+            }
+        } catch (SQLException | NullPointerException ex) {
+            Platform.runLater(() -> {new AlertMessage(Alert.AlertType.ERROR, ex, Names.SQL_ERROR).showAlert(); });
+        }
+        return arrayList;
+    }
+
 }

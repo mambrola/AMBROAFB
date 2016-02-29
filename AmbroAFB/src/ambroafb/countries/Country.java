@@ -10,6 +10,7 @@ import ambro.AView;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
+import ambroafb.general.Utils;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,32 +36,16 @@ public class Country { // ვინაიდან ეს მხოლოდ ჩ
         descrip = new SimpleStringProperty(d);
     }
     
-    public String getDescrip() {
-        return descrip.get();
-    }
-    
     public static Country dbGetCountry (String countryCode){
         return dbGetCountries(countryCode).get(countryCode);
     }
     
     public static HashMap<String,Country> dbGetCountries (String countryCode){
         HashMap<String,Country> countries = new HashMap();
-        String whereTest = countryCode.equals("") ? "" : " where rec_code = '" + countryCode + "'";
-        try {
-            Connection conn = GeneralConfig.getInstance().getConnectionToDB();
-            ResultSet resultSet = conn.createStatement().executeQuery("SELECT * FROM countries" +  whereTest + " ORDER BY rec_code");
-            while (resultSet.next()) {
-                String recCode = resultSet.getString("rec_code");
-                String descrip = resultSet.getString("descrip");
-                countries.put(recCode, new Country(recCode, descrip));
-            }
-        }
-        catch (SQLException | NullPointerException ex) {
-            Platform.runLater(() -> {
-                new AlertMessage(Alert.AlertType.ERROR, ex, Names.SQL_ERROR).showAlert();
-            });
-        }
-        System.out.println("countries: " + countries.size() + countries);
+        String whereText = countryCode.equals("") ? "" : " where rec_code = '" + countryCode + "'";
+        Utils.getArrayListsFromDB("SELECT * FROM countries" +  whereText + " ORDER BY rec_code", new String[]{"rec_code", "descrip"}).stream().forEach((row) -> {
+            countries.put((String) row[0], new Country((String) row[0], (String) row[1]));
+        });
         return countries;
     }
     

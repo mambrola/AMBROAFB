@@ -27,4 +27,26 @@ VIEW `invoices_to_java` AS
         LEFT JOIN `products` `p` ON ((`p`.`rec_id` = `ip`.`product_id`)))
     GROUP BY `i`.`rec_id` , `i`.`invoice_number` , `i`.`client_id` , `i`.`begin_date` , `i`.`end_date` , `c`.`first_name` , `c`.`last_name` , `c`.`email` 
 */
-
+/*CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `dtm`@`%` 
+    SQL SECURITY DEFINER
+VIEW `clients_to_java` AS
+    SELECT 
+        `c`.`rec_id` AS `rec_id`,
+        `c`.`email` AS `email`,
+        `c`.`password` AS `password`,
+        `c`.`is_jur` AS `is_jur`,
+        `c`.`first_name` AS `first_name`,
+        `c`.`last_name` AS `last_name`,
+        `c`.`address` AS `address`,
+        `c`.`zip_code` AS `zip_code`,
+        `c`.`city` AS `city`,
+        `c`.`country_code` AS `country_code`,
+        `c`.`is_rezident` AS `is_rezident`,
+        `c`.`pass_number` AS `pass_number`,
+        `ct`.`descrip` AS `country_descrip`
+    FROM
+        (`clients` `c`
+        LEFT JOIN `countries` `ct` ON ((`ct`.`rec_code` = `c`.`country_code`)))
+*/

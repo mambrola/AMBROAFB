@@ -31,7 +31,8 @@ public class ClientsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        table.getItems().add(new Client(1,true, "Glimer", "GmbH", "GiaLomidze@web.de", "Strase st. 15", "62345", "Celle", "de", true, "P 204DE4569"));
-    }    
-    
+        Client.dbGetClients(0).values().stream().forEach((client) -> {
+            table.getItems().add(client);
+        });
+    }
 }

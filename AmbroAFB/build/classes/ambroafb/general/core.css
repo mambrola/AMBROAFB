@@ -1,10 +1,15 @@
 
-.root {
-    -fx-font-family: "Times New Roman GEO";
-    /*-fx-font-family: "BPG Glaho";*/
+.root, #table {
+    /*-fx-font-family: "Times New Roman GEO";*/
+    -fx-font-family: "BPG Glaho";
     /*-fx-font-weight: bolder;*/
     -fx-font-size: 12px;
 }
+
+#table {
+    -fx-font-family: "BPG Glaho";
+}
+
 
 .manu {
     -fx-padding: 0;

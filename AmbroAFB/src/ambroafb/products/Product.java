@@ -6,16 +6,9 @@
 package ambroafb.products;
 
 import ambro.AView;
-import ambroafb.general.AlertMessage;
-import ambroafb.general.GeneralConfig;
-import ambroafb.general.Names;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import ambroafb.general.Utils;
 import java.util.HashMap;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.Alert;
 
 /**
  *
@@ -41,10 +34,6 @@ public class Product { // ვინაიდან ეს მხოლოდ ჩ
     public String toString(){
         return descrip+" : "+remark+" : "+ productId;
     }
-            
-    public String getDescrip() {
-        return descrip.get();
-    }
     
     public static Product dbGetProduct (int productId){
         return dbGetProducts(productId).get(productId);
@@ -52,22 +41,10 @@ public class Product { // ვინაიდან ეს მხოლოდ ჩ
     
     public static HashMap<Integer,Product> dbGetProducts (int productId){
         HashMap<Integer,Product> products = new HashMap();
-        String whereTest = productId == 0 ? "" : " where rec_id = " + Integer.toString(productId);
-        try {
-            Connection conn = GeneralConfig.getInstance().getConnectionToDB();
-            ResultSet resultSet = conn.createStatement().executeQuery("SELECT * FROM products" +  whereTest + " ORDER BY rec_id");
-            while (resultSet.next()) {
-                int recId = resultSet.getInt("rec_id");
-                String descrip = resultSet.getString("descrip");
-                String remark = resultSet.getString("remark");
-                products.put(recId, new Product(recId, descrip, remark));
-            }
-        }
-        catch (SQLException | NullPointerException ex) {
-            Platform.runLater(() -> {
-                new AlertMessage(Alert.AlertType.ERROR, ex, Names.SQL_ERROR).showAlert();
-            });
-        }
+        String whereText = productId == 0 ? "" : " where rec_id = " + Integer.toString(productId);
+        Utils.getArrayListsFromDB("SELECT * FROM products" +  whereText + " ORDER BY rec_id", new String[]{"rec_id", "descrip", "remark"}).stream().forEach((row) -> {
+            products.put((int) row[0], new Product((int) row[0], (String) row[1],(String) row[2]));
+        });
         return products;
     }
     
