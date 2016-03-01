@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import ambro.* ?>
+
+<FlowPane 
+    fx:id="formPane" 
+    stylesheets="/ambroafb/clients/viewadd/addclient.css"  
+    fx:controller="ambroafb.clients.viewadd.AddClientController" 
+    xmlns:fx="http://javafx.com/fxml/1" >
+    <padding>
+        <Insets top="5.0" left="5.0" right="5.0" bottom="5.0"  />
+    </padding>
+    <Label text="%date" /> 
+    <DatePicker fx:id="openDate" /> 
+    <Label text="%client" /> 
+    <ComboBox fx:id="client" />
+    <Label text="%operation" /> 
+    <ComboBox fx:id="operation" />
+    
+    <ATableView fx:id="tableProducts" initializer="ambroafb.auto_dealers.Products" styleClass="unicode" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="2"  />
+        
+</FlowPane>

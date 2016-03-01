@@ -37,7 +37,7 @@
                         </ImageView>
                     </graphic>
                 </ToggleButton>
-                <ToggleButton fx:id="new" onAction = "#enter">
+                <ToggleButton fx:id="addClient" onAction = "#addClient">
                     <tooltip>
                         <Tooltip text="%new" />
                     </tooltip>
@@ -47,7 +47,7 @@
                         </ImageView>
                     </graphic>
                 </ToggleButton>
-                <ToggleButton fx:id="enter" onAction = "#enter">
+                <ToggleButton fx:id="refresh" onAction = "#refresh">
                     <tooltip>
                         <Tooltip text="%enter" />
                     </tooltip>

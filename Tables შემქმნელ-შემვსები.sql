@@ -280,14 +280,14 @@ CREATE TABLE `ambro_soft_afb`.clients (
 	`rec_id` 		  bigint(20) NOT NULL AUTO_INCREMENT,
 	`email` 		varchar(255) DEFAULT NULL,
 	`password` 		varchar(255) DEFAULT NULL,
-	`is_jur` 	  	        bool DEFAULT false,
+	`is_jur` 	  	        BIT DEFAULT false,
 	`first_name` 	varchar(255) DEFAULT NULL,
 	`last_name` 	varchar(255) DEFAULT NULL,
 	`address` 		varchar(255) DEFAULT NULL,
 	`zip_code` 		varchar(255) DEFAULT NULL,
 	`city` 			varchar(255) DEFAULT NULL,
 	`country_code` 	  varchar(2) DEFAULT NULL,
-	`is_rezident`	        bool DEFAULT false,
+	`is_rezident`	        BIT DEFAULT false,
 	`pass_number` 	varchar(255) DEFAULT NULL,
 	PRIMARY KEY (`rec_id`),
 	UNIQUE KEY `email` (`email`),
@@ -298,6 +298,7 @@ INSERT INTO `ambro_soft_afb`.clients
 (`rec_id`, `email`, `password`, `is_jur`, `first_name`, `last_name`, `address`, `zip_code`, `city`, `country_code`, `is_rezident`, `pass_number`) 
 VALUES
 (null, 'm.ambrola@gmail.com', 'password', false, 'Murman', 'ამბროლაძე', 'დელისი 30ა', '0177', 'Tiflis', 'GE', true, '01024008007'), 
+(null, 'Glimer@gmail.com', 'password', true, 'Glimer', 'GmbH', 'Strasener 56', '60004', 'Hanover', 'DE', false, '171717017'), 
 (null, 'GiaLomidze@web.de', 'password', false, 'Gia', 'Lomidze', 'shtrase N', '63255', 'Celle', 'DE', false, '01024448887'); 
 */
 

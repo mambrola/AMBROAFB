@@ -256,7 +256,8 @@ public class Utils {
 
     // ბაზასთან ურთიორთობის მეთოდები:
     // შეიძლება ღირდეს მათი ახალ ფაილში, მაგ. UtilsDB გატანა
-    public static ArrayList<Object[]> getArrayListsFromDB(String query, String[] retrievedColumnNames) {
+    
+    public static ArrayList<Object[]> getArrayListsFromDB(String query, String[] requestedColumnNames) {
         ArrayList<Object[]> arrayList = new ArrayList<>();
         try (Connection conn = GeneralConfig.getInstance().getConnectionToDB(); Statement statement = conn.createStatement()) {
             ResultSet resultSet = statement.executeQuery(query);
@@ -268,14 +269,10 @@ public class Utils {
             }
             while (resultSet.next()) {
                 Object[] objectArray = new Object[columnCount];
-                for (int c = 0; c < retrievedColumnNames.length; c++) {
-                    int appropriateIndex = columnNames.indexOf(retrievedColumnNames[c]) + 1;
-                    
-                    System.out.println("aaaaaaaaa: " + resultSetMetaData.getColumnTypeName(appropriateIndex));
-                    
+                for (int c = 0; c < requestedColumnNames.length; c++) {
+                    int appropriateIndex = columnNames.indexOf(requestedColumnNames[c]) + 1;
                     objectArray[c] = AMySQLChanel.extractFronResultSet(resultSet, appropriateIndex, resultSetMetaData.getColumnTypeName(appropriateIndex));
                 }
-                //System.out.println("objectArray: " + Arrays.deepToString(objectArray));
                 arrayList.add(objectArray);
             }
         } catch (SQLException | NullPointerException ex) {
