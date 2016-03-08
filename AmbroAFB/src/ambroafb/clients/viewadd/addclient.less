@@ -2,13 +2,43 @@
 
 @import url("../../../ambroafb/general/variables.less");
 
-.label {
-    -fx-padding: 2 5 2 10;
-}
+@formWidth  : 800;
+@gap        :  10;
+@labelWidth : 110;
+@formHeight : 320;
 
 #formPane {
-    -fx-min-height: 400;
-    -fx-max-height: 400;
-    -fx-min-width: 800;
-    -fx-max-width: 800;
+    -fx-min-height: @formHeight;
+    -fx-max-height: @formHeight;
+    -fx-min-width: @formWidth + 2*@gap;
+    -fx-max-width: @formWidth + 2*@gap;
+    -fx-padding: @gap;
+    -fx-spacing: @gap;
 }
+
+.label {
+    /*-fx-background-color: green;*/
+    -fx-padding: 2 5 2 0;
+}
+.label.textRight {
+    -fx-pref-width: @labelWidth;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.text-field.w2 {
+    -fx-pref-width: (@formWidth - 2*@labelWidth)/2;
+}
+.text-field.w1 {
+    -fx-pref-width: @formWidth - @labelWidth;
+}
+.text-field.w3, .combo-box {
+    -fx-pref-width: (@formWidth - 3*@labelWidth)/3;
+}
+
+
+.doubleHeight {
+    /*-fx-background-color: yellow;*/
+    -fx-pref-height: 2 * @formHeight / 9;
+}
+
+

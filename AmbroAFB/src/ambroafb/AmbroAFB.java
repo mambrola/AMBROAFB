@@ -84,7 +84,7 @@ public class AmbroAFB extends Application {
      */
     public static void main(String[] args) {
         try {
-            socket = new ServerSocket(20555, 0, InetAddress.getLoopbackAddress());
+            socket = new ServerSocket(20556, 0, InetAddress.getLoopbackAddress());
             new Thread(() -> {
                 while (true) {
                     try (Socket peer = socket.accept()) {
@@ -105,7 +105,7 @@ public class AmbroAFB extends Application {
             }).start();
             launch(args);
         } catch (IOException ex) {
-            try (Socket peer = new Socket(InetAddress.getLoopbackAddress(), 20555)) {
+            try (Socket peer = new Socket(InetAddress.getLoopbackAddress(), 20556)) {
                 peer.getOutputStream().write(1);
             } catch (UnknownHostException ex1) {
                 Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex1);

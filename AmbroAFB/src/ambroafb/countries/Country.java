@@ -43,7 +43,7 @@ public class Country { // ვინაიდან ეს მხოლოდ ჩ
     public static HashMap<String,Country> dbGetCountries (String countryCode){
         HashMap<String,Country> countries = new HashMap();
         String whereText = countryCode.equals("") ? "" : " where rec_code = '" + countryCode + "'";
-        Utils.getArrayListsFromDB("SELECT * FROM countries" +  whereText + " ORDER BY rec_code", new String[]{"rec_code", "descrip"}).stream().forEach((row) -> {
+        Utils.getArrayListsByQueryFromDB("SELECT * FROM countries" +  whereText + " ORDER BY rec_code", new String[]{"rec_code", "descrip"}).stream().forEach((row) -> {
             countries.put((String) row[0], new Country((String) row[0], (String) row[1]));
         });
         return countries;

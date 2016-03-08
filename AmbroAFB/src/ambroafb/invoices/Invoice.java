@@ -83,7 +83,7 @@ public class Invoice { // ვინაიდან ეს მხოლოდ ჩ
     public static HashMap<Integer,Invoice> dbGetInvoices (int invoiceId){
         HashMap<Integer,Invoice> invoices = new HashMap();
         String whereText = invoiceId == 0 ? "" : " where rec_id = " + Integer.toString(invoiceId);
-        Utils.getArrayListsFromDB("SELECT * FROM invoices_to_java" +  whereText + " ORDER BY rec_id desc", new String[]{"rec_id", "invoice_number", "client_id", "begin_date", "end_date", "first_name", "last_name", "email", "product_ids", "product_descrips"}).stream().forEach((row) -> {
+        Utils.getArrayListsByQueryFromDB("SELECT * FROM invoices_to_java" +  whereText + " ORDER BY rec_id desc", new String[]{"rec_id", "invoice_number", "client_id", "begin_date", "end_date", "first_name", "last_name", "email", "product_ids", "product_descrips"}).stream().forEach((row) -> {
             invoices.put((int) row[0], new Invoice((int) row[0], (String) row[1],(int) row[2],(Date) row[3],(Date) row[4],(String) row[5],(String) row[6],(String) row[7],(String) row[8],(String) row[9]));
         });
         return invoices;

@@ -141,7 +141,6 @@ public class Utils {
             if (size.height > 0) {
                 stage.setHeight(size.height);
             }
-
             stage.setMaximized(size.maximized);
         }
 
@@ -257,7 +256,7 @@ public class Utils {
     // ბაზასთან ურთიორთობის მეთოდები:
     // შეიძლება ღირდეს მათი ახალ ფაილში, მაგ. UtilsDB გატანა
     
-    public static ArrayList<Object[]> getArrayListsFromDB(String query, String[] requestedColumnNames) {
+    public static ArrayList<Object[]> getArrayListsByQueryFromDB(String query, String[] requestedColumnNames) {
         ArrayList<Object[]> arrayList = new ArrayList<>();
         try (Connection conn = GeneralConfig.getInstance().getConnectionToDB(); Statement statement = conn.createStatement()) {
             ResultSet resultSet = statement.executeQuery(query);

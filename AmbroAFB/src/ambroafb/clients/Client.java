@@ -58,7 +58,7 @@ public class Client {
     private SimpleStringProperty country;
     
     @AView.Column(title = "%pass_number", width = "100")
-    private SimpleStringProperty passNumber;
+    private SimpleStringProperty passportNumber;
     
     public Client(int ci, boolean ij, boolean ir, String fn, String ln, String e, String a, String zc, String c, String cc, String cd, String pn){
         clientId = ci;
@@ -73,7 +73,24 @@ public class Client {
         fullAddress = new SimpleStringProperty(address + ", " + zipCode  + ", " + city);
         country = new SimpleStringProperty(cd);
         isRezident = new SimpleStringProperty(ir ? "Rz" : "");
-        passNumber = new SimpleStringProperty(pn);
+        passportNumber = new SimpleStringProperty(pn);
+    }
+    
+    public Client(Object[] values){
+        clientId = (int) values[0];
+        isJur = new SimpleBooleanProperty((boolean) values[1]);
+        isRezident = new SimpleStringProperty((boolean) values[2] ? "Rz" : "");
+        firstName = (String) values[3];
+        lastName = (String) values[4];
+        descrip = new SimpleStringProperty(firstName + " " + lastName);
+        email = new SimpleStringProperty((String) values[5]);
+        address = (String) values[6];
+        zipCode =(String) values[7];
+        city =(String) values[8];
+        fullAddress = new SimpleStringProperty(address + ", " + zipCode  + ", " + city);
+        country_code = (String) values[9];
+        country = new SimpleStringProperty((String) values[10]);
+        passportNumber = new SimpleStringProperty((String) values[11]);
     }
     
     @Override
@@ -89,8 +106,8 @@ public class Client {
         HashMap<Integer,Client> clients = new HashMap();
         String query = "SELECT * FROM clients_to_java" +  (recId == 0 ? "" : " where rec_id = " + Integer.toString(recId)) + " ORDER BY rec_id";
         String[] orderedRequestedFields = new String[]{"rec_id", "is_jur", "is_rezident", "first_name", "last_name", "email", "address", "zip_code", "city", "country_code", "country_descrip", "pass_number"};
-        Utils.getArrayListsFromDB(query, orderedRequestedFields).stream().forEach((row) -> {
-            clients.put((int) row[0], new Client((int) row[0], (boolean) row[1], (boolean) row[2], (String) row[3], (String) row[4], (String) row[5], (String) row[6], (String) row[7], (String) row[8], (String) row[9], (String) row[10], (String) row[11]));
+        Utils.getArrayListsByQueryFromDB(query, orderedRequestedFields).stream().forEach((row) -> {
+            clients.put((int) row[0], new Client(row));
         });
         return clients;
     }

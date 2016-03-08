@@ -298,7 +298,8 @@ INSERT INTO `ambro_soft_afb`.clients
 (`rec_id`, `email`, `password`, `is_jur`, `first_name`, `last_name`, `address`, `zip_code`, `city`, `country_code`, `is_rezident`, `pass_number`) 
 VALUES
 (null, 'm.ambrola@gmail.com', 'password', false, 'Murman', 'ამბროლაძე', 'დელისი 30ა', '0177', 'Tiflis', 'GE', true, '01024008007'), 
-(null, 'Glimer@gmail.com', 'password', true, 'Glimer', 'GmbH', 'Strasener 56', '60004', 'Hanover', 'DE', false, '171717017'), 
+(null, 'Glimer@gmail.com', 'password', true, 'Glimer', 'GmbH', 'Strasener 56', '60004', 'Hanover', 'DE', false, '171717017'),
+(null, 'Gmer@gmail.com', 'password', true, 'Gssaslimer', 'GmbH', 'Strasener 56', '60004', 'Hanover', 'DE', false, '171717017'), 
 (null, 'GiaLomidze@web.de', 'password', false, 'Gia', 'Lomidze', 'shtrase N', '63255', 'Celle', 'DE', false, '01024448887'); 
 */
 

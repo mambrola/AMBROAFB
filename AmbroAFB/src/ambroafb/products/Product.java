@@ -42,7 +42,7 @@ public class Product { // ვინაიდან ეს მხოლოდ ჩ
     public static HashMap<Integer,Product> dbGetProducts (int productId){
         HashMap<Integer,Product> products = new HashMap();
         String whereText = productId == 0 ? "" : " where rec_id = " + Integer.toString(productId);
-        Utils.getArrayListsFromDB("SELECT * FROM products" +  whereText + " ORDER BY rec_id", new String[]{"rec_id", "descrip", "remark"}).stream().forEach((row) -> {
+        Utils.getArrayListsByQueryFromDB("SELECT * FROM products" +  whereText + " ORDER BY rec_id", new String[]{"rec_id", "descrip", "remark"}).stream().forEach((row) -> {
             products.put((int) row[0], new Product((int) row[0], (String) row[1],(String) row[2]));
         });
         return products;

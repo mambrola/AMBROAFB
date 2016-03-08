@@ -1,10 +1,31 @@
 @import url("../../../ambroafb/general/core.css");
-.label {
-  -fx-padding: 2 5 2 10;
-}
 #formPane {
-  -fx-min-height: 400;
-  -fx-max-height: 400;
-  -fx-min-width: 800;
-  -fx-max-width: 800;
+  -fx-min-height: 320;
+  -fx-max-height: 320;
+  -fx-min-width: 820;
+  -fx-max-width: 820;
+  -fx-padding: 10;
+  -fx-spacing: 10;
+}
+.label {
+  /*-fx-background-color: green;*/
+  -fx-padding: 2 5 2 0;
+}
+.label.textRight {
+  -fx-pref-width: 110;
+  -fx-alignment: CENTER_RIGHT;
+}
+.text-field.w2 {
+  -fx-pref-width: 290;
+}
+.text-field.w1 {
+  -fx-pref-width: 690;
+}
+.text-field.w3,
+.combo-box {
+  -fx-pref-width: 156.66666667;
+}
+.doubleHeight {
+  /*-fx-background-color: yellow;*/
+  -fx-pref-height: 71.11111111;
 }
