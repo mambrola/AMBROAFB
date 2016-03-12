@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="formPane"  
+          stylesheets="/ambroafb/clients/viewadd/editclient.css" 
+          xmlns:fx="http://javafx.com/fxml/1" 
+          xmlns="http://javafx.com/javafx/8" 
+          fx:controller="ambroafb.clients.viewadd.EditClientController">
+    <fx:include fx:id="addClient" source="/ambroafb/clients/viewadd/AddClient.fxml"/>
+</AnchorPane>

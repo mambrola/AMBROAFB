@@ -145,7 +145,7 @@ public class GeneralConfig {
     /**
      * მიმდინარე კონფიგურაციის მონაცემებს ინახავს მყარ დისკზე
      */
-    public void dump() {
+    public void dump() { 
         try (FileOutputStream fileOut = new FileOutputStream(Names.GENERAL_CONFIGURATION_FILE_NAME);
                 ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
             out.writeObject(savedConf);
@@ -240,7 +240,7 @@ public class GeneralConfig {
     }
 
     public void setSizeFor(String stageName, Sizes size) {
-        savedConf.sizes.put(stageName, size);
+        //savedConf.sizes.put(stageName, size); //Disable by Murman
     }
 
     /**

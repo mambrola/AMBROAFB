@@ -5,18 +5,13 @@
  */
 package ambroafb.clients;
 
-import ambroafb.in_out.*;
-import ambro.ATreeTableView;
 import ambro.AView;
 import ambroafb.general.Utils;
-import ambroafb.invoices.Invoice;
-import java.sql.Date;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
@@ -34,7 +29,7 @@ public class Client {
     public int clientId;
     
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
-    private SimpleBooleanProperty isJur;
+    public SimpleBooleanProperty isJur;
     
     @AView.Column(width = "24")
     private SimpleStringProperty isRezident;
@@ -57,40 +52,37 @@ public class Client {
     @AView.Column(title = "%country", width = "70")
     private SimpleStringProperty country;
     
-    @AView.Column(title = "%pass_number", width = "100")
-    private SimpleStringProperty passportNumber;
+    @AView.Column(title = "%id_number", width = "100")
+    private SimpleStringProperty IDNumber;
     
-    public Client(int ci, boolean ij, boolean ir, String fn, String ln, String e, String a, String zc, String c, String cc, String cd, String pn){
-        clientId = ci;
-        isJur = new SimpleBooleanProperty(ij);
-        firstName = fn;
-        lastName = ln;
-        descrip = new SimpleStringProperty(firstName + " " + lastName);
-        email = new SimpleStringProperty(e);
-        address = a;
-        zipCode =zc;
-        city =c;
-        fullAddress = new SimpleStringProperty(address + ", " + zipCode  + ", " + city);
-        country = new SimpleStringProperty(cd);
-        isRezident = new SimpleStringProperty(ir ? "Rz" : "");
-        passportNumber = new SimpleStringProperty(pn);
-    }
+    private ArrayList<String> phoneList;
+    
+    @AView.Column(title = "%phone", width = "300")
+    private SimpleStringProperty phones;
+    
+    @AView.Column(title = "%fax", width = "100")
+    private SimpleStringProperty fax;
+    
     
     public Client(Object[] values){
-        clientId = (int) values[0];
-        isJur = new SimpleBooleanProperty((boolean) values[1]);
-        isRezident = new SimpleStringProperty((boolean) values[2] ? "Rz" : "");
-        firstName = (String) values[3];
-        lastName = (String) values[4];
-        descrip = new SimpleStringProperty(firstName + " " + lastName);
-        email = new SimpleStringProperty((String) values[5]);
-        address = (String) values[6];
-        zipCode =(String) values[7];
-        city =(String) values[8];
-        fullAddress = new SimpleStringProperty(address + ", " + zipCode  + ", " + city);
-        country_code = (String) values[9];
-        country = new SimpleStringProperty((String) values[10]);
-        passportNumber = new SimpleStringProperty((String) values[11]);
+        System.out.println("values: " + Utils.avoidNullAndReturnBoolean(values[1]) +":"+ values[1]);
+        clientId =      Utils.avoidNullAndReturnInt(values[0]);
+        isJur =         new SimpleBooleanProperty(Utils.avoidNullAndReturnBoolean(values[1]));
+        isRezident =    new SimpleStringProperty(Utils.avoidNullAndReturnBoolean(values[2]) ? "Rz" : "");
+        firstName =     Utils.avoidNullAndReturnString(values[3]);
+        lastName =      Utils.avoidNullAndReturnString(values[4]);
+        descrip =       new SimpleStringProperty(firstName + " " + lastName);
+        email =         new SimpleStringProperty(Utils.avoidNullAndReturnString(values[5]));
+        address =       Utils.avoidNullAndReturnString(values[6]);
+        zipCode =       Utils.avoidNullAndReturnString(values[7]);
+        city =          Utils.avoidNullAndReturnString(values[8]);
+        fullAddress =   new SimpleStringProperty(address + ", " + zipCode  + ", " + city);
+        country_code =  Utils.avoidNullAndReturnString(values[9]);
+        country =       new SimpleStringProperty(Utils.avoidNullAndReturnString(values[10]));
+        IDNumber =      new SimpleStringProperty(Utils.avoidNullAndReturnString(values[11]));
+        phoneList =     new ArrayList<>(Arrays.asList(Utils.avoidNullAndReturnString(values[12]).split(":;:")));
+        phones =        new SimpleStringProperty(Utils.avoidNullAndReturnString(values[12]).replaceAll(":;:", ",  "));
+        fax =           new SimpleStringProperty(Utils.avoidNullAndReturnString(values[13]));
     }
     
     @Override
@@ -105,8 +97,11 @@ public class Client {
     static HashMap<Integer,Client> dbGetClients(int recId) {
         HashMap<Integer,Client> clients = new HashMap();
         String query = "SELECT * FROM clients_to_java" +  (recId == 0 ? "" : " where rec_id = " + Integer.toString(recId)) + " ORDER BY rec_id";
-        String[] orderedRequestedFields = new String[]{"rec_id", "is_jur", "is_rezident", "first_name", "last_name", "email", "address", "zip_code", "city", "country_code", "country_descrip", "pass_number"};
+        String[] orderedRequestedFields = new String[]{"rec_id", "is_jur", "is_rezident", "first_name", "last_name", "email", "address", "zip_code", "city", "country_code", "country_descrip", "pass_number", "phones", "fax"};
         Utils.getArrayListsByQueryFromDB(query, orderedRequestedFields).stream().forEach((row) -> {
+            
+            System.out.println("row: " + row[12]);
+            
             clients.put((int) row[0], new Client(row));
         });
         return clients;

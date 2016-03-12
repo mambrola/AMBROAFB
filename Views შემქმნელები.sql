@@ -25,7 +25,7 @@ VIEW `invoices_to_java` AS
         LEFT JOIN `clients` `c` ON ((`c`.`rec_id` = `i`.`client_id`)))
         JOIN `invoice_products` `ip` ON ((`ip`.`invoice_id` = `i`.`rec_id`)))
         LEFT JOIN `products` `p` ON ((`p`.`rec_id` = `ip`.`product_id`)))
-    GROUP BY `i`.`rec_id` , `i`.`invoice_number` , `i`.`client_id` , `i`.`begin_date` , `i`.`end_date` , `c`.`first_name` , `c`.`last_name` , `c`.`email` 
+    GROUP BY `i`.`rec_id`
 */
 /*CREATE 
     ALGORITHM = UNDEFINED 
@@ -45,8 +45,14 @@ VIEW `clients_to_java` AS
         `c`.`country_code` AS `country_code`,
         `c`.`is_rezident` AS `is_rezident`,
         `c`.`pass_number` AS `pass_number`,
-        `ct`.`descrip` AS `country_descrip`
+        `c`.`fax` AS `fax`,
+        `ct`.`descrip` AS `country_descrip`,
+        GROUP_CONCAT(`cp`.`phone`
+            ORDER BY `cp`.`rec_id` ASC
+            SEPARATOR ':;:') AS `phones`
     FROM
-        (`clients` `c`
+        ((`clients` `c`
         LEFT JOIN `countries` `ct` ON ((`ct`.`rec_code` = `c`.`country_code`)))
+        LEFT JOIN `client_phones` `cp` ON ((`cp`.`client_id` = `c`.`rec_id`)))
+    GROUP BY `c`.`rec_id`
 */

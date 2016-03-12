@@ -4,8 +4,8 @@
 
 @formWidth  : 800;
 @gap        :  10;
-@labelWidth : 110;
-@formHeight : 320;
+@spaceWidth :  30;
+@formHeight : 473;
 
 #formPane {
     -fx-min-height: @formHeight;
@@ -18,21 +18,21 @@
 
 .label {
     /*-fx-background-color: green;*/
-    -fx-padding: 2 5 2 0;
-}
-.label.textRight {
-    -fx-pref-width: @labelWidth;
-    -fx-alignment: CENTER_RIGHT;
+    -fx-padding: 1 0 1 2;
 }
 
-.text-field.w2 {
-    -fx-pref-width: (@formWidth - 2*@labelWidth)/2;
+.w1 .text-field{
+    -fx-pref-width: @formWidth;
 }
-.text-field.w1 {
-    -fx-pref-width: @formWidth - @labelWidth;
+
+.w2, .w3 {
+    -fx-spacing: @spaceWidth;
 }
-.text-field.w3, .combo-box {
-    -fx-pref-width: (@formWidth - 3*@labelWidth)/3;
+.w2 .text-field {
+    -fx-pref-width: (@formWidth - @spaceWidth)/2;
+}
+.w3 .text-field, .w3 .combo-box {
+    -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
 }
 
 
@@ -40,5 +40,7 @@
     /*-fx-background-color: yellow;*/
     -fx-pref-height: 2 * @formHeight / 9;
 }
+
+
 
 

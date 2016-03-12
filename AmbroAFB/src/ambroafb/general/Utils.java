@@ -11,16 +11,13 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +25,7 @@ import java.util.logging.SimpleFormatter;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -99,6 +97,35 @@ public class Utils {
         return controller;
     }
 
+    
+    /**
+     * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით Murman:ჩავამატე parameters
+     *
+     * @param name - fxml დოკუმენტის მისამართი
+     * @param parameters
+     * @param title - წარწერა, რომელიც stage-ს ექნება გაკეთებული
+     * @param logo - icon სურათის მისამართი
+     * @return
+     * @throws IOException
+     */
+    public static Stage createStage(String name, HashMap<String, Object> parameters, String title, String logo) throws IOException {
+        if (stages.containsKey(name)) {
+            Stage stage = stages.get(name);
+            stage.centerOnScreen();
+            stage.toFront();
+            return stage;
+        }
+        Stage stage = new Stage();
+        Scene scene = createScene(name, parameters);
+        stage.setScene(scene);
+        addsFeaturesToStage(stage, name, title, logo);
+        stages.put(name, stage);
+
+        return stage;
+    }
+    
+    
+    
     /**
      * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით
      *
@@ -115,7 +142,6 @@ public class Utils {
             stage.toFront();
             return stage;
         }
-
         Stage stage = new Stage();
         Scene scene = createScene(name);
         stage.setScene(scene);
@@ -167,6 +193,26 @@ public class Utils {
     }
 
     /**
+     * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით Murman:ჩავამატე parameters
+     *
+     * @param name - fxml დოკუმენტის მისამართი
+     * @param parameters
+     * @param title - წარწერა, რომელიც stage-ს ექნება გაკეთებული
+     * @param logo - icon სურათის მისამართი
+     * @param ownerStage- stage, რომლის შვილობილადაც შეიქმნება ეს ახალი stage
+     * @return
+     * @throws IOException
+     */
+    public static Stage createStage(String name, HashMap<String, Object> parameters, String title, String logo, Stage ownerStage) throws IOException {
+        Stage stage = createStage(name, parameters, title, logo);
+        if (stage.getOwner() == null) {
+            stage.initOwner(ownerStage);
+        }
+        return stage;
+    }
+    
+    
+    /**
      * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით
      *
      * @param name - fxml დოკუმენტის მისამართი
@@ -185,6 +231,22 @@ public class Utils {
     }
 
     /**
+     * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით Murman:ჩავამატე parameters
+     *
+     * @param name - fxml დოკუმენტის მისამართი
+     * @param parameters
+     * @return
+     * @throws IOException
+     */
+    public static Scene createScene(String name, HashMap<String, Object> parameters) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(GeneralConfig.getInstance().getBundle());
+        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
+        return new Scene(root);
+    }
+    
+    
+    /**
      * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით
      *
      * @param name - fxml დოკუმენტის მისამართი
@@ -194,9 +256,6 @@ public class Utils {
     public static Scene createScene(String name) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(GeneralConfig.getInstance().getBundle());
-
-        System.out.println(name + " name: " + AmbroAFB.class.getResource(name));
-
         Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
         return new Scene(root);
     }
@@ -279,5 +338,29 @@ public class Utils {
         }
         return arrayList;
     }
+    
+    public static ArrayList<Node> getFocusTraversableBottomChildren(Parent root){
+        ArrayList<Node> arrayList = new ArrayList<>();
+        root.getChildrenUnmodifiable().stream().forEach((n) -> {
+            if(((Parent) n).getChildrenUnmodifiable().isEmpty()){
+                if(n.isFocusTraversable())
+                    arrayList.add(n);
+            }
+            else{
+                arrayList.addAll(getFocusTraversableBottomChildren((Parent)n));
+            }
+        });
+        return arrayList;
+    }
 
+    
+    public static String avoidNullAndReturnString(Object object){
+        return object == null ? "" : (String) object;
+    }
+    public static int avoidNullAndReturnInt(Object object){
+        return object == null ? 0 : (int) object;
+    }
+    public static boolean avoidNullAndReturnBoolean(Object object){
+        return object == null ? false : (boolean) object;
+    }
 }

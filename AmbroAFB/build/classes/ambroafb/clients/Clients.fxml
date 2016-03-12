@@ -12,7 +12,7 @@
 <?import ambro.* ?>
 
 
-<BorderPane id="clientsPane" stylesheets="/ambroafb/clients/clients.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.clients.ClientsController">
+<BorderPane id="formPane" stylesheets="/ambroafb/clients/clients.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.clients.ClientsController">
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="menu-bar" >
             <children>
@@ -23,17 +23,27 @@
                     </tooltip>
                     <graphic>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                            <Image url="/images/delete.png" />
+                            <Image url="/images/delete2.png" />
                         </ImageView>
                     </graphic>
                 </ToggleButton>
-                <ToggleButton fx:id="edit" onAction = "#enter">
+                <ToggleButton fx:id="edit" onAction = "#editClient">
                     <tooltip>
                         <Tooltip text="%edit" />
                     </tooltip>
                     <graphic>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                            <Image url="/images/edit.png" />
+                            <Image url="/images/edit2.png" />
+                        </ImageView>
+                    </graphic>
+                </ToggleButton>
+                <ToggleButton fx:id="view" onAction = "#viewClient">
+                    <tooltip>
+                        <Tooltip text="%view" />
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="/images/view.png" />
                         </ImageView>
                     </graphic>
                 </ToggleButton>
@@ -43,7 +53,7 @@
                     </tooltip>
                     <graphic>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                            <Image url="/images/new.png" />
+                            <Image url="/images/new2.png" />
                         </ImageView>
                     </graphic>
                 </ToggleButton>

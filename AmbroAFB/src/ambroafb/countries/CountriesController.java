@@ -23,7 +23,12 @@ public class CountriesController implements Initializable {
     @FXML
     private TableView<Country> table;
     
-    @FXML private void tm(ActionEvent e) {System.out.println("pressed: " + "Pictogram");}
+    @FXML private void tm(ActionEvent e) {
+        System.out.println("pressed: " + "Pictogram");
+        Country.dbGetCountries("").values().stream().forEach((country) -> {
+            table.getItems().add(country);
+        });
+    }
     /**
      * Initializes the controller class.
      * @param url

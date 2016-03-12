@@ -6,23 +6,12 @@
 package ambroafb.invoices;
 
 import ambro.AView;
-import ambroafb.general.AlertMessage;
-import ambroafb.general.GeneralConfig;
-import ambroafb.general.Names;
 import ambroafb.general.Utils;
-import ambroafb.products.Product;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
 
 /**
  *
@@ -63,7 +52,6 @@ public class Invoice { // ვინაიდან ეს მხოლოდ ჩ
         clientLastName = cln; 
         clientEmail = ce;
         client = new SimpleStringProperty(clientFirstName + " " + clientLastName + ", " + clientEmail);
-        System.out.println("objectArray: " + client);
         String[] pii = pis.split(":;:");
         productIds = new int[pii.length];
         for(int i = 0; i < pii.length; i++)

@@ -289,18 +289,39 @@ CREATE TABLE `ambro_soft_afb`.clients (
 	`country_code` 	  varchar(2) DEFAULT NULL,
 	`is_rezident`	        BIT DEFAULT false,
 	`pass_number` 	varchar(255) DEFAULT NULL,
+    `fax`			varchar(255) DEFAULT NULL,
 	PRIMARY KEY (`rec_id`),
 	UNIQUE KEY `email` (`email`),
 	UNIQUE KEY `email_first_name_last_name` (`email`, `first_name`, `last_name`)
 ) 	ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 INSERT INTO `ambro_soft_afb`.clients
-(`rec_id`, `email`, `password`, `is_jur`, `first_name`, `last_name`, `address`, `zip_code`, `city`, `country_code`, `is_rezident`, `pass_number`) 
+(`rec_id`, `email`, `password`, `is_jur`, `first_name`, `last_name`, `address`, `zip_code`, `city`, `country_code`, `is_rezident`, `pass_number`, `fax`) 
 VALUES
-(null, 'm.ambrola@gmail.com', 'password', false, 'Murman', 'ამბროლაძე', 'დელისი 30ა', '0177', 'Tiflis', 'GE', true, '01024008007'), 
-(null, 'Glimer@gmail.com', 'password', true, 'Glimer', 'GmbH', 'Strasener 56', '60004', 'Hanover', 'DE', false, '171717017'),
-(null, 'Gmer@gmail.com', 'password', true, 'Gssaslimer', 'GmbH', 'Strasener 56', '60004', 'Hanover', 'DE', false, '171717017'), 
-(null, 'GiaLomidze@web.de', 'password', false, 'Gia', 'Lomidze', 'shtrase N', '63255', 'Celle', 'DE', false, '01024448887'); 
+(null, 'm.ambrola@gmail.com', 'password', false, 'Murman', 'ამბროლაძე', 'დელისი 30ა', '0177', 'Tiflis', 'GE', true, '01024008007', '+ (49) 123467'), 
+(null, 'Glimer@gmail.com', 'password', true, 'Glimer', 'GmbH', 'Strasener 56', '60004', 'Hanover', 'DE', false, '171717017', '+ (49) 123467'),
+(null, 'Gmer@gmail.com', 'password', true, 'Gssaslimer', 'GmbH', 'Strasener 56', '60004', 'Hanover', 'DE', false, '171717017', '+ (49) 123467'), 
+(null, 'GiaLomidze@web.de', 'password', false, 'Gia', 'Lomidze', 'shtrase N', '63255', 'Celle', 'DE', false, '01024448887', '+ (49) 123467'); 
+*/
+
+/*DROP TABLE IF EXISTS `ambro_soft_afb`.client_phones;
+CREATE TABLE `ambro_soft_afb`.client_phones (
+	`rec_id` 		  bigint(20) NOT NULL AUTO_INCREMENT,
+	`client_id` 	  bigint(20) NOT NULL,
+	`phone` 		varchar(255) DEFAULT NULL,
+	PRIMARY KEY (`rec_id`),
+	UNIQUE KEY `client_id_phone` (`client_id`, `phone`)
+) 	ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+INSERT INTO `ambro_soft_afb`.client_phones
+(`rec_id`, `client_id`, `phone`) 
+VALUES
+(null, 2, '+ (42) 111111'), 
+(null, 2, '+ (42) 222222'), 
+(null, 3, '+ (43) 111111'), 
+(null, 3, '+ (43) 222222'), 
+(null, 3, '+ (43) 333333'), 
+(null, 4, '+ (44) 111111'); 
 */
 
 /*DROP TABLE IF EXISTS `ambro_soft_afb`.accounts;

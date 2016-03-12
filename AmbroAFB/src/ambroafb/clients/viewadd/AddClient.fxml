@@ -10,71 +10,95 @@
 <?import javafx.geometry.*?>
 <?import ambro.* ?>
 
-<VBox fx:id="formPane" stylesheets="/ambroafb/clients/viewadd/addclient.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="ambroafb.clients.viewadd.AddClientController">
-   <children>
+<VBox     fx:id="formPane" 
+          stylesheets="/ambroafb/clients/viewadd/addclient.css" 
+          xmlns:fx="http://javafx.com/fxml/1" 
+          xmlns="http://javafx.com/javafx/8" 
+          fx:controller="ambroafb.clients.viewadd.AddClientController">
+    <children>
        
-       <HBox>
-          <children>
-              <Label text="%date" /> 
-              <DatePicker fx:id="openDate">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </DatePicker>
-          </children> 
-       </HBox>
-       <HBox>
-          <children>
-              <CheckBox fx:id="juridical" onAction="#switchJuridical" /> 
-              <Label text="%juridical" />
-          </children> 
-       </HBox>
-       <HBox>
-          <children>
-              <Label fx:id="first_name" styleClass="textRight" text="%first_name" /> 
-              <TextField styleClass="w2" fx:id="firstName" />
-              <Label fx:id="last_name" styleClass="textRight" text="%last_name" /> 
-              <TextField styleClass="w2" fx:id="lastName" />
-          </children>
-       </HBox>
-       <HBox>
-          <children>
-              <Label styleClass="textRight" text="%passport_number" /> 
-              <TextField styleClass="w2" fx:id="passportNumber" />
-              <Label styleClass="textRight" text="%email" /> 
-              <TextField styleClass="w2" fx:id="email" />
-          </children>
-       </HBox>
-       <HBox>
-          <children>
-              <Label styleClass="textRight" text="%address" /> 
-              <TextField  styleClass="w1" fx:id="address" />
-          </children>
-       </HBox>
-       <HBox>
-          <children>
-              <Label styleClass="textRight" text="%zip_code" /> 
-              <TextField fx:id="zipCode" styleClass="w3" />
-              <Label styleClass="textRight" text="%city" /> 
-              <TextField fx:id="city" styleClass="w3" />
-              <Label styleClass="textRight" text="%country" /> 
-              <ComboBox fx:id="country" />
-          </children>
-       </HBox>
-       <HBox>
-          <children>
-              <CheckBox fx:id="rezident" /> 
-              <Label text="%rezident" />
-          </children> 
-       </HBox>
-       <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
-           <padding>
-               <Insets right="30" /> 
-           </padding>
-          <children>
-              <Button text="%ok" /> 
-              <Button text="%cancel" />
-          </children>
-       </HBox>
-   </children>
+        <VBox>
+            <children>
+                <Label text="%date" /> 
+                <DatePicker fx:id="openDate" />
+            </children> 
+        </VBox>
+        <HBox>
+            <children>
+                <CheckBox fx:id="juridical" onAction="#switchJuridical" /> 
+                <Label text="%juridical" />
+            </children> 
+        </HBox>
+        <HBox styleClass="w3" >
+            <children>
+                <VBox >
+                    <Label fx:id="first_name" text="%first_name" /> 
+                    <TextField fx:id="firstName" />
+                </VBox>
+                <VBox >
+                    <Label fx:id="last_name" text="%last_name" /> 
+                    <TextField fx:id="lastName" />
+                </VBox >
+                <VBox >
+                    <Label text="%id_number" /> 
+                    <TextField fx:id="idNumber" />
+                </VBox>
+            </children>
+        </HBox>
+        <HBox  styleClass="w3" >
+            <children>
+                <VBox >
+                    <Label text="%email" /> 
+                    <TextField fx:id="email" />
+                </VBox >
+                <VBox >
+                    <Label text="%phone" /> 
+                    <ComboBox fx:id="phone" editable="true"/>
+                </VBox >
+                <VBox >
+                    <Label text="%fax" /> 
+                    <TextField fx:id="fax" />
+                </VBox >
+            </children>
+        </HBox>
+        <HBox   styleClass="w1">
+            <children>
+                <VBox >
+                    <Label text="%address" /> 
+                    <TextField  fx:id="address" />
+                </VBox >
+            </children>
+        </HBox>
+        <HBox   styleClass="w3">
+            <children>
+                <VBox >
+                    <Label text="%zip_code" /> 
+                    <TextField fx:id="zipCode" />
+                </VBox>
+                <VBox >
+                    <Label text="%city" /> 
+                    <TextField fx:id="city" styleClass="w3" />
+                </VBox>
+                <VBox >
+                    <Label text="%country" /> 
+                    <ComboBox fx:id="country" promptText="%select" />
+                </VBox>
+            </children>
+        </HBox>
+        <HBox>
+            <children>
+                <CheckBox fx:id="rezident" /> 
+                <Label text="%rezident" />
+            </children> 
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
+            <padding>
+                <Insets right="30" /> 
+            </padding>
+            <children>
+                <Button fx:id="ok" styleClass="middle" text="%ok" /> 
+                <Button fx:id="cancel" styleClass="middle" text="%cancel" />
+            </children>
+        </HBox>
+    </children>
 </VBox>
