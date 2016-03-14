@@ -257,7 +257,9 @@ public class Utils {
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(GeneralConfig.getInstance().getBundle());
         Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
-        return new Scene(root);
+        Scene scene = new Scene(root);
+        scene.getProperties().put("controller", loader.getController());
+        return scene;
     }
 
     /**

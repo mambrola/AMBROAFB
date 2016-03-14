@@ -32,36 +32,36 @@ public class Client {
     public SimpleBooleanProperty isJur;
     
     @AView.Column(width = "24")
-    private SimpleStringProperty isRezident;
+    public SimpleStringProperty isRezident;
     
-    private String firstName, lastName;
+    public String firstName, lastName;
     
     @AView.Column(title = "%descrip", width = "120")
-    private SimpleStringProperty descrip;
+    public SimpleStringProperty descrip;
 
     @AView.Column(title = "%email", width = "150")
-    private SimpleStringProperty email;
+    public SimpleStringProperty email;
     
-    private String address, zipCode, city;
+    public String address, zipCode, city;
     
     @AView.Column(title = "%full_address", width = "200")
-    private SimpleStringProperty fullAddress;
+    public SimpleStringProperty fullAddress;
     
-    private String country_code;
+    public String country_code;
     
     @AView.Column(title = "%country", width = "70")
-    private SimpleStringProperty country;
+    public SimpleStringProperty country;
     
     @AView.Column(title = "%id_number", width = "100")
-    private SimpleStringProperty IDNumber;
+    public SimpleStringProperty IDNumber;
     
-    private ArrayList<String> phoneList;
+    public ArrayList<String> phoneList;
     
     @AView.Column(title = "%phone", width = "300")
-    private SimpleStringProperty phones;
+    public SimpleStringProperty phones;
     
     @AView.Column(title = "%fax", width = "100")
-    private SimpleStringProperty fax;
+    public SimpleStringProperty fax;
     
     
     public Client(Object[] values){
