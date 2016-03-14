@@ -6,6 +6,7 @@
 package ambroafb.clients;
 
 import ambroafb.AmbroAFB;
+import ambroafb.clients.viewadd.client_dialog.ClientDialog;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -60,11 +61,18 @@ public class ClientsController implements Initializable {
         
     @FXML 
     private void addClient(ActionEvent e) {
-        try{
-            Stage stage = Utils.createStage("/ambroafb/clients/viewadd/AddClient.fxml", GeneralConfig.getInstance().getTitleFor("add_client"), "/images/innerLogo.png", AmbroAFB.mainStage);
-            stage.setResizable(false);
-            stage.show();
-        } catch(IOException ex){ AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION); alert.showAlert();}
+        ClientDialog dialog = new ClientDialog();
+        dialog.showAndWait();
+        if (dialog.isCancelled()){
+            System.out.println("dialog is cancelled");
+        }else{
+            System.out.println("created/changed client: "+dialog.getResult());
+        }
+//        try{
+//            Stage stage = Utils.createStage("/ambroafb/clients/viewadd/AddClient.fxml", GeneralConfig.getInstance().getTitleFor("add_client"), "/images/innerLogo.png", AmbroAFB.mainStage);
+//            stage.setResizable(false);
+//            stage.show();
+//        } catch(IOException ex){ AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION); alert.showAlert();}
     }
     
     @FXML 
