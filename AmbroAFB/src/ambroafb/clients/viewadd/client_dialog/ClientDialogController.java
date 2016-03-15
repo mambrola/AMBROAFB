@@ -45,7 +45,7 @@ public class ClientDialogController implements Initializable {
 
     GeneralConfig conf = GeneralConfig.getInstance();
     ArrayList<Node> focusTraversableNodes;
-    ObjectProperty<Client> clientProperty = new SimpleObjectProperty<>();
+    Client client;
 //    HashMap<String, String> textFieldValues = new HashMap<>();
 
     private Consumer<Client> onCreate;
@@ -86,21 +86,6 @@ public class ClientDialogController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        clientProperty.addListener((ObservableValue<? extends Client> observable, Client oldValue, Client client) -> {
-            juridical.setSelected(client.getIsJur());
-            rezident.setSelected(client.getIsRez());
-            firstName.setText(client.getFirstName());
-            lastName.setText(client.getLastName());
-            idNumber.setText(client.getIDNumber());
-            email.setText(client.getEmail());
-            fax.setText(client.getFax());
-            address.setText(client.getAddress());
-            zipCode.setText(client.getZipCode());
-            city.setText(client.getCity());
-            country.setValue(client.getCountry());
-            phone.getItems().setAll(client.getPhoneList());
-        });
-
         Country.dbGetCountries("").values().stream().forEach((c) -> {
             country.getItems().add(c.getFullDescrip());
         });
@@ -145,7 +130,6 @@ public class ClientDialogController implements Initializable {
     private void saveClient() {
         System.out.println("method 'saveClient'");
         if (onCreate != null) {
-            Client client = clientProperty.get();
             if (client == null) {
                 client = new Client();
             }
@@ -166,10 +150,8 @@ public class ClientDialogController implements Initializable {
     }
 
     private void cancel() {
-        if (new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK)) {
-            if (onCancell != null) {
-                onCancell.accept(null);
-            }
+        if (onCancell != null) {
+            onCancell.accept(null);
         }
     }
 
@@ -188,7 +170,21 @@ public class ClientDialogController implements Initializable {
     }
 
     public void setClient(Client client) {
-        clientProperty.set(client);
+        if (client != null) {
+            juridical.setSelected(client.getIsJur());
+            rezident.setSelected(client.getIsRez());
+            firstName.setText(client.getFirstName());
+            lastName.setText(client.getLastName());
+            idNumber.setText(client.getIDNumber());
+            email.setText(client.getEmail());
+            fax.setText(client.getFax());
+            address.setText(client.getAddress());
+            zipCode.setText(client.getZipCode());
+            city.setText(client.getCity());
+            country.setValue(client.getCountry());
+            phone.getItems().setAll(client.getPhoneList());
+        }
+        this.client = client;
     }
 
 }

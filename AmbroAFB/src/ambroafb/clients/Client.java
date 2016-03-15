@@ -10,6 +10,10 @@ import ambroafb.general.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.binding.StringExpression;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -34,20 +38,20 @@ public class Client {
     @AView.Column(width = "24")
     private SimpleBooleanProperty isRez;
 
-    private String firstName, lastName;
+    private SimpleStringProperty firstName, lastName;
 
     @AView.Column(title = "%descrip", width = "120")
-    private SimpleStringProperty descrip;
+    private StringExpression descrip;
 
     @AView.Column(title = "%email", width = "150")
     private SimpleStringProperty email;
 
-    private String address, zipCode, city;
+    private SimpleStringProperty address, zipCode, city;
 
     @AView.Column(title = "%full_address", width = "200")
-    private SimpleStringProperty fullAddress;
+    private StringExpression fullAddress;
 
-    private String country_code;
+    private SimpleStringProperty country_code;
 
     @AView.Column(title = "%country", width = "70")
     private SimpleStringProperty country;
@@ -66,9 +70,15 @@ public class Client {
     public Client() {
         isJur = new SimpleBooleanProperty();
         isRez = new SimpleBooleanProperty();
-        descrip = new SimpleStringProperty();
+        firstName = new SimpleStringProperty();
+        lastName = new SimpleStringProperty();
+        descrip = firstName.concat(" ").concat(lastName);
         email = new SimpleStringProperty();
-        fullAddress = new SimpleStringProperty();
+        address = new SimpleStringProperty();
+        zipCode = new SimpleStringProperty();
+        city = new SimpleStringProperty();
+        fullAddress = address.concat(", ").concat(zipCode).concat(", ").concat(city);
+        country_code = new SimpleStringProperty();
         country = new SimpleStringProperty();
         IDNumber = new SimpleStringProperty();
         phoneList = new ArrayList<>();
@@ -89,15 +99,13 @@ public class Client {
         clientId = Utils.avoidNullAndReturnInt(values[0]);
         isJur.set(Utils.avoidNullAndReturnBoolean(values[1]));
         isRez.set(Utils.avoidNullAndReturnBoolean(values[2]));
-        firstName = Utils.avoidNullAndReturnString(values[3]);
-        lastName = Utils.avoidNullAndReturnString(values[4]);
-        descrip.set(firstName + " " + lastName);
+        firstName.set(Utils.avoidNullAndReturnString(values[3]));
+        lastName.set(Utils.avoidNullAndReturnString(values[4]));
         email.set(Utils.avoidNullAndReturnString(values[5]));
-        address = Utils.avoidNullAndReturnString(values[6]);
-        zipCode = Utils.avoidNullAndReturnString(values[7]);
-        city = Utils.avoidNullAndReturnString(values[8]);
-        fullAddress.set(address + ", " + zipCode + ", " + city);
-        country_code = Utils.avoidNullAndReturnString(values[9]);
+        address.set(Utils.avoidNullAndReturnString(values[6]));
+        zipCode.set(Utils.avoidNullAndReturnString(values[7]));
+        city.set(Utils.avoidNullAndReturnString(values[8]));
+        country_code.set(Utils.avoidNullAndReturnString(values[9]));
         country.set(Utils.avoidNullAndReturnString(values[10]));
         IDNumber.set(Utils.avoidNullAndReturnString(values[11]));
         phones.set(Utils.avoidNullAndReturnString(values[12]));
@@ -150,35 +158,37 @@ public class Client {
         this.isRez.set(isRez);
     }
 
-    public String getFirstName() {
+    public SimpleStringProperty firstNameProperty() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-        descrip.set(firstName + " " + lastName);
+    public String getFirstName() {
+        return firstName.get();
     }
 
-    public String getLastName() {
+    public void setFirstName(String firstName) {
+        this.firstName.set(firstName);
+    }
+
+    public SimpleStringProperty lastNameProperty() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-        descrip.set(firstName + " " + lastName);
+    public String getLastName() {
+        return lastName.get();
     }
 
-    public SimpleStringProperty descripProperty() {
+    public void setLastName(String lastName) {
+        this.lastName.set(lastName);
+    }
+
+    public StringExpression descripProperty() {
         return descrip;
     }
 
     public String getDescrip() {
         return descrip.get();
     }
-
-//    public void setDescrip(String descrip) {
-//        this.descrip.set(descrip);
-//    }
 
     public SimpleStringProperty emailProperty() {
         return email;
@@ -192,34 +202,43 @@ public class Client {
         this.email.set(email);
     }
 
-    public String getAddress() {
+    public SimpleStringProperty addressProperty() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-        fullAddress.set(address + ", " + zipCode + ", " + city);
+    public String getAddress() {
+        return address.get();
     }
 
-    public String getZipCode() {
+    public void setAddress(String address) {
+        this.address.set(address);
+    }
+
+    public SimpleStringProperty zipCodeProperty() {
         return zipCode;
     }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-        fullAddress.set(address + ", " + zipCode + ", " + city);
+    public String getZipCode() {
+        return zipCode.get();
     }
 
-    public String getCity() {
+    public void setZipCode(String zipCode) {
+        this.zipCode.set(zipCode);
+    }
+
+    public SimpleStringProperty cityProperty() {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-        fullAddress.set(address + ", " + zipCode + ", " + city);
+    public String getCity() {
+        return city.get();
     }
 
-    public SimpleStringProperty fullAddressProperty() {
+    public void setCity(String city) {
+        this.city.set(city);
+    }
+
+    public StringExpression fullAddressProperty() {
         return fullAddress;
     }
 
@@ -230,13 +249,16 @@ public class Client {
 //    public void setFullAddress(String fullAddress) {
 //        this.fullAddress.set(fullAddress);
 //    }
-
-    public String getCountry_code() {
+    public SimpleStringProperty country_codeProperty() {
         return country_code;
     }
 
+    public String getCountry_code() {
+        return country_code.get();
+    }
+
     public void setCountry_code(String country_code) {
-        this.country_code = country_code;
+        this.country_code.set(country_code);
     }
 
     public SimpleStringProperty countryProperty() {
