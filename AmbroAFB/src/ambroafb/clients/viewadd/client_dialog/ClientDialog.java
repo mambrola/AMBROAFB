@@ -30,6 +30,7 @@ public class ClientDialog extends Stage {
     private ClientDialogController controller;
     private Client result;
     private boolean cancelled = true;
+    private boolean askClose = true;
 
     public ClientDialog() {
         this(new Client());
@@ -67,7 +68,8 @@ public class ClientDialog extends Stage {
 
     private void onClose(Object o) {
         System.out.println("on close");
-        if (new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK)) {
+        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
+        if (close) {
             cancelled = true;
             System.out.println("cancelling");
             close();
@@ -97,6 +99,14 @@ public class ClientDialog extends Stage {
      */
     public void setDisabled() {
         controller.setDisabled();
+    }
+    
+    /**
+     * დიალოგის დახურვისას ამოაგდებს გაფრთხილებას ნამდვილად უნდა თუ არა დახურვა
+     * @param ask 
+     */
+    public void askClose(boolean ask){
+        askClose = ask;
     }
 
     /**

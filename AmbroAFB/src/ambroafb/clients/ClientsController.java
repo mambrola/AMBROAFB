@@ -36,6 +36,7 @@ public class ClientsController implements Initializable {
         Client client = table.getSelectionModel().getSelectedItem();
         ClientDialog dialog = new ClientDialog(client);
         dialog.setDisabled();
+        dialog.askClose(false);
         dialog.showAndWait();
     }
 

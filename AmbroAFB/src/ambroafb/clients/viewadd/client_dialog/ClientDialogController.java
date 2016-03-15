@@ -46,7 +46,6 @@ public class ClientDialogController implements Initializable {
     GeneralConfig conf = GeneralConfig.getInstance();
     ArrayList<Node> focusTraversableNodes;
     Client client;
-//    HashMap<String, String> textFieldValues = new HashMap<>();
 
     private Consumer<Client> onCreate;
     private Consumer<Void> onCancell;
@@ -167,6 +166,8 @@ public class ClientDialogController implements Initializable {
         focusTraversableNodes.forEach((Node t) -> {
             t.setDisable(true);
         });
+        phone.setEditable(false);
+        phone.setDisable(false);
     }
 
     public void setClient(Client client) {
