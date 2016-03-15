@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox alignment="CENTER_LEFT" spacing="20.0" stylesheets="/ambroafb/clients/editon_panel/editorpanel.css" styleClass="menu-bar" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.clients.editor_panel.EditorPanelController">
+<fx:root type="javafx.scene.layout.HBox" alignment="CENTER_LEFT" spacing="20.0" stylesheets="/ambroafb/clients/editon_panel/editorpanel.css" styleClass="menu-bar" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <fx:include fx:id="exit" source="/ambroafb/general/exit_button/ExitButton.fxml"/>
         <Button fx:id="delete" onAction = "#delete">
@@ -45,7 +45,7 @@
         </Button>
                 
                 
-        <SplitMenuButton fx:id="addClient" onAction="#add">
+        <SplitMenuButton fx:id="add" onAction="#add">
             <tooltip>
                 <Tooltip text="%new" />
             </tooltip>
@@ -55,7 +55,7 @@
                 </ImageView>
             </graphic>
             <items>
-                <MenuItem mnemonicParsing="false" onAction="#addBySample" >
+                <MenuItem fx:id="addBySample" mnemonicParsing="false" onAction="#addBySample" >
                     <graphic>
                         <Label text="%add_by_sample">
                             <tooltip>
@@ -90,4 +90,4 @@
     <padding>
         <Insets bottom="3.0" left="10.0" top="3.0" />
     </padding>
-</HBox>
+</fx:root>

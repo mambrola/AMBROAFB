@@ -12,9 +12,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleButton;
 
 /**
  * FXML Controller class
@@ -97,8 +95,9 @@ public class ClientsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         asignTable();
-//        edit.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
-//        view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+        panel.getViewButton().disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+        panel.getEditButton().disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+        panel.getAddBySample().disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
     }
 
     private void asignTable() {
