@@ -10,7 +10,7 @@ package ambroafb.general;
  * @author tabramishvili
  */
 public class Names {
-    public static final String MAIN_FXML =   "/ambroafb/Main.fxml"; // "/ambroafb/clients/viewadd/AddClient_1.fxml"; //
+    public static final String MAIN_FXML =  "/ambroafb/clients/Clients.fxml"; //  "/ambroafb/Main.fxml"; //
     public static final String MAIN_TITLE = "title_main";
     public static final String MAIN_LOGO = "/images/logo.png";
     

@@ -25,7 +25,7 @@
         </VBox>
         <HBox>
             <children>
-                <CheckBox fx:id="juridical" onAction="#switchJuridical" /> 
+                <CheckBox fx:id="juridical" userData="aa" onAction="#switchJuridical" /> 
                 <Label text="%juridical" />
             </children> 
         </HBox>

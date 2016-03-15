@@ -9892,3 +9892,63 @@ java.net.SocketException: socket closed
 	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
 	at java.lang.Thread.run(Thread.java:745)
 
+Mar 14, 2016 4:55:27 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 14, 2016 4:55:42 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 14, 2016 4:56:03 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 14, 2016 4:57:06 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 14, 2016 4:57:26 PM ambroafb.AmbroAFB lambda$main$5
+SEVERE: null
+java.net.SocketException: socket closed
+	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketAccept(DualStackPlainSocketImpl.java:131)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:199)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:545)
+	at java.net.ServerSocket.accept(ServerSocket.java:513)
+	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
+	at java.lang.Thread.run(Thread.java:745)
+
+Mar 14, 2016 4:57:50 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 14, 2016 4:57:56 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 14, 2016 4:58:08 PM ambroafb.AmbroAFB lambda$main$5
+SEVERE: null
+java.net.SocketException: socket closed
+	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketAccept(DualStackPlainSocketImpl.java:131)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:199)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:545)
+	at java.net.ServerSocket.accept(ServerSocket.java:513)
+	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
+	at java.lang.Thread.run(Thread.java:745)
+
+Mar 14, 2016 5:01:36 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 14, 2016 5:22:23 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 14, 2016 5:22:38 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 14, 2016 5:23:04 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 14, 2016 5:23:32 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 14, 2016 5:25:15 PM ambroafb.AmbroAFB lambda$main$5
+SEVERE: null
+java.net.SocketException: socket closed
+	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketAccept(DualStackPlainSocketImpl.java:131)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:199)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:545)
+	at java.net.ServerSocket.accept(ServerSocket.java:513)
+	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
+	at java.lang.Thread.run(Thread.java:745)
+
+Mar 14, 2016 6:23:03 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
