@@ -1,0 +1,5 @@
+@import url("../../../ambroafb/general/core.css");
+#formPane {
+  -fx-min-width: 1200;
+  -fx-max-width: 1200;
+}

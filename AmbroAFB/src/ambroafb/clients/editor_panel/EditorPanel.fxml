@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.collections.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox alignment="CENTER_LEFT" spacing="20.0" stylesheets="/ambroafb/clients/editon_panel/editorpanel.css" styleClass="menu-bar" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.clients.editor_panel.EditorPanelController">
+    <children>
+        <fx:include fx:id="exit" source="/ambroafb/general/exit_button/ExitButton.fxml"/>
+        <Button fx:id="delete" onAction = "#delete">
+            <tooltip>
+                <Tooltip text="%delete" />
+            </tooltip>
+            <graphic>
+                <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="/images/delete2.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button fx:id="edit" onAction = "#edit">
+            <tooltip>
+                <Tooltip text="%edit" />
+            </tooltip>
+            <graphic>
+                <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="/images/edit2.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button fx:id="view" onAction = "#view">
+            <tooltip>
+                <Tooltip text="%view" />
+            </tooltip>
+            <graphic>
+                <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="/images/view.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+                
+                
+        <SplitMenuButton fx:id="addClient" onAction="#add">
+            <tooltip>
+                <Tooltip text="%new" />
+            </tooltip>
+            <graphic>
+                <ImageView fitHeight="18.0" fitWidth="18.0"  pickOnBounds="true" preserveRatio="true" >
+                    <Image url="/images/new2.png" />
+                </ImageView>
+            </graphic>
+            <items>
+                <MenuItem mnemonicParsing="false" onAction="#addBySample" >
+                    <graphic>
+                        <Label text="%add_by_sample">
+                            <tooltip>
+                                <Tooltip text="%new" />
+                            </tooltip>
+                            <graphic>
+                                <HBox  spacing="8" >
+                                    <ImageView fitHeight="18.0" fitWidth="18.0"  pickOnBounds="true" preserveRatio="true">
+                                        <Image url="/images/clone.png" />
+                                    </ImageView>
+                                    <Separator orientation="VERTICAL" />
+                                </HBox>
+                            </graphic>
+                        </Label> 
+                                
+                    </graphic>
+                </MenuItem>
+            </items>
+        </SplitMenuButton>
+                
+        <ToggleButton fx:id="refresh" onAction = "#refresh">
+            <tooltip>
+                <Tooltip text="%enter" />
+            </tooltip>
+            <graphic>
+                <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="/images/refresh.png" />
+                </ImageView>
+            </graphic>
+        </ToggleButton>
+    </children>
+    <padding>
+        <Insets bottom="3.0" left="10.0" top="3.0" />
+    </padding>
+</HBox>

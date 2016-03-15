@@ -5,6 +5,7 @@
  */
 package ambroafb.clients;
 
+import ambroafb.clients.editor_panel.EditorPanel;
 import ambroafb.clients.viewadd.client_dialog.ClientDialog;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,8 +25,11 @@ public class ClientsController implements Initializable {
 
     @FXML
     private TableView<Client> table;
+    
     @FXML
-    private Button edit, view;
+    private EditorPanel panel;
+//    @FXML
+//    private Button edit, view;
 
     @FXML
     private void enter(ActionEvent e) {
@@ -64,11 +68,6 @@ public class ClientsController implements Initializable {
         }else{
             System.out.println("changed client: "+dialog.getResult());
         }
-//        try{
-//            Stage stage = Utils.createStage("/ambroafb/clients/viewadd/AddClient.fxml", GeneralConfig.getInstance().getTitleFor("add_client"), "/images/innerLogo.png", AmbroAFB.mainStage);
-//            stage.setResizable(false);
-//            stage.show();
-//        } catch(IOException ex){ AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION); alert.showAlert();}
     }
     
     @FXML 
@@ -98,8 +97,8 @@ public class ClientsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         asignTable();
-        edit.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
-        view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+//        edit.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+//        view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
     }
 
     private void asignTable() {
