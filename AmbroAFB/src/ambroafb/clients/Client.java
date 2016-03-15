@@ -97,19 +97,19 @@ public class Client {
         this();
         System.out.println("values: " + Utils.avoidNullAndReturnBoolean(values[1]) + ":" + values[1]);
         clientId = Utils.avoidNullAndReturnInt(values[0]);
-        isJur.set(Utils.avoidNullAndReturnBoolean(values[1]));
-        isRez.set(Utils.avoidNullAndReturnBoolean(values[2]));
-        firstName.set(Utils.avoidNullAndReturnString(values[3]));
-        lastName.set(Utils.avoidNullAndReturnString(values[4]));
-        email.set(Utils.avoidNullAndReturnString(values[5]));
-        address.set(Utils.avoidNullAndReturnString(values[6]));
-        zipCode.set(Utils.avoidNullAndReturnString(values[7]));
-        city.set(Utils.avoidNullAndReturnString(values[8]));
-        country_code.set(Utils.avoidNullAndReturnString(values[9]));
-        country.set(Utils.avoidNullAndReturnString(values[10]));
-        IDNumber.set(Utils.avoidNullAndReturnString(values[11]));
-        phones.set(Utils.avoidNullAndReturnString(values[12]));
-        fax.set(Utils.avoidNullAndReturnString(values[13]));
+        setIsJur(Utils.avoidNullAndReturnBoolean(values[1]));
+        setIsRez(Utils.avoidNullAndReturnBoolean(values[2]));
+        setFirstName(Utils.avoidNullAndReturnString(values[3]));
+        setLastName(Utils.avoidNullAndReturnString(values[4]));
+        setEmail(Utils.avoidNullAndReturnString(values[5]));
+        setAddress(Utils.avoidNullAndReturnString(values[6]));
+        setZipCode(Utils.avoidNullAndReturnString(values[7]));
+        setCity(Utils.avoidNullAndReturnString(values[8]));
+        setCountry_code(Utils.avoidNullAndReturnString(values[9]));
+        setCountry(Utils.avoidNullAndReturnString(values[10]));
+        setIDNumber(Utils.avoidNullAndReturnString(values[11]));
+        setPhones(Utils.avoidNullAndReturnString(values[12]));
+        setFax(Utils.avoidNullAndReturnString(values[13]));
     }
 
     @Override
@@ -142,7 +142,7 @@ public class Client {
         return isJur.get();
     }
 
-    public void setIsJur(boolean isJur) {
+    public final void setIsJur(boolean isJur) {
         this.isJur.set(isJur);
     }
 
@@ -154,7 +154,7 @@ public class Client {
         return isRez.get();
     }
 
-    public void setIsRez(boolean isRez) {
+    public final void setIsRez(boolean isRez) {
         this.isRez.set(isRez);
     }
 
@@ -166,7 +166,7 @@ public class Client {
         return firstName.get();
     }
 
-    public void setFirstName(String firstName) {
+    public final void setFirstName(String firstName) {
         this.firstName.set(firstName);
     }
 
@@ -178,7 +178,7 @@ public class Client {
         return lastName.get();
     }
 
-    public void setLastName(String lastName) {
+    public final void setLastName(String lastName) {
         this.lastName.set(lastName);
     }
 
@@ -198,7 +198,7 @@ public class Client {
         return email.get();
     }
 
-    public void setEmail(String email) {
+    public final void setEmail(String email) {
         this.email.set(email);
     }
 
@@ -210,7 +210,7 @@ public class Client {
         return address.get();
     }
 
-    public void setAddress(String address) {
+    public final void setAddress(String address) {
         this.address.set(address);
     }
 
@@ -222,7 +222,7 @@ public class Client {
         return zipCode.get();
     }
 
-    public void setZipCode(String zipCode) {
+    public final void setZipCode(String zipCode) {
         this.zipCode.set(zipCode);
     }
 
@@ -234,7 +234,7 @@ public class Client {
         return city.get();
     }
 
-    public void setCity(String city) {
+    public final void setCity(String city) {
         this.city.set(city);
     }
 
@@ -257,7 +257,7 @@ public class Client {
         return country_code.get();
     }
 
-    public void setCountry_code(String country_code) {
+    public final void setCountry_code(String country_code) {
         this.country_code.set(country_code);
     }
 
@@ -269,7 +269,7 @@ public class Client {
         return country.get();
     }
 
-    public void setCountry(String country) {
+    public final void setCountry(String country) {
         this.country.set(country);
     }
 
@@ -281,7 +281,7 @@ public class Client {
         return IDNumber.get();
     }
 
-    public void setIDNumber(String IDNumber) {
+    public final void setIDNumber(String IDNumber) {
         this.IDNumber.set(IDNumber);
     }
 
@@ -289,7 +289,7 @@ public class Client {
         return phoneList;
     }
 
-    public void setPhoneList(ArrayList<String> phoneList) {
+    public final void setPhoneList(ArrayList<String> phoneList) {
         this.phoneList = phoneList;
     }
 
@@ -301,7 +301,7 @@ public class Client {
         return phones.get();
     }
 
-    public void setPhones(String phones) {
+    public final void setPhones(String phones) {
         this.phones.set(phones.replaceAll(":;:", ",  "));
     }
 
@@ -313,7 +313,7 @@ public class Client {
         return fax.get();
     }
 
-    public void setFax(String fax) {
+    public final void setFax(String fax) {
         this.fax.set(fax);
     }
 
