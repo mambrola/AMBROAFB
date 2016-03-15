@@ -35,7 +35,7 @@ public class Client {
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private SimpleBooleanProperty isJur;
 
-    @AView.Column(width = "24")
+    @AView.Column(width = "24", cellFactory = RezCellFactory.class)
     private SimpleBooleanProperty isRez;
 
     private SimpleStringProperty firstName, lastName;
@@ -336,5 +336,19 @@ public class Client {
             };
             return cell;
         }
+    }
+    
+    public static class RezCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
+
+        @Override
+        public TableCell<Client, Boolean> call(TableColumn<Client, Boolean> param) {
+            return new TableCell<Client, Boolean>(){
+                @Override
+                public void updateItem(Boolean isFirm, boolean empty) {
+                    setText(empty?null:(isFirm?"Rz":null));
+                }
+            };
+        }
+        
     }
 }
