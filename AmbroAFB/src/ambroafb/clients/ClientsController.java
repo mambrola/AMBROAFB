@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
 
 /**
  * FXML Controller class
@@ -22,60 +23,71 @@ public class ClientsController implements Initializable {
 
     @FXML
     private TableView<Client> table;
-    
-    @FXML private void enter(ActionEvent e) {System.out.println("passed: Enter");  }
-    
-    @FXML 
+    @FXML
+    private ToggleButton edit, view;
+
+    @FXML
+    private void enter(ActionEvent e) {
+        System.out.println("passed: Enter");
+    }
+
+    @FXML
     private void viewClient(ActionEvent e) {
         Client client = table.getSelectionModel().getSelectedItem();
         ClientDialog dialog = new ClientDialog(client);
         dialog.setDisabled();
         dialog.showAndWait();
     }
-    
-    @FXML 
+
+    @FXML
     private void editClient(ActionEvent e) {
-        
+
         Client editingClient = table.getSelectionModel().getSelectedItem();
         ClientDialog dialog = new ClientDialog(editingClient);
         dialog.showAndWait();
-        if (dialog.isCancelled()){
+        if (dialog.isCancelled()) {
             System.out.println("dialog is cancelled");
-        }else{
-            System.out.println("changed client: "+dialog.getResult());
+        } else {
+            System.out.println("changed client: " + dialog.getResult());
         }
     }
-        
-    @FXML 
+
+    @FXML
     private void addClient(ActionEvent e) {
         ClientDialog dialog = new ClientDialog();
         dialog.showAndWait();
-        if (dialog.isCancelled()){
+        if (dialog.isCancelled()) {
             System.out.println("dialog is cancelled");
-        }else{
-            System.out.println("changed client: "+dialog.getResult());
+        } else {
+            System.out.println("changed client: " + dialog.getResult());
         }
     }
-    
-    @FXML 
+
+    @FXML
     private void refresh(ActionEvent e) {
         //table.getItems().clear();
-        ((Client)table.getItems().get(0)).setIsJur(!((Client)table.getItems().get(0)).getIsJur());//asignTable();
+        ((Client) table.getItems().get(0)).setIsJur(!((Client) table.getItems().get(0)).getIsJur());//asignTable();
     }
+
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         asignTable();
+        edit.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+        view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
     }
-    
-    private void asignTable(){
+
+    private void asignTable() {
         Client.dbGetClients(0).values().stream().forEach((client) -> {
             table.getItems().add(client);
         });
-        
+//        if (table.getItems().size() > 0) {
+//            table.getSelectionModel().select(0);
+//        }
     }
 }
