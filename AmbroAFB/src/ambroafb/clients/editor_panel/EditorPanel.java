@@ -31,12 +31,6 @@ import javafx.scene.layout.HBox;
  */
 public class EditorPanel extends HBox implements Initializable {
 
-    private final ObjectProperty<EventHandler<ActionEvent>> onNew = new SimpleObjectProperty<>();
-    private final ObjectProperty<EventHandler<ActionEvent>> onNewBySample = new SimpleObjectProperty<>();
-    private final ObjectProperty<EventHandler<ActionEvent>> onView = new SimpleObjectProperty<>();
-    private final ObjectProperty<EventHandler<ActionEvent>> onEdit = new SimpleObjectProperty<>();
-    private final ObjectProperty<EventHandler<ActionEvent>> onRefresh = new SimpleObjectProperty<>();
-
     @FXML
     private Button view, edit, delete;
     @FXML
@@ -63,48 +57,6 @@ public class EditorPanel extends HBox implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }
-
-    
-
-    @FXML
-    private void edit(ActionEvent event) {
-        System.out.println("edit");
-        if (onEdit.get() != null) {
-            onEdit.get().handle(event);
-        }
-    }
-
-    @FXML
-    private void view(ActionEvent event) {
-        System.out.println("view");
-        if (onView.get() != null) {
-            onView.get().handle(event);
-        }
-    }
-
-    @FXML
-    private void add(ActionEvent event) {
-        System.out.println("add");
-        if (onNew.get() != null) {
-            onNew.get().handle(event);
-        }
-    }
-
-    @FXML
-    private void addBySample(ActionEvent event) {
-        System.out.println("add by sample");
-        if (onNewBySample.get() != null) {
-            onNewBySample.get().handle(event);
-        }
-    }
-
-    @FXML
-    private void refresh(ActionEvent event) {
-        System.out.println("refresh");
-        if (onRefresh.get() != null) {
-            onRefresh.get().handle(event);
-        }
     }
 
     public SplitMenuButton getAddButton() {
@@ -138,51 +90,51 @@ public class EditorPanel extends HBox implements Initializable {
      */
     
     public ObjectProperty<EventHandler<ActionEvent>> onNewProperty() {
-        return onNew;
+        return add.onActionProperty();
     }
 
     public void setOnNew(EventHandler<ActionEvent> handler) {
-        onNew.set(handler);
+        add.setOnAction(handler);
     }
 
     public EventHandler<ActionEvent> getOnNew() {
-        return onNew.get();
+        return add.getOnAction();
     }
 
     public ObjectProperty<EventHandler<ActionEvent>> onNewBySampleProperty() {
-        return onNewBySample;
+        return addBySample.onActionProperty();
     }
 
     public void setOnNewBySample(EventHandler<ActionEvent> handler) {
-        onNewBySample.set(handler);
+        addBySample.setOnAction(handler);
     }
 
     public EventHandler<ActionEvent> getOnNewBySample() {
-        return onNewBySample.get();
+        return addBySample.getOnAction();
     }
 
     public ObjectProperty<EventHandler<ActionEvent>> onViewProperty() {
-        return onView;
+        return view.onActionProperty();
     }
 
     public void setOnView(EventHandler<ActionEvent> handler) {
-        onView.set(handler);
+        view.setOnAction(handler);
     }
 
     public EventHandler<ActionEvent> getOnView() {
-        return onView.get();
+        return view.getOnAction();
     }
 
     public ObjectProperty<EventHandler<ActionEvent>> onEditProperty() {
-        return onEdit;
+        return edit.onActionProperty();
     }
 
     public void setOnEdit(EventHandler<ActionEvent> handler) {
-        onEdit.set(handler);
+        edit.setOnAction(handler);
     }
 
     public EventHandler<ActionEvent> getOnEdit() {
-        return onEdit.get();
+        return edit.getOnAction();
     }
 
     public ObjectProperty<EventHandler<ActionEvent>> onDeleteProperty() {
@@ -198,14 +150,14 @@ public class EditorPanel extends HBox implements Initializable {
     }
 
     public ObjectProperty<EventHandler<ActionEvent>> onRefreshProperty() {
-        return onRefresh;
+        return refresh.onActionProperty();
     }
 
     public void setOnRefresh(EventHandler<ActionEvent> handler) {
-        onRefresh.set(handler);
+        refresh.setOnAction(handler);
     }
 
     public EventHandler<ActionEvent> getOnRefresh() {
-        return onRefresh.get();
+        return refresh.getOnAction();
     }
 }

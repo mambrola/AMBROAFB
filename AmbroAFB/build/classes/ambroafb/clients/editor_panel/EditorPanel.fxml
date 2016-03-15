@@ -23,7 +23,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button fx:id="edit" onAction = "#edit">
+        <Button fx:id="edit" >
             <tooltip>
                 <Tooltip text="%edit" />
             </tooltip>
@@ -33,7 +33,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button fx:id="view" onAction = "#view">
+        <Button fx:id="view" >
             <tooltip>
                 <Tooltip text="%view" />
             </tooltip>
@@ -45,7 +45,7 @@
         </Button>
                 
                 
-        <SplitMenuButton fx:id="add" onAction="#add">
+        <SplitMenuButton fx:id="add">
             <tooltip>
                 <Tooltip text="%new" />
             </tooltip>
@@ -55,7 +55,7 @@
                 </ImageView>
             </graphic>
             <items>
-                <MenuItem fx:id="addBySample" mnemonicParsing="false" onAction="#addBySample" >
+                <MenuItem fx:id="addBySample" mnemonicParsing="false">
                     <graphic>
                         <Label text="%add_by_sample">
                             <tooltip>
@@ -76,7 +76,7 @@
             </items>
         </SplitMenuButton>
                 
-        <ToggleButton fx:id="refresh" onAction = "#refresh">
+        <ToggleButton fx:id="refresh">
             <tooltip>
                 <Tooltip text="%enter" />
             </tooltip>

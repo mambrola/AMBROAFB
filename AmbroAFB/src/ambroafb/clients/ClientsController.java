@@ -70,7 +70,9 @@ public class ClientsController implements Initializable {
     
     @FXML 
     private void addBySample(ActionEvent e) {
-        ClientDialog dialog = new ClientDialog();
+        Client client = table.getSelectionModel().getSelectedItem();
+        ClientDialog dialog = new ClientDialog(client);
+        dialog.resetClient();
         dialog.showAndWait();
         if (dialog.isCancelled()){
             System.out.println("dialog is cancelled addBySample");
