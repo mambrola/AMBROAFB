@@ -76,7 +76,7 @@ public class ClientsController implements Initializable {
         ClientDialog dialog = new ClientDialog();
         dialog.showAndWait();
         if (dialog.isCancelled()){
-            System.out.println("dialog is cancelled");
+            System.out.println("dialog is cancelled addClient");
         }else{
             System.out.println("changed client: "+dialog.getResult());
         }
@@ -86,6 +86,23 @@ public class ClientsController implements Initializable {
 //            stage.show();
 //        } catch(IOException ex){ AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION); alert.showAlert();}
     }
+    
+    @FXML 
+    private void addBySample(ActionEvent e) {
+        ClientDialog dialog = new ClientDialog();
+        dialog.showAndWait();
+        if (dialog.isCancelled()){
+            System.out.println("dialog is cancelled addBySample");
+        }else{
+            System.out.println("changed client: "+dialog.getResult());
+        }
+//        try{
+//            Stage stage = Utils.createStage("/ambroafb/clients/viewadd/AddClient.fxml", GeneralConfig.getInstance().getTitleFor("add_client"), "/images/innerLogo.png", AmbroAFB.mainStage);
+//            stage.setResizable(false);
+//            stage.show();
+//        } catch(IOException ex){ AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION); alert.showAlert();}
+    }
+    
     
     @FXML 
     private void refresh(ActionEvent e) {

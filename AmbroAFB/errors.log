@@ -9952,3 +9952,25 @@ java.net.SocketException: socket closed
 
 Mar 14, 2016 6:23:03 PM ambroafb.general.Utils log
 SEVERE: Do you want to exit without saving?
+Mar 15, 2016 11:48:59 AM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 15, 2016 11:49:22 AM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 15, 2016 11:49:31 AM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 15, 2016 11:52:33 AM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 15, 2016 12:04:51 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+Mar 15, 2016 12:46:03 PM ambroafb.AmbroAFB lambda$main$5
+SEVERE: null
+java.net.SocketException: socket closed
+	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketAccept(DualStackPlainSocketImpl.java:131)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:199)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:545)
+	at java.net.ServerSocket.accept(ServerSocket.java:513)
+	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
+	at java.lang.Thread.run(Thread.java:745)
+

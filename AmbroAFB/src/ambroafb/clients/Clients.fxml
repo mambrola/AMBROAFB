@@ -17,7 +17,7 @@
         <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="menu-bar" >
             <children>
                 <fx:include fx:id="exit" source="/ambroafb/general/exit_button/ExitButton.fxml"/>
-                <ToggleButton fx:id="delete" onAction = "#enter">
+                <Button fx:id="delete" onAction = "#enter">
                     <tooltip>
                         <Tooltip text="%delete" />
                     </tooltip>
@@ -26,8 +26,8 @@
                             <Image url="/images/delete2.png" />
                         </ImageView>
                     </graphic>
-                </ToggleButton>
-                <ToggleButton fx:id="edit" onAction = "#editClient">
+                </Button>
+                <Button fx:id="edit" onAction = "#editClient">
                     <tooltip>
                         <Tooltip text="%edit" />
                     </tooltip>
@@ -36,8 +36,8 @@
                             <Image url="/images/edit2.png" />
                         </ImageView>
                     </graphic>
-                </ToggleButton>
-                <ToggleButton fx:id="view" onAction = "#viewClient">
+                </Button>
+                <Button fx:id="view" onAction = "#viewClient">
                     <tooltip>
                         <Tooltip text="%view" />
                     </tooltip>
@@ -46,17 +46,35 @@
                             <Image url="/images/view.png" />
                         </ImageView>
                     </graphic>
-                </ToggleButton>
-                <ToggleButton fx:id="addClient" onAction = "#addClient">
+                </Button>
+                
+                
+                <SplitMenuButton fx:id="addClient" onAction="#addClient">
                     <tooltip>
                         <Tooltip text="%new" />
                     </tooltip>
                     <graphic>
-                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="18.0" fitWidth="18.0"  pickOnBounds="true" preserveRatio="true" >
                             <Image url="/images/new2.png" />
                         </ImageView>
                     </graphic>
-                </ToggleButton>
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#addBySample" >
+                            <graphic>
+                                <HBox>
+                                    <StackPane  prefHeight="18.0" prefWidth="27.0" alignment="CENTER"  >
+                                        <ImageView fitHeight="18.0" fitWidth="18.0"  pickOnBounds="true" preserveRatio="true">
+                                            <Image url="/images/clone.png" />
+                                        </ImageView>
+                                    </StackPane>
+                                    <Separator orientation="VERTICAL" />
+                                    <Label text="%add_by_sample"/> 
+                                </HBox>
+                            </graphic>
+                        </MenuItem>
+                    </items>
+                </SplitMenuButton>
+                
                 <ToggleButton fx:id="refresh" onAction = "#refresh">
                     <tooltip>
                         <Tooltip text="%enter" />
