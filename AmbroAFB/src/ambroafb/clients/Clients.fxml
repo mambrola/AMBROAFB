@@ -61,15 +61,20 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#addBySample" >
                             <graphic>
-                                <HBox>
-                                    <StackPane  prefHeight="18.0" prefWidth="27.0" alignment="CENTER"  >
-                                        <ImageView fitHeight="18.0" fitWidth="18.0"  pickOnBounds="true" preserveRatio="true">
-                                            <Image url="/images/clone.png" />
-                                        </ImageView>
-                                    </StackPane>
-                                    <Separator orientation="VERTICAL" />
-                                    <Label text="%add_by_sample"/> 
-                                </HBox>
+                                <Label text="%add_by_sample">
+                                    <tooltip>
+                                        <Tooltip text="%new" />
+                                    </tooltip>
+                                    <graphic>
+                                        <HBox  spacing="8" >
+                                            <ImageView fitHeight="18.0" fitWidth="18.0"  pickOnBounds="true" preserveRatio="true">
+                                                <Image url="/images/clone.png" />
+                                            </ImageView>
+                                            <Separator orientation="VERTICAL" />
+                                        </HBox>
+                                    </graphic>
+                                </Label> 
+                                
                             </graphic>
                         </MenuItem>
                     </items>

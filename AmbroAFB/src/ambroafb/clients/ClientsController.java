@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
 
@@ -24,7 +25,7 @@ public class ClientsController implements Initializable {
     @FXML
     private TableView<Client> table;
     @FXML
-    private ToggleButton edit, view;
+    private Button edit, view;
 
     @FXML
     private void enter(ActionEvent e) {
@@ -81,7 +82,8 @@ public class ClientsController implements Initializable {
 
         }
     }
-
+    
+    @FXML
     private void refresh(ActionEvent e) {
         //table.getItems().clear();
         ((Client) table.getItems().get(0)).setIsJur(!((Client) table.getItems().get(0)).getIsJur());//asignTable();

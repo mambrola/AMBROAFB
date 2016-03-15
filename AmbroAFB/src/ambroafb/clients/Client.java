@@ -61,10 +61,10 @@ public class Client {
 
     private ArrayList<String> phoneList;
 
-    @AView.Column(title = "%phone", width = "300")
+    @AView.Column(title = "%phones", width = "300")
     private SimpleStringProperty phones;
 
-    @AView.Column(title = "%fax", width = "100")
+    @AView.Column(title = "%fax")
     private SimpleStringProperty fax;
 
     public Client() {
@@ -88,7 +88,7 @@ public class Client {
         phones.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             phoneList.clear();
             if (newValue != null) {
-                phoneList.addAll(Arrays.asList(newValue.split(", ")));
+                phoneList.addAll(Arrays.asList(newValue.split(":;:")));
             }
         });
     }
