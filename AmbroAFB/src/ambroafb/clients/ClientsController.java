@@ -31,7 +31,7 @@ public class ClientsController implements Initializable {
 
     @FXML
     private void enter(ActionEvent e) {
-        System.out.println("passed: Enter");
+        System.out.println("passed: Delete");
     }
 
     @FXML

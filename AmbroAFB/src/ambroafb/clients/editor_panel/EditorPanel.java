@@ -35,7 +35,6 @@ public class EditorPanel extends HBox implements Initializable {
     private final ObjectProperty<EventHandler<ActionEvent>> onNewBySample = new SimpleObjectProperty<>();
     private final ObjectProperty<EventHandler<ActionEvent>> onView = new SimpleObjectProperty<>();
     private final ObjectProperty<EventHandler<ActionEvent>> onEdit = new SimpleObjectProperty<>();
-    private final ObjectProperty<EventHandler<ActionEvent>> onDelete = new SimpleObjectProperty<>();
     private final ObjectProperty<EventHandler<ActionEvent>> onRefresh = new SimpleObjectProperty<>();
 
     @FXML
@@ -66,13 +65,7 @@ public class EditorPanel extends HBox implements Initializable {
         // TODO
     }
 
-    @FXML
-    private void delete(ActionEvent event) {
-        System.out.println("delete");
-        if (onDelete.get() != null) {
-            onDelete.get().handle(event);
-        }
-    }
+    
 
     @FXML
     private void edit(ActionEvent event) {
@@ -193,15 +186,15 @@ public class EditorPanel extends HBox implements Initializable {
     }
 
     public ObjectProperty<EventHandler<ActionEvent>> onDeleteProperty() {
-        return onDelete;
+        return delete.onActionProperty();
     }
 
     public void setOnDelete(EventHandler<ActionEvent> handler) {
-        onDelete.set(handler);
+        delete.setOnAction(handler);
     }
 
     public EventHandler<ActionEvent> getOnDelete() {
-        return onDelete.get();
+        return delete.getOnAction();
     }
 
     public ObjectProperty<EventHandler<ActionEvent>> onRefreshProperty() {
