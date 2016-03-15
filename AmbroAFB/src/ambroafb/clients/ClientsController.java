@@ -38,25 +38,37 @@ public class ClientsController implements Initializable {
     
     @FXML 
     private void viewClient(ActionEvent e) {
-        try{
-            Stage stage = Utils.createStage("/ambroafb/clients/viewadd/ViewClient.fxml", GeneralConfig.getInstance().getTitleFor("view_client"), "/images/innerLogo.png", AmbroAFB.mainStage);
-            stage.setResizable(false);
-            stage.show();
-        } catch(IOException ex){ AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION); alert.showAlert();}
+        Client client = table.getSelectionModel().getSelectedItem();
+        ClientDialog dialog = new ClientDialog(client);
+        dialog.setDisabled();
+        dialog.showAndWait();
+//        try{
+//            Stage stage = Utils.createStage("/ambroafb/clients/viewadd/ViewClient.fxml", GeneralConfig.getInstance().getTitleFor("view_client"), "/images/innerLogo.png", AmbroAFB.mainStage);
+//            stage.setResizable(false);
+//            stage.show();
+//        } catch(IOException ex){ AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION); alert.showAlert();}
     }
     
     @FXML 
     private void editClient(ActionEvent e) {
         
-        System.out.println("selected: " + table.getSelectionModel().getSelectedItem().clientId);
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("client", table.getSelectionModel().getSelectedItem());
-        try{
-            Stage stage = Utils.createStage("/ambroafb/clients/viewadd/EditClient.fxml", parameters, GeneralConfig.getInstance().getTitleFor("edit_client"), "/images/innerLogo.png", AmbroAFB.mainStage);
-            stage.setResizable(false);
-            stage.show();
-            System.out.println("stage.getScene().lookup: " + stage.getScene().lookup("client"));
-        } catch(IOException ex){ AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION); alert.showAlert();}
+        Client editingClient = table.getSelectionModel().getSelectedItem();
+        ClientDialog dialog = new ClientDialog(editingClient);
+        dialog.showAndWait();
+        if (dialog.isCancelled()){
+            System.out.println("dialog is cancelled");
+        }else{
+            System.out.println("changed client: "+dialog.getResult());
+        }
+//        System.out.println("selected: " + table.getSelectionModel().getSelectedItem().clientId);
+//        HashMap<String, Object> parameters = new HashMap<>();
+//        parameters.put("client", table.getSelectionModel().getSelectedItem());
+//        try{
+//            Stage stage = Utils.createStage("/ambroafb/clients/viewadd/EditClient.fxml", parameters, GeneralConfig.getInstance().getTitleFor("edit_client"), "/images/innerLogo.png", AmbroAFB.mainStage);
+//            stage.setResizable(false);
+//            stage.show();
+//            System.out.println("stage.getScene().lookup: " + stage.getScene().lookup("client"));
+//        } catch(IOException ex){ AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION); alert.showAlert();}
     }
         
     @FXML 
@@ -66,7 +78,7 @@ public class ClientsController implements Initializable {
         if (dialog.isCancelled()){
             System.out.println("dialog is cancelled");
         }else{
-            System.out.println("created/changed client: "+dialog.getResult());
+            System.out.println("changed client: "+dialog.getResult());
         }
 //        try{
 //            Stage stage = Utils.createStage("/ambroafb/clients/viewadd/AddClient.fxml", GeneralConfig.getInstance().getTitleFor("add_client"), "/images/innerLogo.png", AmbroAFB.mainStage);
@@ -78,7 +90,7 @@ public class ClientsController implements Initializable {
     @FXML 
     private void refresh(ActionEvent e) {
         //table.getItems().clear();
-        ((Client)table.getItems().get(0)).isJur.set(!((Client)table.getItems().get(0)).isJur.getValue());//asignTable();
+        ((Client)table.getItems().get(0)).setIsJur(!((Client)table.getItems().get(0)).getIsJur());//asignTable();
     }
     /**
      * Initializes the controller class.

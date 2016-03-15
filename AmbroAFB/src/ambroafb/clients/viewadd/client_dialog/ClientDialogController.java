@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,6 +34,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * FXML Controller class
@@ -40,6 +45,7 @@ public class ClientDialogController implements Initializable {
 
     GeneralConfig conf = GeneralConfig.getInstance();
     ArrayList<Node> focusTraversableNodes;
+    ObjectProperty<Client> clientProperty = new SimpleObjectProperty<>();
 //    HashMap<String, String> textFieldValues = new HashMap<>();
 
     private Consumer<Client> onCreate;
@@ -56,7 +62,7 @@ public class ClientDialogController implements Initializable {
     @FXML
     TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
     @FXML
-    ComboBox country;
+    ComboBox country, phone;
 
     @FXML
     private void switchJuridical(ActionEvent e) {
@@ -80,17 +86,30 @@ public class ClientDialogController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        clientProperty.addListener((ObservableValue<? extends Client> observable, Client oldValue, Client client) -> {
+            juridical.setSelected(client.getIsJur());
+            rezident.setSelected(client.getIsRez());
+            firstName.setText(client.getFirstName());
+            lastName.setText(client.getLastName());
+            idNumber.setText(client.getIDNumber());
+            email.setText(client.getEmail());
+            fax.setText(client.getFax());
+            address.setText(client.getAddress());
+            zipCode.setText(client.getZipCode());
+            city.setText(client.getCity());
+            country.setValue(client.getCountry());
+            phone.getItems().setAll(client.getPhoneList());
+        });
+
         Country.dbGetCountries("").values().stream().forEach((c) -> {
             country.getItems().add(c.getFullDescrip());
         });
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        int countNodes = focusTraversableNodes.size();
         focusTraversableNodes.stream().forEach((node) -> {
             if (node.getClass().equals(TextField.class)) {
                 ((TextField) node).focusedProperty().addListener((observable, oldValue, newValue) -> {
                     if (!oldValue && newValue) {
-                        node.setUserData(((TextField) node).getText());
-//                        textFieldValues.put(node.getId(), ((TextField) node).getText());
+                        node.getProperties().put("backupValue", ((TextField) node).getText());
                     }
                 });
             }
@@ -116,7 +135,7 @@ public class ClientDialogController implements Initializable {
                 }
                 if (keyEvent.getCode() == KeyCode.ESCAPE) {
                     if (node.getClass().equals(TextField.class)) {
-                        ((TextField) node).setText((String) node.getUserData());
+                        ((TextField) node).setText((String) node.getProperties().get("backupValue"));
                     }
                 }
             });
@@ -126,8 +145,23 @@ public class ClientDialogController implements Initializable {
     private void saveClient() {
         System.out.println("method 'saveClient'");
         if (onCreate != null) {
-            Client c = new Client(new Object[]{null, juridical.isSelected(), rezident.isSelected(), firstName.getText(), lastName.getText(), email.getText(), address.getText(), zipCode.getText(), city.getText(), null, country.getValue(), idNumber.getText(), null, fax.getText()});
-            onCreate.accept(c); // null-ის მაგივრად გადავცემთ შექმნილ კლიენტს
+            Client client = clientProperty.get();
+            if (client == null) {
+                client = new Client();
+            }
+            client.setIsJur(juridical.isSelected());
+            client.setIsRez(rezident.isSelected());
+            client.setFirstName(firstName.getText());
+            client.setLastName(lastName.getText());
+            client.setEmail(email.getText());
+            client.setAddress(address.getText());
+            client.setZipCode(zipCode.getText());
+            client.setCity(city.getText());
+            client.setCountry((String) country.getValue());
+            client.setIDNumber(idNumber.getText());
+            client.setPhones(StringUtils.join(phone.getItems(), ":;:"));
+            client.setFax(fax.getText());
+            onCreate.accept(client);
         }
     }
 
@@ -146,14 +180,15 @@ public class ClientDialogController implements Initializable {
     public void onCancell(Consumer<Void> callback) {
         onCancell = callback;
     }
-    
-    public void setDisabled(){
-        
+
+    public void setDisabled() {
+        focusTraversableNodes.forEach((Node t) -> {
+            t.setDisable(true);
+        });
     }
-    
-    public void setClient(Client client){
-        firstName.setText(client.firstName);
-        lastName.setText(client.lastName);
+
+    public void setClient(Client client) {
+        clientProperty.set(client);
     }
 
 }

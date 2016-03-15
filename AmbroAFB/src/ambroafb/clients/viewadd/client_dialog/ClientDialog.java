@@ -5,6 +5,7 @@
  */
 package ambroafb.clients.viewadd.client_dialog;
 
+import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
 import ambroafb.general.Utils;
 import java.io.IOException;
@@ -25,8 +26,12 @@ public class ClientDialog extends Stage{
     private boolean cancelled = true;
     
     public ClientDialog(){
+        this(new Client());
+    }
+    
+    public ClientDialog(Client client){
         super();
-        
+
         try {
             Scene scene = Utils.createScene("/ambroafb/clients/viewadd/client_dialog/ClientDialog.fxml");
             setScene(scene);
@@ -35,7 +40,11 @@ public class ClientDialog extends Stage{
         } catch (IOException ex) {
             Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
+        initOwner(AmbroAFB.mainStage);
+        setResizable(false);
         
+        
+        controller.setClient(client);
         controller.onCreate((Client t) -> {
             System.out.println("on create: "+t);
             result = t;
@@ -47,11 +56,7 @@ public class ClientDialog extends Stage{
             cancelled = true;
             close();
         });
-    }
-    
-    public ClientDialog(Client client){
-        this();
-        controller.setClient(client);
+        
     }
     
     
@@ -67,5 +72,8 @@ public class ClientDialog extends Stage{
         return cancelled;
     }
     
+    public void setDisabled(){
+        controller.setDisabled();
+    }
     
 }
