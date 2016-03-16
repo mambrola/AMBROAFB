@@ -75,7 +75,6 @@
                 </MenuItem>
             </items>
         </SplitMenuButton>
-                
         <ToggleButton fx:id="refresh">
             <tooltip>
                 <Tooltip text="%enter" />

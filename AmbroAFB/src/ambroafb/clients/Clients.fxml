@@ -10,17 +10,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import ambro.* ?>
-<?import ambroafb.clients.editor_panel.*?>
+<?import ambroafb.general.editor_panel.*?>
 
 
 <BorderPane id="formPane" stylesheets="/ambroafb/clients/clients.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.clients.ClientsController">
     <top>
         <EditorPanel fx:id="panel"
-            onNew="#addClient"
+            onDelete="#delete" 
+            onEdit="#edit" 
+            onView="#view" 
+            onNew="#add"
             onNewBySample="#addBySample" 
-            onEdit="#editClient" 
-            onDelete="#enter" 
-            onView="#viewClient" 
             onRefresh="#refresh" />
     </top>
     <center>

@@ -11,7 +11,9 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.DatePicker;
 
 /**
  *
@@ -24,7 +26,7 @@ public class Invoice { // ვინაიდან ეს მხოლოდ ჩ
     @AView.Column(title = "%invoice_n", width = "100")
     private SimpleStringProperty invoiceNumber;
     
-    private int clientId;
+    private SimpleIntegerProperty clientId;
     
     @AView.Column(title = "%begin_date", width = "70")
     private LocalDate beginDate;
@@ -32,7 +34,7 @@ public class Invoice { // ვინაიდან ეს მხოლოდ ჩ
     @AView.Column(title = "%end_date", width = "70")
     private LocalDate endDate;
     
-    private String clientFirstName, clientLastName, clientEmail;
+    private SimpleStringProperty clientFirstName, clientLastName, clientEmail;
     
     @AView.Column(title = "%client", width = "350")
     private SimpleStringProperty client;
@@ -45,12 +47,12 @@ public class Invoice { // ვინაიდან ეს მხოლოდ ჩ
     public Invoice(int ii, String in, int ci, Date bd, Date ed, String cfn, String cln, String ce, String pis, String pds){
         invoiceId = ci;
         invoiceNumber = new SimpleStringProperty(in);
-        clientId = ci;
+        clientId = new SimpleIntegerProperty(ci);
         beginDate = bd.toLocalDate();
         endDate = ed.toLocalDate();
-        clientFirstName = cfn;
-        clientLastName = cln; 
-        clientEmail = ce;
+        clientFirstName = new SimpleStringProperty(cfn);
+        clientLastName = new SimpleStringProperty(cln); 
+        clientEmail = new SimpleStringProperty(ce);
         client = new SimpleStringProperty(clientFirstName + " " + clientLastName + ", " + clientEmail);
         String[] pii = pis.split(":;:");
         productIds = new int[pii.length];
@@ -58,14 +60,9 @@ public class Invoice { // ვინაიდან ეს მხოლოდ ჩ
             productIds[i] = Integer.parseInt(pii[i]);
         products = new SimpleStringProperty(pds.replaceAll(":;:", ",  "));
     }
-    
+   
     public static Invoice dbGetInvoice (int invoiceId){
         return dbGetInvoices(invoiceId).get(invoiceId);
-    }
-    
-    @Override
-    public String toString(){
-        return invoiceId +":"+ invoiceNumber +":"+ clientId +":"+ client.get() +":"+ Arrays.toString(productIds) +":"+ products.get();
     }
     
     public static HashMap<Integer,Invoice> dbGetInvoices (int invoiceId){

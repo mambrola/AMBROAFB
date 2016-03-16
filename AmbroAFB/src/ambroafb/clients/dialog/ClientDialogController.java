@@ -3,29 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.clients.viewadd.client_dialog;
+package ambroafb.clients.dialog;
 
 import ambroafb.clients.Client;
 import ambroafb.countries.Country;
-import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -50,21 +42,14 @@ public class ClientDialogController implements Initializable {
     private Consumer<Client> onCreate;
     private Consumer<Void> onCancell;
 
-    @FXML
-    VBox formPane;
-    @FXML
-    private Label first_name, last_name;
-    @FXML
-    DatePicker openDate;
-    @FXML
-    CheckBox juridical, rezident;
-    @FXML
-    TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
-    @FXML
-    ComboBox country, phone;
+    @FXML VBox formPane;
+    @FXML private Label first_name, last_name;
+    @FXML DatePicker openDate;
+    @FXML CheckBox juridical, rezident;
+    @FXML TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
+    @FXML ComboBox country, phone;
 
-    @FXML
-    private void switchJuridical(ActionEvent e) {
+    @FXML private void switchJuridical(ActionEvent e) {
         System.out.println("e.getSource(): " + firstName.widthProperty().getValue());
         double w = firstName.widthProperty().getValue() + lastName.widthProperty().getValue();
         if (((CheckBox) e.getSource()).isSelected()) {
@@ -81,7 +66,9 @@ public class ClientDialogController implements Initializable {
     }
 
     /**
-     * Initializes the controller class.
+     * 
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

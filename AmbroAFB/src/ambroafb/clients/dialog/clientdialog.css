@@ -8,15 +8,12 @@
   -fx-spacing: 10;
 }
 .label {
-  /*-fx-background-color: green;*/
+  -fx-font-weight: bold;
+  -fx-font-size: 0.9em;
   -fx-padding: 1 0 1 2;
 }
 .w1 .text-field {
   -fx-pref-width: 800;
-}
-.w2,
-.w3 {
-  -fx-spacing: 30;
 }
 .w2 .text-field {
   -fx-pref-width: 385;
@@ -25,7 +22,14 @@
 .w3 .combo-box {
   -fx-pref-width: 246.66666667;
 }
+.w2,
+.w3 {
+  -fx-spacing: 30;
+}
 .doubleHeight {
   /*-fx-background-color: yellow;*/
   -fx-pref-height: 105.11111111;
+}
+.button {
+  -fx-font-weight: bold;
 }

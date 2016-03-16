@@ -17,16 +17,13 @@
 }
 
 .label {
-    /*-fx-background-color: green;*/
+    -fx-font-weight: bold;
+    -fx-font-size: 0.9em;
     -fx-padding: 1 0 1 2;
 }
 
 .w1 .text-field{
     -fx-pref-width: @formWidth;
-}
-
-.w2, .w3 {
-    -fx-spacing: @spaceWidth;
 }
 .w2 .text-field {
     -fx-pref-width: (@formWidth - @spaceWidth)/2;
@@ -35,10 +32,17 @@
     -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
 }
 
+.w2, .w3 {
+    -fx-spacing: @spaceWidth;
+}
+
 
 .doubleHeight {
     /*-fx-background-color: yellow;*/
     -fx-pref-height: 2 * @formHeight / 9;
+}
+.button {
+    -fx-font-weight: bold;
 }
 
 

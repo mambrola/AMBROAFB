@@ -3,23 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.clients.viewadd.client_dialog;
+package ambroafb.clients.dialog;
 
 import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.Utils;
 import java.io.IOException;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Callback;
 
 /**
  *
@@ -40,7 +37,7 @@ public class ClientDialog extends Stage {
         super();
 
         try {
-            Scene scene = Utils.createScene("/ambroafb/clients/viewadd/client_dialog/ClientDialog.fxml");
+            Scene scene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
             setScene(scene);
             controller = (ClientDialogController) scene.getProperties().get("controller");
 
