@@ -96,8 +96,8 @@
                 <Insets right="30" /> 
             </padding>
             <children>
-                <Button fx:id="ok" styleClass="middle" text="%ok" /> 
-                <Button fx:id="cancel" styleClass="middle" text="%cancel" />
+                <Button fx:id="ok" styleClass="middle" text="%ok" onAction="#saveClient" /> 
+                <Button fx:id="cancel" styleClass="middle" text="%cancel" onAction="#cancel"  />
             </children>
         </HBox>
     </children>

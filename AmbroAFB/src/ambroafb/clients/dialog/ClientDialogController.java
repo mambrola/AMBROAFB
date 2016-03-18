@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -42,14 +43,21 @@ public class ClientDialogController implements Initializable {
     private Consumer<Client> onCreate;
     private Consumer<Void> onCancell;
 
-    @FXML VBox formPane;
-    @FXML private Label first_name, last_name;
-    @FXML DatePicker openDate;
-    @FXML CheckBox juridical, rezident;
-    @FXML TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
-    @FXML ComboBox country, phone;
+    @FXML
+    VBox formPane;
+    @FXML
+    private Label first_name, last_name;
+    @FXML
+    DatePicker openDate;
+    @FXML
+    CheckBox juridical, rezident;
+    @FXML
+    TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
+    @FXML
+    ComboBox country, phone;
 
-    @FXML private void switchJuridical(ActionEvent e) {
+    @FXML
+    private void switchJuridical(ActionEvent e) {
         System.out.println("e.getSource(): " + firstName.widthProperty().getValue());
         double w = firstName.widthProperty().getValue() + lastName.widthProperty().getValue();
         if (((CheckBox) e.getSource()).isSelected()) {
@@ -66,7 +74,7 @@ public class ClientDialogController implements Initializable {
     }
 
     /**
-     * 
+     *
      * @param url
      * @param rb
      */
@@ -76,43 +84,25 @@ public class ClientDialogController implements Initializable {
             country.getItems().add(c.getFullDescrip());
         });
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        focusTraversableNodes.stream().forEach((node) -> {
-            if (node.getClass().equals(TextField.class)) {
-                ((TextField) node).focusedProperty().addListener((observable, oldValue, newValue) -> {
-                    if (!oldValue && newValue) {
-                        node.getProperties().put("backupValue", ((TextField) node).getText());
-                    }
-                });
-            }
-            if (node.getClass().equals(Button.class)) {
-                ((Button) node).pressedProperty().addListener((observable, oldValue, newValue) -> {
-                    if (oldValue && !newValue && node.isHover()) {
-                        node.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.ENTER, false, false, false, false));
-                    }
-                });
-            }
-            node.setOnKeyPressed((KeyEvent keyEvent) -> {
-                if (keyEvent.getCode() == KeyCode.ENTER) {
-                    switch (node.getId()) {
-                        case ("ok"):
-                            saveClient();
-                            break;
-                        case ("cancel"):
-                            cancel();
-                            break;
-                        default:
-                            node.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.TAB, false, false, false, false));
-                    }
+        focusTraversableNodes.stream().filter((node) -> node.getClass().equals(TextField.class)).forEach((node) -> {
+            TextField field = (TextField) node;
+
+            field.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (!oldValue && newValue) {
+                    node.getProperties().put("backupValue", ((TextField) node).getText());
                 }
-                if (keyEvent.getCode() == KeyCode.ESCAPE) {
-                    if (node.getClass().equals(TextField.class)) {
-                        ((TextField) node).setText((String) node.getProperties().get("backupValue"));
-                    }
+            });
+            field.setOnKeyPressed((KeyEvent keyEvent) -> {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    node.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.TAB, false, false, false, false));
+                } else if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                    ((TextField) node).setText((String) node.getProperties().get("backupValue"));
                 }
             });
         });
     }
 
+    @FXML
     private void saveClient() {
         System.out.println("method 'saveClient'");
         if (onCreate != null) {
@@ -135,6 +125,7 @@ public class ClientDialogController implements Initializable {
         }
     }
 
+    @FXML
     private void cancel() {
         if (onCancell != null) {
             onCancell.accept(null);
