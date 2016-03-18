@@ -60,10 +60,7 @@ public class DialogPanel extends Pane {
             node.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
                 if (event.getCode().equals(KeyCode.SPACE)) {
                     event.consume();
-                } else if (event.getCode().equals(KeyCode.ENTER)) {
-                    ((Button) node).fire();
-                    event.consume();
-                }
+                } 
             });
         }
         node.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {

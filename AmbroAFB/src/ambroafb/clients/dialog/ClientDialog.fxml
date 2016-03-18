@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
 <?import ambro.* ?>
+<?import ambroafb.general.okay_cancel.* ?>
 
 <ambroafb.general.DialogPanel stylesheets="/ambroafb/clients/dialog/clientdialog.css" 
                         xmlns:fx="http://javafx.com/fxml/1" 
@@ -91,13 +92,9 @@
                 </children> 
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
-                <padding>
-                    <Insets right="30" /> 
-                </padding>
-                <children>
-                    <Button fx:id="ok" styleClass="middle" text="%ok" onAction="#saveClient" /> 
-                    <Button fx:id="cancel" styleClass="middle" text="%cancel" onAction="#cancel"  />
-                </children>
+                <OkayCancel
+                    onOkay="#okay" 
+                    onCancel="#cancel" />
             </HBox>
         </children>
     </VBox>

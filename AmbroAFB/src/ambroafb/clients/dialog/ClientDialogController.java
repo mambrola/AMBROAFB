@@ -24,6 +24,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -43,8 +44,8 @@ public class ClientDialogController implements Initializable {
     private Consumer<Client> onCreate;
     private Consumer<Void> onCancell;
 
-//    @FXML
-////    VBox formPane;
+    @FXML
+    VBox formPane;
     @FXML
     private Label first_name, last_name;
     @FXML
@@ -83,23 +84,7 @@ public class ClientDialogController implements Initializable {
         Country.dbGetCountries("").values().stream().forEach((c) -> {
             country.getItems().add(c.getFullDescrip());
         });
-//        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-//        focusTraversableNodes.stream().filter((node) -> node.getClass().equals(TextField.class)).forEach((node) -> {
-//            TextField field = (TextField) node;
-//
-//            field.focusedProperty().addListener((observable, oldValue, newValue) -> {
-//                if (!oldValue && newValue) {
-//                    node.getProperties().put("backupValue", ((TextField) node).getText());
-//                }
-//            });
-//            field.setOnKeyPressed((KeyEvent keyEvent) -> {
-//                if (keyEvent.getCode() == KeyCode.ENTER) {
-//                    node.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.TAB, false, false, false, false));
-//                } else if (keyEvent.getCode() == KeyCode.ESCAPE) {
-//                    ((TextField) node).setText((String) node.getProperties().get("backupValue"));
-//                }
-//            });
-//        });
+        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
     }
 
     @FXML
@@ -127,11 +112,18 @@ public class ClientDialogController implements Initializable {
 
     @FXML
     private void cancel() {
-        if (onCancell != null) {
-            onCancell.accept(null);
-        }
+        
+        System.out.println("CCCCCCCCCCCCCCCCCCanceled");
+//        if (onCancell != null) {
+//            onCancell.accept(null);
+//        }
     }
 
+    @FXML
+    private void okay() {
+        System.out.println("OOOOOOOOOOOOOOOOOOkaied");
+    }
+    
     public void onCreate(Consumer<Client> callback) {
         onCreate = callback;
     }
@@ -142,6 +134,9 @@ public class ClientDialogController implements Initializable {
 
     public void setDisabled() {
         focusTraversableNodes.forEach((Node t) -> {
+//            if(TextInputControl.class.isAssignableFrom(t.getClass()))
+//                ((TextInputControl) t).setEditable(false);
+
             t.setDisable(true);
         });
         phone.setEditable(false);
