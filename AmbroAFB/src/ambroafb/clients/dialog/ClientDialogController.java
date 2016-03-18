@@ -43,8 +43,8 @@ public class ClientDialogController implements Initializable {
     private Consumer<Client> onCreate;
     private Consumer<Void> onCancell;
 
-    @FXML
-    VBox formPane;
+//    @FXML
+////    VBox formPane;
     @FXML
     private Label first_name, last_name;
     @FXML
@@ -83,23 +83,23 @@ public class ClientDialogController implements Initializable {
         Country.dbGetCountries("").values().stream().forEach((c) -> {
             country.getItems().add(c.getFullDescrip());
         });
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        focusTraversableNodes.stream().filter((node) -> node.getClass().equals(TextField.class)).forEach((node) -> {
-            TextField field = (TextField) node;
-
-            field.focusedProperty().addListener((observable, oldValue, newValue) -> {
-                if (!oldValue && newValue) {
-                    node.getProperties().put("backupValue", ((TextField) node).getText());
-                }
-            });
-            field.setOnKeyPressed((KeyEvent keyEvent) -> {
-                if (keyEvent.getCode() == KeyCode.ENTER) {
-                    node.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.TAB, false, false, false, false));
-                } else if (keyEvent.getCode() == KeyCode.ESCAPE) {
-                    ((TextField) node).setText((String) node.getProperties().get("backupValue"));
-                }
-            });
-        });
+//        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+//        focusTraversableNodes.stream().filter((node) -> node.getClass().equals(TextField.class)).forEach((node) -> {
+//            TextField field = (TextField) node;
+//
+//            field.focusedProperty().addListener((observable, oldValue, newValue) -> {
+//                if (!oldValue && newValue) {
+//                    node.getProperties().put("backupValue", ((TextField) node).getText());
+//                }
+//            });
+//            field.setOnKeyPressed((KeyEvent keyEvent) -> {
+//                if (keyEvent.getCode() == KeyCode.ENTER) {
+//                    node.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.TAB, false, false, false, false));
+//                } else if (keyEvent.getCode() == KeyCode.ESCAPE) {
+//                    ((TextField) node).setText((String) node.getProperties().get("backupValue"));
+//                }
+//            });
+//        });
     }
 
     @FXML
