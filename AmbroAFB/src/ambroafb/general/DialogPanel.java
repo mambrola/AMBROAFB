@@ -22,12 +22,12 @@ import javafx.scene.layout.Pane;
  *
  * @author tabramishvili
  */
-public class Panel extends Pane {
+public class DialogPanel extends Pane {
 
     public final Object MARKED_NODE_KEY = new Object();
-    public final Object BACKUP_VALUE_KEY = new Object();
+    public final Object BACKUP_VALUE_KEY = new Object();                    
 
-    public Panel() {
+    public DialogPanel() {
         getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
             customizeChildren();
         });

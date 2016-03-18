@@ -10,11 +10,11 @@
 <?import javafx.geometry.*?>
 <?import ambro.* ?>
 
-<ambroafb.general.Panel stylesheets="/ambroafb/clients/dialog/clientdialog.css" 
+<ambroafb.general.DialogPanel stylesheets="/ambroafb/clients/dialog/clientdialog.css" 
                         xmlns:fx="http://javafx.com/fxml/1" 
                         xmlns="http://javafx.com/javafx/8" 
                         fx:controller="ambroafb.clients.dialog.ClientDialogController">
-    <VBox     fx:id="formPane">
+    <VBox fx:id="formPane">
         <children>
             <VBox>
                 <children>
@@ -101,4 +101,4 @@
             </HBox>
         </children>
     </VBox>
-</ambroafb.general.Panel>
+</ambroafb.general.DialogPanel>
