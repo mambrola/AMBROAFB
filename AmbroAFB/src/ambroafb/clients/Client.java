@@ -13,6 +13,7 @@ import java.util.HashMap;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -299,5 +300,42 @@ public class Client {
             };
         }
         
+    }
+    
+    public static class PhoneNumber{
+        
+        private int id;
+        private final StringProperty number = new SimpleStringProperty();
+
+        public PhoneNumber(){}
+        public PhoneNumber(int id, String number){
+            this.id = id;
+            this.number.set(number);
+        }
+        
+        public PhoneNumber(String number){
+            this.number.set(number);
+        }
+        
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+        
+        public String getNumber() {
+            return number.get();
+        }
+
+        public void setNumber(String value) {
+            number.set(value);
+        }
+
+        public StringProperty numberProperty() {
+            return number;
+        }
+
     }
 }
