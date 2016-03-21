@@ -95,8 +95,11 @@ public class ClientsController implements Initializable {
     
     @FXML
     private void refresh(ActionEvent e) {
-        table.getItems().clear();
-        asignTable();
+        
+        table.getItems().get(0).setEmail("ccccccc");
+
+        //table.getItems().clear();
+        //asignTable();
     }
 
     /**

@@ -18,6 +18,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
@@ -52,16 +53,18 @@ public class Client {
 
     private SimpleStringProperty country_code;
 
-    @AView.Column(title = "%country", width = "80")
+    @AView.Column(title = "%country", width = "80") 
     private SimpleStringProperty country;
 
     @AView.Column(title = "%id_number", width = "100")
     private SimpleStringProperty IDNumber;
 
-    private ArrayList<String> phoneList;
+    private SimpleStringProperty phoneIds;      // ეს ჩაემატა აქ და კიდევ ერთ ადგილას, ჩასამატებელია ყველგან
 
     @AView.Column(title = "%phones", width = "300")
     private SimpleStringProperty phones;
+    
+    private ArrayList<PhoneNumber> phoneList;
 
     @AView.Column(title = "%fax", width = "80")
     private SimpleStringProperty fax;
@@ -80,13 +83,22 @@ public class Client {
         country_code =  new SimpleStringProperty();
         country =       new SimpleStringProperty();
         IDNumber =      new SimpleStringProperty();
-        phoneList =     new ArrayList<>();
+        phoneIds =      new SimpleStringProperty();
         phones =        new SimpleStringProperty();
+        phoneList =     new ArrayList<>();
+        
         fax =           new SimpleStringProperty();
         phones.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             phoneList.clear();
             if (newValue != null) {
-                phoneList.addAll(Arrays.asList(newValue.split(", ")));
+                for(String phone : Arrays.asList(newValue.split(", ")))
+                {
+                    phoneList.add(new PhoneNumber(5, phone));  //აქ გასარკვევია და გასაანალიზებელი, შეიძლება თოკა დაგვჭირდეს!
+                }
+                
+                
+                
+                
             }
         });
     }
@@ -168,106 +180,6 @@ public class Client {
     public final void setPhones(        String phones)              { this.phones.set(phones.replaceAll(":;:", ",  "));}
     public final void setFax(           String fax)                 { this.fax.set(fax);}
     
-//    public void setFullAddress(String fullAddress) {
-//        this.fullAddress.set(fullAddress);
-//    }
-    
-    
-    
-    public SimpleBooleanProperty isRezProperty() {
-        return isRez;
-    }
-
-    
-
-    
-    public SimpleStringProperty firstNameProperty() {
-        return firstName;
-    }
-
-    
-
-    
-
-    public SimpleStringProperty lastNameProperty() {
-        return lastName;
-    }
-
-    
-    
-    public StringExpression descripProperty() {
-        return descrip;
-    }
-
-    
-    public SimpleStringProperty emailProperty() { return email;}
-
-    
-
-    
-    public SimpleStringProperty addressProperty() {
-        return address;
-    }
-
-    
-
-    
-    public SimpleStringProperty zipCodeProperty() {
-        return zipCode;
-    }
-
-    
-
-    
-    public SimpleStringProperty cityProperty() {
-        return city;
-    }
-
-    
-
-    
-    public StringExpression fullAddressProperty() {
-        return fullAddress;
-    }
-
-    
-
-    public SimpleStringProperty country_codeProperty() {
-        return country_code;
-    }
-
-
-    
-    public SimpleStringProperty countryProperty() {
-        return country;
-    }
-
-    
-    
-    public SimpleStringProperty IDNumberProperty() {
-        return IDNumber;
-    }
-
-    
-
-    
-
-    
-    
-    public SimpleStringProperty phonesProperty() {
-        return phones;
-    }
-
-
-    
-    public SimpleStringProperty faxProperty() {
-        return fax;
-    }
-
-    
-
-    
-
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 
         @Override
