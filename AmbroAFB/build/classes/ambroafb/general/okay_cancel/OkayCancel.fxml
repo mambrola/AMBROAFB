@@ -13,7 +13,7 @@
 <fx:root type="javafx.scene.layout.HBox" 
          alignment="CENTER_RIGHT" 
          spacing="50.0" 
-         stylesheets="/ambroafb/general/okay_cancel/okaycancel.css" 
+         stylesheets="/styles/css/okaycancel.css" 
          xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <Button fx:id="okay" styleClass="middle" text="OK" >

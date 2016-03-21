@@ -11,7 +11,10 @@
 <?import javafx.collections.*?>
 <?import javafx.scene.image.* ?>
 
-<AnchorPane prefHeight="300.0" prefWidth="700.0" stylesheets="/ambroafb/configuration/configuration.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.configuration.ConfigurationController">
+<AnchorPane fx:id="formPane"  
+            stylesheets="/styles/css/configuration.css" 
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="ambroafb.configuration.ConfigurationController">
     <children>
         <HBox alignment="CENTER_LEFT" spacing="5.0" styleClass="menu-bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>

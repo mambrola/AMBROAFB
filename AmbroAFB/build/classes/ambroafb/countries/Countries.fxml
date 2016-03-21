@@ -12,7 +12,10 @@
 <?import ambro.* ?>
 
 
-<BorderPane id="clientsPane" stylesheets="/ambroafb/countries/countries.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.countries.CountriesController">
+<BorderPane fx:id="formPane" 
+            stylesheets="/styles/css/countries.css" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="ambroafb.countries.CountriesController">
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="menu-bar" >
             <children>

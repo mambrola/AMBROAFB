@@ -13,7 +13,10 @@
 <?import ambroafb.general.editor_panel.*?>
 
 
-<BorderPane id="formPane" stylesheets="/ambroafb/clients/clients.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.clients.ClientsController">
+<BorderPane id="formPane" 
+            stylesheets="/styles/css/clients.css" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="ambroafb.clients.ClientsController">
     <top>
         <EditorPanel fx:id="panel"
             onDelete="#delete" 

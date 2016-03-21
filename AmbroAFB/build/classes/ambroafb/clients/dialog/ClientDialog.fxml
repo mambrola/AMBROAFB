@@ -11,7 +11,7 @@
 <?import ambro.* ?>
 <?import ambroafb.general.okay_cancel.* ?>
 
-<ambroafb.general.DialogPanel stylesheets="/ambroafb/clients/dialog/clientdialog.css" 
+<ambroafb.general.DialogPanel stylesheets="/styles/css/clientdialog.css" 
                         xmlns:fx="http://javafx.com/fxml/1" 
                         xmlns="http://javafx.com/javafx/8" 
                         fx:controller="ambroafb.clients.dialog.ClientDialogController">

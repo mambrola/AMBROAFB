@@ -3,7 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 
-<Button onAction = "#goBack" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.general.back_button.BackButtonController">
+<Button onAction = "#goBack" 
+        xmlns:fx="http://javafx.com/fxml/1" 
+        fx:controller="ambroafb.general.back_button.BackButtonController">
     <tooltip>
         <Tooltip text="%back"/>
     </tooltip>

@@ -10,7 +10,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root type="javafx.scene.layout.HBox" alignment="CENTER_LEFT" spacing="20.0" stylesheets="/ambroafb/general/editor_panel/editorpanel.css" styleClass="menu-bar" xmlns:fx="http://javafx.com/fxml/1" >
+<fx:root type="javafx.scene.layout.HBox" 
+         alignment="CENTER_LEFT" 
+         spacing="20.0" 
+         stylesheets="/styles/css/editorpanel.css" 
+         styleClass="menu-bar" 
+         xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <fx:include fx:id="exit" source="/ambroafb/general/exit_button/ExitButton.fxml"/>
         <Button fx:id="delete">

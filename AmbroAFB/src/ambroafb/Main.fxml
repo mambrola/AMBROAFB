@@ -8,7 +8,11 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
 
-<AnchorPane prefHeight="750" prefWidth="1260" stylesheets="/ambroafb/main.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="ambroafb.MainController">
+<AnchorPane fx:id="formPane" 
+            stylesheets="/styles/css/main.css" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            xmlns="http://javafx.com/javafx/8" 
+            fx:controller="ambroafb.MainController">
     <children>
         <MenuBar prefWidth="1500.0">
             <menus>

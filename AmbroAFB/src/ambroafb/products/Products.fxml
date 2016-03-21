@@ -13,7 +13,7 @@
 <?import ambroafb.general.editor_panel.*?>
 
 <BorderPane id="formPane" 
-            stylesheets="/ambroafb/products/products.css" 
+            stylesheets="/styles/css/products.css" 
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="ambroafb.products.ProductsController">
     <top>

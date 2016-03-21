@@ -11,7 +11,7 @@
 <?import ambro.* ?>
 
 <GridPane 
-    stylesheets="/ambroafb/auto_dealers/autodealers.css"  
+    stylesheets="/styles/css/autodealers.css"  
     fx:controller="ambroafb.auto_dealers.AutoDealersController" 
     xmlns:fx="http://javafx.com/fxml/1" 
     gridLinesVisible="true" >
