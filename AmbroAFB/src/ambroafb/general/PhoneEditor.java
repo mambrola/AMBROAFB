@@ -5,12 +5,15 @@
  */
 package ambroafb.general;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.SelectionModel;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -27,25 +30,39 @@ public class PhoneEditor<T> extends ComboBox<T> {
     public PhoneEditor() {
         getItems().addListener((ListChangeListener.Change<? extends T> c) -> {
             itemsSize.set(getItems().size());
-            if (!isFocused()) {
-                getSelectionModel().selectFirst();
-            }
-        });
-
-        ChangeListener<Number> unselectable = (ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             getSelectionModel().selectFirst();
-        };
-        
-        getSelectionModel().selectedIndexProperty().addListener(unselectable);
+        });
+        SingleSelectionModel<T> currentSelection = getSelectionModel();
+
         editableProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (newValue){
-                getSelectionModel().selectedIndexProperty().removeListener(unselectable);
-            }else{
-                getSelectionModel().selectedIndexProperty().addListener(unselectable);
+            if (newValue) {
+                setSelectionModel(currentSelection);
+                Object val = getProperties().get("_firstItem");
+                if (val != null) {
+                    getItems().add(0, (T) val);
+                }
+            } else {
+                T val = getItems().size() > 0 ? getItems().get(0) : null;
+                if (val != null) {
+                    getProperties().put("_firstItem", val);
+                }
+                setSelectionModel(new SingleSelectionModel<T>() {
+                    @Override
+                    protected T getModelItem(int index) {
+                        return val;
+                    }
+
+                    @Override
+                    protected int getItemCount() {
+                        return 1;
+                    }
+                });
+                getItems().remove(0);
             }
         });
 
-        disableProperty().bind(editableProperty().not().and(itemsSize.lessThanOrEqualTo(1)));
+        BooleanBinding forDisable = editableProperty().not().and(itemsSize.lessThanOrEqualTo(0));
+        disableProperty().bind(forDisable);
 
         focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (!newValue) {
@@ -69,6 +86,7 @@ public class PhoneEditor<T> extends ComboBox<T> {
                         if (text != null && !text.isEmpty()) {
                             getItems().add(index, newVal);
                         }
+                        event.consume();
                     }
                 } else {
                     String text = getEditor().getText();
@@ -76,6 +94,7 @@ public class PhoneEditor<T> extends ComboBox<T> {
                         getItems().add(getConverter().fromString(text));
                         getSelectionModel().select(-1);
                         getEditor().setText("");
+                        event.consume();
                     }
                 }
             } else if (event.getCode().equals(KeyCode.DOWN)) {
@@ -83,7 +102,7 @@ public class PhoneEditor<T> extends ComboBox<T> {
                 show();
             }
         });
-        
+
     }
 
 }
