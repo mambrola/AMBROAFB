@@ -6,6 +6,7 @@
 package ambroafb.clients;
 
 import ambro.AView;
+import ambroafb.general.Editable;
 import ambroafb.general.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -302,7 +303,7 @@ public class Client {
         
     }
     
-    public static class PhoneNumber{
+    public static class PhoneNumber implements Editable<String>{
         
         private int id;
         private final StringProperty number = new SimpleStringProperty();
@@ -335,6 +336,11 @@ public class Client {
 
         public StringProperty numberProperty() {
             return number;
+        }
+
+        @Override
+        public void edit(String param) {
+            setNumber(param);
         }
 
     }
