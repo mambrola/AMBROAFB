@@ -12,7 +12,10 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.Pane;
 
 /**
  * FXML Controller class
@@ -29,7 +32,17 @@ public class ClientsController implements Initializable {
 
     @FXML
     private void delete(ActionEvent e) {
-        System.out.println("passed: Delete");
+        Client client = table.getSelectionModel().getSelectedItem();
+        ClientDialog dialog = new ClientDialog(client);
+        dialog.setDisabled();
+        dialog.askClose(false);
+        
+        ((Button)dialog.getScene().getRoot().lookup("#okay")).setText("Delete");
+        dialog.getScene().getRoot().lookup("#okay").setDisable(false);
+        dialog.getScene().getRoot().lookup("#cancel").setDisable(false);
+        
+        dialog.showAndWait();
+        
     }
 
     @FXML

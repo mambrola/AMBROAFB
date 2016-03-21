@@ -93,7 +93,7 @@
                 </children> 
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
-                <OkayCancel
+                <OkayCancel fx:id="okayCancel"
                     onOkay="#okay" 
                     onCancel="#cancel" />
             </HBox>
