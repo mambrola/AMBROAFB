@@ -37,20 +37,20 @@ public class Client {
 
     private SimpleStringProperty firstName, lastName;
 
-    @AView.Column(title = "%descrip", width = "120")
+    @AView.Column(title = "%descrip", width = "152")
     private StringExpression descrip;
 
-    @AView.Column(title = "%email", width = "150")
+    @AView.Column(title = "%email", width = "170")
     private SimpleStringProperty email;
 
     private SimpleStringProperty address, zipCode, city;
 
-    @AView.Column(title = "%full_address", width = "200")
+    @AView.Column(title = "%full_address", width = "270")
     private StringExpression fullAddress;
 
     private SimpleStringProperty country_code;
 
-    @AView.Column(title = "%country", width = "70")
+    @AView.Column(title = "%country", width = "80")
     private SimpleStringProperty country;
 
     @AView.Column(title = "%id_number", width = "100")
@@ -61,7 +61,7 @@ public class Client {
     @AView.Column(title = "%phones", width = "300")
     private SimpleStringProperty phones;
 
-    @AView.Column(title = "%fax")
+    @AView.Column(title = "%fax", width = "80")
     private SimpleStringProperty fax;
 
     public Client() {
