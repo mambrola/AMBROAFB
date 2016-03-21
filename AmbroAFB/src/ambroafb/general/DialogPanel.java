@@ -25,7 +25,7 @@ import javafx.scene.layout.Pane;
 public class DialogPanel extends Pane {
 
     public final Object MARKED_NODE_KEY = new Object();
-    public final Object BACKUP_VALUE_KEY = new Object();                    
+    public final Object BACKUP_VALUE_KEY = new Object();
 
     public DialogPanel() {
         getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
@@ -51,16 +51,22 @@ public class DialogPanel extends Pane {
             });
             field.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
                 if (event.getCode().equals(KeyCode.ESCAPE)) {
-                    field.setText((String) node.getProperties().get(BACKUP_VALUE_KEY));
-                    field.positionCaret(field.getText().length() - 1);
-                    field.selectAll();
+                    String backupValue = (String) node.getProperties().get(BACKUP_VALUE_KEY);
+                    if (backupValue != null) {
+                        field.setText(backupValue);
+                        int index = field.getText().length() - 1;
+                        if (index >= 0) {
+                            field.positionCaret(index);
+                            field.selectAll();
+                        }
+                    }
                 }
             });
         } else if (node.getClass().equals(Button.class)) {
             node.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
                 if (event.getCode().equals(KeyCode.SPACE)) {
                     event.consume();
-                } 
+                }
             });
         }
         node.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {

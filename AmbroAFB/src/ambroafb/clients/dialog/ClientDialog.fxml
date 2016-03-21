@@ -10,6 +10,7 @@
 <?import javafx.geometry.*?>
 <?import ambro.* ?>
 <?import ambroafb.general.okay_cancel.* ?>
+<?import ambroafb.general.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/clientdialog.css" 
                         xmlns:fx="http://javafx.com/fxml/1" 
@@ -53,7 +54,7 @@
                     </VBox >
                     <VBox >
                         <Label text="%phones" /> 
-                        <ComboBox fx:id="phone" editable="true"/>
+                        <PhoneEditor fx:id="phone" editable="true"/>
                     </VBox >
                     <VBox >
                         <Label text="%fax" /> 

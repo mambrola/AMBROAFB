@@ -84,7 +84,7 @@ public class Client {
         phones.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             phoneList.clear();
             if (newValue != null) {
-                phoneList.addAll(Arrays.asList(newValue.split(":;:")));
+                phoneList.addAll(Arrays.asList(newValue.split(", ")));
             }
         });
     }

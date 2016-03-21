@@ -112,7 +112,7 @@ public class ClientDialogController implements Initializable {
 
     @FXML
     private void cancel() {
-        
+
         System.out.println("CCCCCCCCCCCCCCCCCCanceled");
 //        if (onCancell != null) {
 //            onCancell.accept(null);
@@ -123,7 +123,7 @@ public class ClientDialogController implements Initializable {
     private void okay() {
         System.out.println("OOOOOOOOOOOOOOOOOOkaied");
     }
-    
+
     public void onCreate(Consumer<Client> callback) {
         onCreate = callback;
     }
@@ -134,13 +134,11 @@ public class ClientDialogController implements Initializable {
 
     public void setDisabled() {
         focusTraversableNodes.forEach((Node t) -> {
-//            if(TextInputControl.class.isAssignableFrom(t.getClass()))
-//                ((TextInputControl) t).setEditable(false);
-
-            t.setDisable(true);
+            if (t != phone) {
+                t.setDisable(true);
+            }
         });
         phone.setEditable(false);
-        phone.setDisable(false);
     }
 
     public void setClient(Client client) {
