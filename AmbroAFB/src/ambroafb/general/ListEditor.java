@@ -64,6 +64,7 @@ public class ListEditor<T extends Editable<String>> extends ComboBox<T> {
                         return 1;
                     }
                 });
+                setValue(val);
                 getItems().remove(0);
             }
         });

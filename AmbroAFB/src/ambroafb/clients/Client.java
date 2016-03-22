@@ -10,14 +10,14 @@ import ambroafb.general.Editable;
 import ambroafb.general.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.concurrent.Callable;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -30,14 +30,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author mambroladze
  */
-public class Client {
+public final class Client {
 
     // ვინაიდან ეს მხოლოდ ჩვენებაა და თვითო tableView-ს ველში არ ხდება ჩასწორება Property-ები არ გვჭირდება
     public int clientId;
@@ -61,17 +59,14 @@ public class Client {
     @AView.Column(title = "%full_address", width = "270")
     private StringExpression fullAddress;
 
-    private SimpleStringProperty country;
+    private ObjectProperty<Country> country;
 
-    private SimpleStringProperty countryCode;
-
+//    private SimpleStringProperty countryCode;
     @AView.Column(title = "%country", width = "80")
     private SimpleStringProperty countryDescrip;
 
     @AView.Column(title = "%id_number", width = "100")
     private SimpleStringProperty IDNumber;
-
-    private SimpleStringProperty phones;
 
     @AView.Column(title = "%phones", width = "300")
     private SimpleStringProperty phoneNumbers;
@@ -92,46 +87,22 @@ public class Client {
         zipCode = new SimpleStringProperty();
         city = new SimpleStringProperty();
         fullAddress = address.concat(", ").concat(zipCode).concat(", ").concat(city);
-        country = new SimpleStringProperty();
-        countryCode = new SimpleStringProperty();
+        country = new SimpleObjectProperty<>();
         countryDescrip = new SimpleStringProperty();
         IDNumber = new SimpleStringProperty();
-        phones = new SimpleStringProperty();
-        phoneNumbers = new SimpleStringProperty();
         phoneList = FXCollections.observableArrayList();
-
+        phoneNumbers = new SimpleStringProperty();
         fax = new SimpleStringProperty();
-        phones.addListener((ObservableValue<? extends String> o, String oldValue, String newValue) -> {
-            phoneList.clear();
-            phoneNumbers.set("");
-            if (newValue != null && newValue.length() > 0) {
-                String str = "";
-                for (String phone : Arrays.asList(newValue.split(":;:"))) {
-                    String ph[] = phone.split(";:;");
-                    phoneList.add(new PhoneNumber(Integer.parseInt(ph[0]), ph[1]));
-                    str = str + ", " + ph[1];
-                }
-                phoneNumbers.set(str.substring(2));
-            }
-        });
-//        phoneList.addListener((ListChangeListener.Change<? extends PhoneNumber> c) -> {
-//            String newPhones = phoneList.stream()
-//                    .map((PhoneNumber t) -> t.getId() + ";:;" + t.getNumber())
-//                    .reduce("", (String t, String u) -> t + (t.isEmpty() ? "" : ":;:") + u);
-//            System.out.println("new Phones: " + newPhones);
-//            phones.set(newPhones);
-//        });
 
-        country.addListener((ObservableValue<? extends String> o, String oldValue, String newValue) -> {
-            countryCode.set("");
-            countryDescrip.set("");
-            if (newValue != null && newValue.length() > 0) {
-                String cntr[] = newValue.split(";:;");
-                countryCode.set(cntr[0]);
-                countryDescrip.set(cntr[1]);
-            }
+        phoneList.addListener((ListChangeListener.Change<? extends PhoneNumber> c) -> {
+            rebindPhoneNumbers();
         });
+        rebindPhoneNumbers();
 
+        country.addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
+            rebindCountry();
+        });
+        rebindCountry();
     }
 
     public Client(Object[] values) {
@@ -146,9 +117,9 @@ public class Client {
         setAddress(Utils.avoidNullAndReturnString(values[6]));
         setZipCode(Utils.avoidNullAndReturnString(values[7]));
         setCity(Utils.avoidNullAndReturnString(values[8]));
-        setCountry(Utils.avoidNullAndReturnString(values[9]));
+        setCountry((Country) values[9]);
         setIDNumber(Utils.avoidNullAndReturnString(values[10]));
-        setPhones(Utils.avoidNullAndReturnString(values[11]));
+        getPhoneList().setAll((Collection<PhoneNumber>) values[11]);
         setFax(Utils.avoidNullAndReturnString(values[12]));
     }
 
@@ -176,8 +147,35 @@ public class Client {
         setCity(other.getCity());
         setCountry(other.getCountry());
         setIDNumber(other.getIDNumber());
-        setPhones(other.getPhones());
+        getPhoneList().setAll(
+                other.getPhoneList()
+                .stream()
+                .map((PhoneNumber t) -> new PhoneNumber(t.getId(), t.getNumber()))
+                .collect(Collectors.toList())
+        );
         setFax(other.getFax());
+    }
+
+    private void rebindPhoneNumbers() {
+        phoneNumbers.unbind();
+        phoneNumbers.bind(phoneList
+                .stream()
+                .map(PhoneNumber::numberProperty)
+                .reduce(new SimpleStringProperty(""), (StringProperty t, StringProperty u) -> {
+                    SimpleStringProperty p = new SimpleStringProperty();
+                    p.bind(
+                            t.concat(
+                                    Bindings.createStringBinding(() -> t.get().isEmpty() ? "" : ", ", t.isEmpty())
+                            ).concat(u));
+                    return p;
+                }));
+    }
+
+    private void rebindCountry() {
+        countryDescrip.unbind();
+        if (country.get() != null) {
+            countryDescrip.bind(country.get().codeProperty().concat("   ").concat(country.get().nameProperty()));
+        }
     }
 
     @Override
@@ -197,9 +195,34 @@ public class Client {
 
             System.out.println("row: " + row[12]);
 
+            String phones = row[11] == null ? "" : row[11].toString();
+            row[11] = dbStringToPhones(phones);
+
+            row[9] = dbStringToCountry(row[9] == null ? "" : row[9].toString());
+
             clients.put((int) row[0], new Client(row));
         });
         return clients;
+    }
+
+    private static Collection<PhoneNumber> dbStringToPhones(String phones) {
+        ArrayList<PhoneNumber> list = new ArrayList<>();
+        if (phones == null || phones.isEmpty()) {
+            return list;
+        }
+        for (String phone : Arrays.asList(phones.split(":;:"))) {
+            String ph[] = phone.split(";:;");
+            list.add(new PhoneNumber(Integer.parseInt(ph[0]), ph[1]));
+        }
+        return list;
+    }
+
+    private static Country dbStringToCountry(String c) {
+        if (c == null || c.isEmpty()) {
+            return null;
+        }
+        String cntr[] = c.split(";:;");
+        return new Country(cntr[0], cntr[1]);
     }
 
     public SimpleBooleanProperty isJurProperty() {
@@ -242,11 +265,7 @@ public class Client {
         return fullAddress;
     }
 
-    public SimpleStringProperty country_codeProperty() {
-        return countryCode;
-    }
-
-    public SimpleStringProperty countryProperty() {
+    public ObjectProperty<Country> countryProperty() {
         return country;
     }
 
@@ -254,8 +273,8 @@ public class Client {
         return IDNumber;
     }
 
-    public SimpleStringProperty phonesProperty() {
-        return phones;
+    public StringExpression phoneNumbersProperty() {
+        return phoneNumbers;
     }
 
     public SimpleStringProperty faxProperty() {
@@ -294,16 +313,12 @@ public class Client {
         return fullAddress.get();
     }
 
-    public String getCountry() {
+    public Country getCountry() {
         return country.get();
     }
 
     public ObservableList<PhoneNumber> getPhoneList() {
         return phoneList;
-    }
-
-    public String getPhones() {
-        return phones.get();
     }
 
     public String getPhoneNumbers() {
@@ -358,7 +373,7 @@ public class Client {
         this.city.set(city);
     }
 
-    public final void setCountry(String country) {
+    public final void setCountry(Country country) {
         this.country.set(country);
     }
 
@@ -368,14 +383,6 @@ public class Client {
 
     public final void setPhoneList(ObservableList<PhoneNumber> phoneList) {
         this.phoneList = phoneList;
-    }
-
-    public final void setPhones(String phones) {
-        this.phones.set(phones);
-    }
-
-    public final void setPhoneNumbers(String phoneNumbers) {
-        this.phoneNumbers.set(phoneNumbers);
     }
 
     public final void setFax(String fax) {
@@ -469,5 +476,57 @@ public class Client {
             return "PhoneNumber{" + "id=" + id + ", number=" + number + '}';
         }
 
+    }
+
+    public static class Country {
+
+        private int id;
+        private final StringProperty code = new SimpleStringProperty();
+        private final StringProperty name = new SimpleStringProperty();
+
+        public Country() {
+        }
+
+        public Country(int id, String code, String name) {
+            this(code, name);
+            this.id = id;
+        }
+
+        public Country(String code, String name) {
+            this.code.set(code);
+            this.name.set(name);
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getCode() {
+            return code.get();
+        }
+
+        public void setCode(String value) {
+            code.set(value);
+        }
+
+        public StringProperty codeProperty() {
+            return code;
+        }
+
+        public String getName() {
+            return name.get();
+        }
+
+        public void setName(String value) {
+            name.set(value);
+        }
+
+        public StringProperty nameProperty() {
+            return name;
+        }
     }
 }

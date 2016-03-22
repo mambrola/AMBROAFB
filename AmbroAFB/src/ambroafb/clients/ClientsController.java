@@ -58,7 +58,7 @@ public class ClientsController implements Initializable {
             System.out.println("dialog is cancelled");
         } else {
             System.out.println("changed client: " + editedClient);
-            System.out.println("phones = "+editedClient.getPhones());
+            System.out.println("phones = "+editedClient.getPhoneNumbers());
         }
     }
 

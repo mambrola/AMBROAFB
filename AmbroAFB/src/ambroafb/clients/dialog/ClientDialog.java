@@ -60,7 +60,7 @@ public class ClientDialog extends Stage implements Initializable {
     @FXML
     TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
     @FXML
-    ComboBox country;
+    ComboBox<Client.Country> country;
     @FXML
     ListEditor<Client.PhoneNumber> phone;
     @FXML
@@ -162,8 +162,20 @@ public class ClientDialog extends Stage implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        country.setConverter(new StringConverter<Client.Country>() {
+
+            @Override
+            public String toString(Client.Country object) {
+                return object.getCode()+"   "+object.getName();
+            }
+
+            @Override
+            public Client.Country fromString(String string) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
         Country.dbGetCountries("").values().stream().forEach((c) -> {
-            country.getItems().add(c.getFullDescrip());
+            country.getItems().add(new Client.Country(c.countryCode, c.getDescrip()));
         });
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         phone.setConverter(new StringConverter<Client.PhoneNumber>() {
@@ -207,7 +219,7 @@ public class ClientDialog extends Stage implements Initializable {
             zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
             city.textProperty().bindBidirectional(client.cityProperty());
             country.valueProperty().bindBidirectional(client.countryProperty());
-            phone.setItems(client.getPhoneList());
+            phone.getItems().setAll(client.getPhoneList());
         }
     }
 
