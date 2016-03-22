@@ -49,12 +49,16 @@ public class ClientsController implements Initializable {
     private void edit(ActionEvent e) {
 
         Client editingClient = table.getSelectionModel().getSelectedItem();
+        Client backup = editingClient.cloneWithID();
+        
         ClientDialog dialog = new ClientDialog(editingClient);
-        dialog.showAndWait();
-        if (dialog.isCancelled()) {
+        Client editedClient = dialog.getResult();
+        if (editedClient == null) {
+            editingClient.copyFrom(backup);
             System.out.println("dialog is cancelled");
         } else {
-            System.out.println("changed client: " + dialog.getResult());
+            System.out.println("changed client: " + editedClient);
+            System.out.println("phones = "+editedClient.getPhones());
         }
     }
 
@@ -70,25 +74,24 @@ public class ClientsController implements Initializable {
     @FXML
     private void add(ActionEvent e) {
         ClientDialog dialog = new ClientDialog();
-        dialog.showAndWait();
+        Client newClient = dialog.getResult();
 
-        if (dialog.isCancelled()){
+        if (newClient == null){
             System.out.println("dialog is cancelled addClient");
         }else{
-            System.out.println("changed client: "+dialog.getResult());
+            System.out.println("changed client: "+newClient);
         }
     }
     
     @FXML 
     private void addBySample(ActionEvent e) {
         Client client = table.getSelectionModel().getSelectedItem();
-        ClientDialog dialog = new ClientDialog(client);
-        dialog.resetClient();
-        dialog.showAndWait();
-        if (dialog.isCancelled()){
+        ClientDialog dialog = new ClientDialog(client.cloneWithoutID());
+        Client newClient = dialog.getResult();
+        if (newClient == null){
             System.out.println("dialog is cancelled addBySample");
         }else{
-            System.out.println("changed client: "+dialog.getResult());
+            System.out.println("changed client: "+newClient);
 
         }
     }

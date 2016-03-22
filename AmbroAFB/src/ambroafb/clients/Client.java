@@ -11,17 +11,27 @@ import ambroafb.general.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.Callable;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -52,45 +62,45 @@ public class Client {
     private StringExpression fullAddress;
 
     private SimpleStringProperty country;
-    
+
     private SimpleStringProperty countryCode;
 
-    @AView.Column(title = "%country", width = "80") 
+    @AView.Column(title = "%country", width = "80")
     private SimpleStringProperty countryDescrip;
 
     @AView.Column(title = "%id_number", width = "100")
     private SimpleStringProperty IDNumber;
 
     private SimpleStringProperty phones;
-    
+
     @AView.Column(title = "%phones", width = "300")
     private SimpleStringProperty phoneNumbers;
-    
-    private ArrayList<PhoneNumber> phoneList;
+
+    private ObservableList<PhoneNumber> phoneList;
 
     @AView.Column(title = "%fax", width = "80")
     private SimpleStringProperty fax;
 
     public Client() {
-        isJur =         new SimpleBooleanProperty();
-        isRez =         new SimpleBooleanProperty();
-        firstName =     new SimpleStringProperty();
-        lastName =      new SimpleStringProperty();
+        isJur = new SimpleBooleanProperty();
+        isRez = new SimpleBooleanProperty();
+        firstName = new SimpleStringProperty();
+        lastName = new SimpleStringProperty();
         descrip = firstName.concat(" ").concat(lastName);
-        email =         new SimpleStringProperty();
-        address =       new SimpleStringProperty();
-        zipCode =       new SimpleStringProperty();
-        city =          new SimpleStringProperty();
+        email = new SimpleStringProperty();
+        address = new SimpleStringProperty();
+        zipCode = new SimpleStringProperty();
+        city = new SimpleStringProperty();
         fullAddress = address.concat(", ").concat(zipCode).concat(", ").concat(city);
-        country =       new SimpleStringProperty();
-        countryCode =   new SimpleStringProperty();
-        countryDescrip= new SimpleStringProperty();
-        IDNumber =      new SimpleStringProperty();
-        phones =        new SimpleStringProperty();
-        phoneNumbers =  new SimpleStringProperty();
-        phoneList =     new ArrayList<>();
-        
-        fax =           new SimpleStringProperty();
+        country = new SimpleStringProperty();
+        countryCode = new SimpleStringProperty();
+        countryDescrip = new SimpleStringProperty();
+        IDNumber = new SimpleStringProperty();
+        phones = new SimpleStringProperty();
+        phoneNumbers = new SimpleStringProperty();
+        phoneList = FXCollections.observableArrayList();
+
+        fax = new SimpleStringProperty();
         phones.addListener((ObservableValue<? extends String> o, String oldValue, String newValue) -> {
             phoneList.clear();
             phoneNumbers.set("");
@@ -104,7 +114,14 @@ public class Client {
                 phoneNumbers.set(str.substring(2));
             }
         });
-        
+//        phoneList.addListener((ListChangeListener.Change<? extends PhoneNumber> c) -> {
+//            String newPhones = phoneList.stream()
+//                    .map((PhoneNumber t) -> t.getId() + ";:;" + t.getNumber())
+//                    .reduce("", (String t, String u) -> t + (t.isEmpty() ? "" : ":;:") + u);
+//            System.out.println("new Phones: " + newPhones);
+//            phones.set(newPhones);
+//        });
+
         country.addListener((ObservableValue<? extends String> o, String oldValue, String newValue) -> {
             countryCode.set("");
             countryDescrip.set("");
@@ -114,26 +131,53 @@ public class Client {
                 countryDescrip.set(cntr[1]);
             }
         });
-        
-        
+
     }
 
     public Client(Object[] values) {
         this();
         System.out.println("values: " + Utils.avoidNullAndReturnBoolean(values[1]) + ":" + values[1]);
-        clientId =      Utils.avoidNullAndReturnInt(    values[0]);
-        setIsJur(       Utils.avoidNullAndReturnBoolean(values[1]));
-        setIsRez(       Utils.avoidNullAndReturnBoolean(values[2]));
-        setFirstName(   Utils.avoidNullAndReturnString( values[3]));
-        setLastName(    Utils.avoidNullAndReturnString( values[4]));
-        setEmail(       Utils.avoidNullAndReturnString( values[5]));
-        setAddress(     Utils.avoidNullAndReturnString( values[6]));
-        setZipCode(     Utils.avoidNullAndReturnString( values[7]));
-        setCity(        Utils.avoidNullAndReturnString( values[8]));
-        setCountry(     Utils.avoidNullAndReturnString( values[9]));
-        setIDNumber(    Utils.avoidNullAndReturnString( values[10]));
-        setPhones(      Utils.avoidNullAndReturnString( values[11]));
-        setFax(         Utils.avoidNullAndReturnString( values[12]));
+        clientId = Utils.avoidNullAndReturnInt(values[0]);
+        setIsJur(Utils.avoidNullAndReturnBoolean(values[1]));
+        setIsRez(Utils.avoidNullAndReturnBoolean(values[2]));
+        setFirstName(Utils.avoidNullAndReturnString(values[3]));
+        setLastName(Utils.avoidNullAndReturnString(values[4]));
+        setEmail(Utils.avoidNullAndReturnString(values[5]));
+        setAddress(Utils.avoidNullAndReturnString(values[6]));
+        setZipCode(Utils.avoidNullAndReturnString(values[7]));
+        setCity(Utils.avoidNullAndReturnString(values[8]));
+        setCountry(Utils.avoidNullAndReturnString(values[9]));
+        setIDNumber(Utils.avoidNullAndReturnString(values[10]));
+        setPhones(Utils.avoidNullAndReturnString(values[11]));
+        setFax(Utils.avoidNullAndReturnString(values[12]));
+    }
+
+    public Client cloneWithoutID() {
+        Client clone = new Client();
+        clone.copyFrom(this);
+
+        return clone;
+    }
+
+    public Client cloneWithID() {
+        Client clone = cloneWithoutID();
+        clone.clientId = clientId;
+        return clone;
+    }
+
+    public void copyFrom(Client other) {
+        setIsJur(other.getIsJur());
+        setIsRez(other.getIsRez());
+        setFirstName(other.getFirstName());
+        setLastName(other.getLastName());
+        setEmail(other.getEmail());
+        setAddress(other.getAddress());
+        setZipCode(other.getZipCode());
+        setCity(other.getCity());
+        setCountry(other.getCountry());
+        setIDNumber(other.getIDNumber());
+        setPhones(other.getPhones());
+        setFax(other.getFax());
     }
 
     @Override
@@ -162,38 +206,182 @@ public class Client {
         return isJur;
     }
 
-    public boolean                  getIsJur()          { return isJur.get();}
-    public boolean                  getIsRez()          { return isRez.get();}
-    public String                   getFirstName()      { return firstName.get();}
-    public String                   getLastName()       { return lastName.get();}
-    public String                   getDescrip()        { return descrip.get();}
-    public String                   getEmail()          { return email.get();}
-    public String                   getCity()           { return city.get();}
-    public String                   getFullAddress()    { return fullAddress.get();}
-    public String                   getCountry()        { return country.get();}
-    public ArrayList<PhoneNumber>   getPhoneList()      { return phoneList;}
-    public String                   getPhones()         { return phones.get();}
-    public String                   getPhoneNumbers()   { return phoneNumbers.get();}
-    public String                   getFax()            { return fax.get();}
-    public String                   getAddress()        { return address.get();}
-    public String                   getZipCode()        { return zipCode.get();}
-    public String                   getIDNumber()       { return IDNumber.get();}
+    public SimpleBooleanProperty isRezProperty() {
+        return isRez;
+    }
 
-    public final void setIsJur(         boolean isJur)                      { this.isJur.set(isJur);}
-    public final void setIsRez(         boolean isRez)                      { this.isRez.set(isRez);}
-    public final void setFirstName(     String firstName)                   { this.firstName.set(firstName);}
-    public final void setLastName(      String lastName)                    { this.lastName.set(lastName);}
-    public final void setEmail(         String email)                       { this.email.set(email);}
-    public final void setAddress(       String address)                     { this.address.set(address);}
-    public final void setZipCode(       String zipCode)                     { this.zipCode.set(zipCode);}
-    public final void setCity(          String city)                        { this.city.set(city);}
-    public final void setCountry(       String country)                     { this.country.set(country);}
-    public final void setIDNumber(      String IDNumber)                    { this.IDNumber.set(IDNumber);}
-    public final void setPhoneList(     ArrayList<PhoneNumber> phoneList)   { this.phoneList = phoneList;}
-    public final void setPhones(        String phones)                      { this.phones.set(phones);}
-    public final void setPhoneNumbers(  String phoneNumbers)                { this.phoneNumbers.set(phoneNumbers);}
-    public final void setFax(           String fax)                         { this.fax.set(fax);}
-    
+    public SimpleStringProperty firstNameProperty() {
+        return firstName;
+    }
+
+    public SimpleStringProperty lastNameProperty() {
+        return lastName;
+    }
+
+    public StringExpression descripProperty() {
+        return descrip;
+    }
+
+    public SimpleStringProperty emailProperty() {
+        return email;
+    }
+
+    public SimpleStringProperty addressProperty() {
+        return address;
+    }
+
+    public SimpleStringProperty zipCodeProperty() {
+        return zipCode;
+    }
+
+    public SimpleStringProperty cityProperty() {
+        return city;
+    }
+
+    public StringExpression fullAddressProperty() {
+        return fullAddress;
+    }
+
+    public SimpleStringProperty country_codeProperty() {
+        return countryCode;
+    }
+
+    public SimpleStringProperty countryProperty() {
+        return country;
+    }
+
+    public SimpleStringProperty IDNumberProperty() {
+        return IDNumber;
+    }
+
+    public SimpleStringProperty phonesProperty() {
+        return phones;
+    }
+
+    public SimpleStringProperty faxProperty() {
+        return fax;
+    }
+
+    public boolean getIsJur() {
+        return isJur.get();
+    }
+
+    public boolean getIsRez() {
+        return isRez.get();
+    }
+
+    public String getFirstName() {
+        return firstName.get();
+    }
+
+    public String getLastName() {
+        return lastName.get();
+    }
+
+    public String getDescrip() {
+        return descrip.get();
+    }
+
+    public String getEmail() {
+        return email.get();
+    }
+
+    public String getCity() {
+        return city.get();
+    }
+
+    public String getFullAddress() {
+        return fullAddress.get();
+    }
+
+    public String getCountry() {
+        return country.get();
+    }
+
+    public ObservableList<PhoneNumber> getPhoneList() {
+        return phoneList;
+    }
+
+    public String getPhones() {
+        return phones.get();
+    }
+
+    public String getPhoneNumbers() {
+        return phoneNumbers.get();
+    }
+
+    public String getFax() {
+        return fax.get();
+    }
+
+    public String getAddress() {
+        return address.get();
+    }
+
+    public String getZipCode() {
+        return zipCode.get();
+    }
+
+    public String getIDNumber() {
+        return IDNumber.get();
+    }
+
+    public final void setIsJur(boolean isJur) {
+        this.isJur.set(isJur);
+    }
+
+    public final void setIsRez(boolean isRez) {
+        this.isRez.set(isRez);
+    }
+
+    public final void setFirstName(String firstName) {
+        this.firstName.set(firstName);
+    }
+
+    public final void setLastName(String lastName) {
+        this.lastName.set(lastName);
+    }
+
+    public final void setEmail(String email) {
+        this.email.set(email);
+    }
+
+    public final void setAddress(String address) {
+        this.address.set(address);
+    }
+
+    public final void setZipCode(String zipCode) {
+        this.zipCode.set(zipCode);
+    }
+
+    public final void setCity(String city) {
+        this.city.set(city);
+    }
+
+    public final void setCountry(String country) {
+        this.country.set(country);
+    }
+
+    public final void setIDNumber(String IDNumber) {
+        this.IDNumber.set(IDNumber);
+    }
+
+    public final void setPhoneList(ObservableList<PhoneNumber> phoneList) {
+        this.phoneList = phoneList;
+    }
+
+    public final void setPhones(String phones) {
+        this.phones.set(phones);
+    }
+
+    public final void setPhoneNumbers(String phoneNumbers) {
+        this.phoneNumbers.set(phoneNumbers);
+    }
+
+    public final void setFax(String fax) {
+        this.fax.set(fax);
+    }
+
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 
         @Override
@@ -214,36 +402,38 @@ public class Client {
             return cell;
         }
     }
-    
+
     public static class RezCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 
         @Override
         public TableCell<Client, Boolean> call(TableColumn<Client, Boolean> param) {
-            return new TableCell<Client, Boolean>(){
+            return new TableCell<Client, Boolean>() {
                 @Override
                 public void updateItem(Boolean isFirm, boolean empty) {
-                    setText(empty?null:(isFirm?"Rz":null));
+                    setText(empty ? null : (isFirm ? "Rz" : null));
                 }
             };
         }
-        
+
     }
-    
-    public static class PhoneNumber implements Editable<String>{
-        
+
+    public static class PhoneNumber implements Editable<String> {
+
         private int id;
         private final StringProperty number = new SimpleStringProperty();
 
-        public PhoneNumber(){}
-        public PhoneNumber(int id, String number){
+        public PhoneNumber() {
+        }
+
+        public PhoneNumber(int id, String number) {
             this.id = id;
             this.number.set(number);
         }
-        
-        public PhoneNumber(String number){
+
+        public PhoneNumber(String number) {
             this.number.set(number);
         }
-        
+
         public int getId() {
             return id;
         }
@@ -251,7 +441,7 @@ public class Client {
         public void setId(int id) {
             this.id = id;
         }
-        
+
         public String getNumber() {
             return number.get();
         }
@@ -278,6 +468,6 @@ public class Client {
         public String toString() {
             return "PhoneNumber{" + "id=" + id + ", number=" + number + '}';
         }
-        
+
     }
 }

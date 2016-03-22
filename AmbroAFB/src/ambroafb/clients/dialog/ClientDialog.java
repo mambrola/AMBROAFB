@@ -7,26 +7,65 @@ package ambroafb.clients.dialog;
 
 import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
+import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
+import ambroafb.general.GeneralConfig;
+import ambroafb.general.ListEditor;
 import ambroafb.general.Utils;
+import ambroafb.general.editor_panel.EditorPanel;
+import ambroafb.general.okay_cancel.OkayCancel;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.StringConverter;
 
 /**
  *
  * @author tabramishvili
  */
-public class ClientDialog extends Stage {
+public class ClientDialog extends Stage implements Initializable {
 
-    private ClientDialogController controller;
-    private Client result;
-    private boolean cancelled = true;
+    GeneralConfig conf = GeneralConfig.getInstance();
+    ArrayList<Node> focusTraversableNodes;
+    Client client;
+
+    @FXML
+    VBox formPane;
+    @FXML
+    private Label first_name, last_name;
+    @FXML
+    DatePicker openDate;
+    @FXML
+    CheckBox juridical, rezident;
+    @FXML
+    TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
+    @FXML
+    ComboBox country;
+    @FXML
+    ListEditor<Client.PhoneNumber> phone;
+    @FXML
+    OkayCancel okayCancel;
+
     private boolean askClose = true;
 
     public ClientDialog() {
@@ -35,39 +74,31 @@ public class ClientDialog extends Stage {
 
     public ClientDialog(Client client) {
         super();
+        this.client = client;
 
+        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/clients/dialog/ClientDialog.fxml"));
+        loader.setResources(conf.getBundle());
+        loader.setController(this);
         try {
-            Scene scene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
-            setScene(scene);
-            controller = (ClientDialogController) scene.getProperties().get("controller");
-
+            setScene(new Scene(loader.load()));
         } catch (IOException ex) {
-            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EditorPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         initOwner(AmbroAFB.mainStage);
         setResizable(false);
 
-        controller.setClient(client);
-        controller.onCreate((Client t) -> {
-            System.out.println("on create: " + t);
-            result = t;
-            cancelled = false;
-            close();
-        });
-
         setOnCloseRequest((WindowEvent event) -> {
             event.consume();
-            onClose(null);
+            onClose();
         });
-        controller.onCancell(this::onClose);
 
     }
 
-    private void onClose(Object o) {
+    private void onClose() {
         System.out.println("on close");
         boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
         if (close) {
-            cancelled = true;
+            client = null;
             System.out.println("cancelling");
             close();
         }
@@ -79,40 +110,105 @@ public class ClientDialog extends Stage {
      * @return
      */
     public Client getResult() {
-        return isCancelled() ? null : result;
+        showAndWait();
+        return client;
     }
 
-    /**
-     * აბრუნებს გაუქმენულია თუ არა კლიენტის შექმნა/შეცვლა
-     *
-     * @return
-     */
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    /**
-     * ყველა ველი ხდება disable, გამოიყენება მხოლოდ კლიენტის სანახავად
-     */
-    public void setDisabled() {
-        controller.setDisabled();
-    }
-    
     /**
      * დიალოგის დახურვისას ამოაგდებს გაფრთხილებას ნამდვილად უნდა თუ არა დახურვა
-     * @param ask 
+     *
+     * @param ask
      */
-    public void askClose(boolean ask){
+    public void askClose(boolean ask) {
         askClose = ask;
+    }
+    
+    @FXML
+    private void cancel(ActionEvent e) {
+
+        System.out.println("CCCCCCCCCCCCCCCCCCanceled");
+//        if (onCancell != null) {
+//            onCancell.accept(null);
+//        }
+    }
+
+    @FXML
+    private void okay(ActionEvent e) {
+        System.out.println("OOOOOOOOOOOOOOOOOOkaied");
+        close();
+    }
+
+    @FXML
+    private void switchJuridical(ActionEvent e) {
+        System.out.println("e.getSource(): " + firstName.widthProperty().getValue());
+        double w = firstName.widthProperty().getValue() + lastName.widthProperty().getValue();
+        if (((CheckBox) e.getSource()).isSelected()) {
+            first_name.setText(conf.getTitleFor("firm_name"));
+            last_name.setText(conf.getTitleFor("firm_form"));
+            firstName.setPrefWidth(0.75 * w);
+            lastName.setPrefWidth(0.25 * w);
+        } else {
+            first_name.setText(conf.getTitleFor("first_name"));
+            last_name.setText(conf.getTitleFor("last_name"));
+            firstName.setPrefWidth(0.50 * w);
+            lastName.setPrefWidth(0.50 * w);
+        }
     }
 
     /**
-     * ანულებს კლიენტს, კლიენტსი შეცვლის შემთხვევაში გადაცემული კლიენტი არ
-     * შეიცვლება და მის მაგივრად ახალი კლიენტი დაბრუნდება ახალი კლიენტის შექმნის
-     * შემთხვევაში ამ მეთოდის გამოძახება იდეურად არაფერს შეცვლის
+     *
+     * @param url
+     * @param rb
      */
-    public void resetClient() {
-        controller.setClient(null);
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        Country.dbGetCountries("").values().stream().forEach((c) -> {
+            country.getItems().add(c.getFullDescrip());
+        });
+        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+        phone.setConverter(new StringConverter<Client.PhoneNumber>() {
+
+            @Override
+            public String toString(Client.PhoneNumber object) {
+                return object != null ? object.getNumber() : null;
+            }
+
+            @Override
+            public Client.PhoneNumber fromString(String string) {
+                return new Client.PhoneNumber(string);
+            }
+        });
+        juridical.setOnAction(this::switchJuridical);
+        okayCancel.setOnOkay(this::okay);
+        okayCancel.setOnCancel(this::cancel);
+        System.out.println("client: "+client);
+        bindClient();
+    }
+
+    public void setDisabled() {
+        focusTraversableNodes.forEach((Node t) -> {
+            if (t != phone) {
+                t.setDisable(true);
+            }
+        });
+        phone.setEditable(false);
+    }
+
+    public void bindClient() {
+        if (client != null) {
+            juridical.selectedProperty().bindBidirectional(client.isJurProperty());
+            rezident.selectedProperty().bindBidirectional(client.isRezProperty());
+            firstName.textProperty().bindBidirectional(client.firstNameProperty());
+            lastName.textProperty().bindBidirectional(client.lastNameProperty());
+            idNumber.textProperty().bindBidirectional(client.IDNumberProperty());
+            email.textProperty().bindBidirectional(client.emailProperty());
+            fax.textProperty().bindBidirectional(client.faxProperty());
+            address.textProperty().bindBidirectional(client.addressProperty());
+            zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
+            city.textProperty().bindBidirectional(client.cityProperty());
+            country.valueProperty().bindBidirectional(client.countryProperty());
+            phone.setItems(client.getPhoneList());
+        }
     }
 
 }

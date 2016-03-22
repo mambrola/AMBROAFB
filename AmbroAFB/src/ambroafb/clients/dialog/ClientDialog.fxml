@@ -14,8 +14,7 @@
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/clientdialog.css" 
                         xmlns:fx="http://javafx.com/fxml/1" 
-                        xmlns="http://javafx.com/javafx/8" 
-                        fx:controller="ambroafb.clients.dialog.ClientDialogController">
+                        xmlns="http://javafx.com/javafx/8" >
     <VBox fx:id="formPane">
         <children>
             <VBox>
@@ -26,7 +25,7 @@
             </VBox>
             <HBox>
                 <children>
-                    <CheckBox fx:id="juridical" userData="aa" onAction="#switchJuridical" /> 
+                    <CheckBox fx:id="juridical" userData="aa" /> 
                     <Label text="%juridical" />
                 </children> 
             </HBox>
@@ -54,7 +53,7 @@
                     </VBox >
                     <VBox >
                         <Label text="%phones" /> 
-                        <PhoneEditor fx:id="phone" editable="true"/>
+                        <ListEditor fx:id="phone" editable="true"/>
                     </VBox >
                     <VBox >
                         <Label text="%fax" /> 
@@ -93,9 +92,7 @@
                 </children> 
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
-                <OkayCancel fx:id="okayCancel"
-                    onOkay="#okay" 
-                    onCancel="#cancel" />
+                <OkayCancel fx:id="okayCancel"/>
             </HBox>
         </children>
     </VBox>

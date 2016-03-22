@@ -24,14 +24,14 @@ import javafx.util.Callback;
  * @author tabramishvili
  * @param <T>
  */
-public class PhoneEditor<T extends Editable<String>> extends ComboBox<T> {
+public class ListEditor<T extends Editable<String>> extends ComboBox<T> {
 
     private final Object FIRST_ITEM_KEY = new Object();
     private final Object SELECTED_ITEM_KEY = new Object();
 
     private final IntegerProperty itemsSize = new SimpleIntegerProperty();
 
-    public PhoneEditor() {
+    public ListEditor() {
         getItems().addListener((ListChangeListener.Change<? extends T> c) -> {
             itemsSize.set(getItems().size());
             if (itemsSize.get() > 0) {
