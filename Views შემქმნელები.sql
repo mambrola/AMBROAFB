@@ -1,6 +1,6 @@
 use ambro_soft_afb;
 
-/*CREATE 
+/*CREATE  OR REPLACE 
     ALGORITHM = UNDEFINED 
     DEFINER = `root`@`localhost` 
     SQL SECURITY DEFINER
@@ -27,7 +27,7 @@ VIEW `invoices_to_java` AS
         LEFT JOIN `products` `p` ON ((`p`.`rec_id` = `ip`.`product_id`)))
     GROUP BY `i`.`rec_id`
 */
-/*CREATE 
+/*CREATE  OR REPLACE 
     ALGORITHM = UNDEFINED 
     DEFINER = `dtm`@`%` 
     SQL SECURITY DEFINER
@@ -42,12 +42,11 @@ VIEW `clients_to_java` AS
         `c`.`address` AS `address`,
         `c`.`zip_code` AS `zip_code`,
         `c`.`city` AS `city`,
-        `c`.`country_code` AS `country_code`,
+        CONCAT(`ct`.`rec_code`, ';:;', `ct`.`descrip`) AS `country`,
         `c`.`is_rezident` AS `is_rezident`,
         `c`.`pass_number` AS `pass_number`,
         `c`.`fax` AS `fax`,
-        `ct`.`descrip` AS `country_descrip`,
-        GROUP_CONCAT(`cp`.`phone`
+        GROUP_CONCAT(CONCAT(`cp`.`rec_id`, ';:;', `cp`.`phone`)
             ORDER BY `cp`.`rec_id` ASC
             SEPARATOR ':;:') AS `phones`
     FROM

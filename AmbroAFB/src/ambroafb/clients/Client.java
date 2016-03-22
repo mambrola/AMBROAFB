@@ -18,7 +18,6 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
@@ -51,18 +50,20 @@ public class Client {
     @AView.Column(title = "%full_address", width = "270")
     private StringExpression fullAddress;
 
-    private SimpleStringProperty country_code;
+    private SimpleStringProperty country;
+    
+    private SimpleStringProperty countryCode;
 
     @AView.Column(title = "%country", width = "80") 
-    private SimpleStringProperty country;
+    private SimpleStringProperty countryDescrip;
 
     @AView.Column(title = "%id_number", width = "100")
     private SimpleStringProperty IDNumber;
 
-    private SimpleStringProperty phoneIds;      // ეს ჩაემატა აქ და კიდევ ერთ ადგილას, ჩასამატებელია ყველგან
-
-    @AView.Column(title = "%phones", width = "300")
     private SimpleStringProperty phones;
+    
+    @AView.Column(title = "%phones", width = "300")
+    private SimpleStringProperty phoneNumbers;
     
     private ArrayList<PhoneNumber> phoneList;
 
@@ -80,27 +81,40 @@ public class Client {
         zipCode =       new SimpleStringProperty();
         city =          new SimpleStringProperty();
         fullAddress = address.concat(", ").concat(zipCode).concat(", ").concat(city);
-        country_code =  new SimpleStringProperty();
         country =       new SimpleStringProperty();
+        countryCode =   new SimpleStringProperty();
+        countryDescrip= new SimpleStringProperty();
         IDNumber =      new SimpleStringProperty();
-        phoneIds =      new SimpleStringProperty();
         phones =        new SimpleStringProperty();
+        phoneNumbers =  new SimpleStringProperty();
         phoneList =     new ArrayList<>();
         
         fax =           new SimpleStringProperty();
-        phones.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+        phones.addListener((ObservableValue<? extends String> o, String oldValue, String newValue) -> {
             phoneList.clear();
-            if (newValue != null) {
-                for(String phone : Arrays.asList(newValue.split(", ")))
-                {
-                    phoneList.add(new PhoneNumber(5, phone));  //აქ გასარკვევია და გასაანალიზებელი, შეიძლება თოკა დაგვჭირდეს!
+            phoneNumbers.set("");
+            if (newValue != null && newValue.length() > 0) {
+                String str = "";
+                for (String phone : Arrays.asList(newValue.split(":;:"))) {
+                    String ph[] = phone.split(";:;");
+                    phoneList.add(new PhoneNumber(Integer.parseInt(ph[0]), ph[1]));
+                    str = str + ", " + ph[1];
                 }
-                
-                
-                
-                
+                phoneNumbers.set(str.substring(2));
             }
         });
+        
+        country.addListener((ObservableValue<? extends String> o, String oldValue, String newValue) -> {
+            countryCode.set("");
+            countryDescrip.set("");
+            if (newValue != null && newValue.length() > 0) {
+                String cntr[] = newValue.split(";:;");
+                countryCode.set(cntr[0]);
+                countryDescrip.set(cntr[1]);
+            }
+        });
+        
+        
     }
 
     public Client(Object[] values) {
@@ -115,11 +129,10 @@ public class Client {
         setAddress(     Utils.avoidNullAndReturnString( values[6]));
         setZipCode(     Utils.avoidNullAndReturnString( values[7]));
         setCity(        Utils.avoidNullAndReturnString( values[8]));
-        setCountry_code(Utils.avoidNullAndReturnString( values[9]));
-        setCountry(     Utils.avoidNullAndReturnString( values[10]));
-        setIDNumber(    Utils.avoidNullAndReturnString( values[11]));
-        setPhones(      Utils.avoidNullAndReturnString( values[12]));
-        setFax(         Utils.avoidNullAndReturnString( values[13]));
+        setCountry(     Utils.avoidNullAndReturnString( values[9]));
+        setIDNumber(    Utils.avoidNullAndReturnString( values[10]));
+        setPhones(      Utils.avoidNullAndReturnString( values[11]));
+        setFax(         Utils.avoidNullAndReturnString( values[12]));
     }
 
     @Override
@@ -134,7 +147,7 @@ public class Client {
     static HashMap<Integer, Client> dbGetClients(int recId) {
         HashMap<Integer, Client> clients = new HashMap();
         String query = "SELECT * FROM clients_to_java" + (recId == 0 ? "" : " where rec_id = " + Integer.toString(recId)) + " ORDER BY rec_id";
-        String[] orderedRequestedFields = new String[]{"rec_id", "is_jur", "is_rezident", "first_name", "last_name", "email", "address", "zip_code", "city", "country_code", "country_descrip", "pass_number", "phones", "fax"};
+        String[] orderedRequestedFields = new String[]{"rec_id", "is_jur", "is_rezident", "first_name", "last_name", "email", "address", "zip_code", "city", "country", "pass_number", "phones", "fax"};
         Utils.getArrayListsByQueryFromDB(query, orderedRequestedFields).stream().forEach((row) -> {
 
             System.out.println("row: " + row[12]);
@@ -148,37 +161,37 @@ public class Client {
         return isJur;
     }
 
-    public boolean              getIsJur()          { return isJur.get();}
-    public boolean              getIsRez()          { return isRez.get();}
-    public String               getFirstName()      { return firstName.get();}
-    public String               getLastName()       { return lastName.get();}
-    public String               getDescrip()        { return descrip.get();}
-    public String               getEmail()          { return email.get();}
-    public String               getCity()           { return city.get();}
-    public String               getFullAddress()    { return fullAddress.get();}
-    public String               getCountry_code()   { return country_code.get();}
-    public ArrayList<String>    getPhoneList()      { return phoneList;}
-    public String               getPhones()         { return phones.get();}
-    public String               getFax()            { return fax.get();}
-    public String               getAddress()        { return address.get();}
-    public String               getZipCode()        { return zipCode.get();}
-    public String               getCountry()        { return country.get();}
-    public String               getIDNumber()       { return IDNumber.get();}
+    public boolean                  getIsJur()          { return isJur.get();}
+    public boolean                  getIsRez()          { return isRez.get();}
+    public String                   getFirstName()      { return firstName.get();}
+    public String                   getLastName()       { return lastName.get();}
+    public String                   getDescrip()        { return descrip.get();}
+    public String                   getEmail()          { return email.get();}
+    public String                   getCity()           { return city.get();}
+    public String                   getFullAddress()    { return fullAddress.get();}
+    public String                   getCountry()        { return country.get();}
+    public ArrayList<PhoneNumber>   getPhoneList()      { return phoneList;}
+    public String                   getPhones()         { return phones.get();}
+    public String                   getPhoneNumbers()   { return phoneNumbers.get();}
+    public String                   getFax()            { return fax.get();}
+    public String                   getAddress()        { return address.get();}
+    public String                   getZipCode()        { return zipCode.get();}
+    public String                   getIDNumber()       { return IDNumber.get();}
 
-    public final void setIsJur(         boolean isJur)              { this.isJur.set(isJur);}
-    public final void setIsRez(         boolean isRez)              { this.isRez.set(isRez);}
-    public final void setFirstName(     String firstName)           { this.firstName.set(firstName);}
-    public final void setLastName(      String lastName)            { this.lastName.set(lastName);}
-    public final void setEmail(         String email)               { this.email.set(email);}
-    public final void setAddress(       String address)             { this.address.set(address);}
-    public final void setZipCode(       String zipCode)             { this.zipCode.set(zipCode);}
-    public final void setCity(          String city)                { this.city.set(city);}
-    public final void setCountry_code(  String country_code)        { this.country_code.set(country_code);}
-    public final void setCountry(       String country)             { this.country.set(country);}
-    public final void setIDNumber(      String IDNumber)            { this.IDNumber.set(IDNumber);}
-    public final void setPhoneList(     ArrayList<String> phoneList){ this.phoneList = phoneList;}
-    public final void setPhones(        String phones)              { this.phones.set(phones.replaceAll(":;:", ",  "));}
-    public final void setFax(           String fax)                 { this.fax.set(fax);}
+    public final void setIsJur(         boolean isJur)                      { this.isJur.set(isJur);}
+    public final void setIsRez(         boolean isRez)                      { this.isRez.set(isRez);}
+    public final void setFirstName(     String firstName)                   { this.firstName.set(firstName);}
+    public final void setLastName(      String lastName)                    { this.lastName.set(lastName);}
+    public final void setEmail(         String email)                       { this.email.set(email);}
+    public final void setAddress(       String address)                     { this.address.set(address);}
+    public final void setZipCode(       String zipCode)                     { this.zipCode.set(zipCode);}
+    public final void setCity(          String city)                        { this.city.set(city);}
+    public final void setCountry(       String country)                     { this.country.set(country);}
+    public final void setIDNumber(      String IDNumber)                    { this.IDNumber.set(IDNumber);}
+    public final void setPhoneList(     ArrayList<PhoneNumber> phoneList)   { this.phoneList = phoneList;}
+    public final void setPhones(        String phones)                      { this.phones.set(phones);}
+    public final void setPhoneNumbers(  String phoneNumbers)                { this.phoneNumbers.set(phoneNumbers);}
+    public final void setFax(           String fax)                         { this.fax.set(fax);}
     
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 
