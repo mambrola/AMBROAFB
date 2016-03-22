@@ -6,14 +6,21 @@
 package ambroafb.clients.dialog;
 
 import ambroafb.clients.Client;
+import ambroafb.clients.Client.PhoneNumber;
 import ambroafb.countries.Country;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.PhoneEditor;
 import ambroafb.general.Utils;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,6 +35,7 @@ import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -55,7 +63,9 @@ public class ClientDialogController implements Initializable {
     @FXML
     TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
     @FXML
-    ComboBox country, phone;
+    ComboBox country;
+    @FXML
+    PhoneEditor<PhoneNumber> phone;
 
     @FXML
     private void switchJuridical(ActionEvent e) {
@@ -85,6 +95,18 @@ public class ClientDialogController implements Initializable {
             country.getItems().add(c.getFullDescrip());
         });
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+        phone.setConverter(new StringConverter<PhoneNumber>() {
+
+            @Override
+            public String toString(PhoneNumber object) {
+                return object != null ? object.getNumber() : null;
+            }
+
+            @Override
+            public PhoneNumber fromString(String string) {
+                return new PhoneNumber(string);
+            }
+        });
     }
 
     @FXML
@@ -122,6 +144,10 @@ public class ClientDialogController implements Initializable {
     @FXML
     private void okay() {
         System.out.println("OOOOOOOOOOOOOOOOOOkaied");
+        System.out.println("method 'saveClient'");
+        phone.getItems().forEach((PhoneNumber t) -> {
+            System.out.println("num: " + t.getNumber());
+        });
     }
 
     public void onCreate(Consumer<Client> callback) {
@@ -154,7 +180,13 @@ public class ClientDialogController implements Initializable {
             zipCode.setText(client.getZipCode());
             city.setText(client.getCity());
             country.setValue(client.getCountry());
-            phone.getItems().setAll(client.getPhoneList());
+            AtomicInteger i = new AtomicInteger(0);
+            phone.getItems().setAll(
+                    client.getPhoneList()
+                    .stream()
+                    .map((String t) -> new Client.PhoneNumber(i.getAndIncrement(), t))
+                    .collect(Collectors.toList())
+            );
         }
         this.client = client;
     }

@@ -5,6 +5,8 @@
  */
 package ambroafb.general;
 
+import javafx.beans.value.ObservableValue;
+
 /**
  *
  * @author tabramishvili
@@ -12,4 +14,5 @@ package ambroafb.general;
  */
 public interface Editable<T> {
     public void edit(T param);
+    public ObservableValue<String> getObservableString();
 }

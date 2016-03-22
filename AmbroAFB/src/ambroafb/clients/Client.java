@@ -15,6 +15,7 @@ import javafx.beans.binding.StringExpression;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -268,5 +269,15 @@ public class Client {
             setNumber(param);
         }
 
+        @Override
+        public ObservableValue<String> getObservableString() {
+            return number;
+        }
+
+        @Override
+        public String toString() {
+            return "PhoneNumber{" + "id=" + id + ", number=" + number + '}';
+        }
+        
     }
 }
