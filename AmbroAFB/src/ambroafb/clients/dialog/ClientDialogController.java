@@ -180,13 +180,7 @@ public class ClientDialogController implements Initializable {
             zipCode.setText(client.getZipCode());
             city.setText(client.getCity());
             country.setValue(client.getCountry());
-            AtomicInteger i = new AtomicInteger(0);
-            phone.getItems().setAll(
-                    client.getPhoneList()
-                    .stream()
-                    .map((String t) -> new Client.PhoneNumber(i.getAndIncrement(), t))
-                    .collect(Collectors.toList())
-            );
+            phone.getItems().setAll(client.getPhoneList());
         }
         this.client = client;
     }
