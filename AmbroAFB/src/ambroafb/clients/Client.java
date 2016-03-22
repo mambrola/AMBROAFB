@@ -195,9 +195,7 @@ public final class Client {
 
             System.out.println("row: " + row[12]);
 
-            String phones = row[11] == null ? "" : row[11].toString();
-            row[11] = dbStringToPhones(phones);
-
+            row[11] = dbStringToPhones(row[11] == null ? "" : row[11].toString());
             row[9] = dbStringToCountry(row[9] == null ? "" : row[9].toString());
 
             clients.put((int) row[0], new Client(row));
