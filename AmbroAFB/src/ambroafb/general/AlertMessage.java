@@ -27,8 +27,10 @@ public class AlertMessage extends Alert {
         setTitle(GeneralConfig.getInstance().getTitleFor(Names.ALERT_ERROR_WINDOW_TITLE));
         setHeaderText(GeneralConfig.getInstance().getTitleFor(messageName));
         
+        getDialogPane().getStylesheets().add(
+            getClass().getResource("/styles/css/core.css").toExternalForm());
         
-        getDialogPane().getScene().getStylesheets().add("/ambroafb/general/core.css");
+//        getDialogPane().getScene().getStylesheets().add("/ambroafb/general/core.css");
         ((Stage)getDialogPane().getScene().getWindow()).initOwner(AmbroAFB.mainStage);
 
         Utils.log(messageName, ex);
