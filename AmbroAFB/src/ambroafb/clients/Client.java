@@ -424,14 +424,14 @@ public final class Client {
 
     public static class PhoneNumber implements Editable<String> {
 
-        private int id;
+        private int recId;
         private final StringProperty number = new SimpleStringProperty();
 
         public PhoneNumber() {
         }
 
         public PhoneNumber(int id, String number) {
-            this.id = id;
+            this.recId = id;
             this.number.set(number);
         }
 
@@ -440,11 +440,11 @@ public final class Client {
         }
 
         public int getId() {
-            return id;
+            return recId;
         }
 
         public void setId(int id) {
-            this.id = id;
+            this.recId = id;
         }
 
         public String getNumber() {
@@ -471,7 +471,7 @@ public final class Client {
 
         @Override
         public String toString() {
-            return "PhoneNumber{" + "id=" + id + ", number=" + number + '}';
+            return "PhoneNumber{" + "id=" + recId + ", number=" + number + '}';
         }
 
     }
