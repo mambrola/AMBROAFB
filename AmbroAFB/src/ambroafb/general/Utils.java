@@ -7,8 +7,11 @@ package ambroafb.general;
 
 import ambro.AMySQLChanel;
 import ambroafb.AmbroAFB;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -97,9 +100,9 @@ public class Utils {
         return controller;
     }
 
-    
     /**
-     * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით Murman:ჩავამატე parameters
+     * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით Murman:ჩავამატე
+     * parameters
      *
      * @param name - fxml დოკუმენტის მისამართი
      * @param parameters
@@ -123,9 +126,7 @@ public class Utils {
 
         return stage;
     }
-    
-    
-    
+
     /**
      * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით
      *
@@ -193,7 +194,8 @@ public class Utils {
     }
 
     /**
-     * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით Murman:ჩავამატე parameters
+     * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით Murman:ჩავამატე
+     * parameters
      *
      * @param name - fxml დოკუმენტის მისამართი
      * @param parameters
@@ -210,8 +212,7 @@ public class Utils {
         }
         return stage;
     }
-    
-    
+
     /**
      * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით
      *
@@ -244,8 +245,7 @@ public class Utils {
         Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
         return new Scene(root);
     }
-    
-    
+
     /**
      * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით
      *
@@ -316,7 +316,6 @@ public class Utils {
 
     // ბაზასთან ურთიორთობის მეთოდები:
     // შეიძლება ღირდეს მათი ახალ ფაილში, მაგ. UtilsDB გატანა
-    
     public static ArrayList<Object[]> getArrayListsByQueryFromDB(String query, String[] requestedColumnNames) {
         ArrayList<Object[]> arrayList = new ArrayList<>();
         try (Connection conn = GeneralConfig.getInstance().getConnectionToDB(); Statement statement = conn.createStatement()) {
@@ -324,8 +323,8 @@ public class Utils {
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             int columnCount = resultSetMetaData.getColumnCount();
             ArrayList<String> columnNames = new ArrayList<>();
-            for(int i = 0; i < columnCount; i++){
-                columnNames.add(i, resultSetMetaData.getColumnName(i+1));
+            for (int i = 0; i < columnCount; i++) {
+                columnNames.add(i, resultSetMetaData.getColumnName(i + 1));
             }
             while (resultSet.next()) {
                 Object[] objectArray = new Object[columnCount];
@@ -336,33 +335,48 @@ public class Utils {
                 arrayList.add(objectArray);
             }
         } catch (SQLException | NullPointerException ex) {
-            Platform.runLater(() -> {new AlertMessage(Alert.AlertType.ERROR, ex, Names.SQL_ERROR).showAlert(); });
+            Platform.runLater(() -> {
+                new AlertMessage(Alert.AlertType.ERROR, ex, Names.SQL_ERROR).showAlert();
+            });
         }
         return arrayList;
     }
-    
-    public static ArrayList<Node> getFocusTraversableBottomChildren(Parent root){
+
+    public static ArrayList<Node> getFocusTraversableBottomChildren(Parent root) {
         ArrayList<Node> arrayList = new ArrayList<>();
         root.getChildrenUnmodifiable().stream().forEach((n) -> {
-            if(((Parent) n).getChildrenUnmodifiable().isEmpty()){
-                if(n.isFocusTraversable())
+            if (((Parent) n).getChildrenUnmodifiable().isEmpty()) {
+                if (n.isFocusTraversable()) {
                     arrayList.add(n);
-            }
-            else{
-                arrayList.addAll(getFocusTraversableBottomChildren((Parent)n));
+                }
+            } else {
+                arrayList.addAll(getFocusTraversableBottomChildren((Parent) n));
             }
         });
         return arrayList;
     }
 
-    
-    public static String avoidNullAndReturnString(Object object){
+    public static String avoidNullAndReturnString(Object object) {
         return object == null ? "" : (String) object;
     }
-    public static int avoidNullAndReturnInt(Object object){
+
+    public static int avoidNullAndReturnInt(Object object) {
         return object == null ? 0 : (int) object;
     }
-    public static boolean avoidNullAndReturnBoolean(Object object){
+
+    public static boolean avoidNullAndReturnBoolean(Object object) {
         return object == null ? false : (boolean) object;
+    }
+
+    public static String readStream(InputStream stream) throws IOException {
+        StringBuilder response = new StringBuilder();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(stream))) {
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+        }
+
+        return response.toString();
     }
 }

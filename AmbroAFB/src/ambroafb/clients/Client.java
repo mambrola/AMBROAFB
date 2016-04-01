@@ -8,10 +8,17 @@ package ambroafb.clients;
 import ambro.AView;
 import ambroafb.general.Editable;
 import ambroafb.general.Utils;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -20,7 +27,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -30,6 +36,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -123,6 +132,23 @@ public final class Client {
         setFax(Utils.avoidNullAndReturnString(values[12]));
     }
 
+    public Client(JSONObject obj) throws JSONException {
+        this();
+        clientId = obj.getInt("recId");
+        setIsJur(obj.optBoolean("isJur"));
+        setIsRez(obj.optBoolean("isRez"));
+        setFirstName(obj.optString("firstName"));
+        setLastName(obj.optString("lastName"));
+        setEmail(obj.optString("email"));
+        setAddress(obj.optString("address"));
+        setZipCode(obj.optString("zipCode"));
+        setCity(obj.optString("city"));
+        setCountry(new Country(obj.optJSONObject("country")));
+        setIDNumber(obj.optString("passNumber"));
+        getPhoneList().setAll(PhoneNumber.jsonToPhoneList(obj.optJSONArray("phoneNumbers")));
+        setFax(obj.optString("fax"));
+    }
+
     public Client cloneWithoutID() {
         Client clone = new Client();
         clone.copyFrom(this);
@@ -185,6 +211,27 @@ public final class Client {
 
     public Client dbGetClient(int clientId) {
         return dbGetClients(clientId).get(clientId);
+    }
+
+    static List<Client> getClients() {
+        ArrayList<Client> clients = new ArrayList<>();
+        try {
+            URL url = new URL("http://localhost:8080/KFZ_Server/api/clients");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            int responseCode = con.getResponseCode();
+            if (responseCode == 200) {
+                JSONArray arr = new JSONArray(Utils.readStream(con.getInputStream()));
+                for (int i = 0; i < arr.length(); i++) {
+                    clients.add(new Client(arr.getJSONObject(i)));
+                }
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | JSONException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return clients;
     }
 
     static HashMap<Integer, Client> dbGetClients(int recId) {
@@ -424,10 +471,24 @@ public final class Client {
 
     public static class PhoneNumber implements Editable<String> {
 
+        public static List<PhoneNumber> jsonToPhoneList(JSONArray arr) throws JSONException {
+            ArrayList<PhoneNumber> list = new ArrayList<>();
+            if (arr != null) {
+                for (int i = 0; i < arr.length(); i++) {
+                    list.add(new PhoneNumber(arr.getJSONObject(i)));
+                }
+            }
+            return list;
+        }
+
         private int recId;
         private final StringProperty number = new SimpleStringProperty();
 
         public PhoneNumber() {
+        }
+
+        public PhoneNumber(JSONObject obj) throws JSONException {
+            this(obj.getInt("recId"), obj.getString("number"));
         }
 
         public PhoneNumber(int id, String number) {
@@ -483,6 +544,10 @@ public final class Client {
         private final StringProperty name = new SimpleStringProperty();
 
         public Country() {
+        }
+
+        public Country(JSONObject obj) throws JSONException {
+            this(obj.getString("countryCode"), obj.getString("descrip"));
         }
 
         public Country(int id, String code, String name) {
