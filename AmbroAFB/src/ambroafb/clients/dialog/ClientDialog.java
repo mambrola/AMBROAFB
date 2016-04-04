@@ -47,7 +47,7 @@ public class ClientDialog extends Stage implements Initializable {
 
     GeneralConfig conf = GeneralConfig.getInstance();
     ArrayList<Node> focusTraversableNodes;
-    Client client;
+    Client client, clientBackup;
 
     @FXML
     VBox formPane;
@@ -75,6 +75,7 @@ public class ClientDialog extends Stage implements Initializable {
     public ClientDialog(Client client) {
         super();
         this.client = client;
+        this.clientBackup = client.cloneWithID();
 
         FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/clients/dialog/ClientDialog.fxml"));
         loader.setResources(conf.getBundle());
@@ -139,8 +140,8 @@ public class ClientDialog extends Stage implements Initializable {
             Client.saveClient(client);
             close();
         } catch (Exception ex) {
-            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, null).showAlert();
+            client.copyFrom(clientBackup);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
         }
     }
 

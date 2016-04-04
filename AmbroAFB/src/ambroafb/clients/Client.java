@@ -51,7 +51,7 @@ public final class Client {
     // ვინაიდან ეს მხოლოდ ჩვენებაა და თვითო tableView-ს ველში არ ხდება ჩასწორება Property-ები არ გვჭირდება
     @JsonProperty("recId")
     public int clientId;
-    
+
     public String password;
 
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
@@ -227,28 +227,24 @@ public final class Client {
     }
 
     public static Client saveClient(Client client) throws Exception {
-        try {
-            URL url = new URL("http://localhost:8080/KFZ_Server/api/clients" + (client.clientId > 0 ? "/" + client.clientId : ""));
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod(client.clientId > 0 ? "PUT" : "POST");
-            con.setDoInput(true);
-            con.setDoOutput(true);
-            
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            mapper.writeValue(con.getOutputStream(), client);
-            
-            int responseCode = con.getResponseCode();
-            if (responseCode == 200) {
-                Client res = mapper.readValue(con.getInputStream(), Client.class);
-                client.copyFrom(res);
-            } else {
-                throw new Exception(Utils.readStream(con.getInputStream()));
+        URL url = new URL("http://localhost:8080/KFZ_Server/api/clients" + (client.clientId > 0 ? "/" + client.clientId : ""));
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod(client.clientId > 0 ? "PUT" : "POST");
+        con.setDoInput(true);
+        con.setDoOutput(true);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.writeValue(con.getOutputStream(), client);
+        int responseCode = con.getResponseCode();
+        if (responseCode == 200) {
+            Client res = mapper.readValue(con.getInputStream(), Client.class);
+            client.copyFrom(res);
+        } else {
+            if (responseCode == 409) {
+                String message = Utils.readStream(con.getErrorStream());
+                throw new Exception(message);
             }
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return client;
     }
