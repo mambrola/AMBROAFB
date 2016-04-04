@@ -122,7 +122,7 @@ public class ClientDialog extends Stage implements Initializable {
     public void askClose(boolean ask) {
         askClose = ask;
     }
-    
+
     @FXML
     private void cancel(ActionEvent e) {
 
@@ -135,7 +135,13 @@ public class ClientDialog extends Stage implements Initializable {
     @FXML
     private void okay(ActionEvent e) {
         System.out.println("OOOOOOOOOOOOOOOOOOkaied");
-        close();
+        try {
+            Client.saveClient(client);
+            close();
+        } catch (Exception ex) {
+            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, null).showAlert();
+        }
     }
 
     @FXML
@@ -166,7 +172,7 @@ public class ClientDialog extends Stage implements Initializable {
 
             @Override
             public String toString(Client.Country object) {
-                return object.getCode()+"   "+object.getName();
+                return object.getCode() + "   " + object.getName();
             }
 
             @Override
@@ -193,7 +199,7 @@ public class ClientDialog extends Stage implements Initializable {
         juridical.setOnAction(this::switchJuridical);
         okayCancel.setOnOkay(this::okay);
         okayCancel.setOnCancel(this::cancel);
-        System.out.println("client: "+client);
+        System.out.println("client: " + client);
         bindClient();
     }
 
@@ -219,7 +225,7 @@ public class ClientDialog extends Stage implements Initializable {
             zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
             city.textProperty().bindBidirectional(client.cityProperty());
             country.valueProperty().bindBidirectional(client.countryProperty());
-            phone.getItems().setAll(client.getPhoneList());
+            phone.setItems(client.getPhoneList());
         }
     }
 

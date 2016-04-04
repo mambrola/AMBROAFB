@@ -8,6 +8,11 @@ package ambroafb.clients;
 import ambro.AView;
 import ambroafb.general.Editable;
 import ambroafb.general.Utils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -36,9 +41,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  *
@@ -47,7 +49,10 @@ import org.json.JSONObject;
 public final class Client {
 
     // ვინაიდან ეს მხოლოდ ჩვენებაა და თვითო tableView-ს ველში არ ხდება ჩასწორება Property-ები არ გვჭირდება
+    @JsonProperty("recId")
     public int clientId;
+    
+    public String password;
 
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private SimpleBooleanProperty isJur;
@@ -58,6 +63,7 @@ public final class Client {
     private SimpleStringProperty firstName, lastName;
 
     @AView.Column(title = "%descrip", width = "152")
+    @JsonIgnore
     private StringExpression descrip;
 
     @AView.Column(title = "%email", width = "170")
@@ -66,20 +72,24 @@ public final class Client {
     private SimpleStringProperty address, zipCode, city;
 
     @AView.Column(title = "%full_address", width = "270")
+    @JsonIgnore
     private StringExpression fullAddress;
 
     private ObjectProperty<Country> country;
 
-//    private SimpleStringProperty countryCode;
     @AView.Column(title = "%country", width = "80")
+    @JsonIgnore
     private SimpleStringProperty countryDescrip;
 
     @AView.Column(title = "%id_number", width = "100")
+    @JsonProperty("passNumber")
     private SimpleStringProperty IDNumber;
 
     @AView.Column(title = "%phones", width = "300")
+    @JsonIgnore
     private SimpleStringProperty phoneNumbers;
 
+    @JsonProperty("phoneNumbers")
     private ObservableList<PhoneNumber> phoneList;
 
     @AView.Column(title = "%fax", width = "80")
@@ -132,23 +142,6 @@ public final class Client {
         setFax(Utils.avoidNullAndReturnString(values[12]));
     }
 
-    public Client(JSONObject obj) throws JSONException {
-        this();
-        clientId = obj.getInt("recId");
-        setIsJur(obj.optBoolean("isJur"));
-        setIsRez(obj.optBoolean("isRez"));
-        setFirstName(obj.optString("firstName"));
-        setLastName(obj.optString("lastName"));
-        setEmail(obj.optString("email"));
-        setAddress(obj.optString("address"));
-        setZipCode(obj.optString("zipCode"));
-        setCity(obj.optString("city"));
-        setCountry(new Country(obj.optJSONObject("country")));
-        setIDNumber(obj.optString("passNumber"));
-        getPhoneList().setAll(PhoneNumber.jsonToPhoneList(obj.optJSONArray("phoneNumbers")));
-        setFax(obj.optString("fax"));
-    }
-
     public Client cloneWithoutID() {
         Client clone = new Client();
         clone.copyFrom(this);
@@ -176,7 +169,7 @@ public final class Client {
         getPhoneList().setAll(
                 other.getPhoneList()
                 .stream()
-                .map((PhoneNumber t) -> new PhoneNumber(t.getId(), t.getNumber()))
+                .map((PhoneNumber t) -> new PhoneNumber(t.getRecId(), t.getNumber()))
                 .collect(Collectors.toList())
         );
         setFax(other.getFax());
@@ -213,7 +206,7 @@ public final class Client {
         return dbGetClients(clientId).get(clientId);
     }
 
-    static List<Client> getClients() {
+    public static List<Client> getClients() {
         ArrayList<Client> clients = new ArrayList<>();
         try {
             URL url = new URL("http://localhost:8080/KFZ_Server/api/clients");
@@ -221,17 +214,43 @@ public final class Client {
             con.setRequestMethod("GET");
             int responseCode = con.getResponseCode();
             if (responseCode == 200) {
-                JSONArray arr = new JSONArray(Utils.readStream(con.getInputStream()));
-                for (int i = 0; i < arr.length(); i++) {
-                    clients.add(new Client(arr.getJSONObject(i)));
-                }
+                ObjectMapper mapper = new ObjectMapper();
+                return mapper.readValue(con.getInputStream(), new TypeReference<ArrayList<Client>>() {
+                });
             }
         } catch (MalformedURLException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | JSONException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return clients;
+    }
+
+    public static Client saveClient(Client client) throws Exception {
+        try {
+            URL url = new URL("http://localhost:8080/KFZ_Server/api/clients" + (client.clientId > 0 ? "/" + client.clientId : ""));
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod(client.clientId > 0 ? "PUT" : "POST");
+            con.setDoInput(true);
+            con.setDoOutput(true);
+            
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            mapper.writeValue(con.getOutputStream(), client);
+            
+            int responseCode = con.getResponseCode();
+            if (responseCode == 200) {
+                Client res = mapper.readValue(con.getInputStream(), Client.class);
+                client.copyFrom(res);
+            } else {
+                throw new Exception(Utils.readStream(con.getInputStream()));
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return client;
     }
 
     static HashMap<Integer, Client> dbGetClients(int recId) {
@@ -382,6 +401,7 @@ public final class Client {
         return zipCode.get();
     }
 
+    @JsonProperty("passNumber")
     public String getIDNumber() {
         return IDNumber.get();
     }
@@ -422,12 +442,13 @@ public final class Client {
         this.country.set(country);
     }
 
+    @JsonProperty("passNumber")
     public final void setIDNumber(String IDNumber) {
         this.IDNumber.set(IDNumber);
     }
 
-    public final void setPhoneList(ObservableList<PhoneNumber> phoneList) {
-        this.phoneList = phoneList;
+    public final void setPhoneList(Collection<PhoneNumber> phoneList) {
+        this.phoneList.setAll(phoneList);
     }
 
     public final void setFax(String fax) {
@@ -471,24 +492,11 @@ public final class Client {
 
     public static class PhoneNumber implements Editable<String> {
 
-        public static List<PhoneNumber> jsonToPhoneList(JSONArray arr) throws JSONException {
-            ArrayList<PhoneNumber> list = new ArrayList<>();
-            if (arr != null) {
-                for (int i = 0; i < arr.length(); i++) {
-                    list.add(new PhoneNumber(arr.getJSONObject(i)));
-                }
-            }
-            return list;
-        }
-
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         private int recId;
         private final StringProperty number = new SimpleStringProperty();
 
         public PhoneNumber() {
-        }
-
-        public PhoneNumber(JSONObject obj) throws JSONException {
-            this(obj.getInt("recId"), obj.getString("number"));
         }
 
         public PhoneNumber(int id, String number) {
@@ -500,11 +508,11 @@ public final class Client {
             this.number.set(number);
         }
 
-        public int getId() {
+        public int getRecId() {
             return recId;
         }
 
-        public void setId(int id) {
+        public void setRecId(int id) {
             this.recId = id;
         }
 
@@ -526,6 +534,7 @@ public final class Client {
         }
 
         @Override
+        @JsonIgnore
         public ObservableValue<String> getObservableString() {
             return number;
         }
@@ -539,33 +548,17 @@ public final class Client {
 
     public static class Country {
 
-        private int id;
+        @JsonProperty("countryCode")
         private final StringProperty code = new SimpleStringProperty();
+        @JsonProperty("descrip")
         private final StringProperty name = new SimpleStringProperty();
 
         public Country() {
         }
 
-        public Country(JSONObject obj) throws JSONException {
-            this(obj.getString("countryCode"), obj.getString("descrip"));
-        }
-
-        public Country(int id, String code, String name) {
-            this(code, name);
-            this.id = id;
-        }
-
         public Country(String code, String name) {
             this.code.set(code);
             this.name.set(name);
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
         }
 
         public String getCode() {

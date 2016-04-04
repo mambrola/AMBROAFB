@@ -8,8 +8,10 @@ package ambroafb.general;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -32,13 +34,21 @@ public class ListEditor<T extends Editable<String>> extends ComboBox<T> {
     private final IntegerProperty itemsSize = new SimpleIntegerProperty();
 
     public ListEditor() {
-        getItems().addListener((ListChangeListener.Change<? extends T> c) -> {
+        final ListChangeListener<T> itemsListener = (ListChangeListener.Change<? extends T> c) -> {
             itemsSize.set(getItems().size());
             if (itemsSize.get() > 0) {
                 getSelectionModel().selectFirst();
                 getProperties().put(SELECTED_ITEM_KEY, getSelectionModel().getSelectedItem());
             }
+        };
+        getItems().addListener(itemsListener);
+        
+        itemsProperty().addListener((ObservableValue<? extends ObservableList<T>> observable, ObservableList<T> oldValue, ObservableList<T> newValue) -> {
+            System.out.println("changed");
+            oldValue.removeListener(itemsListener);
+            newValue.addListener(itemsListener);
         });
+        
         SingleSelectionModel<T> currentSelection = getSelectionModel();
 
         editableProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -140,6 +150,20 @@ public class ListEditor<T extends Editable<String>> extends ComboBox<T> {
             }
         });
 
+    }
+
+    private void setItemsListener() {
+        getItems().addListener((ListChangeListener.Change<? extends T> c) -> {
+            itemsChanged();
+        });
+    }
+
+    private void itemsChanged() {
+        itemsSize.set(getItems().size());
+        if (itemsSize.get() > 0) {
+            getSelectionModel().selectFirst();
+            getProperties().put(SELECTED_ITEM_KEY, getSelectionModel().getSelectedItem());
+        }
     }
 
 }
