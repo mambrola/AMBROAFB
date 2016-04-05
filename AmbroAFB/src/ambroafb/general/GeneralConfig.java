@@ -18,6 +18,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Alert.AlertType;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.tomcat.jdbc.pool.ConnectionPool;
@@ -66,6 +68,7 @@ public class GeneralConfig {
 
     public ResourceBundle bundle;
     public Locale locale;
+    private KFZClient client;
 
     private ConnectionPool pool;
     private HashMap<String, Object> attributes;
@@ -97,6 +100,23 @@ public class GeneralConfig {
         return ResourceBundle.getBundle(Names.BUNDLE_TITLES_NAME, locale);
     }
 
+    public KFZClient getServerClient() {
+        if (client == null) {
+            try {
+                client = new KFZClient("sad", "fgh");
+            } catch (IOException | KFZClient.InvalidCredentialsException ex) {
+                Logger.getLogger(GeneralConfig.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return client;
+    }
+
+    public void logoutServerClient() {
+        if (client != null) {
+            client.logout();
+        }
+    }
+
     /**
      * აბრუნებს აპლიკაციის მიმდინარე Locale ობიექტს
      *
@@ -122,8 +142,9 @@ public class GeneralConfig {
      * @return
      */
     public String getTitleFor(String key) {
-        if(bundle.containsKey(key))
+        if (bundle.containsKey(key)) {
             return StringEscapeUtils.unescapeJava(bundle.getString(key));
+        }
         return key;
     }
 
@@ -145,7 +166,7 @@ public class GeneralConfig {
     /**
      * მიმდინარე კონფიგურაციის მონაცემებს ინახავს მყარ დისკზე
      */
-    public void dump() { 
+    public void dump() {
         try (FileOutputStream fileOut = new FileOutputStream(Names.GENERAL_CONFIGURATION_FILE_NAME);
                 ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
             out.writeObject(savedConf);
@@ -171,7 +192,7 @@ public class GeneralConfig {
             p.setDriverClassName(savedConf.classForName);
             p.setUsername(username);
             p.setPassword(password);
-            
+
             pool = new ConnectionPool(p);
         }
         String lang = mapLanguageToId(language);
@@ -179,7 +200,7 @@ public class GeneralConfig {
         savedConf.database = database;
         savedConf.username = username;
         savedConf.password = password;
-        
+
     }
 
     /**

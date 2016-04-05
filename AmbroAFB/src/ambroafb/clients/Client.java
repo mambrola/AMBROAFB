@@ -6,7 +6,10 @@
 package ambroafb.clients;
 
 import ambro.AView;
+import ambroafb.general.AlertMessage;
 import ambroafb.general.Editable;
+import ambroafb.general.GeneralConfig;
+import ambroafb.general.KFZClient;
 import ambroafb.general.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -36,6 +39,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
@@ -209,14 +213,17 @@ public final class Client {
     public static List<Client> getClients() {
         ArrayList<Client> clients = new ArrayList<>();
         try {
-            URL url = new URL("http://localhost:8080/KFZ_Server/api/clients");
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            KFZClient serverClient = GeneralConfig.getInstance().getServerClient();
+            HttpURLConnection con = serverClient.createConnection("clients");
             con.setRequestMethod("GET");
+            con.setDoInput(true);
             int responseCode = con.getResponseCode();
             if (responseCode == 200) {
                 ObjectMapper mapper = new ObjectMapper();
                 return mapper.readValue(con.getInputStream(), new TypeReference<ArrayList<Client>>() {
                 });
+            } else if (responseCode == 403) {
+                new AlertMessage(Alert.AlertType.ERROR, null, Utils.readStream(con.getErrorStream())).showAlert();
             }
         } catch (MalformedURLException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -227,11 +234,12 @@ public final class Client {
     }
 
     public static Client saveClient(Client client) throws Exception {
-        URL url = new URL("http://localhost:8080/KFZ_Server/api/clients" + (client.clientId > 0 ? "/" + client.clientId : ""));
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        KFZClient serverClient = GeneralConfig.getInstance().getServerClient();
+        HttpURLConnection con = serverClient.createConnection("clients" + (client.clientId > 0 ? "/" + client.clientId : ""));
         con.setRequestMethod(client.clientId > 0 ? "PUT" : "POST");
         con.setDoInput(true);
         con.setDoOutput(true);
+        con.connect();
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -243,9 +251,11 @@ public final class Client {
         } else {
             if (responseCode == 409) {
                 String message = Utils.readStream(con.getErrorStream());
+                con.disconnect();
                 throw new Exception(message);
             }
         }
+        con.disconnect();
         return client;
     }
 
