@@ -65,6 +65,9 @@ public class ClientsController implements Initializable {
     @FXML
     private void view(ActionEvent e) {
         Client client = table.getSelectionModel().getSelectedItem();
+        
+        
+        
         ClientDialog dialog = new ClientDialog(client);
         dialog.setDisabled();
         dialog.askClose(false);
