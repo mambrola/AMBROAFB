@@ -104,7 +104,7 @@ public class GeneralConfig {
         if (client == null) {
             try {
                 client = new KFZClient("sad", "fgh");
-            } catch (IOException | KFZClient.InvalidCredentialsException ex) {
+            } catch (IOException | KFZClient.KFZServerException ex) {
                 Logger.getLogger(GeneralConfig.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
