@@ -26,6 +26,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -367,6 +370,10 @@ public class Utils {
 
     public static boolean avoidNullAndReturnBoolean(Object object) {
         return object == null ? false : (boolean) object;
+    }
+    
+    public static StringBinding avoidNull(StringProperty prop){
+        return Bindings.when(prop.isNull()).then("").otherwise(prop);
     }
 
     public static String readStream(InputStream stream) throws IOException {
