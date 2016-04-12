@@ -45,7 +45,27 @@ public class KFZClient {
 
     public final void login() throws IOException, KFZServerException {
         String cred = "{'username':'" + credentials.username + "', 'password':'" + credentials.password + "'}";
-        token = post("/authentication", cred);
+        HttpURLConnection con = createConnection("/authentication");
+        con.setRequestMethod("POST");
+        con.setDoOutput(true);
+        con.getOutputStream().write(cred.getBytes("UTF-8"));
+
+        int status = con.getResponseCode();
+        String newToken = con.getHeaderField("X-CHANGE-TOKEN");
+        if (newToken != null) {
+            token = newToken;
+        }
+        if (status == 200) {
+            token = readStream(con.getInputStream());
+            con.getInputStream().close();
+            con.disconnect();
+        } else {
+            String error = readStream(con.getErrorStream());
+            con.getErrorStream().close();
+            con.getInputStream().close();
+            con.disconnect();
+            throw new KFZServerException(error, status);
+        }
     }
 
     public final void logout() {
@@ -65,11 +85,22 @@ public class KFZClient {
         }
 
         int status = con.getResponseCode();
+        String newToken = con.getHeaderField("X-CHANGE-TOKEN");
+        if (newToken != null) {
+            token = newToken;
+        }
         if (status == 200) {
             String response = readStream(con.getInputStream());
             con.getInputStream().close();
             con.disconnect();
             return response;
+        } else if (status == 401) {
+            try {
+                login();
+                return call(resource, method, data);
+            } catch (KFZServerException e) {
+                System.out.println("login failed");
+            }
         }
         String error = readStream(con.getErrorStream());
         con.getErrorStream().close();
