@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -56,7 +57,8 @@ public final class Client {
     @JsonProperty("recId")
     public int clientId;
 
-    public String password;
+    // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
+    public String password, payPal, www;
 
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private SimpleBooleanProperty isJur;
@@ -104,12 +106,12 @@ public final class Client {
         isRez = new SimpleBooleanProperty();
         firstName = new SimpleStringProperty();
         lastName = new SimpleStringProperty();
-        descrip = firstName.concat(" ").concat(lastName);
+        descrip = Utils.avoidNull(firstName).concat(" ").concat(Utils.avoidNull(lastName));
         email = new SimpleStringProperty();
         address = new SimpleStringProperty();
         zipCode = new SimpleStringProperty();
         city = new SimpleStringProperty();
-        fullAddress = address.concat(", ").concat(zipCode).concat(", ").concat(city);
+        fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
         country = new SimpleObjectProperty<>();
         countryDescrip = new SimpleStringProperty();
         IDNumber = new SimpleStringProperty();
@@ -126,24 +128,6 @@ public final class Client {
             rebindCountry();
         });
         rebindCountry();
-    }
-
-    public Client(Object[] values) {
-        this();
-        System.out.println("values: " + Utils.avoidNullAndReturnBoolean(values[1]) + ":" + values[1]);
-        clientId = Utils.avoidNullAndReturnInt(values[0]);
-        setIsJur(Utils.avoidNullAndReturnBoolean(values[1]));
-        setIsRez(Utils.avoidNullAndReturnBoolean(values[2]));
-        setFirstName(Utils.avoidNullAndReturnString(values[3]));
-        setLastName(Utils.avoidNullAndReturnString(values[4]));
-        setEmail(Utils.avoidNullAndReturnString(values[5]));
-        setAddress(Utils.avoidNullAndReturnString(values[6]));
-        setZipCode(Utils.avoidNullAndReturnString(values[7]));
-        setCity(Utils.avoidNullAndReturnString(values[8]));
-        setCountry((Country) values[9]);
-        setIDNumber(Utils.avoidNullAndReturnString(values[10]));
-        getPhoneList().setAll((Collection<PhoneNumber>) values[11]);
-        setFax(Utils.avoidNullAndReturnString(values[12]));
     }
 
     public Client cloneWithoutID() {
@@ -206,93 +190,28 @@ public final class Client {
         return descrip.get() + " : " + email.get() + " : " + fullAddress.get();
     }
 
-    public Client dbGetClient(int clientId) {
-        return dbGetClients(clientId).get(clientId);
-    }
-
     public static List<Client> getClients() {
-        ArrayList<Client> clients = new ArrayList<>();
         try {
-            KFZClient serverClient = GeneralConfig.getInstance().getServerClient();
-            HttpURLConnection con = serverClient.createConnection("clients");
-            con.setRequestMethod("GET");
-            con.setDoInput(true);
-            int responseCode = con.getResponseCode();
-            if (responseCode == 200) {
-                ObjectMapper mapper = new ObjectMapper();
-                return mapper.readValue(con.getInputStream(), new TypeReference<ArrayList<Client>>() {
-                });
-            } else if (responseCode == 403) {
-                new AlertMessage(Alert.AlertType.ERROR, null, Utils.readStream(con.getErrorStream())).showAlert();
-            }
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+            String data = GeneralConfig.getInstance().getServerClient().get("clients");
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {
+            });
+        } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return clients;
+        return new ArrayList<>();
     }
 
     public static Client saveClient(Client client) throws Exception {
-        KFZClient serverClient = GeneralConfig.getInstance().getServerClient();
-        HttpURLConnection con = serverClient.createConnection("clients" + (client.clientId > 0 ? "/" + client.clientId : ""));
-        con.setRequestMethod(client.clientId > 0 ? "PUT" : "POST");
-        con.setDoInput(true);
-        con.setDoOutput(true);
-        con.connect();
+        String resource = "clients" + (client.clientId > 0 ? "/" + client.clientId : "");
+        String method = client.clientId > 0 ? "PUT" : "POST";
+        ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String client_str = mapper.writeValueAsString(client);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        mapper.writeValue(con.getOutputStream(), client);
-        int responseCode = con.getResponseCode();
-        if (responseCode == 200) {
-            Client res = mapper.readValue(con.getInputStream(), Client.class);
-            client.copyFrom(res);
-        } else {
-            if (responseCode == 409) {
-                String message = Utils.readStream(con.getErrorStream());
-                con.disconnect();
-                throw new Exception(message);
-            }
-        }
-        con.disconnect();
+        String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, client_str);
+        Client res = mapper.readValue(res_str, Client.class);
+        client.copyFrom(res);
         return client;
-    }
-
-    static HashMap<Integer, Client> dbGetClients(int recId) {
-        HashMap<Integer, Client> clients = new HashMap();
-        String query = "SELECT * FROM clients_to_java" + (recId == 0 ? "" : " where rec_id = " + Integer.toString(recId)) + " ORDER BY rec_id";
-        String[] orderedRequestedFields = new String[]{"rec_id", "is_jur", "is_rezident", "first_name", "last_name", "email", "address", "zip_code", "city", "country", "pass_number", "phones", "fax"};
-        Utils.getArrayListsByQueryFromDB(query, orderedRequestedFields).stream().forEach((row) -> {
-
-            System.out.println("row: " + row[12]);
-
-            row[11] = dbStringToPhones(row[11] == null ? "" : row[11].toString());
-            row[9] = dbStringToCountry(row[9] == null ? "" : row[9].toString());
-
-            clients.put((int) row[0], new Client(row));
-        });
-        return clients;
-    }
-
-    private static Collection<PhoneNumber> dbStringToPhones(String phones) {
-        ArrayList<PhoneNumber> list = new ArrayList<>();
-        if (phones == null || phones.isEmpty()) {
-            return list;
-        }
-        for (String phone : Arrays.asList(phones.split(":;:"))) {
-            String ph[] = phone.split(";:;");
-            list.add(new PhoneNumber(Integer.parseInt(ph[0]), ph[1]));
-        }
-        return list;
-    }
-
-    private static Country dbStringToCountry(String c) {
-        if (c == null || c.isEmpty()) {
-            return null;
-        }
-        String cntr[] = c.split(";:;");
-        return new Country(cntr[0], cntr[1]);
     }
 
     public SimpleBooleanProperty isJurProperty() {
