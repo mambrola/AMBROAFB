@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -100,22 +99,22 @@ public final class Client {
     private SimpleStringProperty fax;
 
     public Client() {
-        isJur = new SimpleBooleanProperty();
-        isRez = new SimpleBooleanProperty();
-        firstName = new SimpleStringProperty();
-        lastName = new SimpleStringProperty();
+        isJur =             new SimpleBooleanProperty();
+        isRez =             new SimpleBooleanProperty();
+        firstName =         new SimpleStringProperty();
+        lastName =          new SimpleStringProperty();
         descrip = firstName.concat(" ").concat(lastName);
-        email = new SimpleStringProperty();
-        address = new SimpleStringProperty();
-        zipCode = new SimpleStringProperty();
-        city = new SimpleStringProperty();
+        email =             new SimpleStringProperty();
+        address =           new SimpleStringProperty();
+        zipCode =           new SimpleStringProperty();
+        city =              new SimpleStringProperty();
         fullAddress = address.concat(", ").concat(zipCode).concat(", ").concat(city);
-        country = new SimpleObjectProperty<>();
-        countryDescrip = new SimpleStringProperty();
-        IDNumber = new SimpleStringProperty();
+        country =           new SimpleObjectProperty<>();
+        countryDescrip =    new SimpleStringProperty();
+        IDNumber =          new SimpleStringProperty();
         phoneList = FXCollections.observableArrayList();
-        phoneNumbers = new SimpleStringProperty();
-        fax = new SimpleStringProperty();
+        phoneNumbers =      new SimpleStringProperty();
+        fax =               new SimpleStringProperty();
 
         phoneList.addListener((ListChangeListener.Change<? extends PhoneNumber> c) -> {
             rebindPhoneNumbers();
