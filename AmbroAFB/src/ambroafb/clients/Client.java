@@ -101,19 +101,19 @@ public final class Client {
     private SimpleStringProperty fax;
 
     public Client() {
-        isJur = new SimpleBooleanProperty();
-        isRez = new SimpleBooleanProperty();
-        firstName = new SimpleStringProperty();
-        lastName = new SimpleStringProperty();
+        isJur =             new SimpleBooleanProperty();
+        isRez =             new SimpleBooleanProperty();
+        firstName =         new SimpleStringProperty();
+        lastName =          new SimpleStringProperty();
         descrip = Utils.avoidNull(firstName).concat(" ").concat(Utils.avoidNull(lastName));
-        email = new SimpleStringProperty();
-        address = new SimpleStringProperty();
-        zipCode = new SimpleStringProperty();
-        city = new SimpleStringProperty();
+        email =             new SimpleStringProperty();
+        address =           new SimpleStringProperty();
+        zipCode =           new SimpleStringProperty();
+        city =              new SimpleStringProperty();
         fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
-        country = new SimpleObjectProperty<>();
-        countryDescrip = new SimpleStringProperty();
-        IDNumber = new SimpleStringProperty();
+        country =           new SimpleObjectProperty<>();
+        countryDescrip =    new SimpleStringProperty();
+        IDNumber =          new SimpleStringProperty();
         phoneList = FXCollections.observableArrayList();
         phoneNumbers =      new SimpleStringProperty();
         fax =               new SimpleStringProperty();
