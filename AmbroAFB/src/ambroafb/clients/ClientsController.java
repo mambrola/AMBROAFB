@@ -26,7 +26,7 @@ public class ClientsController implements Initializable {
 
     @FXML
     private TableView<Client> table;
-    
+
     @FXML
     private EditorPanel panel;
 
@@ -36,21 +36,27 @@ public class ClientsController implements Initializable {
         ClientDialog dialog = new ClientDialog(client);
         dialog.setDisabled();
         dialog.askClose(false);
-        
-        ((Button)dialog.getScene().getRoot().lookup("#okay")).setText("Delete");
+
+        ((Button) dialog.getScene().getRoot().lookup("#okay")).setText("Delete");
         dialog.getScene().getRoot().lookup("#okay").setDisable(false);
         dialog.getScene().getRoot().lookup("#cancel").setDisable(false);
-        
+
         dialog.showAndWait();
-        
+        if (Client.deleteClient(client.clientId)) {
+            table.getItems().remove(client);
+        }
     }
 
     @FXML
     private void edit(ActionEvent e) {
 
         Client editingClient = table.getSelectionModel().getSelectedItem();
+        Client real = Client.getClient(editingClient.clientId);
+        if (real != null) {
+            editingClient.copyFrom(real);
+        }
         Client backup = editingClient.cloneWithID();
-        
+
         ClientDialog dialog = new ClientDialog(editingClient);
         Client editedClient = dialog.getResult();
         if (editedClient == null) {
@@ -58,16 +64,18 @@ public class ClientsController implements Initializable {
             System.out.println("dialog is cancelled");
         } else {
             System.out.println("changed client: " + editedClient);
-            System.out.println("phones = "+editedClient.getPhoneNumbers());
+            System.out.println("phones = " + editedClient.getPhoneNumbers());
         }
     }
 
     @FXML
     private void view(ActionEvent e) {
         Client client = table.getSelectionModel().getSelectedItem();
-        
-        
-        
+        Client real = Client.getClient(client.clientId);
+        if (real != null) {
+            client.copyFrom(real);
+        }
+
         ClientDialog dialog = new ClientDialog(client);
         dialog.setDisabled();
         dialog.askClose(false);
@@ -79,29 +87,33 @@ public class ClientsController implements Initializable {
         ClientDialog dialog = new ClientDialog();
         Client newClient = dialog.getResult();
 
-        if (newClient == null){
+        if (newClient == null) {
             System.out.println("dialog is cancelled addClient");
-        }else{
-            System.out.println("changed client: "+newClient);
+        } else {
+            System.out.println("changed client: " + newClient);
+            newClient = Client.saveClient(newClient);
+            if (newClient != null) {
+                table.getItems().add(newClient);
+            }
         }
     }
-    
-    @FXML 
+
+    @FXML
     private void addBySample(ActionEvent e) {
         Client client = table.getSelectionModel().getSelectedItem();
         ClientDialog dialog = new ClientDialog(client.cloneWithoutID());
         Client newClient = dialog.getResult();
-        if (newClient == null){
+        if (newClient == null) {
             System.out.println("dialog is cancelled addBySample");
-        }else{
-            System.out.println("changed client: "+newClient);
-
+        } else {
+            System.out.println("changed client: " + newClient);
+            Client.saveClient(newClient);
         }
     }
-    
+
     @FXML
     private void refresh(ActionEvent e) {
-        
+
         table.getItems().get(0).setEmail("ccccccc");
 
         //table.getItems().clear();

@@ -10,7 +10,9 @@ import ambroafb.clients.Client;
 import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.KFZClient;
 import ambroafb.general.ListEditor;
+import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.okay_cancel.OkayCancel;
@@ -60,9 +62,9 @@ public class ClientDialog extends Stage implements Initializable {
     @FXML
     TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
     @FXML
-    ComboBox<Client.Country> country;
+    ComboBox<Country> country;
     @FXML
-    ListEditor<Client.PhoneNumber> phone;
+    ListEditor<PhoneNumber> phone;
     @FXML
     OkayCancel okayCancel;
 
@@ -169,32 +171,35 @@ public class ClientDialog extends Stage implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        country.setConverter(new StringConverter<Client.Country>() {
+        country.setConverter(new StringConverter<Country>() {
 
             @Override
-            public String toString(Client.Country object) {
+            public String toString(Country object) {
                 return object.getCode() + "   " + object.getName();
             }
 
             @Override
-            public Client.Country fromString(String string) {
+            public Country fromString(String string) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
-        Country.dbGetCountries("").values().stream().forEach((c) -> {
-            country.getItems().add(new Client.Country(c.countryCode, c.getDescrip()));
-        });
+        try {
+            country.getItems().addAll(Country.getCountries());
+        } catch (KFZClient.KFZServerException | IOException ex) {
+            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.WARNING, ex, "Can't load countries").showAlert();
+        }
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        phone.setConverter(new StringConverter<Client.PhoneNumber>() {
+        phone.setConverter(new StringConverter<PhoneNumber>() {
 
             @Override
-            public String toString(Client.PhoneNumber object) {
+            public String toString(PhoneNumber object) {
                 return object != null ? object.getNumber() : null;
             }
 
             @Override
-            public Client.PhoneNumber fromString(String string) {
-                return new Client.PhoneNumber(string);
+            public PhoneNumber fromString(String string) {
+                return new PhoneNumber(string);
             }
         });
         juridical.setOnAction(this::switchJuridical);

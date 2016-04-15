@@ -6,10 +6,12 @@
 package ambroafb.clients;
 
 import ambro.AView;
+import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.Editable;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
+import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -60,45 +62,45 @@ public final class Client {
     public String password, payPal, www;
 
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
-    private SimpleBooleanProperty isJur;
+    private final SimpleBooleanProperty isJur;
 
     @AView.Column(width = "24", cellFactory = RezCellFactory.class)
-    private SimpleBooleanProperty isRez;
+    private final SimpleBooleanProperty isRez;
 
-    private SimpleStringProperty firstName, lastName;
+    private final SimpleStringProperty firstName, lastName;
 
     @AView.Column(title = "%descrip", width = "152")
     @JsonIgnore
-    private StringExpression descrip;
+    private final StringExpression descrip;
 
     @AView.Column(title = "%email", width = "170")
-    private SimpleStringProperty email;
+    private final SimpleStringProperty email;
 
-    private SimpleStringProperty address, zipCode, city;
+    private final SimpleStringProperty address, zipCode, city;
 
     @AView.Column(title = "%full_address", width = "270")
     @JsonIgnore
-    private StringExpression fullAddress;
+    private final StringExpression fullAddress;
 
-    private ObjectProperty<Country> country;
+    private final ObjectProperty<Country> country;
 
     @AView.Column(title = "%country", width = "80")
     @JsonIgnore
-    private SimpleStringProperty countryDescrip;
+    private final SimpleStringProperty countryDescrip;
 
     @AView.Column(title = "%id_number", width = "100")
     @JsonProperty("passNumber")
-    private SimpleStringProperty IDNumber;
+    private final SimpleStringProperty IDNumber;
 
     @AView.Column(title = "%phones", width = "300")
     @JsonIgnore
-    private SimpleStringProperty phoneNumbers;
+    private final SimpleStringProperty phoneNumbers;
 
     @JsonProperty("phoneNumbers")
-    private ObservableList<PhoneNumber> phoneList;
+    private final ObservableList<PhoneNumber> phoneList;
 
     @AView.Column(title = "%fax", width = "80")
-    private SimpleStringProperty fax;
+    private final SimpleStringProperty fax;
 
     public Client() {
         isJur =             new SimpleBooleanProperty();
@@ -115,8 +117,8 @@ public final class Client {
         countryDescrip =    new SimpleStringProperty();
         IDNumber =          new SimpleStringProperty();
         phoneList = FXCollections.observableArrayList();
-        phoneNumbers =      new SimpleStringProperty();
-        fax =               new SimpleStringProperty();
+        phoneNumbers = new SimpleStringProperty();
+        fax = new SimpleStringProperty();
 
         phoneList.addListener((ListChangeListener.Change<? extends PhoneNumber> c) -> {
             rebindPhoneNumbers();
@@ -201,16 +203,45 @@ public final class Client {
         return new ArrayList<>();
     }
 
-    public static Client saveClient(Client client) throws Exception {
-        String resource = "clients" + (client.clientId > 0 ? "/" + client.clientId : "");
-        String method = client.clientId > 0 ? "PUT" : "POST";
-        ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String client_str = mapper.writeValueAsString(client);
+    public static Client getClient(int id) {
+        try {
+            String data = GeneralConfig.getInstance().getServerClient().get("clients/" + id);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, Client.class);
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+        }
+        return null;
+    }
 
-        String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, client_str);
-        Client res = mapper.readValue(res_str, Client.class);
-        client.copyFrom(res);
-        return client;
+    public static Client saveClient(Client client) {
+        try {
+            String resource = "clients" + (client.clientId > 0 ? "/" + client.clientId : "");
+            String method = client.clientId > 0 ? "PUT" : "POST";
+            ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            String client_str = mapper.writeValueAsString(client);
+
+            String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, client_str);
+            Client res = mapper.readValue(res_str, Client.class);
+            client.copyFrom(res);
+            return client;
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+        }
+        return null;
+    }
+
+    public static boolean deleteClient(int id) {
+        try {
+            GeneralConfig.getInstance().getServerClient().call("clients/" + id, "DELETE", null);
+            return true;
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+        }
+        return false;
     }
 
     public SimpleBooleanProperty isJurProperty() {
@@ -384,7 +415,7 @@ public final class Client {
         @Override
         public TableCell<Client, Boolean> call(TableColumn<Client, Boolean> param) {
             TableCell<Client, Boolean> cell = new TableCell<Client, Boolean>() {
-                private ImageView view = new ImageView();
+                private final ImageView view = new ImageView();
 
                 @Override
                 public void updateItem(Boolean isFirm, boolean empty) {
@@ -414,99 +445,4 @@ public final class Client {
 
     }
 
-    public static class PhoneNumber implements Editable<String> {
-
-        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-        private int recId;
-        private final StringProperty number = new SimpleStringProperty();
-
-        public PhoneNumber() {
-        }
-
-        public PhoneNumber(int id, String number) {
-            this.recId = id;
-            this.number.set(number);
-        }
-
-        public PhoneNumber(String number) {
-            this.number.set(number);
-        }
-
-        public int getRecId() {
-            return recId;
-        }
-
-        public void setRecId(int id) {
-            this.recId = id;
-        }
-
-        public String getNumber() {
-            return number.get();
-        }
-
-        public void setNumber(String value) {
-            number.set(value);
-        }
-
-        public StringProperty numberProperty() {
-            return number;
-        }
-
-        @Override
-        public void edit(String param) {
-            setNumber(param);
-        }
-
-        @Override
-        @JsonIgnore
-        public ObservableValue<String> getObservableString() {
-            return number;
-        }
-
-        @Override
-        public String toString() {
-            return "PhoneNumber{" + "id=" + recId + ", number=" + number + '}';
-        }
-
-    }
-
-    public static class Country {
-
-        @JsonProperty("countryCode")
-        private final StringProperty code = new SimpleStringProperty();
-        @JsonProperty("descrip")
-        private final StringProperty name = new SimpleStringProperty();
-
-        public Country() {
-        }
-
-        public Country(String code, String name) {
-            this.code.set(code);
-            this.name.set(name);
-        }
-
-        public String getCode() {
-            return code.get();
-        }
-
-        public void setCode(String value) {
-            code.set(value);
-        }
-
-        public StringProperty codeProperty() {
-            return code;
-        }
-
-        public String getName() {
-            return name.get();
-        }
-
-        public void setName(String value) {
-            name.set(value);
-        }
-
-        public StringProperty nameProperty() {
-            return name;
-        }
-    }
 }
