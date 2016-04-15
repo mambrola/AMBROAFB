@@ -12,8 +12,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  *
@@ -21,7 +30,42 @@ import java.util.logging.Logger;
  */
 public class KFZClient {
 
-    private String serverAddress = "http://localhost:8080/KFZ_Server/api";
+    /* ეს სამომავლოდ დაგვჭირდება თუ სერვერზე დავაყენებთ HTTPS-ს და არ გვექნება ვალიდური სერთიფიკატი
+     static {
+     try {
+     // Create a trust manager that does not validate certificate chains
+     TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+     @Override
+     public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+     return null;
+     }
+
+     @Override
+     public void checkClientTrusted(X509Certificate[] certs, String authType) {
+     }
+
+     @Override
+     public void checkServerTrusted(X509Certificate[] certs, String authType) {
+     }
+     }};
+     // Install the all-trusting trust manager
+     final SSLContext sc = SSLContext.getInstance("SSL");
+     sc.init(null, trustAllCerts, new java.security.SecureRandom());
+     HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+     // Create all-trusting host name verifier
+     HostnameVerifier allHostsValid = (String hostname, SSLSession session) -> true;
+
+     // Install the all-trusting host verifier
+     HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+     } catch (KeyManagementException | NoSuchAlgorithmException ex) {
+     Logger.getLogger(KFZClient.class.getName()).log(Level.SEVERE, null, ex);
+     }
+     }
+    
+    private static String serverAddress = "https://localhost:8443/KFZ_Server/api";
+    
+     */
+    private static String serverAddress = "http://localhost:8080/KFZ_Server/api";
 
     private final Credentials credentials;
     private String token;
@@ -146,10 +190,6 @@ public class KFZClient {
 
     public String getServerAddress() {
         return serverAddress;
-    }
-
-    public void setServerAddress(String serverAddress) {
-        this.serverAddress = serverAddress;
     }
 
     public static class Credentials {
