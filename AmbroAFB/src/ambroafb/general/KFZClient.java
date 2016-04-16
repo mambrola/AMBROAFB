@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class KFZClient {
 
-    private String serverAddress = "http://localhost:8080/KFZ_Server/api";
+    private String serverAddress = "http://136.243.102.152:8080/KFZ_Server/api";
 
     private final Credentials credentials;
     private String token;
