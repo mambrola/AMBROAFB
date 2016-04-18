@@ -62,13 +62,14 @@ public class KFZClient {
      }
      }
     
-    private static String serverAddress = "https://localhost:8443/KFZ_Server/api";
+     private static String serverAddress = "https://localhost:8443/KFZ_Server/api";
     
      */
     private static String serverAddress = "http://localhost:8080/KFZ_Server/api";
 
     private final Credentials credentials;
     private String token;
+    private String clientName = "";
 
     public KFZClient(String username, String password) throws IOException, KFZServerException {
         this(new Credentials(username, password));
@@ -77,6 +78,15 @@ public class KFZClient {
     public KFZClient(Credentials credentials) throws IOException, KFZServerException {
         this.credentials = credentials;
         login();
+    }
+
+    public KFZClient setClientName(String name) {
+        clientName = name;
+        return this;
+    }
+
+    public String getClientName() {
+        return clientName;
     }
 
     public String get(String resource) throws IOException, KFZServerException {
@@ -157,6 +167,7 @@ public class KFZClient {
         URL url = createUrl(resource);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("Authorization", "Bearer " + token);
+        con.setRequestProperty("X-CLIENT-NAME", clientName);
         return con;
     }
 

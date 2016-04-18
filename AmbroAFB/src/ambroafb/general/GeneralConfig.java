@@ -103,7 +103,7 @@ public class GeneralConfig {
     public KFZClient getServerClient() {
         if (client == null) {
             try {
-                client = new KFZClient("sad", "fgh");
+                client = new KFZClient("sad", "fgh").setClientName("AmbroAFB");
             } catch (IOException | KFZClient.KFZServerException ex) {
                 Logger.getLogger(GeneralConfig.class.getName()).log(Level.SEVERE, null, ex);
             }
