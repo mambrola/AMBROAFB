@@ -216,6 +216,8 @@ public final class Client {
             String method = client.clientId > 0 ? "PUT" : "POST";
             ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             String client_str = mapper.writeValueAsString(client);
+            
+            System.out.println("ambroafb.clients.Client.saveClient() client_str: " + client_str);
 
             String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, client_str);
             Client res = mapper.readValue(res_str, Client.class);
