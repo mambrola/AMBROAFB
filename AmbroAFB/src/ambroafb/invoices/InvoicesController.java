@@ -45,23 +45,6 @@ public class InvoicesController implements Initializable {
 
     @FXML
     private void add(ActionEvent e) {
-        
-        InvoiceDialog dialog = new InvoiceDialog();
-        Invoice newInvoice = dialog.getResult();
-
-        if (newClient == null) {
-            System.out.println("dialog is cancelled addClient");
-        } else {
-            System.out.println("changed client: " + newClient);
-            newClient = Client.saveClient(newClient);
-            if (newClient != null) {
-                table.getItems().add(newClient);
-            }
-        }
-        
-        
-        
-        
     }
 
     @FXML

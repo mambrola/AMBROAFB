@@ -22,6 +22,9 @@
 .w3 .combo-box {
   -fx-pref-width: 246.66666667;
 }
+.w3 .c2 {
+  -fx-pref-width: 523.33333333;
+}
 .w2,
 .w3 {
   -fx-spacing: 30;
