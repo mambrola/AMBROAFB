@@ -9,6 +9,7 @@ import ambro.AView;
 import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.Editable;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.PhoneNumber;
@@ -47,11 +48,7 @@ import javafx.util.Callback;
  *
  * @author mambroladze
  */
-public final class Client {
-
-    // ვინაიდან ეს მხოლოდ ჩვენებაა და თვითო tableView-ს ველში არ ხდება ჩასწორება Property-ები არ გვჭირდება
-    @JsonProperty("recId")
-    public int clientId;
+public class Client extends EditorPanelable{
 
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
     public String password, payPal, www;
@@ -126,6 +123,7 @@ public final class Client {
         rebindCountry();
     }
 
+    @Override
     public Client cloneWithoutID() {
         Client clone = new Client();
         clone.copyFrom(this);
@@ -133,13 +131,16 @@ public final class Client {
         return clone;
     }
 
+    @Override
     public Client cloneWithID() {
         Client clone = cloneWithoutID();
-        clone.clientId = clientId;
+        clone.recId = recId;
         return clone;
     }
 
-    public void copyFrom(Client other) {
+    @Override
+    public void copyFrom(EditorPanelable object) {
+        Client other = (Client) object;
         setIsJur(other.getIsJur());
         setIsRez(other.getIsRez());
         setFirstName(other.getFirstName());
@@ -198,7 +199,7 @@ public final class Client {
         return new ArrayList<>();
     }
 
-    public static Client getClient(int id) {
+    public static Client getOneFromDB(int id) {
         try {
             String data = GeneralConfig.getInstance().getServerClient().get("clients/" + id);
             ObjectMapper mapper = new ObjectMapper();
@@ -212,8 +213,8 @@ public final class Client {
 
     public static Client saveClient(Client client) {
         try {
-            String resource = "clients" + (client.clientId > 0 ? "/" + client.clientId : "");
-            String method = client.clientId > 0 ? "PUT" : "POST";
+            String resource = "clients" + (client.recId > 0 ? "/" + client.recId : "");
+            String method = client.recId > 0 ? "PUT" : "POST";
             ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             String client_str = mapper.writeValueAsString(client);
             

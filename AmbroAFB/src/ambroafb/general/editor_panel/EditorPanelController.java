@@ -6,15 +6,21 @@
 package ambroafb.general.editor_panel;
 
 import ambro.ATable;
+import ambro.ATableView;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.clients.dialog.ClientDialog;
+import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.EditorPanelable;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
+import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -27,31 +33,21 @@ public class EditorPanelController implements Initializable {
     private Button exit, delete, edit, view;
 
     @FXML
-    private TableView table;
-       
-
-    @FXML
     private void edit(ActionEvent e) {
-        System.out.println("clas names: " + getClassName("") + ":" + getClassName("dialogClass"));
-        
-        
-
-//        Client editingClient = table.getSelectionModel().getSelectedItem();
-//        Client real = Client.getClient(editingClient.clientId);
-//        if (real != null) {
-//            editingClient.copyFrom(real);
-//        }
-//        Client backup = editingClient.cloneWithID();
-//
-//        ClientDialog dialog = new ClientDialog(editingClient);
-//        Client editedClient = dialog.getResult();
-//        if (editedClient == null) {
-//            editingClient.copyFrom(backup);
-//            System.out.println("dialog is cancelled");
-//        } else {
-//            System.out.println("changed client: " + editedClient);
-//            System.out.println("phones = " + editedClient.getPhoneNumbers());
-//        }
+        EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
+        try {
+            EditorPanelable real = (EditorPanelable)Class.forName(getClassName("")).getMethod("getOneFromDB", int.class).invoke(null, selected.recId);
+            if (real != null) {
+                selected.copyFrom(real);
+            }    
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+        EditorPanelable backup = selected.cloneWithID();
+        EditorPanelable result = null;
+        try {
+            result = (EditorPanelable)((Dialogable)Class.forName(getClassName("dialogClass")).getConstructor(EditorPanelable.class).newInstance(selected)).getResult();
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+        if (result == null)
+            selected.copyFrom(backup);
     }
 
     
@@ -65,6 +61,7 @@ public class EditorPanelController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
     }
+    
     
     
     private String getClassName(String type){

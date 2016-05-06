@@ -24,6 +24,8 @@ import javafx.scene.layout.Pane;
  */
 public class ClientsController implements Initializable {
 
+    @FXML private Button exit;
+    
     @FXML
     private TableView<Client> table;
 
@@ -42,7 +44,7 @@ public class ClientsController implements Initializable {
         dialog.getScene().getRoot().lookup("#cancel").setDisable(false);
 
         dialog.showAndWait();
-        if (Client.deleteClient(client.clientId)) {
+        if (Client.deleteClient(client.recId)) {
             table.getItems().remove(client);
         }
     }
@@ -51,7 +53,7 @@ public class ClientsController implements Initializable {
     private void edit(ActionEvent e) {
 
         Client editingClient = table.getSelectionModel().getSelectedItem();
-        Client real = Client.getClient(editingClient.clientId);
+        Client real = Client.getOneFromDB(editingClient.recId);
         if (real != null) {
             editingClient.copyFrom(real);
         }
@@ -71,7 +73,7 @@ public class ClientsController implements Initializable {
     @FXML
     private void view(ActionEvent e) {
         Client client = table.getSelectionModel().getSelectedItem();
-        Client real = Client.getClient(client.clientId);
+        Client real = Client.getOneFromDB(client.recId);
         if (real != null) {
             client.copyFrom(real);
         }
@@ -127,6 +129,7 @@ public class ClientsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        //exit.getScene();//.lookup("#edit").disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
         asignTable();
     }
 

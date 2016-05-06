@@ -69,8 +69,8 @@ public class EditorPanel extends HBox  {
      * @param table
      */
     public void disablePropertyBinder(TableView table){
-        this.edit.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
-        this.view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+        this.       edit.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+        this.       view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
         this.addBySample.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
     }
 
