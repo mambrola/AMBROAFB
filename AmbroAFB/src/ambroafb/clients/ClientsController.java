@@ -49,7 +49,7 @@ public class ClientsController implements Initializable {
 
     @FXML
     private void edit(ActionEvent e) {
-
+        
         Client editingClient = table.getSelectionModel().getSelectedItem();
         Client real = Client.getClient(editingClient.clientId);
         if (real != null) {

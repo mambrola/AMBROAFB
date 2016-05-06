@@ -87,4 +87,7 @@ public class Country { // ვინაიდან ეს მხოლოდ ჩ
         });
     }
 
+    public boolean equals(Country other){
+        return this.code.get().equals(other.getCode()) && this.name.get().equals(other.getName());
+    }
 }

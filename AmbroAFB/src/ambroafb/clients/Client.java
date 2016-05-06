@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +48,7 @@ import javafx.util.Callback;
  *
  * @author mambroladze
  */
-public final class Client {
+public class Client {
 
     // ვინაიდან ეს მხოლოდ ჩვენებაა და თვითო tableView-ს ველში არ ხდება ჩასწორება Property-ები არ გვჭირდება
     @JsonProperty("recId")
@@ -405,6 +406,35 @@ public final class Client {
 
     public final void setFax(String fax) {
         this.fax.set(fax);
+    }
+    
+    public boolean equals(Client other){
+        boolean result = this.isJur.get() == other.getIsJur() &&
+                         this.isRez.get() == other.getIsRez() && 
+                         this.firstName.get().equals(other.getFirstName()) &&
+                         this.lastName.get().equals(other.getLastName()) &&
+                         this.email.get().equals(other.getEmail())    &&
+                         this.address.get().equals(other.getAddress()) &&
+                         this.zipCode.get().equals(other.getZipCode()) &&
+                         this.city.get().equals(other.getCity()) &&
+                         this.country.get().equals(other.getCountry()) &&
+                         this.IDNumber.get().equals(other.getIDNumber()) &&
+                         this.fax.get().equals(other.getFax());
+        boolean phonesEqual = comparePhones(this.phoneList, other.getPhoneList());
+        return result && phonesEqual;
+    }
+
+    public boolean comparePhones(ObservableList<PhoneNumber> phoneList, ObservableList<PhoneNumber> otherPhoneList) {
+        if (phoneList.size() != otherPhoneList.size()) return false;
+
+        for (PhoneNumber thisNumber : phoneList) {
+            String phone = thisNumber.getNumber();
+            for (PhoneNumber otherNumber : otherPhoneList){
+                if ( phone.equals(otherNumber.getNumber()) ) return true;
+            }
+        }
+        
+        return false;
     }
 
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {

@@ -69,4 +69,11 @@ public class PhoneNumber implements Editable<String> {
         return "PhoneNumber{" + "id=" + recId + ", number=" + number + '}';
     }
 
+    public boolean equals(PhoneNumber other){
+        return this.number.get().equals(other.getNumber());
+    }
+    
+    public int compare(PhoneNumber other){
+        return this.recId - other.recId;
+    }
 }
