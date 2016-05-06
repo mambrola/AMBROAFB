@@ -1,3 +1,4 @@
+create database ambro_soft_afb;
 use ambro_soft_afb;
 
 /*DROP TABLE IF EXISTS `ambro_soft_afb`.bal_accounts;
