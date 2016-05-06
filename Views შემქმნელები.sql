@@ -26,10 +26,11 @@ VIEW `invoices_to_java` AS
         JOIN `invoice_products` `ip` ON ((`ip`.`invoice_id` = `i`.`rec_id`)))
         LEFT JOIN `products` `p` ON ((`p`.`rec_id` = `ip`.`product_id`)))
     GROUP BY `i`.`rec_id`
-*/
+*/    
+    
 /*CREATE  OR REPLACE 
     ALGORITHM = UNDEFINED 
-    DEFINER = `dtm`@`%` 
+    DEFINER = `dtm`@`%`  # დათო: %-ის მაგივრად localhost-ით გავუშვი ჩემს ბაზაში. ჯავას კოდიდან dtm@localhost ითხოვს.
     SQL SECURITY DEFINER
 VIEW `clients_to_java` AS
     SELECT 
