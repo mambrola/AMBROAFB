@@ -78,7 +78,7 @@ public class InvoiceDialog extends Stage implements Initializable {
     public InvoiceDialog(Invoice invoice) {
         super();
         this.invoice = invoice;
-        this.invoiceBackup = invoice.cloneWithID();
+        //this.invoiceBackup = invoice.cloneWithID();
 
         FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/invoices/dialog/ClientDialog.fxml"));
         loader.setResources(conf.getBundle());
@@ -138,14 +138,14 @@ public class InvoiceDialog extends Stage implements Initializable {
 
     @FXML
     private void okay(ActionEvent e) {
-        System.out.println("OOOOOOOOOOOOOOOOOOkaied");
-        try {
-            Invoice.saveInvoice(invoice);
-            close();
-        } catch (Exception ex) {
-            invoice.copyFrom(invoiceBackup);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
-        }
+//        System.out.println("OOOOOOOOOOOOOOOOOOkaied");
+//        try {
+//            Invoice.saveInvoice(invoice);
+//            close();
+//        } catch (Exception ex) {
+//            invoice.copyFrom(invoiceBackup);
+//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+//        }
     }
 
     @FXML
@@ -206,8 +206,8 @@ public class InvoiceDialog extends Stage implements Initializable {
         juridical.setOnAction(this::switchJuridical);
         okayCancel.setOnOkay(this::okay);
         okayCancel.setOnCancel(this::cancel);
-        System.out.println("client: " + client);
-        bindClient();
+        //System.out.println("client: " + client);
+        
     }
 
     public void setDisabled() {
@@ -219,21 +219,6 @@ public class InvoiceDialog extends Stage implements Initializable {
         phone.setEditable(false);
     }
 
-    public void bindClient() {
-        if (client != null) {
-            juridical.selectedProperty().bindBidirectional(client.isJurProperty());
-            rezident.selectedProperty().bindBidirectional(client.isRezProperty());
-            firstName.textProperty().bindBidirectional(client.firstNameProperty());
-            lastName.textProperty().bindBidirectional(client.lastNameProperty());
-            idNumber.textProperty().bindBidirectional(client.IDNumberProperty());
-            email.textProperty().bindBidirectional(client.emailProperty());
-            fax.textProperty().bindBidirectional(client.faxProperty());
-            address.textProperty().bindBidirectional(client.addressProperty());
-            zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
-            city.textProperty().bindBidirectional(client.cityProperty());
-            country.valueProperty().bindBidirectional(client.countryProperty());
-            phone.setItems(client.getPhoneList());
-        }
-    }
+   
 
 }
