@@ -6,12 +6,24 @@
 package ambroafb.clients;
 
 import ambro.AView;
+import ambroafb.countries.Country;
+import ambroafb.general.AlertMessage;
 import ambroafb.general.Editable;
+import ambroafb.general.GeneralConfig;
+import ambroafb.general.KFZClient;
+import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -20,11 +32,11 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
@@ -38,58 +50,67 @@ import javafx.util.Callback;
 public final class Client {
 
     // ვინაიდან ეს მხოლოდ ჩვენებაა და თვითო tableView-ს ველში არ ხდება ჩასწორება Property-ები არ გვჭირდება
+    @JsonProperty("recId")
     public int clientId;
 
+    // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
+    public String password, payPal, www;
+
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
-    private SimpleBooleanProperty isJur;
+    private final SimpleBooleanProperty isJur;
 
     @AView.Column(width = "24", cellFactory = RezCellFactory.class)
-    private SimpleBooleanProperty isRez;
+    private final SimpleBooleanProperty isRez;
 
-    private SimpleStringProperty firstName, lastName;
+    private final SimpleStringProperty firstName, lastName;
 
     @AView.Column(title = "%descrip", width = "152")
-    private StringExpression descrip;
+    @JsonIgnore
+    private final StringExpression descrip;
 
     @AView.Column(title = "%email", width = "170")
-    private SimpleStringProperty email;
+    private final SimpleStringProperty email;
 
-    private SimpleStringProperty address, zipCode, city;
+    private final SimpleStringProperty address, zipCode, city;
 
     @AView.Column(title = "%full_address", width = "270")
-    private StringExpression fullAddress;
+    @JsonIgnore
+    private final StringExpression fullAddress;
 
-    private ObjectProperty<Country> country;
+    private final ObjectProperty<Country> country;
 
-//    private SimpleStringProperty countryCode;
     @AView.Column(title = "%country", width = "80")
-    private SimpleStringProperty countryDescrip;
+    @JsonIgnore
+    private final SimpleStringProperty countryDescrip;
 
     @AView.Column(title = "%id_number", width = "100")
-    private SimpleStringProperty IDNumber;
+    @JsonProperty("passNumber")
+    private final SimpleStringProperty IDNumber;
 
     @AView.Column(title = "%phones", width = "300")
-    private SimpleStringProperty phoneNumbers;
+    @JsonIgnore
+    private final SimpleStringProperty phoneNumbers;
 
-    private ObservableList<PhoneNumber> phoneList;
+    @JsonProperty("phoneNumbers")
+    private final ObservableList<PhoneNumber> phoneList;
 
     @AView.Column(title = "%fax", width = "80")
-    private SimpleStringProperty fax;
+    private final SimpleStringProperty fax;
 
     public Client() {
-        isJur = new SimpleBooleanProperty();
-        isRez = new SimpleBooleanProperty();
-        firstName = new SimpleStringProperty();
-        lastName = new SimpleStringProperty();
-        descrip = firstName.concat(" ").concat(lastName);
-        email = new SimpleStringProperty();
-        address = new SimpleStringProperty();
-        zipCode = new SimpleStringProperty();
-        city = new SimpleStringProperty();
-        fullAddress = address.concat(", ").concat(zipCode).concat(", ").concat(city);
-        country = new SimpleObjectProperty<>();
-        countryDescrip = new SimpleStringProperty();
-        IDNumber = new SimpleStringProperty();
+        isJur =             new SimpleBooleanProperty();
+        isRez =             new SimpleBooleanProperty();
+        firstName =         new SimpleStringProperty();
+        lastName =          new SimpleStringProperty();
+        descrip = Utils.avoidNull(firstName).concat(" ").concat(Utils.avoidNull(lastName));
+        email =             new SimpleStringProperty();
+        address =           new SimpleStringProperty();
+        zipCode =           new SimpleStringProperty();
+        city =              new SimpleStringProperty();
+        fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
+        country =           new SimpleObjectProperty<>();
+        countryDescrip =    new SimpleStringProperty();
+        IDNumber =          new SimpleStringProperty();
         phoneList = FXCollections.observableArrayList();
         phoneNumbers = new SimpleStringProperty();
         fax = new SimpleStringProperty();
@@ -103,24 +124,6 @@ public final class Client {
             rebindCountry();
         });
         rebindCountry();
-    }
-
-    public Client(Object[] values) {
-        this();
-        System.out.println("values: " + Utils.avoidNullAndReturnBoolean(values[1]) + ":" + values[1]);
-        clientId = Utils.avoidNullAndReturnInt(values[0]);
-        setIsJur(Utils.avoidNullAndReturnBoolean(values[1]));
-        setIsRez(Utils.avoidNullAndReturnBoolean(values[2]));
-        setFirstName(Utils.avoidNullAndReturnString(values[3]));
-        setLastName(Utils.avoidNullAndReturnString(values[4]));
-        setEmail(Utils.avoidNullAndReturnString(values[5]));
-        setAddress(Utils.avoidNullAndReturnString(values[6]));
-        setZipCode(Utils.avoidNullAndReturnString(values[7]));
-        setCity(Utils.avoidNullAndReturnString(values[8]));
-        setCountry((Country) values[9]);
-        setIDNumber(Utils.avoidNullAndReturnString(values[10]));
-        getPhoneList().setAll((Collection<PhoneNumber>) values[11]);
-        setFax(Utils.avoidNullAndReturnString(values[12]));
     }
 
     public Client cloneWithoutID() {
@@ -150,7 +153,7 @@ public final class Client {
         getPhoneList().setAll(
                 other.getPhoneList()
                 .stream()
-                .map((PhoneNumber t) -> new PhoneNumber(t.getId(), t.getNumber()))
+                .map((PhoneNumber t) -> new PhoneNumber(t.getRecId(), t.getNumber()))
                 .collect(Collectors.toList())
         );
         setFax(other.getFax());
@@ -183,44 +186,59 @@ public final class Client {
         return descrip.get() + " : " + email.get() + " : " + fullAddress.get();
     }
 
-    public Client dbGetClient(int clientId) {
-        return dbGetClients(clientId).get(clientId);
+    public static List<Client> getClients() {
+        try {
+            String data = GeneralConfig.getInstance().getServerClient().get("clients");
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {
+            });
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
     }
 
-    static HashMap<Integer, Client> dbGetClients(int recId) {
-        HashMap<Integer, Client> clients = new HashMap();
-        String query = "SELECT * FROM clients_to_java" + (recId == 0 ? "" : " where rec_id = " + Integer.toString(recId)) + " ORDER BY rec_id";
-        String[] orderedRequestedFields = new String[]{"rec_id", "is_jur", "is_rezident", "first_name", "last_name", "email", "address", "zip_code", "city", "country", "pass_number", "phones", "fax"};
-        Utils.getArrayListsByQueryFromDB(query, orderedRequestedFields).stream().forEach((row) -> {
-
-            System.out.println("row: " + row[12]);
-
-            row[11] = dbStringToPhones(row[11] == null ? "" : row[11].toString());
-            row[9] = dbStringToCountry(row[9] == null ? "" : row[9].toString());
-
-            clients.put((int) row[0], new Client(row));
-        });
-        return clients;
+    public static Client getClient(int id) {
+        try {
+            String data = GeneralConfig.getInstance().getServerClient().get("clients/" + id);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, Client.class);
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+        }
+        return null;
     }
 
-    private static Collection<PhoneNumber> dbStringToPhones(String phones) {
-        ArrayList<PhoneNumber> list = new ArrayList<>();
-        if (phones == null || phones.isEmpty()) {
-            return list;
+    public static Client saveClient(Client client) {
+        try {
+            String resource = "clients" + (client.clientId > 0 ? "/" + client.clientId : "");
+            String method = client.clientId > 0 ? "PUT" : "POST";
+            ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            String client_str = mapper.writeValueAsString(client);
+            
+            System.out.println("ambroafb.clients.Client.saveClient() client_str: " + client_str);
+
+            String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, client_str);
+            Client res = mapper.readValue(res_str, Client.class);
+            client.copyFrom(res);
+            return client;
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
         }
-        for (String phone : Arrays.asList(phones.split(":;:"))) {
-            String ph[] = phone.split(";:;");
-            list.add(new PhoneNumber(Integer.parseInt(ph[0]), ph[1]));
-        }
-        return list;
+        return null;
     }
 
-    private static Country dbStringToCountry(String c) {
-        if (c == null || c.isEmpty()) {
-            return null;
+    public static boolean deleteClient(int id) {
+        try {
+            GeneralConfig.getInstance().getServerClient().call("clients/" + id, "DELETE", null);
+            return true;
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
         }
-        String cntr[] = c.split(";:;");
-        return new Country(cntr[0], cntr[1]);
+        return false;
     }
 
     public SimpleBooleanProperty isJurProperty() {
@@ -335,6 +353,7 @@ public final class Client {
         return zipCode.get();
     }
 
+    @JsonProperty("passNumber")
     public String getIDNumber() {
         return IDNumber.get();
     }
@@ -375,12 +394,13 @@ public final class Client {
         this.country.set(country);
     }
 
+    @JsonProperty("passNumber")
     public final void setIDNumber(String IDNumber) {
         this.IDNumber.set(IDNumber);
     }
 
-    public final void setPhoneList(ObservableList<PhoneNumber> phoneList) {
-        this.phoneList = phoneList;
+    public final void setPhoneList(Collection<PhoneNumber> phoneList) {
+        this.phoneList.setAll(phoneList);
     }
 
     public final void setFax(String fax) {
@@ -392,7 +412,7 @@ public final class Client {
         @Override
         public TableCell<Client, Boolean> call(TableColumn<Client, Boolean> param) {
             TableCell<Client, Boolean> cell = new TableCell<Client, Boolean>() {
-                private ImageView view = new ImageView();
+                private final ImageView view = new ImageView();
 
                 @Override
                 public void updateItem(Boolean isFirm, boolean empty) {
@@ -422,109 +442,4 @@ public final class Client {
 
     }
 
-    public static class PhoneNumber implements Editable<String> {
-
-        private int id;
-        private final StringProperty number = new SimpleStringProperty();
-
-        public PhoneNumber() {
-        }
-
-        public PhoneNumber(int id, String number) {
-            this.id = id;
-            this.number.set(number);
-        }
-
-        public PhoneNumber(String number) {
-            this.number.set(number);
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getNumber() {
-            return number.get();
-        }
-
-        public void setNumber(String value) {
-            number.set(value);
-        }
-
-        public StringProperty numberProperty() {
-            return number;
-        }
-
-        @Override
-        public void edit(String param) {
-            setNumber(param);
-        }
-
-        @Override
-        public ObservableValue<String> getObservableString() {
-            return number;
-        }
-
-        @Override
-        public String toString() {
-            return "PhoneNumber{" + "id=" + id + ", number=" + number + '}';
-        }
-
-    }
-
-    public static class Country {
-
-        private int id;
-        private final StringProperty code = new SimpleStringProperty();
-        private final StringProperty name = new SimpleStringProperty();
-
-        public Country() {
-        }
-
-        public Country(int id, String code, String name) {
-            this(code, name);
-            this.id = id;
-        }
-
-        public Country(String code, String name) {
-            this.code.set(code);
-            this.name.set(name);
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getCode() {
-            return code.get();
-        }
-
-        public void setCode(String value) {
-            code.set(value);
-        }
-
-        public StringProperty codeProperty() {
-            return code;
-        }
-
-        public String getName() {
-            return name.get();
-        }
-
-        public void setName(String value) {
-            name.set(value);
-        }
-
-        public StringProperty nameProperty() {
-            return name;
-        }
-    }
 }

@@ -5,12 +5,17 @@
  */
 package ambroafb.countries;
 
-import ambroafb.products.Product;
+import ambroafb.general.AlertMessage;
+import ambroafb.general.KFZClient;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 
 /**
@@ -22,23 +27,33 @@ public class CountriesController implements Initializable {
 
     @FXML
     private TableView<Country> table;
-    
-    @FXML private void tm(ActionEvent e) {
+
+    @FXML
+    private void tm(ActionEvent e) {
         System.out.println("pressed: " + "Pictogram");
-        Country.dbGetCountries("").values().stream().forEach((country) -> {
-            table.getItems().add(country);
-        });
+        refreshCountries();
     }
+
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Country.dbGetCountries("").values().stream().forEach((country) -> {
-            table.getItems().add(country);
-        });
-    }    
-    
+        refreshCountries();
+    }
+
+    private void refreshCountries() {
+        try {
+            Country.getCountries().stream().forEach((country) -> {
+                table.getItems().add(country);
+            });
+        } catch (KFZClient.KFZServerException | IOException ex) {
+            Logger.getLogger(CountriesController.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+        }
+    }
+
 }

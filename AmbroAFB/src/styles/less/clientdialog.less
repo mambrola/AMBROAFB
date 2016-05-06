@@ -31,6 +31,11 @@
     -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
 }
 
+.w3 .c2 {
+    -fx-pref-width: 2*(@formWidth - 2*@spaceWidth)/3 + @spaceWidth;
+}
+
+
 .w2, .w3 {
     -fx-spacing: @spaceWidth;
 }
@@ -42,6 +47,10 @@
 }
 .button {
     -fx-font-weight: bold;
+}
+
+*:disabled {
+    -fx-opacity: 0.9;
 }
 
 

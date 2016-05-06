@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.clients.dialog;
+package ambroafb.invoices.dialog;
 
 import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
@@ -16,6 +16,7 @@ import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.okay_cancel.OkayCancel;
+import ambroafb.invoices.Invoice;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -45,11 +46,11 @@ import javafx.util.StringConverter;
  *
  * @author tabramishvili
  */
-public class ClientDialog extends Stage implements Initializable {
+public class InvoiceDialog extends Stage implements Initializable {
 
     GeneralConfig conf = GeneralConfig.getInstance();
     ArrayList<Node> focusTraversableNodes;
-    Client client, clientBackup;
+    Invoice invoice, invoiceBackup;
 
     @FXML
     VBox formPane;
@@ -70,16 +71,16 @@ public class ClientDialog extends Stage implements Initializable {
 
     private boolean askClose = true;
 
-    public ClientDialog() {
-        this(new Client());
+    public InvoiceDialog() {
+        this(new Invoice());
     }
 
-    public ClientDialog(Client client) {
+    public InvoiceDialog(Invoice invoice) {
         super();
-        this.client = client;
-        this.clientBackup = client.cloneWithID();
+        this.invoice = invoice;
+        this.invoiceBackup = invoice.cloneWithID();
 
-        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/clients/dialog/ClientDialog.fxml"));
+        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/invoices/dialog/ClientDialog.fxml"));
         loader.setResources(conf.getBundle());
         loader.setController(this);
         try {
@@ -101,7 +102,7 @@ public class ClientDialog extends Stage implements Initializable {
         System.out.println("on close");
         boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
         if (close) {
-            client = null;
+            invoice = null;
             System.out.println("cancelling");
             close();
         }
@@ -112,9 +113,9 @@ public class ClientDialog extends Stage implements Initializable {
      *
      * @return
      */
-    public Client getResult() {
+    public Invoice getResult() {
         showAndWait();
-        return client;
+        return invoice;
     }
 
     /**
@@ -139,10 +140,10 @@ public class ClientDialog extends Stage implements Initializable {
     private void okay(ActionEvent e) {
         System.out.println("OOOOOOOOOOOOOOOOOOkaied");
         try {
-            Client.saveClient(client);
+            Invoice.saveInvoice(invoice);
             close();
         } catch (Exception ex) {
-            client.copyFrom(clientBackup);
+            invoice.copyFrom(invoiceBackup);
             new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
         }
     }
@@ -186,7 +187,7 @@ public class ClientDialog extends Stage implements Initializable {
         try {
             country.getItems().addAll(Country.getCountries());
         } catch (KFZClient.KFZServerException | IOException ex) {
-            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InvoiceDialog.class.getName()).log(Level.SEVERE, null, ex);
             new AlertMessage(Alert.AlertType.WARNING, ex, "Can't load countries").showAlert();
         }
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);

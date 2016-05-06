@@ -27,7 +27,6 @@
             onRefresh="#refresh" />
     </top>
     <center>
-        <!--<DialogPane fx:id="alert" styleClass="root"></DialogPane>-->
         <ATableView fx:id="table" initializer="ambroafb.clients.Client" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
     </center>
 </BorderPane>

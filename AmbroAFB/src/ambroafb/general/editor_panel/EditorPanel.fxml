@@ -67,8 +67,8 @@
                                 <Tooltip text="%new" />
                             </tooltip>
                             <graphic>
-                                <HBox  spacing="8" >
-                                    <ImageView fitHeight="18.0" fitWidth="18.0"  pickOnBounds="true" preserveRatio="true">
+                                <HBox  spacing="4" >
+                                    <ImageView fitHeight="22.0" fitWidth="22.0"  pickOnBounds="true" preserveRatio="true">
                                         <Image url="/images/clone.png" />
                                     </ImageView>
                                     <Separator orientation="VERTICAL" />

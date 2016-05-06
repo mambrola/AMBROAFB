@@ -44,6 +44,17 @@ public class Invoice { // ვინაიდან ეს მხოლოდ ჩ
     @AView.Column(title = "%products", width = "300")
     private SimpleStringProperty products;
         
+    public Invoice(){
+        invoiceNumber = new SimpleStringProperty();
+        clientId = new SimpleIntegerProperty();
+        clientFirstName = new SimpleStringProperty();
+        clientLastName = new SimpleStringProperty(); 
+        clientEmail = new SimpleStringProperty();
+        client = new SimpleStringProperty(clientFirstName + " " + clientLastName + ", " + clientEmail);
+    }
+    
+    
+    
     public Invoice(int ii, String in, int ci, Date bd, Date ed, String cfn, String cln, String ce, String pis, String pds){
         invoiceId = ci;
         invoiceNumber = new SimpleStringProperty(in);
