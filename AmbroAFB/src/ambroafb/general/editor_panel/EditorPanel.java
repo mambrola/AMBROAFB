@@ -50,19 +50,19 @@ public class EditorPanel extends HBox  {
      * Event Handlers *
      * *************************************************************************
      */
-    public void setOnDelete     (EventHandler<ActionEvent> handler) { delete.setOnAction(handler);}
-    public void setOnEdit       (EventHandler<ActionEvent> handler) { edit.setOnAction(handler);}
-    public void setOnView       (EventHandler<ActionEvent> handler) { view.setOnAction(handler);}
-    public void setOnNew        (EventHandler<ActionEvent> handler) { add.setOnAction(handler);}
-    public void setOnNewBySample(EventHandler<ActionEvent> handler) { addBySample.setOnAction(handler);}
-    public void setOnRefresh    (EventHandler<ActionEvent> handler) { refresh.setOnAction(handler);}
-    
-    public EventHandler<ActionEvent> getOnDelete()      { return delete.getOnAction();}
-    public EventHandler<ActionEvent> getOnEdit()        { return edit.getOnAction();}
-    public EventHandler<ActionEvent> getOnView()        { return view.getOnAction();}
-    public EventHandler<ActionEvent> getOnNew()         { return add.getOnAction();}
-    public EventHandler<ActionEvent> getOnNewBySample() { return addBySample.getOnAction();}
-    public EventHandler<ActionEvent> getOnRefresh()     { return refresh.getOnAction();}
+//    public void setOnDelete     (EventHandler<ActionEvent> handler) { delete.setOnAction(handler);}
+//    public void setOnEdit       (EventHandler<ActionEvent> handler) { edit.setOnAction(handler);}
+//    public void setOnView       (EventHandler<ActionEvent> handler) { view.setOnAction(handler);}
+//    public void setOnNew        (EventHandler<ActionEvent> handler) { add.setOnAction(handler);}
+//    public void setOnNewBySample(EventHandler<ActionEvent> handler) { addBySample.setOnAction(handler);}
+//    public void setOnRefresh    (EventHandler<ActionEvent> handler) { refresh.setOnAction(handler);}
+//    
+//    public EventHandler<ActionEvent> getOnDelete()      { return delete.getOnAction();}
+//    public EventHandler<ActionEvent> getOnEdit()        { return edit.getOnAction();}
+//    public EventHandler<ActionEvent> getOnView()        { return view.getOnAction();}
+//    public EventHandler<ActionEvent> getOnNew()         { return add.getOnAction();}
+//    public EventHandler<ActionEvent> getOnNewBySample() { return addBySample.getOnAction();}
+//    public EventHandler<ActionEvent> getOnRefresh()     { return refresh.getOnAction();}
    
     /**
      * 

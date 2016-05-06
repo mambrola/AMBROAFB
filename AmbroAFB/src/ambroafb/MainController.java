@@ -187,27 +187,27 @@ public class MainController implements Initializable {
     @FXML private void account_statments(ActionEvent event) {}
     @FXML private void other(ActionEvent event) {}
     
-    @FXML
-    private void programsInOut(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage(
-                    Names.IN_OUT_FXML, 
-                    config.getTitleFor(Names.IN_OUT_TITLE), 
-                    Names.IN_OUT_LOGO,
-                    AmbroAFB.mainStage
-            );
-            stage.show();
-        }catch(IOException ex){
-//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-//            alert.showAlert();
-           
-            Platform.runLater(() -> {
-                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-                alert.showAlert();
-                System.out.println("errorr after");
-            });
-        }
-    }
+//    @FXML
+//    private void programsInOut(ActionEvent event) {
+//        try{
+//            Stage stage = Utils.createStage(
+//                    Names.IN_OUT_FXML, 
+//                    config.getTitleFor(Names.IN_OUT_TITLE), 
+//                    Names.IN_OUT_LOGO,
+//                    AmbroAFB.mainStage
+//            );
+//            stage.show();
+//        }catch(IOException ex){
+////            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
+////            alert.showAlert();
+//           
+//            Platform.runLater(() -> {
+//                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
+//                alert.showAlert();
+//                System.out.println("errorr after");
+//            });
+//        }
+//    }
     
     
     

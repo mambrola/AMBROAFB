@@ -18,13 +18,7 @@
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="ambroafb.clients.ClientsController">
     <top>
-        <EditorPanel fx:id="panel"
-            onDelete="#delete" 
-            onEdit="#edit" 
-            onView="#view" 
-            onNew="#add"
-            onNewBySample="#addBySample" 
-            onRefresh="#refresh" />
+        <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
     </top>
     <center>
         <ATableView fx:id="table" initializer="ambroafb.clients.Client" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />

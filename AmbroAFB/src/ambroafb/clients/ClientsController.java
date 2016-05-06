@@ -134,6 +134,6 @@ public class ClientsController implements Initializable {
         Client.getClients().stream().forEach((client) -> {
             table.getItems().add(client);
         });
-        panel.disablePropertyBinder(table);
+        //panel.disablePropertyBinder(table);
     }
 }
