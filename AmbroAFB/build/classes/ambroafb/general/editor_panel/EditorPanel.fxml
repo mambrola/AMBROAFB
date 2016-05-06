@@ -10,7 +10,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox   fx:id = "formNode"
+<HBox   
+        fx:id = "formNode"
         alignment="CENTER_LEFT" 
         stylesheets="/styles/css/editorpanel.css"
         xmlns:fx="http://javafx.com/fxml/1" 

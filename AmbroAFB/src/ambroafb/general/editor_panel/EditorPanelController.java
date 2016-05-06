@@ -5,10 +5,7 @@
  */
 package ambroafb.general.editor_panel;
 
-import ambro.ATable;
 import ambro.ATableView;
-import ambroafb.general.editor_panel.EditorPanel;
-import ambroafb.clients.dialog.ClientDialog;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.lang.reflect.InvocationTargetException;
@@ -20,7 +17,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.stage.WindowEvent;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableView;
 
 /**
  * FXML Controller class
@@ -31,6 +29,10 @@ public class EditorPanelController implements Initializable {
 
     @FXML
     private Button exit, delete, edit, view;
+    
+    @FXML
+    private MenuItem addBySample;
+    
 
     @FXML
     private void edit(ActionEvent e) {
@@ -61,8 +63,14 @@ public class EditorPanelController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
     }
+  
+    public void disablePropertyBinder (TableView table){
+        edit.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+        view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+        addBySample.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
     
     
+    }
     
     private String getClassName(String type){
         String rtrn = (String)exit.getScene().getProperties().get("controller").toString();

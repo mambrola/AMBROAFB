@@ -5,17 +5,16 @@
  */
 package ambroafb.clients;
 
-import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.clients.dialog.ClientDialog;
+import ambroafb.general.editor_panel.EditorPanelController;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 
 /**
  * FXML Controller class
@@ -24,13 +23,14 @@ import javafx.scene.layout.Pane;
  */
 public class ClientsController implements Initializable {
 
-    @FXML private Button exit;
-    
+    @FXML
+    private BorderPane formPane;
+
     @FXML
     private TableView<Client> table;
 
     @FXML
-    private EditorPanel panel;
+    private EditorPanelController editorPanelController;
 
     @FXML
     private void delete(ActionEvent e) {
@@ -49,26 +49,26 @@ public class ClientsController implements Initializable {
         }
     }
 
-    @FXML
-    private void edit(ActionEvent e) {
-
-        Client editingClient = table.getSelectionModel().getSelectedItem();
-        Client real = Client.getOneFromDB(editingClient.recId);
-        if (real != null) {
-            editingClient.copyFrom(real);
-        }
-        Client backup = editingClient.cloneWithID();
-
-        ClientDialog dialog = new ClientDialog(editingClient);
-        Client editedClient = dialog.getResult();
-        if (editedClient == null) {
-            editingClient.copyFrom(backup);
-            System.out.println("dialog is cancelled");
-        } else {
-            System.out.println("changed client: " + editedClient);
-            System.out.println("phones = " + editedClient.getPhoneNumbers());
-        }
-    }
+//    @FXML
+//    private void edit(ActionEvent e) {
+//
+//        Client editingClient = table.getSelectionModel().getSelectedItem();
+//        Client real = Client.getOneFromDB(editingClient.recId);
+//        if (real != null) {
+//            editingClient.copyFrom(real);
+//        }
+//        Client backup = editingClient.cloneWithID();
+//
+//        ClientDialog dialog = new ClientDialog(editingClient);
+//        Client editedClient = dialog.getResult();
+//        if (editedClient == null) {
+//            editingClient.copyFrom(backup);
+//            System.out.println("dialog is cancelled");
+//        } else {
+//            System.out.println("changed client: " + editedClient);
+//            System.out.println("phones = " + editedClient.getPhoneNumbers());
+//        }
+//    }
 
     @FXML
     private void view(ActionEvent e) {
@@ -129,7 +129,6 @@ public class ClientsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //exit.getScene();//.lookup("#edit").disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
         asignTable();
     }
 
@@ -137,6 +136,6 @@ public class ClientsController implements Initializable {
         Client.getClients().stream().forEach((client) -> {
             table.getItems().add(client);
         });
-        //panel.disablePropertyBinder(table);
+        editorPanelController.disablePropertyBinder(table);
     }
 }

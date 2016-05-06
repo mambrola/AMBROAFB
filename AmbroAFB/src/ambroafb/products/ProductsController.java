@@ -5,8 +5,6 @@
  */
 package ambroafb.products;
 
-import ambroafb.general.editor_panel.EditorPanel;
-import ambroafb.invoices.Invoice;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -23,9 +21,6 @@ public class ProductsController implements Initializable {
 
     @FXML
     private TableView<Product> table;
-    
-    @FXML
-    private EditorPanel panel;
     
     @FXML
     private void delete(ActionEvent e) {
@@ -99,7 +94,7 @@ public class ProductsController implements Initializable {
         Product.dbGetProducts(0).values().stream().forEach((product) -> {
             table.getItems().add(product);
         });
-        panel.disablePropertyBinder(table);
+        //panel.disablePropertyBinder(table);
     }
     
 }

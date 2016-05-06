@@ -14,7 +14,6 @@ import ambroafb.general.KFZClient;
 import ambroafb.general.ListEditor;
 import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
-import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.OkayCancel;
@@ -22,7 +21,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -91,7 +89,7 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
         try {
             setScene(new Scene(loader.load()));
         } catch (IOException ex) {
-            Logger.getLogger(EditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         initOwner(AmbroAFB.mainStage);
         setResizable(false);
