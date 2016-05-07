@@ -80,9 +80,9 @@
                 </MenuItem>
             </items>
         </SplitMenuButton>
-        <ToggleButton fx:id="refresh">
+        <ToggleButton fx:id="refresh" onAction="#refresh">
             <tooltip>
-                <Tooltip text="%enter" />
+                <Tooltip text="%refresh" />
             </tooltip>
             <graphic>
                 <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">

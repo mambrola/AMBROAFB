@@ -6,6 +6,7 @@
 package ambroafb.general.editor_panel;
 
 import ambro.ATableView;
+import ambroafb.clients.ClientsController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +34,9 @@ public class EditorPanelController implements Initializable {
     @FXML
     private MenuItem addBySample;
     
-
+    @FXML
+    private Initializable outerController;
+    
     @FXML
     private void edit(ActionEvent e) {
         EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
@@ -52,7 +55,12 @@ public class EditorPanelController implements Initializable {
             selected.copyFrom(backup);
     }
 
-    
+    @FXML
+    private void refresh(ActionEvent e) {
+        try {
+            Class.forName(getClassName("controllerClass")).getMethod("asignTable").invoke(outerController);
+        } catch (SecurityException | IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+    }
        
     /**
      *
@@ -64,16 +72,20 @@ public class EditorPanelController implements Initializable {
         
     }
   
-    public void disablePropertyBinder (TableView table){
+    public void buttonsMainPropertysBinder (TableView table){
         edit.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
         view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
         addBySample.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
-    
-    
+    }
+
+    public void setOuterController(Initializable controller){
+        outerController = controller;
     }
     
     private String getClassName(String type){
-        String rtrn = (String)exit.getScene().getProperties().get("controller").toString();
+        String rtrn = exit.getScene().getProperties().get("controller").toString();
+        if(type.equals("controllerClass"))
+            return rtrn.substring(0, rtrn.indexOf("@"));
         String path = rtrn.substring(0, rtrn.lastIndexOf(".") + 1);
         String className = rtrn.substring(path.length(), rtrn.lastIndexOf("Controller"));
         System.out.println("<-------> " + rtrn + " : " + path + " : " + className);

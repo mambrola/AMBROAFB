@@ -31,7 +31,7 @@ public class ClientsController implements Initializable {
 
     @FXML
     private EditorPanelController editorPanelController;
-
+    
     @FXML
     private void delete(ActionEvent e) {
         Client client = table.getSelectionModel().getSelectedItem();
@@ -113,15 +113,6 @@ public class ClientsController implements Initializable {
         }
     }
 
-    @FXML
-    private void refresh(ActionEvent e) {
-
-        table.getItems().get(0).setEmail("ccccccc");
-
-        //table.getItems().clear();
-        //asignTable();
-    }
-
     /**
      *
      * @param url
@@ -129,13 +120,28 @@ public class ClientsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        editorPanelController.setOuterController(this);
+        editorPanelController.buttonsMainPropertysBinder(table);
         asignTable();
     }
 
-    private void asignTable() {
+    
+    //შეიძლება ეს მაინც ჯობია გაიყოს, იდეურად უფრო სწორი იქნება. აქ დარჩება მარტო კლიენტების შეყრა და არჩეულის ისევ არჩევის მექანიზმი(მეთოდი), დანარჩენი იქით უნდა გაკეთდეს - ეკუთვნის რეფრეშს
+    public void asignTable() {
+        Client selected = table.getSelectionModel().getSelectedItem();
+        table.getItems().clear();
         Client.getClients().stream().forEach((client) -> {
             table.getItems().add(client);
         });
-        editorPanelController.disablePropertyBinder(table);
+        if(selected != null)
+        selectClientAgain(selected);
+    }
+
+    private void selectClientAgain(Client selected) {
+        int i = table.getItems().size() - 1;
+        while(i >= 0 && !table.getItems().get(i).getEmail().equals(selected.getEmail()))
+            i--;
+        if(i >= 0)
+            table.getSelectionModel().select(i);
     }
 }

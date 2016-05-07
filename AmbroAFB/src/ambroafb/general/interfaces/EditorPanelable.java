@@ -18,4 +18,5 @@ public abstract class EditorPanelable {
     public EditorPanelable cloneWithoutID() {return null;}
     public EditorPanelable cloneWithID() {return null;}
     public void copyFrom(EditorPanelable other){};
+    public void asignTable(){};
 }
