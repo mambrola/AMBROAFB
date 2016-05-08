@@ -127,6 +127,7 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
      *
      * @param ask
      */
+    @Override
     public void askClose(boolean ask) {
         askClose = ask;
     }
@@ -144,7 +145,7 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
     private void okay(ActionEvent e) {
         System.out.println("OOOOOOOOOOOOOOOOOOkaied");
         try {
-            Client.saveClient(client);
+            Client.saveOneToDB(client);
             close();
         } catch (Exception ex) {
             client.copyFrom(clientBackup);
@@ -214,6 +215,7 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
         bindClient();
     }
 
+    @Override
     public void setDisabled() {
         focusTraversableNodes.forEach((Node t) -> {
             if (t != phone) {

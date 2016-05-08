@@ -70,35 +70,35 @@ public class ClientsController implements Initializable {
 //        }
 //    }
 
-    @FXML
-    private void view(ActionEvent e) {
-        Client client = table.getSelectionModel().getSelectedItem();
-        Client real = Client.getOneFromDB(client.recId);
-        if (real != null) {
-            client.copyFrom(real);
-        }
+//    @FXML
+//    private void view(ActionEvent e) {
+//        Client client = table.getSelectionModel().getSelectedItem();
+//        Client real = Client.getOneFromDB(client.recId);
+//        if (real != null) {
+//            client.copyFrom(real);
+//        }
+//
+//        ClientDialog dialog = new ClientDialog(client);
+//        dialog.setDisabled();
+//        dialog.askClose(false);
+//        dialog.showAndWait();
+//    }
 
-        ClientDialog dialog = new ClientDialog(client);
-        dialog.setDisabled();
-        dialog.askClose(false);
-        dialog.showAndWait();
-    }
-
-    @FXML
-    private void add(ActionEvent e) {
-        ClientDialog dialog = new ClientDialog();
-        Client newClient = dialog.getResult();
-
-        if (newClient == null) {
-            System.out.println("dialog is cancelled addClient");
-        } else {
-            System.out.println("changed client: " + newClient);
-            newClient = Client.saveClient(newClient);
-            if (newClient != null) {
-                table.getItems().add(newClient);
-            }
-        }
-    }
+//    @FXML
+//    private void add(ActionEvent e) {
+//        ClientDialog dialog = new ClientDialog();
+//        Client newClient = dialog.getResult();
+//
+//        if (newClient == null) {
+//            System.out.println("dialog is cancelled addClient");
+//        } else {
+//            System.out.println("changed client: " + newClient);
+//            newClient = Client.saveClient(newClient);
+//            if (newClient != null) {
+//                table.getItems().add(newClient);
+//            }
+//        }
+//    }
 
     @FXML
     private void addBySample(ActionEvent e) {
@@ -109,7 +109,7 @@ public class ClientsController implements Initializable {
             System.out.println("dialog is cancelled addBySample");
         } else {
             System.out.println("changed client: " + newClient);
-            Client.saveClient(newClient);
+            Client.saveOneToDB(newClient);
         }
     }
 
@@ -125,21 +125,17 @@ public class ClientsController implements Initializable {
         asignTable();
     }
 
-    
-    //შეიძლება ეს მაინც ჯობია გაიყოს, იდეურად უფრო სწორი იქნება. აქ დარჩება მარტო კლიენტების შეყრა და არჩეულის ისევ არჩევის მექანიზმი(მეთოდი), დანარჩენი იქით უნდა გაკეთდეს - ეკუთვნის რეფრეშს
+    //შეიძლება გატანა მშობელ კლასში
     public void asignTable() {
-        Client selected = table.getSelectionModel().getSelectedItem();
-        table.getItems().clear();
         Client.getClients().stream().forEach((client) -> {
             table.getItems().add(client);
         });
-        if(selected != null)
-        selectClientAgain(selected);
     }
-
-    private void selectClientAgain(Client selected) {
+    
+    //შეიძლება გატანა მშობელ კლასში refresh-თან EditorPanelController-ში
+    public void selectOneAgain(Client selected) {
         int i = table.getItems().size() - 1;
-        while(i >= 0 && !table.getItems().get(i).getEmail().equals(selected.getEmail()))
+        while(i >= 0 && table.getItems().get(i).getRecId() != selected.getRecId())
             i--;
         if(i >= 0)
             table.getSelectionModel().select(i);

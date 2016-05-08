@@ -38,7 +38,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button fx:id="view" >
+        <Button fx:id="view" onAction="#view" >
             <tooltip>
                 <Tooltip text="%view" />
             </tooltip>
@@ -50,7 +50,7 @@
         </Button>
                 
                 
-        <SplitMenuButton fx:id="add">
+        <SplitMenuButton fx:id="add" onAction="#add">
             <tooltip>
                 <Tooltip text="%new" />
             </tooltip>

@@ -41,7 +41,7 @@ public class EditorPanelController implements Initializable {
     private void edit(ActionEvent e) {
         EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
         try {
-            EditorPanelable real = (EditorPanelable)Class.forName(getClassName("")).getMethod("getOneFromDB", int.class).invoke(null, selected.recId);
+            EditorPanelable real = (EditorPanelable)Class.forName(getClassName("objectClass")).getMethod("getOneFromDB", int.class).invoke(null, selected.recId);
             if (real != null) {
                 selected.copyFrom(real);
             }    
@@ -54,11 +54,59 @@ public class EditorPanelController implements Initializable {
         if (result == null)
             selected.copyFrom(backup);
     }
+    
+    @FXML
+    private void view(ActionEvent e) {
+        EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
+        try {
+            EditorPanelable real = (EditorPanelable)Class.forName(getClassName("objectClass")).getMethod("getOneFromDB", int.class).invoke(null, selected.recId);
+            if (real != null) {
+                selected.copyFrom(real);
+            }    
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+        
+        try {
+            try {
+                Dialogable dialog = (Dialogable)Class.forName(getClassName("dialogClass")).getConstructor(EditorPanelable.class).newInstance(selected);
+                dialog.setDisabled();
+                dialog.askClose(false);
+                dialog.showAndWait();
+            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @FXML
+    private void add(ActionEvent e) {
+        EditorPanelable result = null;
+        try {
+            result = (EditorPanelable)((Dialogable)Class.forName(getClassName("dialogClass")).getConstructor().newInstance()).getResult();
+        
+            if (result == null) {
+                System.out.println("dialog is cancelled addClient");
+            } else {
+                System.out.println("changed client: " + result);
+                result = (EditorPanelable)Class.forName(getClassName("objectClass")).getMethod("saveOneToDB", Class.forName(getClassName("objectClass"))).invoke(null, result); 
+                if (result != null) {
+                    ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
+                }
+            }
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+    }
+    
+    
+    
 
     @FXML
     private void refresh(ActionEvent e) {
+        ATableView table = (ATableView)exit.getScene().lookup("#table");
+        EditorPanelable selected = (EditorPanelable)table.getSelectionModel().getSelectedItem();
+        table.getItems().clear();
         try {
             Class.forName(getClassName("controllerClass")).getMethod("asignTable").invoke(outerController);
+            if(selected != null)
+                Class.forName(getClassName("controllerClass")).getMethod("selectOneAgain", Class.forName(getClassName("objectClass"))).invoke(outerController, selected);
         } catch (SecurityException | IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
     }
        
