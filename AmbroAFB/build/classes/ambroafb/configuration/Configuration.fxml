@@ -20,6 +20,19 @@
         <HBox alignment="CENTER_LEFT" spacing="5.0" styleClass="menu-bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <fx:include fx:id="exit" source="/ambroafb/general/exit_button/ExitButton.fxml"/>
+                <Button onAction="#save">
+                    <tooltip>
+                        <Tooltip text="%save" />
+                    </tooltip>
+                    <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="/images/save.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                
                 <SaveButton onSave="#save" />
             </children>
             <padding>
