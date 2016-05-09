@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.collections.*?>
 <?import javafx.scene.image.* ?>
+<?import ambroafb.general.save_button.*?>
 
 <AnchorPane fx:id="formPane"  
             stylesheets="/styles/css/configuration.css" 
@@ -19,18 +20,7 @@
         <HBox alignment="CENTER_LEFT" spacing="5.0" styleClass="menu-bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <fx:include fx:id="exit" source="/ambroafb/general/exit_button/ExitButton.fxml"/>
-                <Button onAction="#save">
-                    <tooltip>
-                        <Tooltip text="%save" />
-                    </tooltip>
-                    <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="/images/save.png" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Button>
+                <SaveButton onSave="#save" />
             </children>
             <padding>
                 <Insets bottom="3.0" left="10.0" top="3.0" />
