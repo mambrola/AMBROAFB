@@ -100,7 +100,6 @@ public class ClientsController implements Initializable {
 //            }
 //        }
 //    }
->>>>>>> origin/master
 
     @FXML
     private void addBySample(ActionEvent e) {
