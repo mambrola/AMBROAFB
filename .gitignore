@@ -12,3 +12,5 @@
 hs_err_pid*
 /AmbroAFB/dist/
 /AmbroAFB/nbproject/private/
+*.properties
+AmbroAFB/errors.log

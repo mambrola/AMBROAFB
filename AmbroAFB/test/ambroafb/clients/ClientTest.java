@@ -76,62 +76,62 @@ public class ClientTest {
         assertTrue(result);
     }
 
-    @Test
-    public void testCloneWithoutID() {
-        Client result = personalClient.cloneWithoutID();
-        assertTrue(result.equals(personalClient));
-    }
-
-    @Test
-    public void testCloneWithID() {
-        personalClient.clientId = 1;
-        Client result = personalClient.cloneWithID();
-        assertEquals(personalClient.clientId, result.clientId);
-    }
-
-    @Test
-    public void testToStringWithDescription() {
-        Client instance = new Client();
-        instance.setFirstName("testName");
-        instance.setLastName("testLastName");
-        instance.setEmail("c@gmail.com");
-        
-        String expectedResult = "testName testLastName : c@gmail.com : , , ";
-        String result = instance.toString();
-        assertEquals(expectedResult, result);
-    }
-
-    @Test
-    public void testToStringWithoutNameAndDescription() {
-        Client instance = new Client();
-        instance.setLastName("testLastName");
-        instance.setEmail("c@gmail.com");
-        
-        String expectedResult = " testLastName : c@gmail.com : , , ";
-        String result = instance.toString();
-        assertEquals(expectedResult, result);
-    }
-    
-    @Test
-    public void testToStringWithSomeDescription() {
-        Client instance = new Client();
-        instance.setLastName("testLastName");
-        instance.setEmail("c@gmail.com");
-        instance.setZipCode("12345");
-        
-        String expectedResult = " testLastName : c@gmail.com : , 12345, ";
-        String result = instance.toString();
-        assertEquals(expectedResult, result);
-    }
-    
-    @Test
-    public void testToStringEmptyClient() {
-        Client instance = new Client();
-        
-        String expectedResult = "  : null : , , ";
-        String result = instance.toString();
-        assertEquals(expectedResult, result);
-    }
+//    @Test
+//    public void testCloneWithoutID() {
+//        Client result = personalClient.cloneWithoutID();
+//        assertTrue(result.equals(personalClient));
+//    }
+//
+//    @Test
+//    public void testCloneWithID() {
+//        personalClient.recId = 1;
+//        Client result = personalClient.cloneWithID();
+//        assertEquals(personalClient.recId, result.recId);
+//    }
+//
+//    @Test
+//    public void testToStringWithDescription() {
+//        Client instance = new Client();
+//        instance.setFirstName("testName");
+//        instance.setLastName("testLastName");
+//        instance.setEmail("c@gmail.com");
+//        
+//        String expectedResult = "testName testLastName : c@gmail.com : , , ";
+//        String result = instance.toString();
+//        assertEquals(expectedResult, result);
+//    }
+//
+//    @Test
+//    public void testToStringWithoutNameAndDescription() {
+//        Client instance = new Client();
+//        instance.setLastName("testLastName");
+//        instance.setEmail("c@gmail.com");
+//        
+//        String expectedResult = " testLastName : c@gmail.com : , , ";
+//        String result = instance.toString();
+//        assertEquals(expectedResult, result);
+//    }
+//    
+//    @Test
+//    public void testToStringWithSomeDescription() {
+//        Client instance = new Client();
+//        instance.setLastName("testLastName");
+//        instance.setEmail("c@gmail.com");
+//        instance.setZipCode("12345");
+//        
+//        String expectedResult = " testLastName : c@gmail.com : , 12345, ";
+//        String result = instance.toString();
+//        assertEquals(expectedResult, result);
+//    }
+//    
+//    @Test
+//    public void testToStringEmptyClient() {
+//        Client instance = new Client();
+//        
+//        String expectedResult = "  : null : , , ";
+//        String result = instance.toString();
+//        assertEquals(expectedResult, result);
+//    }
     
 //    @Test
 //    public void testGetClients() {

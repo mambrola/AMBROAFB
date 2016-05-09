@@ -15,6 +15,8 @@ import ambroafb.general.ListEditor;
 import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.EditorPanel;
+import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.OkayCancel;
 import java.io.IOException;
 import java.net.URL;
@@ -45,7 +47,7 @@ import javafx.util.StringConverter;
  *
  * @author tabramishvili
  */
-public class ClientDialog extends Stage implements Initializable {
+public class ClientDialog extends Stage implements Initializable, Dialogable {
 
     GeneralConfig conf = GeneralConfig.getInstance();
     ArrayList<Node> focusTraversableNodes;
@@ -74,6 +76,10 @@ public class ClientDialog extends Stage implements Initializable {
         this(new Client());
     }
 
+    public ClientDialog(EditorPanelable object) {
+        this((Client) object);
+    }
+    
     public ClientDialog(Client client) {
         super();
         this.client = client;
@@ -112,6 +118,7 @@ public class ClientDialog extends Stage implements Initializable {
      *
      * @return
      */
+    @Override
     public Client getResult() {
         showAndWait();
         return client;
