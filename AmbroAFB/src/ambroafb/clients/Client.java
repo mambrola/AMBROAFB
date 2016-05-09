@@ -213,14 +213,14 @@ public class Client extends EditorPanelable{
         return null;
     }
 
-    public static Client saveClient(Client client) {
+    public static Client saveOneToDB(Client client) {
         try {
             String resource = "clients" + (client.recId > 0 ? "/" + client.recId : "");
             String method = client.recId > 0 ? "PUT" : "POST";
             ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             String client_str = mapper.writeValueAsString(client);
             
-            System.out.println("ambroafb.clients.Client.saveClient() client_str: " + client_str);
+            System.out.println(Thread.currentThread().getStackTrace()[1].getClassName() + " .saveOneToDB() client_str: " + client_str);
 
             String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, client_str);
             Client res = mapper.readValue(res_str, Client.class);

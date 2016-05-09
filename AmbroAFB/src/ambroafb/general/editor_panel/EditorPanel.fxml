@@ -10,7 +10,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox   fx:id = "formNode"
+<HBox   
+        fx:id = "formNode"
         alignment="CENTER_LEFT" 
         stylesheets="/styles/css/editorpanel.css"
         xmlns:fx="http://javafx.com/fxml/1" 
@@ -37,7 +38,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button fx:id="view" >
+        <Button fx:id="view" onAction="#view" >
             <tooltip>
                 <Tooltip text="%view" />
             </tooltip>
@@ -49,7 +50,7 @@
         </Button>
                 
                 
-        <SplitMenuButton fx:id="add">
+        <SplitMenuButton fx:id="add" onAction="#add">
             <tooltip>
                 <Tooltip text="%new" />
             </tooltip>
@@ -79,9 +80,9 @@
                 </MenuItem>
             </items>
         </SplitMenuButton>
-        <ToggleButton fx:id="refresh">
+        <ToggleButton fx:id="refresh" onAction="#refresh">
             <tooltip>
-                <Tooltip text="%enter" />
+                <Tooltip text="%refresh" />
             </tooltip>
             <graphic>
                 <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">

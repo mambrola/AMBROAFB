@@ -11,4 +11,7 @@ package ambroafb.general.interfaces;
  */
 public interface Dialogable {
     public EditorPanelable getResult();
+    public void setDisabled();
+    public void askClose(boolean bool);
+    public void showAndWait();
 }

@@ -5,17 +5,11 @@
  */
 package ambroafb.invoices;
 
-import ambroafb.general.editor_panel.EditorPanel;
-import ambroafb.invoices.Invoice;
-import ambroafb.invoices.dialog.InvoiceDialog;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 
 /**
@@ -26,7 +20,6 @@ import javafx.scene.control.TableView;
 public class InvoicesController implements Initializable {
 
     @FXML private TableView<Invoice> table;
-    @FXML private EditorPanel panel;
     
     @FXML
     private void delete(ActionEvent e) {
@@ -72,6 +65,6 @@ public class InvoicesController implements Initializable {
         Invoice.dbGetInvoices(0).values().stream().forEach((invoice) -> {
             table.getItems().add(invoice);
         });
-        panel.disablePropertyBinder(table);
+        //panel.disablePropertyBinder(table);
     }
 }
