@@ -69,6 +69,7 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
     OkayCancel okayCancel;
 
     private boolean askClose = true;
+    private String callButtonType;
 
     public ClientDialog() {
         this(new Client());
@@ -99,6 +100,11 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
             onClose();
         });
 
+    }
+    
+    public ClientDialog(Client client, String fromButton){
+        this(client);
+        callButtonType = fromButton;
     }
 
     private void onClose() {
