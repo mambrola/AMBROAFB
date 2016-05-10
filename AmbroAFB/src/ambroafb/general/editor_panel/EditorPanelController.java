@@ -79,6 +79,27 @@ public class EditorPanelController implements Initializable {
         }
     }
     
+    private void fackeView(){
+        EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
+            Class objectClass = Utils.getClassByName(getClassName("objectClass"));
+            System.out.println("object class: " + objectClass);
+            EditorPanelable real = null; //(EditorPanelable)Utils.getInvokedClassMethod("getOneFromDB", int.class, null, selected.recId);
+            if (real != null) {
+                selected.copyFrom(real);
+            }    
+        
+        try {
+            try {
+                Dialogable dialog = (Dialogable)Class.forName(getClassName("dialogClass")).getConstructor(EditorPanelable.class).newInstance(selected);
+                dialog.setDisabled();
+                dialog.askClose(false);
+                dialog.showAndWait();
+            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @FXML
     private void add(ActionEvent e) {
         EditorPanelable result = null;
@@ -91,7 +112,7 @@ public class EditorPanelController implements Initializable {
         } else {
             System.out.println("changed client: " + result);
             Class objectClass = Utils.getClassByName(getClassName("objectClass"));
-            result = (EditorPanelable) Utils.getInvokedClassMethod("saveOneToDB", objectClass, null, result); 
+            result = (EditorPanelable) Utils.getInvokedClassMethod("saveOneToDB", new Class[]{objectClass}, objectClass, result); 
             if (result != null) {
                 ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
             }

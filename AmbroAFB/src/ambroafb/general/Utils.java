@@ -422,19 +422,19 @@ public class Utils {
         return result;
     }
     
-        /**
-     * This class invokes a specific method ("methodName" parameter) for the obj class.
+    /**
+     * This class invokes a specific method ("methodName" parameter) for the "owner" class.
      * @param methodName    - name of method in its class
-     * @param obj           - class type of object which has this method
-     * @param from          - ...
-     * @param args          - arguments of method
+     * @param argsTypes     - arguments types
+     * @param owner         - class object which owned the method 
+     * @param argsValues    - arguments value for method
      * @return              - object will be null if we invokes a void type method,
      *                          otherwise will return a specific object of class.
      */
-    public static Object getInvokedClassMethod(String methodName, Class<?> obj, Object from, Object... args){
+    public static Object getInvokedClassMethod(String methodName, Class<?>[] argsTypes, Class owner, Object... argsValues){
         Object result = null;
         try {
-            result = obj.getMethod(methodName, obj).invoke(from, args);
+            result = owner.getMethod(methodName, argsTypes).invoke(null, argsValues);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
