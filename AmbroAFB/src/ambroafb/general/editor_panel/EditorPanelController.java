@@ -7,6 +7,7 @@ package ambroafb.general.editor_panel;
 
 import ambro.ATableView;
 import ambroafb.clients.ClientsController;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.lang.reflect.InvocationTargetException;
@@ -20,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
+
 
 /**
  * FXML Controller class
@@ -80,76 +82,22 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void add(ActionEvent e) {
         EditorPanelable result = null;
-//        try {
-            Class dialogClass = getClassFor("dialogClass");
-            Dialogable dialogable = (Dialogable)getInstanceWithoutArgs(dialogClass);
-            result = (EditorPanelable) dialogable.getResult();
-        
-            if (result == null) {
-                System.out.println("dialog is cancelled addClient");
-            } else {
-                System.out.println("changed client: " + result);
-                Class objectClass = getClassFor("objectClass");
-                result = (EditorPanelable) getMethodInvoked("saveOneToDB", objectClass, null, result); 
-                if (result != null) {
-                    ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
-                }
-            }
-//        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
-    }
-    
-    /**
-     * It can use instead of 'Class.forName(getClassName("objectClass"))'
-     * @param type - for example:  "objectClass" or "dialogClass"
-     * @return 
-     */
-    private Class getClassFor(String type){
-        Class result = null;
-        try {
-            result = Class.forName(getClassName(type));
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-    
-    /**
-     * It can use instead of '.getConstructor(EditorPanelable.class).newInstance(selected)'
-     * @param obj           - we need this object instance.
-     * @param constParam    - 'Class' parameter for created specific constructor
-     * @param args          - arguments for instance
-     * @return 
-     */
-    private Object getInstanceWithArgs(Class<?> obj, Class constParam, Object... args){
-        Object result = null;
-        try {
-            result = obj.getConstructor(constParam).newInstance(args);
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(Class.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-    
-    private Object getInstanceWithoutArgs(Class<?> obj){
-        Object result = null;
-        try {
-            result = obj.getConstructor().newInstance();
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-    
-    private Object getMethodInvoked(String methodName, Class<?> obj, Object from, Object... args){
-        Object result = null;
-        try {
-            result = obj.getMethod(methodName, obj).invoke(from, args);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
+        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
+        Dialogable dialogable = (Dialogable)Utils.getInstanceOfClass(dialogClass, null);
+        result = (EditorPanelable) dialogable.getResult();
 
+        if (result == null) {
+            System.out.println("dialog is cancelled addClient");
+        } else {
+            System.out.println("changed client: " + result);
+            Class objectClass = Utils.getClassByName(getClassName("objectClass"));
+            result = (EditorPanelable) Utils.getInvokedClassMethod("saveOneToDB", objectClass, null, result); 
+            if (result != null) {
+                ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
+            }
+        }
+    }
+    
     @FXML
     private void refresh(ActionEvent e) {
         ATableView table = (ATableView)exit.getScene().lookup("#table");

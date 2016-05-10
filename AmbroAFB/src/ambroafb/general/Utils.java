@@ -7,12 +7,14 @@ package ambroafb.general;
 
 import ambro.AMySQLChanel;
 import ambroafb.AmbroAFB;
+import ambroafb.general.editor_panel.EditorPanelController;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -386,5 +388,56 @@ public class Utils {
         }
 
         return response.toString();
+    }
+    
+    /**
+     * It can use instead of '.getConstructor(EditorPanelable.class).newInstance(selected)'
+     * @param obj           - we need this object instance.
+     * @param constParams   - 'Class' parameter for created specific constructor
+     * @param args          - arguments for instance
+     * @return 
+     */
+    public static Object getInstanceOfClass(Class<?> obj, Class[] constParams, Object... args){
+        Object result = null;
+        try {
+            result = obj.getConstructor(constParams).newInstance(args);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+    
+    /**
+     * It can use instead of 'Class.forName(getClassName("objectClass"))'
+     * @param name - name of class for example: Client, Country.
+     * @return 
+     */
+    public static Class getClassByName(String name){
+        Class result = null;
+        try {
+            result = Class.forName(name);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+    
+        /**
+     * This class invokes a specific method ("methodName" parameter) for the obj class.
+     * @param methodName    - name of method in its class
+     * @param obj           - class type of object which has this method
+     * @param from          - ...
+     * @param args          - arguments of method
+     * @return              - object will be null if we invokes a void type method,
+     *                          otherwise will return a specific object of class.
+     */
+    public static Object getInvokedClassMethod(String methodName, Class<?> obj, Object from, Object... args){
+        Object result = null;
+        try {
+            result = obj.getMethod(methodName, obj).invoke(from, args);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
     }
 }

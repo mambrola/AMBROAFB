@@ -145,7 +145,7 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
     private void okay(ActionEvent e) {
         System.out.println("OOOOOOOOOOOOOOOOOOkaied");
         try {
-            Client.saveOneToDB(client);
+//            Client.saveOneToDB(client);
             close();
         } catch (Exception ex) {
             client.copyFrom(clientBackup);
