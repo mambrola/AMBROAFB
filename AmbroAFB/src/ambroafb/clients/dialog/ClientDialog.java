@@ -223,6 +223,7 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
             }
         });
         phone.setEditable(false);
+        okayCancel.setVisible(false);
     }
 
     public void bindClient() {
