@@ -80,23 +80,75 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void add(ActionEvent e) {
         EditorPanelable result = null;
-        try {
-            result = (EditorPanelable)((Dialogable)Class.forName(getClassName("dialogClass")).getConstructor().newInstance()).getResult();
+//        try {
+            Class dialogClass = getClassFor("dialogClass");
+            Dialogable dialogable = (Dialogable)getInstanceWithoutArgs(dialogClass);
+            result = (EditorPanelable) dialogable.getResult();
         
             if (result == null) {
                 System.out.println("dialog is cancelled addClient");
             } else {
                 System.out.println("changed client: " + result);
-                result = (EditorPanelable)Class.forName(getClassName("objectClass")).getMethod("saveOneToDB", Class.forName(getClassName("objectClass"))).invoke(null, result); 
+                Class objectClass = getClassFor("objectClass");
+                result = (EditorPanelable) getMethodInvoked("saveOneToDB", objectClass, null, result); 
                 if (result != null) {
                     ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
                 }
             }
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+//        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
     }
     
+    /**
+     * It can use instead of 'Class.forName(getClassName("objectClass"))'
+     * @param type - for example:  "objectClass" or "dialogClass"
+     * @return 
+     */
+    private Class getClassFor(String type){
+        Class result = null;
+        try {
+            result = Class.forName(getClassName(type));
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
     
+    /**
+     * It can use instead of '.getConstructor(EditorPanelable.class).newInstance(selected)'
+     * @param obj           - we need this object instance.
+     * @param constParam    - 'Class' parameter for created specific constructor
+     * @param args          - arguments for instance
+     * @return 
+     */
+    private Object getInstanceWithArgs(Class<?> obj, Class constParam, Object... args){
+        Object result = null;
+        try {
+            result = obj.getConstructor(constParam).newInstance(args);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(Class.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
     
+    private Object getInstanceWithoutArgs(Class<?> obj){
+        Object result = null;
+        try {
+            result = obj.getConstructor().newInstance();
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+    
+    private Object getMethodInvoked(String methodName, Class<?> obj, Object from, Object... args){
+        Object result = null;
+        try {
+            result = obj.getMethod(methodName, obj).invoke(from, args);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
 
     @FXML
     private void refresh(ActionEvent e) {
