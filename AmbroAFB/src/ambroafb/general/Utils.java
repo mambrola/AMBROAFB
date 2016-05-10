@@ -393,14 +393,14 @@ public class Utils {
     /**
      * It can use instead of '.getConstructor(EditorPanelable.class).newInstance(selected)'
      * @param obj           - we need this object instance.
-     * @param constParams   - 'Class' parameter for created specific constructor
+     * @param constructorParams   - 'Class' parameter for created specific constructor
      * @param args          - arguments for instance
      * @return 
      */
-    public static Object getInstanceOfClass(Class<?> obj, Class[] constParams, Object... args){
+    public static Object getInstanceOfClass(Class<?> obj, Class[] constructorParams, Object... args){
         Object result = null;
         try {
-            result = obj.getConstructor(constParams).newInstance(args);
+            result = obj.getConstructor(constructorParams).newInstance(args);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }

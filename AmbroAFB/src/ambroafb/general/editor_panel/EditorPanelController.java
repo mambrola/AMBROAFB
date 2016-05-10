@@ -42,17 +42,17 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void edit(ActionEvent e) {
         EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-        try {
-            EditorPanelable real = (EditorPanelable)Class.forName(getClassName("objectClass")).getMethod("getOneFromDB", int.class).invoke(null, selected.recId);
-            if (real != null) {
-                selected.copyFrom(real);
-            }    
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+        Class objectClass = Utils.getClassByName(getClassName("objectClass"));
+        EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod("getOneFromDB", new Class[]{int.class}, objectClass, selected.recId);
+        if (real != null) {
+            selected.copyFrom(real);
+        }
+
         EditorPanelable backup = selected.cloneWithID();
-        EditorPanelable result = null;
-        try {
-            result = (EditorPanelable)((Dialogable)Class.forName(getClassName("dialogClass")).getConstructor(EditorPanelable.class).newInstance(selected)).getResult();
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
+        Dialogable dialogable = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class}, selected);
+        EditorPanelable result = (EditorPanelable)dialogable.getResult();
+
         if (result == null)
             selected.copyFrom(backup);
     }
@@ -60,52 +60,27 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void view(ActionEvent e) {
         EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-        try {
-            EditorPanelable real = (EditorPanelable)Class.forName(getClassName("objectClass")).getMethod("getOneFromDB", int.class).invoke(null, selected.recId);
-            if (real != null) {
-                selected.copyFrom(real);
-            }    
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+        Class objectClass = Utils.getClassByName(getClassName("objectClass"));
+        EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod("getOneFromDB", new Class[]{int.class}, objectClass, selected.recId);
         
-        try {
-            try {
-                Dialogable dialog = (Dialogable)Class.forName(getClassName("dialogClass")).getConstructor(EditorPanelable.class).newInstance(selected);
-                dialog.setDisabled();
-                dialog.askClose(false);
-                dialog.showAndWait();
-            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private void fackeView(){
-        EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-            Class objectClass = Utils.getClassByName(getClassName("objectClass"));
-            System.out.println("object class: " + objectClass);
-            EditorPanelable real = null; //(EditorPanelable)Utils.getInvokedClassMethod("getOneFromDB", int.class, null, selected.recId);
-            if (real != null) {
-                selected.copyFrom(real);
-            }    
+        System.out.println("real: " + real);
         
-        try {
-            try {
-                Dialogable dialog = (Dialogable)Class.forName(getClassName("dialogClass")).getConstructor(EditorPanelable.class).newInstance(selected);
-                dialog.setDisabled();
-                dialog.askClose(false);
-                dialog.showAndWait();
-            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+        if (real != null) {
+            selected.copyFrom(real);
         }
+        
+        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
+        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class}, selected);
+        dialog.setDisabled();
+        dialog.askClose(false);
+        dialog.showAndWait();
     }
     
     @FXML
     private void add(ActionEvent e) {
-        EditorPanelable result = null;
         Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
         Dialogable dialogable = (Dialogable)Utils.getInstanceOfClass(dialogClass, null);
-        result = (EditorPanelable) dialogable.getResult();
+        EditorPanelable result = (EditorPanelable) dialogable.getResult();
 
         if (result == null) {
             System.out.println("dialog is cancelled addClient");
