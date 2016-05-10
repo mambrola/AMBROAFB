@@ -52,9 +52,19 @@ public class EditorPanelController implements Initializable {
         Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
         Dialogable dialogable = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class}, selected);
         EditorPanelable result = (EditorPanelable)dialogable.getResult();
-
+        
+        System.out.println("result: " + result);
+        
         if (result == null)
             selected.copyFrom(backup);
+        else{
+            System.out.println("changed client: " + result);
+            System.out.println("must call updateClient");
+//            result = (EditorPanelable) Utils.getInvokedClassMethod("saveOneToDB", new Class[]{objectClass}, objectClass, result); 
+//            if (result != null) {
+//                ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
+//            }
+        }
     }
     
     @FXML
@@ -100,7 +110,10 @@ public class EditorPanelController implements Initializable {
         EditorPanelable selected = (EditorPanelable)table.getSelectionModel().getSelectedItem();
         table.getItems().clear();
         try {
-            Class.forName(getClassName("controllerClass")).getMethod("asignTable").invoke(outerController);
+//            Class.forName(getClassName("controllerClass")).getMethod("asignTable").invoke(outerController);
+            Class controllerClass = Utils.getClassByName(getClassName("controllerClass"));
+            Utils.getInvokedClassMethod("asignTable", null, controllerClass);
+            
             if(selected != null)
                 Class.forName(getClassName("controllerClass")).getMethod("selectOneAgain", Class.forName(getClassName("objectClass"))).invoke(outerController, selected);
         } catch (SecurityException | IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }

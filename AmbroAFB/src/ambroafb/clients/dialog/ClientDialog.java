@@ -138,26 +138,26 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
         askClose = ask;
     }
 
-    @FXML
-    private void cancel(ActionEvent e) {
-
-        System.out.println("CCCCCCCCCCCCCCCCCCanceled");
-//        if (onCancell != null) {
-//            onCancell.accept(null);
-//        }
-    }
-
-    @FXML
-    private void okay(ActionEvent e) {
-        System.out.println("OOOOOOOOOOOOOOOOOOkaied");
-        try {
+//    @FXML
+//    private void cancel(ActionEvent e) {
+//        System.out.println("CCCCCCCCCCCCCCCCCCanceled");
+//        onClose();
+////        if (onCancell != null) {
+////            onCancell.accept(null);
+////        }
+//    }
+//
+//    @FXML
+//    private void okay(ActionEvent e) {
+//        System.out.println("OOOOOOOOOOOOOOOOOOkaied");
+//        try {
 //            Client.saveOneToDB(client);
-            close();
-        } catch (Exception ex) {
-            client.copyFrom(clientBackup);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
-        }
-    }
+//            close();
+//        } catch (Exception ex) {
+//            client.copyFrom(clientBackup);
+//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+//        }
+//    }
 
     @FXML
     private void switchJuridical(ActionEvent e) {
@@ -215,8 +215,10 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
             }
         });
         juridical.setOnAction(this::switchJuridical);
-        okayCancel.setOnOkay(this::okay);
-        okayCancel.setOnCancel(this::cancel);
+        okayCancel.setDialog(this);
+        okayCancel.setEditorPanelable(client);
+//        okayCancel.setOnOkay(this::okay);
+//        okayCancel.setOnCancel(this::cancel);
         System.out.println("client: " + client);
         bindClient();
     }
@@ -229,7 +231,8 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
             }
         });
         phone.setEditable(false);
-        okayCancel.setVisible(false);
+        okayCancel.setOkayAndCancelVisible(false, true);
+        okayCancel.setOkayAndCancelDisable(true, false);
     }
 
     public void bindClient() {
