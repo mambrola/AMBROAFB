@@ -6,10 +6,10 @@
 package ambroafb.general.editor_panel;
 
 import ambro.ATableView;
-import ambroafb.clients.ClientsController;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
@@ -39,48 +40,51 @@ public class EditorPanelController implements Initializable {
     @FXML
     private Initializable outerController;
     
+    
+    @FXML
+    private void delete(ActionEvent e) {
+        EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
+        EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName("objectClass")), "getOneFromDB", new Class[]{int.class}, null, selected.recId);
+        if (real != null) {
+            selected.copyFrom(real);
+        } 
+        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(Utils.getClassByName(getClassName("dialogClass")), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.DELETE);
+        dialog.setDisabled();
+        dialog.askClose(false);
+        Parent root = dialog.getScene().getRoot();
+        ((Button)root.lookup("#okay")).setText("Delete");
+        root.lookup("#okay").setDisable(false);
+        root.lookup("#cancel").setDisable(false);
+        dialog.showAndWait();
+        if((boolean)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName("objectClass")), "deleteOneFromDB", new Class[]{int.class}, null, selected.recId))
+            ((ATableView)exit.getScene().lookup("#table")).getItems().remove(selected);
+    }
+    
+    
     @FXML
     private void edit(ActionEvent e) {
         EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-        Class objectClass = Utils.getClassByName(getClassName("objectClass"));
-        EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod("getOneFromDB", new Class[]{int.class}, objectClass, selected.recId);
+        EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod(Utils.getClassByName(getClassName("objectClass")), "getOneFromDB", new Class[]{int.class}, null, selected.recId);
         if (real != null) {
             selected.copyFrom(real);
         }
-
         EditorPanelable backup = selected.cloneWithID();
-        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
-        Dialogable dialogable = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class}, selected);
-        EditorPanelable result = (EditorPanelable)dialogable.getResult();
         
-        System.out.println("result: " + result);
+        System.out.println("print from edit: " + EDITOR_BUTTON_TYPE.class);
         
+        EditorPanelable result = (EditorPanelable)((Dialogable) Utils.getInstanceOfClass(Utils.getClassByName(getClassName("dialogClass")), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.EDIT)).getResult();
         if (result == null)
             selected.copyFrom(backup);
-        else{
-            System.out.println("changed client: " + result);
-            System.out.println("must call updateClient");
-//            result = (EditorPanelable) Utils.getInvokedClassMethod("saveOneToDB", new Class[]{objectClass}, objectClass, result); 
-//            if (result != null) {
-//                ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
-//            }
-        }
     }
     
     @FXML
     private void view(ActionEvent e) {
         EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-        Class objectClass = Utils.getClassByName(getClassName("objectClass"));
-        EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod("getOneFromDB", new Class[]{int.class}, objectClass, selected.recId);
-        
-        System.out.println("real: " + real);
-        
+        EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName("objectClass")), "getOneFromDB", new Class[]{int.class}, null, selected.recId);
         if (real != null) {
             selected.copyFrom(real);
         }
-        
-        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
-        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class}, selected);
+        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName("dialogClass")), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.VIEW);
         dialog.setDisabled();
         dialog.askClose(false);
         dialog.showAndWait();
@@ -88,16 +92,10 @@ public class EditorPanelController implements Initializable {
     
     @FXML
     private void add(ActionEvent e) {
-        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
-        Dialogable dialogable = (Dialogable)Utils.getInstanceOfClass(dialogClass, null);
-        EditorPanelable result = (EditorPanelable) dialogable.getResult();
-
-        if (result == null) {
-            System.out.println("dialog is cancelled addClient");
-        } else {
-            System.out.println("changed client: " + result);
+        EditorPanelable result = (EditorPanelable) ((Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName("dialogClass")), null)).getResult();
+        if (result != null) {
             Class objectClass = Utils.getClassByName(getClassName("objectClass"));
-            result = (EditorPanelable) Utils.getInvokedClassMethod("saveOneToDB", new Class[]{objectClass}, objectClass, result); 
+            result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
             if (result != null) {
                 ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
             }
@@ -105,18 +103,24 @@ public class EditorPanelController implements Initializable {
     }
     
     @FXML
+    private void addBySample(ActionEvent e) {
+        EditorPanelable selected = ((EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem()).cloneWithoutID();
+        EditorPanelable result = (EditorPanelable) ((Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName("dialogClass")), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.ADD)).getResult();
+        Class objectClass = Utils.getClassByName(getClassName("objectClass"));
+        result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
+        if (result != null) {
+            ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
+        }    
+    }
+    
+    @FXML
     private void refresh(ActionEvent e) {
         ATableView table = (ATableView)exit.getScene().lookup("#table");
         EditorPanelable selected = (EditorPanelable)table.getSelectionModel().getSelectedItem();
         table.getItems().clear();
-        try {
-//            Class.forName(getClassName("controllerClass")).getMethod("asignTable").invoke(outerController);
-            Class controllerClass = Utils.getClassByName(getClassName("controllerClass"));
-            Utils.getInvokedClassMethod("asignTable", null, controllerClass);
-            
-            if(selected != null)
-                Class.forName(getClassName("controllerClass")).getMethod("selectOneAgain", Class.forName(getClassName("objectClass"))).invoke(outerController, selected);
-        } catch (SecurityException | IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException ex) { Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex); }
+        Class controllerClass = Utils.getClassByName(getClassName("controllerClass"));
+        Utils.getInvokedClassMethod(controllerClass, "asignTable", null, outerController);
+        Utils.getInvokedClassMethod(controllerClass, "selectOneAgain", new Class[]{Utils.getClassByName(getClassName("objectClass"))}, outerController, selected);
     }
        
     /**
@@ -130,6 +134,7 @@ public class EditorPanelController implements Initializable {
     }
   
     public void buttonsMainPropertysBinder (TableView table){
+        delete.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
         edit.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
         view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
         addBySample.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());

@@ -202,6 +202,7 @@ public class Client extends EditorPanelable{
     }
 
     public static Client getOneFromDB(int id) {
+        System.out.println("called: getOneFromDB(" + id +")");
         try {
             String data = GeneralConfig.getInstance().getServerClient().get("clients/" + id);
             ObjectMapper mapper = new ObjectMapper();
@@ -214,6 +215,7 @@ public class Client extends EditorPanelable{
     }
 
     public static Client saveOneToDB(Client client) {
+        System.out.println("called: deleteOneFromDB(client), client = " + client.toString());
         try {
             String resource = "clients" + (client.recId > 0 ? "/" + client.recId : "");
             String method = client.recId > 0 ? "PUT" : "POST";
@@ -233,7 +235,8 @@ public class Client extends EditorPanelable{
         return null;
     }
 
-    public static boolean deleteClient(int id) {
+    public static boolean deleteOneFromDB(int id) {
+        System.out.println("called: deleteOneFromDB(" + id +")");
         try {
             GeneralConfig.getInstance().getServerClient().call("clients/" + id, "DELETE", null);
             return true;

@@ -5,6 +5,8 @@
  */
 package ambroafb.general.interfaces;
 
+import javafx.scene.Scene;
+
 /**
  *
  * @author mambroladze
@@ -13,5 +15,6 @@ public interface Dialogable {
     public EditorPanelable getResult();
     public void setDisabled();
     public void askClose(boolean bool);
+    public Scene getScene();
     public void showAndWait();
 }

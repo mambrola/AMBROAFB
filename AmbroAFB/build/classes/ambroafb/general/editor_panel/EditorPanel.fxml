@@ -18,7 +18,7 @@
         fx:controller="ambroafb.general.editor_panel.EditorPanelController">
     <children>
         <fx:include fx:id="exit" source="/ambroafb/general/exit_button/ExitButton.fxml"/>
-        <Button fx:id="delete">
+        <Button fx:id="delete" onAction="#delete" >
             <tooltip>
                 <Tooltip text="%delete" />
             </tooltip>
@@ -60,7 +60,7 @@
                 </ImageView>
             </graphic>
             <items>
-                <MenuItem fx:id="addBySample" mnemonicParsing="false">
+                <MenuItem fx:id="addBySample" onAction="#addBySample" mnemonicParsing="false">
                     <graphic>
                         <Label text="%add_by_sample">
                             <tooltip>

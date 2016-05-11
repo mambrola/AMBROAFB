@@ -5,6 +5,8 @@
  */
 package ambroafb.general;
 
+import java.util.Enumeration;
+
 /**
  *
  * @author tabramishvili
@@ -55,5 +57,9 @@ public class Names {
     public static final String FONT = "Times New Roman GEO";
     
     public static final String DIALOG_WINDOW_TITLE = "Dialog";
+    
+    public static enum EDITOR_BUTTON_TYPE {
+        DELETE, EDIT, VIEW, ADD
+    } 
     
 }

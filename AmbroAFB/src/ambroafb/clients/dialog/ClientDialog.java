@@ -12,6 +12,7 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.ListEditor;
+import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -46,6 +47,8 @@ import javafx.util.StringConverter;
  * @author tabramishvili
  */
 public class ClientDialog extends Stage implements Initializable, Dialogable {
+    
+    private EDITOR_BUTTON_TYPE callerButtonType; 
 
     GeneralConfig conf = GeneralConfig.getInstance();
     ArrayList<Node> focusTraversableNodes;
@@ -69,24 +72,24 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
     OkayCancel okayCancel;
 
     private boolean askClose = true;
-    private String callButtonType;
-
+    
     public ClientDialog() {
-        this(new Client());
+        this(new Client(), EDITOR_BUTTON_TYPE.ADD);
     }
 
-    public ClientDialog(EditorPanelable object) {
-        this((Client) object);
+    public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType) {
+        this((Client) object, buttonType);
     }
     
-    public ClientDialog(Client client) {
+    public ClientDialog(Client client, EDITOR_BUTTON_TYPE buttonType) {
         super();
+        this.callerButtonType = buttonType;
         this.client = client;
         this.clientBackup = client.cloneWithID();
 
         FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/clients/dialog/ClientDialog.fxml"));
         loader.setResources(conf.getBundle());
-        loader.setController(this);
+        //loader.setController(this);
         try {
             setScene(new Scene(loader.load()));
         } catch (IOException ex) {
@@ -102,11 +105,6 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
 
     }
     
-    public ClientDialog(Client client, String fromButton){
-        this(client);
-        callButtonType = fromButton;
-    }
-
     private void onClose() {
         System.out.println("on close");
         boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;

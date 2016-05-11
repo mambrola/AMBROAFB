@@ -18,7 +18,6 @@
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="ambroafb.clients.ClientsController">
     <top>
-        <!--<EditorPanel fx:id="editorPanel" />-->
         <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
     </top>
     <center>

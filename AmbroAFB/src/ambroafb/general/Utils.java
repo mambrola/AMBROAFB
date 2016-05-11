@@ -400,7 +400,10 @@ public class Utils {
     public static Object getInstanceOfClass(Class<?> obj, Class[] constructorParams, Object... args){
         Object result = null;
         try {
+            
+            System.out.println("obj.getConstructor(constructorParams): " + args[1]);
             result = obj.getConstructor(constructorParams).newInstance(args);
+            System.out.println("result: " + result);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -427,14 +430,15 @@ public class Utils {
      * @param methodName    - name of method in its class
      * @param argsTypes     - arguments types
      * @param owner         - class object which owned the method 
+     * @param object        - object, witch (non!) static method will be invoke
      * @param argsValues    - arguments value for method
      * @return              - object will be null if we invokes a void type method,
      *                          otherwise will return a specific object of class.
      */
-    public static Object getInvokedClassMethod(String methodName, Class<?>[] argsTypes, Class owner, Object... argsValues){
+    public static Object getInvokedClassMethod(Class owner, String methodName, Class<?>[] argsTypes, Object object, Object... argsValues){
         Object result = null;
         try {
-            result = owner.getMethod(methodName, argsTypes).invoke(null, argsValues);
+            result = owner.getMethod(methodName, argsTypes).invoke(object, argsValues);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
