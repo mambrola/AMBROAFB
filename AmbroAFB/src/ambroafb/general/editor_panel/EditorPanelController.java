@@ -108,7 +108,7 @@ public class EditorPanelController implements Initializable {
 //        }
         
         dialog.setDisabled();
-//        dialog.askClose(false);
+//        dialog.askClose(false); 
         dialog.showAndWait();
     }
     
