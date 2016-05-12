@@ -172,7 +172,6 @@ public class EditorPanelController implements Initializable {
             return rtrn.substring(0, rtrn.indexOf("@"));
         String path = rtrn.substring(0, rtrn.lastIndexOf(".") + 1);
         String className = rtrn.substring(path.length(), rtrn.lastIndexOf("Controller"));
-        System.out.println("<-------> " + rtrn + " : " + path + " : " + className);
         switch (className){
             case "Countries":
                 rtrn = path + (type.equals("dialogClass") ? "dialog." : "") + "Country" + (type.equals("dialogClass") ? "Dialog" : "");
