@@ -101,6 +101,11 @@ public class OkayCancel extends HBox  {
     
     public EventHandler<ActionEvent> getOnOkay()    { return okay.getOnAction();}
     public EventHandler<ActionEvent> getOnCancel()  { return cancel.getOnAction();}
+
+    public void onClose() {
+        Stage currrentStage = (Stage)getScene().getWindow();
+        currrentStage.close();
+    }
     
     private class ButtonActions implements EventHandler<ActionEvent> {
 
@@ -109,8 +114,7 @@ public class OkayCancel extends HBox  {
             if (event.getSource() == cancel){
                 editorPanelable = null;
             }
-            Stage currrentStage = (Stage)getScene().getWindow();
-            currrentStage.close();
+            onClose();
         }
 
     }

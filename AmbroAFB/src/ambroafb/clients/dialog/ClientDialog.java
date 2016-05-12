@@ -93,6 +93,7 @@ public class ClientDialog extends Stage implements Dialogable {
             this.setScene(currentScene);
             dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
             dialogController.bindClient(this.client);
+            dialogController.setAskForCloseByType(buttonType);
         } catch (IOException ex) {
             Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -101,20 +102,21 @@ public class ClientDialog extends Stage implements Dialogable {
 
         setOnCloseRequest((WindowEvent event) -> {
             event.consume();
-            onClose();
+//            onClose();
+            dialogController.onClose();
         });
         
     }
     
-    private void onClose() {
-        System.out.println("on close");
-        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
-        if (close) {
-            client = null;
-            System.out.println("cancelling");
-            close();
-        }
-    }
+//    private void onClose() {
+//        System.out.println("on close");
+//        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
+//        if (close) {
+//            client = null;
+//            System.out.println("cancelling");
+//            close();
+//        }
+//    }
 
     /**
      * თუ isCancelled() არის true, აბრუნებს null-ს, თუ არადა შესაბამის კლიენტს

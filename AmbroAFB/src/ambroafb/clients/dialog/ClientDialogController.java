@@ -12,6 +12,7 @@ import ambroafb.general.Editable;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.ListEditor;
+import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.okay_cancel.OkayCancel;
@@ -26,6 +27,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -78,6 +80,7 @@ public class ClientDialogController implements Initializable {
 
     ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
+    private boolean askClose = true;
     
     /**
      * Initializes the controller class.
@@ -165,5 +168,19 @@ public class ClientDialogController implements Initializable {
         phone.setEditable(false);
         okayCancel.setOkayAndCancelVisible(false, true);
         okayCancel.setOkayAndCancelDisable(true, false);
+    }
+    
+    public void onClose(){
+        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
+        if (close) {
+//            client = null;
+            okayCancel.onClose();
+        }
+    }
+
+    void setAskForCloseByType(EDITOR_BUTTON_TYPE type) {
+        if (type.equals(EDITOR_BUTTON_TYPE.VIEW) || type.equals(EDITOR_BUTTON_TYPE.DELETE)){
+            askClose = false;
+        }
     }
 }
