@@ -86,8 +86,6 @@ public class ClientDialogController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("Dialog initializer........");
-        
         country.setConverter(new StringConverter<Country>() {
             @Override
             public String toString(Country object) {
@@ -123,9 +121,6 @@ public class ClientDialogController implements Initializable {
         
         juridical.setOnAction(this::switchJuridical);
         
-//        Stage currentStage = (Stage) okayCancel.getScene().getWindow();
-//        okayCancel.setDialog(currentStage);
-//        okayCancel.setEditorPanelable(client);      // gadasaketebelia  client-i ro ganalebuliyo
     }
     
     private void switchJuridical(ActionEvent e) {
