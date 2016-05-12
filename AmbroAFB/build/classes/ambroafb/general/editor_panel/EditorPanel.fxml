@@ -56,7 +56,7 @@
             </tooltip>
             <graphic>
                 <ImageView fitHeight="18.0" fitWidth="18.0"  pickOnBounds="true" preserveRatio="true" >
-                    <Image url="/images/new2.png" />
+                    <Image url="/images/new.png" />
                 </ImageView>
             </graphic>
             <items>
