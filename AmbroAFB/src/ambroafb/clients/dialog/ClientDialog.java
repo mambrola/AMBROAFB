@@ -87,11 +87,12 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
         this.client = client;
         this.clientBackup = client.cloneWithID();
 
-        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/clients/dialog/ClientDialog.fxml"));
-        loader.setResources(conf.getBundle());
-        loader.setController(this);
+//        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/clients/dialog/ClientDialog.fxml"));
+//        loader.setResources(conf.getBundle());
+//        loader.setController(this);
         try {
-            setScene(new Scene(loader.load()));
+            //this.setScene(new Scene(loader.load()));
+            this.setScene(Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml"));
         } catch (IOException ex) {
             Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -157,7 +158,6 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
 //        }
 //    }
 
-    @FXML
     private void switchJuridical(ActionEvent e) {
         System.out.println("e.getSource(): " + firstName.widthProperty().getValue());
         double w = firstName.widthProperty().getValue() + lastName.widthProperty().getValue();
