@@ -73,15 +73,8 @@ public class EditorPanelController implements Initializable {
         }
         EditorPanelable backup = selected.cloneWithID();
         
-        Scene dialogScene = null;
-        try {
-            dialogScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
-        } catch (IOException ex) {
-            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
-        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Scene.class}, selected, EDITOR_BUTTON_TYPE.EDIT, dialogScene);
+        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.EDIT);
         EditorPanelable result = dialog.getResult();
         if (result == null)
             selected.copyFrom(backup);

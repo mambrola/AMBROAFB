@@ -87,15 +87,14 @@ public class ClientDialog extends Stage implements Dialogable { // Initializable
         this.client = client;
         this.clientBackup = client.cloneWithID();
         
-//        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/clients/dialog/ClientDialog.fxml"));
-//        loader.setResources(conf.getBundle());
-//        loader.setController(this);
-//        try {
-            //this.setScene(new Scene(loader.load()));
-//            this.setScene(Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml"));
-//        } catch (IOException ex) {
-//            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
+            this.setScene(currentScene);
+            ClientDialogController dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
+            dialogController.bindClient(this.client);
+        } catch (IOException ex) {
+            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initOwner(AmbroAFB.mainStage);
         setResizable(false);
 
@@ -104,14 +103,6 @@ public class ClientDialog extends Stage implements Dialogable { // Initializable
             onClose();
         });
         
-    }
-    
-    public ClientDialog(EditorPanelable client, EDITOR_BUTTON_TYPE buttonType, Scene scene) {
-        this(client, buttonType);
-        
-        setScene(scene);
-        ClientDialogController dialogController = (ClientDialogController) scene.getProperties().get("controller");
-        dialogController.bindClient(this.client);
     }
     
     private void onClose() {
