@@ -16803,3 +16803,31 @@ java.net.SocketException: socket closed
 	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
 	at java.lang.Thread.run(Thread.java:745)
 
+May 12, 2016 2:37:06 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+May 12, 2016 2:37:12 PM ambroafb.AmbroAFB lambda$main$5
+SEVERE: null
+java.net.SocketException: socket closed
+	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketAccept(DualStackPlainSocketImpl.java:131)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:199)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:545)
+	at java.net.ServerSocket.accept(ServerSocket.java:513)
+	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
+	at java.lang.Thread.run(Thread.java:745)
+
+May 12, 2016 3:01:16 PM ambroafb.general.Utils log
+SEVERE: Do you want to exit without saving?
+May 12, 2016 3:01:21 PM ambroafb.AmbroAFB lambda$main$5
+SEVERE: null
+java.net.SocketException: socket closed
+	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketAccept(DualStackPlainSocketImpl.java:131)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:199)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:545)
+	at java.net.ServerSocket.accept(ServerSocket.java:513)
+	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
+	at java.lang.Thread.run(Thread.java:745)
+

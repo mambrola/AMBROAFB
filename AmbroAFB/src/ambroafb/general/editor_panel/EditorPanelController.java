@@ -10,6 +10,7 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,9 +20,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 
 /**
@@ -70,11 +73,16 @@ public class EditorPanelController implements Initializable {
         }
         EditorPanelable backup = selected.cloneWithID();
         
-        System.out.println("print from edit: " + EDITOR_BUTTON_TYPE.class);
+        Scene dialogScene = null;
+        try {
+            dialogScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
+        } catch (IOException ex) {
+            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
-        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.EDIT);
-        EditorPanelable result = (EditorPanelable) dialog.getResult();
+        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Scene.class}, selected, EDITOR_BUTTON_TYPE.EDIT, dialogScene);
+        EditorPanelable result = dialog.getResult();
         if (result == null)
             selected.copyFrom(backup);
     }
@@ -86,8 +94,26 @@ public class EditorPanelController implements Initializable {
         if (real != null) {
             selected.copyFrom(real);
         }
+        
+        Scene dialogScene = null;
+        try {
+            dialogScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
+        } catch (IOException ex) {
+            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("scene is: " + dialogScene);
+        
         Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
         Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.VIEW);
+//        dialog.accessToSceneController(dialogScene);
+        
+//        try {
+//            Stage s = Utils.createStage("/ambroafb/clients/dialog/ClientDialog.fxml", null, null);
+//            s.show();
+//        } catch (IOException ex) {
+//            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        
         dialog.setDisabled();
         dialog.askClose(false);
         dialog.showAndWait();

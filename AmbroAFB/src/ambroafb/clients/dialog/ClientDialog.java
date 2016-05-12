@@ -46,7 +46,7 @@ import javafx.util.StringConverter;
  *
  * @author tabramishvili
  */
-public class ClientDialog extends Stage implements Initializable, Dialogable {
+public class ClientDialog extends Stage implements Dialogable { // Initializable, 
     
     private EDITOR_BUTTON_TYPE callerButtonType; 
 
@@ -86,16 +86,16 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
         this.callerButtonType = buttonType;
         this.client = client;
         this.clientBackup = client.cloneWithID();
-
+        
 //        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/clients/dialog/ClientDialog.fxml"));
 //        loader.setResources(conf.getBundle());
 //        loader.setController(this);
-        try {
+//        try {
             //this.setScene(new Scene(loader.load()));
-            this.setScene(Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml"));
-        } catch (IOException ex) {
-            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//            this.setScene(Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml"));
+//        } catch (IOException ex) {
+//            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         initOwner(AmbroAFB.mainStage);
         setResizable(false);
 
@@ -103,7 +103,15 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
             event.consume();
             onClose();
         });
-
+        
+    }
+    
+    public ClientDialog(EditorPanelable client, EDITOR_BUTTON_TYPE buttonType, Scene scene) {
+        this(client, buttonType);
+        
+        setScene(scene);
+        ClientDialogController dialogController = (ClientDialogController) scene.getProperties().get("controller");
+        dialogController.bindClient(this.client);
     }
     
     private void onClose() {
@@ -158,68 +166,70 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
 //        }
 //    }
 
-    private void switchJuridical(ActionEvent e) {
-        System.out.println("e.getSource(): " + firstName.widthProperty().getValue());
-        double w = firstName.widthProperty().getValue() + lastName.widthProperty().getValue();
-        if (((CheckBox) e.getSource()).isSelected()) {
-            first_name.setText(conf.getTitleFor("firm_name"));
-            last_name.setText(conf.getTitleFor("firm_form"));
-            firstName.setPrefWidth(0.75 * w);
-            lastName.setPrefWidth(0.25 * w);
-        } else {
-            first_name.setText(conf.getTitleFor("first_name"));
-            last_name.setText(conf.getTitleFor("last_name"));
-            firstName.setPrefWidth(0.50 * w);
-            lastName.setPrefWidth(0.50 * w);
-        }
-    }
+//    private void switchJuridical(ActionEvent e) {
+//        System.out.println("e.getSource(): " + firstName.widthProperty().getValue());
+//        double w = firstName.widthProperty().getValue() + lastName.widthProperty().getValue();
+//        if (((CheckBox) e.getSource()).isSelected()) {
+//            first_name.setText(conf.getTitleFor("firm_name"));
+//            last_name.setText(conf.getTitleFor("firm_form"));
+//            firstName.setPrefWidth(0.75 * w);
+//            lastName.setPrefWidth(0.25 * w);
+//        } else {
+//            first_name.setText(conf.getTitleFor("first_name"));
+//            last_name.setText(conf.getTitleFor("last_name"));
+//            firstName.setPrefWidth(0.50 * w);
+//            lastName.setPrefWidth(0.50 * w);
+//        }
+//    }
 
-    /**
-     *
-     * @param url
-     * @param rb
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        country.setConverter(new StringConverter<Country>() {
+//    /**
+//     *
+//     * @param url
+//     * @param rb
+//     */
+//    @Override
+//    public void initialize(URL url, ResourceBundle rb) {
+//        country.setConverter(new StringConverter<Country>() {
+//
+//            @Override
+//            public String toString(Country object) {
+//                return object.getCode() + "   " + object.getName();
+//            }
+//
+//            @Override
+//            public Country fromString(String string) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//        });
+//        try {
+//            country.getItems().addAll(Country.getCountries());
+//        } catch (KFZClient.KFZServerException | IOException ex) {
+//            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
+//            new AlertMessage(Alert.AlertType.WARNING, ex, "Can't load countries").showAlert();
+//        }
+//        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+//        phone.setConverter(new StringConverter<PhoneNumber>() {
+//
+//            @Override
+//            public String toString(PhoneNumber object) {
+//                return object != null ? object.getNumber() : null;
+//            }
+//
+//            @Override
+//            public PhoneNumber fromString(String string) {
+//                return new PhoneNumber(string);
+//            }
+//        });
+//        juridical.setOnAction(this::switchJuridical);
 
-            @Override
-            public String toString(Country object) {
-                return object.getCode() + "   " + object.getName();
-            }
 
-            @Override
-            public Country fromString(String string) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-        try {
-            country.getItems().addAll(Country.getCountries());
-        } catch (KFZClient.KFZServerException | IOException ex) {
-            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.WARNING, ex, "Can't load countries").showAlert();
-        }
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        phone.setConverter(new StringConverter<PhoneNumber>() {
-
-            @Override
-            public String toString(PhoneNumber object) {
-                return object != null ? object.getNumber() : null;
-            }
-
-            @Override
-            public PhoneNumber fromString(String string) {
-                return new PhoneNumber(string);
-            }
-        });
-        juridical.setOnAction(this::switchJuridical);
-        okayCancel.setDialog(this);
-        okayCancel.setEditorPanelable(client);
+//        okayCancel.setDialog(this);                 // ---------------------------->
+//        okayCancel.setEditorPanelable(client);      // ---------------------------->
+        
 //        okayCancel.setOnOkay(this::okay);
 //        okayCancel.setOnCancel(this::cancel);
-        System.out.println("client: " + client);
-        bindClient();
-    }
+//        bindClient();
+//    }
 
     @Override
     public void setDisabled() {
@@ -229,25 +239,25 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
             }
         });
 //        phone.setEditable(false);
-        okayCancel.setOkayAndCancelVisible(false, true);
-        okayCancel.setOkayAndCancelDisable(true, false);
+//        okayCancel.setOkayAndCancelVisible(false, true);
+//        okayCancel.setOkayAndCancelDisable(true, false);
     }
 
-    public void bindClient() {
-        if (client != null) {
-            juridical.selectedProperty().bindBidirectional(client.isJurProperty());
-            rezident.selectedProperty().bindBidirectional(client.isRezProperty());
-            firstName.textProperty().bindBidirectional(client.firstNameProperty());
-            lastName.textProperty().bindBidirectional(client.lastNameProperty());
-            idNumber.textProperty().bindBidirectional(client.IDNumberProperty());
-            email.textProperty().bindBidirectional(client.emailProperty());
-            fax.textProperty().bindBidirectional(client.faxProperty());
-            address.textProperty().bindBidirectional(client.addressProperty());
-            zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
-            city.textProperty().bindBidirectional(client.cityProperty());
-            country.valueProperty().bindBidirectional(client.countryProperty());
-            phone.setItems(client.getPhoneList());
-        }
-    }
+//    public void bindClient() {
+//        if (client != null) {
+//            juridical.selectedProperty().bindBidirectional(client.isJurProperty());
+//            rezident.selectedProperty().bindBidirectional(client.isRezProperty());
+//            firstName.textProperty().bindBidirectional(client.firstNameProperty());
+//            lastName.textProperty().bindBidirectional(client.lastNameProperty());
+//            idNumber.textProperty().bindBidirectional(client.IDNumberProperty());
+//            email.textProperty().bindBidirectional(client.emailProperty());
+//            fax.textProperty().bindBidirectional(client.faxProperty());
+//            address.textProperty().bindBidirectional(client.addressProperty());
+//            zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
+//            city.textProperty().bindBidirectional(client.cityProperty());
+//            country.valueProperty().bindBidirectional(client.countryProperty());
+//            phone.setItems(client.getPhoneList());
+//        }
+//    }
 
 }

@@ -39,7 +39,7 @@ public class OkayCancel extends HBox  {
 
     @FXML private Button okay, cancel;
     
-    private Stage dialog;
+//    private Stage dialog;
     private EditorPanelable editorPanelable;
 
     public OkayCancel() {
@@ -77,9 +77,10 @@ public class OkayCancel extends HBox  {
     }
     
     
-    public void setDialog(Stage dialog){
-        this.dialog = dialog;
-    }
+//    public void setDialog(Stage dialog){
+//        Stage currrentStage = (Stage)getScene().getWindow();
+//        this.dialog = currrentStage;
+//    }
     
     public void setEditorPanelable(EditorPanelable editorPanelable){
         this.editorPanelable = editorPanelable;
@@ -108,7 +109,8 @@ public class OkayCancel extends HBox  {
             if (event.getSource() == cancel){
                 editorPanelable = null;
             }
-            dialog.close();
+            Stage currrentStage = (Stage)getScene().getWindow();
+            currrentStage.close();
         }
 
     }
