@@ -403,10 +403,10 @@ public class Utils {
             
             System.out.println("obj.getConstructor(constructorParams): " + args[1]);
             result = obj.getConstructor(constructorParams).newInstance(args);
-            System.out.println("result: " + result);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println("result: " + result);
         return result;
     }
     

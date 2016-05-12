@@ -89,7 +89,7 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
 
         FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/clients/dialog/ClientDialog.fxml"));
         loader.setResources(conf.getBundle());
-        //loader.setController(this);
+        loader.setController(this);
         try {
             setScene(new Scene(loader.load()));
         } catch (IOException ex) {
@@ -228,7 +228,7 @@ public class ClientDialog extends Stage implements Initializable, Dialogable {
                 t.setDisable(true);
             }
         });
-        phone.setEditable(false);
+//        phone.setEditable(false);
         okayCancel.setOkayAndCancelVisible(false, true);
         okayCancel.setOkayAndCancelDisable(true, false);
     }

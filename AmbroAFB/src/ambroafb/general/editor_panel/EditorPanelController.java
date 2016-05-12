@@ -72,7 +72,9 @@ public class EditorPanelController implements Initializable {
         
         System.out.println("print from edit: " + EDITOR_BUTTON_TYPE.class);
         
-        EditorPanelable result = (EditorPanelable)((Dialogable) Utils.getInstanceOfClass(Utils.getClassByName(getClassName("dialogClass")), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.EDIT)).getResult();
+        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
+        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.EDIT);
+        EditorPanelable result = (EditorPanelable) dialog.getResult();
         if (result == null)
             selected.copyFrom(backup);
     }
@@ -84,7 +86,8 @@ public class EditorPanelController implements Initializable {
         if (real != null) {
             selected.copyFrom(real);
         }
-        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName("dialogClass")), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.VIEW);
+        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
+        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.VIEW);
         dialog.setDisabled();
         dialog.askClose(false);
         dialog.showAndWait();
