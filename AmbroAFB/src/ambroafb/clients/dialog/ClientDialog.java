@@ -46,7 +46,7 @@ import javafx.util.StringConverter;
  *
  * @author tabramishvili
  */
-public class ClientDialog extends Stage implements Dialogable { // Initializable, 
+public class ClientDialog extends Stage implements Dialogable {
     
     private EDITOR_BUTTON_TYPE callerButtonType; 
 
@@ -72,6 +72,7 @@ public class ClientDialog extends Stage implements Dialogable { // Initializable
     OkayCancel okayCancel;
 
     private boolean askClose = true;
+    private ClientDialogController dialogController;
     
     public ClientDialog() {
         this(new Client(), EDITOR_BUTTON_TYPE.ADD);
@@ -90,7 +91,7 @@ public class ClientDialog extends Stage implements Dialogable { // Initializable
         try {
             Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
             this.setScene(currentScene);
-            ClientDialogController dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
+            dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
             dialogController.bindClient(this.client);
         } catch (IOException ex) {
             Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -157,98 +158,11 @@ public class ClientDialog extends Stage implements Dialogable { // Initializable
 //        }
 //    }
 
-//    private void switchJuridical(ActionEvent e) {
-//        System.out.println("e.getSource(): " + firstName.widthProperty().getValue());
-//        double w = firstName.widthProperty().getValue() + lastName.widthProperty().getValue();
-//        if (((CheckBox) e.getSource()).isSelected()) {
-//            first_name.setText(conf.getTitleFor("firm_name"));
-//            last_name.setText(conf.getTitleFor("firm_form"));
-//            firstName.setPrefWidth(0.75 * w);
-//            lastName.setPrefWidth(0.25 * w);
-//        } else {
-//            first_name.setText(conf.getTitleFor("first_name"));
-//            last_name.setText(conf.getTitleFor("last_name"));
-//            firstName.setPrefWidth(0.50 * w);
-//            lastName.setPrefWidth(0.50 * w);
-//        }
-//    }
 
-//    /**
-//     *
-//     * @param url
-//     * @param rb
-//     */
-//    @Override
-//    public void initialize(URL url, ResourceBundle rb) {
-//        country.setConverter(new StringConverter<Country>() {
-//
-//            @Override
-//            public String toString(Country object) {
-//                return object.getCode() + "   " + object.getName();
-//            }
-//
-//            @Override
-//            public Country fromString(String string) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//        });
-//        try {
-//            country.getItems().addAll(Country.getCountries());
-//        } catch (KFZClient.KFZServerException | IOException ex) {
-//            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
-//            new AlertMessage(Alert.AlertType.WARNING, ex, "Can't load countries").showAlert();
-//        }
-//        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-//        phone.setConverter(new StringConverter<PhoneNumber>() {
-//
-//            @Override
-//            public String toString(PhoneNumber object) {
-//                return object != null ? object.getNumber() : null;
-//            }
-//
-//            @Override
-//            public PhoneNumber fromString(String string) {
-//                return new PhoneNumber(string);
-//            }
-//        });
-//        juridical.setOnAction(this::switchJuridical);
-
-
-//        okayCancel.setDialog(this);                 // ---------------------------->
-//        okayCancel.setEditorPanelable(client);      // ---------------------------->
-        
-//        okayCancel.setOnOkay(this::okay);
-//        okayCancel.setOnCancel(this::cancel);
-//        bindClient();
-//    }
 
     @Override
     public void setDisabled() {
-        focusTraversableNodes.forEach((Node t) -> {
-            if (t != phone) {
-                t.setDisable(true);
-            }
-        });
-//        phone.setEditable(false);
-//        okayCancel.setOkayAndCancelVisible(false, true);
-//        okayCancel.setOkayAndCancelDisable(true, false);
+        dialogController.setDisableComponents();
     }
-
-//    public void bindClient() {
-//        if (client != null) {
-//            juridical.selectedProperty().bindBidirectional(client.isJurProperty());
-//            rezident.selectedProperty().bindBidirectional(client.isRezProperty());
-//            firstName.textProperty().bindBidirectional(client.firstNameProperty());
-//            lastName.textProperty().bindBidirectional(client.lastNameProperty());
-//            idNumber.textProperty().bindBidirectional(client.IDNumberProperty());
-//            email.textProperty().bindBidirectional(client.emailProperty());
-//            fax.textProperty().bindBidirectional(client.faxProperty());
-//            address.textProperty().bindBidirectional(client.addressProperty());
-//            zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
-//            city.textProperty().bindBidirectional(client.cityProperty());
-//            country.valueProperty().bindBidirectional(client.countryProperty());
-//            phone.setItems(client.getPhoneList());
-//        }
-//    }
 
 }

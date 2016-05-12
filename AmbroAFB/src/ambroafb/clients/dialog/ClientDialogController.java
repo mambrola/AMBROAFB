@@ -160,4 +160,15 @@ public class ClientDialogController implements Initializable {
             phone.setItems(client.getPhoneList());
         }
     }
+    
+    public void setDisableComponents(){
+        focusTraversableNodes.forEach((Node t) -> {
+            if (t != phone) {
+                t.setDisable(true);
+            }
+        });
+        phone.setEditable(false);
+        okayCancel.setOkayAndCancelVisible(false, true);
+        okayCancel.setOkayAndCancelDisable(true, false);
+    }
 }
