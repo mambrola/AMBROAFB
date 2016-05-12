@@ -6,6 +6,8 @@
 package ambroafb.general.okay_cancel;
 
 import ambroafb.AmbroAFB;
+import ambroafb.clients.dialog.ClientDialogController;
+import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -20,7 +22,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableView;
@@ -41,6 +45,7 @@ public class OkayCancel extends HBox  {
     
 //    private Stage dialog;
     private EditorPanelable editorPanelable;
+    private ButtonType buttonType;
 
     public OkayCancel() {
         FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/general/okay_cancel/OkayCancel.fxml"));
@@ -107,15 +112,27 @@ public class OkayCancel extends HBox  {
         currrentStage.close();
     }
     
+    private void setButtonType(ButtonType type){
+        buttonType = type;
+    }
+    
+    public ButtonType getButtonType(){
+        return buttonType;
+    }
+    
     private class ButtonActions implements EventHandler<ActionEvent> {
 
         @Override
         public void handle(ActionEvent event) {
             if (event.getSource() == cancel){
-                editorPanelable = null;
+                ClientDialogController dialogContr = (ClientDialogController) getScene().getProperties().get("controller");
+                boolean ask = dialogContr.getAskForClose();
+                if(ask){
+                    ButtonType type = new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get();
+                    setButtonType(type);
+                }
             }
-            onClose();
+//            if(allowToClose) onClose();
         }
-
     }
 }

@@ -81,6 +81,7 @@ public class ClientDialogController implements Initializable {
     ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private boolean askClose = true;
+    private Client client;
     
     /**
      * Initializes the controller class.
@@ -143,6 +144,7 @@ public class ClientDialogController implements Initializable {
     }
 
     public void bindClient(Client client) {
+        this.client = client;
         if (client != null) {
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
             rezident.selectedProperty().bindBidirectional(client.isRezProperty());
@@ -170,17 +172,25 @@ public class ClientDialogController implements Initializable {
         okayCancel.setOkayAndCancelDisable(true, false);
     }
     
+    public ButtonType getAlertButtonType(){
+        return okayCancel.getButtonType();
+    }
+    
     public void onClose(){
-        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
-        if (close) {
-//            client = null;
-            okayCancel.onClose();
-        }
+//        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
+//        if (close) {
+//            okayCancel.onClose();
+//        }
+        okayCancel.onClose();
     }
 
-    void setAskForCloseByType(EDITOR_BUTTON_TYPE type) {
+    public void setAskForCloseByType(EDITOR_BUTTON_TYPE type) {
         if (type.equals(EDITOR_BUTTON_TYPE.VIEW) || type.equals(EDITOR_BUTTON_TYPE.DELETE)){
             askClose = false;
         }
+    }
+    
+    public boolean getAskForClose(){
+        return askClose;
     }
 }

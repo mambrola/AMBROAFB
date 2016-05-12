@@ -53,7 +53,7 @@ public class EditorPanelController implements Initializable {
         } 
         Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(Utils.getClassByName(getClassName("dialogClass")), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.DELETE);
         dialog.setDisabled();
-        dialog.askClose(false);
+//        dialog.askClose(false);
         Parent root = dialog.getScene().getRoot();
         ((Button)root.lookup("#okay")).setText("Delete");
         root.lookup("#okay").setDisable(false);
@@ -108,7 +108,7 @@ public class EditorPanelController implements Initializable {
 //        }
         
         dialog.setDisabled();
-        dialog.askClose(false);
+//        dialog.askClose(false);
         dialog.showAndWait();
     }
     

@@ -103,6 +103,7 @@ public class ClientDialog extends Stage implements Dialogable {
         setOnCloseRequest((WindowEvent event) -> {
             event.consume();
 //            onClose();
+            this.client = null;
             dialogController.onClose();
         });
         
@@ -126,18 +127,22 @@ public class ClientDialog extends Stage implements Dialogable {
     @Override
     public Client getResult() {
         showAndWait();
+        ButtonType type = dialogController.getAlertButtonType();
+        if (type.equals(ButtonType.OK))
+            client = null;
+        dialogController.onClose();
         return client;
     }
 
-    /**
-     * დიალოგის დახურვისას ამოაგდებს გაფრთხილებას ნამდვილად უნდა თუ არა დახურვა
-     *
-     * @param ask
-     */
-    @Override
-    public void askClose(boolean ask) {
-        askClose = ask;
-    }
+//    /**
+//     * დიალოგის დახურვისას ამოაგდებს გაფრთხილებას ნამდვილად უნდა თუ არა დახურვა
+//     *
+//     * @param ask
+//     */
+//    @Override
+//    public void askClose(boolean ask) {
+//        askClose = ask;
+//    }
 
 //    @FXML
 //    private void cancel(ActionEvent e) {
