@@ -39,6 +39,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 
@@ -51,27 +52,8 @@ public class ClientDialog extends Stage implements Dialogable {
     private EDITOR_BUTTON_TYPE callerButtonType; 
 
     GeneralConfig conf = GeneralConfig.getInstance();
-//    ArrayList<Node> focusTraversableNodes;
     Client client, clientBackup;
 
-//    @FXML
-//    VBox formPane;
-//    @FXML
-//    private Label first_name, last_name;
-//    @FXML
-//    DatePicker openDate;
-//    @FXML
-//    CheckBox juridical, rezident;
-//    @FXML
-//    TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
-//    @FXML
-//    ComboBox<Country> country;
-//    @FXML
-//    ListEditor<PhoneNumber> phone;
-//    @FXML
-//    OkayCancel okayCancel;
-
-    private boolean askClose = true;
     private ClientDialogController dialogController;
     
     public ClientDialog() {
@@ -100,25 +82,12 @@ public class ClientDialog extends Stage implements Dialogable {
         initOwner(AmbroAFB.mainStage);
         setResizable(false);
 
-//        setOnCloseRequest((WindowEvent event) -> {
-//            event.consume();
-////            onClose();
-//            this.client = null;
-////            dialogController.onClose();
-//        });
+        setOnCloseRequest((WindowEvent event) -> {
+            event.consume();
+        });
         
     }
     
-//    private void onClose() {
-//        System.out.println("on close");
-//        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
-//        if (close) {
-//            client = null;
-//            System.out.println("cancelling");
-//            close();
-//        }
-//    }
-
     /**
      * თუ isCancelled() არის true, აბრუნებს null-ს, თუ არადა შესაბამის კლიენტს
      *
@@ -127,53 +96,11 @@ public class ClientDialog extends Stage implements Dialogable {
     @Override
     public Client getResult() {
         showAndWait();
-//        ButtonType type = dialogController.getAlertButtonType();
-//        if (type.equals(ButtonType.OK))
-//            client = null;
-//        dialogController.onClose();
         return client;
     }
 
-//    /**
-//     * დიალოგის დახურვისას ამოაგდებს გაფრთხილებას ნამდვილად უნდა თუ არა დახურვა
-//     *
-//     * @param ask
-//     */
-//    @Override
-//    public void askClose(boolean ask) {
-//        askClose = ask;
-//    }
-
-//    @FXML
-//    private void cancel(ActionEvent e) {
-//        System.out.println("CCCCCCCCCCCCCCCCCCanceled");
-//        onClose();
-////        if (onCancell != null) {
-////            onCancell.accept(null);
-////        }
-//    }
-//
-//    @FXML
-//    private void okay(ActionEvent e) {
-//        System.out.println("OOOOOOOOOOOOOOOOOOkaied");
-//        try {
-//            Client.saveOneToDB(client);
-//            close();
-//        } catch (Exception ex) {
-//            client.copyFrom(clientBackup);
-//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
-//        }
-//    }
-
-
-
     @Override
-    public void setDisabled() {
-//        dialogController.setDisableComponents();
-    }
-
-    @Override
-    public boolean allowToMakeOperation() {
+    public boolean allowToMakeOperation() { // sheidzleba shevitanot getResult-shi
         return dialogController.allowToMakeOperation();
     }
 

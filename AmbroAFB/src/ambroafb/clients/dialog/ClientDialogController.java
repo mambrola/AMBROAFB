@@ -23,10 +23,14 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -81,9 +85,7 @@ public class ClientDialogController implements Initializable {
 
     ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
-    private boolean askClose = true;
-    private Client client;
-    private EDITOR_BUTTON_TYPE editorButtonType;
+    private boolean changeComponentValue;
     
     /**
      * Initializes the controller class.
@@ -144,39 +146,60 @@ public class ClientDialogController implements Initializable {
             lastName.setPrefWidth(0.50 * w);
         }
     }
+    
 
     public void bindClient(Client client) {
         if (client != null) {
+            ValueChangeListener listener = new ValueChangeListener();
+            
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
+            
             rezident.selectedProperty().bindBidirectional(client.isRezProperty());
+            rezident.selectedProperty().addListener(listener);
+            
             firstName.textProperty().bindBidirectional(client.firstNameProperty());
+            firstName.textProperty().addListener(listener);
+            
             lastName.textProperty().bindBidirectional(client.lastNameProperty());
+            lastName.textProperty().addListener(listener);
+            
             idNumber.textProperty().bindBidirectional(client.IDNumberProperty());
+            idNumber.textProperty().addListener(listener);
+            
             email.textProperty().bindBidirectional(client.emailProperty());
+            email.textProperty().addListener(listener);
+            
             fax.textProperty().bindBidirectional(client.faxProperty());
+            fax.textProperty().addListener(listener);
+            
             address.textProperty().bindBidirectional(client.addressProperty());
+            address.textProperty().addListener(listener);
+            
             zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
+            zipCode.textProperty().addListener(listener);
+            
             city.textProperty().bindBidirectional(client.cityProperty());
+            city.textProperty().addListener(listener);
+            
             country.valueProperty().bindBidirectional(client.countryProperty());
+            country.valueProperty().addListener(listener);
+            
             phone.setItems(client.getPhoneList());
         }
+    }
+    
+    public boolean anyFieldWillChange(){
+        return changeComponentValue;
     }
     
     public boolean allowToMakeOperation(){
         return okayCancelController.allowToMakeOperation();
     }
     
-//    public ButtonType getAlertButtonType(){
-//        return okayCancelController.getButtonType();
+//    public void specificClose(){
+//        okayCancelController.showAlertAndCheckClickForClose();
 //    }
     
-//    public void onClose(){
-////        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
-////        if (close) {
-////            okayCancel.onClose();
-////        }
-//        okayCancelController.onClose();
-//    }
 
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
@@ -185,8 +208,6 @@ public class ClientDialogController implements Initializable {
         okayCancelController.setConfirmationShowBy(buttonType);
         okayCancelController.changeOkayButtonTitleFor(buttonType);
         okayCancelController.makeButtonsVisibleBy(buttonType);
-        
-        editorButtonType = buttonType;
     }
     
     /**
@@ -201,7 +222,14 @@ public class ClientDialogController implements Initializable {
         phone.setEditable(false);
     }
     
-    public boolean getAskForClose(){
-        return askClose;
+    private class ValueChangeListener implements ChangeListener<Object> {
+
+        @Override
+        public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
+            if ( !newValue.equals(oldValue) ){
+                changeComponentValue = true;
+            }
+        }
+        
     }
 }
