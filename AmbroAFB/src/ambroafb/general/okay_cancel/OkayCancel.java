@@ -58,9 +58,6 @@ public class OkayCancel extends HBox  {
         }
         kayEventChange();
         
-        ButtonActions action = new ButtonActions();
-        okay.setOnAction(action);
-        cancel.setOnAction(action);
     }
     private void assignLoader(FXMLLoader loader) {
         loader.setRoot(this);
@@ -120,19 +117,4 @@ public class OkayCancel extends HBox  {
         return buttonType;
     }
     
-    private class ButtonActions implements EventHandler<ActionEvent> {
-
-        @Override
-        public void handle(ActionEvent event) {
-            if (event.getSource() == cancel){
-                ClientDialogController dialogContr = (ClientDialogController) getScene().getProperties().get("controller");
-                boolean ask = dialogContr.getAskForClose();
-                if(ask){
-                    ButtonType type = new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get();
-                    setButtonType(type);
-                }
-            }
-//            if(allowToClose) onClose();
-        }
-    }
 }

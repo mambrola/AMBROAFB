@@ -20,7 +20,8 @@ public class AlertMessage extends Alert {
      * კონსტრუქტორი უზრუნველყოფს შექმნას შესაბამისი AlertType alert-ი.
      * დაუსეტავს ფანჯარას დასახელებას და ასევე დასასელებას, თუ რის შესახებაა დიალოგი. , 
      * @param alertType    - მესიჯის ტიპი, (AlertType.ERROR, AlertType.WARNING, AlertType.CONFIRMATION ...)
-     * @param message  - შიდა, კონტექსტის დასახელება
+     * @param ex
+     * @param messageName  - შიდა, კონტექსტის დასახელება
      */
     public AlertMessage(AlertType alertType, Exception ex, String messageName) {
         super(alertType);

@@ -54,26 +54,14 @@ public class EditorPanelController implements Initializable {
         }
         Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
         Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.DELETE);
-//        System.out.println("show-mde");
         dialog.showAndWait();
-//        System.out.println("show-s mere");
         boolean allowToMakeOperation = dialog.allowToMakeOperation();
         
-//        dialog.setDisabled();
-//        dialog.askClose(false);
-//        Parent root = dialog.getScene().getRoot();
-//        ((Button)root.lookup("#okay")).setText("Delete");
-//        root.lookup("#okay").setDisable(false);
-//        root.lookup("#cancel").setDisable(false);
-//        dialog.showAndWait();
-//        Class objectClass = Utils.getClassByName(getClassName("objectClass"));
-        System.out.println("allowToMakeOperation: " + allowToMakeOperation);
         if (allowToMakeOperation){
             boolean isDeleted = (boolean) Utils.getInvokedClassMethod(objectClass, "deleteOneFromDB", new Class[]{int.class}, null, selected.recId);
             if(isDeleted)
                 ((ATableView)exit.getScene().lookup("#table")).getItems().remove(selected);
         }
-//        dialog.close();
     }
     
     
@@ -88,8 +76,10 @@ public class EditorPanelController implements Initializable {
         
         Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
         Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.EDIT);
-        EditorPanelable result = dialog.getResult();
-        if (result == null)
+//        EditorPanelable result = dialog.getResult();
+        dialog.showAndWait();
+        boolean allowToMakeOperation = dialog.allowToMakeOperation();
+        if (!allowToMakeOperation)
             selected.copyFrom(backup);
     }
     
@@ -101,27 +91,9 @@ public class EditorPanelController implements Initializable {
             selected.copyFrom(real);
         }
         
-        Scene dialogScene = null;
-        try {
-            dialogScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
-        } catch (IOException ex) {
-            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("scene is: " + dialogScene);
-        
         Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
         Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.VIEW);
-//        dialog.accessToSceneController(dialogScene);
         
-//        try {
-//            Stage s = Utils.createStage("/ambroafb/clients/dialog/ClientDialog.fxml", null, null);
-//            s.show();
-//        } catch (IOException ex) {
-//            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        
-        dialog.setDisabled();
-//        dialog.askClose(false); 
         dialog.showAndWait();
     }
     

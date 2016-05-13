@@ -13,11 +13,7 @@ import javafx.scene.Scene;
  */
 public interface Dialogable {
     public EditorPanelable getResult();
-    public void setDisabled();
-//    public void askClose(boolean bool);
     public Scene getScene();
     public void showAndWait();
-    public void show();
-    public void close();
     public boolean allowToMakeOperation();
 }
