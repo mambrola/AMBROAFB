@@ -24,9 +24,6 @@ import javafx.scene.layout.BorderPane;
 public class ClientsController implements Initializable {
 
     @FXML
-    private BorderPane formPane;
-
-    @FXML
     private TableView<Client> table;
 
     @FXML
