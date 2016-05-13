@@ -47,20 +47,33 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void delete(ActionEvent e) {
         EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-        EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName("objectClass")), "getOneFromDB", new Class[]{int.class}, null, selected.recId);
+        Class objectClass = Utils.getClassByName(getClassName("objectClass"));
+        EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.recId);
         if (real != null) {
             selected.copyFrom(real);
-        } 
-        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(Utils.getClassByName(getClassName("dialogClass")), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.DELETE);
-        dialog.setDisabled();
-//        dialog.askClose(false);
-        Parent root = dialog.getScene().getRoot();
-        ((Button)root.lookup("#okay")).setText("Delete");
-        root.lookup("#okay").setDisable(false);
-        root.lookup("#cancel").setDisable(false);
+        }
+        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
+        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.DELETE);
+//        System.out.println("show-mde");
         dialog.showAndWait();
-        if((boolean)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName("objectClass")), "deleteOneFromDB", new Class[]{int.class}, null, selected.recId))
-            ((ATableView)exit.getScene().lookup("#table")).getItems().remove(selected);
+//        System.out.println("show-s mere");
+        boolean allowToMakeOperation = dialog.allowToMakeOperation();
+        
+//        dialog.setDisabled();
+//        dialog.askClose(false);
+//        Parent root = dialog.getScene().getRoot();
+//        ((Button)root.lookup("#okay")).setText("Delete");
+//        root.lookup("#okay").setDisable(false);
+//        root.lookup("#cancel").setDisable(false);
+//        dialog.showAndWait();
+//        Class objectClass = Utils.getClassByName(getClassName("objectClass"));
+        System.out.println("allowToMakeOperation: " + allowToMakeOperation);
+        if (allowToMakeOperation){
+            boolean isDeleted = (boolean) Utils.getInvokedClassMethod(objectClass, "deleteOneFromDB", new Class[]{int.class}, null, selected.recId);
+            if(isDeleted)
+                ((ATableView)exit.getScene().lookup("#table")).getItems().remove(selected);
+        }
+//        dialog.close();
     }
     
     

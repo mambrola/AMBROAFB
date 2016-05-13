@@ -16,6 +16,7 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.okay_cancel.OkayCancel;
+import ambroafb.general.okay_cancel.OkayCancelController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -76,12 +77,13 @@ public class ClientDialogController implements Initializable {
     @FXML
     private CheckBox rezident;
     @FXML
-    private OkayCancel okayCancel;
+    private OkayCancelController okayCancelController;
 
     ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private boolean askClose = true;
     private Client client;
+    private EDITOR_BUTTON_TYPE editorButtonType;
     
     /**
      * Initializes the controller class.
@@ -144,7 +146,6 @@ public class ClientDialogController implements Initializable {
     }
 
     public void bindClient(Client client) {
-        this.client = client;
         if (client != null) {
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
             rezident.selectedProperty().bindBidirectional(client.isRezProperty());
@@ -161,33 +162,43 @@ public class ClientDialogController implements Initializable {
         }
     }
     
-    public void setDisableComponents(){
+    public boolean allowToMakeOperation(){
+        return okayCancelController.allowToMakeOperation();
+    }
+    
+//    public ButtonType getAlertButtonType(){
+//        return okayCancelController.getButtonType();
+//    }
+    
+//    public void onClose(){
+////        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
+////        if (close) {
+////            okayCancel.onClose();
+////        }
+//        okayCancelController.onClose();
+//    }
+
+    public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
+        if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
+            setDisableComponents();
+        }
+        okayCancelController.setConfirmationShowBy(buttonType);
+        okayCancelController.changeOkayButtonTitleFor(buttonType);
+        okayCancelController.makeButtonsVisibleBy(buttonType);
+        
+        editorButtonType = buttonType;
+    }
+    
+    /**
+     * Disables all fields on Dialog stage except phones.
+     */
+    private void setDisableComponents(){
         focusTraversableNodes.forEach((Node t) -> {
             if (t != phone) {
                 t.setDisable(true);
             }
         });
         phone.setEditable(false);
-        okayCancel.setOkayAndCancelVisible(false, true);
-        okayCancel.setOkayAndCancelDisable(true, false);
-    }
-    
-    public ButtonType getAlertButtonType(){
-        return okayCancel.getButtonType();
-    }
-    
-    public void onClose(){
-//        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
-//        if (close) {
-//            okayCancel.onClose();
-//        }
-        okayCancel.onClose();
-    }
-
-    public void setAskForCloseByType(EDITOR_BUTTON_TYPE type) {
-        if (type.equals(EDITOR_BUTTON_TYPE.VIEW) || type.equals(EDITOR_BUTTON_TYPE.DELETE)){
-            askClose = false;
-        }
     }
     
     public boolean getAskForClose(){

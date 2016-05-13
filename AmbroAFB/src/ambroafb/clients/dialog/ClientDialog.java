@@ -51,25 +51,25 @@ public class ClientDialog extends Stage implements Dialogable {
     private EDITOR_BUTTON_TYPE callerButtonType; 
 
     GeneralConfig conf = GeneralConfig.getInstance();
-    ArrayList<Node> focusTraversableNodes;
+//    ArrayList<Node> focusTraversableNodes;
     Client client, clientBackup;
 
-    @FXML
-    VBox formPane;
-    @FXML
-    private Label first_name, last_name;
-    @FXML
-    DatePicker openDate;
-    @FXML
-    CheckBox juridical, rezident;
-    @FXML
-    TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
-    @FXML
-    ComboBox<Country> country;
-    @FXML
-    ListEditor<PhoneNumber> phone;
-    @FXML
-    OkayCancel okayCancel;
+//    @FXML
+//    VBox formPane;
+//    @FXML
+//    private Label first_name, last_name;
+//    @FXML
+//    DatePicker openDate;
+//    @FXML
+//    CheckBox juridical, rezident;
+//    @FXML
+//    TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
+//    @FXML
+//    ComboBox<Country> country;
+//    @FXML
+//    ListEditor<PhoneNumber> phone;
+//    @FXML
+//    OkayCancel okayCancel;
 
     private boolean askClose = true;
     private ClientDialogController dialogController;
@@ -90,22 +90,22 @@ public class ClientDialog extends Stage implements Dialogable {
         
         try {
             Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
-            this.setScene(currentScene);
             dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
             dialogController.bindClient(this.client);
-            dialogController.setAskForCloseByType(buttonType);
+            dialogController.setNextVisibleAndActionParameters(buttonType);
+            this.setScene(currentScene);
         } catch (IOException ex) {
             Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         initOwner(AmbroAFB.mainStage);
         setResizable(false);
 
-        setOnCloseRequest((WindowEvent event) -> {
-            event.consume();
-//            onClose();
-            this.client = null;
-            dialogController.onClose();
-        });
+//        setOnCloseRequest((WindowEvent event) -> {
+//            event.consume();
+////            onClose();
+//            this.client = null;
+////            dialogController.onClose();
+//        });
         
     }
     
@@ -127,10 +127,10 @@ public class ClientDialog extends Stage implements Dialogable {
     @Override
     public Client getResult() {
         showAndWait();
-        ButtonType type = dialogController.getAlertButtonType();
-        if (type.equals(ButtonType.OK))
-            client = null;
-        dialogController.onClose();
+//        ButtonType type = dialogController.getAlertButtonType();
+//        if (type.equals(ButtonType.OK))
+//            client = null;
+//        dialogController.onClose();
         return client;
     }
 
@@ -169,7 +169,12 @@ public class ClientDialog extends Stage implements Dialogable {
 
     @Override
     public void setDisabled() {
-        dialogController.setDisableComponents();
+//        dialogController.setDisableComponents();
+    }
+
+    @Override
+    public boolean allowToMakeOperation() {
+        return dialogController.allowToMakeOperation();
     }
 
 }

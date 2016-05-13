@@ -5,11 +5,22 @@
  */
 package ambroafb.general.okay_cancel;
 
+import ambroafb.general.AlertMessage;
+import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.Utils;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -23,6 +34,11 @@ public class OkayCancelController implements Initializable {
     @FXML
     private Button cancel;
 
+    private ButtonType alertButtonType;
+    private boolean showConfirmationOnOkay;
+    private boolean showConfirmationOnCancel;
+    private boolean allowOperation;
+    
     /**
      * Initializes the controller class.
      * @param url
@@ -30,7 +46,102 @@ public class OkayCancelController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        showConfirmationOnOkay = false;
+        showConfirmationOnCancel = false;
+        allowOperation = false;
         
-    }    
+        OkayButtonListener OkayListener = new OkayButtonListener();
+        CancelButtonListener cancelListener = new CancelButtonListener();
+        
+        okay.setOnAction(OkayListener);
+        cancel.setOnAction(cancelListener);
+    }
     
+//    private void kayEventChange(){
+//        Utils.getFocusTraversableBottomChildren(this).stream().forEach((node) -> {
+//            node.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+//                if (event.getCode().equals(KeyCode.SPACE)) {
+//                    event.consume();
+//                } 
+//                else if (event.getCode().equals(KeyCode.ENTER)) {
+//                    ((Button) node).fire();
+//                    event.consume();
+//                }
+//            });
+//        });
+//    }
+    
+    public void setConfirmationShowBy(EDITOR_BUTTON_TYPE type){
+        if (type.equals(EDITOR_BUTTON_TYPE.EDIT)){
+            showConfirmationOnOkay = false;
+            showConfirmationOnCancel = true;
+        }
+        else if(type.equals(EDITOR_BUTTON_TYPE.DELETE)){
+            showConfirmationOnOkay = true;
+            showConfirmationOnCancel = false;
+        }
+        else if(type.equals(EDITOR_BUTTON_TYPE.ADD)){
+            showConfirmationOnOkay = false;
+            showConfirmationOnCancel = true;
+        }
+    }
+    
+    public void changeOkayButtonTitleFor(EDITOR_BUTTON_TYPE type){
+        if ( !type.equals(EDITOR_BUTTON_TYPE.VIEW) ){
+            String typeRealName = type.toString();
+            String newTitle = typeRealName.charAt(0) + typeRealName.toLowerCase().substring(1);
+            okay.setText(newTitle);
+        }
+    }
+    
+    public void makeButtonsVisibleBy(EDITOR_BUTTON_TYPE type){
+        if (type.equals(EDITOR_BUTTON_TYPE.VIEW)){
+            cancel.setVisible(false);
+        }
+        okay.setDisable(false);
+        cancel.setDisable(false);
+    }
+    
+    public boolean allowToMakeOperation(){
+        return allowOperation;
+    }
+    
+    
+    
+    private class OkayButtonListener implements EventHandler<ActionEvent> {
+
+        @Override
+        public void handle(ActionEvent event) {
+            if (showConfirmationOnOkay){
+                AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without ...?");
+                alertButtonType = alert.showAndWait().get();
+                if (alertButtonType.equals(ButtonType.OK)){
+                    allowOperation = true;
+                    Stage currentStage = (Stage) cancel.getScene().getWindow();
+                    currentStage.close();
+                }
+            }
+            else {
+                Stage currentStage = (Stage) cancel.getScene().getWindow();
+                currentStage.close();
+            }
+        }
+        
+    }
+    
+    private class CancelButtonListener implements EventHandler<ActionEvent> {
+
+        @Override
+        public void handle(ActionEvent event) {
+            if (showConfirmationOnCancel){
+                AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without ...?");
+                alertButtonType = alert.showAndWait().get();
+                if (alertButtonType.equals(ButtonType.OK))
+                    allowOperation = true;
+            }
+            Stage currentStage = (Stage) cancel.getScene().getWindow();
+            currentStage.close();
+        }
+        
+    }
 }

@@ -17,4 +17,7 @@ public interface Dialogable {
 //    public void askClose(boolean bool);
     public Scene getScene();
     public void showAndWait();
+    public void show();
+    public void close();
+    public boolean allowToMakeOperation();
 }

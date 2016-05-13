@@ -93,8 +93,10 @@
                 </children> 
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
-                <OkayCancel fx:id="okayCancel"/>
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/OkayCancel.fxml"/>
             </HBox>
         </children>
     </VBox>
 </ambroafb.general.DialogPanel>
+
+<!--<OkayCancel fx:id="okayCancel"/>-->
