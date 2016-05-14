@@ -43,65 +43,61 @@ public class EditorPanelController implements Initializable {
     @FXML
     private Initializable outerController;
     
+    private enum CLASS_TYPE {OBJECT, DIALOG, CONTROLLER};
     
     @FXML
     private void delete(ActionEvent e) {
         EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-        Class objectClass = Utils.getClassByName(getClassName("objectClass"));
+        Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
         EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.recId);
         if (real != null) {
             selected.copyFrom(real);
         }
-        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
+        Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
         Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.DELETE);
-        dialog.showAndWait();
-        boolean allowToMakeOperation = dialog.allowToMakeOperation();
-        
-        if (allowToMakeOperation){
+        if (dialog.getResult() != null){
             boolean isDeleted = (boolean) Utils.getInvokedClassMethod(objectClass, "deleteOneFromDB", new Class[]{int.class}, null, selected.recId);
             if(isDeleted)
                 ((ATableView)exit.getScene().lookup("#table")).getItems().remove(selected);
         }
     }
     
-    
     @FXML
     private void edit(ActionEvent e) {
         EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-        EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod(Utils.getClassByName(getClassName("objectClass")), "getOneFromDB", new Class[]{int.class}, null, selected.recId);
+        Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+        EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.recId);
         if (real != null) {
             selected.copyFrom(real);
         }
         EditorPanelable backup = selected.cloneWithID();
-        
-        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
+        Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
         Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.EDIT);
-//        EditorPanelable result = dialog.getResult();
-        dialog.showAndWait();
-        boolean allowToMakeOperation = dialog.allowToMakeOperation();
-        if (!allowToMakeOperation)
+        EditorPanelable result = dialog.getResult();
+        if (result == null){
             selected.copyFrom(backup);
+        } else {
+             Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
+        }
     }
     
     @FXML
     private void view(ActionEvent e) {
         EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-        EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName("objectClass")), "getOneFromDB", new Class[]{int.class}, null, selected.recId);
+        EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT)), "getOneFromDB", new Class[]{int.class}, null, selected.recId);
         if (real != null) {
             selected.copyFrom(real);
         }
-        
-        Class dialogClass = Utils.getClassByName(getClassName("dialogClass"));
+        Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
         Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.VIEW);
-        
         dialog.showAndWait();
     }
     
     @FXML
     private void add(ActionEvent e) {
-        EditorPanelable result = (EditorPanelable) ((Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName("dialogClass")), null)).getResult();
+        EditorPanelable result = (EditorPanelable) ((Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), null)).getResult();
         if (result != null) {
-            Class objectClass = Utils.getClassByName(getClassName("objectClass"));
+            Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
             result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
             if (result != null) {
                 ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
@@ -112,8 +108,8 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void addBySample(ActionEvent e) {
         EditorPanelable selected = ((EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem()).cloneWithoutID();
-        EditorPanelable result = (EditorPanelable) ((Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName("dialogClass")), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.ADD)).getResult();
-        Class objectClass = Utils.getClassByName(getClassName("objectClass"));
+        EditorPanelable result = (EditorPanelable) ((Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.ADD)).getResult();
+        Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
         result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
         if (result != null) {
             ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
@@ -125,9 +121,8 @@ public class EditorPanelController implements Initializable {
         ATableView table = (ATableView)exit.getScene().lookup("#table");
         EditorPanelable selected = (EditorPanelable)table.getSelectionModel().getSelectedItem();
         table.getItems().clear();
-        Class controllerClass = Utils.getClassByName(getClassName("controllerClass"));
+        Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
         Utils.getInvokedClassMethod(controllerClass, "asignTable", null, outerController);
-        //Utils.getInvokedClassMethod(controllerClass, "selectOneAgain", new Class[]{Utils.getClassByName(getClassName("objectClass"))}, outerController, selected);
         selectOneAgain(selected);
     }
        
@@ -140,7 +135,7 @@ public class EditorPanelController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
     }
-  
+    
     public void buttonsMainPropertysBinder (TableView table){
         delete.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
         edit.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
@@ -152,21 +147,22 @@ public class EditorPanelController implements Initializable {
         outerController = controller;
     }
     
-    private String getClassName(String type){
+    private String getClassName(CLASS_TYPE type){
         String rtrn = exit.getScene().getProperties().get("controller").toString();
-        if(type.equals("controllerClass"))
+        if(type.equals(CLASS_TYPE.CONTROLLER))
             return rtrn.substring(0, rtrn.indexOf("@"));
         String path = rtrn.substring(0, rtrn.lastIndexOf(".") + 1);
         String className = rtrn.substring(path.length(), rtrn.lastIndexOf("Controller"));
         switch (className){
             case "Countries":
-                rtrn = path + (type.equals("dialogClass") ? "dialog." : "") + "Country" + (type.equals("dialogClass") ? "Dialog" : "");
+                rtrn = path + (type.equals(CLASS_TYPE.DIALOG) ? "dialog." : "") + "Country" + (type.equals(CLASS_TYPE.DIALOG) ? "Dialog" : "");
                 break;
             default:
-                rtrn = path + (type.equals("dialogClass") ? "dialog." : "") + className.substring(0, className.length() - 1) + (type.equals("dialogClass") ? "Dialog" : "");
+                rtrn = path + (type.equals(CLASS_TYPE.DIALOG) ? "dialog." : "") + className.substring(0, className.length() - 1) + (type.equals(CLASS_TYPE.DIALOG) ? "Dialog" : "");
         }
         return rtrn;
     }
+    
 
     private void selectOneAgain(EditorPanelable selected) {
         ATableView table = (ATableView) exit.getScene().lookup("#table");

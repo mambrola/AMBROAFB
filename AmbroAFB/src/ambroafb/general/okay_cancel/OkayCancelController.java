@@ -9,8 +9,11 @@ import ambroafb.clients.dialog.ClientDialogController;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -35,15 +38,10 @@ import javafx.stage.Stage;
 public class OkayCancelController implements Initializable {
 
     @FXML
-    private Button okay;
-    @FXML
-    private Button cancel;
+    private Button okay, cancel;
 
-    private boolean showConfirmationOnOkay;
-    private boolean showConfirmationOnCancel;
     private boolean allowOperation;
-    private String confirmationText ;
-    
+
     /**
      * Initializes the controller class.
      * @param url
@@ -51,117 +49,62 @@ public class OkayCancelController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        showConfirmationOnOkay = false;
-        showConfirmationOnCancel = false;
-        allowOperation = false;
-        
-        confirmationText = "Do you want to exit without #?";
-        
-        OkayButtonListener OkayListener = new OkayButtonListener();
-        CancelButtonListener cancelListener = new CancelButtonListener();
-        
-        kayEventChange(okay.getParent());
-        okay.setOnAction(OkayListener);
-        cancel.setOnAction(cancelListener);
+          allowOperation = false;
     }
-    
-    private void kayEventChange(Parent root){
-        Utils.getFocusTraversableBottomChildren(root).stream().forEach((node) -> {
-            node.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-                if (event.getCode().equals(KeyCode.SPACE)) {
-                    event.consume();
-                } 
-                else if (event.getCode().equals(KeyCode.ENTER)) {
-                    ((Button) node).fire();
-                    event.consume();
-                }
-            });
-        });
-    }
-    
-    public void setConfirmationShowBy(EDITOR_BUTTON_TYPE type){
-        switch (type) {
-            case EDIT:
-                showConfirmationOnOkay = false;
-                showConfirmationOnCancel = true;
-                break;
-            case DELETE:
-                showConfirmationOnOkay = true;
-                showConfirmationOnCancel = false;
-                break;
-            case ADD:
-                showConfirmationOnOkay = false;
-                showConfirmationOnCancel = true;
-                break;
-            default:
-                showConfirmationOnOkay = false;
-                showConfirmationOnCancel = false;
-                break;
-        }
-    }
-    
-    public void changeOkayButtonTitleFor(EDITOR_BUTTON_TYPE type){
-        if ( !type.equals(EDITOR_BUTTON_TYPE.VIEW) ){
-            String typeRealName = type.toString();
-            String newTitle = typeRealName.charAt(0) + typeRealName.toLowerCase().substring(1);
-            okay.setText(newTitle);
-        }
-        
-        confirmationText = confirmationText.replace("#", okay.getText().toLowerCase());
-    }
-    
-    public void makeButtonsVisibleBy(EDITOR_BUTTON_TYPE type){
-        if (type.equals(EDITOR_BUTTON_TYPE.VIEW)){
-            cancel.setVisible(false);
-        }
+
+    public void setButtonsFeatures(EDITOR_BUTTON_TYPE type){
+        String alertText;
         okay.setDisable(false);
         cancel.setDisable(false);
+        switch (type) {
+            case DELETE:
+                okay.setText("Delete");
+                alertText = "You Realy want Delete this item?";
+                okay.setOnAction((ActionEvent event) -> {
+                    if(new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
+//                        allowOperation = true;
+                        ((Stage) okay.getScene().getWindow()).close();
+                    }
+                });
+                cancel.setOnAction((ActionEvent event) -> {
+                    operationCanceled();
+                    ((Stage) okay.getScene().getWindow()).close();
+                });
+                break;
+            case EDIT:
+            case ADD:
+                okay.setText(type.equals(EDITOR_BUTTON_TYPE.ADD) ? "Add" : "Save");
+                okay.setOnAction((ActionEvent event) -> {
+//                    allowOperation = true;
+                    ((Stage) okay.getScene().getWindow()).close();
+                });
+                alertText = "Close without saving changes?";    
+                cancel.setOnAction((ActionEvent event) -> {
+                    boolean anyFieldWasChanged = false;
+                    try {
+                        anyFieldWasChanged = (boolean)cancel.getScene().getProperties().get("controller").getClass().getMethod("anyFieldWillChange").invoke(cancel.getScene().getProperties().get("controller"));
+                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(OkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
+                    if(!anyFieldWasChanged || new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
+                        operationCanceled();
+                        ((Stage) okay.getScene().getWindow()).close();
+                    }
+                });
+                break;
+            case VIEW:
+                okay.setOnAction((ActionEvent event) -> {
+                    operationCanceled();
+                    ((Stage) okay.getScene().getWindow()).close();
+                });
+                cancel.setVisible(false);
+        }
     }
-    
     public boolean allowToMakeOperation(){
         return allowOperation;
     }
     
-    private void onClose(){
-        Stage currentStage = (Stage) cancel.getScene().getWindow();
-        currentStage.close();
-    }
-
-    public void showAlertAndCheckClickForClose(){
-        AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, confirmationText);
-        ButtonType alertButtonType = alert.showAndWait().get();
-        if (alertButtonType.equals(ButtonType.OK)){
-            allowOperation = true;
-            onClose();
-        }
-    }
-    
-    private class OkayButtonListener implements EventHandler<ActionEvent> {
-
-        @Override
-        public void handle(ActionEvent event) {
-            if (showConfirmationOnOkay){
-                showAlertAndCheckClickForClose();
-            }
-            else {
-                onClose();
-            }
-        }
-        
-    }
-    
-    private class CancelButtonListener implements EventHandler<ActionEvent> {
-
-        @Override
-        public void handle(ActionEvent event) {
-            ClientDialogController controller = (ClientDialogController) cancel.getScene().getProperties().get("controller");
-            if (showConfirmationOnCancel && controller.anyFieldWillChange()){ // && controller.anyChange()
-                showAlertAndCheckClickForClose();
-            }
-            else {
-                onClose();
-            }
-        }
-    }
-    
+    private void operationCanceled(){
+        try {
+            cancel.getScene().getProperties().get("controller").getClass().getMethod("operationCanceled").invoke(cancel.getScene().getProperties().get("controller"));
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(OkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
+    }                        
 }

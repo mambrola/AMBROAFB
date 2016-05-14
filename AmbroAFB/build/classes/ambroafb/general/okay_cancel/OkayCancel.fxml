@@ -32,5 +32,3 @@
         <Insets bottom="30.0" right="50.0" top="30.0" />
     </padding>
 </HBox>
-
-<!--fx:root type="javafx.scene.layout.HBox"-->

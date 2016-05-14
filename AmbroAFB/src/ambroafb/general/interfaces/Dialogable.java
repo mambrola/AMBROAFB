@@ -15,5 +15,5 @@ public interface Dialogable {
     public EditorPanelable getResult();
     public Scene getScene();
     public void showAndWait();
-    public boolean allowToMakeOperation();
+    public void operationCanceled();
 }

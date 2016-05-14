@@ -25,8 +25,7 @@ import javafx.stage.WindowEvent;
  */
 public class ClientDialog extends Stage implements Dialogable {
     
-    GeneralConfig conf = GeneralConfig.getInstance();
-    Client client, clientBackup;
+    public Client client, clientBackup;
 
     private ClientDialogController dialogController;
     
@@ -45,6 +44,7 @@ public class ClientDialog extends Stage implements Dialogable {
         try {
             Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
             dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
+            dialogController.setOwnerStage(this);
             dialogController.setNextVisibleAndActionParameters(buttonType);
             dialogController.bindClient(this.client);
             this.setScene(currentScene);
@@ -63,10 +63,9 @@ public class ClientDialog extends Stage implements Dialogable {
         showAndWait();
         return client;
     }
-
-    @Override
-    public boolean allowToMakeOperation() { // sheidzleba shevitanot getResult-shi
-        return dialogController.allowToMakeOperation();
+    
+     public void operationCanceled(){
+        client = null;
     }
-
+    
 }

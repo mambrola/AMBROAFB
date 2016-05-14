@@ -8,14 +8,13 @@ package ambroafb.clients.dialog;
 import ambroafb.clients.Client;
 import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
-import ambroafb.general.Editable;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.ListEditor;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
-import ambroafb.general.okay_cancel.OkayCancel;
+import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.OkayCancelController;
 import java.io.IOException;
 import java.net.URL;
@@ -25,23 +24,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.InputEvent;
-import static javafx.scene.input.KeyCode.T;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -74,6 +68,8 @@ public class ClientDialogController implements Initializable {
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private boolean changeComponentValue;
+    private Client client;
+    private Dialogable ownerStage;
     
     private int n = 0;
     
@@ -124,10 +120,8 @@ public class ClientDialogController implements Initializable {
     
 
     public void bindClient(Client client) {
-        
+        this.client = client;
         formPane.addEventHandler(EventType.ROOT, new MyEventHandler());
-        
-        
         if (client != null) {
             ValueChangeListener listener = new ValueChangeListener();
             
@@ -184,9 +178,9 @@ public class ClientDialogController implements Initializable {
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
-        okayCancelController.setConfirmationShowBy(buttonType);
-        okayCancelController.changeOkayButtonTitleFor(buttonType);
-        okayCancelController.makeButtonsVisibleBy(buttonType);
+        okayCancelController.setButtonsFeatures(buttonType);
+//        okayCancelController.changeOkayButtonTitleFor(buttonType);
+//        okayCancelController.makeButtonsVisibleBy(buttonType);
     }
     
     private void switchJuridical(ActionEvent e) {
@@ -214,7 +208,15 @@ public class ClientDialogController implements Initializable {
                 t.setDisable(true);
             }
         });
-        phone.setEditable(false);
+        //phone.setEditable(false);
+    }
+
+    public void setOwnerStage(Dialogable stage) {
+        ownerStage = stage;
+    }
+    
+    public void operationCanceled(){
+        ownerStage.operationCanceled();
     }
     
     private class ValueChangeListener implements ChangeListener<Object> {
@@ -231,11 +233,13 @@ public class ClientDialogController implements Initializable {
     private class MyEventHandler implements javafx.event.EventHandler {
         @Override
         public void handle(Event event) {
-            System.out.println("" + event);
+            //System.out.println("" + event);
             if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED) || event.getEventType().equals(KeyEvent.KEY_PRESSED))
-                System.out.println("MyEventHandler fix Change" + n++);
+                ;//System.out.println("MyEventHandler fix Change" + n++);
         }
         
     }
+    
+   
     
 }
