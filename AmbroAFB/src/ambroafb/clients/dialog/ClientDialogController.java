@@ -27,6 +27,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -38,6 +40,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.InputEvent;
+import static javafx.scene.input.KeyCode.T;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -53,39 +59,23 @@ public class ClientDialogController implements Initializable {
     @FXML
     private DatePicker openDate;
     @FXML
-    private CheckBox juridical;
+    private CheckBox juridical, rezident;
     @FXML
-    private Label first_name;
+    private Label first_name, last_name;
     @FXML
-    private TextField firstName;
-    @FXML
-    private Label last_name;
-    @FXML
-    private TextField lastName;
-    @FXML
-    private TextField idNumber;
-    @FXML
-    private TextField email;
+    private TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
     @FXML
     private ListEditor<PhoneNumber> phone;
     @FXML
-    private TextField fax;
-    @FXML
-    private TextField address;
-    @FXML
-    private TextField zipCode;
-    @FXML
-    private TextField city;
-    @FXML
     private ComboBox<Country> country;
-    @FXML
-    private CheckBox rezident;
     @FXML
     private OkayCancelController okayCancelController;
 
-    ArrayList<Node> focusTraversableNodes;
+    private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private boolean changeComponentValue;
+    
+    private int n = 0;
     
     /**
      * Initializes the controller class.
@@ -131,24 +121,13 @@ public class ClientDialogController implements Initializable {
         
     }
     
-    private void switchJuridical(ActionEvent e) {
-        System.out.println("e.getSource(): " + firstName.widthProperty().getValue());
-        double w = firstName.widthProperty().getValue() + lastName.widthProperty().getValue();
-        if (((CheckBox) e.getSource()).isSelected()) {
-            first_name.setText(conf.getTitleFor("firm_name"));
-            last_name.setText(conf.getTitleFor("firm_form"));
-            firstName.setPrefWidth(0.75 * w);
-            lastName.setPrefWidth(0.25 * w);
-        } else {
-            first_name.setText(conf.getTitleFor("first_name"));
-            last_name.setText(conf.getTitleFor("last_name"));
-            firstName.setPrefWidth(0.50 * w);
-            lastName.setPrefWidth(0.50 * w);
-        }
-    }
     
 
     public void bindClient(Client client) {
+        
+        formPane.addEventHandler(EventType.ROOT, new MyEventHandler());
+        
+        
         if (client != null) {
             ValueChangeListener listener = new ValueChangeListener();
             
@@ -210,6 +189,22 @@ public class ClientDialogController implements Initializable {
         okayCancelController.makeButtonsVisibleBy(buttonType);
     }
     
+    private void switchJuridical(ActionEvent e) {
+        double w = firstName.widthProperty().getValue() + lastName.widthProperty().getValue();
+        if (((CheckBox) e.getSource()).isSelected()) {
+            first_name.setText(conf.getTitleFor("firm_name"));
+            last_name.setText(conf.getTitleFor("firm_form"));
+            firstName.setPrefWidth(0.75 * w);
+            lastName.setPrefWidth(0.25 * w);
+        } else {
+            first_name.setText(conf.getTitleFor("first_name"));
+            last_name.setText(conf.getTitleFor("last_name"));
+            firstName.setPrefWidth(0.50 * w);
+            lastName.setPrefWidth(0.50 * w);
+        }
+    }
+    
+    
     /**
      * Disables all fields on Dialog stage except phones.
      */
@@ -232,4 +227,15 @@ public class ClientDialogController implements Initializable {
         }
         
     }
+    
+    private class MyEventHandler implements javafx.event.EventHandler {
+        @Override
+        public void handle(Event event) {
+            System.out.println("" + event);
+            if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED) || event.getEventType().equals(KeyEvent.KEY_PRESSED))
+                System.out.println("MyEventHandler fix Change" + n++);
+        }
+        
+    }
+    
 }

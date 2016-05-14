@@ -5,16 +5,12 @@
  */
 package ambroafb.clients;
 
-import ambroafb.clients.dialog.ClientDialog;
 import ambroafb.general.editor_panel.EditorPanelController;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.BorderPane;
 
 /**
  * FXML Controller class
@@ -47,14 +43,5 @@ public class ClientsController implements Initializable {
         Client.getClients().stream().forEach((client) -> {
             table.getItems().add(client);
         });
-    }
-    
-    //შეიძლება გატანა მშობელ კლასში refresh-თან EditorPanelController-ში
-    public void selectOneAgain(Client selected) {
-        int i = table.getItems().size() - 1;
-        while(i >= 0 && table.getItems().get(i).getRecId() != selected.getRecId())
-            i--;
-        if(i >= 0)
-            table.getSelectionModel().select(i);
     }
 }

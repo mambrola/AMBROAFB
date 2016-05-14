@@ -25,8 +25,6 @@ import javafx.stage.WindowEvent;
  */
 public class ClientDialog extends Stage implements Dialogable {
     
-    private EDITOR_BUTTON_TYPE callerButtonType; 
-
     GeneralConfig conf = GeneralConfig.getInstance();
     Client client, clientBackup;
 
@@ -42,19 +40,15 @@ public class ClientDialog extends Stage implements Dialogable {
     
     public ClientDialog(Client client, EDITOR_BUTTON_TYPE buttonType) {
         super();
-        this.callerButtonType = buttonType;
         this.client = client;
         this.clientBackup = client.cloneWithID();
-        
         try {
             Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
             dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
-            dialogController.bindClient(this.client);
             dialogController.setNextVisibleAndActionParameters(buttonType);
+            dialogController.bindClient(this.client);
             this.setScene(currentScene);
-        } catch (IOException ex) {
-            Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (IOException ex) { Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex); }
         initOwner(AmbroAFB.mainStage);
         setResizable(false);
 
@@ -64,11 +58,6 @@ public class ClientDialog extends Stage implements Dialogable {
         
     }
     
-    /**
-     * თუ isCancelled() არის true, აბრუნებს null-ს, თუ არადა შესაბამის კლიენტს
-     *
-     * @return
-     */
     @Override
     public Client getResult() {
         showAndWait();

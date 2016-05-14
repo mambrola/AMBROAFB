@@ -127,7 +127,8 @@ public class EditorPanelController implements Initializable {
         table.getItems().clear();
         Class controllerClass = Utils.getClassByName(getClassName("controllerClass"));
         Utils.getInvokedClassMethod(controllerClass, "asignTable", null, outerController);
-        Utils.getInvokedClassMethod(controllerClass, "selectOneAgain", new Class[]{Utils.getClassByName(getClassName("objectClass"))}, outerController, selected);
+        //Utils.getInvokedClassMethod(controllerClass, "selectOneAgain", new Class[]{Utils.getClassByName(getClassName("objectClass"))}, outerController, selected);
+        selectOneAgain(selected);
     }
        
     /**
@@ -165,5 +166,16 @@ public class EditorPanelController implements Initializable {
                 rtrn = path + (type.equals("dialogClass") ? "dialog." : "") + className.substring(0, className.length() - 1) + (type.equals("dialogClass") ? "Dialog" : "");
         }
         return rtrn;
+    }
+
+    private void selectOneAgain(EditorPanelable selected) {
+        ATableView table = (ATableView) exit.getScene().lookup("#table");
+        int i = table.getItems().size() - 1;
+        while (i >= 0 && ((EditorPanelable) table.getItems().get(i)).getRecId() != selected.getRecId()) {
+            i--;
+        }
+        if (i >= 0) {
+            table.getSelectionModel().select(i);
+        }
     }
 }
