@@ -23,7 +23,9 @@ public abstract class EditorPanelable {
         return recId;
     };
     
-    
+    public void setRecId(int recId){
+        this.recId = recId;
+    };
     
     
 }

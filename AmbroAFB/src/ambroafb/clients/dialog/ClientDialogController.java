@@ -39,7 +39,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 /**
@@ -91,13 +90,7 @@ public class ClientDialogController implements Initializable {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
-        
-        try {
-            country.getItems().addAll(Country.getCountries());
-        } catch (KFZClient.KFZServerException | IOException ex) {
-            Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.WARNING, ex, "Can't load countries").showAlert();
-        }
+        country.getItems().addAll(Country.getAllFromDB());
         
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         

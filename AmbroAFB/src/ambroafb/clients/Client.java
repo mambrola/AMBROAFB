@@ -127,7 +127,6 @@ public class Client extends EditorPanelable{
     public Client cloneWithoutID() {
         Client clone = new Client();
         clone.copyFrom(this);
-
         return clone;
     }
 
