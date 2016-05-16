@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -44,7 +45,6 @@ public class ClientDialog extends Stage implements Dialogable {
         try {
             Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
             dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
-            //dialogController.setOwnerStage((Dialogable)this);
             dialogController.setNextVisibleAndActionParameters(buttonType);
             dialogController.bindClient(this.client);
             this.setScene(currentScene);
