@@ -40,8 +40,6 @@ public class OkayCancelController implements Initializable {
     @FXML
     private Button okay, cancel;
 
-    private boolean allowOperation;
-
     /**
      * Initializes the controller class.
      * @param url
@@ -49,7 +47,6 @@ public class OkayCancelController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-          allowOperation = false;
     }
 
     public void setButtonsFeatures(EDITOR_BUTTON_TYPE type){
@@ -62,7 +59,6 @@ public class OkayCancelController implements Initializable {
                 alertText = "You Realy want Delete this item?";
                 okay.setOnAction((ActionEvent event) -> {
                     if(new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
-//                        allowOperation = true;
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -75,7 +71,6 @@ public class OkayCancelController implements Initializable {
             case ADD:
                 okay.setText(type.equals(EDITOR_BUTTON_TYPE.ADD) ? "Add" : "Save");
                 okay.setOnAction((ActionEvent event) -> {
-//                    allowOperation = true;
                     ((Stage) okay.getScene().getWindow()).close();
                 });
                 alertText = "Close without saving changes?";    
@@ -97,9 +92,6 @@ public class OkayCancelController implements Initializable {
                 });
                 cancel.setVisible(false);
         }
-    }
-    public boolean allowToMakeOperation(){
-        return allowOperation;
     }
     
     private void operationCanceled(){

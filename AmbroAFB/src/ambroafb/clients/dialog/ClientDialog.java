@@ -61,7 +61,6 @@ public class ClientDialog extends Stage implements Dialogable {
     @Override
     public Client getResult() {
         showAndWait();
-        System.out.println("client: " + client);
         return client;
     }
     

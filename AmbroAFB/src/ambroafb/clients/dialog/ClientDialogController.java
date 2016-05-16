@@ -70,8 +70,6 @@ public class ClientDialogController implements Initializable {
     private boolean changeComponentValue;
     private Client client;
     
-    private int n = 0;
-    
     /**
      * Initializes the controller class.
      * @param url
@@ -108,63 +106,31 @@ public class ClientDialogController implements Initializable {
         
         juridical.setOnAction(this::switchJuridical);
         
-        
         focusTraversableNodes.forEach((Node t) -> {
-            System.out.println("node: " + t);
             t.addEventHandler(EventType.ROOT, new MyEventHandler());
         });
     }
-    
-    
 
     public void bindClient(Client client) {
         this.client = client;
-       // formPane.addEventHandler(EventType.ROOT, new MyEventHandler());
         if (client != null) {
-            ValueChangeListener listener = new ValueChangeListener();
-            
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
-            
             rezident.selectedProperty().bindBidirectional(client.isRezProperty());
-            rezident.selectedProperty().addListener(listener);
-            
             firstName.textProperty().bindBidirectional(client.firstNameProperty());
-            firstName.textProperty().addListener(listener);
-            
             lastName.textProperty().bindBidirectional(client.lastNameProperty());
-            lastName.textProperty().addListener(listener);
-            
             idNumber.textProperty().bindBidirectional(client.IDNumberProperty());
-            idNumber.textProperty().addListener(listener);
-            
             email.textProperty().bindBidirectional(client.emailProperty());
-            email.textProperty().addListener(listener);
-            
             fax.textProperty().bindBidirectional(client.faxProperty());
-            fax.textProperty().addListener(listener);
-            
             address.textProperty().bindBidirectional(client.addressProperty());
-            address.textProperty().addListener(listener);
-            
             zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
-            zipCode.textProperty().addListener(listener);
-            
             city.textProperty().bindBidirectional(client.cityProperty());
-            city.textProperty().addListener(listener);
-            
             country.valueProperty().bindBidirectional(client.countryProperty());
-            country.valueProperty().addListener(listener);
-            
             phone.setItems(client.getPhoneList());
         }
     }
     
     public boolean anyFieldWillChange(){
         return changeComponentValue;
-    }
-    
-    public boolean allowToMakeOperation(){
-        return okayCancelController.allowToMakeOperation();
     }
     
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
@@ -205,17 +171,6 @@ public class ClientDialogController implements Initializable {
     
     public void operationCanceled(){
         ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
-    }
-    
-    private class ValueChangeListener implements ChangeListener<Object> {
-
-        @Override
-        public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
-            if ( !newValue.equals(oldValue) ){
-                ;//changeComponentValue = true;
-            }
-        }
-        
     }
     
     private class MyEventHandler implements javafx.event.EventHandler {
