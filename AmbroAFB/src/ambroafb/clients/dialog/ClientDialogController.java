@@ -228,7 +228,7 @@ public class ClientDialogController implements Initializable {
         public void handle(Event event) {
             //System.out.println("" + event);
             if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED) || event.getEventType().equals(KeyEvent.KEY_PRESSED))
-                ;//System.out.println("MyEventHandler fix Change" + n++);
+                System.out.println("MyEventHandler fix Change" + n++);
         }
         
     }

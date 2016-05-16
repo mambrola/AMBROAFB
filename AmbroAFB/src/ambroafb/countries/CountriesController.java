@@ -46,14 +46,10 @@ public class CountriesController implements Initializable {
     }
 
     private void refreshCountries() {
-        try {
-            Country.getCountries().stream().forEach((country) -> {
+       
+            Country.getAllFromDB().stream().forEach((country) -> {
                 table.getItems().add(country);
             });
-        } catch (KFZClient.KFZServerException | IOException ex) {
-            Logger.getLogger(CountriesController.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
-        }
     }
 
 }

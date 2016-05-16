@@ -182,12 +182,7 @@ public class InvoiceDialog extends Stage implements Initializable {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
-        try {
-            country.getItems().addAll(Country.getCountries());
-        } catch (KFZClient.KFZServerException | IOException ex) {
-            Logger.getLogger(InvoiceDialog.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.WARNING, ex, "Can't load countries").showAlert();
-        }
+        country.getItems().addAll(Country.getAllFromDB());
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         phone.setConverter(new StringConverter<PhoneNumber>() {
 
