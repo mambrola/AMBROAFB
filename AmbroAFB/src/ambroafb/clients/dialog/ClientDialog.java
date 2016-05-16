@@ -44,7 +44,7 @@ public class ClientDialog extends Stage implements Dialogable {
         try {
             Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
             dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
-            dialogController.setOwnerStage((Dialogable)this);
+            //dialogController.setOwnerStage((Dialogable)this);
             dialogController.setNextVisibleAndActionParameters(buttonType);
             dialogController.bindClient(this.client);
             this.setScene(currentScene);
@@ -61,6 +61,7 @@ public class ClientDialog extends Stage implements Dialogable {
     @Override
     public Client getResult() {
         showAndWait();
+        System.out.println("client: " + client);
         return client;
     }
     

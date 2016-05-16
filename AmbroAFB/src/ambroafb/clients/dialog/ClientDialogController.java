@@ -26,6 +26,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -68,7 +69,6 @@ public class ClientDialogController implements Initializable {
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private boolean changeComponentValue;
     private Client client;
-    private Dialogable ownerStage;
     
     private int n = 0;
     
@@ -108,13 +108,18 @@ public class ClientDialogController implements Initializable {
         
         juridical.setOnAction(this::switchJuridical);
         
+        
+        focusTraversableNodes.forEach((Node t) -> {
+            System.out.println("node: " + t);
+            t.addEventHandler(EventType.ROOT, new MyEventHandler());
+        });
     }
     
     
 
     public void bindClient(Client client) {
         this.client = client;
-        formPane.addEventHandler(EventType.ROOT, new MyEventHandler());
+       // formPane.addEventHandler(EventType.ROOT, new MyEventHandler());
         if (client != null) {
             ValueChangeListener listener = new ValueChangeListener();
             
@@ -162,18 +167,11 @@ public class ClientDialogController implements Initializable {
         return okayCancelController.allowToMakeOperation();
     }
     
-//    public void specificClose(){
-//        okayCancelController.showAlertAndCheckClickForClose();
-//    }
-    
-
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
         okayCancelController.setButtonsFeatures(buttonType);
-//        okayCancelController.changeOkayButtonTitleFor(buttonType);
-//        okayCancelController.makeButtonsVisibleBy(buttonType);
     }
     
     private void switchJuridical(ActionEvent e) {
@@ -204,12 +202,9 @@ public class ClientDialogController implements Initializable {
         //phone.setEditable(false);
     }
 
-    public void setOwnerStage(Dialogable stage) {
-        ownerStage = stage;
-    }
     
     public void operationCanceled(){
-        ownerStage.operationCanceled();
+        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
     }
     
     private class ValueChangeListener implements ChangeListener<Object> {
@@ -217,7 +212,7 @@ public class ClientDialogController implements Initializable {
         @Override
         public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
             if ( !newValue.equals(oldValue) ){
-                changeComponentValue = true;
+                ;//changeComponentValue = true;
             }
         }
         
@@ -226,9 +221,9 @@ public class ClientDialogController implements Initializable {
     private class MyEventHandler implements javafx.event.EventHandler {
         @Override
         public void handle(Event event) {
-            //System.out.println("" + event);
-            if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED) || event.getEventType().equals(KeyEvent.KEY_PRESSED))
-                System.out.println("MyEventHandler fix Change" + n++);
+            if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED) || event.getEventType().equals(KeyEvent.KEY_PRESSED)){
+                changeComponentValue = true;
+            }
         }
         
     }
