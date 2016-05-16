@@ -15,6 +15,7 @@ import ambroafb.general.interfaces.EditorPanelable;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -52,7 +53,8 @@ public class ClientDialog extends Stage implements Dialogable {
         initOwner(AmbroAFB.mainStage);
         setResizable(false);
 
-        setOnCloseRequest((WindowEvent event) -> {
+        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
+            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             event.consume();
         });
         

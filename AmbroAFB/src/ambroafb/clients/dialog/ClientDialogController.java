@@ -129,7 +129,7 @@ public class ClientDialogController implements Initializable {
         }
     }
     
-    public boolean anyFieldWillChange(){
+    public boolean anyFieldChanged(){
         return changeComponentValue;
     }
     
@@ -171,6 +171,10 @@ public class ClientDialogController implements Initializable {
     
     public void operationCanceled(){
         ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
+    }
+
+    public OkayCancelController getOkayCancelController() {
+        return okayCancelController;
     }
     
     private class MyEventHandler implements javafx.event.EventHandler {

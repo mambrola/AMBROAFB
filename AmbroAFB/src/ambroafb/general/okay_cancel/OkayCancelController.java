@@ -18,6 +18,7 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,6 +30,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -47,6 +49,14 @@ public class OkayCancelController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+    }
+    
+    public Button getOkayButton(){
+        return okay;
+    }
+    
+    public Button getCancelButton(){
+        return cancel;
     }
 
     public void setButtonsFeatures(EDITOR_BUTTON_TYPE type){
@@ -77,7 +87,7 @@ public class OkayCancelController implements Initializable {
                 cancel.setOnAction((ActionEvent event) -> {
                     boolean anyFieldWasChanged = false;
                     try {
-                        anyFieldWasChanged = (boolean)cancel.getScene().getProperties().get("controller").getClass().getMethod("anyFieldWillChange").invoke(cancel.getScene().getProperties().get("controller"));
+                        anyFieldWasChanged = (boolean)cancel.getScene().getProperties().get("controller").getClass().getMethod("anyFieldChanged").invoke(cancel.getScene().getProperties().get("controller"));
                     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(OkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
                     if(!anyFieldWasChanged || new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
                         operationCanceled();
@@ -87,6 +97,10 @@ public class OkayCancelController implements Initializable {
                 break;
             case VIEW:
                 okay.setOnAction((ActionEvent event) -> {
+                    operationCanceled();
+                    ((Stage) okay.getScene().getWindow()).close();
+                });
+                cancel.setOnAction((ActionEvent event) -> {
                     operationCanceled();
                     ((Stage) okay.getScene().getWindow()).close();
                 });
