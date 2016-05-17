@@ -48,8 +48,6 @@ public class ClientDialogController implements Initializable {
     private TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
     @FXML
     private ListEditor<PhoneNumber> phone;
-//    @FXML
-//    private ComboBox<Country> country;
     @FXML
     private CountryComboBox country;
     @FXML
@@ -67,34 +65,9 @@ public class ClientDialogController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        country.setConverter(new StringConverter<Country>() {
-//            @Override
-//            public String toString(Country object) {
-//                return object.getCode() + "   " + object.getName();
-//            }
-//
-//            @Override
-//            public Country fromString(String string) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//        });
-//        country.getItems().addAll(Country.getAllFromDB());
-//        country = new CountryComboBox();
         
         country.getItems().addAll(Country.getAllFromDB());
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        
-//        phone.setConverter(new StringConverter<PhoneNumber>() {
-//            @Override
-//            public String toString(PhoneNumber object) {
-//                return object != null ? object.getNumber() : null;
-//            }
-//
-//            @Override
-//            public PhoneNumber fromString(String string) {
-//                return new PhoneNumber(string);
-//            }
-//        });
         
         juridical.setOnAction(this::switchJuridical);
         
