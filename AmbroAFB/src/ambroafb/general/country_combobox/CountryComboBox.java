@@ -9,7 +9,6 @@ import ambroafb.AmbroAFB;
 import ambroafb.countries.Country;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
-import ambroafb.general.okay_cancel.OkayCancel;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +30,7 @@ import javafx.scene.layout.HBox;
 public class CountryComboBox extends ComboBox<Country> {
     
     public CountryComboBox(){
-        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/general/save_button/CountryComboBox.fxml"));
+        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/general/country_combobox/CountryComboBox.fxml"));
         loader.setResources(GeneralConfig.getInstance().getBundle());
         loader.setRoot((ComboBox)this);
         loader.setController((ComboBox)this);

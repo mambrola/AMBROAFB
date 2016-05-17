@@ -7,31 +7,22 @@ package ambroafb.clients.dialog;
 
 import ambroafb.clients.Client;
 import ambroafb.countries.Country;
-import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.KFZClient;
 import ambroafb.general.ListEditor;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.OkayCancelController;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -69,8 +60,7 @@ public class ClientDialogController implements Initializable {
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private boolean changeComponentValue;
     private Client client;
-    
-    private int n = 0;
+    private Client clientBackup;
     
     /**
      * Initializes the controller class.
@@ -108,63 +98,36 @@ public class ClientDialogController implements Initializable {
         
         juridical.setOnAction(this::switchJuridical);
         
-        
         focusTraversableNodes.forEach((Node t) -> {
-            System.out.println("node: " + t);
             t.addEventHandler(EventType.ROOT, new MyEventHandler());
         });
     }
-    
-    
 
     public void bindClient(Client client) {
         this.client = client;
-       // formPane.addEventHandler(EventType.ROOT, new MyEventHandler());
         if (client != null) {
-            ValueChangeListener listener = new ValueChangeListener();
-            
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
-            
             rezident.selectedProperty().bindBidirectional(client.isRezProperty());
-            rezident.selectedProperty().addListener(listener);
-            
             firstName.textProperty().bindBidirectional(client.firstNameProperty());
-            firstName.textProperty().addListener(listener);
-            
             lastName.textProperty().bindBidirectional(client.lastNameProperty());
-            lastName.textProperty().addListener(listener);
-            
             idNumber.textProperty().bindBidirectional(client.IDNumberProperty());
-            idNumber.textProperty().addListener(listener);
-            
             email.textProperty().bindBidirectional(client.emailProperty());
-            email.textProperty().addListener(listener);
-            
             fax.textProperty().bindBidirectional(client.faxProperty());
-            fax.textProperty().addListener(listener);
-            
             address.textProperty().bindBidirectional(client.addressProperty());
-            address.textProperty().addListener(listener);
-            
             zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
-            zipCode.textProperty().addListener(listener);
-            
             city.textProperty().bindBidirectional(client.cityProperty());
-            city.textProperty().addListener(listener);
-            
             country.valueProperty().bindBidirectional(client.countryProperty());
-            country.valueProperty().addListener(listener);
-            
             phone.setItems(client.getPhoneList());
         }
     }
     
-    public boolean anyFieldWillChange(){
-        return changeComponentValue;
+    public void setBackupClient(Client backupClient){
+        this.clientBackup = backupClient;
     }
     
-    public boolean allowToMakeOperation(){
-        return okayCancelController.allowToMakeOperation();
+    public boolean anyFieldChanged(){
+        boolean result =  client.equals(clientBackup);
+        return !result;
     }
     
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
@@ -199,23 +162,16 @@ public class ClientDialogController implements Initializable {
                 t.setDisable(true);
             }
         });
-        //phone.setEditable(false);
+//        phone.setEditable(false);
     }
 
     
     public void operationCanceled(){
         ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
     }
-    
-    private class ValueChangeListener implements ChangeListener<Object> {
 
-        @Override
-        public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
-            if ( !newValue.equals(oldValue) ){
-                ;//changeComponentValue = true;
-            }
-        }
-        
+    public OkayCancelController getOkayCancelController() {
+        return okayCancelController;
     }
     
     private class MyEventHandler implements javafx.event.EventHandler {

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -411,34 +412,45 @@ public class Client extends EditorPanelable{
     }
     
     public boolean equals(Client other){
-        boolean result = this.isJur.get() == other.getIsJur() &&
-                         this.isRez.get() == other.getIsRez() && 
-                         this.firstName.get().equals(other.getFirstName()) &&
-                         this.lastName.get().equals(other.getLastName()) &&
-                         this.email.get().equals(other.getEmail())    &&
-                         this.address.get().equals(other.getAddress()) &&
-                         this.zipCode.get().equals(other.getZipCode()) &&
-                         this.city.get().equals(other.getCity()) &&
-                         this.country.get().equals(other.getCountry()) &&
-                         this.IDNumber.get().equals(other.getIDNumber()) &&
-                         this.fax.get().equals(other.getFax());
-        boolean phonesEqual = comparePhones(this.phoneList, other.getPhoneList());
-        return result && phonesEqual;
+        boolean fieldsCompareResult =   this.isJur.get() == other.getIsJur() &&
+                                        this.isRez.get() == other.getIsRez() && 
+                                        this.firstName.get().equals(other.getFirstName()) &&
+                                        this.lastName.get().equals(other.getLastName()) &&
+                                        this.email.get().equals(other.getEmail())    &&
+                                        this.address.get().equals(other.getAddress()) &&
+                                        this.zipCode.get().equals(other.getZipCode()) &&
+                                        this.city.get().equals(other.getCity()) &&
+                                        this.country.get().equals(other.getCountry()) &&
+                                        this.IDNumber.get().equals(other.getIDNumber()) &&
+                                        this.fax.get().equals(other.getFax());
+        boolean equalsPhone = comparePhones(this.phoneList, other.getPhoneList());
+        return fieldsCompareResult && equalsPhone;
     }
 
+    private void printPhones(List<PhoneNumber> list){
+        for (PhoneNumber phone : list){
+            System.out.println("phone: " + phone);
+        }
+    }
+    
+    /**
+     * The method compares clients phones list and pays attention size and order of them.
+     * @param phoneList
+     * @param otherPhoneList
+     * @return 
+     */
     public boolean comparePhones(ObservableList<PhoneNumber> phoneList, ObservableList<PhoneNumber> otherPhoneList) {
         if (phoneList.size() != otherPhoneList.size()) return false;
 
-        for (PhoneNumber thisNumber : phoneList) {
-            String phone = thisNumber.getNumber();
-            for (PhoneNumber otherNumber : otherPhoneList){
-                if ( phone.equals(otherNumber.getNumber()) ) return true;
-            }
+        for(int i = 0; i < phoneList.size(); i++){
+            PhoneNumber phone = phoneList.get(i);
+            PhoneNumber otherPhone = otherPhoneList.get(i);
+            if ( !phone.getNumber().equals(otherPhone.getNumber()) ) return false;
         }
-        
-        return false;
-    }
 
+        return true;
+    }
+    
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 
         @Override

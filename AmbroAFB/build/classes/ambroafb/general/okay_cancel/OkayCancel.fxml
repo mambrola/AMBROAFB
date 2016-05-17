@@ -22,7 +22,7 @@
                 <Tooltip text="%ok" />
             </tooltip>
         </Button>
-        <Button fx:id="cancel" styleClass="middle" text="Cencel"  >
+        <Button fx:id="cancel" styleClass="middle" text="Cancel"  >
             <tooltip>
                 <Tooltip text="%cancel" />
             </tooltip>

@@ -8,7 +8,6 @@ package ambroafb.general.save_button;
 import ambroafb.AmbroAFB;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
-import ambroafb.general.okay_cancel.OkayCancel;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -9,13 +9,16 @@ import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -41,18 +44,20 @@ public class ClientDialog extends Stage implements Dialogable {
         super();
         this.client = client;
         this.clientBackup = client.cloneWithID();
+        
         try {
             Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
             dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
-            //dialogController.setOwnerStage((Dialogable)this);
             dialogController.setNextVisibleAndActionParameters(buttonType);
             dialogController.bindClient(this.client);
+            dialogController.setBackupClient(this.clientBackup);
             this.setScene(currentScene);
         } catch (IOException ex) { Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex); }
         initOwner(AmbroAFB.mainStage);
         setResizable(false);
 
-        setOnCloseRequest((WindowEvent event) -> {
+        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
+            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             event.consume();
         });
         
@@ -61,7 +66,6 @@ public class ClientDialog extends Stage implements Dialogable {
     @Override
     public Client getResult() {
         showAndWait();
-        System.out.println("client: " + client);
         return client;
     }
     

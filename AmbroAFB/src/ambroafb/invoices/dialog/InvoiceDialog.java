@@ -14,7 +14,6 @@ import ambroafb.general.KFZClient;
 import ambroafb.general.ListEditor;
 import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
-import ambroafb.general.okay_cancel.OkayCancel;
 import ambroafb.invoices.Invoice;
 import java.io.IOException;
 import java.net.URL;
@@ -64,8 +63,8 @@ public class InvoiceDialog extends Stage implements Initializable {
     ComboBox<Country> country;
     @FXML
     ListEditor<PhoneNumber> phone;
-    @FXML
-    OkayCancel okayCancel;
+//    @FXML
+//    OkayCancel okayCancel;
 
     private boolean askClose = true;
 
@@ -197,8 +196,8 @@ public class InvoiceDialog extends Stage implements Initializable {
             }
         });
         juridical.setOnAction(this::switchJuridical);
-        okayCancel.setOnOkay(this::okay);
-        okayCancel.setOnCancel(this::cancel);
+//        okayCancel.setOnOkay(this::okay);
+//        okayCancel.setOnCancel(this::cancel);
         //System.out.println("client: " + client);
         
     }
