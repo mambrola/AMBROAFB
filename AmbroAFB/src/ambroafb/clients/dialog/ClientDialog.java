@@ -54,6 +54,7 @@ public class ClientDialog extends Stage implements Dialogable {
             dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
             dialogController.setNextVisibleAndActionParameters(buttonType);
             dialogController.bindClient(this.client);
+            dialogController.setBackupClient(this.clientBackup);
             this.setScene(currentScene);
         } catch (IOException ex) { Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex); }
         initOwner(AmbroAFB.mainStage);

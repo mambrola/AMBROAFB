@@ -60,6 +60,7 @@ public class ClientDialogController implements Initializable {
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private boolean changeComponentValue;
     private Client client;
+    private Client clientBackup;
     
     /**
      * Initializes the controller class.
@@ -120,8 +121,15 @@ public class ClientDialogController implements Initializable {
         }
     }
     
+    public void setBackupClient(Client backupClient){
+        this.clientBackup = backupClient;
+    }
+    
     public boolean anyFieldChanged(){
-        return changeComponentValue;
+//        return changeComponentValue;
+        boolean result =  client.equals(clientBackup);
+        System.out.println("change any field: " + !result);
+        return !result;
     }
     
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
