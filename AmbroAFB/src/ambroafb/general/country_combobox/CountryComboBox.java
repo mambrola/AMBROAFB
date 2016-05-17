@@ -30,7 +30,7 @@ import javafx.scene.layout.HBox;
 public class CountryComboBox extends ComboBox<Country> {
     
     public CountryComboBox(){
-        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/general/save_button/CountryComboBox.fxml"));
+        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/general/country_combobox/CountryComboBox.fxml"));
         loader.setResources(GeneralConfig.getInstance().getBundle());
         loader.setRoot((ComboBox)this);
         loader.setController((ComboBox)this);

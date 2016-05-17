@@ -7,31 +7,22 @@ package ambroafb.clients.dialog;
 
 import ambroafb.clients.Client;
 import ambroafb.countries.Country;
-import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.KFZClient;
 import ambroafb.general.ListEditor;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.OkayCancelController;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -108,6 +99,7 @@ public class ClientDialogController implements Initializable {
         
         focusTraversableNodes.forEach((Node t) -> {
             t.addEventHandler(EventType.ROOT, new MyEventHandler());
+            System.out.println("node: " + t);
         });
     }
 

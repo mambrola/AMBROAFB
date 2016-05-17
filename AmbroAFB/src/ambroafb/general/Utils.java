@@ -7,7 +7,6 @@ package ambroafb.general;
 
 import ambro.AMySQLChanel;
 import ambroafb.AmbroAFB;
-import ambroafb.general.editor_panel.EditorPanelController;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
