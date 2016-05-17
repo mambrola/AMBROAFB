@@ -18105,6 +18105,11 @@ java.net.SocketException: socket closed
 	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
 	at java.lang.Thread.run(Thread.java:745)
 
+<<<<<<< HEAD
+May 16, 2016 3:40:13 PM ambroafb.general.Utils log
+SEVERE: Server returned HTTP response code: 409 for URL: http://136.243.102.152:8080/KFZ_Server/api/clients/4
+java.io.IOException: Server returned HTTP response code: 409 for URL: http://136.243.102.152:8080/KFZ_Server/api/clients/4
+=======
 May 16, 2016 1:14:03 PM ambroafb.general.Utils log
 SEVERE: Close without saving changes?
 May 16, 2016 1:14:12 PM ambroafb.AmbroAFB lambda$main$5
@@ -18122,6 +18127,7 @@ java.net.SocketException: socket closed
 May 16, 2016 2:52:21 PM ambroafb.general.Utils log
 SEVERE: Server returned HTTP response code: 409 for URL: http://136.243.102.152:8080/KFZ_Server/api/clients/2
 java.io.IOException: Server returned HTTP response code: 409 for URL: http://136.243.102.152:8080/KFZ_Server/api/clients/2
+>>>>>>> origin/master
 	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
 	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
 	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
@@ -18198,13 +18204,24 @@ java.io.IOException: Server returned HTTP response code: 409 for URL: http://136
 	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
 	at com.sun.glass.ui.win.WinApplication.lambda$null$148(WinApplication.java:191)
 	at java.lang.Thread.run(Thread.java:745)
+<<<<<<< HEAD
+Caused by: java.io.IOException: Server returned HTTP response code: 409 for URL: http://136.243.102.152:8080/KFZ_Server/api/clients/4
+=======
 Caused by: java.io.IOException: Server returned HTTP response code: 409 for URL: http://136.243.102.152:8080/KFZ_Server/api/clients/2
+>>>>>>> origin/master
 	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1840)
 	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
 	at java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:480)
 	at ambroafb.general.KFZClient.call(KFZClient.java:141)
 	... 65 more
 
+<<<<<<< HEAD
+May 16, 2016 3:40:20 PM ambroafb.general.Utils log
+SEVERE: You Realy want Delete this item?
+May 16, 2016 3:40:23 PM ambroafb.general.Utils log
+SEVERE: You Realy want Delete this item?
+May 16, 2016 3:40:47 PM ambroafb.AmbroAFB lambda$main$5
+=======
 May 16, 2016 2:52:25 PM ambroafb.AmbroAFB lambda$main$5
 SEVERE: null
 java.net.SocketException: socket closed
@@ -18338,6 +18355,7 @@ java.net.SocketException: socket closed
 May 16, 2016 7:03:22 PM ambroafb.general.Utils log
 SEVERE: Close without saving changes?
 May 16, 2016 7:03:25 PM ambroafb.AmbroAFB lambda$main$5
+>>>>>>> origin/master
 SEVERE: null
 java.net.SocketException: socket closed
 	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
@@ -18349,6 +18367,13 @@ java.net.SocketException: socket closed
 	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
 	at java.lang.Thread.run(Thread.java:745)
 
+<<<<<<< HEAD
+May 16, 2016 3:42:22 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+May 16, 2016 3:42:27 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+May 16, 2016 3:43:55 PM ambroafb.AmbroAFB lambda$main$5
+=======
 May 16, 2016 7:05:55 PM ambroafb.general.Utils log
 SEVERE: Close without saving changes?
 May 16, 2016 7:05:59 PM ambroafb.AmbroAFB lambda$main$5
@@ -18462,6 +18487,7 @@ SEVERE: Close without saving changes?
 May 16, 2016 7:23:03 PM ambroafb.general.Utils log
 SEVERE: Close without saving changes?
 May 16, 2016 7:26:47 PM ambroafb.AmbroAFB lambda$main$5
+>>>>>>> origin/master
 SEVERE: null
 java.net.SocketException: socket closed
 	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
@@ -18473,9 +18499,15 @@ java.net.SocketException: socket closed
 	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
 	at java.lang.Thread.run(Thread.java:745)
 
+<<<<<<< HEAD
+May 16, 2016 3:44:29 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+May 16, 2016 3:44:56 PM ambroafb.AmbroAFB lambda$main$5
+=======
 May 17, 2016 12:09:29 PM ambroafb.general.Utils log
 SEVERE: Close without saving changes?
 May 17, 2016 12:09:32 PM ambroafb.AmbroAFB lambda$main$5
+>>>>>>> origin/master
 SEVERE: null
 java.net.SocketException: socket closed
 	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
@@ -18487,11 +18519,19 @@ java.net.SocketException: socket closed
 	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
 	at java.lang.Thread.run(Thread.java:745)
 
+<<<<<<< HEAD
+May 16, 2016 3:45:44 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+May 16, 2016 3:45:48 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+May 16, 2016 3:46:16 PM ambroafb.AmbroAFB lambda$main$5
+=======
 May 17, 2016 1:43:14 PM ambroafb.general.Utils log
 SEVERE: Close without saving changes?
 May 17, 2016 1:43:27 PM ambroafb.general.Utils log
 SEVERE: Close without saving changes?
 May 17, 2016 1:43:32 PM ambroafb.AmbroAFB lambda$main$5
+>>>>>>> origin/master
 SEVERE: null
 java.net.SocketException: socket closed
 	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
@@ -18503,11 +18543,19 @@ java.net.SocketException: socket closed
 	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
 	at java.lang.Thread.run(Thread.java:745)
 
+<<<<<<< HEAD
+May 16, 2016 3:46:28 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+May 16, 2016 3:46:46 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+May 16, 2016 3:46:58 PM ambroafb.AmbroAFB lambda$main$5
+=======
 May 17, 2016 1:44:30 PM ambroafb.general.Utils log
 SEVERE: Close without saving changes?
 May 17, 2016 1:44:39 PM ambroafb.general.Utils log
 SEVERE: Close without saving changes?
 May 17, 2016 1:44:43 PM ambroafb.AmbroAFB lambda$main$5
+>>>>>>> origin/master
 SEVERE: null
 java.net.SocketException: socket closed
 	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
@@ -18519,9 +18567,15 @@ java.net.SocketException: socket closed
 	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
 	at java.lang.Thread.run(Thread.java:745)
 
+<<<<<<< HEAD
+May 16, 2016 3:49:34 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+May 16, 2016 3:49:39 PM ambroafb.AmbroAFB lambda$main$5
+=======
 May 17, 2016 1:45:15 PM ambroafb.general.Utils log
 SEVERE: Close without saving changes?
 May 17, 2016 1:46:39 PM ambroafb.AmbroAFB lambda$main$5
+>>>>>>> origin/master
 SEVERE: null
 java.net.SocketException: socket closed
 	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
