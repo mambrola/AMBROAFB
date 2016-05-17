@@ -7,6 +7,7 @@ package ambroafb.general;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,6 +21,7 @@ import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 /**
  *
@@ -171,6 +173,17 @@ public class ListEditor<T extends Editable<String>> extends ComboBox<T> {
             }
         });
         
+        setConverter(new StringConverter<T>() {
+            @Override
+            public String toString(T object) {
+                return object != null ? ((PhoneNumber)object).getNumber() : null;
+            }
+
+            @Override
+            public T fromString(String string) {
+                return (T) new PhoneNumber(string);
+            }
+        });
     }
 
 //    private void setItemsListener() {
