@@ -42,15 +42,8 @@ public class CountryComboBox extends ComboBox<Country> {
                 return null;
             }
         });
-        this.getItems().addAll(Country.getAllFromDB());
     }
     
-    public CountryComboBox(List<Country> countries){
-//        this();
-        this.getItems().clear();
-        this.getItems().addAll(countries);
-    }
-        
     public void selectItem(Country country){
         this.getSelectionModel().select(country);
     }

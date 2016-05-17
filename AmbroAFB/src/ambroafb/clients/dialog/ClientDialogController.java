@@ -81,6 +81,7 @@ public class ClientDialogController implements Initializable {
 //        country.getItems().addAll(Country.getAllFromDB());
 //        country = new CountryComboBox();
         
+        country.getItems().addAll(Country.getAllFromDB());
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         
 //        phone.setConverter(new StringConverter<PhoneNumber>() {
