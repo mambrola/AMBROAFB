@@ -99,7 +99,6 @@ public class ClientDialogController implements Initializable {
         
         focusTraversableNodes.forEach((Node t) -> {
             t.addEventHandler(EventType.ROOT, new MyEventHandler());
-            System.out.println("node: " + t);
         });
     }
 

@@ -9,6 +9,7 @@ import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -43,6 +44,11 @@ public class ClientDialog extends Stage implements Dialogable {
         super();
         this.client = client;
         this.clientBackup = client.cloneWithID();
+        
+//        client.getPhoneList().set(0, new PhoneNumber("1"));
+//        boolean comp = client.comparePhones(client.getPhoneList(), clientBackup.getPhoneList());
+//        System.out.println("comp: " + comp);
+        
         try {
             Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
             dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
