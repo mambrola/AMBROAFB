@@ -12,14 +12,13 @@ import ambroafb.general.ListEditor;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
+import ambroafb.general.country_combobox.CountryComboBox;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.OkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -28,8 +27,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
@@ -52,13 +49,12 @@ public class ClientDialogController implements Initializable {
     @FXML
     private ListEditor<PhoneNumber> phone;
     @FXML
-    private ComboBox<Country> country;
+    private CountryComboBox country;
     @FXML
     private OkayCancelController okayCancelController;
 
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
-    private boolean changeComponentValue;
     private Client client;
     private Client clientBackup;
     
@@ -69,38 +65,12 @@ public class ClientDialogController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        country.setConverter(new StringConverter<Country>() {
-            @Override
-            public String toString(Country object) {
-                return object.getCode() + "   " + object.getName();
-            }
-
-            @Override
-            public Country fromString(String string) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
+        
         country.getItems().addAll(Country.getAllFromDB());
-        
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        
-        phone.setConverter(new StringConverter<PhoneNumber>() {
-            @Override
-            public String toString(PhoneNumber object) {
-                return object != null ? object.getNumber() : null;
-            }
-
-            @Override
-            public PhoneNumber fromString(String string) {
-                return new PhoneNumber(string);
-            }
-        });
         
         juridical.setOnAction(this::switchJuridical);
         
-        focusTraversableNodes.forEach((Node t) -> {
-            t.addEventHandler(EventType.ROOT, new MyEventHandler());
-        });
     }
 
     public void bindClient(Client client) {
@@ -126,8 +96,7 @@ public class ClientDialogController implements Initializable {
     }
     
     public boolean anyFieldChanged(){
-        boolean result =  client.equals(clientBackup);
-        return !result;
+        return !client.equals(clientBackup);
     }
     
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
@@ -173,17 +142,5 @@ public class ClientDialogController implements Initializable {
     public OkayCancelController getOkayCancelController() {
         return okayCancelController;
     }
-    
-    private class MyEventHandler implements javafx.event.EventHandler {
-        @Override
-        public void handle(Event event) {
-            if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED) || event.getEventType().equals(KeyEvent.KEY_PRESSED)){
-                changeComponentValue = true;
-            }
-        }
-        
-    }
-    
-   
     
 }

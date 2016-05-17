@@ -43,10 +43,10 @@ public class Country extends EditorPanelable{
         description = code.concat("\t").concat(name);
     }
 
-    @Override
-    public String toString(){
-        return getCode().concat("\t").concat(getName());
-    }
+//    @Override
+//    public String toString(){
+//        return getCode().concat("\t").concat(getName());
+//    }
     
     
     public Country(String code, String name) {
