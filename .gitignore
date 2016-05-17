@@ -16,3 +16,4 @@ hs_err_pid*
 AmbroAFB/errors.log
 *.properties
 AmbroAFB/errors.log
+AmbroAFB/build/built-jar.properties
