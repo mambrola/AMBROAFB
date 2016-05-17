@@ -126,9 +126,7 @@ public class ClientDialogController implements Initializable {
     }
     
     public boolean anyFieldChanged(){
-//        return changeComponentValue;
         boolean result =  client.equals(clientBackup);
-        System.out.println("change any field: " + !result);
         return !result;
     }
     

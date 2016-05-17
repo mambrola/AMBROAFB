@@ -433,32 +433,24 @@ public class Client extends EditorPanelable{
         }
     }
     
+    /**
+     * The method compares clients phones list and pays attention size and order of them.
+     * @param phoneList
+     * @param otherPhoneList
+     * @return 
+     */
     public boolean comparePhones(ObservableList<PhoneNumber> phoneList, ObservableList<PhoneNumber> otherPhoneList) {
         if (phoneList.size() != otherPhoneList.size()) return false;
 
-        int counter = 0;
-        for (PhoneNumber phone : phoneList){
-            boolean contains = isElementsOf(otherPhoneList, phone);
-            if (contains){
-                counter += 1;
-            }
+        for(int i = 0; i < phoneList.size(); i++){
+            PhoneNumber phone = phoneList.get(i);
+            PhoneNumber otherPhone = otherPhoneList.get(i);
+            if ( !phone.getNumber().equals(otherPhone.getNumber()) ) return false;
         }
 
-        return counter == phoneList.size();
+        return true;
     }
     
-    private boolean isElementsOf(ObservableList<PhoneNumber> otherPhoneList, PhoneNumber p){
-        boolean result = false;
-        for (PhoneNumber otherPhone : otherPhoneList){
-            if (otherPhone.getNumber().equals(p.getNumber())){
-                result = true;
-                break;
-            }
-        }
-        return result;
-    }
-    
-
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 
         @Override
