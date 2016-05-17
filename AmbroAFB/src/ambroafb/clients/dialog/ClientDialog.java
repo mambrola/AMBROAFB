@@ -45,10 +45,6 @@ public class ClientDialog extends Stage implements Dialogable {
         this.client = client;
         this.clientBackup = client.cloneWithID();
         
-//        client.getPhoneList().set(0, new PhoneNumber("1"));
-//        boolean comp = client.comparePhones(client.getPhoneList(), clientBackup.getPhoneList());
-//        System.out.println("comp: " + comp);
-        
         try {
             Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
             dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
