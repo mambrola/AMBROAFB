@@ -122,7 +122,7 @@ public class EditorPanelController implements Initializable {
         EditorPanelable selected = (EditorPanelable)table.getSelectionModel().getSelectedItem();
         table.getItems().clear();
         Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
-        Utils.getInvokedClassMethod(controllerClass, "asignTable", null, outerController);
+        Utils.getInvokedClassMethod(controllerClass, "assignTable", null, outerController);
         selectOneAgain(selected);
     }
        
@@ -165,6 +165,7 @@ public class EditorPanelController implements Initializable {
     
 
     private void selectOneAgain(EditorPanelable selected) {
+        if (selected == null) return;
         ATableView table = (ATableView) exit.getScene().lookup("#table");
         int i = table.getItems().size() - 1;
         while (i >= 0 && ((EditorPanelable) table.getItems().get(i)).getRecId() != selected.getRecId()) {

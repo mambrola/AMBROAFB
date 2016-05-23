@@ -35,11 +35,11 @@ public class ClientsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(table);
-        asignTable();
+        assignTable();
     }
 
     //შეიძლება გატანა მშობელ კლასში
-    public void asignTable() {
+    public void assignTable() {
         Client.getClients().stream().forEach((client) -> {
             table.getItems().add(client);
         });
