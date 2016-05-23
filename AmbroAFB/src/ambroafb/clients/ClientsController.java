@@ -13,13 +13,18 @@ import java.util.function.Predicate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 /**
  * FXML Controller class
@@ -63,6 +68,19 @@ public class ClientsController implements Initializable {
         
         SortedList<Client> sorterData = new SortedList<>(filterData);
         table.setItems(sorterData);
+        sorterData.comparatorProperty().bind(table.comparatorProperty());
+
+        // umjobesia ATableView-shi daiweros:
+        table.getSortOrder().addListener(new ListChangeListener<TableColumn<Client, ?>>() {
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends TableColumn<Client, ?>> c) {
+                for (int i = 0; i < c.getList().size(); i++){
+                    String variable = c.getList().get(i).toString();
+                    System.out.println("variable: " + variable);
+                    System.out.println("");
+                }
+            }
+        });
         
 //        Client.getClients().stream().forEach((client) -> {
 //            table.getItems().add(client);
