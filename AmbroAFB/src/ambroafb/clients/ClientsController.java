@@ -57,34 +57,34 @@ public class ClientsController implements Initializable {
 
     //შეიძლება გატანა მშობელ კლასში
     public void assignTable() {
-        ObservableList<Client> clients = FXCollections.observableArrayList();
-        Client.getClients().stream().forEach((client) -> {
-            clients.add(client);
-        });
-        
-        FilteredList<Client> filterData = new FilteredList<>(clients, p -> true);
-        FilterFieldChangeListener filtrListener = new FilterFieldChangeListener(filterData);
-        filter.textProperty().addListener(filtrListener);
-        
-        SortedList<Client> sorterData = new SortedList<>(filterData);
-        table.setItems(sorterData);
-        sorterData.comparatorProperty().bind(table.comparatorProperty());
-
-        // umjobesia ATableView-shi daiweros:
-        table.getSortOrder().addListener(new ListChangeListener<TableColumn<Client, ?>>() {
-            @Override
-            public void onChanged(ListChangeListener.Change<? extends TableColumn<Client, ?>> c) {
-                for (int i = 0; i < c.getList().size(); i++){
-                    String variable = c.getList().get(i).toString();
-                    System.out.println("variable: " + variable);
-                    System.out.println("");
-                }
-            }
-        });
-        
+//        ObservableList<Client> clients = FXCollections.observableArrayList();
 //        Client.getClients().stream().forEach((client) -> {
-//            table.getItems().add(client);
+//            clients.add(client);
 //        });
+//        
+//        FilteredList<Client> filterData = new FilteredList<>(clients, p -> true);
+//        FilterFieldChangeListener filtrListener = new FilterFieldChangeListener(filterData);
+//        filter.textProperty().addListener(filtrListener);
+//        
+//        SortedList<Client> sorterData = new SortedList<>(filterData);
+//        table.setItems(sorterData);
+//        sorterData.comparatorProperty().bind(table.comparatorProperty());
+//        
+//        // umjobesia ATableView-shi daiweros:
+//        table.getSortOrder().addListener(new ListChangeListener<TableColumn<Client, ?>>() {
+//            @Override
+//            public void onChanged(ListChangeListener.Change<? extends TableColumn<Client, ?>> c) {
+//                for (int i = 0; i < c.getList().size(); i++){
+//                    String variable = c.getList().get(i).toString();
+//                    System.out.println("variable: " + variable);
+//                    System.out.println("");
+//                }
+//            }
+//        });
+        
+        Client.getClients().stream().forEach((client) -> {
+            table.getItems().add(client);
+        });
     }
     
     
