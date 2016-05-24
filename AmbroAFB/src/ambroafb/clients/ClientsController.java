@@ -37,7 +37,7 @@ import org.controlsfx.control.table.TableFilter;
 public class ClientsController implements Initializable {
 
     @FXML
-    private TableView<Client> table;
+    private TableView<EditorPanelable> table;
     
     @FXML
     private TextField filter;
@@ -45,8 +45,8 @@ public class ClientsController implements Initializable {
     @FXML
     private EditorPanelController editorPanelController;
     
-    private ObservableList<Client> clients;
-    private SortedList<Client> sorterData;
+    private ObservableList<EditorPanelable> clients;
+    private SortedList<EditorPanelable> sorterData;
     
     /**
      *
@@ -58,6 +58,7 @@ public class ClientsController implements Initializable {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(table);
         assignTable();
+        editorPanelController.setInnerTableDataList(clients);
     }
 
     //შეიძლება გატანა მშობელ კლასში
@@ -67,51 +68,27 @@ public class ClientsController implements Initializable {
             clients.add(client);
         });
         
-        FilteredList<Client> filterData = new FilteredList<>(clients, p -> true);
+        FilteredList<EditorPanelable> filterData = new FilteredList<>(clients, p -> true);
         FilterFieldChangeListener filtrListener = new FilterFieldChangeListener(filterData);
         filter.textProperty().addListener(filtrListener);
         
-        // For columns sort:
+        // For columns sort: 
         sorterData = new SortedList<>(filterData);
         sorterData.comparatorProperty().bind(table.comparatorProperty());
-//        table.setItems(sorterData);
-        
-        table.setItems(clients);
-        
-//        Client.getClients().stream().forEach((client) -> {
-//            table.getItems().add(client);
-//        });
-        
-//        TableFilter<Client> filter = new TableFilter<>(table);
-    }
-    
-    public void makeAppropriateActionOn(Names.EDITOR_BUTTON_TYPE buttonType, EditorPanelable tableElem){
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
-            clients.remove((Client) tableElem);
-        }
-        else if(buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
-           clients.add((Client) tableElem);
-        }
-    }
-    
-    @FXML
-    public void clickOnTable(MouseEvent event){
-        table.setItems(clients);
+        table.setItems(sorterData);
+
     }
     
     private class FilterFieldChangeListener implements ChangeListener<String> {
         
-        private FilteredList<Client> clientsData;
+        private FilteredList<EditorPanelable> clientsData;
         
-        public FilterFieldChangeListener(FilteredList<Client> filterData){
+        public FilterFieldChangeListener(FilteredList<EditorPanelable> filterData){
             clientsData = filterData;
         }
 
         @Override
         public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-            if (newValue.isEmpty()){
-                table.setItems(sorterData);
-            }
             PredicateListener predListener = new PredicateListener(newValue);
             clientsData.setPredicate(predListener);
         }
@@ -119,7 +96,7 @@ public class ClientsController implements Initializable {
     }
     
     
-    private class PredicateListener implements Predicate<Client> {
+    private class PredicateListener implements Predicate<EditorPanelable> {
         
         private boolean predicate;
         private String searchStr;
@@ -130,25 +107,14 @@ public class ClientsController implements Initializable {
         }
         
         @Override
-        public boolean test(Client c) {
+        public boolean test(EditorPanelable param) {
+            Client c = (Client)param;
+            
             if (c == null || searchStr.isEmpty())
                 predicate = true;
             else {
-                String firstName = c.getFirstName().toLowerCase();
-                String lastName = c.getLastName().toLowerCase();
-                String email = c.getEmail().toLowerCase();
-                String address = c.getAddress().toLowerCase();
-                String zipCode = c.getZipCode().toLowerCase();
-                String city = c.getCity().toLowerCase();
-                String country = c.getCountry().getName().toLowerCase();
-                
-                predicate = firstName.contains(searchStr) || 
-                            lastName.contains(searchStr)  || 
-                            address.contains(searchStr)   ||
-                            zipCode.contains(searchStr)   ||
-                            city.contains(searchStr)      ||
-                            country.contains(searchStr)   ||
-                            email.contains(searchStr);
+                String values = c.getFilterFieldValues();
+                predicate = values.contains(searchStr);
             }
             return predicate;
         }

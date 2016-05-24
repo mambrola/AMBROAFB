@@ -413,6 +413,21 @@ public class Client extends EditorPanelable{
         this.fax.set(fax);
     }
     
+    public String getFilterFieldValues(){
+        String phones = "";
+        for (PhoneNumber phoneNumber : phoneList) {
+            phones += phoneNumber.getNumber() + " ";
+        }
+
+        String result = firstName.concat(" " + lastName.get())
+                                .concat(" " + email.get()).concat(" " + address.get())
+                                .concat(" " + zipCode.get()).concat(" " + city.get())
+                                .concat(" " + country.getName()).concat(" " + fax.get())
+                                .concat(" " + IDNumber.get())
+                        .get();
+        return result + phones;
+    }
+    
     public boolean equals(Client other){
         boolean fieldsCompareResult =   this.isJur.get() == other.getIsJur() &&
                                         this.isRez.get() == other.getIsRez() && 
@@ -428,7 +443,7 @@ public class Client extends EditorPanelable{
         boolean equalsPhone = comparePhones(this.phoneList, other.getPhoneList());
         return fieldsCompareResult && equalsPhone;
     }
-
+    
     private void printPhones(List<PhoneNumber> list){
         for (PhoneNumber phone : list){
             System.out.println("phone: " + phone);
