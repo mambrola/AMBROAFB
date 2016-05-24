@@ -113,7 +113,7 @@ public class ClientsController implements Initializable {
             if (c == null || searchStr.isEmpty())
                 predicate = true;
             else {
-                String values = c.getFilterFieldValues();
+                String values = param.getFilterFieldValues();
                 predicate = values.contains(searchStr);
             }
             return predicate;
