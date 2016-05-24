@@ -28,16 +28,16 @@ import javafx.beans.property.StringProperty;
  */
 public class Country extends EditorPanelable{
 
-    @JsonProperty("countryCode")
     @AView.Column(width = "24")
     private final StringProperty code = new SimpleStringProperty();
 
-    @JsonProperty("descrip")
     @AView.Column(title = "%descrip", width = "250")
     private final StringProperty name = new SimpleStringProperty();
 
     @JsonIgnore
     private final StringExpression description;
+    
+    private int recId;
 
     public Country() {
         description = code.concat("\t").concat(name);
@@ -124,5 +124,10 @@ public class Country extends EditorPanelable{
         Country other = (Country) object;
         setCode(other.getCode());
         setName(other.getName());
+    }
+
+    @Override
+    public String getFilterFieldValues() {
+        return name.get();
     }
 }
