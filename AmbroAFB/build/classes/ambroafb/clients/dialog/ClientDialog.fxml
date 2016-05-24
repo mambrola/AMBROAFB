@@ -95,7 +95,7 @@
                 </children> 
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
-                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/OkayCancel.fxml"/>
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
             </HBox>
         </children>
     </VBox>

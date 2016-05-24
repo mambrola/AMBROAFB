@@ -15,7 +15,7 @@
          spacing="50.0" 
          stylesheets="/styles/css/okaycancel.css" 
          xmlns:fx="http://javafx.com/fxml/1" 
-         fx:controller="ambroafb.general.okay_cancel.OkayCancelController">
+         fx:controller="ambroafb.general.okay_cancel.DialogOkayCancelController">
     <children>
         <Button fx:id="okay" styleClass="middle" text="OK" >
             <tooltip>

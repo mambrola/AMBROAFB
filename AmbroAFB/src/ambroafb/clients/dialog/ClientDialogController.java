@@ -14,7 +14,7 @@ import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.country_combobox.CountryComboBox;
 import ambroafb.general.interfaces.Dialogable;
-import ambroafb.general.okay_cancel.OkayCancelController;
+import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -51,7 +51,7 @@ public class ClientDialogController implements Initializable {
     @FXML
     private CountryComboBox country;
     @FXML
-    private OkayCancelController okayCancelController;
+    private DialogOkayCancelController okayCancelController;
 
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
@@ -139,7 +139,7 @@ public class ClientDialogController implements Initializable {
         ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
     }
 
-    public OkayCancelController getOkayCancelController() {
+    public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }
     

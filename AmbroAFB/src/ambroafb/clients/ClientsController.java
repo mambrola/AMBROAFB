@@ -5,6 +5,8 @@
  */
 package ambroafb.clients;
 
+import ambroafb.AmbroAFB;
+import ambroafb.clients.filter.ClientFilter;
 import ambroafb.general.Names;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -27,6 +29,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import org.controlsfx.control.table.TableFilter;
 
 /**
@@ -57,12 +60,16 @@ public class ClientsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(table);
+        
+        
+        
         assignTable();
         editorPanelController.setInnerTableDataList(clients);
     }
 
     //შეიძლება გატანა მშობელ კლასში
-    private void assignTable() {
+    public void assignTable() {
+        new ClientFilter(AmbroAFB.mainStage).getResult();   // აქ უნდა მოვახერხო მშობელი სტეიჯი ჩავუსვა, ასევე დიალოგ ფანჯრებს
         clients = FXCollections.observableArrayList();
         Client.getClients().stream().forEach((client) -> {
             clients.add(client);

@@ -25,7 +25,7 @@ import javafx.stage.Stage;
  *
  * @author dato
  */
-public class OkayCancelController implements Initializable {
+public class DialogOkayCancelController implements Initializable {
 
     @FXML
     private Button okay, cancel;
@@ -76,7 +76,7 @@ public class OkayCancelController implements Initializable {
                     boolean anyFieldWasChanged = false;
                     try {
                         anyFieldWasChanged = (boolean)cancel.getScene().getProperties().get("controller").getClass().getMethod("anyFieldChanged").invoke(cancel.getScene().getProperties().get("controller"));
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(OkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
+                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(DialogOkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
                     if(!anyFieldWasChanged || new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
                         operationCanceled();
                         ((Stage) okay.getScene().getWindow()).close();
@@ -99,6 +99,6 @@ public class OkayCancelController implements Initializable {
     private void operationCanceled(){
         try {
             cancel.getScene().getProperties().get("controller").getClass().getMethod("operationCanceled").invoke(cancel.getScene().getProperties().get("controller"));
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(OkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(DialogOkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
     }                        
 }
