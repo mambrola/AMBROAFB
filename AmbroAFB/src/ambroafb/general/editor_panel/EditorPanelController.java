@@ -6,6 +6,8 @@
 package ambroafb.general.editor_panel;
 
 import ambro.ATableView;
+import ambroafb.clients.Client;
+import ambroafb.clients.ClientsController;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -16,6 +18,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
 
 
@@ -41,6 +45,9 @@ public class EditorPanelController implements Initializable {
     private MenuItem addBySample;
     
     @FXML
+    private ToggleButton refresh;
+    
+    @FXML
     private Initializable outerController;
     
     private enum CLASS_TYPE {OBJECT, DIALOG, CONTROLLER};
@@ -55,10 +62,15 @@ public class EditorPanelController implements Initializable {
         }
         Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
         Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.DELETE);
-        if (dialog.getResult() != null){
-            boolean isDeleted = (boolean) Utils.getInvokedClassMethod(objectClass, "deleteOneFromDB", new Class[]{int.class}, null, selected.recId);
-            if(isDeleted)
+        EditorPanelable result = dialog.getResult();
+        if (result != null){
+//            boolean isDeleted = (boolean) Utils.getInvokedClassMethod(objectClass, "deleteOneFromDB", new Class[]{int.class}, null, selected.recId);
+//            if(isDeleted)
                 ((ATableView)exit.getScene().lookup("#table")).getItems().remove(selected);
+
+//            Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
+//            Object controllerObject = Utils.getInstanceOfClass(controllerClass, new Class[]{});
+//            Utils.getInvokedClassMethod(controllerClass, "makeAppropriateActionOn", new Class[]{EDITOR_BUTTON_TYPE.class, EditorPanelable.class}, controllerObject, EDITOR_BUTTON_TYPE.DELETE, result);
         }
     }
     
@@ -99,6 +111,7 @@ public class EditorPanelController implements Initializable {
         if (result != null) {
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
             result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
+
             if (result != null) {
                 ((ATableView)exit.getScene().lookup("#table")).getItems().add(result);
             }
@@ -124,6 +137,7 @@ public class EditorPanelController implements Initializable {
         Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
         Utils.getInvokedClassMethod(controllerClass, "assignTable", null, outerController);
         selectOneAgain(selected);
+        refresh.setSelected(false);
     }
        
     /**

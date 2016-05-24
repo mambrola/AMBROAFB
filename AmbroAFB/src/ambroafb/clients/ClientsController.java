@@ -5,7 +5,9 @@
  */
 package ambroafb.clients;
 
+import ambroafb.general.Names;
 import ambroafb.general.editor_panel.EditorPanelController;
+import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.Collections;
 import java.util.ResourceBundle;
@@ -25,6 +27,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import org.controlsfx.control.table.TableFilter;
 
 /**
  * FXML Controller class
@@ -42,7 +45,9 @@ public class ClientsController implements Initializable {
     @FXML
     private EditorPanelController editorPanelController;
     
-
+    private ObservableList<Client> clients;
+    private SortedList<Client> sorterData;
+    
     /**
      *
      * @param url
@@ -56,37 +61,43 @@ public class ClientsController implements Initializable {
     }
 
     //შეიძლება გატანა მშობელ კლასში
-    public void assignTable() {
-//        ObservableList<Client> clients = FXCollections.observableArrayList();
-//        Client.getClients().stream().forEach((client) -> {
-//            clients.add(client);
-//        });
-//        
-//        FilteredList<Client> filterData = new FilteredList<>(clients, p -> true);
-//        FilterFieldChangeListener filtrListener = new FilterFieldChangeListener(filterData);
-//        filter.textProperty().addListener(filtrListener);
-//        
-//        SortedList<Client> sorterData = new SortedList<>(filterData);
+    private void assignTable() {
+        clients = FXCollections.observableArrayList();
+        Client.getClients().stream().forEach((client) -> {
+            clients.add(client);
+        });
+        
+        FilteredList<Client> filterData = new FilteredList<>(clients, p -> true);
+        FilterFieldChangeListener filtrListener = new FilterFieldChangeListener(filterData);
+        filter.textProperty().addListener(filtrListener);
+        
+        // For columns sort:
+        sorterData = new SortedList<>(filterData);
+        sorterData.comparatorProperty().bind(table.comparatorProperty());
 //        table.setItems(sorterData);
-//        sorterData.comparatorProperty().bind(table.comparatorProperty());
-//        
-//        // umjobesia ATableView-shi daiweros:
-//        table.getSortOrder().addListener(new ListChangeListener<TableColumn<Client, ?>>() {
-//            @Override
-//            public void onChanged(ListChangeListener.Change<? extends TableColumn<Client, ?>> c) {
-//                for (int i = 0; i < c.getList().size(); i++){
-//                    String variable = c.getList().get(i).toString();
-//                    System.out.println("variable: " + variable);
-//                    System.out.println("");
-//                }
-//            }
+        
+        table.setItems(clients);
+        
+//        Client.getClients().stream().forEach((client) -> {
+//            table.getItems().add(client);
 //        });
         
-        Client.getClients().stream().forEach((client) -> {
-            table.getItems().add(client);
-        });
+//        TableFilter<Client> filter = new TableFilter<>(table);
     }
     
+    public void makeAppropriateActionOn(Names.EDITOR_BUTTON_TYPE buttonType, EditorPanelable tableElem){
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
+            clients.remove((Client) tableElem);
+        }
+        else if(buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
+           clients.add((Client) tableElem);
+        }
+    }
+    
+    @FXML
+    public void clickOnTable(MouseEvent event){
+        table.setItems(clients);
+    }
     
     private class FilterFieldChangeListener implements ChangeListener<String> {
         
@@ -98,6 +109,9 @@ public class ClientsController implements Initializable {
 
         @Override
         public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            if (newValue.isEmpty()){
+                table.setItems(sorterData);
+            }
             PredicateListener predListener = new PredicateListener(newValue);
             clientsData.setPredicate(predListener);
         }
@@ -122,8 +136,19 @@ public class ClientsController implements Initializable {
             else {
                 String firstName = c.getFirstName().toLowerCase();
                 String lastName = c.getLastName().toLowerCase();
-
-                predicate = firstName.contains(searchStr) || lastName.contains(searchStr);
+                String email = c.getEmail().toLowerCase();
+                String address = c.getAddress().toLowerCase();
+                String zipCode = c.getZipCode().toLowerCase();
+                String city = c.getCity().toLowerCase();
+                String country = c.getCountry().getName().toLowerCase();
+                
+                predicate = firstName.contains(searchStr) || 
+                            lastName.contains(searchStr)  || 
+                            address.contains(searchStr)   ||
+                            zipCode.contains(searchStr)   ||
+                            city.contains(searchStr)      ||
+                            country.contains(searchStr)   ||
+                            email.contains(searchStr);
             }
             return predicate;
         }
