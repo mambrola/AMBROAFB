@@ -98,20 +98,21 @@ public class Client extends EditorPanelable{
     public Client() {
         isJur =             new SimpleBooleanProperty();
         isRez =             new SimpleBooleanProperty();
-        firstName =         new SimpleStringProperty();
-        lastName =          new SimpleStringProperty();
+        firstName =         new SimpleStringProperty("");
+        lastName =          new SimpleStringProperty("");
         descrip = Utils.avoidNull(firstName).concat(" ").concat(Utils.avoidNull(lastName));
-        email =             new SimpleStringProperty();
-        address =           new SimpleStringProperty();
-        zipCode =           new SimpleStringProperty();
-        city =              new SimpleStringProperty();
+        email =             new SimpleStringProperty("");
+        address =           new SimpleStringProperty("");
+        zipCode =           new SimpleStringProperty("");
+        city =              new SimpleStringProperty("");
         fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
         country =           new SimpleObjectProperty<>();
-        countryDescrip =    new SimpleStringProperty();
-        IDNumber =          new SimpleStringProperty();
+        country.set(new Country("GE", "Georgia"));
+        countryDescrip =    new SimpleStringProperty("");
+        IDNumber =          new SimpleStringProperty("");
         phoneList = FXCollections.observableArrayList();
-        phoneNumbers = new SimpleStringProperty();
-        fax = new SimpleStringProperty();
+        phoneNumbers = new SimpleStringProperty("");
+        fax = new SimpleStringProperty("");
 
         phoneList.addListener((ListChangeListener.Change<? extends PhoneNumber> c) -> {
             rebindPhoneNumbers();
@@ -123,7 +124,7 @@ public class Client extends EditorPanelable{
         });
         rebindCountry();
     }
-
+    
     @Override
     public Client cloneWithoutID() {
         Client clone = new Client();
@@ -213,8 +214,9 @@ public class Client extends EditorPanelable{
     }
 
     public static Client saveOneToDB(Client client) {
-        System.out.println("called: deleteOneFromDB(client), client = " + client.toString());
+        if (client == null) return null; 
         try {
+            System.out.println("called: deleteOneFromDB(client), client = " + client.toString());
             String resource = "clients" + (client.recId > 0 ? "/" + client.recId : "");
             String method = client.recId > 0 ? "PUT" : "POST";
             ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
