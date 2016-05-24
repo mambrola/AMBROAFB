@@ -413,11 +413,10 @@ public class Client extends EditorPanelable{
         this.fax.set(fax);
     }
     
+    @Override
     public String getFilterFieldValues(){
         String phones = "";
-        for (PhoneNumber phoneNumber : phoneList) {
-            phones += phoneNumber.getNumber() + " ";
-        }
+        phones = phoneList.stream().map((phoneNumber) -> phoneNumber.getNumber() + " ").reduce(phones, String::concat);
 
         String result = firstName.concat(" " + lastName.get())
                                 .concat(" " + email.get()).concat(" " + address.get())

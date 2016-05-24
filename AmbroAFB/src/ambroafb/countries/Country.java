@@ -125,4 +125,9 @@ public class Country extends EditorPanelable{
         setCode(other.getCode());
         setName(other.getName());
     }
+
+    @Override
+    public String getFilterFieldValues() {
+        return name.get();
+    }
 }

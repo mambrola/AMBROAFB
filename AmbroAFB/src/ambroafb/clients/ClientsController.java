@@ -99,7 +99,7 @@ public class ClientsController implements Initializable {
     private class PredicateListener implements Predicate<EditorPanelable> {
         
         private boolean predicate;
-        private String searchStr;
+        private final String searchStr;
         
         public PredicateListener(String searchable){
             searchStr = searchable.toLowerCase();
