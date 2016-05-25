@@ -14,6 +14,7 @@ import org.json.JSONObject;
  */
 public interface Filterable {
     public JSONObject getResult();
+    public void setResult(boolean isOk);
 //    public Scene getScene();
 //    public void showAndWait();
 //    public void operationCanceled();

@@ -6,38 +6,72 @@
 package ambroafb.clients.filter;
 
 import ambroafb.AmbroAFB;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.Filterable;
 import java.io.IOException;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  *
  * @author mambroladze
  */
-public class ClientFilter  extends Stage implements Filterable{
-//    private ClientFilterController filterController;
+public class ClientFilter  extends Stage implements Filterable, Initializable{
+    @FXML
+    private DatePicker dateBiger, dateLess;
+    
+    private JSONObject jSonResult;
     
     public ClientFilter(Stage owner) {
         this.initStyle(StageStyle.UTILITY);
         try {
-            Scene currentScene = Utils.createScene("/ambroafb/clients/filter/ClientFilter.fxml");
-//            filterController = (ClientFilterController) currentScene.getProperties().get("controller");
-            this.setScene(currentScene);
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setResources(GeneralConfig.getInstance().getBundle());
+            fxmlLoader.setController((ClientFilter)this);
+            Scene scene = new Scene(fxmlLoader.load(AmbroAFB.class.getResource("/ambroafb/clients/filter/ClientFilter.fxml").openStream()));
+            scene.getProperties().put("controller", fxmlLoader.getController());
+            this.setScene(scene);
         } catch (IOException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
-        initOwner(owner);
+        this.initOwner(owner);
         setResizable(false);
     }
 
     @Override
     public JSONObject getResult() {
         showAndWait();
-        return null;
+        return jSonResult;
+    }
+
+    @Override
+    public void setResult(boolean isOk){
+        if(!isOk)
+            return;
+        jSonResult = new JSONObject();
+        try {
+            jSonResult.append("dateBiger", dateBiger.getValue() == null ? LocalDate.MIN : dateBiger.getValue());
+            jSonResult.append("dateLess", dateLess.getValue() == null ? LocalDate.MAX : dateLess.getValue());
+        } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
+    }
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        //dateBiger.setValue(LocalDate.MIN);
+        // იღებს derby ბაზიდან dateBiger, dateLess-ების მნიშვნელობებს
     }
 }

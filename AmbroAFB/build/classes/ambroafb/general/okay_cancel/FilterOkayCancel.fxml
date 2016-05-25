@@ -16,12 +16,12 @@
         xmlns:fx="http://javafx.com/fxml/1" 
         fx:controller="ambroafb.general.okay_cancel.FilterOkayCancelController">
     <children>
-        <Button fx:id="okay" styleClass="middle" text="OK" >
+        <Button fx:id="okay" styleClass="middle" text="OK" onAction="#okay" >
             <tooltip>
                 <Tooltip text="%ok" />
             </tooltip>
         </Button>
-        <Button fx:id="cancel" styleClass="middle" text="Cancel"  >
+        <Button fx:id="cancel" styleClass="middle" text="Cancel" onAction="#cancel"  >
             <tooltip>
                 <Tooltip text="%cancel" />
             </tooltip>

@@ -109,26 +109,7 @@ public class MainController implements Initializable {
     private void clients(ActionEvent event) {
         Clients clients = new Clients();
         clients.show();
-        clients.getClientsController().reAssignTable();
-        
-//        try{
-//            Stage stage = Utils.createStage(
-//                    "/ambroafb/clients/Clients.fxml", 
-//                    config.getTitleFor("clients"), 
-//                    Names.IN_OUT_LOGO,
-//                    AmbroAFB.mainStage
-//            );
-//            stage.show();
-//        }catch(IOException ex){
-////            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-////            alert.showAlert();
-//           
-//            Platform.runLater(() -> {
-//                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-//                alert.showAlert();
-//                System.out.println("error after");
-//            });
-//        }
+        clients.getClientsController().reAssignTable(true);
     }
     
     @FXML 

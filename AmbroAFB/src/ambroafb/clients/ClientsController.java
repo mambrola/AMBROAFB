@@ -31,6 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.controlsfx.control.table.TableFilter;
+import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -64,14 +65,17 @@ public class ClientsController implements Initializable {
         editorPanelController.setInnerTableDataList(clients);
     }
 
-    //შეიძლება გატანა მშობელ კლასში
-    public void reAssignTable() {
-        
-        
-        if(new ClientFilter(stage).getResult() == null)
-            return; 
+    public void reAssignTable(boolean isFirstTime) {
+        JSONObject filterJson = new ClientFilter(stage).getResult();
+        if(filterJson == null){
+            if(isFirstTime)
+                stage.close();
+            else
+                return; 
+        }
         clients.clear();
-        Client.getClients().stream().forEach((client) -> {
+        System.out.println("Filter return JSON: " + filterJson);
+        Client.getAllFromDB().stream().forEach((client) -> {
             clients.add(client);
         });
         

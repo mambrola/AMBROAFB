@@ -135,7 +135,7 @@ public class EditorPanelController implements Initializable {
         ATableView table = (ATableView)exit.getScene().lookup("#table");
         EditorPanelable selected = (EditorPanelable)table.getSelectionModel().getSelectedItem();
         Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
-        Utils.getInvokedClassMethod(controllerClass, "reAssignTable", null, outerController);
+        Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{boolean.class}, outerController, false);
         selectOneAgain(selected);
         refresh.setSelected(false);
     }

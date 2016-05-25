@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -188,7 +187,7 @@ public class Client extends EditorPanelable{
         return descrip.get() + " : " + email.get() + " : " + fullAddress.get();
     }
 
-    public static List<Client> getClients() {
+    public static List<Client> getAllFromDB() {
         try {
             String data = GeneralConfig.getInstance().getServerClient().get("clients");
             ObjectMapper mapper = new ObjectMapper();

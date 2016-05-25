@@ -9,7 +9,7 @@
 <VBox   fx:id="formPane"
         stylesheets="/styles/css/clientfilter.css" 
         xmlns:fx="http://javafx.com/fxml/1" 
-        fx:controller="ambroafb.clients.filter.ClientFilterController">
+        >
     <HBox styleClass="w2" >
         <children>
             <VBox >
