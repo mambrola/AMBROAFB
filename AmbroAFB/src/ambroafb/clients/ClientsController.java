@@ -5,32 +5,23 @@
  */
 package ambroafb.clients;
 
-import ambroafb.AmbroAFB;
 import ambroafb.clients.filter.ClientFilter;
-import ambroafb.general.Names;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
-import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import org.controlsfx.control.table.TableFilter;
 import org.json.JSONObject;
 
 /**
@@ -43,9 +34,6 @@ public class ClientsController implements Initializable {
     @FXML
     private TableView<EditorPanelable> table;
     
-    @FXML
-    private TextField filter;
-
     @FXML
     private EditorPanelController editorPanelController;
     
@@ -61,12 +49,12 @@ public class ClientsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(table);
-//        reAssignTable();
-        editorPanelController.setInnerTableDataList(clients);
+        editorPanelController.setTableDataList(table, clients);
     }
 
     public void reAssignTable(boolean isFirstTime) {
         JSONObject filterJson = new ClientFilter(stage).getResult();
+        System.out.println("Filter return JSON: " + filterJson + ":" + isFirstTime);
         if(filterJson == null){
             if(isFirstTime)
                 stage.close();
@@ -74,65 +62,12 @@ public class ClientsController implements Initializable {
                 return; 
         }
         clients.clear();
-        System.out.println("Filter return JSON: " + filterJson);
         Client.getAllFromDB().stream().forEach((client) -> {
             clients.add(client);
         });
-        
-        FilteredList<EditorPanelable> filterData = new FilteredList<>(clients, p -> true);
-        FilterFieldChangeListener filtrListener = new FilterFieldChangeListener(filterData);
-        filter.textProperty().addListener(filtrListener);
-        
-        // For columns sort: 
-        sorterData = new SortedList<>(filterData);
-        sorterData.comparatorProperty().bind(table.comparatorProperty());
-        table.setItems(sorterData);
-
     }
 
     void informAboutStage(Stage stage) {
         this.stage = stage;
-    }
-    
-    private class FilterFieldChangeListener implements ChangeListener<String> {
-        
-        private FilteredList<EditorPanelable> clientsData;
-        
-        public FilterFieldChangeListener(FilteredList<EditorPanelable> filterData){
-            clientsData = filterData;
-        }
-
-        @Override
-        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-            PredicateListener predListener = new PredicateListener(newValue);
-            clientsData.setPredicate(predListener);
-        }
-        
-    }
-    
-    
-    private class PredicateListener implements Predicate<EditorPanelable> {
-        
-        private boolean predicate;
-        private final String searchStr;
-        
-        public PredicateListener(String searchable){
-            searchStr = searchable.toLowerCase();
-            predicate = false;
-        }
-        
-        @Override
-        public boolean test(EditorPanelable param) {
-            Client c = (Client)param;
-            
-            if (c == null || searchStr.isEmpty())
-                predicate = true;
-            else {
-                String values = param.getFilterFieldValues();
-                predicate = values.contains(searchStr);
-            }
-            return predicate;
-        }
-        
     }
 }

@@ -7,21 +7,18 @@ package ambroafb.clients.filter;
 
 import ambroafb.AmbroAFB;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.Utils;
-import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.Filterable;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -35,11 +32,14 @@ import org.json.JSONObject;
 public class ClientFilter  extends Stage implements Filterable, Initializable{
     @FXML
     private DatePicker dateBiger, dateLess;
+    @FXML
+    private Button cancel;
     
     private JSONObject jSonResult;
     
     public ClientFilter(Stage owner) {
-        this.initStyle(StageStyle.UTILITY);
+        this.initStyle(StageStyle.UNIFIED);
+        this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setResources(GeneralConfig.getInstance().getBundle());
@@ -71,6 +71,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        
         //dateBiger.setValue(LocalDate.MIN);
         // იღებს derby ბაზიდან dateBiger, dateLess-ების მნიშვნელობებს
     }

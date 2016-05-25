@@ -5,7 +5,6 @@
  */
 package ambroafb.general.interfaces;
 
-import javafx.scene.Scene;
 import org.json.JSONObject;
 
 /**
@@ -15,7 +14,4 @@ import org.json.JSONObject;
 public interface Filterable {
     public JSONObject getResult();
     public void setResult(boolean isOk);
-//    public Scene getScene();
-//    public void showAndWait();
-//    public void operationCanceled();
 }

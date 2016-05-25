@@ -12,7 +12,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 
 /**
@@ -32,7 +31,7 @@ public class FilterOkayCancelController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-                // TODO
+        
     }    
     
     @FXML
@@ -42,6 +41,9 @@ public class FilterOkayCancelController implements Initializable {
     }
     @FXML
     private void cancel(ActionEvent event) {
+        
+        System.out.println("ambroafb.general.okay_cancel.FilterOkayCancelController.cancel: დააCancelა");
+        
         ((Filterable)okay.getScene().getProperties().get("controller")).setResult(false);
         ((Stage) okay.getScene().getWindow()).close();
     }

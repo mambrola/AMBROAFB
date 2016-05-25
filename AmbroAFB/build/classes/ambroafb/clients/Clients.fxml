@@ -23,7 +23,6 @@
     <center>
         <VBox >
             <children>
-                <TextField fx:id="filter" promptText="Filter" />
                 <ATableView fx:id="table" initializer="ambroafb.clients.Client" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
             </children>
         </VBox>

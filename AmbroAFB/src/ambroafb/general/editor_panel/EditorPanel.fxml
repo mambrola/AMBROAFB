@@ -48,8 +48,6 @@
                 </ImageView>
             </graphic>
         </Button>
-                
-                
         <SplitMenuButton fx:id="add" onAction="#add">
             <tooltip>
                 <Tooltip text="%new" />
@@ -90,8 +88,10 @@
                 </ImageView>
             </graphic>
         </ToggleButton>
+        <Region HBox.hgrow="ALWAYS" />
+        <TextField fx:id="search" promptText="%search" />
     </children>
     <padding>
-        <Insets bottom="3.0" left="10.0" top="3.0" />
+        <Insets bottom="3.0" left="10.0" top="3.0" right="10.0" />
     </padding>
 </HBox>
