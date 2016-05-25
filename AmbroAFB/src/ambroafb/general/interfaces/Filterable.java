@@ -6,13 +6,14 @@
 package ambroafb.general.interfaces;
 
 import javafx.scene.Scene;
+import org.json.JSONObject;
 
 /**
  *
  * @author mambroladze
  */
 public interface Filterable {
-    public EditorPanelable getResult();
+    public JSONObject getResult();
 //    public Scene getScene();
 //    public void showAndWait();
 //    public void operationCanceled();

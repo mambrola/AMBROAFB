@@ -48,9 +48,9 @@ public class ClientsController implements Initializable {
     @FXML
     private EditorPanelController editorPanelController;
     
-    private ObservableList<EditorPanelable> clients;
+    private ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();;
     private SortedList<EditorPanelable> sorterData;
-    
+    private Stage stage;
     /**
      *
      * @param url
@@ -60,17 +60,17 @@ public class ClientsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(table);
-        
-        
-        
-        assignTable();
+//        reAssignTable();
         editorPanelController.setInnerTableDataList(clients);
     }
 
     //შეიძლება გატანა მშობელ კლასში
-    public void assignTable() {
-        new ClientFilter(AmbroAFB.mainStage).getResult();   // აქ უნდა მოვახერხო მშობელი სტეიჯი ჩავუსვა, ასევე დიალოგ ფანჯრებს
-        clients = FXCollections.observableArrayList();
+    public void reAssignTable() {
+        
+        
+        if(new ClientFilter(stage).getResult() == null)
+            return; 
+        clients.clear();
         Client.getClients().stream().forEach((client) -> {
             clients.add(client);
         });
@@ -84,6 +84,10 @@ public class ClientsController implements Initializable {
         sorterData.comparatorProperty().bind(table.comparatorProperty());
         table.setItems(sorterData);
 
+    }
+
+    void informAboutStage(Stage stage) {
+        this.stage = stage;
     }
     
     private class FilterFieldChangeListener implements ChangeListener<String> {

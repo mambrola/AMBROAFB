@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.json.JSONObject;
 
 /**
  *
@@ -35,7 +36,7 @@ public class ClientFilter  extends Stage implements Filterable{
     }
 
     @Override
-    public EditorPanelable getResult() {
+    public JSONObject getResult() {
         showAndWait();
         return null;
     }
