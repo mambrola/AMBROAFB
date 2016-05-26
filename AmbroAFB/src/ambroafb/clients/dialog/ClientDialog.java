@@ -7,9 +7,7 @@ package ambroafb.clients.dialog;
 
 import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -18,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 

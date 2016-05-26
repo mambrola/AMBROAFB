@@ -14,7 +14,7 @@ import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
 import ambroafb.general.country_combobox.CountryComboBox;
 import ambroafb.general.interfaces.Dialogable;
-import ambroafb.general.okay_cancel.OkayCancelController;
+import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -23,12 +23,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -51,7 +49,7 @@ public class ClientDialogController implements Initializable {
     @FXML
     private CountryComboBox country;
     @FXML
-    private OkayCancelController okayCancelController;
+    private DialogOkayCancelController okayCancelController;
 
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
@@ -131,7 +129,7 @@ public class ClientDialogController implements Initializable {
                 t.setDisable(true);
             }
         });
-//        phone.setEditable(false);
+//        phone.setEditable(false); //ეს რატომღაც ჭედავდა, მგონია array-ს ინდექსი და რამეო
     }
 
     
@@ -139,7 +137,7 @@ public class ClientDialogController implements Initializable {
         ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
     }
 
-    public OkayCancelController getOkayCancelController() {
+    public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }
     

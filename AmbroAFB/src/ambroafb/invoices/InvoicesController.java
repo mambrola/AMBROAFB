@@ -48,7 +48,7 @@ public class InvoicesController implements Initializable {
     @FXML
     private void refresh(ActionEvent e) {
         table.getItems().clear();
-        assignTable();
+        reAssignTable();
     }
     
     /**
@@ -58,10 +58,10 @@ public class InvoicesController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        assignTable();
+        reAssignTable();
     }
 
-    private void assignTable() {
+    private void reAssignTable() {
         Invoice.dbGetInvoices(0).values().stream().forEach((invoice) -> {
             table.getItems().add(invoice);
         });

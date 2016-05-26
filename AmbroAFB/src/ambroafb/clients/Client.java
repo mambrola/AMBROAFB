@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -188,7 +187,7 @@ public class Client extends EditorPanelable{
         return descrip.get() + " : " + email.get() + " : " + fullAddress.get();
     }
 
-    public static List<Client> getClients() {
+    public static List<Client> getAllFromDB() {
         try {
             String data = GeneralConfig.getInstance().getServerClient().get("clients");
             ObjectMapper mapper = new ObjectMapper();
@@ -414,7 +413,7 @@ public class Client extends EditorPanelable{
     }
     
     @Override
-    public String getFilterFieldValues(){
+    public String toStringForSearch(){
         String phones = "";
         phones = phoneList.stream().map((phoneNumber) -> phoneNumber.getNumber() + " ").reduce(phones, String::concat);
 
@@ -424,7 +423,7 @@ public class Client extends EditorPanelable{
                                 .concat(" " + country.getName()).concat(" " + fax.get())
                                 .concat(" " + IDNumber.get())
                         .get();
-        return result + phones;
+        return (result + phones).toLowerCase();
     }
     
     public boolean equals(Client other){
@@ -444,9 +443,9 @@ public class Client extends EditorPanelable{
     }
     
     private void printPhones(List<PhoneNumber> list){
-        for (PhoneNumber phone : list){
+        list.stream().forEach((phone) -> {
             System.out.println("phone: " + phone);
-        }
+        });
     }
     
     /**
@@ -466,7 +465,7 @@ public class Client extends EditorPanelable{
 
         return true;
     }
-    
+
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 
         @Override

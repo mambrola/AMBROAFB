@@ -12,7 +12,7 @@ import java.util.Enumeration;
  * @author tabramishvili
  */
 public class Names {
-    public static final String MAIN_FXML = "/ambroafb/Main.fxml"; // "/ambroafb/new_account/NewAccount.fxml"; //
+    public static final String MAIN_FXML = "/ambroafb/Main.fxml"; // "/ambroafb/clients/Clients.fxml"; //"ambroafb/clients/filter/ClientFilter.fxml"; //
     public static final String MAIN_TITLE = "title_main";
     public static final String MAIN_LOGO = "/images/logo.png";
     

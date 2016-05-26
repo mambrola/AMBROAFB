@@ -18,7 +18,7 @@ public abstract class EditorPanelable {
     public abstract EditorPanelable cloneWithoutID();
     public abstract EditorPanelable cloneWithID();
     public abstract void copyFrom(EditorPanelable other);
-    public abstract String getFilterFieldValues();
+    public abstract String toStringForSearch();
     
     public int getRecId(){
         return recId;

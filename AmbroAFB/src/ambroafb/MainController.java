@@ -5,6 +5,7 @@
  */
 package ambroafb;
 
+import ambroafb.clients.Clients;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -106,24 +107,9 @@ public class MainController implements Initializable {
     
     @FXML
     private void clients(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage(
-                    "/ambroafb/clients/Clients.fxml", 
-                    config.getTitleFor("clients"), 
-                    Names.IN_OUT_LOGO,
-                    AmbroAFB.mainStage
-            );
-            stage.show();
-        }catch(IOException ex){
-//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-//            alert.showAlert();
-           
-            Platform.runLater(() -> {
-                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-                alert.showAlert();
-                System.out.println("error after");
-            });
-        }
+        Clients clients = new Clients();
+        clients.show();
+        clients.getClientsController().reAssignTable(true);
     }
     
     @FXML 

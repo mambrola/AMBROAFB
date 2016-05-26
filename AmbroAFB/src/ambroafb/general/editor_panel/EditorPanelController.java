@@ -6,32 +6,23 @@
 package ambroafb.general.editor_panel;
 
 import ambro.ATableView;
-import ambroafb.clients.Client;
-import ambroafb.clients.ClientsController;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.stage.Stage;
 
 
 /**
@@ -53,6 +44,9 @@ public class EditorPanelController implements Initializable {
     @FXML
     private Initializable outerController;
     
+    @FXML
+    private TextField search;
+
     private enum CLASS_TYPE {OBJECT, DIALOG, CONTROLLER};
     
     private ObservableList<EditorPanelable> tableData;
@@ -134,9 +128,8 @@ public class EditorPanelController implements Initializable {
     private void refresh(ActionEvent e) {
         ATableView table = (ATableView)exit.getScene().lookup("#table");
         EditorPanelable selected = (EditorPanelable)table.getSelectionModel().getSelectedItem();
-        tableData.clear();
         Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
-        Utils.getInvokedClassMethod(controllerClass, "assignTable", null, outerController);
+        Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{boolean.class}, outerController, false);
         selectOneAgain(selected);
         refresh.setSelected(false);
     }
@@ -151,8 +144,18 @@ public class EditorPanelController implements Initializable {
         
     }
     
-    public void setInnerTableDataList(ObservableList<EditorPanelable> list){
+    public void setTableDataList(TableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
         tableData = list;
+        FilteredList<EditorPanelable> filteredData = new FilteredList<>(tableData, p -> true);
+        search.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(object -> {
+                return (newValue == null || newValue.isEmpty()|| object.toStringForSearch().contains(newValue.toLowerCase()));
+            });
+
+        });
+        SortedList<EditorPanelable> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedData);
     }
     
     public void buttonsMainPropertysBinder (TableView table){
