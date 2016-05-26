@@ -127,7 +127,7 @@ public class Country extends EditorPanelable{
     }
 
     @Override
-    public String getFilterFieldValues() {
+    public String toStringForSearch() {
         return name.get();
     }
 }
