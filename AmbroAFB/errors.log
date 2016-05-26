@@ -20915,3 +20915,19 @@ java.net.SocketException: socket closed
 	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
 	at java.lang.Thread.run(Thread.java:745)
 
+May 26, 2016 11:49:47 AM ambroafb.general.Utils log
+SEVERE: You Realy want Delete this item?
+May 26, 2016 11:49:59 AM ambroafb.general.Utils log
+SEVERE: You Realy want Delete this item?
+May 26, 2016 12:11:23 PM ambroafb.AmbroAFB lambda$main$5
+SEVERE: null
+java.net.SocketException: socket closed
+	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketAccept(DualStackPlainSocketImpl.java:131)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:199)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:545)
+	at java.net.ServerSocket.accept(ServerSocket.java:513)
+	at ambroafb.AmbroAFB.lambda$main$5(AmbroAFB.java:90)
+	at java.lang.Thread.run(Thread.java:745)
+

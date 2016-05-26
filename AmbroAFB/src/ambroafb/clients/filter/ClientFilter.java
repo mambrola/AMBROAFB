@@ -64,8 +64,8 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
             return;
         jSonResult = new JSONObject();
         try {
-            jSonResult.append("dateBiger", dateBiger.getValue() == null ? LocalDate.MIN : dateBiger.getValue());
-            jSonResult.append("dateLess", dateLess.getValue() == null ? LocalDate.MAX : dateLess.getValue());
+            jSonResult.put("dateBiger", dateBiger.getValue() == null ? LocalDate.MIN : dateBiger.getValue());
+            jSonResult.put("dateLess", dateLess.getValue() == null ? LocalDate.MAX : dateLess.getValue());
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
     }
     

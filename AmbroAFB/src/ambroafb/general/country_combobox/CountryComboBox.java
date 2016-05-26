@@ -9,11 +9,7 @@ import ambroafb.AmbroAFB;
 import ambroafb.countries.Country;
 import ambroafb.general.GeneralConfig;
 import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 
