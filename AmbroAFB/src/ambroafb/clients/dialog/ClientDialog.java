@@ -45,8 +45,8 @@ public class ClientDialog extends Stage implements Dialogable {
         try {
             Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
             dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
-            dialogController.setNextVisibleAndActionParameters(buttonType);
             dialogController.bindClient(this.client);
+            dialogController.setNextVisibleAndActionParameters(buttonType);
             dialogController.setBackupClient(this.clientBackup);
             this.setScene(currentScene);
         } catch (IOException ex) { Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex); }

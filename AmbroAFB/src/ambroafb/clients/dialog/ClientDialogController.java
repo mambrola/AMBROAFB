@@ -129,7 +129,8 @@ public class ClientDialogController implements Initializable {
                 t.setDisable(true);
             }
         });
-//        phone.setEditable(false); //ეს რატომღაც ჭედავდა, მგონია array-ს ინდექსი და რამეო
+        if (phone.getItems().size() > 0)
+            phone.setEditable(false); //ეს რატომღაც ჭედავდა, მგონია array-ს ინდექსი და რამეო
     }
 
     
