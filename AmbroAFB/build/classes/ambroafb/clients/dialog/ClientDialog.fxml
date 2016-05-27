@@ -23,8 +23,6 @@
                 <children>
                     <Label text="%date" /> 
                     <DatePicker fx:id="openDate" />
-                    
-                    <ambroafb.clients.combobox.ClientComboBox fx:id="bla"/>
                 </children> 
             </VBox>
             <HBox>

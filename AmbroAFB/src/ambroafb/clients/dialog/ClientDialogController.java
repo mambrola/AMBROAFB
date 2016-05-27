@@ -6,7 +6,6 @@
 package ambroafb.clients.dialog;
 
 import ambroafb.clients.Client;
-import ambroafb.clients.combobox.ClientComboBox;
 import ambroafb.countries.Country;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.ListEditor;

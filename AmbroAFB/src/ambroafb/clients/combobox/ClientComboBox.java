@@ -7,7 +7,6 @@ package ambroafb.clients.combobox;
 
 import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
-import ambroafb.countries.Country;
 import ambroafb.general.GeneralConfig;
 import java.io.IOException;
 import java.util.logging.Level;
