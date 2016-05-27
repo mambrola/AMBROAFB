@@ -11,7 +11,7 @@
 <?import ambro.* ?>
 <?import ambroafb.general.okay_cancel.* ?>
 <?import ambroafb.general.*?>
-<?import ambroafb.countries.combobox.* ?>
+<?import ambroafb.countries.* ?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/clientdialog.css" 
                         xmlns:fx="http://javafx.com/fxml/1" 

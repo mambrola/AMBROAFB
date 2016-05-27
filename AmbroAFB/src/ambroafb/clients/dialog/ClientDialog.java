@@ -29,18 +29,17 @@ public class ClientDialog extends Stage implements Dialogable {
 
     private ClientDialogController dialogController;
     
-    public ClientDialog() {
-        this(new Client(), EDITOR_BUTTON_TYPE.ADD);
-    }
-
     public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType) {
-        this((Client) object, buttonType);
-    }
-    
-    public ClientDialog(Client client, EDITOR_BUTTON_TYPE buttonType) {
         super();
-        this.client = client;
-        this.clientBackup = client.cloneWithID();
+        
+        Client clientObject;
+        if (object == null)
+            clientObject = new Client();
+        else
+            clientObject = (Client) object; 
+        
+        this.client = clientObject;
+        this.clientBackup = clientObject.cloneWithID();
         
         try {
             Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
@@ -57,7 +56,6 @@ public class ClientDialog extends Stage implements Dialogable {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             event.consume();
         });
-        
     }
     
     @Override

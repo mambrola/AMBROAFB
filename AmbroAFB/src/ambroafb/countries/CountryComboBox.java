@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.countries.combobox;
+package ambroafb.countries;
 
 import ambroafb.countries.Country;
 import javafx.scene.control.ComboBox;
