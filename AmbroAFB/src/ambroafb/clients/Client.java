@@ -200,7 +200,6 @@ public class Client extends EditorPanelable{
     }
 
     public static Client getOneFromDB(int id) {
-        System.out.println("called: getOneFromDB(" + id +")");
         try {
             String data = GeneralConfig.getInstance().getServerClient().get("clients/" + id);
             ObjectMapper mapper = new ObjectMapper();
@@ -215,14 +214,11 @@ public class Client extends EditorPanelable{
     public static Client saveOneToDB(Client client) {
         if (client == null) return null; 
         try {
-            System.out.println("called: deleteOneFromDB(client), client = " + client.toString());
             String resource = "clients" + (client.recId > 0 ? "/" + client.recId : "");
             String method = client.recId > 0 ? "PUT" : "POST";
             ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             String client_str = mapper.writeValueAsString(client);
             
-            System.out.println(Thread.currentThread().getStackTrace()[1].getClassName() + " .saveOneToDB() client_str: " + client_str);
-
             String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, client_str);
             Client res = mapper.readValue(res_str, Client.class);
             client.copyFrom(res);
@@ -235,7 +231,6 @@ public class Client extends EditorPanelable{
     }
 
     public static boolean deleteOneFromDB(int id) {
-        System.out.println("called: deleteOneFromDB(" + id +")");
         try {
             GeneralConfig.getInstance().getServerClient().call("clients/" + id, "DELETE", null);
             return true;
@@ -440,12 +435,6 @@ public class Client extends EditorPanelable{
                                         this.fax.get().equals(other.getFax());
         boolean equalsPhone = comparePhones(this.phoneList, other.getPhoneList());
         return fieldsCompareResult && equalsPhone;
-    }
-    
-    private void printPhones(List<PhoneNumber> list){
-        list.stream().forEach((phone) -> {
-            System.out.println("phone: " + phone);
-        });
     }
     
     /**

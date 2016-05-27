@@ -49,7 +49,6 @@ public class ClientsController implements Initializable {
 
     public void reAssignTable(boolean isFirstTime) {
         JSONObject filterJson = new ClientFilter(stage).getResult();
-        System.out.println("Filter return JSON: " + filterJson + ":" + isFirstTime);
         if(filterJson == null){
             if(isFirstTime)
                 stage.close();

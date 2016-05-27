@@ -126,7 +126,6 @@ public class MainController implements Initializable {
             Platform.runLater(() -> {
                 AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
                 alert.showAlert();
-                System.out.println("error after");
             });
         }
     }
@@ -145,7 +144,6 @@ public class MainController implements Initializable {
             Platform.runLater(() -> {
                 AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
                 alert.showAlert();
-                System.out.println("errorr after");
             });
         }
     }
@@ -164,7 +162,6 @@ public class MainController implements Initializable {
             Platform.runLater(() -> {
                 AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
                 alert.showAlert();
-                System.out.println("errorr after");
             });
         }
     }

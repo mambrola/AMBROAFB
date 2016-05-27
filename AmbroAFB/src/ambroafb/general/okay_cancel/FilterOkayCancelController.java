@@ -41,9 +41,6 @@ public class FilterOkayCancelController implements Initializable {
     }
     @FXML
     private void cancel(ActionEvent event) {
-        
-        System.out.println("ambroafb.general.okay_cancel.FilterOkayCancelController.cancel: დააCancelა");
-        
         ((Filterable)okay.getScene().getProperties().get("controller")).setResult(false);
         ((Stage) okay.getScene().getWindow()).close();
     }
