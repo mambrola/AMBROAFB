@@ -42,6 +42,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -194,6 +196,20 @@ public class Client extends EditorPanelable{
             return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {
             });
         } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
+    }
+    
+    public static List<Client> getFilteredFromDB(JSONObject filter) {
+        try {
+            String data = GeneralConfig.getInstance().getServerClient().get(
+                    "clients/filter?dateFrom=" + filter.getString("dateBigger") + "&dateTo=" + filter.getString("dateLess")
+            );
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {
+            });
+        } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new ArrayList<>();
