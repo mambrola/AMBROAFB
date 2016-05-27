@@ -12,7 +12,7 @@ import ambroafb.general.ListEditor;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.PhoneNumber;
 import ambroafb.general.Utils;
-import ambroafb.general.country_combobox.CountryComboBox;
+import ambroafb.countries.combobox.CountryComboBox;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;

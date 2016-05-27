@@ -3,17 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.general.country_combobox;
+package ambroafb.countries.combobox;
 
 import ambroafb.AmbroAFB;
 import ambroafb.countries.Country;
 import ambroafb.general.GeneralConfig;
 import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 
@@ -24,7 +20,7 @@ import javafx.util.StringConverter;
 public class CountryComboBox extends ComboBox<Country> {
     
     public CountryComboBox(){
-        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/general/country_combobox/CountryComboBox.fxml"));
+        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/countries/combobox/CountryComboBox.fxml"));
         loader.setResources(GeneralConfig.getInstance().getBundle());
         loader.setRoot((ComboBox)this);
         loader.setController((ComboBox)this);

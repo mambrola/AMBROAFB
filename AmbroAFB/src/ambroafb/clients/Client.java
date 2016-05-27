@@ -51,7 +51,7 @@ import javafx.util.Callback;
 public class Client extends EditorPanelable{
 
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
-    public String password, payPal, www;
+    public String password, payPal, www, createdDate;
 
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private final SimpleBooleanProperty isJur;
