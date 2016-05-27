@@ -5,11 +5,7 @@
  */
 package ambroafb.countries.combobox;
 
-import ambroafb.AmbroAFB;
 import ambroafb.countries.Country;
-import ambroafb.general.GeneralConfig;
-import java.io.IOException;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 
@@ -20,13 +16,6 @@ import javafx.util.StringConverter;
 public class CountryComboBox extends ComboBox<Country> {
     
     public CountryComboBox(){
-        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/countries/combobox/CountryComboBox.fxml"));
-        loader.setResources(GeneralConfig.getInstance().getBundle());
-        loader.setRoot((ComboBox)this);
-        loader.setController((ComboBox)this);
-        try {
-            loader.load();
-        } catch (IOException exception) { throw new RuntimeException(exception); }
 
         this.setConverter(new StringConverter<Country>() {
             @Override

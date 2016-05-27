@@ -5,13 +5,7 @@
  */
 package ambroafb.clients.combobox;
 
-import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
-import ambroafb.general.GeneralConfig;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 
@@ -22,15 +16,6 @@ import javafx.util.StringConverter;
 public class ClientComboBox extends ComboBox<Client> {
     
     public ClientComboBox(){
-        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/clients/combobox/ClientComboBox.fxml"));
-        loader.setResources(GeneralConfig.getInstance().getBundle());
-        loader.setRoot((ComboBox)this);
-        loader.setController((ComboBox)this);
-        try {
-            loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(ClientComboBox.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
         setConverter(new StringConverter<Client>() {
             @Override
