@@ -47,12 +47,6 @@ public class ClientComboBox extends ComboBox<Client> {
                 return null;
             }
         });
-        
-        Client c = new Client();
-        c.setFirstName("dato");
-        c.setLastName("qobu");
-        c.setEmail("c@gmail.com");
-        getItems().add(c);
     }
     
     public void selectItem(Client client){
