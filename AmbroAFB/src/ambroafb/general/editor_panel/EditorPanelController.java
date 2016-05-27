@@ -151,7 +151,6 @@ public class EditorPanelController implements Initializable {
             filteredData.setPredicate(object -> {
                 return (newValue == null || newValue.isEmpty()|| object.toStringForSearch().contains(newValue.toLowerCase()));
             });
-
         });
         SortedList<EditorPanelable> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(table.comparatorProperty());
