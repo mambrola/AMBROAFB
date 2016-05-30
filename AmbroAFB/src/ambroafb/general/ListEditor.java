@@ -91,24 +91,24 @@ public class ListEditor<T extends Editable<String>> extends ComboBox<T> {
             }
         });
 
-        setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
-
-            @Override
-            public ListCell<T> call(ListView<T> param) {
-                return new ListCell<T>() {
-
-                    @Override
-                    protected void updateItem(T item, boolean empty) {
-                        super.updateItem(item, empty);
-                        textProperty().unbind();
-                        if (item != null && !empty) {
-                            textProperty().bind(item.getObservableString());
-                        }
-                    }
-
-                };
-            }
-        });
+//        setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
+//
+//            @Override
+//            public ListCell<T> call(ListView<T> param) {
+//                return new ListCell<T>() {
+//
+//                    @Override
+//                    protected void updateItem(T item, boolean empty) {
+//                        super.updateItem(item, empty);
+//                        textProperty().unbind();
+//                        if (item != null && !empty) {
+//                            textProperty().bind(item.getObservableString());
+//                        }
+//                    }
+//
+//                };
+//            }
+//        });
 
         addEventHandler(ActionEvent.ACTION, (ActionEvent event) -> {
             String text = getEditor().getText();
