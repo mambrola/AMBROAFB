@@ -10,7 +10,9 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.Filterable;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,8 +66,8 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
             return;
         jSonResult = new JSONObject();
         try {
-            jSonResult.put("dateBiger", dateBiger.getValue() == null ? LocalDate.MIN : dateBiger.getValue());
-            jSonResult.put("dateLess", dateLess.getValue() == null ? LocalDate.MAX : dateLess.getValue());
+            jSonResult.put("dateBigger", (dateBiger.getValue() == null ? "1970-01-01" : dateBiger.getValue()).toString());
+            jSonResult.put("dateLess", (dateLess.getValue() == null ? "9999-01-01" : dateLess.getValue()).toString());
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
     }
     
