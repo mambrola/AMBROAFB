@@ -6,6 +6,7 @@
 package ambroafb.general.editor_panel;
 
 import ambro.ATableView;
+import ambroafb.clients.Client;
 import ambroafb.general.Editable;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;

@@ -5,10 +5,14 @@
  */
 package ambroafb.phones;
 
+import ambroafb.phones.Phone;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.SingleSelectionModel;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 /**
@@ -21,23 +25,28 @@ public class PhoneComboBox extends ComboBox<Phone> {
     
     public PhoneComboBox(List<Phone> items, boolean isEditable){
         phoneComboBox = (PhoneComboBox)this;
+        
         if(isEditable){
             this.setEditable(true);
-            System.out.println("items.size: " + items.size());
-            this.getItems().addAll(items);            
+            this.getItems().addAll(items);
         } else {
             setViewableSetup();
-            this.setValue(items.get(0));
-            items.remove(0);
+//            this.setValue(items.get(0));
+//            items.remove(0);
+            System.out.println("items: " + items.size());
             this.getItems().addAll(items);
             disabledItems.addAll(items);
         }
-
+        
+//        setConverter();
+    }
+    
+    private void setConverter(){
         this.setConverter(new StringConverter<Phone>() {
             @Override
             public String toString(Phone object) {
                 if(object == null)
-                    return "დაამატე ნომერი";
+                    return "";
                 return object.getNumber();
             }
             @Override
@@ -50,8 +59,10 @@ public class PhoneComboBox extends ComboBox<Phone> {
                 } else {
                     selectedItem.setNumber(string);
                     phoneComboBox.getItems().remove(selectedIndex);
-                    phoneComboBox.getItems().add(selectedIndex, selectedItem);
-               }
+                    if(!string.equals(""))
+                        phoneComboBox.getItems().add(selectedIndex, selectedItem);
+                    phoneComboBox.setValue(null);
+                }
                 return selectedItem;
             }
         });
@@ -82,5 +93,9 @@ public class PhoneComboBox extends ComboBox<Phone> {
             } 
         }; 
         setSelectionModel(model); 
+    }
+
+    private void setEditableSetup() {
+        this.setEditable(true);
     }
 }

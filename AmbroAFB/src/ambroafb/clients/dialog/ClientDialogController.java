@@ -10,9 +10,10 @@ import ambroafb.countries.Country;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.ListEditor;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import ambroafb.general.PhoneNumber;
+import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
 import ambroafb.countries.*;
+import ambroafb.phones.PhoneComboBox;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
@@ -35,7 +36,7 @@ import javafx.scene.layout.VBox;
  */
 public class ClientDialogController implements Initializable {
     @FXML
-    private VBox formPane;
+    private VBox formPane, phonesContainer;
     @FXML
     private DatePicker openDate;
     @FXML
@@ -45,7 +46,7 @@ public class ClientDialogController implements Initializable {
     @FXML
     private TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
     @FXML
-    private ListEditor<PhoneNumber> phone;
+    private ListEditor<Phone> phone;
     @FXML
     private CountryComboBox country;
     @FXML
@@ -98,9 +99,15 @@ public class ClientDialogController implements Initializable {
     }
     
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
+        boolean editable = true;
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
-            setDisableComponents();
+//            setDisableComponents();
+            editable = false;
         }
+        System.out.println("size: " + client.getPhoneList().size());
+        PhoneComboBox phonesCombobox = new PhoneComboBox(client.getPhoneList(), editable);
+        phonesContainer.getChildren().add(phonesCombobox);
+        
         okayCancelController.setButtonsFeatures(buttonType);
     }
     
@@ -125,12 +132,15 @@ public class ClientDialogController implements Initializable {
      */
     private void setDisableComponents(){
         focusTraversableNodes.forEach((Node t) -> {
-            if (t != phone) {
-                t.setDisable(true);
-            }
+//            if (t != phone) {
+//                t.setDisable(true);
+//            }
+            if(t == phonesContainer){
+                System.out.println("equallllllssssss");
+            } 
         });
-        if (phone.getItems().size() > 0)
-            phone.setEditable(false); //ეს რატომღაც ჭედავდა, მგონია array-ს ინდექსი და რამეო
+//        if (phone.getItems().size() > 0)
+//            phone.setEditable(false); //ეს რატომღაც ჭედავდა, მგონია array-ს ინდექსი და რამეო
     }
 
     

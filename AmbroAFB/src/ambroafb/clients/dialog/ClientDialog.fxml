@@ -12,6 +12,7 @@
 <?import ambroafb.general.okay_cancel.* ?>
 <?import ambroafb.general.*?>
 <?import ambroafb.countries.* ?>
+<?import ambroafb.custom_combobox.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/clientdialog.css" 
                         xmlns:fx="http://javafx.com/fxml/1" 
@@ -53,7 +54,7 @@
                         <Label text="%email" /> 
                         <TextField fx:id="email" />
                     </VBox >
-                    <VBox >
+                    <VBox fx:id="phonesContainer">
                         <Label text="%phones" /> 
                         <ListEditor fx:id="phone" editable="true"/>
                     </VBox >

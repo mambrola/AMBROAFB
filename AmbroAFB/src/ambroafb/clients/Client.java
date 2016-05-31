@@ -11,7 +11,7 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
-import ambroafb.general.PhoneNumber;
+import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -91,7 +91,7 @@ public class Client extends EditorPanelable{
     private final SimpleStringProperty phoneNumbers;
 
     @JsonProperty("phoneNumbers")
-    private final ObservableList<PhoneNumber> phoneList;
+    private final ObservableList<Phone> phoneList;
 
     @AView.Column(title = "%fax", width = "80")
     private final SimpleStringProperty fax;
@@ -115,7 +115,7 @@ public class Client extends EditorPanelable{
         phoneNumbers = new SimpleStringProperty("");
         fax = new SimpleStringProperty("");
 
-        phoneList.addListener((ListChangeListener.Change<? extends PhoneNumber> c) -> {
+        phoneList.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
         });
         rebindPhoneNumbers();
@@ -153,10 +153,9 @@ public class Client extends EditorPanelable{
         setCity(other.getCity());
         setCountry(other.getCountry());
         setIDNumber(other.getIDNumber());
-        getPhoneList().setAll(
-                other.getPhoneList()
+        getPhoneList().setAll(other.getPhoneList()
                 .stream()
-                .map((PhoneNumber t) -> new PhoneNumber(t.getRecId(), t.getNumber()))
+                .map((Phone t) -> new Phone(t.getRecId(), t.getNumber()))
                 .collect(Collectors.toList())
         );
         setFax(other.getFax());
@@ -166,7 +165,7 @@ public class Client extends EditorPanelable{
         phoneNumbers.unbind();
         phoneNumbers.bind(phoneList
                 .stream()
-                .map(PhoneNumber::numberProperty)
+                .map(Phone::numberProperty)
                 .reduce(new SimpleStringProperty(""), (StringProperty t, StringProperty u) -> {
                     SimpleStringProperty p = new SimpleStringProperty();
                     p.bind(
@@ -349,7 +348,7 @@ public class Client extends EditorPanelable{
         return country.get();
     }
 
-    public ObservableList<PhoneNumber> getPhoneList() {
+    public ObservableList<Phone> getPhoneList() {
         return phoneList;
     }
 
@@ -415,7 +414,7 @@ public class Client extends EditorPanelable{
         this.IDNumber.set(IDNumber);
     }
 
-    public final void setPhoneList(Collection<PhoneNumber> phoneList) {
+    public final void setPhoneList(Collection<Phone> phoneList) {
         this.phoneList.setAll(phoneList);
     }
 
@@ -459,12 +458,12 @@ public class Client extends EditorPanelable{
      * @param otherPhoneList
      * @return 
      */
-    public boolean comparePhones(ObservableList<PhoneNumber> phoneList, ObservableList<PhoneNumber> otherPhoneList) {
+    public boolean comparePhones(ObservableList<Phone> phoneList, ObservableList<Phone> otherPhoneList) {
         if (phoneList.size() != otherPhoneList.size()) return false;
 
         for(int i = 0; i < phoneList.size(); i++){
-            PhoneNumber phone = phoneList.get(i);
-            PhoneNumber otherPhone = otherPhoneList.get(i);
+            Phone phone = phoneList.get(i);
+            Phone otherPhone = otherPhoneList.get(i);
             if ( !phone.getNumber().equals(otherPhone.getNumber()) ) return false;
         }
 

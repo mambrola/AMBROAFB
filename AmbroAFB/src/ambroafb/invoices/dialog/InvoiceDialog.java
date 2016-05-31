@@ -12,7 +12,7 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.ListEditor;
-import ambroafb.general.PhoneNumber;
+import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
 import ambroafb.invoices.Invoice;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class InvoiceDialog extends Stage implements Initializable {
     @FXML
     ComboBox<Country> country;
     @FXML
-    ListEditor<PhoneNumber> phone;
+    ListEditor<Phone> phone;
 //    @FXML
 //    OkayCancel okayCancel;
 
@@ -183,16 +183,16 @@ public class InvoiceDialog extends Stage implements Initializable {
         });
         country.getItems().addAll(Country.getAllFromDB());
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        phone.setConverter(new StringConverter<PhoneNumber>() {
+        phone.setConverter(new StringConverter<Phone>() {
 
             @Override
-            public String toString(PhoneNumber object) {
+            public String toString(Phone object) {
                 return object != null ? object.getNumber() : null;
             }
 
             @Override
-            public PhoneNumber fromString(String string) {
-                return new PhoneNumber(string);
+            public Phone fromString(String string) {
+                return new Phone(string);
             }
         });
         juridical.setOnAction(this::switchJuridical);
