@@ -57,7 +57,7 @@ public class ClientsController implements Initializable {
                 return; 
         }
         clients.clear();
-        Client.getAllFromDB().stream().forEach((client) -> {
+        Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {
             clients.add(client);
         });
     }

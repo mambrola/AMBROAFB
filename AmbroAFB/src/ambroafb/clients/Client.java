@@ -123,7 +123,7 @@ public class Client extends EditorPanelable{
         country.addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
             rebindCountry();
         });
-        rebindCountry();
+        countryDescrip.set(country.get().codeProperty().concat("   ").concat(country.get().nameProperty()).get());
     }
     
     @Override
