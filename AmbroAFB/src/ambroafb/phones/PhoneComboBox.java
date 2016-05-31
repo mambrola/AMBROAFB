@@ -8,6 +8,7 @@ package ambroafb.phones;
 import ambroafb.phones.Phone;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -20,25 +21,24 @@ import javafx.util.StringConverter;
  * @author dato
  */
 public class PhoneComboBox extends ComboBox<Phone> {
-    private ArrayList<Phone> disabledItems = new ArrayList<>();
-    private PhoneComboBox phoneComboBox;
+    private final ArrayList<Phone> disabledItems = new ArrayList<>();
+    private final PhoneComboBox phoneComboBox;
     
-    public PhoneComboBox(List<Phone> items, boolean isEditable){
+    public PhoneComboBox(ObservableList<Phone> items, boolean isEditable){
         phoneComboBox = (PhoneComboBox)this;
         
         if(isEditable){
             this.setEditable(true);
-            this.getItems().addAll(items);
+            this.setItems(items);
         } else {
             setViewableSetup();
-//            this.setValue(items.get(0));
-//            items.remove(0);
-            System.out.println("items: " + items.size());
-            this.getItems().addAll(items);
+            this.setValue(items.get(0));
+            items.remove(0);
+            this.setItems(items);
             disabledItems.addAll(items);
         }
         
-//        setConverter();
+        setConverter();
     }
     
     private void setConverter(){
@@ -95,7 +95,4 @@ public class PhoneComboBox extends ComboBox<Phone> {
         setSelectionModel(model); 
     }
 
-    private void setEditableSetup() {
-        this.setEditable(true);
-    }
 }

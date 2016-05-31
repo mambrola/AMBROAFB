@@ -104,7 +104,8 @@ public class EditorPanelController implements Initializable {
     
     @FXML
     private void add(ActionEvent e) {
-        EditorPanelable result = (EditorPanelable) ((Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, null, EDITOR_BUTTON_TYPE.ADD)).getResult();
+        Dialogable dialogable = (Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, null, EDITOR_BUTTON_TYPE.ADD);
+        EditorPanelable result = (EditorPanelable)dialogable.getResult();
         if (result != null) {
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
             result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 

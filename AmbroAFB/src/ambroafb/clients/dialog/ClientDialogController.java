@@ -46,8 +46,6 @@ public class ClientDialogController implements Initializable {
     @FXML
     private TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
     @FXML
-    private ListEditor<Phone> phone;
-    @FXML
     private CountryComboBox country;
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -86,7 +84,6 @@ public class ClientDialogController implements Initializable {
             zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
             city.textProperty().bindBidirectional(client.cityProperty());
             country.valueProperty().bindBidirectional(client.countryProperty());
-            phone.setItems(client.getPhoneList());
         }
     }
     
@@ -101,10 +98,9 @@ public class ClientDialogController implements Initializable {
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
         boolean editable = true;
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
-//            setDisableComponents();
+            setDisableComponents();
             editable = false;
         }
-        System.out.println("size: " + client.getPhoneList().size());
         PhoneComboBox phonesCombobox = new PhoneComboBox(client.getPhoneList(), editable);
         phonesContainer.getChildren().add(phonesCombobox);
         
@@ -132,15 +128,8 @@ public class ClientDialogController implements Initializable {
      */
     private void setDisableComponents(){
         focusTraversableNodes.forEach((Node t) -> {
-//            if (t != phone) {
-//                t.setDisable(true);
-//            }
-            if(t == phonesContainer){
-                System.out.println("equallllllssssss");
-            } 
+            t.setDisable(true);
         });
-//        if (phone.getItems().size() > 0)
-//            phone.setEditable(false); //ეს რატომღაც ჭედავდა, მგონია array-ს ინდექსი და რამეო
     }
 
     
