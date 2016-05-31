@@ -83,7 +83,20 @@ public class Phone implements Editable<String> {
     }
 
     public boolean equals(Phone other){
-        return this.number.get().equals(other.getNumber());
+        String thisNumber = getOnlyDigitsFrom(number.get());
+        String otherNumber = getOnlyDigitsFrom(other.getNumber());
+        return thisNumber.equals(otherNumber);
+    }
+    
+    private String getOnlyDigitsFrom(String phone){
+        String result = "";
+        for(int i = 0; i < phone.length(); i++){
+            char ch = phone.charAt(i);
+            if (Character.isDigit(ch)){
+                result += ch;
+            }
+        }
+        return result;
     }
     
     public int compare(Phone other){

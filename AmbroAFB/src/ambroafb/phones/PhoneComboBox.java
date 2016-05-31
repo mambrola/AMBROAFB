@@ -8,6 +8,8 @@ package ambroafb.phones;
 import ambroafb.phones.Phone;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -30,6 +32,7 @@ public class PhoneComboBox extends ComboBox<Phone> {
         if(isEditable){
             this.setEditable(true);
             this.setItems(items);
+            makeInputWithoutLetters();
         } else {
             setViewableSetup();
             this.setValue(items.get(0));
@@ -39,6 +42,30 @@ public class PhoneComboBox extends ComboBox<Phone> {
         }
         
         setConverter();
+    }
+    
+    private void makeInputWithoutLetters() {
+        getEditor().textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println(newValue);
+                if (containsLetter(newValue)){
+                    getEditor().setText(oldValue);
+                }
+            }
+            
+            private boolean containsLetter(String input){
+                boolean result = false;
+                for (int i = 0; i < input.length(); i++) {
+                    char ch = input.charAt(i);
+                    if (Character.isLetter(ch)){
+                        result = true;
+                        break;
+                    }
+                }
+                return result;
+            }
+        });
     }
     
     private void setConverter(){
@@ -55,7 +82,8 @@ public class PhoneComboBox extends ComboBox<Phone> {
                 Phone selectedItem = phoneComboBox.getSelectionModel().getSelectedItem();
                 if(selectedIndex < 0){
                     selectedItem = new Phone(string);
-                    phoneComboBox.getItems().add(0, selectedItem);
+                    if (!containsPhone(selectedItem))
+                        phoneComboBox.getItems().add(0, selectedItem);
                 } else {
                     selectedItem.setNumber(string);
                     phoneComboBox.getItems().remove(selectedIndex);
@@ -66,6 +94,17 @@ public class PhoneComboBox extends ComboBox<Phone> {
                 return selectedItem;
             }
         });
+    }
+    
+    private boolean containsPhone(Phone p){
+        boolean result = false;
+        for (Phone phone : getItems()) {
+            if (phone.equals(p)){
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     private void setViewableSetup() {
