@@ -8,6 +8,8 @@ package ambroafb.phones;
 import ambroafb.phones.Phone;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -25,9 +27,12 @@ import javafx.util.StringConverter;
 public class PhoneComboBox extends ComboBox<Phone> {
     private final ArrayList<Phone> disabledItems = new ArrayList<>();
     private final PhoneComboBox phoneComboBox;
+    private final String regEx = "^\\+?[0-9. ()-]{1,30}$";
+    private final Pattern pattern;
     
     public PhoneComboBox(ObservableList<Phone> items, boolean isEditable){
         phoneComboBox = (PhoneComboBox)this;
+        pattern = Pattern.compile(regEx);
         
         if(isEditable){
             this.setEditable(true);
@@ -48,21 +53,12 @@ public class PhoneComboBox extends ComboBox<Phone> {
         getEditor().textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (containsLetter(newValue)){
-                    getEditor().setText(oldValue);
-                }
-            }
-            
-            private boolean containsLetter(String input){
-                boolean result = false;
-                for (int i = 0; i < input.length(); i++) {
-                    char ch = input.charAt(i);
-                    if (Character.isLetter(ch)){
-                        result = true;
-                        break;
+                if(!newValue.isEmpty()){
+                    Matcher matcher = pattern.matcher(newValue);
+                    if(!matcher.matches()){
+                        getEditor().setText(oldValue);
                     }
                 }
-                return result;
             }
         });
     }
