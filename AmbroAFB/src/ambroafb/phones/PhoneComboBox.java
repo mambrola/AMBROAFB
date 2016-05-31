@@ -31,13 +31,13 @@ public class PhoneComboBox extends ComboBox<Phone> {
         
         if(isEditable){
             this.setEditable(true);
-            this.setItems(items);
+            this.setItems(items); // setItems() -> because of adding new phone into the combobox, it also add in client.
             makeInputWithoutLetters();
         } else {
             setViewableSetup();
             this.setValue(items.get(0));
             items.remove(0);
-            this.setItems(items);
+            this.getItems().addAll(items); // setItems() will cause problem because of "remove(0)"
             disabledItems.addAll(items);
         }
         
@@ -48,7 +48,6 @@ public class PhoneComboBox extends ComboBox<Phone> {
         getEditor().textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                System.out.println(newValue);
                 if (containsLetter(newValue)){
                     getEditor().setText(oldValue);
                 }

@@ -76,6 +76,10 @@ public class Phone implements Editable<String> {
     public ObservableValue<String> getObservableString() {
         return number;
     }
+    
+    public StringProperty getNumberProperty(){
+        return number;
+    }
 
     @Override
     public String toString() {
