@@ -126,6 +126,28 @@ public class Client extends EditorPanelable{
         countryDescrip.set(country.get().codeProperty().concat("   ").concat(country.get().nameProperty()).get());
     }
     
+    private void rebindPhoneNumbers() {
+        phoneNumbers.unbind();
+        phoneNumbers.bind(phoneList
+                .stream()
+                .map(Phone::numberProperty)
+                .reduce(new SimpleStringProperty(""), (StringProperty t, StringProperty u) -> {
+                    SimpleStringProperty p = new SimpleStringProperty();
+                    p.bind(
+                            t.concat(
+                                    Bindings.createStringBinding(() -> t.get().isEmpty() ? "" : ", ", t.isEmpty())
+                            ).concat(u));
+                    return p;
+                }));
+    }
+
+    private void rebindCountry() {
+        countryDescrip.unbind();
+        if (country.get() != null) {
+            countryDescrip.bind(country.get().codeProperty().concat("   ").concat(country.get().nameProperty()));
+        }
+    }
+    
     @Override
     public Client cloneWithoutID() {
         Client clone = new Client();
@@ -161,27 +183,7 @@ public class Client extends EditorPanelable{
         setFax(other.getFax());
     }
 
-    private void rebindPhoneNumbers() {
-        phoneNumbers.unbind();
-        phoneNumbers.bind(phoneList
-                .stream()
-                .map(Phone::numberProperty)
-                .reduce(new SimpleStringProperty(""), (StringProperty t, StringProperty u) -> {
-                    SimpleStringProperty p = new SimpleStringProperty();
-                    p.bind(
-                            t.concat(
-                                    Bindings.createStringBinding(() -> t.get().isEmpty() ? "" : ", ", t.isEmpty())
-                            ).concat(u));
-                    return p;
-                }));
-    }
-
-    private void rebindCountry() {
-        countryDescrip.unbind();
-        if (country.get() != null) {
-            countryDescrip.bind(country.get().codeProperty().concat("   ").concat(country.get().nameProperty()));
-        }
-    }
+    
 
     @Override
     public String toString() {
@@ -453,7 +455,7 @@ public class Client extends EditorPanelable{
     }
     
     /**
-     * The method compares clients phones list and pays attention size and order of them.
+     * The method compares clients phones list and pays attention size and order of them. გადასატანია ტელეფონებში
      * @param phoneList
      * @param otherPhoneList
      * @return 

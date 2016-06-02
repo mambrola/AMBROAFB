@@ -62,7 +62,7 @@ public class ClientsController implements Initializable {
         });
     }
 
-    void informAboutStage(Stage stage) {
+    void setStage(Stage stage) {
         this.stage = stage;
     }
 }
