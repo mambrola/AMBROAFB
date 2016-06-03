@@ -24,8 +24,11 @@ public class Clients extends Stage {
     
     private ClientsController clientsController;
     
+    private Stage currentStage;
+    
     public Clients() {
         try {
+            currentStage = (Stage)this;
             Scene scene = Utils.createScene("/ambroafb/clients/Clients.fxml");
             clientsController = (ClientsController) scene.getProperties().get("controller");
             clientsController.setStage((Stage)this);
@@ -33,11 +36,12 @@ public class Clients extends Stage {
         } catch (IOException ex) { Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex); }
         initOwner(AmbroAFB.mainStage);
         
-        String title = GeneralConfig.getInstance().getTitleFor("clients_stage_title");
-        setTitle(title);
+        setTitle(GeneralConfig.getInstance().getTitleFor("clients_stage_title"));
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
+            String fullTitle = Utils.getFullTitleOfStage(currentStage);
+            Utils.removeShowingStageByTitle(fullTitle);
+            currentStage.close();
             event.consume();
         });
     }

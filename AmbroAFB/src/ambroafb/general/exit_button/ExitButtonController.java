@@ -20,11 +20,11 @@ import javafx.stage.WindowEvent;
  * @author tabramishvili
  */
 public class ExitButtonController implements Initializable {
-
+    
     @FXML
-    private void exit(ActionEvent e) {
+    public void exit(ActionEvent e) {
         System.out.println("exit Down");
-        Stage stage = (Stage) (((Node) e.getSource()).getScene().getWindow());
+        Stage stage = (Stage) (((Node)e.getSource()).getScene().getWindow());
         stage.fireEvent(new WindowEvent(
                 stage,
                 WindowEvent.WINDOW_CLOSE_REQUEST
