@@ -50,14 +50,11 @@ public class PhoneComboBox extends ComboBox<Phone> {
     }
     
     private void makeInputWithoutLetters() {
-        getEditor().textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(!newValue.isEmpty()){
-                    Matcher matcher = pattern.matcher(newValue);
-                    if(!matcher.matches()){
-                        getEditor().setText(oldValue);
-                    }
+        getEditor().textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if(!newValue.isEmpty()){
+                Matcher matcher = pattern.matcher(newValue);
+                if(!matcher.matches()){
+                    getEditor().setText(oldValue);
                 }
             }
         });
