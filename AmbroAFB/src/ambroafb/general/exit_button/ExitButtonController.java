@@ -21,13 +21,15 @@ import javafx.stage.WindowEvent;
  * @author tabramishvili
  */
 public class ExitButtonController implements Initializable {
-
+    
     @FXML
+
     private Button button;
     
     @FXML
     private void exit(ActionEvent e) {
         Stage stage = (Stage) (button.getScene().getWindow());
+
         stage.fireEvent(new WindowEvent(
                 stage,
                 WindowEvent.WINDOW_CLOSE_REQUEST
