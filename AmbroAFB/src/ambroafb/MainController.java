@@ -109,9 +109,9 @@ public class MainController implements Initializable {
     @FXML
     private void clients(ActionEvent event) {
         Clients clients = new Clients();
-        String stageTitle = clients.getTitle();
-        if (!Utils.isStageAlreadyShow(stageTitle)){
-            Utils.saveShowingStageByTitle(stageTitle);
+        String stageFullTitle = Utils.getFullTitleOfStage(clients);
+        if (!Utils.isStageAlreadyShow(stageFullTitle)){
+            Utils.saveShowingStageByTitle(stageFullTitle);
             clients.show();
             clients.getClientsController().reAssignTable(true);
         }

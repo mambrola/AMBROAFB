@@ -424,6 +424,16 @@ public class Utils {
         SHOWING_SCENES.remove(title);
     }
     
+    public static String getFullTitleOfStage(Stage currentStage){
+        Stage owner = (Stage) currentStage.getOwner();
+        if (owner == null) {
+            return currentStage.getTitle();
+        }
+        else {
+            return getFullTitleOfStage(owner) + "/" + currentStage.getTitle();
+        }
+    }
+    
     /**
      * It can use instead of 'Class.forName(getClassName("objectClass"))'
      * @param name - name of class for example: Client, Country.

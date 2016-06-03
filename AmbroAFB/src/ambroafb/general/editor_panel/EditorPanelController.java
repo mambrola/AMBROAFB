@@ -165,10 +165,10 @@ public class EditorPanelController implements Initializable {
     }
     
     private boolean isAlreadyShow(Dialogable dialog) {
-        String title = dialog.getTitle();
-        boolean result = Utils.isStageAlreadyShow(title);
+        String fullTitle = dialog.getFullTitle();
+        boolean result = Utils.isStageAlreadyShow(fullTitle);
         if (!result){
-            Utils.saveShowingStageByTitle(title);
+            Utils.saveShowingStageByTitle(fullTitle);
         }
         return result;
     }
@@ -181,6 +181,10 @@ public class EditorPanelController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
+    }
+    
+    public Button getExitButton(){
+        return exit;
     }
     
     public void setTableDataList(TableView<EditorPanelable> table, ObservableList<EditorPanelable> list){

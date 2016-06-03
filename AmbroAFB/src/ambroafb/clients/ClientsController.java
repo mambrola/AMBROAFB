@@ -65,4 +65,8 @@ public class ClientsController implements Initializable {
     void setStage(Stage stage) {
         this.stage = stage;
     }
+    
+    public EditorPanelController getEditorPanelController(){
+        return editorPanelController;
+    }
 }

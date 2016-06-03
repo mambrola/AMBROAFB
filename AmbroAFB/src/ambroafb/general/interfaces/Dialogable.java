@@ -17,6 +17,6 @@ public interface Dialogable {
     public Scene getScene();
     public void showAndWait();
     public void operationCanceled();
-    public String getTitle();
+    public String getFullTitle();
     public void setOwnerStage(Stage owner);
 }

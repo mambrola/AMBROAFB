@@ -78,5 +78,10 @@ public class ClientDialog extends Stage implements Dialogable {
             initOwner(owner);
         }
     }
+
+    @Override
+    public String getFullTitle() {
+        return Utils.getFullTitleOfStage(this);
+    }
     
 }
