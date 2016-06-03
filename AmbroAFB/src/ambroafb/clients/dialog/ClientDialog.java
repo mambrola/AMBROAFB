@@ -30,7 +30,7 @@ public class ClientDialog extends Stage implements Dialogable {
 
     private ClientDialogController dialogController;
     
-    public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType) {
+    public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         
         Client clientObject;
         if (object == null)
@@ -58,6 +58,7 @@ public class ClientDialog extends Stage implements Dialogable {
         
         String title = GeneralConfig.getInstance().getTitleFor("client_dialog_stage_title");
         setTitle(title);
+        initOwner(owner);
     }
     
     @Override
@@ -69,13 +70,6 @@ public class ClientDialog extends Stage implements Dialogable {
     @Override
     public void operationCanceled(){
         client = null;
-    }
-
-    @Override
-    public void setOwnerStage(Stage owner) {
-        if (owner != null) {
-            initOwner(owner);
-        }
     }
 
     @Override

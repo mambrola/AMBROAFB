@@ -6,6 +6,7 @@
 package ambroafb.clients;
 
 import ambroafb.clients.filter.ClientFilter;
+import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -51,10 +52,12 @@ public class ClientsController implements Initializable {
         JSONObject filterJson = new ClientFilter(stage).getResult();
         System.out.println("ambroafb.clients.ClientsController.reAssignTable()" + filterJson);
         if(filterJson == null){
-            if(isFirstTime)
+            if(isFirstTime){
                 stage.close();
-            else
-                return; 
+                String fullTitle = Utils.getFullTitleOfStage(stage);
+                Utils.removeShowingStageAndSubstages(fullTitle);
+            }
+            return;
         }
         clients.clear();
         Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {

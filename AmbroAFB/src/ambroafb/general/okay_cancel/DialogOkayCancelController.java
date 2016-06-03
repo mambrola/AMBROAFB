@@ -113,6 +113,6 @@ public class DialogOkayCancelController implements Initializable {
     private void changeStageShowingStatus(){
         Stage currentStage = (Stage) okay.getScene().getWindow();
         String title = Utils.getFullTitleOfStage(currentStage);
-        Utils.removeShowingStageByTitle(title);
+        Utils.removeShowingStageAndSubstages(title);
     }
 }

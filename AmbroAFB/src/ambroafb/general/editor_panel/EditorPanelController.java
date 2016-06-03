@@ -61,8 +61,8 @@ public class EditorPanelController implements Initializable {
             selected.copyFrom(real);
         }
         Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
-        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.DELETE);
-        dialog.setOwnerStage((Stage)exit.getScene().getWindow());
+        Stage ownerStage = (Stage) exit.getScene().getWindow();
+        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.DELETE, ownerStage);
         
         boolean isAlreadyShowDialog = isAlreadyShow(dialog);
         if (isAlreadyShowDialog) return;
@@ -85,8 +85,8 @@ public class EditorPanelController implements Initializable {
         }
         EditorPanelable backup = selected.cloneWithID();
         Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
-        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.EDIT);
-        dialog.setOwnerStage((Stage)exit.getScene().getWindow());
+        Stage ownerStage = (Stage) exit.getScene().getWindow();
+        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.EDIT, ownerStage);
         
         boolean isAlreadyShowDialog = isAlreadyShow(dialog);
         if (isAlreadyShowDialog) return;
@@ -107,8 +107,8 @@ public class EditorPanelController implements Initializable {
             selected.copyFrom(real);
         }
         Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
-        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.VIEW);
-        dialog.setOwnerStage((Stage)exit.getScene().getWindow());
+        Stage ownerStage = (Stage) exit.getScene().getWindow();
+        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.VIEW, ownerStage);
         
         boolean isAlreadyShowDialog = isAlreadyShow(dialog);
         if (isAlreadyShowDialog) return;
@@ -118,8 +118,7 @@ public class EditorPanelController implements Initializable {
     
     @FXML
     private void add(ActionEvent e) {
-        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, null, EDITOR_BUTTON_TYPE.ADD);
-        dialog.setOwnerStage((Stage)exit.getScene().getWindow());
+        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, null, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
         
         boolean isAlreadyShowDialog = isAlreadyShow(dialog);
         if (isAlreadyShowDialog) return;
@@ -138,8 +137,8 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void addBySample(ActionEvent e) {
         EditorPanelable selected = ((EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem()).cloneWithoutID();
-        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.ADD);
-        dialog.setOwnerStage((Stage)exit.getScene().getWindow());
+        Stage ownerStage = (Stage) exit.getScene().getWindow();
+        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.ADD, ownerStage);
         
         boolean isAlreadyShowDialog = isAlreadyShow(dialog);
         if (isAlreadyShowDialog) return;
@@ -164,11 +163,11 @@ public class EditorPanelController implements Initializable {
     
     private boolean isAlreadyShow(Dialogable dialog) {
         String fullTitle = dialog.getFullTitle();
-        boolean result = Utils.isStageAlreadyShow(fullTitle);
-        if (!result){
-            Utils.saveShowingStageByTitle(fullTitle);
+        Stage stage = Utils.getStageByFullTitle(fullTitle);
+        if (stage == null){
+            Utils.saveShowingStageByTitle(fullTitle, stage);
         }
-        return result;
+        return stage != null;
     }
        
     /**
