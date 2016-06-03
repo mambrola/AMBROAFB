@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -22,9 +23,11 @@ import javafx.stage.WindowEvent;
 public class ExitButtonController implements Initializable {
 
     @FXML
+    private Button button;
+    
+    @FXML
     private void exit(ActionEvent e) {
-        System.out.println("exit Down");
-        Stage stage = (Stage) (((Node) e.getSource()).getScene().getWindow());
+        Stage stage = (Stage) (button.getScene().getWindow());
         stage.fireEvent(new WindowEvent(
                 stage,
                 WindowEvent.WINDOW_CLOSE_REQUEST

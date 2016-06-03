@@ -31,7 +31,6 @@ public class ClientDialog extends Stage implements Dialogable {
     private ClientDialogController dialogController;
     
     public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType) {
-        super();
         
         Client clientObject;
         if (object == null)

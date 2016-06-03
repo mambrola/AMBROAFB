@@ -11,6 +11,7 @@ import ambroafb.general.Utils;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -33,13 +34,12 @@ public class Clients extends Stage {
         } catch (IOException ex) { Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex); }
         initOwner(AmbroAFB.mainStage);
         
-        String title = GeneralConfig.getInstance().getTitleFor("clients_stage_title");
-        setTitle(title);
+        setTitle(GeneralConfig.getInstance().getTitleFor("clients_stage_title"));
         
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-            event.consume();
-        });
+//        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
+//            clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
+//            event.consume();
+//        });
     }
     
     public ClientsController getClientsController(){
