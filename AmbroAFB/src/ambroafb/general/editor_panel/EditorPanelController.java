@@ -6,8 +6,6 @@
 package ambroafb.general.editor_panel;
 
 import ambro.ATableView;
-import ambroafb.clients.Client;
-import ambroafb.general.Editable;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -183,9 +181,9 @@ public class EditorPanelController implements Initializable {
         
     }
     
-    public Button getExitButton(){
-        return exit;
-    }
+//    public Button getExitButton(){
+//        return exit;
+//    }
     
     public void setTableDataList(TableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
         tableData = list;

@@ -24,11 +24,11 @@ public class ExitButtonController implements Initializable {
     
     @FXML
 
-    private Button button;
+    private Button exitButton;
     
     @FXML
     private void exit(ActionEvent e) {
-        Stage stage = (Stage) (button.getScene().getWindow());
+        Stage stage = (Stage) (exitButton.getScene().getWindow());
 
         stage.fireEvent(new WindowEvent(
                 stage,
