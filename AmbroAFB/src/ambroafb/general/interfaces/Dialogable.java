@@ -6,6 +6,7 @@
 package ambroafb.general.interfaces;
 
 import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  *
@@ -16,4 +17,6 @@ public interface Dialogable {
     public Scene getScene();
     public void showAndWait();
     public void operationCanceled();
+    public String getTitle();
+    public void setOwnerStage(Stage owner);
 }

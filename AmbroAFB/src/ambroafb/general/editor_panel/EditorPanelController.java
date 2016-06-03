@@ -25,6 +25,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.stage.Stage;
 
 
 /**
@@ -63,6 +64,11 @@ public class EditorPanelController implements Initializable {
         }
         Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
         Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.DELETE);
+        dialog.setOwnerStage((Stage)exit.getScene().getWindow());
+        
+        boolean isAlreadyShowDialog = isAlreadyShow(dialog);
+        if (isAlreadyShowDialog) return;
+        
         EditorPanelable result = dialog.getResult();
         if (result != null){
             boolean isDeleted = (boolean) Utils.getInvokedClassMethod(objectClass, "deleteOneFromDB", new Class[]{int.class}, null, selected.recId);
@@ -82,6 +88,11 @@ public class EditorPanelController implements Initializable {
         EditorPanelable backup = selected.cloneWithID();
         Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
         Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.EDIT);
+        dialog.setOwnerStage((Stage)exit.getScene().getWindow());
+        
+        boolean isAlreadyShowDialog = isAlreadyShow(dialog);
+        if (isAlreadyShowDialog) return;
+        
         EditorPanelable result = dialog.getResult();
         if (result == null){
             selected.copyFrom(backup);
@@ -99,13 +110,23 @@ public class EditorPanelController implements Initializable {
         }
         Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
         Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.VIEW);
+        dialog.setOwnerStage((Stage)exit.getScene().getWindow());
+        
+        boolean isAlreadyShowDialog = isAlreadyShow(dialog);
+        if (isAlreadyShowDialog) return;
+        
         dialog.showAndWait();
     }
     
     @FXML
     private void add(ActionEvent e) {
-        Dialogable dialogable = (Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, null, EDITOR_BUTTON_TYPE.ADD);
-        EditorPanelable result = (EditorPanelable)dialogable.getResult();
+        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, null, EDITOR_BUTTON_TYPE.ADD);
+        dialog.setOwnerStage((Stage)exit.getScene().getWindow());
+        
+        boolean isAlreadyShowDialog = isAlreadyShow(dialog);
+        if (isAlreadyShowDialog) return;
+        
+        EditorPanelable result = (EditorPanelable)dialog.getResult();
         if (result != null) {
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
             result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
@@ -119,7 +140,13 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void addBySample(ActionEvent e) {
         EditorPanelable selected = ((EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem()).cloneWithoutID();
-        EditorPanelable result = (EditorPanelable) ((Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.ADD)).getResult();
+        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, selected, EDITOR_BUTTON_TYPE.ADD);
+        dialog.setOwnerStage((Stage)exit.getScene().getWindow());
+        
+        boolean isAlreadyShowDialog = isAlreadyShow(dialog);
+        if (isAlreadyShowDialog) return;
+        
+        EditorPanelable result = (EditorPanelable) dialog.getResult();
         Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
         result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
         if (result != null) {
@@ -135,6 +162,15 @@ public class EditorPanelController implements Initializable {
         Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{boolean.class}, outerController, false);
         selectOneAgain(selected);
         refresh.setSelected(false);
+    }
+    
+    private boolean isAlreadyShow(Dialogable dialog) {
+        String title = dialog.getTitle();
+        boolean result = Utils.isStageAlreadyShow(title);
+        if (!result){
+            Utils.saveShowingStageByTitle(title);
+        }
+        return result;
     }
        
     /**

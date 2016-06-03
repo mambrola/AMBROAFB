@@ -7,6 +7,7 @@ package ambroafb.clients.dialog;
 
 import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -49,13 +50,15 @@ public class ClientDialog extends Stage implements Dialogable {
             dialogController.setBackupClient(this.clientBackup);
             this.setScene(currentScene);
         } catch (IOException ex) { Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex); }
-        initOwner(AmbroAFB.mainStage);
         setResizable(false);
 
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             event.consume();
         });
+        
+        String title = GeneralConfig.getInstance().getTitleFor("client_dialog_stage_title");
+        setTitle(title);
     }
     
     @Override
@@ -67,6 +70,13 @@ public class ClientDialog extends Stage implements Dialogable {
     @Override
     public void operationCanceled(){
         client = null;
+    }
+
+    @Override
+    public void setOwnerStage(Stage owner) {
+        if (owner != null) {
+            initOwner(owner);
+        }
     }
     
 }

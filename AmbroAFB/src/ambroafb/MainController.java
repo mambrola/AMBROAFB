@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
@@ -108,8 +109,12 @@ public class MainController implements Initializable {
     @FXML
     private void clients(ActionEvent event) {
         Clients clients = new Clients();
-        clients.show();
-        clients.getClientsController().reAssignTable(true);
+        String stageTitle = clients.getTitle();
+        if (!Utils.isStageAlreadyShow(stageTitle)){
+            Utils.saveShowingStageByTitle(stageTitle);
+            clients.show();
+            clients.getClientsController().reAssignTable(true);
+        }
     }
     
     @FXML 

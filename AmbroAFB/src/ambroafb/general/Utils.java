@@ -21,7 +21,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -406,6 +408,20 @@ public class Utils {
         }
         System.out.println("result: " + result);
         return result;
+    }
+    
+    private static final Set<String> SHOWING_SCENES = new HashSet<>();
+    
+    public static void saveShowingStageByTitle(String title){
+        SHOWING_SCENES.add(title);
+    }
+    
+    public static boolean isStageAlreadyShow(String title){
+        return SHOWING_SCENES.contains(title);
+    }
+    
+    public static void removeShowingStageByTitle(String title){
+        SHOWING_SCENES.remove(title);
     }
     
     /**
