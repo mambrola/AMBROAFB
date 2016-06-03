@@ -6,11 +6,14 @@
 package ambroafb.phones;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.util.StringConverter;
 
@@ -35,12 +38,16 @@ public class PhoneComboBox extends ComboBox<Phone> {
         }
         else {
             setViewableSetup();
-            if (!items.isEmpty()){
-                this.setValue(items.get(0));
-                items.remove(0);
+            List<Phone> tmItems = new ArrayList<>();
+            items.stream().forEach((ph) -> {
+                tmItems.add(ph);
+            });
+            if (!tmItems.isEmpty()){
+                this.setValue(tmItems.get(0));
+                tmItems.remove(0);
             }
-            this.getItems().addAll(items); // setItems() will cause problem because of "remove(0)"
-            disabledItems.addAll(items);
+            this.getItems().addAll(tmItems); // setItems() will cause problem because of "remove(0)"
+            disabledItems.addAll(tmItems);
         }
         
         setConverter();
