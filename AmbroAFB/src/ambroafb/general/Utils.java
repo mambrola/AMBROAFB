@@ -421,6 +421,7 @@ public class Utils {
         Stage result = null;
         if (SHOWING_STAGES.containsKey(title)){
             result = SHOWING_STAGES.get(title);
+            result.requestFocus();
         }
         return result;
     }
