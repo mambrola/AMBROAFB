@@ -105,7 +105,7 @@ public class MainController implements Initializable {
     
     @FXML
     private void clients(ActionEvent event) {
-        Clients clients = new Clients();
+        Clients clients = new Clients(AmbroAFB.mainStage);
         String stageFullTitle = Utils.getFullTitleOfStage(clients);
         if (Utils.getStageByFullTitle(stageFullTitle) == null){
             Utils.saveShowingStageByTitle(stageFullTitle, clients);

@@ -26,7 +26,7 @@ public class Clients extends Stage {
     
     private Stage currentStage;
     
-    public Clients() {
+    public Clients(Stage owner) {
         try {
             currentStage = (Stage)this;
             Scene scene = Utils.createScene("/ambroafb/clients/Clients.fxml");
@@ -34,7 +34,7 @@ public class Clients extends Stage {
             clientsController.setStage((Stage)this);
             this.setScene(scene);
         } catch (IOException ex) { Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex); }
-        initOwner(AmbroAFB.mainStage);
+        initOwner(owner);
         
         setTitle(GeneralConfig.getInstance().getTitleFor("clients_stage_title"));
         
