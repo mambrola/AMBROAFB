@@ -101,8 +101,10 @@ public class ClientDialogController implements Initializable {
             setDisableComponents();
             editable = false;
         }
-        PhoneComboBox phonesCombobox = new PhoneComboBox(client.getPhoneList(), editable);
-        phonesContainer.getChildren().add(phonesCombobox);
+        if (client != null){
+            PhoneComboBox phonesCombobox = new PhoneComboBox(client.getPhoneList(), editable);
+            phonesContainer.getChildren().add(phonesCombobox);
+        }
         
         okayCancelController.setButtonsFeatures(buttonType);
     }

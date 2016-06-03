@@ -5,19 +5,13 @@
  */
 package ambroafb.phones;
 
-import ambroafb.phones.Phone;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.SingleSelectionModel;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 /**
@@ -38,10 +32,13 @@ public class PhoneComboBox extends ComboBox<Phone> {
             this.setEditable(true);
             this.setItems(items); // setItems() -> because of adding new phone into the combobox, it also add in client.
             makeInputWithoutLetters();
-        } else {
+        }
+        else {
             setViewableSetup();
-            this.setValue(items.get(0));
-            items.remove(0);
+            if (!items.isEmpty()){
+                this.setValue(items.get(0));
+                items.remove(0);
+            }
             this.getItems().addAll(items); // setItems() will cause problem because of "remove(0)"
             disabledItems.addAll(items);
         }
