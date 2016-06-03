@@ -5,15 +5,14 @@
  */
 package ambroafb.general.exit_button;
 
+import ambroafb.general.Utils;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -23,17 +22,14 @@ import javafx.stage.WindowEvent;
 public class ExitButtonController implements Initializable {
     
     @FXML
-
-    private Button button;
+    private Button exitButton;
     
     @FXML
     private void exit(ActionEvent e) {
-        Stage stage = (Stage) (button.getScene().getWindow());
-
-        stage.fireEvent(new WindowEvent(
-                stage,
-                WindowEvent.WINDOW_CLOSE_REQUEST
-        ));
+        Stage stage = (Stage) exitButton.getScene().getWindow();
+        String stageFullTitle = Utils.getFullTitleOfStage(stage);
+        Utils.removeShowingStageAndSubstages(stageFullTitle);
+        stage.close();
     }
 
     /**

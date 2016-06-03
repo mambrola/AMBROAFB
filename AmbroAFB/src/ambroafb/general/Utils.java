@@ -22,6 +22,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.FileHandler;
@@ -410,18 +411,32 @@ public class Utils {
         return result;
     }
     
-    private static final Set<String> SHOWING_SCENES = new HashSet<>();
+    private static final Map<String, Stage> SHOWING_STAGES = new HashMap<>();
     
-    public static void saveShowingStageByTitle(String title){
-        SHOWING_SCENES.add(title);
+    public static void saveShowingStageByTitle(String title, Stage stage){
+        SHOWING_STAGES.put(title, stage);
     }
     
-    public static boolean isStageAlreadyShow(String title){
-        return SHOWING_SCENES.contains(title);
+    public static Stage getStageByFullTitle(String title){
+        Stage result = null;
+        if (SHOWING_STAGES.containsKey(title)){
+            result = SHOWING_STAGES.get(title);
+        }
+        return result;
     }
     
-    public static void removeShowingStageByTitle(String title){
-        SHOWING_SCENES.remove(title);
+    public static void removeShowingStageAndSubstages(String showingStageFullTitle){
+        List<String> stagesTitles = new ArrayList<>();
+        for (String elemStageFullTitle : SHOWING_STAGES.keySet()) {
+            if (elemStageFullTitle.startsWith(showingStageFullTitle)){
+                // save titles. Remove from map on this line, will cause error in key iteration.
+                stagesTitles.add(elemStageFullTitle);
+            }
+        }
+        
+        for (String title : stagesTitles){
+            SHOWING_STAGES.remove(title);
+        }
     }
     
     public static String getFullTitleOfStage(Stage currentStage){

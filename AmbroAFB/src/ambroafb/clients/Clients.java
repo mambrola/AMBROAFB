@@ -11,7 +11,6 @@ import ambroafb.general.Utils;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -41,9 +40,7 @@ public class Clients extends Stage {
         
 
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            String fullTitle = Utils.getFullTitleOfStage(currentStage);
-            Utils.removeShowingStageByTitle(fullTitle);
-            currentStage.close();
+            clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             event.consume();
         });
 

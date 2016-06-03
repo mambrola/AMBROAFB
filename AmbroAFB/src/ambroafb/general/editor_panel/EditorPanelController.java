@@ -6,8 +6,6 @@
 package ambroafb.general.editor_panel;
 
 import ambro.ATableView;
-import ambroafb.clients.Client;
-import ambroafb.general.Editable;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -166,11 +164,11 @@ public class EditorPanelController implements Initializable {
     
     private boolean isAlreadyShow(Dialogable dialog) {
         String fullTitle = dialog.getFullTitle();
-        boolean result = Utils.isStageAlreadyShow(fullTitle);
-        if (!result){
-            Utils.saveShowingStageByTitle(fullTitle);
+        Stage stage = Utils.getStageByFullTitle(fullTitle);
+        if (stage == null){
+            Utils.saveShowingStageByTitle(fullTitle, stage);
         }
-        return result;
+        return stage != null;
     }
        
     /**
