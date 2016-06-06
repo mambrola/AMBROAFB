@@ -180,9 +180,9 @@ public class EditorPanelController implements Initializable {
         
     }
     
-//    public Button getExitButton(){
-//        return exit;
-//    }
+    public Button getExitButton(){
+        return exit;
+    }
     
     public void setTableDataList(TableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
         tableData = list;
