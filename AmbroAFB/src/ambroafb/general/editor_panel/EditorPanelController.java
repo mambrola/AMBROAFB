@@ -10,6 +10,7 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
@@ -24,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
 
 
 /**
@@ -54,110 +56,147 @@ public class EditorPanelController implements Initializable {
     
     @FXML
     private void delete(ActionEvent e) {
-        EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-        Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
-        EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.recId);
-        if (real != null) {
-            selected.copyFrom(real);
+        Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Dialogable.LOCAL_NAME);
+        if (dialogStage == null || !dialogStage.isShowing()){
+            EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
+            Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+            EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.recId);
+            if (real != null) {
+                selected.copyFrom(real);
+            }
+            Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
+            Stage ownerStage = (Stage) exit.getScene().getWindow();
+            Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.DELETE, ownerStage);
+
+            EditorPanelable result = dialog.getResult();
+            if (result != null){
+                boolean isDeleted = (boolean) Utils.getInvokedClassMethod(objectClass, "deleteOneFromDB", new Class[]{int.class}, null, selected.recId);
+                if(isDeleted)
+                    tableData.remove(selected);
+            }
         }
-        Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
-        Stage ownerStage = (Stage) exit.getScene().getWindow();
-        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.DELETE, ownerStage);
-        
-        boolean isAlreadyShowDialog = isAlreadyShow(dialog);
-        if (isAlreadyShowDialog) return;
-        
-        EditorPanelable result = dialog.getResult();
-        if (result != null){
-            boolean isDeleted = (boolean) Utils.getInvokedClassMethod(objectClass, "deleteOneFromDB", new Class[]{int.class}, null, selected.recId);
-            if(isDeleted)
-                tableData.remove(selected);
+        else {
+            dialogStage.requestFocus();
         }
     }
     
     @FXML
     private void edit(ActionEvent e) {
-        EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-        Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
-        EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.recId);
-        if (real != null) {
-            selected.copyFrom(real);
+        Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Dialogable.LOCAL_NAME);
+        if (dialogStage == null || !dialogStage.isShowing()){
+            EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
+            Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+            EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.recId);
+            if (real != null) {
+                selected.copyFrom(real);
+            }
+            EditorPanelable backup = selected.cloneWithID();
+            Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
+            Stage ownerStage = (Stage) exit.getScene().getWindow();
+            Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.EDIT, ownerStage);
+
+            boolean isAlreadyShowDialog = isAlreadyShow(dialog);
+            if (isAlreadyShowDialog) return;
+
+            EditorPanelable result = dialog.getResult();
+            if (result == null){
+                selected.copyFrom(backup);
+            } else {
+                 Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
+            }
         }
-        EditorPanelable backup = selected.cloneWithID();
-        Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
-        Stage ownerStage = (Stage) exit.getScene().getWindow();
-        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.EDIT, ownerStage);
-        
-        boolean isAlreadyShowDialog = isAlreadyShow(dialog);
-        if (isAlreadyShowDialog) return;
-        
-        EditorPanelable result = dialog.getResult();
-        if (result == null){
-            selected.copyFrom(backup);
-        } else {
-             Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
+        else {
+            dialogStage.requestFocus();
         }
     }
     
     @FXML
     private void view(ActionEvent e) {
-        EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
-        EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT)), "getOneFromDB", new Class[]{int.class}, null, selected.recId);
-        if (real != null) {
-            selected.copyFrom(real);
+        Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Dialogable.LOCAL_NAME);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            System.out.println("dialog stage: " + dialogStage);
+            EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
+            EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT)), "getOneFromDB", new Class[]{int.class}, null, selected.recId);
+            if (real != null) {
+                selected.copyFrom(real);
+            }
+            Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
+            Stage ownerStage = (Stage) exit.getScene().getWindow();
+            Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.VIEW, ownerStage);
+
+            dialog.showAndWait();
         }
-        Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
-        Stage ownerStage = (Stage) exit.getScene().getWindow();
-        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.VIEW, ownerStage);
-        
-        boolean isAlreadyShowDialog = isAlreadyShow(dialog);
-        if (isAlreadyShowDialog) return;
-        
-        dialog.showAndWait();
+        else {
+            dialogStage.requestFocus();
+        }
     }
     
     @FXML
     private void add(ActionEvent e) {
-        Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, null, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
-        
-        boolean isAlreadyShowDialog = isAlreadyShow(dialog);
-        if (isAlreadyShowDialog) return;
-        
-        EditorPanelable result = (EditorPanelable)dialog.getResult();
-        if (result != null) {
-            Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
-            result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
+        Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Dialogable.LOCAL_NAME);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, null, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
 
+            boolean isAlreadyShowDialog = isAlreadyShow(dialog);
+            if (isAlreadyShowDialog) return;
+
+            EditorPanelable result = (EditorPanelable)dialog.getResult();
             if (result != null) {
-                tableData.add(result);
+                Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+                result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
+
+                if (result != null) {
+                    tableData.add(result);
+                }
             }
+        }
+        else {
+            dialogStage.requestFocus();
         }
     }
     
     @FXML
     private void addBySample(ActionEvent e) {
-        EditorPanelable selected = ((EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem()).cloneWithoutID();
-        Stage ownerStage = (Stage) exit.getScene().getWindow();
-        Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.ADD, ownerStage);
-        
-        boolean isAlreadyShowDialog = isAlreadyShow(dialog);
-        if (isAlreadyShowDialog) return;
-        
-        EditorPanelable result = (EditorPanelable) dialog.getResult();
-        Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
-        result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
-        if (result != null) {
-            tableData.add(result);
-        }    
+        Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Dialogable.LOCAL_NAME);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            EditorPanelable selected = ((EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem()).cloneWithoutID();
+            Stage ownerStage = (Stage) exit.getScene().getWindow();
+            Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.ADD, ownerStage);
+
+            boolean isAlreadyShowDialog = isAlreadyShow(dialog);
+            if (isAlreadyShowDialog) return;
+
+            EditorPanelable result = (EditorPanelable) dialog.getResult();
+            Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+            result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
+            if (result != null) {
+                tableData.add(result);
+            }
+        }
+        else {
+            dialogStage.requestFocus();
+        }
     }
     
     @FXML
     private void refresh(ActionEvent e) {
-        ATableView table = (ATableView)exit.getScene().lookup("#table");
-        EditorPanelable selected = (EditorPanelable)table.getSelectionModel().getSelectedItem();
-        Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
-        Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{boolean.class}, outerController, false);
-        selectOneAgain(selected);
+        Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage filterStage = Utils.getStageFor(editorPanelSceneStage, Filterable.LOCAL_NAME);
+        if (filterStage == null || !filterStage.isShowing()){
+            ATableView table = (ATableView)exit.getScene().lookup("#table");
+            EditorPanelable selected = (EditorPanelable)table.getSelectionModel().getSelectedItem();
+            Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
+            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{boolean.class}, outerController, false);
+            selectOneAgain(selected);
+        }
+        else {
+            filterStage.requestFocus();
+        }
         refresh.setSelected(false);
     }
     
@@ -165,7 +204,7 @@ public class EditorPanelController implements Initializable {
         String fullTitle = dialog.getFullTitle();
         Stage stage = Utils.getStageByFullTitle(fullTitle);
         if (stage == null){
-            Utils.saveShowingStageByTitle(fullTitle, stage);
+            Utils.saveShowingStageByPath(fullTitle, stage);
         }
         return stage != null;
     }

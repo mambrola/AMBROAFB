@@ -60,13 +60,13 @@ public class DialogOkayCancelController implements Initializable {
                 okay.setOnAction((ActionEvent event) -> {
                     if(new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
                         ((Stage) okay.getScene().getWindow()).close();
-                        changeStageShowingStatus();
+//                        changeStageShowingStatus();
                     }
                 });
                 cancel.setOnAction((ActionEvent event) -> {
                     operationCanceled();
                     ((Stage) okay.getScene().getWindow()).close();
-                    changeStageShowingStatus();
+//                    changeStageShowingStatus();
                 });
                 break;
             case EDIT:
@@ -74,7 +74,7 @@ public class DialogOkayCancelController implements Initializable {
                 okay.setText(type.equals(EDITOR_BUTTON_TYPE.ADD) ? "Add" : "Save");
                 okay.setOnAction((ActionEvent event) -> {
                     ((Stage) okay.getScene().getWindow()).close();
-                    changeStageShowingStatus();
+//                    changeStageShowingStatus();
                 });
                 alertText = "Close without saving changes?";    
                 cancel.setOnAction((ActionEvent event) -> {
@@ -85,7 +85,7 @@ public class DialogOkayCancelController implements Initializable {
                     if(!anyFieldWasChanged || new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
                         operationCanceled();
                         ((Stage) okay.getScene().getWindow()).close();
-                        changeStageShowingStatus();
+//                        changeStageShowingStatus();
                     }
                 });
                 break;
@@ -93,12 +93,12 @@ public class DialogOkayCancelController implements Initializable {
                 okay.setOnAction((ActionEvent event) -> {
                     operationCanceled();
                     ((Stage) okay.getScene().getWindow()).close();
-                    changeStageShowingStatus();
+//                    changeStageShowingStatus();
                 });
                 cancel.setOnAction((ActionEvent event) -> {
                     operationCanceled();
                     ((Stage) okay.getScene().getWindow()).close();
-                    changeStageShowingStatus();
+//                    changeStageShowingStatus();
                 });
                 cancel.setVisible(false);
         }
@@ -110,9 +110,9 @@ public class DialogOkayCancelController implements Initializable {
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(DialogOkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
     }
     
-    private void changeStageShowingStatus(){
-        Stage currentStage = (Stage) okay.getScene().getWindow();
-        String title = Utils.getFullTitleOfStage(currentStage);
-        Utils.removeShowingStageAndSubstages(title);
-    }
+//    private void changeStageShowingStatus(){
+//        Stage currentStage = (Stage) okay.getScene().getWindow();
+//        String title = Utils.getFullTitleOfStage(currentStage);
+//        Utils.removeShowingStageAndSubstages(title);
+//    }
 }

@@ -18,5 +18,6 @@ public interface Dialogable {
     public void showAndWait();
     public void operationCanceled();
     public String getFullTitle();
-//    public void setOwnerStage(Stage owner);
+
+    public static final String LOCAL_NAME = "/Dialog";
 }

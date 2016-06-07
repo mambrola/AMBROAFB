@@ -27,10 +27,13 @@ import javafx.stage.WindowEvent;
 public class ClientDialog extends Stage implements Dialogable {
     
     public Client client, clientBackup;
-
+    
     private ClientDialogController dialogController;
     
     public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+        String ownerPath = Utils.getPathForStage(owner);
+        String clientsDialogPath = ownerPath + Dialogable.LOCAL_NAME;
+        Utils.saveShowingStageByPath(clientsDialogPath, (Stage)this);
         
         Client clientObject;
         if (object == null)

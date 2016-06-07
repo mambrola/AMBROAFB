@@ -7,6 +7,7 @@ package ambroafb.clients.filter;
 
 import ambroafb.AmbroAFB;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Filterable;
 import java.io.IOException;
 import java.net.URL;
@@ -40,6 +41,10 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
     private JSONObject jSonResult;
     
     public ClientFilter(Stage owner) {
+        String ownerPath = Utils.getPathForStage(owner);
+        String clientFilterPath = ownerPath + Filterable.LOCAL_NAME;
+        Utils.saveShowingStageByPath(clientFilterPath, (Stage)this);
+        
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));
         try {

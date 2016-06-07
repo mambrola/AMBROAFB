@@ -105,12 +105,19 @@ public class MainController implements Initializable {
     
     @FXML
     private void clients(ActionEvent event) {
-        Clients clients = new Clients(AmbroAFB.mainStage);
-        String stageFullTitle = Utils.getFullTitleOfStage(clients);
-        if (Utils.getStageByFullTitle(stageFullTitle) == null){
-            Utils.saveShowingStageByTitle(stageFullTitle, clients);
+        String mainStagePath = Utils.getPathForStage(AmbroAFB.mainStage);
+        String clientsStagePath = mainStagePath + "/Clients";
+        Stage clientsStage = Utils.getStageForPath(clientsStagePath);
+        if(clientsStage == null){
+            Clients clients = new Clients(AmbroAFB.mainStage);
             clients.show();
             clients.getClientsController().reAssignTable(true);
+        }
+        else if(!clientsStage.isShowing()){
+            Utils.removeByStage(clientsStage);
+        }
+        else {
+            clientsStage.requestFocus();
         }
     }
     

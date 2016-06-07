@@ -42,6 +42,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.commons.collections.BidiMap;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
 
 /**
  *
@@ -411,10 +413,52 @@ public class Utils {
         return result;
     }
     
+    
+    
     private static final Map<String, Stage> SHOWING_STAGES = new HashMap<>();
     
-    public static void saveShowingStageByTitle(String title, Stage stage){
-        SHOWING_STAGES.put(title, stage);
+    private static final BidiMap bidmap = new DualHashBidiMap();
+    
+    public static void saveShowingStageByPath(String title, Stage stage){
+        bidmap.put(title, stage);
+    }
+    
+    public static int getMapSize(){
+        return bidmap.size();
+    }
+    
+    public static String getPathForStage(Stage stage){
+        return (String)bidmap.getKey(stage);
+    }
+    
+    public static Stage getStageForPath(String path){
+       return (Stage) bidmap.get(path);
+    }
+    
+    public static void removeAlsoSubstagesByPath(String path){
+        List<String> pathes = new ArrayList<>();
+        bidmap.keySet().stream().forEach((key) -> {
+            if (((String)key).startsWith(path)){
+                System.out.println("amosashleli pattth: " +   key);
+                pathes.add((String) key);
+            }
+        });
+        pathes.stream().forEach((currPath) -> {
+            bidmap.remove((String) currPath);
+        });
+    }
+    
+    public static void removeByStage(Stage stage){
+        String path = (String) bidmap.getKey(stage);
+        System.out.println("<-utils: remove stage method-> currStage path: " + path);
+        Utils.removeAlsoSubstagesByPath(path);
+    }
+    
+    public static Stage getStageFor(Stage owner, String substageLocalName){
+        String ownerPath = getPathForStage(owner);
+        String substagePath = ownerPath + substageLocalName;
+        Stage substage = getStageForPath(substagePath);
+        return substage;
     }
     
     public static Stage getStageByFullTitle(String title){
