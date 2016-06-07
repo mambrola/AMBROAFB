@@ -113,7 +113,6 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Dialogable.LOCAL_NAME);
         if(dialogStage == null || !dialogStage.isShowing()){
-            System.out.println("dialog stage: " + dialogStage);
             EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
             EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT)), "getOneFromDB", new Class[]{int.class}, null, selected.recId);
             if (real != null) {

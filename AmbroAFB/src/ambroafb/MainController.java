@@ -108,9 +108,10 @@ public class MainController implements Initializable {
     @FXML
     private void clients(ActionEvent event) {
         String mainStagePath = Utils.getPathForStage(AmbroAFB.mainStage);
-        String clientsStagePath = mainStagePath + "/Clients";
+        String clientsStagePath = mainStagePath + "/" + Clients.class.getSimpleName();
+        
         Stage clientsStage = Utils.getStageForPath(clientsStagePath);
-        if(clientsStage == null){
+        if(clientsStage == null || !clientsStage.isShowing()){
             Clients clients = new Clients(AmbroAFB.mainStage);
             clients.show();
             

@@ -5,8 +5,6 @@
  */
 package ambroafb.clients;
 
-import ambroafb.AmbroAFB;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -27,7 +25,7 @@ public class Clients extends Stage {
     public Clients(Stage owner) {
         try {
             String ownerPath = Utils.getPathForStage(owner);
-            String clientsStagePath = ownerPath + "/Clients";
+            String clientsStagePath = ownerPath + "/" + Clients.class.getSimpleName();
             Utils.saveShowingStageByPath(clientsStagePath, (Stage)this);
             
             Scene scene = Utils.createScene("/ambroafb/clients/Clients.fxml");
