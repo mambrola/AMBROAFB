@@ -6,6 +6,7 @@
 package ambroafb;
 
 import ambroafb.clients.Clients;
+import ambroafb.clients.filter.ClientFilter;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -20,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 /**
  *
@@ -111,10 +113,11 @@ public class MainController implements Initializable {
         if(clientsStage == null){
             Clients clients = new Clients(AmbroAFB.mainStage);
             clients.show();
+            
+//            ClientFilter filter = new ClientFilter(clients);
+//            JSONObject json = filter.getResult();
             clients.getClientsController().reAssignTable(true);
-        }
-        else if(!clientsStage.isShowing()){
-            Utils.removeByStage(clientsStage);
+//            clients.close();
         }
         else {
             clientsStage.requestFocus();

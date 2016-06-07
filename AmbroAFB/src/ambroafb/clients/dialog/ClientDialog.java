@@ -53,15 +53,13 @@ public class ClientDialog extends Stage implements Dialogable {
             this.setScene(currentScene);
         } catch (IOException ex) { Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex); }
         setResizable(false);
+        initOwner(owner);
 
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             event.consume();
         });
         
-        String title = GeneralConfig.getInstance().getTitleFor("client_dialog_stage_title");
-        setTitle(title);
-        initOwner(owner);
     }
     
     @Override
@@ -75,9 +73,4 @@ public class ClientDialog extends Stage implements Dialogable {
         client = null;
     }
 
-    @Override
-    public String getFullTitle() {
-        return Utils.getFullTitleOfStage(this);
-    }
-    
 }

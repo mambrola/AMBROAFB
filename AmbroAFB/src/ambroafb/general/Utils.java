@@ -382,16 +382,74 @@ public class Utils {
         return Bindings.when(prop.isNull()).then("").otherwise(prop);
     }
 
-    public static String readStream(InputStream stream) throws IOException {
-        StringBuilder response = new StringBuilder();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(stream))) {
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+    private static final BidiMap bidmap = new DualHashBidiMap();
+    
+    /**
+     * The function saves stage and its path into bidirectional map
+     * @param path  - owner path plus current stage local name.
+     * @param stage - current stage
+     */
+    public static void saveShowingStageByPath(String path, Stage stage){
+        bidmap.put(path, stage);
+    }
+    
+    /**
+     * The function returns path for the given stage.
+     * @param stage - current stage
+     * @return 
+     */
+    public static String getPathForStage(Stage stage){
+        return (String)bidmap.getKey(stage);
+    }
+    
+    /**
+     * The function returns stage for the given path
+     * @param path - full path for stage (ex: main/Clients/Dialog).
+     * @return
+     */
+    public static Stage getStageForPath(String path){
+       return (Stage) bidmap.get(path);
+    }
+    
+    /**
+     * The function removes stage for the given path and also removes its subStages.
+     * The function needs a helper collection to save removable object in it,
+     * because of don't mess an iterator of map.
+     * @param path - full path for stage  (ex: main/Clients/Dialog).
+     */
+    public static void removeAlsoSubstagesByPath(String path){
+        List<String> pathes = new ArrayList<>();
+        bidmap.keySet().stream().forEach((key) -> {
+            if (((String)key).startsWith(path)){
+                pathes.add((String) key);
             }
-        }
-
-        return response.toString();
+        });
+        pathes.stream().forEach((currPath) -> {
+            bidmap.remove((String) currPath);
+        });
+    }
+    
+    /**
+     * The function removes stage from bidirectional map 
+     * and use "removeAlsoSubstagesByPath" method for it.
+     * @param stage - which must remove
+     */
+    public static void removeByStage(Stage stage){
+        String path = (String) bidmap.getKey(stage);
+        Utils.removeAlsoSubstagesByPath(path);
+    }
+    
+    /**
+     * The function returns stage which associated for the given local name.
+     * @param owner             - owner of finding stage
+     * @param substageLocalName - local name of finding stage
+     * @return 
+     */
+    public static Stage getStageFor(Stage owner, String substageLocalName){
+        String ownerPath = getPathForStage(owner);
+        String substagePath = ownerPath + substageLocalName;
+        Stage substage = getStageForPath(substagePath);
+        return substage;
     }
     
     /**
@@ -411,87 +469,6 @@ public class Utils {
         }
         System.out.println("result: " + result);
         return result;
-    }
-    
-    
-    
-    private static final Map<String, Stage> SHOWING_STAGES = new HashMap<>();
-    
-    private static final BidiMap bidmap = new DualHashBidiMap();
-    
-    public static void saveShowingStageByPath(String title, Stage stage){
-        bidmap.put(title, stage);
-    }
-    
-    public static int getMapSize(){
-        return bidmap.size();
-    }
-    
-    public static String getPathForStage(Stage stage){
-        return (String)bidmap.getKey(stage);
-    }
-    
-    public static Stage getStageForPath(String path){
-       return (Stage) bidmap.get(path);
-    }
-    
-    public static void removeAlsoSubstagesByPath(String path){
-        List<String> pathes = new ArrayList<>();
-        bidmap.keySet().stream().forEach((key) -> {
-            if (((String)key).startsWith(path)){
-                System.out.println("amosashleli pattth: " +   key);
-                pathes.add((String) key);
-            }
-        });
-        pathes.stream().forEach((currPath) -> {
-            bidmap.remove((String) currPath);
-        });
-    }
-    
-    public static void removeByStage(Stage stage){
-        String path = (String) bidmap.getKey(stage);
-        System.out.println("<-utils: remove stage method-> currStage path: " + path);
-        Utils.removeAlsoSubstagesByPath(path);
-    }
-    
-    public static Stage getStageFor(Stage owner, String substageLocalName){
-        String ownerPath = getPathForStage(owner);
-        String substagePath = ownerPath + substageLocalName;
-        Stage substage = getStageForPath(substagePath);
-        return substage;
-    }
-    
-    public static Stage getStageByFullTitle(String title){
-        Stage result = null;
-        if (SHOWING_STAGES.containsKey(title)){
-            result = SHOWING_STAGES.get(title);
-            result.requestFocus();
-        }
-        return result;
-    }
-    
-    public static void removeShowingStageAndSubstages(String showingStageFullTitle){
-        List<String> stagesTitles = new ArrayList<>();
-        for (String elemStageFullTitle : SHOWING_STAGES.keySet()) {
-            if (elemStageFullTitle.startsWith(showingStageFullTitle)){
-                // save titles. Remove from map on this line, will cause error in key iteration.
-                stagesTitles.add(elemStageFullTitle);
-            }
-        }
-        
-        for (String title : stagesTitles){
-            SHOWING_STAGES.remove(title);
-        }
-    }
-    
-    public static String getFullTitleOfStage(Stage currentStage){
-        Stage owner = (Stage) currentStage.getOwner();
-        if (owner == null) {
-            return currentStage.getTitle();
-        }
-        else {
-            return getFullTitleOfStage(owner) + "/" + currentStage.getTitle();
-        }
     }
     
     /**

@@ -54,8 +54,6 @@ public class ClientsController implements Initializable {
         if(filterJson == null){
             if(isFirstTime){
                 stage.close();
-                String fullTitle = Utils.getFullTitleOfStage(stage);
-                Utils.removeShowingStageAndSubstages(fullTitle);
             }
             return;
         }

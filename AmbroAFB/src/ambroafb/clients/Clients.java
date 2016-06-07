@@ -37,9 +37,6 @@ public class Clients extends Stage {
         } catch (IOException ex) { Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex); }
         initOwner(owner);
         
-        setTitle(GeneralConfig.getInstance().getTitleFor("clients_stage_title"));
-        
-
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             event.consume();

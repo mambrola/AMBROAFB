@@ -25,7 +25,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
-import org.apache.commons.collections.bidimap.DualHashBidiMap;
 
 
 /**
@@ -97,9 +96,6 @@ public class EditorPanelController implements Initializable {
             Stage ownerStage = (Stage) exit.getScene().getWindow();
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.EDIT, ownerStage);
 
-            boolean isAlreadyShowDialog = isAlreadyShow(dialog);
-            if (isAlreadyShowDialog) return;
-
             EditorPanelable result = dialog.getResult();
             if (result == null){
                 selected.copyFrom(backup);
@@ -141,9 +137,6 @@ public class EditorPanelController implements Initializable {
         if(dialogStage == null || !dialogStage.isShowing()){
             Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, null, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
 
-            boolean isAlreadyShowDialog = isAlreadyShow(dialog);
-            if (isAlreadyShowDialog) return;
-
             EditorPanelable result = (EditorPanelable)dialog.getResult();
             if (result != null) {
                 Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
@@ -167,9 +160,6 @@ public class EditorPanelController implements Initializable {
             EditorPanelable selected = ((EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem()).cloneWithoutID();
             Stage ownerStage = (Stage) exit.getScene().getWindow();
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG)), new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.ADD, ownerStage);
-
-            boolean isAlreadyShowDialog = isAlreadyShow(dialog);
-            if (isAlreadyShowDialog) return;
 
             EditorPanelable result = (EditorPanelable) dialog.getResult();
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
@@ -200,15 +190,6 @@ public class EditorPanelController implements Initializable {
         refresh.setSelected(false);
     }
     
-    private boolean isAlreadyShow(Dialogable dialog) {
-        String fullTitle = dialog.getFullTitle();
-        Stage stage = Utils.getStageByFullTitle(fullTitle);
-        if (stage == null){
-            Utils.saveShowingStageByPath(fullTitle, stage);
-        }
-        return stage != null;
-    }
-       
     /**
      *
      * @param url
