@@ -6,11 +6,13 @@
 package ambroafb.general.editor_panel;
 
 import ambro.ATableView;
+import ambroafb.clients.Client;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.Filterable;
+import java.awt.BorderLayout;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
@@ -25,6 +27,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 
 /**
@@ -49,7 +52,7 @@ public class EditorPanelController implements Initializable {
     @FXML
     private TextField search;
 
-    private enum CLASS_TYPE {OBJECT, DIALOG, CONTROLLER};
+    private enum CLASS_TYPE {OBJECT, DIALOG, FILTER, CONTROLLER};
     
     private ObservableList<EditorPanelable> tableData;
     
@@ -179,8 +182,19 @@ public class EditorPanelController implements Initializable {
         if (filterStage == null || !filterStage.isShowing()){
             ATableView table = (ATableView)exit.getScene().lookup("#table");
             EditorPanelable selected = (EditorPanelable)table.getSelectionModel().getSelectedItem();
+ 
+            Class className = Utils.getClassByName(getClassName(CLASS_TYPE.FILTER));
+            Filterable filter = (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow());
+            JSONObject json = filter.getResult();
+            
+//            if(json != null){
+//                table.getItems().clear();
+//                Client.getFilteredFromDB(json).stream().forEach((client) -> {
+////                    table.getItems().add(client);
+//                });
+//            }
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
-            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{boolean.class}, outerController, false);
+            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{JSONObject.class}, outerController, json);
             selectOneAgain(selected);
         }
         else {
@@ -238,7 +252,7 @@ public class EditorPanelController implements Initializable {
                 rtrn = path + (type.equals(CLASS_TYPE.DIALOG) ? "dialog." : "") + "Country" + (type.equals(CLASS_TYPE.DIALOG) ? "Dialog" : "");
                 break;
             default:
-                rtrn = path + (type.equals(CLASS_TYPE.DIALOG) ? "dialog." : "") + className.substring(0, className.length() - 1) + (type.equals(CLASS_TYPE.DIALOG) ? "Dialog" : "");
+                rtrn = path + (type.equals(CLASS_TYPE.DIALOG) ? "dialog." : (type.equals(CLASS_TYPE.FILTER)) ? "filter." : "") + className.substring(0, className.length() - 1) + (type.equals(CLASS_TYPE.DIALOG) ? "Dialog" : (type.equals(CLASS_TYPE.FILTER)) ? "Filter" : "");
         }
         return rtrn;
     }

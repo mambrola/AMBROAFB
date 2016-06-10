@@ -384,6 +384,10 @@ public class Utils {
 
     private static final BidiMap bidmap = new DualHashBidiMap();
     
+    public static int getSize(){
+        return bidmap.size();
+    }
+    
     /**
      * The function saves stage and its path into bidirectional map
      * @param path  - owner path plus current stage local name.

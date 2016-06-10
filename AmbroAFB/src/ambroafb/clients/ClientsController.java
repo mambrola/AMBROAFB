@@ -48,19 +48,13 @@ public class ClientsController implements Initializable {
         editorPanelController.setTableDataList(table, clients);
     }
 
-    public void reAssignTable(boolean isFirstTime) {
-        JSONObject filterJson = new ClientFilter(stage).getResult();
-        System.out.println("ambroafb.clients.ClientsController.reAssignTable()" + filterJson);
-        if(filterJson == null){
-            if(isFirstTime){
-                stage.close();
-            }
-            return;
+    public void reAssignTable(JSONObject filterJson) {
+        if(filterJson != null){
+            clients.clear();
+            Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {
+                clients.add(client);
+            });
         }
-        clients.clear();
-        Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {
-            clients.add(client);
-        });
     }
 
     void setStage(Stage stage) {
