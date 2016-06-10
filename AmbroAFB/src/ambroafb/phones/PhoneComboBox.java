@@ -7,14 +7,11 @@ package ambroafb.phones;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.util.StringConverter;
 
