@@ -9,6 +9,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.GeneralConfig.Sizes;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
+import ambroafb.general.UtilsDB;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -36,6 +37,7 @@ public class AmbroAFB extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         mainStage = stage;
+        UtilsDB.initTables();
         Utils.saveShowingStageByPath("main", mainStage);
         Scene scene = Utils.createScene(Names.MAIN_FXML);
         stage.setScene(scene);

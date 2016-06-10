@@ -19,5 +19,6 @@ AmbroAFB/errors.log
 *.properties
 AmbroAFB/errors.log
 *.properties
-
+*.dat
+*.ctrl
 *.properties
