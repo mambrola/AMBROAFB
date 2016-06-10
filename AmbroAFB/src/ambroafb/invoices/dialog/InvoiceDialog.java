@@ -12,9 +12,8 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.ListEditor;
-import ambroafb.general.PhoneNumber;
+import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
-import ambroafb.general.okay_cancel.OkayCancel;
 import ambroafb.invoices.Invoice;
 import java.io.IOException;
 import java.net.URL;
@@ -63,9 +62,9 @@ public class InvoiceDialog extends Stage implements Initializable {
     @FXML
     ComboBox<Country> country;
     @FXML
-    ListEditor<PhoneNumber> phone;
-    @FXML
-    OkayCancel okayCancel;
+    ListEditor<Phone> phone;
+//    @FXML
+//    OkayCancel okayCancel;
 
     private boolean askClose = true;
 
@@ -182,28 +181,23 @@ public class InvoiceDialog extends Stage implements Initializable {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
-        try {
-            country.getItems().addAll(Country.getCountries());
-        } catch (KFZClient.KFZServerException | IOException ex) {
-            Logger.getLogger(InvoiceDialog.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.WARNING, ex, "Can't load countries").showAlert();
-        }
+        country.getItems().addAll(Country.getAllFromDB());
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        phone.setConverter(new StringConverter<PhoneNumber>() {
+        phone.setConverter(new StringConverter<Phone>() {
 
             @Override
-            public String toString(PhoneNumber object) {
+            public String toString(Phone object) {
                 return object != null ? object.getNumber() : null;
             }
 
             @Override
-            public PhoneNumber fromString(String string) {
-                return new PhoneNumber(string);
+            public Phone fromString(String string) {
+                return new Phone(string);
             }
         });
         juridical.setOnAction(this::switchJuridical);
-        okayCancel.setOnOkay(this::okay);
-        okayCancel.setOnCancel(this::cancel);
+//        okayCancel.setOnOkay(this::okay);
+//        okayCancel.setOnCancel(this::cancel);
         //System.out.println("client: " + client);
         
     }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<fx:root type="javafx.scene.layout.HBox" 
+         alignment="CENTER" 
+         xmlns:fx="http://javafx.com/fxml/1" >
+    <children>
+        <Button fx:id="saver">
+            <tooltip>
+                <Tooltip text="%save" />
+            </tooltip>
+            <graphic>
+                <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="/images/save.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+    </children>
+</fx:root>

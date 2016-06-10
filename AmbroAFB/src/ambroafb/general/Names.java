@@ -5,12 +5,14 @@
  */
 package ambroafb.general;
 
+import java.util.Enumeration;
+
 /**
  *
  * @author tabramishvili
  */
 public class Names {
-    public static final String MAIN_FXML = "/ambroafb/Main.fxml"; // "/ambroafb/new_account/NewAccount.fxml"; //
+    public static final String MAIN_FXML = "/ambroafb/Main.fxml"; // "/ambroafb/clients/Clients.fxml"; //"ambroafb/clients/filter/ClientFilter.fxml"; //
     public static final String MAIN_TITLE = "title_main";
     public static final String MAIN_LOGO = "/images/logo.png";
     
@@ -39,7 +41,10 @@ public class Names {
     public static final String GENERAL_CONFIGURATION_FILE_NAME = "config.ser";
     public static final String LOCKER_FILE_NAME = "locker.lck";
     
+    public static final String ALERT_CONFIRMATION_WINDOW_TITLE = "Confirmation_Alert";
     public static final String ALERT_ERROR_WINDOW_TITLE = "Error_Alert";
+    public static final String ALERT_INFORMATION_WINDOW_TITLE = "Information_Alert";
+    public static final String ALERT_WARNING_WINDOW_TITLE = "Warning_Alert";
     public static final String ERROR_BUTTON_CLICK = "Car_fines_second_view";
     public static final String CONFIGURATION_FILE_OR_CLASS_NOT_FOUND = "File_or_class_not_found";
     public static final String ERROR_CONFIGURATION = "Error_in_save_configurations";
@@ -55,5 +60,9 @@ public class Names {
     public static final String FONT = "Times New Roman GEO";
     
     public static final String DIALOG_WINDOW_TITLE = "Dialog";
+    
+    public static enum EDITOR_BUTTON_TYPE {
+        DELETE, EDIT, VIEW, ADD
+    } 
     
 }

@@ -10,18 +10,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root type="javafx.scene.layout.HBox" 
+<HBox
          alignment="CENTER_RIGHT" 
          spacing="50.0" 
          stylesheets="/styles/css/okaycancel.css" 
-         xmlns:fx="http://javafx.com/fxml/1" >
+         xmlns:fx="http://javafx.com/fxml/1" 
+         fx:controller="ambroafb.general.okay_cancel.DialogOkayCancelController">
     <children>
         <Button fx:id="okay" styleClass="middle" text="OK" >
             <tooltip>
                 <Tooltip text="%ok" />
             </tooltip>
         </Button>
-        <Button fx:id="cancel" styleClass="middle" text="Cencel"  >
+        <Button fx:id="cancel" styleClass="middle" text="Cancel"  >
             <tooltip>
                 <Tooltip text="%cancel" />
             </tooltip>
@@ -30,4 +31,4 @@
     <padding>
         <Insets bottom="30.0" right="50.0" top="30.0" />
     </padding>
-</fx:root>
+</HBox>

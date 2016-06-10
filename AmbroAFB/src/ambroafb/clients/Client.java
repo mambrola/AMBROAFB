@@ -8,12 +8,12 @@ package ambroafb.clients;
 import ambro.AView;
 import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
-import ambroafb.general.Editable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
-import ambroafb.general.PhoneNumber;
+import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
+import ambroafb.phones.PhoneComboBox;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -43,15 +43,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
  * @author mambroladze
  */
+
 public class Client extends EditorPanelable{
 
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
-    public String password, payPal, www;
+    public String password, payPal, www, createdDate, status;
 
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private final SimpleBooleanProperty isJur;
@@ -89,7 +92,7 @@ public class Client extends EditorPanelable{
     private final SimpleStringProperty phoneNumbers;
 
     @JsonProperty("phoneNumbers")
-    private final ObservableList<PhoneNumber> phoneList;
+    private final ObservableList<Phone> phoneList;
 
     @AView.Column(title = "%fax", width = "80")
     private final SimpleStringProperty fax;
@@ -97,22 +100,23 @@ public class Client extends EditorPanelable{
     public Client() {
         isJur =             new SimpleBooleanProperty();
         isRez =             new SimpleBooleanProperty();
-        firstName =         new SimpleStringProperty();
-        lastName =          new SimpleStringProperty();
+        firstName =         new SimpleStringProperty("");
+        lastName =          new SimpleStringProperty("");
         descrip = Utils.avoidNull(firstName).concat(" ").concat(Utils.avoidNull(lastName));
-        email =             new SimpleStringProperty();
-        address =           new SimpleStringProperty();
-        zipCode =           new SimpleStringProperty();
-        city =              new SimpleStringProperty();
+        email =             new SimpleStringProperty("");
+        address =           new SimpleStringProperty("");
+        zipCode =           new SimpleStringProperty("");
+        city =              new SimpleStringProperty("");
         fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
         country =           new SimpleObjectProperty<>();
-        countryDescrip =    new SimpleStringProperty();
-        IDNumber =          new SimpleStringProperty();
+        country.set(new Country("GE", "Georgia"));
+        countryDescrip =    new SimpleStringProperty("");
+        IDNumber =          new SimpleStringProperty("");
         phoneList = FXCollections.observableArrayList();
-        phoneNumbers = new SimpleStringProperty();
-        fax = new SimpleStringProperty();
+        phoneNumbers = new SimpleStringProperty("");
+        fax = new SimpleStringProperty("");
 
-        phoneList.addListener((ListChangeListener.Change<? extends PhoneNumber> c) -> {
+        phoneList.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
         });
         rebindPhoneNumbers();
@@ -120,14 +124,35 @@ public class Client extends EditorPanelable{
         country.addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
             rebindCountry();
         });
-        rebindCountry();
+        countryDescrip.set(country.get().codeProperty().concat("   ").concat(country.get().nameProperty()).get());
+    }
+    
+    private void rebindPhoneNumbers() {
+        phoneNumbers.unbind();
+        phoneNumbers.bind(phoneList
+                .stream()
+                .map(Phone::numberProperty)
+                .reduce(new SimpleStringProperty(""), (StringProperty t, StringProperty u) -> {
+                    SimpleStringProperty p = new SimpleStringProperty();
+                    p.bind(
+                            t.concat(
+                                    Bindings.createStringBinding(() -> t.get().isEmpty() ? "" : ", ", t.isEmpty())
+                            ).concat(u));
+                    return p;
+                }));
     }
 
+    private void rebindCountry() {
+        countryDescrip.unbind();
+        if (country.get() != null) {
+            countryDescrip.bind(country.get().codeProperty().concat("   ").concat(country.get().nameProperty()));
+        }
+    }
+    
     @Override
     public Client cloneWithoutID() {
         Client clone = new Client();
         clone.copyFrom(this);
-
         return clone;
     }
 
@@ -151,49 +176,42 @@ public class Client extends EditorPanelable{
         setCity(other.getCity());
         setCountry(other.getCountry());
         setIDNumber(other.getIDNumber());
-        getPhoneList().setAll(
-                other.getPhoneList()
+        getPhoneList().setAll(other.getPhoneList()
                 .stream()
-                .map((PhoneNumber t) -> new PhoneNumber(t.getRecId(), t.getNumber()))
+                .map((Phone t) -> new Phone(t.getRecId(), t.getNumber()))
                 .collect(Collectors.toList())
         );
         setFax(other.getFax());
     }
 
-    private void rebindPhoneNumbers() {
-        phoneNumbers.unbind();
-        phoneNumbers.bind(phoneList
-                .stream()
-                .map(PhoneNumber::numberProperty)
-                .reduce(new SimpleStringProperty(""), (StringProperty t, StringProperty u) -> {
-                    SimpleStringProperty p = new SimpleStringProperty();
-                    p.bind(
-                            t.concat(
-                                    Bindings.createStringBinding(() -> t.get().isEmpty() ? "" : ", ", t.isEmpty())
-                            ).concat(u));
-                    return p;
-                }));
-    }
-
-    private void rebindCountry() {
-        countryDescrip.unbind();
-        if (country.get() != null) {
-            countryDescrip.bind(country.get().codeProperty().concat("   ").concat(country.get().nameProperty()));
-        }
-    }
+    
 
     @Override
     public String toString() {
         return descrip.get() + " : " + email.get() + " : " + fullAddress.get();
     }
 
-    public static List<Client> getClients() {
+    public static List<Client> getAllFromDB() {
         try {
             String data = GeneralConfig.getInstance().getServerClient().get("clients");
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {
             });
         } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
+    }
+    
+    public static List<Client> getFilteredFromDB(JSONObject filter) {
+        try {
+            String data = GeneralConfig.getInstance().getServerClient().get(
+                    "clients/filter?dateFrom=" + filter.getString("dateBigger") + "&dateTo=" + filter.getString("dateLess")
+            );
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {
+            });
+        } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new ArrayList<>();
@@ -211,15 +229,14 @@ public class Client extends EditorPanelable{
         return null;
     }
 
-    public static Client saveClient(Client client) {
+    public static Client saveOneToDB(Client client) {
+        if (client == null) return null; 
         try {
             String resource = "clients" + (client.recId > 0 ? "/" + client.recId : "");
             String method = client.recId > 0 ? "PUT" : "POST";
             ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             String client_str = mapper.writeValueAsString(client);
             
-            System.out.println("ambroafb.clients.Client.saveClient() client_str: " + client_str);
-
             String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, client_str);
             Client res = mapper.readValue(res_str, Client.class);
             client.copyFrom(res);
@@ -231,7 +248,7 @@ public class Client extends EditorPanelable{
         return null;
     }
 
-    public static boolean deleteClient(int id) {
+    public static boolean deleteOneFromDB(int id) {
         try {
             GeneralConfig.getInstance().getServerClient().call("clients/" + id, "DELETE", null);
             return true;
@@ -334,7 +351,7 @@ public class Client extends EditorPanelable{
         return country.get();
     }
 
-    public ObservableList<PhoneNumber> getPhoneList() {
+    public ObservableList<Phone> getPhoneList() {
         return phoneList;
     }
 
@@ -400,13 +417,45 @@ public class Client extends EditorPanelable{
         this.IDNumber.set(IDNumber);
     }
 
-    public final void setPhoneList(Collection<PhoneNumber> phoneList) {
+    public final void setPhoneList(Collection<Phone> phoneList) {
         this.phoneList.setAll(phoneList);
     }
 
     public final void setFax(String fax) {
         this.fax.set(fax);
     }
+    
+    @Override
+    public String toStringForSearch(){
+        String phones = "";
+        phones = phoneList.stream().map((phoneNumber) -> phoneNumber.getNumber() + " ").reduce(phones, String::concat);
+
+        String result = firstName.concat(" " + lastName.get())
+                                .concat(" " + email.get()).concat(" " + address.get())
+                                .concat(" " + zipCode.get()).concat(" " + city.get())
+                                .concat(" " + country.getName()).concat(" " + fax.get())
+                                .concat(" " + IDNumber.get())
+                        .get();
+        return (result + phones).toLowerCase();
+    }
+    
+    public boolean equals(Client other){
+        boolean fieldsCompareResult =   this.isJur.get() == other.getIsJur() &&
+                                        this.isRez.get() == other.getIsRez() && 
+                                        this.firstName.get().equals(other.getFirstName()) &&
+                                        this.lastName.get().equals(other.getLastName()) &&
+                                        this.email.get().equals(other.getEmail())    &&
+                                        this.address.get().equals(other.getAddress()) &&
+                                        this.zipCode.get().equals(other.getZipCode()) &&
+                                        this.city.get().equals(other.getCity()) &&
+                                        this.country.get().equals(other.getCountry()) &&
+                                        this.IDNumber.get().equals(other.getIDNumber()) &&
+                                        this.fax.get().equals(other.getFax());
+        boolean equalsPhones = PhoneComboBox.comparePhones(phoneList, other.getPhoneList());
+        return fieldsCompareResult && equalsPhones;
+    }
+    
+    
 
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 

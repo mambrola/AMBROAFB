@@ -15,8 +15,18 @@ public abstract class EditorPanelable {
     @JsonProperty("recId")
     public int recId;
     
-    public EditorPanelable cloneWithoutID() {return null;}
-    public EditorPanelable cloneWithID() {return null;}
-    public void copyFrom(EditorPanelable other){};
-    public void asignTable(){};
+    public abstract EditorPanelable cloneWithoutID();
+    public abstract EditorPanelable cloneWithID();
+    public abstract void copyFrom(EditorPanelable other);
+    public abstract String toStringForSearch();
+    
+    public int getRecId(){
+        return recId;
+    };
+    
+    public void setRecId(int recId){
+        this.recId = recId;
+    };
+    
+    
 }

@@ -20,11 +20,20 @@ public class AlertMessage extends Alert {
      * კონსტრუქტორი უზრუნველყოფს შექმნას შესაბამისი AlertType alert-ი.
      * დაუსეტავს ფანჯარას დასახელებას და ასევე დასასელებას, თუ რის შესახებაა დიალოგი. , 
      * @param alertType    - მესიჯის ტიპი, (AlertType.ERROR, AlertType.WARNING, AlertType.CONFIRMATION ...)
-     * @param message  - შიდა, კონტექსტის დასახელება
+     * @param ex
+     * @param messageName  - შიდა, კონტექსტის დასახელება
      */
     public AlertMessage(AlertType alertType, Exception ex, String messageName) {
         super(alertType);
-        setTitle(GeneralConfig.getInstance().getTitleFor(Names.ALERT_ERROR_WINDOW_TITLE));
+        String titleAlert; //added by Murman 
+        switch (alertType){
+            case CONFIRMATION: titleAlert = Names.ALERT_CONFIRMATION_WINDOW_TITLE; break;
+            case ERROR: titleAlert = Names.ALERT_ERROR_WINDOW_TITLE; break;
+            case INFORMATION: titleAlert = Names.ALERT_INFORMATION_WINDOW_TITLE; break;
+            case WARNING: titleAlert = Names.ALERT_WARNING_WINDOW_TITLE; break;
+            default: titleAlert = "?";
+        }
+        setTitle(GeneralConfig.getInstance().getTitleFor(titleAlert));
         setHeaderText(GeneralConfig.getInstance().getTitleFor(messageName));
         
         getDialogPane().getStylesheets().add(

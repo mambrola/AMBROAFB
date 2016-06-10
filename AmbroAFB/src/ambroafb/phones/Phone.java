@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.general;
+package ambroafb.phones;
 
+import ambroafb.general.Editable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,21 +16,25 @@ import javafx.beans.value.ObservableValue;
  *
  * @author tabramishvili
  */
-public class PhoneNumber implements Editable<String> {
+public class Phone implements Editable<String> {
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int recId;
+    
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private int clientId;
+
     private final StringProperty number = new SimpleStringProperty();
 
-    public PhoneNumber() {
+    public Phone() {
     }
 
-    public PhoneNumber(int id, String number) {
+    public Phone(int id, String number) {
         this.recId = id;
         this.number.set(number);
     }
 
-    public PhoneNumber(String number) {
+    public Phone(String number) {
         this.number.set(number);
     }
 
@@ -39,6 +44,14 @@ public class PhoneNumber implements Editable<String> {
 
     public void setRecId(int id) {
         this.recId = id;
+    }
+    
+    public int getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 
     public String getNumber() {
@@ -63,10 +76,34 @@ public class PhoneNumber implements Editable<String> {
     public ObservableValue<String> getObservableString() {
         return number;
     }
+    
+    public StringProperty getNumberProperty(){
+        return number;
+    }
 
     @Override
     public String toString() {
         return "PhoneNumber{" + "id=" + recId + ", number=" + number + '}';
     }
 
+    public boolean equals(Phone other){
+        String thisNumber = getOnlyDigitsFrom(number.get());
+        String otherNumber = getOnlyDigitsFrom(other.getNumber());
+        return thisNumber.equals(otherNumber);
+    }
+    
+    private String getOnlyDigitsFrom(String phone){
+        String result = "";
+        for(int i = 0; i < phone.length(); i++){
+            char ch = phone.charAt(i);
+            if (Character.isDigit(ch)){
+                result += ch;
+            }
+        }
+        return result;
+    }
+    
+    public int compare(Phone other){
+        return this.recId - other.recId;
+    }
 }

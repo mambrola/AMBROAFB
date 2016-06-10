@@ -6,8 +6,14 @@
 package ambroafb.general;
 
 import ambroafb.countries.Country;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,6 +21,23 @@ import java.util.HashMap;
  */
 public class UtilsDB {
     
-     
+         
+    private static final String URL = "jdbc:derby:localDB;create=true;user=afb;password=afb";
+    private static Connection connection;
+    
+    public static void initTables(){
+        try {
+            Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
+            connection = DriverManager.getConnection(URL);
+            Statement stm = connection.createStatement();
+            stm.execute("create table filterDates(ID INTEGER not null primary key)");
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private static void createTable(String tableName){
+        
+    }
         
 }

@@ -5,8 +5,10 @@
  */
 package ambroafb.general;
 
+import ambroafb.phones.Phone;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,6 +22,7 @@ import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 /**
  *
@@ -149,21 +152,53 @@ public class ListEditor<T extends Editable<String>> extends ComboBox<T> {
                 selectedItem.edit(getEditor().getText());
             }
         });
+        
+        getEditor().textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                boolean symbolsAredigits = allSymbolsAreDigit(newValue);
+                if (!symbolsAredigits)
+                    getEditor().setText(oldValue);
+            }
+            
+            private boolean allSymbolsAreDigit(String text){
+                boolean result = true;
+                for (int i = 0; i < text.length(); i++){
+                    char symbol = text.charAt(i);
+                    if ( !Character.isDigit(symbol) ){
+                        result = false;
+                        break;
+                    }
+                }
+                return result;
+            }
+        });
+        
+        setConverter(new StringConverter<T>() {
+            @Override
+            public String toString(T object) {
+                return object != null ? ((Phone)object).getNumber() : null;
+            }
 
-    }
-
-    private void setItemsListener() {
-        getItems().addListener((ListChangeListener.Change<? extends T> c) -> {
-            itemsChanged();
+            @Override
+            public T fromString(String string) {
+                return (T) new Phone(string);
+            }
         });
     }
 
-    private void itemsChanged() {
-        itemsSize.set(getItems().size());
-        if (itemsSize.get() > 0) {
-            getSelectionModel().selectFirst();
-            getProperties().put(SELECTED_ITEM_KEY, getSelectionModel().getSelectedItem());
-        }
-    }
+//    private void setItemsListener() {
+//        getItems().addListener((ListChangeListener.Change<? extends T> c) -> {
+//            itemsChanged();
+//        });
+//    }
+//
+//    private void itemsChanged() {
+//        itemsSize.set(getItems().size());
+//        if (itemsSize.get() > 0) {
+//            getSelectionModel().selectFirst();
+//            getProperties().put(SELECTED_ITEM_KEY, getSelectionModel().getSelectedItem());
+//        }
+//    }
 
 }

@@ -5,6 +5,9 @@
  */
 package ambroafb;
 
+import ambroafb.clients.Client;
+import ambroafb.clients.Clients;
+import ambroafb.clients.filter.ClientFilter;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -19,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 /**
  *
@@ -104,23 +108,22 @@ public class MainController implements Initializable {
     
     @FXML
     private void clients(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage(
-                    "/ambroafb/clients/Clients.fxml", 
-                    config.getTitleFor("clients"), 
-                    Names.IN_OUT_LOGO,
-                    AmbroAFB.mainStage
-            );
-            stage.show();
-        }catch(IOException ex){
-//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-//            alert.showAlert();
-           
-            Platform.runLater(() -> {
-                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-                alert.showAlert();
-                System.out.println("error after");
-            });
+        String mainStagePath = Utils.getPathForStage(AmbroAFB.mainStage);
+        String clientsStagePath = mainStagePath + "/" + Clients.class.getSimpleName();
+        
+        Stage clientsStage = Utils.getStageForPath(clientsStagePath);
+        if(clientsStage == null || !clientsStage.isShowing()){
+            Clients clients = new Clients(AmbroAFB.mainStage);
+            clients.show();
+            
+            ClientFilter filter = new ClientFilter(clients);
+            JSONObject json = filter.getResult();
+            clients.getClientsController().reAssignTable(json);
+
+            if (json == null) clients.close();
+        }
+        else {
+            clientsStage.requestFocus();
         }
     }
     
@@ -138,7 +141,6 @@ public class MainController implements Initializable {
             Platform.runLater(() -> {
                 AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
                 alert.showAlert();
-                System.out.println("error after");
             });
         }
     }
@@ -157,7 +159,6 @@ public class MainController implements Initializable {
             Platform.runLater(() -> {
                 AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
                 alert.showAlert();
-                System.out.println("errorr after");
             });
         }
     }
@@ -176,7 +177,6 @@ public class MainController implements Initializable {
             Platform.runLater(() -> {
                 AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
                 alert.showAlert();
-                System.out.println("errorr after");
             });
         }
     }

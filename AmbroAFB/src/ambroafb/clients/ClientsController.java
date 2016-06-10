@@ -5,16 +5,20 @@
  */
 package ambroafb.clients;
 
-import ambroafb.clients.dialog.ClientDialog;
+import ambroafb.clients.filter.ClientFilter;
+import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.EditorPanelController;
+import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -24,95 +28,14 @@ import javafx.scene.layout.BorderPane;
 public class ClientsController implements Initializable {
 
     @FXML
-    private BorderPane formPane;
-
-    @FXML
-    private TableView<Client> table;
-
+    private TableView<EditorPanelable> table;
+    
     @FXML
     private EditorPanelController editorPanelController;
     
-    @FXML
-    private void delete(ActionEvent e) {
-        Client client = table.getSelectionModel().getSelectedItem();
-        ClientDialog dialog = new ClientDialog(client);
-        dialog.setDisabled();
-        dialog.askClose(false);
-
-        ((Button) dialog.getScene().getRoot().lookup("#okay")).setText("Delete");
-        dialog.getScene().getRoot().lookup("#okay").setDisable(false);
-        dialog.getScene().getRoot().lookup("#cancel").setDisable(false);
-
-        dialog.showAndWait();
-        if (Client.deleteClient(client.recId)) {
-            table.getItems().remove(client);
-        }
-    }
-
-//    @FXML
-//    private void edit(ActionEvent e) {
-//
-//        Client editingClient = table.getSelectionModel().getSelectedItem();
-//        Client real = Client.getOneFromDB(editingClient.recId);
-//        if (real != null) {
-//            editingClient.copyFrom(real);
-//        }
-//        Client backup = editingClient.cloneWithID();
-//
-//        ClientDialog dialog = new ClientDialog(editingClient);
-//        Client editedClient = dialog.getResult();
-//        if (editedClient == null) {
-//            editingClient.copyFrom(backup);
-//            System.out.println("dialog is cancelled");
-//        } else {
-//            System.out.println("changed client: " + editedClient);
-//            System.out.println("phones = " + editedClient.getPhoneNumbers());
-//        }
-//    }
-
-    @FXML
-    private void view(ActionEvent e) {
-        Client client = table.getSelectionModel().getSelectedItem();
-        Client real = Client.getOneFromDB(client.recId);
-        if (real != null) {
-            client.copyFrom(real);
-        }
-
-        ClientDialog dialog = new ClientDialog(client);
-        dialog.setDisabled();
-        dialog.askClose(false);
-        dialog.showAndWait();
-    }
-
-    @FXML
-    private void add(ActionEvent e) {
-        ClientDialog dialog = new ClientDialog();
-        Client newClient = dialog.getResult();
-
-        if (newClient == null) {
-            System.out.println("dialog is cancelled addClient");
-        } else {
-            System.out.println("changed client: " + newClient);
-            newClient = Client.saveClient(newClient);
-            if (newClient != null) {
-                table.getItems().add(newClient);
-            }
-        }
-    }
-
-    @FXML
-    private void addBySample(ActionEvent e) {
-        Client client = table.getSelectionModel().getSelectedItem();
-        ClientDialog dialog = new ClientDialog(client.cloneWithoutID());
-        Client newClient = dialog.getResult();
-        if (newClient == null) {
-            System.out.println("dialog is cancelled addBySample");
-        } else {
-            System.out.println("changed client: " + newClient);
-            Client.saveClient(newClient);
-        }
-    }
-
+    private final ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();;
+    private SortedList<EditorPanelable> sorterData;
+    private Stage stage;
     /**
      *
      * @param url
@@ -122,26 +45,23 @@ public class ClientsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(table);
-        asignTable();
+        editorPanelController.setTableDataList(table, clients);
     }
 
+    public void reAssignTable(JSONObject filterJson) {
+        if(filterJson != null){
+            clients.clear();
+            Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {
+                clients.add(client);
+            });
+        }
+    }
+
+    void setStage(Stage stage) {
+        this.stage = stage;
+    }
     
-    //შეიძლება ეს მაინც ჯობია გაიყოს, იდეურად უფრო სწორი იქნება. აქ დარჩება მარტო კლიენტების შეყრა და არჩეულის ისევ არჩევის მექანიზმი(მეთოდი), დანარჩენი იქით უნდა გაკეთდეს - ეკუთვნის რეფრეშს
-    public void asignTable() {
-        Client selected = table.getSelectionModel().getSelectedItem();
-        table.getItems().clear();
-        Client.getClients().stream().forEach((client) -> {
-            table.getItems().add(client);
-        });
-        if(selected != null)
-        selectClientAgain(selected);
-    }
-
-    private void selectClientAgain(Client selected) {
-        int i = table.getItems().size() - 1;
-        while(i >= 0 && !table.getItems().get(i).getEmail().equals(selected.getEmail()))
-            i--;
-        if(i >= 0)
-            table.getSelectionModel().select(i);
+    public EditorPanelController getEditorPanelController(){
+        return editorPanelController;
     }
 }

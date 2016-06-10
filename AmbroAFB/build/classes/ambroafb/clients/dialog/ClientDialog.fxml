@@ -11,10 +11,12 @@
 <?import ambro.* ?>
 <?import ambroafb.general.okay_cancel.* ?>
 <?import ambroafb.general.*?>
+<?import ambroafb.countries.* ?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/clientdialog.css" 
                         xmlns:fx="http://javafx.com/fxml/1" 
-                        xmlns="http://javafx.com/javafx/8" >
+                        xmlns="http://javafx.com/javafx/8"
+                        fx:controller="ambroafb.clients.dialog.ClientDialogController" >
     <VBox fx:id="formPane">
         <children>
             <VBox>
@@ -51,9 +53,9 @@
                         <Label text="%email" /> 
                         <TextField fx:id="email" />
                     </VBox >
-                    <VBox >
+                    <VBox fx:id="phonesContainer">
                         <Label text="%phones" /> 
-                        <ListEditor fx:id="phone" editable="true"/>
+                        <!--<ListEditor fx:id="phone" editable="true"/>-->
                     </VBox >
                     <VBox >
                         <Label text="%fax" /> 
@@ -81,7 +83,8 @@
                     </VBox>
                     <VBox >
                         <Label text="%country" /> 
-                        <ComboBox fx:id="country" promptText="%select" />
+                        <!--<ComboBox fx:id="country" promptText="%select" />-->
+                        <CountryComboBox fx:id="country"/>
                     </VBox>
                 </children>
             </HBox>
@@ -92,7 +95,7 @@
                 </children> 
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
-                <OkayCancel fx:id="okayCancel"/>
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
             </HBox>
         </children>
     </VBox>

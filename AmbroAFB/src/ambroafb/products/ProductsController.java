@@ -77,7 +77,7 @@ public class ProductsController implements Initializable {
     @FXML
     private void refresh(ActionEvent e) {
         table.getItems().clear();
-        asignTable();
+        reAssignTable();
     }
     /**
      * 
@@ -87,10 +87,10 @@ public class ProductsController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        asignTable();
+        reAssignTable();
     }
 
-    private void asignTable() {
+    private void reAssignTable() {
         Product.dbGetProducts(0).values().stream().forEach((product) -> {
             table.getItems().add(product);
         });

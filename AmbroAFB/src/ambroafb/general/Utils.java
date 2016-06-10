@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -20,7 +21,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +42,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.commons.collections.BidiMap;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
 
 /**
  *
@@ -376,15 +382,131 @@ public class Utils {
         return Bindings.when(prop.isNull()).then("").otherwise(prop);
     }
 
-    public static String readStream(InputStream stream) throws IOException {
-        StringBuilder response = new StringBuilder();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(stream))) {
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+    private static final BidiMap bidmap = new DualHashBidiMap();
+    
+    public static int getSize(){
+        return bidmap.size();
+    }
+    
+    /**
+     * The function saves stage and its path into bidirectional map
+     * @param path  - owner path plus current stage local name.
+     * @param stage - current stage
+     */
+    public static void saveShowingStageByPath(String path, Stage stage){
+        bidmap.put(path, stage);
+    }
+    
+    /**
+     * The function returns path for the given stage.
+     * @param stage - current stage
+     * @return 
+     */
+    public static String getPathForStage(Stage stage){
+        return (String)bidmap.getKey(stage);
+    }
+    
+    /**
+     * The function returns stage for the given path
+     * @param path - full path for stage (ex: main/Clients/Dialog).
+     * @return
+     */
+    public static Stage getStageForPath(String path){
+       return (Stage) bidmap.get(path);
+    }
+    
+    /**
+     * The function removes stage for the given path and also removes its subStages.
+     * The function needs a helper collection to save removable object in it,
+     * because of don't mess an iterator of map.
+     * @param path - full path for stage  (ex: main/Clients/Dialog).
+     */
+    public static void removeAlsoSubstagesByPath(String path){
+        List<String> pathes = new ArrayList<>();
+        bidmap.keySet().stream().forEach((key) -> {
+            if (((String)key).startsWith(path)){
+                pathes.add((String) key);
             }
+        });
+        pathes.stream().forEach((currPath) -> {
+            bidmap.remove((String) currPath);
+        });
+    }
+    
+    /**
+     * The function removes stage from bidirectional map 
+     * and use "removeAlsoSubstagesByPath" method for it.
+     * @param stage - which must remove
+     */
+    public static void removeByStage(Stage stage){
+        String path = (String) bidmap.getKey(stage);
+        Utils.removeAlsoSubstagesByPath(path);
+    }
+    
+    /**
+     * The function returns stage which associated for the given local name.
+     * @param owner             - owner of finding stage
+     * @param substageLocalName - local name of finding stage
+     * @return 
+     */
+    public static Stage getStageFor(Stage owner, String substageLocalName){
+        String ownerPath = getPathForStage(owner);
+        String substagePath = ownerPath + substageLocalName;
+        Stage substage = getStageForPath(substagePath);
+        return substage;
+    }
+    
+    /**
+     * It can use instead of '.getConstructor(EditorPanelable.class).newInstance(selected)'
+     * @param obj           - we need this object instance.
+     * @param constructorParams   - 'Class' parameter for created specific constructor
+     * @param args          - arguments for instance
+     * @return 
+     */
+    public static Object getInstanceOfClass(Class<?> obj, Class[] constructorParams, Object... args){
+        Object result = null;
+        try {
+            
+            result = obj.getConstructor(constructorParams).newInstance(args);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return response.toString();
+        System.out.println("result: " + result);
+        return result;
+    }
+    
+    /**
+     * It can use instead of 'Class.forName(getClassName("objectClass"))'
+     * @param name - name of class for example: Client, Country.
+     * @return 
+     */
+    public static Class getClassByName(String name){
+        Class result = null;
+        try {
+            result = Class.forName(name);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+    
+    /**
+     * This class invokes a specific method ("methodName" parameter) for the "owner" class.
+     * @param methodName    - name of method in its class
+     * @param argsTypes     - arguments types
+     * @param owner         - class object which owned the method 
+     * @param object        - object, witch (non!) static method will be invoke
+     * @param argsValues    - arguments value for method
+     * @return              - object will be null if we invokes a void type method,
+     *                          otherwise will return a specific object of class.
+     */
+    public static Object getInvokedClassMethod(Class owner, String methodName, Class<?>[] argsTypes, Object object, Object... argsValues){
+        Object result = null;
+        try {
+            result = owner.getMethod(methodName, argsTypes).invoke(object, argsValues);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
     }
 }
