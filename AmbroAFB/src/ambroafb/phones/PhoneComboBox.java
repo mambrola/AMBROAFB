@@ -7,6 +7,7 @@ package ambroafb.phones;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -33,7 +34,7 @@ public class PhoneComboBox extends ComboBox<Phone> {
         
         if(isEditable){
             this.setEditable(true);
-            this.setItems(items); // setItems() -> because of adding new phone into the combobox, it also add in client.
+            this.setItems(items);
             makeInputWithoutLetters();
         }
         else {
@@ -46,11 +47,29 @@ public class PhoneComboBox extends ComboBox<Phone> {
                 this.setValue(tmItems.get(0));
                 tmItems.remove(0);
             }
-            this.getItems().addAll(tmItems); // setItems() will cause problem because of "remove(0)"
+            this.getItems().addAll(tmItems);
             disabledItems.addAll(tmItems);
         }
         
         setConverter();
+    }
+    
+    /**
+     * The method compares clients phones list and pays attention size and order of them. გადასატანია ტელეფონებში
+     * @param first
+     * @param second
+     * @return 
+     */
+    public static boolean comparePhones(ObservableList<Phone> first, ObservableList<Phone> second) {
+        if (first.size() != second.size()) return false;
+
+        for(int i = 0; i < first.size(); i++){
+            Phone phone = first.get(i);
+            Phone otherPhone = second.get(i);
+            if ( !phone.getNumber().equals(otherPhone.getNumber()) ) return false;
+        }
+
+        return true;
     }
     
     private void makeInputWithoutLetters() {

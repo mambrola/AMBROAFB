@@ -13,6 +13,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
+import ambroafb.phones.PhoneComboBox;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -450,27 +451,11 @@ public class Client extends EditorPanelable{
                                         this.country.get().equals(other.getCountry()) &&
                                         this.IDNumber.get().equals(other.getIDNumber()) &&
                                         this.fax.get().equals(other.getFax());
-        boolean equalsPhone = comparePhones(this.phoneList, other.getPhoneList());
-        return fieldsCompareResult && equalsPhone;
+        boolean equalsPhones = PhoneComboBox.comparePhones(phoneList, other.getPhoneList());
+        return fieldsCompareResult && equalsPhones;
     }
     
-    /**
-     * The method compares clients phones list and pays attention size and order of them. გადასატანია ტელეფონებში
-     * @param phoneList
-     * @param otherPhoneList
-     * @return 
-     */
-    public boolean comparePhones(ObservableList<Phone> phoneList, ObservableList<Phone> otherPhoneList) {
-        if (phoneList.size() != otherPhoneList.size()) return false;
-
-        for(int i = 0; i < phoneList.size(); i++){
-            Phone phone = phoneList.get(i);
-            Phone otherPhone = otherPhoneList.get(i);
-            if ( !phone.getNumber().equals(otherPhone.getNumber()) ) return false;
-        }
-
-        return true;
-    }
+    
 
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 
