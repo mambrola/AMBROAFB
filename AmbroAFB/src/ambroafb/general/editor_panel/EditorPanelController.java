@@ -241,12 +241,18 @@ public class EditorPanelController implements Initializable {
             return rtrn.substring(0, rtrn.indexOf("@"));
         String path = rtrn.substring(0, rtrn.lastIndexOf(".") + 1);
         String className = rtrn.substring(path.length(), rtrn.lastIndexOf("Controller"));
-        switch (className){
-            case "Countries":
-                rtrn = path + (type.equals(CLASS_TYPE.DIALOG) ? "dialog." : "") + "Country" + (type.equals(CLASS_TYPE.DIALOG) ? "Dialog" : "");
+        String singularName = className.equals("Countries") ? "Country" : 
+                              className.substring(0, className.length() - 1);
+        switch (type){
+            case DIALOG:
+                rtrn = path + "dialog." + singularName + "Dialog";
                 break;
-            default:
-                rtrn = path + (type.equals(CLASS_TYPE.DIALOG) ? "dialog." : (type.equals(CLASS_TYPE.FILTER)) ? "filter." : "") + className.substring(0, className.length() - 1) + (type.equals(CLASS_TYPE.DIALOG) ? "Dialog" : (type.equals(CLASS_TYPE.FILTER)) ? "Filter" : "");
+            case FILTER:
+                rtrn = path + "filter." + singularName + "Filter";
+                break;
+            default: // case OBJECT:
+                rtrn = path + singularName;
+                break;
         }
         return rtrn;
     }
