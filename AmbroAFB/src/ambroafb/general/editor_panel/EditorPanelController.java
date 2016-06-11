@@ -186,13 +186,7 @@ public class EditorPanelController implements Initializable {
             Class className = Utils.getClassByName(getClassName(CLASS_TYPE.FILTER));
             Filterable filter = (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow());
             JSONObject json = filter.getResult();
-            
-//            if(json != null){
-//                table.getItems().clear();
-//                Client.getFilteredFromDB(json).stream().forEach((client) -> {
-////                    table.getItems().add(client);
-//                });
-//            }
+
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
             Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{JSONObject.class}, outerController, json);
             selectOneAgain(selected);

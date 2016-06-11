@@ -13,7 +13,6 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
-import ambroafb.phones.PhoneComboBox;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -451,7 +450,7 @@ public class Client extends EditorPanelable{
                                         this.country.get().equals(other.getCountry()) &&
                                         this.IDNumber.get().equals(other.getIDNumber()) &&
                                         this.fax.get().equals(other.getFax());
-        boolean equalsPhones = PhoneComboBox.comparePhones(phoneList, other.getPhoneList());
+        boolean equalsPhones = Phone.compareLists(phoneList, other.getPhoneList());
         return fieldsCompareResult && equalsPhones;
     }
     

@@ -5,9 +5,7 @@
  */
 package ambroafb.clients.dialog;
 
-import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;

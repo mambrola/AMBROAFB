@@ -6,7 +6,6 @@
 package ambroafb.general.interfaces;
 
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 /**
  *
@@ -18,5 +17,5 @@ public interface Dialogable {
     public void showAndWait();
     public void operationCanceled();
 
-    public static final String LOCAL_NAME = "/Dialog";
+    public static final String LOCAL_NAME = "/DialogOrFilter";
 }

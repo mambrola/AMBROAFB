@@ -5,8 +5,6 @@
  */
 package ambroafb.clients;
 
-import ambroafb.clients.filter.ClientFilter;
-import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
