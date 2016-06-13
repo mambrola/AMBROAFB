@@ -5,15 +5,18 @@
  */
 package ambroafb.general;
 
-import ambroafb.countries.Country;
+import ambroafb.clients.filter.ClientFilter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -21,23 +24,89 @@ import java.util.logging.Logger;
  */
 public class UtilsDB {
     
-         
+    private static UtilsDB instance;
+    private static final String DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
     private static final String URL = "jdbc:derby:localDB;create=true;user=afb;password=afb";
-    private static Connection connection;
+    private Connection connection;
     
-    public static void initTables(){
+    public static UtilsDB getInstance(){
+        if (instance == null){
+            instance = new UtilsDB();
+        }
+        return instance;
+    }
+    
+    private UtilsDB(){
         try {
-            Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
+            Class.forName(DRIVER_NAME);
             connection = DriverManager.getConnection(URL);
-            Statement stm = connection.createStatement();
-            stm.execute("create table filterDates(ID INTEGER not null primary key)");
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    private static void createTables(String tableName){
-        
+    
+    
+    public void createTables(){
+        String filterClients = "create table filter_clients ( " +
+                                        " id int primary key, " +
+                                        " from_date varchar(16)," +
+                                        " to_date varchar(16)" +
+                                    ")";
+        createTable(filterClients);
     }
-        
+
+    private void createTable(String tableQuery) {
+        try {
+            try (Statement statement = connection.createStatement()) {
+                statement.execute(tableQuery);
+                addDefaultValuesIntoFilterClients();
+            }
+        } catch (SQLException ex) {
+//            Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void addDefaultValuesIntoFilterClients(){
+        String query = "insert into filter_clients " +
+                        " values(1, '" + ClientFilter.dateBigerStr + "', '" + ClientFilter.dateLessStr + "')";
+        executeQuery(query);
+    }
+    
+    public JSONObject getFilterClientsDate() {
+        JSONObject result = null;
+        String query = "select * from filter_clients";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet set = statement.executeQuery(query);
+            set.next();
+            String fromDate = set.getString(2);
+            String toDate = set.getString(3);
+            
+            result = new JSONObject();
+            result.put("dateBigger", fromDate);
+            result.put("dateLess", toDate);
+        } catch (SQLException | JSONException ex) {
+            Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    public void updateFilterClients(String dateBigger, String dateLess) {
+        String query = "update filter_clients " +
+                " set from_date = '" + dateBigger + "', " +
+                " to_date = '" + dateLess + "' " +
+                " where id = 1";
+
+        executeQuery(query);
+    }
+    
+    private void executeQuery(String query){
+        try {
+            try (Statement statement = connection.createStatement()) {
+                statement.execute(query);
+            }
+        } catch (SQLException ex) {
+        }
+    }
 }
