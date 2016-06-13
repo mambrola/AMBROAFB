@@ -48,18 +48,12 @@ public class UtilsDB {
     
     
     public void createTables(){
-        ArrayList<String> queries = new ArrayList<>();
-        
         String filterClients = "create table filter_clients ( " +
                                         " id int primary key, " +
                                         " from_date varchar(16)," +
                                         " to_date varchar(16)" +
                                     ")";
-        
-        queries.add(filterClients);
-        queries.stream().forEach((query) -> {
-            createTable(query);
-        });
+        createTable(filterClients);
     }
 
     private void createTable(String tableQuery) {
@@ -76,13 +70,7 @@ public class UtilsDB {
     private void addDefaultValuesIntoFilterClients(){
         String query = "insert into filter_clients " +
                         " values(1, '" + ClientFilter.dateBigerStr + "', '" + ClientFilter.dateLessStr + "')";
-        try {
-            try (Statement statement = connection.createStatement()) {
-                statement.execute(query);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        executeQuery(query);
     }
     
     public JSONObject getFilterClientsDate() {
@@ -98,26 +86,27 @@ public class UtilsDB {
             result = new JSONObject();
             result.put("dateBigger", fromDate);
             result.put("dateLess", toDate);
-        } catch (SQLException ex) {
-            Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JSONException ex) {
+        } catch (SQLException | JSONException ex) {
             Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
 
     public void updateFilterClients(String dateBigger, String dateLess) {
+        String query = "update filter_clients " +
+                " set from_date = '" + dateBigger + "', " +
+                " to_date = '" + dateLess + "' " +
+                " where id = 1";
+
+        executeQuery(query);
+    }
+    
+    private void executeQuery(String query){
         try {
-            String query = "update filter_clients " +
-                    " set from_date = '" + dateBigger + "', " +
-                    " to_date = '" + dateLess + "' " +
-                    " where id = 1";
-            
             try (Statement statement = connection.createStatement()) {
                 statement.execute(query);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
