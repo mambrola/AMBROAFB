@@ -8,9 +8,11 @@ package ambroafb.clients.filter;
 import ambroafb.AmbroAFB;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
+import ambroafb.general.UtilsDB;
 import ambroafb.general.interfaces.Filterable;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +38,9 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
     private Button cancel;
     
     private JSONObject jSonResult;
+    
+    public static String dateBigerStr = "1970-01-01";
+    public static String dateLessStr = "9999-01-01";
     
     public ClientFilter(Stage owner) {
         String ownerPath = Utils.getPathForStage(owner);
@@ -68,8 +73,10 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
             return;
         jSonResult = new JSONObject();
         try {
-            jSonResult.put("dateBigger", (dateBiger.getValue() == null ? "1970-01-01" : dateBiger.getValue()).toString());
-            jSonResult.put("dateLess", (dateLess.getValue() == null ? "9999-12-31" : dateLess.getValue()).toString());
+            jSonResult.put("dateBigger", (dateBiger.getValue() == null ? dateBigerStr : dateBiger.getValue()).toString());
+            jSonResult.put("dateLess", (dateLess.getValue() == null ? dateLessStr : dateLess.getValue()).toString());
+             
+            UtilsDB.getInstance().updateFilterClients(jSonResult.getString("dateBigger"), jSonResult.getString("dateLess"));
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
     }
     
@@ -78,5 +85,21 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
         
         //dateBiger.setValue(LocalDate.MIN);
         // იღებს derby ბაზიდან dateBiger, dateLess-ების მნიშვნელობებს
+        try {
+            JSONObject json = UtilsDB.getInstance().getFilterClientsDate();
+            if (json != null){
+                String dateB = json.getString("dateBigger");
+                String dateL = json.getString("dateLess");
+                
+                LocalDate bigger = (dateB.equals(dateBigerStr)) ? null : LocalDate.parse(dateB);
+                LocalDate less = (dateL.equals(dateLessStr)) ? null : LocalDate.parse(dateL);
+ 
+                dateBiger.setValue(bigger);
+                dateLess.setValue(less);
+            } 
+        }
+        catch (JSONException ex) {
+            Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
