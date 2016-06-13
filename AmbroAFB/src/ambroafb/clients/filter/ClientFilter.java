@@ -69,7 +69,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
         jSonResult = new JSONObject();
         try {
             jSonResult.put("dateBigger", (dateBiger.getValue() == null ? "1970-01-01" : dateBiger.getValue()).toString());
-            jSonResult.put("dateLess", (dateLess.getValue() == null ? "9999-01-01" : dateLess.getValue()).toString());
+            jSonResult.put("dateLess", (dateLess.getValue() == null ? "9999-12-31" : dateLess.getValue()).toString());
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
     }
     

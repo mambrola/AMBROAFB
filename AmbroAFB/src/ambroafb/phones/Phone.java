@@ -104,9 +104,6 @@ public class Phone implements Editable<String> {
         return result;
     }
     
-    public int compare(Phone other){
-        return this.recId - other.recId;
-    }
     /**
      * The method compares clients phones list and pays attention size and order of them. 
      * @param first
