@@ -39,8 +39,8 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
     
     private JSONObject jSonResult;
     
-    public static String dateBigerStr = "1970-01-01";
-    public static String dateLessStr = "9999-01-01";
+    public static final String DATE_BIGGER = "1970-01-01";
+    public static final String DATE_LESS = "9999-01-01";
     
     public ClientFilter(Stage owner) {
         String ownerPath = Utils.getPathForStage(owner);
@@ -73,8 +73,8 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
             return;
         jSonResult = new JSONObject();
         try {
-            jSonResult.put("dateBigger", (dateBiger.getValue() == null ? dateBigerStr : dateBiger.getValue()).toString());
-            jSonResult.put("dateLess", (dateLess.getValue() == null ? dateLessStr : dateLess.getValue()).toString());
+            jSonResult.put("dateBigger", (dateBiger.getValue() == null ? DATE_BIGGER : dateBiger.getValue()).toString());
+            jSonResult.put("dateLess", (dateLess.getValue() == null ? DATE_LESS : dateLess.getValue()).toString());
              
             UtilsDB.getInstance().updateFilterClients(jSonResult.getString("dateBigger"), jSonResult.getString("dateLess"));
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
@@ -91,8 +91,8 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
                 String dateB = json.getString("dateBigger");
                 String dateL = json.getString("dateLess");
                 
-                LocalDate bigger = (dateB.equals(dateBigerStr)) ? null : LocalDate.parse(dateB);
-                LocalDate less = (dateL.equals(dateLessStr)) ? null : LocalDate.parse(dateL);
+                LocalDate bigger = (dateB.equals(DATE_BIGGER)) ? null : LocalDate.parse(dateB);
+                LocalDate less = (dateL.equals(DATE_LESS)) ? null : LocalDate.parse(dateL);
  
                 dateBiger.setValue(bigger);
                 dateLess.setValue(less);

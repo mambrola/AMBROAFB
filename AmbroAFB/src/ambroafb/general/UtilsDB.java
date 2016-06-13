@@ -65,7 +65,7 @@ public class UtilsDB {
     
     private void addDefaultValuesIntoFilterClients(){
         String query = "insert into filter_clients " +
-                        " values(1, '" + ClientFilter.dateBigerStr + "', '" + ClientFilter.dateLessStr + "')";
+                        " values(1, '" + ClientFilter.DATE_BIGGER + "', '" + ClientFilter.DATE_LESS + "')";
         executeQuery(query);
     }
     
