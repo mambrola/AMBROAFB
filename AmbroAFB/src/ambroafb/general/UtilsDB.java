@@ -48,22 +48,18 @@ public class UtilsDB {
     
     
     public void createTables(){
+        createFilterClientTable();
+    }
+
+    private void createFilterClientTable() {
         String filterClients = "create table filter_clients ( " +
                                         " id int primary key, " +
                                         " from_date varchar(16)," +
                                         " to_date varchar(16)" +
                                     ")";
-        createTable(filterClients);
-    }
-
-    private void createTable(String tableQuery) {
-        try {
-            try (Statement statement = connection.createStatement()) {
-                statement.execute(tableQuery);
-                addDefaultValuesIntoFilterClients();
-            }
-        } catch (SQLException ex) {
-//            Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
+        boolean exec = executeQuery(filterClients);
+        if (exec){
+            addDefaultValuesIntoFilterClients();
         }
     }
     
@@ -101,12 +97,14 @@ public class UtilsDB {
         executeQuery(query);
     }
     
-    private void executeQuery(String query){
+    private boolean executeQuery(String query){
         try {
             try (Statement statement = connection.createStatement()) {
                 statement.execute(query);
             }
+            return true;
         } catch (SQLException ex) {
+            return false;
         }
     }
 }
