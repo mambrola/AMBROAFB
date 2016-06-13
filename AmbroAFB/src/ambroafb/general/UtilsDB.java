@@ -36,7 +36,7 @@ public class UtilsDB {
         }
     }
     
-    private static void createTable(String tableName){
+    private static void createTables(String tableName){
         
     }
         
