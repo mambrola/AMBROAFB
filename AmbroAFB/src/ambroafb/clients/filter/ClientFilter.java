@@ -75,8 +75,12 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
         try {
             jSonResult.put("dateBigger", (dateBiger.getValue() == null ? DATE_BIGGER : dateBiger.getValue()).toString());
             jSonResult.put("dateLess", (dateLess.getValue() == null ? DATE_LESS : dateLess.getValue()).toString());
-             
-            UtilsDB.getInstance().updateFilterClients(jSonResult.getString("dateBigger"), jSonResult.getString("dateLess"));
+            
+            JSONObject baseJS = new JSONObject();
+            baseJS.put("dateBigger", (dateBiger.getValue() == null) ? "" : dateBiger.getValue());
+            baseJS.put("dateLess", (dateLess.getValue() == null) ? "" : dateLess.getValue());
+            
+            UtilsDB.getInstance().updateFilters("clients", "filter", baseJS);
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
     }
     
@@ -86,13 +90,13 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
         //dateBiger.setValue(LocalDate.MIN);
         // იღებს derby ბაზიდან dateBiger, dateLess-ების მნიშვნელობებს
         try {
-            JSONObject json = UtilsDB.getInstance().getFilterClientsDate();
-            if (json != null){
+            JSONObject json = UtilsDB.getInstance().getFilterJson("clients", "filter");
+            if (json != null && json.length() > 0){
                 String dateB = json.getString("dateBigger");
                 String dateL = json.getString("dateLess");
                 
-                LocalDate bigger = (dateB.equals(DATE_BIGGER)) ? null : LocalDate.parse(dateB);
-                LocalDate less = (dateL.equals(DATE_LESS)) ? null : LocalDate.parse(dateL);
+                LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
+                LocalDate less   = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);
  
                 dateBiger.setValue(bigger);
                 dateLess.setValue(less);

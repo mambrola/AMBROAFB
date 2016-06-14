@@ -37,7 +37,7 @@ public class AmbroAFB extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         mainStage = stage;
-        UtilsDB.getInstance().createTables();
+        UtilsDB.getInstance().createLocalUsageTable();
         Utils.saveShowingStageByPath("main", mainStage);
         Scene scene = Utils.createScene(Names.MAIN_FXML);
         stage.setScene(scene);

@@ -6,6 +6,7 @@
 package ambroafb.general;
 
 import ambroafb.clients.filter.ClientFilter;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -28,6 +29,7 @@ public class UtilsDB {
     private static final String DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
     private static final String URL = "jdbc:derby:localDB;create=true;user=afb;password=afb";
     private Connection connection;
+    private static final String TABLE_NAME = "filters";
     
     public static UtilsDB getInstance(){
         if (instance == null){
@@ -47,52 +49,47 @@ public class UtilsDB {
     
     
     
-    public void createTables(){
-        createFilterClientTable();
-    }
-
-    private void createFilterClientTable() {
-        String filterClients = "create table filter_clients ( " +
+    public void createLocalUsageTable(){
+//        createFilterClientTable();
+        String filterClients = "create table filters ( " +
                                         " id int primary key, " +
-                                        " from_date varchar(16)," +
-                                        " to_date varchar(16)" +
+                                        " target varchar(16)," +
+                                        " type varchar(16)," +
+                                        " json clob " +
                                     ")";
         boolean exec = executeQuery(filterClients);
         if (exec){
-            addDefaultValuesIntoFilterClients();
+            addDefaultValuesIntoFilters();
         }
     }
-    
-    private void addDefaultValuesIntoFilterClients(){
-        String query = "insert into filter_clients " +
-                        " values(1, '" + ClientFilter.DATE_BIGGER + "', '" + ClientFilter.DATE_LESS + "')";
+
+    private void addDefaultValuesIntoFilters(){
+        String query = "insert into filters " +
+                        " values (1, 'clients', 'filter', '{}')";
         executeQuery(query);
     }
     
-    public JSONObject getFilterClientsDate() {
+    public JSONObject getFilterJson(String target, String type) {
         JSONObject result = null;
-        String query = "select * from filter_clients";
+        String query = "select * from filters " +
+                        " where target = '" + target + "' and type = '" + type + "'";
         try {
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
-            set.next();
-            String fromDate = set.getString(2);
-            String toDate = set.getString(3);
-            
-            result = new JSONObject();
-            result.put("dateBigger", fromDate);
-            result.put("dateLess", toDate);
+            while (set.next()){
+                String jsonString = set.getString(4);
+                result = new JSONObject(jsonString);
+            }
         } catch (SQLException | JSONException ex) {
             Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
 
-    public void updateFilterClients(String dateBigger, String dateLess) {
-        String query = "update filter_clients " +
-                " set from_date = '" + dateBigger + "', " +
-                " to_date = '" + dateLess + "' " +
-                " where id = 1";
+    public void updateFilters(String target, String type, JSONObject json) {
+        String query = "update filters " +
+                " set json = '" + json.toString() + "' " +
+                " where target = '" + target + "' and type = '" + type + "'";
 
         executeQuery(query);
     }
@@ -104,6 +101,7 @@ public class UtilsDB {
             }
             return true;
         } catch (SQLException ex) {
+//            Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
