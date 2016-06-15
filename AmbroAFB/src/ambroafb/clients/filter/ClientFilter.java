@@ -70,7 +70,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
         jSonResult = new JSONObject();
         try {
             
-            System.out.println("dateBigger: " + dateBigger);
+            System.out.println("dateBigger: " + dateBigger.getEditor().getText());
             
             
             jSonResult.put("dateBigger", (dateBigger.getValue() == null ? DATE_BIGGER : dateBigger.getValue()).toString());
