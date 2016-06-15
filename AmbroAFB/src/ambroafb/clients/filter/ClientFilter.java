@@ -33,12 +33,8 @@ import org.json.JSONObject;
  */
 public class ClientFilter  extends Stage implements Filterable, Initializable{
     @FXML
-    private DatePicker dateBiger, dateLess;
-    @FXML
-    private Button cancel;
-    
+    private DatePicker dateBigger, dateLess;
     private JSONObject jSonResult;
-    
     public static final String DATE_BIGGER = "1970-01-01";
     public static final String DATE_LESS = "9999-01-01";
     
@@ -73,24 +69,25 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
             return;
         jSonResult = new JSONObject();
         try {
-            jSonResult.put("dateBigger", (dateBiger.getValue() == null ? DATE_BIGGER : dateBiger.getValue()).toString());
-            jSonResult.put("dateLess", (dateLess.getValue() == null ? DATE_LESS : dateLess.getValue()).toString());
+            
+            System.out.println("dateBigger: " + dateBigger);
+            
+            
+            jSonResult.put("dateBigger", (dateBigger.getValue() == null ? DATE_BIGGER : dateBigger.getValue()).toString());
+            jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());
             
             JSONObject baseJS = new JSONObject();
-            baseJS.put("dateBigger", (dateBiger.getValue() == null) ? "" : dateBiger.getValue());
-            baseJS.put("dateLess", (dateLess.getValue() == null) ? "" : dateLess.getValue());
+            baseJS.put("dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue());
+            baseJS.put(  "dateLess", (  dateLess.getValue() == null) ? "" :   dateLess.getValue());
             
-            UtilsDB.getInstance().updateFilters("clients", "filter", baseJS);
+            UtilsDB.getInstance().updateDefaultParameters("clients", "filter", baseJS);
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
     }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
-        //dateBiger.setValue(LocalDate.MIN);
-        // იღებს derby ბაზიდან dateBiger, dateLess-ების მნიშვნელობებს
         try {
-            JSONObject json = UtilsDB.getInstance().getFilterJson("clients", "filter");
+            JSONObject json = UtilsDB.getInstance().getDefaultParametersJson("clients", "filter");
             if (json != null && json.length() > 0){
                 String dateB = json.getString("dateBigger");
                 String dateL = json.getString("dateLess");
@@ -98,7 +95,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
                 LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
                 LocalDate less   = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);
  
-                dateBiger.setValue(bigger);
+                dateBigger.setValue(bigger);
                 dateLess.setValue(less);
             } 
         }

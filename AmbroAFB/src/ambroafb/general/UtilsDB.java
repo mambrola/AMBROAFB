@@ -5,15 +5,11 @@
  */
 package ambroafb.general;
 
-import ambroafb.clients.filter.ClientFilter;
-import java.sql.Clob;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONException;
@@ -27,9 +23,9 @@ public class UtilsDB {
     
     private static UtilsDB instance;
     private static final String DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
-    private static final String URL = "jdbc:derby:localDB;create=true;user=afb;password=afb";
+    private static final String URL = "jdbc:derby:localDB; create=true; user=afb; password=afb";
     private Connection connection;
-    private static final String TABLE_NAME = "filters";
+    private static final String DP_TABLE_NAME = "defaultParameters";
     
     public static UtilsDB getInstance(){
         if (instance == null){
@@ -47,31 +43,28 @@ public class UtilsDB {
         }
     }
     
-    
-    
-    public void createLocalUsageTable(){
-//        createFilterClientTable();
-        String filterClients = "create table filters ( " +
+    public void createLocalUsageTables(){
+        String quary = "create table " + DP_TABLE_NAME + " ( " +
                                         " id int primary key, " +
                                         " target varchar(16)," +
                                         " type varchar(16)," +
                                         " json clob " +
                                     ")";
-        boolean exec = executeQuery(filterClients);
+        boolean exec = executeQuery(quary);
         if (exec){
-            addDefaultValuesIntoFilters();
+            addInitialValuesIntoDefaultParameters();
         }
     }
 
-    private void addDefaultValuesIntoFilters(){
-        String query = "insert into filters " +
+    private void addInitialValuesIntoDefaultParameters(){
+        String query = "insert into " + DP_TABLE_NAME +
                         " values (1, 'clients', 'filter', '{}')";
         executeQuery(query);
     }
     
-    public JSONObject getFilterJson(String target, String type) {
+    public JSONObject getDefaultParametersJson(String target, String type) {
         JSONObject result = null;
-        String query = "select * from filters " +
+        String query = "select * from defaultParameters " +
                         " where target = '" + target + "' and type = '" + type + "'";
         try {
             Statement statement = connection.createStatement();
@@ -86,8 +79,8 @@ public class UtilsDB {
         return result;
     }
 
-    public void updateFilters(String target, String type, JSONObject json) {
-        String query = "update filters " +
+    public void updateDefaultParameters(String target, String type, JSONObject json) {
+        String query = "update defaultParameters " +
                 " set json = '" + json.toString() + "' " +
                 " where target = '" + target + "' and type = '" + type + "'";
 
