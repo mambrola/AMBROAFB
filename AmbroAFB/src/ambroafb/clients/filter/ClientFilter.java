@@ -5,6 +5,7 @@
  */
 package ambroafb.clients.filter;
 
+import ambroafb.ADatePicker;
 import ambroafb.AmbroAFB;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
@@ -33,7 +34,8 @@ import org.json.JSONObject;
  */
 public class ClientFilter  extends Stage implements Filterable, Initializable{
     @FXML
-    private DatePicker dateBigger, dateLess;
+    private ADatePicker dateBigger, dateLess;
+    
     private JSONObject jSonResult;
     public static final String DATE_BIGGER = "1970-01-01";
     public static final String DATE_LESS = "9999-01-01";
@@ -69,9 +71,8 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
             return;
         jSonResult = new JSONObject();
         try {
-            
-            System.out.println("dateBigger: " + dateBigger.getEditor().getText());
-            
+            dateBigger.setEditingValue();
+            dateLess.setEditingValue();
             
             jSonResult.put("dateBigger", (dateBigger.getValue() == null ? DATE_BIGGER : dateBigger.getValue()).toString());
             jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());

@@ -5,7 +5,7 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import ambroafb.*?>
+<?import ambroafb.ADatePicker?>
 
 <VBox   fx:id="formPane"
         stylesheets="/styles/css/clientfilter.css" 
@@ -19,7 +19,7 @@
             </VBox>
             <VBox >
                 <Label fx:id="date_less" text="%open_date_less" /> 
-                <DatePicker fx:id="dateLess" />
+                <ADatePicker fx:id="dateLess" />
             </VBox >
             
         </children>
