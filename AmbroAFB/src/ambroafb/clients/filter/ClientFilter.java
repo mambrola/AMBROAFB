@@ -67,9 +67,9 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
 
     @Override
     public void setResult(boolean isOk){
+        jSonResult = new JSONObject();
         if(!isOk)
             return;
-        jSonResult = new JSONObject();
         try {
             dateBigger.setEditingValue();
             dateLess.setEditingValue();
