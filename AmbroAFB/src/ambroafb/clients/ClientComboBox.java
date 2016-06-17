@@ -5,7 +5,6 @@
  */
 package ambroafb.clients;
 
-import ambroafb.clients.Client;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 
@@ -16,7 +15,6 @@ import javafx.util.StringConverter;
 public class ClientComboBox extends ComboBox<Client> {
     
     public ClientComboBox(){
-        
         setConverter(new StringConverter<Client>() {
             @Override
             public String toString(Client client) {
@@ -31,6 +29,8 @@ public class ClientComboBox extends ComboBox<Client> {
                 return null;
             }
         });
+
+        this.getItems().addAll(Client.getAllFromDB());
     }
     
     public void selectItem(Client client){

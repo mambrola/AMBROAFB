@@ -6,9 +6,6 @@
 package ambroafb.clients;
 
 import ambroafb.general.Utils;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

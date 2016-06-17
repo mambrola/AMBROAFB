@@ -7,6 +7,7 @@ package ambroafb.clients.filter;
 
 import ambro.ADatePicker;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.UtilsDB;
 import ambroafb.general.interfaces.Filterable;
@@ -37,7 +38,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     
     public ClientFilter(Stage owner) {
         String ownerPath = Utils.getPathForStage(owner);
-        String clientFilterPath = ownerPath + Filterable.LOCAL_NAME;
+        String clientFilterPath = ownerPath + Names.LEVEL_FOR_PATH;
         Utils.saveShowingStageByPath(clientFilterPath, (Stage)this);
         
         this.initStyle(StageStyle.UNIFIED);

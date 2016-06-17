@@ -8,8 +8,6 @@ package ambroafb.auto_dealers;
 import ambro.AView;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Slider;
 
 /**
  *

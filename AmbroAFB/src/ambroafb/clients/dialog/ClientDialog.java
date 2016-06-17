@@ -6,6 +6,7 @@
 package ambroafb.clients.dialog;
 
 import ambroafb.clients.Client;
+import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -27,7 +28,7 @@ public class ClientDialog extends Stage implements Dialogable {
     
     public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         String ownerPath = Utils.getPathForStage(owner);
-        String clientsDialogPath = ownerPath + Dialogable.LOCAL_NAME;
+        String clientsDialogPath = ownerPath + Names.LEVEL_FOR_PATH;
         Utils.saveShowingStageByPath(clientsDialogPath, (Stage)this);
         
         Client clientObject;
@@ -52,7 +53,6 @@ public class ClientDialog extends Stage implements Dialogable {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             event.consume();
         });
-        
     }
     
     @Override

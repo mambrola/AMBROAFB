@@ -7,7 +7,6 @@ package ambroafb.clients.dialog;
 
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
-import ambroafb.countries.Country;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
@@ -16,6 +15,7 @@ import ambroafb.phones.PhoneComboBox;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -23,7 +23,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -68,6 +67,7 @@ public class ClientDialogController implements Initializable {
     public void bindClient(Client client) {
         this.client = client;
         if (client != null) {
+            openDate.setValue(getClientCreatedDate());
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
             rezident. selectedProperty().bindBidirectional(client.isRezProperty());
             firstName.    textProperty().bindBidirectional(client.firstNameProperty());
@@ -82,12 +82,23 @@ public class ClientDialogController implements Initializable {
         }
     }
     
+    private LocalDate getClientCreatedDate(){
+        LocalDate result = null;
+        String date = client.createdDate;
+        if (date != null){
+            int beforeTime = date.indexOf(" ");
+            String onlyDatePart = client.createdDate.substring(0, beforeTime);
+            result = LocalDate.parse(onlyDatePart);
+        }
+        return result;
+    }
+    
     public void setBackupClient(Client backupClient){
         this.clientBackup = backupClient;
     }
     
     public boolean anyFieldChanged(){
-        return !client.equals(clientBackup);
+        return !client.compares(clientBackup);
     }
     
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {

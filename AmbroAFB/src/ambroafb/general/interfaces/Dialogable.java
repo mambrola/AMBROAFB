@@ -16,6 +16,4 @@ public interface Dialogable {
     public Scene getScene();
     public void showAndWait();
     public void operationCanceled();
-
-    public static final String LOCAL_NAME = "/DialogOrFilter";
 }

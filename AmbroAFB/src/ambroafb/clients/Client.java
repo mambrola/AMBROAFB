@@ -431,8 +431,9 @@ public class Client extends EditorPanelable{
         return (result + phones).toLowerCase();
     }
     
-    public boolean equals(Client other){
-        boolean fieldsCompareResult =   this.isJur.get() == other.getIsJur() &&
+    public boolean compares(Client other){ // this.createdDate.equals(other.createdDate) &&
+        boolean fieldsCompareResult =   
+                                        this.isJur.get() == other.getIsJur() &&
                                         this.isRez.get() == other.getIsRez() && 
                                         this.firstName.get().equals(other.getFirstName()) &&
                                         this.lastName.get().equals(other.getLastName()) &&

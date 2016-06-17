@@ -319,13 +319,13 @@ public class Utils {
      */
     public static void exitApplication() {
         GeneralConfig.getInstance().logoutServerClient();
-        try {
-            if (AmbroAFB.socket != null) {
-                AmbroAFB.socket.close();
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            if (AmbroAFB.socket != null) {
+//                AmbroAFB.socket.close(); // socket opened with "try", so close operation is not needed.
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         Platform.exit();
         System.exit(0);
     }
@@ -476,12 +476,10 @@ public class Utils {
     public static Object getInstanceOfClass(Class<?> obj, Class[] constructorParams, Object... args){
         Object result = null;
         try {
-            
             result = obj.getConstructor(constructorParams).newInstance(args);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("result: " + result);
         return result;
     }
     

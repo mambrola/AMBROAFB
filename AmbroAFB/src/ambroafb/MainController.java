@@ -5,7 +5,6 @@
  */
 package ambroafb;
 
-import ambroafb.clients.Client;
 import ambroafb.clients.Clients;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.general.AlertMessage;
@@ -120,7 +119,8 @@ public class MainController implements Initializable {
             JSONObject json = filter.getResult();
             clients.getClientsController().reAssignTable(json);
 
-            if (json.length() == 0) clients.close();
+            if (json != null && json.length() == 0) 
+                clients.close();
         }
         else {
             clientsStage.requestFocus();
