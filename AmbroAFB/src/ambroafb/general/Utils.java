@@ -248,12 +248,12 @@ public class Utils {
      * @return
      * @throws IOException
      */
-    public static Scene createScene(String name, HashMap<String, Object> parameters) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setResources(GeneralConfig.getInstance().getBundle());
-        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
-        return new Scene(root);
-    }
+//    public static Scene createScene(String name, HashMap<String, Object> parameters) throws IOException {
+//        FXMLLoader loader = new FXMLLoader();
+//        loader.setResources(GeneralConfig.getInstance().getBundle());
+//        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
+//        return new Scene(root);
+//    }
 
     /**
      * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით
@@ -275,14 +275,6 @@ public class Utils {
         return scene;
     }
     
-    public static Scene createScene(String name) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setResources(GeneralConfig.getInstance().getBundle());
-        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
-        Scene scene = new Scene(root);
-        scene.getProperties().put("controller", loader.getController());
-        return scene;
-    }
 
     /**
      * ინახავს მიმდინარე კონფიგურაციებს, თიშავს მიმდინარე აპლიკაციას და უშვებს
