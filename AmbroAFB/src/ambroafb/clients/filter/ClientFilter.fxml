@@ -5,7 +5,7 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import ambroafb.ADatePicker?>
+<?import ambro.ADatePicker?>
 
 <VBox   fx:id="formPane"
         stylesheets="/styles/css/clientfilter.css" 

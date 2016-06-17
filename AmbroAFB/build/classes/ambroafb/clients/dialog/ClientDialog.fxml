@@ -22,7 +22,7 @@
             <VBox>
                 <children>
                     <Label text="%date" /> 
-                    <DatePicker fx:id="openDate" />
+                    <ADatePicker fx:id="openDate" />
                 </children> 
             </VBox>
             <HBox>

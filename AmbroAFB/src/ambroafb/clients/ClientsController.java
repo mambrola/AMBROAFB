@@ -32,8 +32,7 @@ public class ClientsController implements Initializable {
     private EditorPanelController editorPanelController;
     
     private final ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();;
-    private SortedList<EditorPanelable> sorterData;
-    private Stage stage;
+    
     /**
      *
      * @param url
@@ -53,10 +52,6 @@ public class ClientsController implements Initializable {
                 clients.add(client);
             });
         }
-    }
-
-    void setStage(Stage stage) {
-        this.stage = stage;
     }
     
     public EditorPanelController getEditorPanelController(){

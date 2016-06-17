@@ -112,8 +112,8 @@ public class Client extends EditorPanelable{
         countryDescrip =    new SimpleStringProperty("");
         IDNumber =          new SimpleStringProperty("");
         phoneList = FXCollections.observableArrayList();
-        phoneNumbers = new SimpleStringProperty("");
-        fax = new SimpleStringProperty("");
+        phoneNumbers =      new SimpleStringProperty("");
+        fax =               new SimpleStringProperty("");
 
         phoneList.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
@@ -181,13 +181,6 @@ public class Client extends EditorPanelable{
                 .collect(Collectors.toList())
         );
         setFax(other.getFax());
-    }
-
-    
-
-    @Override
-    public String toString() {
-        return descrip.get() + " : " + email.get() + " : " + fullAddress.get();
     }
 
     public static List<Client> getAllFromDB() {
@@ -453,8 +446,6 @@ public class Client extends EditorPanelable{
         boolean equalsPhones = Phone.compareLists(phoneList, other.getPhoneList());
         return fieldsCompareResult && equalsPhones;
     }
-    
-    
 
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 
@@ -488,7 +479,5 @@ public class Client extends EditorPanelable{
                 }
             };
         }
-
     }
-
 }

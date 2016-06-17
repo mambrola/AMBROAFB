@@ -5,24 +5,19 @@
  */
 package ambroafb.clients.filter;
 
-import ambroafb.ADatePicker;
-import ambroafb.AmbroAFB;
+import ambro.ADatePicker;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.UtilsDB;
 import ambroafb.general.interfaces.Filterable;
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONException;
@@ -47,12 +42,10 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));
-        try {
-            Scene scene = Utils.createScene("/ambroafb/clients/filter/ClientFilter.fxml", (ClientFilter)this);
-            this.setScene(scene);
-        } catch (IOException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
+        Scene scene = Utils.createScene("/ambroafb/clients/filter/ClientFilter.fxml", (ClientFilter)this);
+        this.setScene(scene);
         this.initOwner(owner);
-        setResizable(false);
+        this.setResizable(false);
     }
 
     @Override
@@ -87,7 +80,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             JSONObject json = UtilsDB.getInstance().getDefaultParametersJson("clients", "filter");
             if (json != null && json.length() > 0){
                 String dateB = json.getString("dateBigger");
-                String dateL = json.getString("dateLess");
+                String dateL = json.getString(  "dateLess");
                 
                 LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
                 LocalDate less   = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);

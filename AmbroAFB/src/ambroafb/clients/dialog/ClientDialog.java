@@ -10,9 +10,6 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -42,14 +39,12 @@ public class ClientDialog extends Stage implements Dialogable {
         this.client = clientObject;
         this.clientBackup = clientObject.cloneWithID();
         
-        try {
-            Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml", null);
-            dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
-            dialogController.bindClient(this.client); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
-            dialogController.setNextVisibleAndActionParameters(buttonType);
-            dialogController.setBackupClient(this.clientBackup);
-            this.setScene(currentScene);
-        } catch (IOException ex) { Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex); }
+        Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml", null);
+        dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
+        dialogController.bindClient(this.client); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
+        dialogController.setNextVisibleAndActionParameters(buttonType);
+        dialogController.setBackupClient(this.clientBackup);
+        this.setScene(currentScene);
         setResizable(false);
         initOwner(owner);
 

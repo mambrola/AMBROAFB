@@ -35,7 +35,7 @@ public class AmbroAFB extends Application {
     public static ServerSocket socket;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         mainStage = stage;
         UtilsDB.getInstance().createLocalUsageTables();
         Utils.saveShowingStageByPath("main", mainStage);
@@ -43,7 +43,9 @@ public class AmbroAFB extends Application {
         stage.setScene(scene);
         stage.setTitle(GeneralConfig.getInstance().getTitleFor(Names.MAIN_TITLE));
         if (Names.MAIN_LOGO != null) {
-            stage.getIcons().add(new Image(Utils.class.getResource(Names.MAIN_LOGO).openStream()));
+            try {
+                stage.getIcons().add(new Image(Utils.class.getResource(Names.MAIN_LOGO).openStream()));
+            } catch (IOException ex) { Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex); }
         }
 
         GeneralConfig conf = GeneralConfig.getInstance();

@@ -261,17 +261,22 @@ public class Utils {
      * @param name - fxml დოკუმენტის მისამართი
      * @param controller
      * @return
-     * @throws IOException
      */
-    public static Scene createScene(String name, Object controller) throws IOException {
+    public static Scene createScene(String name, Object controller) {
+        Scene scene = null;
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(GeneralConfig.getInstance().getBundle());
         if (controller != null){
             loader.setController(controller);
         }
-        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
-        Scene scene = new Scene(root);
-        scene.getProperties().put("controller", loader.getController());
+        try {
+            Parent root;
+            root = loader.load(AmbroAFB.class.getResource(name).openStream());
+            scene = new Scene(root);
+            scene.getProperties().put("controller", loader.getController());
+        } catch (IOException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return scene;
     }
     

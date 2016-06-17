@@ -5,6 +5,7 @@
  */
 package ambroafb.clients.dialog;
 
+import ambro.ADatePicker;
 import ambroafb.clients.Client;
 import ambroafb.countries.Country;
 import ambroafb.general.GeneralConfig;
@@ -36,7 +37,7 @@ public class ClientDialogController implements Initializable {
     @FXML
     private VBox formPane, phonesContainer;
     @FXML
-    private DatePicker openDate;
+    private ADatePicker openDate;
     @FXML
     private CheckBox juridical, rezident;
     @FXML
@@ -60,28 +61,24 @@ public class ClientDialogController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        country.getItems().addAll(Country.getAllFromDB());
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        
         juridical.setOnAction(this::switchJuridical);
-        
     }
 
     public void bindClient(Client client) {
         this.client = client;
         if (client != null) {
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
-            rezident.selectedProperty().bindBidirectional(client.isRezProperty());
-            firstName.textProperty().bindBidirectional(client.firstNameProperty());
-            lastName.textProperty().bindBidirectional(client.lastNameProperty());
-            idNumber.textProperty().bindBidirectional(client.IDNumberProperty());
-            email.textProperty().bindBidirectional(client.emailProperty());
-            fax.textProperty().bindBidirectional(client.faxProperty());
-            address.textProperty().bindBidirectional(client.addressProperty());
-            zipCode.textProperty().bindBidirectional(client.zipCodeProperty());
-            city.textProperty().bindBidirectional(client.cityProperty());
-            country.valueProperty().bindBidirectional(client.countryProperty());
+            rezident. selectedProperty().bindBidirectional(client.isRezProperty());
+            firstName.    textProperty().bindBidirectional(client.firstNameProperty());
+            lastName.     textProperty().bindBidirectional(client.lastNameProperty());
+            idNumber.     textProperty().bindBidirectional(client.IDNumberProperty());
+            email.        textProperty().bindBidirectional(client.emailProperty());
+            fax.          textProperty().bindBidirectional(client.faxProperty());
+            address.      textProperty().bindBidirectional(client.addressProperty());
+            zipCode.      textProperty().bindBidirectional(client.zipCodeProperty());
+            city.         textProperty().bindBidirectional(client.cityProperty());
+            country.     valueProperty().bindBidirectional(client.countryProperty());
         }
     }
     
