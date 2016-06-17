@@ -102,6 +102,7 @@ public class ClientDialogController implements Initializable {
     }
     
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
+        openDate.setDisable(true);
         boolean editable = true;
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();

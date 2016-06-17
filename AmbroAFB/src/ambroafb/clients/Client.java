@@ -181,6 +181,7 @@ public class Client extends EditorPanelable{
                 .collect(Collectors.toList())
         );
         setFax(other.getFax());
+        this.createdDate = other.createdDate;
     }
 
     public static List<Client> getAllFromDB() {
@@ -232,6 +233,8 @@ public class Client extends EditorPanelable{
             String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, client_str);
             Client res = mapper.readValue(res_str, Client.class);
             client.copyFrom(res);
+            if(client.getRecId() <= 0)
+                client.setRecId(res.getRecId());
             return client;
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
