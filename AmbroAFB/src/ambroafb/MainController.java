@@ -120,7 +120,7 @@ public class MainController implements Initializable {
             JSONObject json = filter.getResult();
             clients.getClientsController().reAssignTable(json);
 
-            if (json == null) clients.close();
+            if (json.length() == 0) clients.close();
         }
         else {
             clientsStage.requestFocus();
