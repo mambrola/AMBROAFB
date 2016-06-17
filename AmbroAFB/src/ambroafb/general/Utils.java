@@ -99,7 +99,7 @@ public class Utils {
         }
 
         controller = new MultiSceneStage();
-        Scene scene = createScene(name);
+        Scene scene = createScene(name, null);
         controller.addScene(scene);
         addsFeaturesToStage(controller, name, title, logo);
         stages.put(name, controller);
@@ -153,7 +153,7 @@ public class Utils {
             return stage;
         }
         Stage stage = new Stage();
-        Scene scene = createScene(name);
+        Scene scene = createScene(name, null);
         stage.setScene(scene);
         addsFeaturesToStage(stage, name, title, logo);
         stages.put(name, stage);
@@ -259,9 +259,22 @@ public class Utils {
      * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით
      *
      * @param name - fxml დოკუმენტის მისამართი
+     * @param controller
      * @return
      * @throws IOException
      */
+    public static Scene createScene(String name, Object controller) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(GeneralConfig.getInstance().getBundle());
+        if (controller != null){
+            loader.setController(controller);
+        }
+        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
+        Scene scene = new Scene(root);
+        scene.getProperties().put("controller", loader.getController());
+        return scene;
+    }
+    
     public static Scene createScene(String name) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(GeneralConfig.getInstance().getBundle());

@@ -32,7 +32,7 @@ import org.json.JSONObject;
  *
  * @author mambroladze
  */
-public class ClientFilter  extends Stage implements Filterable, Initializable{
+public class ClientFilter  extends Stage implements Filterable, Initializable {
     @FXML
     private ADatePicker dateBigger, dateLess;
     
@@ -48,11 +48,14 @@ public class ClientFilter  extends Stage implements Filterable, Initializable{
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setResources(GeneralConfig.getInstance().getBundle());
-            fxmlLoader.setController((ClientFilter)this);
-            Scene scene = new Scene(fxmlLoader.load(AmbroAFB.class.getResource("/ambroafb/clients/filter/ClientFilter.fxml").openStream()));
-            scene.getProperties().put("controller", fxmlLoader.getController());
+//            FXMLLoader fxmlLoader = new FXMLLoader();
+//            fxmlLoader.setResources(GeneralConfig.getInstance().getBundle());
+            Scene scene = Utils.createScene("/ambroafb/clients/filter/ClientFilter.fxml", (ClientFilter)this);
+//            fxmlLoader.setController((ClientFilter)this);
+//            Scene scene = new Scene(fxmlLoader.load(AmbroAFB.class.getResource("/ambroafb/clients/filter/ClientFilter.fxml").openStream()));
+//            scene.getProperties().put("controller", fxmlLoader.getController());
+//            ClientFilter c = (ClientFilter) scene.getProperties().get("controller");
+//            System.out.println("c: " + c);
             this.setScene(scene);
         } catch (IOException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
         this.initOwner(owner);

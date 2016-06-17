@@ -39,7 +39,7 @@ public class AmbroAFB extends Application {
         mainStage = stage;
         UtilsDB.getInstance().createLocalUsageTables();
         Utils.saveShowingStageByPath("main", mainStage);
-        Scene scene = Utils.createScene(Names.MAIN_FXML);
+        Scene scene = Utils.createScene(Names.MAIN_FXML, null);
         stage.setScene(scene);
         stage.setTitle(GeneralConfig.getInstance().getTitleFor(Names.MAIN_TITLE));
         if (Names.MAIN_LOGO != null) {
