@@ -48,14 +48,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));
         try {
-//            FXMLLoader fxmlLoader = new FXMLLoader();
-//            fxmlLoader.setResources(GeneralConfig.getInstance().getBundle());
             Scene scene = Utils.createScene("/ambroafb/clients/filter/ClientFilter.fxml", (ClientFilter)this);
-//            fxmlLoader.setController((ClientFilter)this);
-//            Scene scene = new Scene(fxmlLoader.load(AmbroAFB.class.getResource("/ambroafb/clients/filter/ClientFilter.fxml").openStream()));
-//            scene.getProperties().put("controller", fxmlLoader.getController());
-//            ClientFilter c = (ClientFilter) scene.getProperties().get("controller");
-//            System.out.println("c: " + c);
             this.setScene(scene);
         } catch (IOException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
         this.initOwner(owner);
@@ -84,7 +77,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             baseJS.put("dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue());
             baseJS.put(  "dateLess", (  dateLess.getValue() == null) ? "" :   dateLess.getValue());
             
-            UtilsDB.getInstance().updateDefaultParameters("clients", "filter", baseJS);
+            UtilsDB.getInstance().updateOrInsertDefaultParameters("clients", "filter", baseJS);
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
     }
     

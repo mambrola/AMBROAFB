@@ -51,20 +51,17 @@ public class UtilsDB {
                                         " json clob " +
                                     ")";
         boolean exec = executeQuery(quary);
-        if (exec){
-            addInitialValuesIntoDefaultParameters();
-        }
     }
 
-    private void addInitialValuesIntoDefaultParameters(){
+    private void addInitialValuesIntoDefaultParameters(String target, String type){
         String query = "insert into " + DP_TABLE_NAME +
-                        " values (1, 'clients', 'filter', '{}')";
+                        " values (1, '" + target + "', '" + type + "', '{}')";
         executeQuery(query);
     }
     
     public JSONObject getDefaultParametersJson(String target, String type) {
         JSONObject result = null;
-        String query = "select * from defaultParameters " +
+        String query = "select * from " + DP_TABLE_NAME +
                         " where target = '" + target + "' and type = '" + type + "'";
         try {
             Statement statement = connection.createStatement();
@@ -79,12 +76,18 @@ public class UtilsDB {
         return result;
     }
 
-    public void updateDefaultParameters(String target, String type, JSONObject json) {
-        String query = "update defaultParameters " +
-                " set json = '" + json.toString() + "' " +
-                " where target = '" + target + "' and type = '" + type + "'";
+    public void updateOrInsertDefaultParameters(String target, String type, JSONObject json) {
+        JSONObject jsonValue = getDefaultParametersJson(target, type);
+        if (jsonValue == null){
+            addInitialValuesIntoDefaultParameters(target, type);
+        }
+        else {
+            String query = "update " + DP_TABLE_NAME +
+                    " set json = '" + json.toString() + "' " +
+                    " where target = '" + target + "' and type = '" + type + "'";
 
-        executeQuery(query);
+            executeQuery(query);
+        }
     }
     
     private boolean executeQuery(String query){
