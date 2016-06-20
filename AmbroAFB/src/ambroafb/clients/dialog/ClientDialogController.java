@@ -101,7 +101,7 @@ public class ClientDialogController implements Initializable {
         }
     }
     
-    public void changeComponentVisualByPattern(TextField textField, String explain){
+    public void changeTextFieldVisualByPattern(TextField textField, String explain){
         Parent parent = textField.getParent();
         Label validatorExplain = (Label) parent.lookup(".patterValidatorExplain");
         validatorExplain.setText(explain);
@@ -116,6 +116,22 @@ public class ClientDialogController implements Initializable {
             validatorExplain.setVisible(true);
             validatorExplain.setTextFill(new Color(1, 0, 0, 1));
         }
+    }
+    
+    public void changeTextFieldVisualByEmpty(TextField textField, String text){
+        Parent parent = textField.getParent();
+        Label requiredMsg = (Label) parent.lookup(".requiredFieldText");
+        requiredMsg.setText(text);
+        
+        if (text.isEmpty()){
+            requiredMsg.setVisible(false);
+        }
+        else {
+            textField.requestFocus();
+            requiredMsg.setTextFill(new Color(1, 0, 0, 1));
+            requiredMsg.setVisible(true);
+        }
+        
     }
     
     private LocalDate getClientCreatedDate(){

@@ -36,14 +36,17 @@
                     <VBox >
                         <Label fx:id="first_name" text="%first_name" /> 
                         <TextField fx:id="firstName" />
+                        <Label styleClass="requiredFieldText" visible="false" />
                     </VBox>
                     <VBox >
                         <Label fx:id="last_name" text="%last_name" /> 
                         <TextField fx:id="lastName" />
+                        <Label styleClass="requiredFieldText" visible="false" />
                     </VBox >
                     <VBox >
                         <Label text="%id_number" /> 
                         <TextField fx:id="idNumber" />
+                        <Label styleClass="requiredFieldText" visible="false" />
                     </VBox>
                 </children>
             </HBox>
@@ -68,6 +71,7 @@
                     <VBox >
                         <Label text="%address" /> 
                         <TextField  fx:id="address" />
+                        <Label styleClass="requiredFieldText" visible="false" />
                     </VBox >
                 </children>
             </HBox>

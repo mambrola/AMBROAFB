@@ -61,6 +61,7 @@ import javafx.scene.control.PasswordField;
 public class Utils {
 
     private static Logger logger;
+    private static final String REQUIRED_TEXT = "This is required.";
 
     /**
      * აკეთებს exception-ის ლოგირებას კონსოლში და ფაილში სახელად 'error.log'
@@ -556,11 +557,13 @@ public class Utils {
             field.setAccessible(accessible);
             
             if (mustNotEmpty && text.isEmpty()){
-//                fieldAsObject.requestFocus();
-                fieldAsObject.setPromptText("This is required");
+                classObject.getClass().getMethod("changeTextFieldVisualByEmpty", TextField.class, String.class).invoke(classObject, fieldAsObject, REQUIRED_TEXT);
                 result = false;
             }
-        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            else {
+                classObject.getClass().getMethod("changeTextFieldVisualByEmpty", TextField.class, String.class).invoke(classObject, fieldAsObject, "");
+            }
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException | InvocationTargetException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
@@ -579,11 +582,11 @@ public class Utils {
             Pattern pattern = Pattern.compile(patternAnnot.value());
             Matcher matcher = pattern.matcher(text);
             if (!matcher.matches()){
-                classObject.getClass().getMethod("changeComponentVisualByPattern", TextField.class, String.class).invoke(classObject, fieldAsObject, patternAnnot.explain());
+                classObject.getClass().getMethod("changeTextFieldVisualByPattern", TextField.class, String.class).invoke(classObject, fieldAsObject, patternAnnot.explain());
                 result = false;
             }
             else {
-                classObject.getClass().getMethod("changeComponentVisualByPattern", TextField.class, String.class).invoke(classObject, fieldAsObject, "");
+                classObject.getClass().getMethod("changeTextFieldVisualByPattern", TextField.class, String.class).invoke(classObject, fieldAsObject, "");
             }
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
