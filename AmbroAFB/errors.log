@@ -23678,3 +23678,15 @@ Caused by: java.io.FileNotFoundException: http://136.243.102.152:8080/KFZ_Server
 	at ambroafb.general.KFZClient.call(KFZClient.java:141)
 	... 64 more
 
+Jun 20, 2016 2:59:06 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+Jun 20, 2016 3:13:55 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+Jun 20, 2016 3:14:04 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+Jun 20, 2016 3:14:36 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+Jun 20, 2016 3:15:20 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
+Jun 20, 2016 3:17:20 PM ambroafb.general.Utils log
+SEVERE: Close without saving changes?
