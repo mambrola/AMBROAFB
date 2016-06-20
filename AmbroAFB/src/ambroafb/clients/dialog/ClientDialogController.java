@@ -43,12 +43,15 @@ public class ClientDialogController implements Initializable {
     @FXML
     private Label first_name, last_name;
     
-    @FXML  @IsNotEpmty
+    @FXML  
+    @IsNotEpmty
     private TextField firstName, lastName, address, idNumber;
     @FXML
     private TextField fax, zipCode, city;
     
-    @FXML @IsNotEpmty @Pattern(".+@.+\\..+")
+    @FXML 
+    @IsNotEpmty 
+    @ContentPattern(".+@.+\\..+")
     private TextField email;
     @FXML
     private CountryComboBox country;

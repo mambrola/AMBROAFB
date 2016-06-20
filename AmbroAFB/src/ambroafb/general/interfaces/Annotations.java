@@ -5,17 +5,27 @@
  */
 package ambroafb.general.interfaces;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
+
+
 /**
  *
  * @author dato
  */
 public class Annotations {
  
-    public @interface IsNotEpmty{
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface IsNotEpmty {
         boolean value() default true;
     }
     
-    public @interface Pattern{
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface ContentPattern {
         String value();
     }
 }

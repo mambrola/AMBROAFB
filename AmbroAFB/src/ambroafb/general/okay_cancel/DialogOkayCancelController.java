@@ -5,8 +5,10 @@
  */
 package ambroafb.general.okay_cancel;
 
+import ambroafb.clients.dialog.ClientDialogController;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.Utils;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,6 +17,7 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -58,21 +61,22 @@ public class DialogOkayCancelController implements Initializable {
                 okay.setOnAction((ActionEvent event) -> {
                     if(new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
                         ((Stage) okay.getScene().getWindow()).close();
-//                        changeStageShowingStatus();
                     }
                 });
                 cancel.setOnAction((ActionEvent event) -> {
                     operationCanceled();
                     ((Stage) okay.getScene().getWindow()).close();
-//                    changeStageShowingStatus();
                 });
                 break;
             case EDIT:
             case ADD:
                 okay.setText(type.equals(EDITOR_BUTTON_TYPE.ADD) ? "Add" : "Save");
                 okay.setOnAction((ActionEvent event) -> {
-                    ((Stage) okay.getScene().getWindow()).close();
-//                    changeStageShowingStatus();
+                    Scene currScene = okay.getScene();
+                    Object controller = currScene.getProperties().get("controller");
+                    boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller);
+                    if (allRequiredFieldsAreValid)
+                        ((Stage) okay.getScene().getWindow()).close();
                 });
                 alertText = "Close without saving changes?";    
                 cancel.setOnAction((ActionEvent event) -> {
@@ -83,7 +87,6 @@ public class DialogOkayCancelController implements Initializable {
                     if(!anyFieldWasChanged || new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
                         operationCanceled();
                         ((Stage) okay.getScene().getWindow()).close();
-//                        changeStageShowingStatus();
                     }
                 });
                 break;
@@ -91,12 +94,10 @@ public class DialogOkayCancelController implements Initializable {
                 okay.setOnAction((ActionEvent event) -> {
                     operationCanceled();
                     ((Stage) okay.getScene().getWindow()).close();
-//                    changeStageShowingStatus();
                 });
                 cancel.setOnAction((ActionEvent event) -> {
                     operationCanceled();
                     ((Stage) okay.getScene().getWindow()).close();
-//                    changeStageShowingStatus();
                 });
                 cancel.setVisible(false);
         }
@@ -108,9 +109,4 @@ public class DialogOkayCancelController implements Initializable {
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(DialogOkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
     }
     
-//    private void changeStageShowingStatus(){
-//        Stage currentStage = (Stage) okay.getScene().getWindow();
-//        String title = Utils.getFullTitleOfStage(currentStage);
-//        Utils.removeShowingStageAndSubstages(title);
-//    }
 }
