@@ -52,10 +52,10 @@
                     <VBox >
                         <Label text="%email" /> 
                         <TextField fx:id="email" />
+                        <Label styleClass="patterValidatorExplain" text="" visible="false" />
                     </VBox >
                     <VBox fx:id="phonesContainer">
                         <Label text="%phones" /> 
-                        <!--<ListEditor fx:id="phone" editable="true"/>-->
                     </VBox >
                     <VBox >
                         <Label text="%fax" /> 

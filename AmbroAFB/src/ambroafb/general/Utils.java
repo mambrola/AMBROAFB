@@ -52,6 +52,7 @@ import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
+import javafx.scene.control.PasswordField;
 
 /**
  *
@@ -531,28 +532,31 @@ public class Utils {
         boolean result = true;
         Field[] fields = currentClassObject.getClass().getDeclaredFields();
         
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(IsNotEpmty.class)){
-                result = checkValidationForIsNotEmptyAnnotation(field, currentClassObject);
+        for (int i = 0; i < fields.length; i++) { // Field field : fields
+            Field field = fields[i];
+            if (field.isAnnotationPresent(ContentEmpty.class)){
+                result = result && checkValidationForIsNotEmptyAnnotation(field, currentClassObject);
             }
             if (field.isAnnotationPresent(ContentPattern.class)){
-                result = checkValidationForContentPatternAnnotation(field, currentClassObject);
+                result = result && checkValidationForContentPatternAnnotation(field, currentClassObject);
             }
         }
         return result;
     }
- 
+    
     private static boolean checkValidationForIsNotEmptyAnnotation(Field field, Object classObject){
         boolean result = true;
         try {
-            boolean mustNotEmpty = field.getAnnotation(IsNotEpmty.class).value();
+            boolean mustNotEmpty = field.getAnnotation(ContentEmpty.class).value();
+            
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
             TextField fieldAsObject = (TextField) field.get(classObject);
             String text = fieldAsObject.getText();
             field.setAccessible(accessible);
-//                    
+            
             if (mustNotEmpty && text.isEmpty()){
+//                fieldAsObject.requestFocus();
                 fieldAsObject.setPromptText("This is required");
                 result = false;
             }
@@ -565,20 +569,23 @@ public class Utils {
     private static boolean checkValidationForContentPatternAnnotation(Field field, Object classObject){
         boolean result = true;
         try {
-            String patternValue = field.getAnnotation(ContentPattern.class).value();
+            ContentPattern patternAnnot = field.getAnnotation(ContentPattern.class);
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
             TextField fieldAsObject = (TextField) field.get(classObject);
             String text = fieldAsObject.getText();
             field.setAccessible(accessible);
-          
-            Pattern pattern = Pattern.compile(patternValue);
+
+            Pattern pattern = Pattern.compile(patternAnnot.value());
             Matcher matcher = pattern.matcher(text);
             if (!matcher.matches()){
-                fieldAsObject.setStyle("-fx-control-inner-background: #ff0000");
+                classObject.getClass().getMethod("changeComponentVisualByPattern", TextField.class, String.class).invoke(classObject, fieldAsObject, patternAnnot.explain());
                 result = false;
             }
-        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            else {
+                classObject.getClass().getMethod("changeComponentVisualByPattern", TextField.class, String.class).invoke(classObject, fieldAsObject, "");
+            }
+        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;

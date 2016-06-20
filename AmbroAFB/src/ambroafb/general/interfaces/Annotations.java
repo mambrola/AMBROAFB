@@ -19,7 +19,7 @@ public class Annotations {
  
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    public @interface IsNotEpmty {
+    public @interface ContentEmpty {
         boolean value() default true;
     }
     
@@ -27,5 +27,6 @@ public class Annotations {
     @Target(ElementType.FIELD)
     public @interface ContentPattern {
         String value();
+        String explain();
     }
 }

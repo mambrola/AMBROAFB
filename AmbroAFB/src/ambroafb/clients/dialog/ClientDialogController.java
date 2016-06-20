@@ -27,6 +27,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ambroafb.general.interfaces.Annotations.*;
+import javafx.scene.Parent;
+import javafx.scene.paint.Color;
+
 
 /**
  * FXML Controller class
@@ -44,15 +47,21 @@ public class ClientDialogController implements Initializable {
     private Label first_name, last_name;
     
     @FXML  
-    @IsNotEpmty
-    private TextField firstName, lastName, address, idNumber;
+    @ContentEmpty
+    private TextField firstName, lastName, idNumber;
+    
+    @FXML 
+    @ContentEmpty 
+    @ContentPattern(value = ".+@.+\\..+", explain = "The email is invalid. Like this: ex@some.some")
+    private TextField email;
+    
+    @FXML  
+    @ContentEmpty
+    private TextField address; // this place must be because of required fields order.
+    
     @FXML
     private TextField fax, zipCode, city;
     
-    @FXML 
-    @IsNotEpmty 
-    @ContentPattern(".+@.+\\..+")
-    private TextField email;
     @FXML
     private CountryComboBox country;
     @FXML
@@ -89,6 +98,23 @@ public class ClientDialogController implements Initializable {
             zipCode.      textProperty().bindBidirectional(client.zipCodeProperty());
             city.         textProperty().bindBidirectional(client.cityProperty());
             country.     valueProperty().bindBidirectional(client.countryProperty());
+        }
+    }
+    
+    public void changeComponentVisualByPattern(TextField textField, String explain){
+        Parent parent = textField.getParent();
+        Label validatorExplain = (Label) parent.lookup(".patterValidatorExplain");
+        validatorExplain.setText(explain);
+        
+        if (explain.isEmpty()) {
+            textField.setStyle("-fx-border-color: transparent");
+            validatorExplain.setVisible(false);
+        }
+        else {
+            textField.requestFocus();
+            textField.setStyle("-fx-border-color: #ff0000");
+            validatorExplain.setVisible(true);
+            validatorExplain.setTextFill(new Color(1, 0, 0, 1));
         }
     }
     
