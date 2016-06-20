@@ -26,6 +26,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import ambroafb.general.interfaces.Annotations.*;
 
 /**
  * FXML Controller class
@@ -41,8 +42,14 @@ public class ClientDialogController implements Initializable {
     private CheckBox juridical, rezident;
     @FXML
     private Label first_name, last_name;
+    
+    @FXML  @IsNotEpmty
+    private TextField firstName, lastName, address, idNumber;
     @FXML
-    private TextField firstName, lastName, idNumber, email, fax, address, zipCode, city;
+    private TextField fax, zipCode, city;
+    
+    @FXML @IsNotEpmty @Pattern(".+@.+\\..+")
+    private TextField email;
     @FXML
     private CountryComboBox country;
     @FXML
