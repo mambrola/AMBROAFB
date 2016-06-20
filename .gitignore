@@ -25,3 +25,4 @@ AmbroAFB/errors.log
 *.lck
 derby.log
 *.properties
+*.properties
