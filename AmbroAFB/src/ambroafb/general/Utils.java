@@ -52,6 +52,7 @@ import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
+import javafx.scene.control.PasswordField;
 
 /**
  *
@@ -60,6 +61,7 @@ import java.util.regex.Pattern;
 public class Utils {
 
     private static Logger logger;
+    private static final String REQUIRED_TEXT = "This is required.";
 
     /**
      * აკეთებს exception-ის ლოგირებას კონსოლში და ფაილში სახელად 'error.log'
@@ -531,32 +533,33 @@ public class Utils {
         boolean result = true;
         Field[] fields = currentClassObject.getClass().getDeclaredFields();
         
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(IsNotEpmty.class)){
-                result = checkValidationForIsNotEmptyAnnotation(field, currentClassObject);
+        for (int i = 0; i < fields.length; i++) { // Field field : fields
+            Field field = fields[i];
+            if (field.isAnnotationPresent(ContentEmpty.class)){
+                result = result && checkValidationForIsNotEmptyAnnotation(field, currentClassObject);
             }
             if (field.isAnnotationPresent(ContentPattern.class)){
-                result = checkValidationForContentPatternAnnotation(field, currentClassObject);
+                result = result && checkValidationForContentPatternAnnotation(field, currentClassObject);
             }
         }
         return result;
     }
- 
+    
     private static boolean checkValidationForIsNotEmptyAnnotation(Field field, Object classObject){
         boolean result = true;
         try {
-            boolean mustNotEmpty = field.getAnnotation(IsNotEpmty.class).value();
-            boolean accessible = field.isAccessible();
-            field.setAccessible(true);
-            TextField fieldAsObject = (TextField) field.get(classObject);
-            String text = fieldAsObject.getText();
-            field.setAccessible(accessible);
-//                    
+            boolean mustNotEmpty = field.getAnnotation(ContentEmpty.class).value();
+            
+            Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+            String text = (String)typeAndContent[1];
             if (mustNotEmpty && text.isEmpty()){
-                fieldAsObject.setPromptText("This is required");
+                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], REQUIRED_TEXT);
                 result = false;
             }
-        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            else {
+                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], "");
+            }
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException | InvocationTargetException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
@@ -565,22 +568,41 @@ public class Utils {
     private static boolean checkValidationForContentPatternAnnotation(Field field, Object classObject){
         boolean result = true;
         try {
-            String patternValue = field.getAnnotation(ContentPattern.class).value();
-            boolean accessible = field.isAccessible();
-            field.setAccessible(true);
-            TextField fieldAsObject = (TextField) field.get(classObject);
-            String text = fieldAsObject.getText();
-            field.setAccessible(accessible);
-          
-            Pattern pattern = Pattern.compile(patternValue);
-            Matcher matcher = pattern.matcher(text);
+            ContentPattern patternAnnot = field.getAnnotation(ContentPattern.class);
+            
+            Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+            
+            Pattern pattern = Pattern.compile(patternAnnot.value());
+            Matcher matcher = pattern.matcher((String)typeAndContent[1]);
             if (!matcher.matches()){
-                fieldAsObject.setStyle("-fx-control-inner-background: #ff0000");
+                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], patternAnnot.explain());
                 result = false;
             }
-        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            else {
+                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], "");
+            }
+        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
+    }
+    
+    // am shemtxvevashi sheidzleba girdes visrolot exception-i zemot mainc gviwevs davichirot igive exception-i
+    private static Object[] getNodesTypeAndContent(Field field, Object classObject){
+        Object[] results = new Object[2];
+        try {
+            boolean accessible = field.isAccessible();
+            field.setAccessible(true);
+            
+            if (field.getType().toString().contains("TextField")){
+                results[0] = (TextField) field.get(classObject);
+                results[1] = ((TextField) results[0]).getText();
+            }
+            field.setAccessible(accessible);
+            
+        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return results;
     }
 }
