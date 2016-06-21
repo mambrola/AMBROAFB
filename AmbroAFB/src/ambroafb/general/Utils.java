@@ -550,18 +550,14 @@ public class Utils {
         try {
             boolean mustNotEmpty = field.getAnnotation(ContentEmpty.class).value();
             
-            boolean accessible = field.isAccessible();
-            field.setAccessible(true);
-            TextField fieldAsObject = (TextField) field.get(classObject);
-            String text = fieldAsObject.getText();
-            field.setAccessible(accessible);
-            
+            Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+            String text = (String)typeAndContent[1];
             if (mustNotEmpty && text.isEmpty()){
-                classObject.getClass().getMethod("changeTextFieldVisualByEmpty", TextField.class, String.class).invoke(classObject, fieldAsObject, REQUIRED_TEXT);
+                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], REQUIRED_TEXT);
                 result = false;
             }
             else {
-                classObject.getClass().getMethod("changeTextFieldVisualByEmpty", TextField.class, String.class).invoke(classObject, fieldAsObject, "");
+                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], "");
             }
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException | InvocationTargetException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
@@ -573,24 +569,40 @@ public class Utils {
         boolean result = true;
         try {
             ContentPattern patternAnnot = field.getAnnotation(ContentPattern.class);
-            boolean accessible = field.isAccessible();
-            field.setAccessible(true);
-            TextField fieldAsObject = (TextField) field.get(classObject);
-            String text = fieldAsObject.getText();
-            field.setAccessible(accessible);
-
+            
+            Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+            
             Pattern pattern = Pattern.compile(patternAnnot.value());
-            Matcher matcher = pattern.matcher(text);
+            Matcher matcher = pattern.matcher((String)typeAndContent[1]);
             if (!matcher.matches()){
-                classObject.getClass().getMethod("changeTextFieldVisualByPattern", TextField.class, String.class).invoke(classObject, fieldAsObject, patternAnnot.explain());
+                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], patternAnnot.explain());
                 result = false;
             }
             else {
-                classObject.getClass().getMethod("changeTextFieldVisualByPattern", TextField.class, String.class).invoke(classObject, fieldAsObject, "");
+                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], "");
             }
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
+    }
+    
+    // am shemtxvevashi sheidzleba girdes visrolot exception-i zemot mainc gviwevs davichirot igive exception-i
+    private static Object[] getNodesTypeAndContent(Field field, Object classObject){
+        Object[] results = new Object[2];
+        try {
+            boolean accessible = field.isAccessible();
+            field.setAccessible(true);
+            
+            if (field.getType().toString().contains("TextField")){
+                results[0] = (TextField) field.get(classObject);
+                results[1] = ((TextField) results[0]).getText();
+            }
+            field.setAccessible(accessible);
+            
+        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return results;
     }
 }

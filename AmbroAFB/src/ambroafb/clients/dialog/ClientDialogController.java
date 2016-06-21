@@ -101,35 +101,35 @@ public class ClientDialogController implements Initializable {
         }
     }
     
-    public void changeTextFieldVisualByPattern(TextField textField, String explain){
-        Parent parent = textField.getParent();
-        Label validatorExplain = (Label) parent.lookup(".patterValidatorExplain");
+    public void changeNodeVisualByPattern(Node node, String explain){
+        Parent parent = node.getParent();
+        Label validatorExplain = (Label) parent.lookup(".validationMessage");
         validatorExplain.setText(explain);
         
         if (explain.isEmpty()) {
-            textField.setStyle("-fx-border-color: transparent");
+            node.setStyle("-fx-border-color: transparent");
             validatorExplain.setVisible(false);
         }
         else {
-            textField.requestFocus();
-            textField.setStyle("-fx-border-color: #ff0000");
+            node.requestFocus();
+            node.setStyle("-fx-border-color: #ff0000");
             validatorExplain.setVisible(true);
             validatorExplain.setTextFill(new Color(1, 0, 0, 1));
         }
     }
     
-    public void changeTextFieldVisualByEmpty(TextField textField, String text){
-        Parent parent = textField.getParent();
-        Label requiredMsg = (Label) parent.lookup(".requiredFieldText");
+    public void changeNodeVisualByEmpty(Node ndoe, String text){
+        Parent parent = ndoe.getParent();
+        Label requiredMsg = (Label) parent.lookup(".validationMessage");
         requiredMsg.setText(text);
         
         if (text.isEmpty()){
             requiredMsg.setVisible(false);
         }
         else {
-            textField.requestFocus();
-            requiredMsg.setTextFill(new Color(1, 0, 0, 1));
+            ndoe.requestFocus();
             requiredMsg.setVisible(true);
+            requiredMsg.setTextFill(new Color(1, 0, 0, 1));
         }
         
     }
