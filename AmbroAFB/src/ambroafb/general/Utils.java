@@ -52,7 +52,10 @@ import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -61,7 +64,7 @@ import javafx.scene.control.PasswordField;
 public class Utils {
 
     private static Logger logger;
-    private static final String REQUIRED_TEXT = "This is required.";
+    private static Tooltip toolTip = new Tooltip();
 
     /**
      * აკეთებს exception-ის ლოგირებას კონსოლში და ფაილში სახელად 'error.log'
@@ -535,10 +538,10 @@ public class Utils {
         
         for (int i = 0; i < fields.length; i++) { // Field field : fields
             Field field = fields[i];
-            if (field.isAnnotationPresent(ContentEmpty.class)){
+            if (field.isAnnotationPresent(ContentNotEmpty.class)){
                 result = result && checkValidationForIsNotEmptyAnnotation(field, currentClassObject);
             }
-            if (field.isAnnotationPresent(ContentPattern.class)){
+            if (field.isAnnotationPresent(ContentMail.class)){
                 result = result && checkValidationForContentPatternAnnotation(field, currentClassObject);
             }
         }
@@ -547,47 +550,42 @@ public class Utils {
     
     private static boolean checkValidationForIsNotEmptyAnnotation(Field field, Object classObject){
         boolean result = true;
-        try {
-            boolean mustNotEmpty = field.getAnnotation(ContentEmpty.class).value();
-            
-            Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
-            String text = (String)typeAndContent[1];
-            if (mustNotEmpty && text.isEmpty()){
-                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], REQUIRED_TEXT);
-                result = false;
-            }
-            else {
-                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], "");
-            }
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException | InvocationTargetException ex) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        ContentNotEmpty annotation = field.getAnnotation(ContentNotEmpty.class);
+
+        Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+        String text = (String)typeAndContent[1];
+        if (annotation.value() && text.isEmpty()){
+            changeNodeVisualByEmpty((Node)typeAndContent[0], annotation.explain());
+            result = false;
+        }
+        else {
+            changeNodeVisualByEmpty((Node)typeAndContent[0], "");
         }
         return result;
     }
     
     private static boolean checkValidationForContentPatternAnnotation(Field field, Object classObject){
         boolean result = true;
-        try {
-            ContentPattern patternAnnot = field.getAnnotation(ContentPattern.class);
-            
-            Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
-            
-            Pattern pattern = Pattern.compile(patternAnnot.value());
-            Matcher matcher = pattern.matcher((String)typeAndContent[1]);
-            if (!matcher.matches()){
-                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], patternAnnot.explain());
-                result = false;
-            }
-            else {
-                classObject.getClass().getMethod("changeNodeVisualByEmpty", Node.class, String.class).invoke(classObject, (Node)typeAndContent[0], "");
-            }
-        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        ContentMail annotation = field.getAnnotation(ContentMail.class);
+
+        Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+
+        boolean validSyntax = Pattern.matches(annotation.valueForSyntax(), (String)typeAndContent[1]);
+        boolean validAlphabet = Pattern.matches(annotation.valueForAlphabet(), (String)typeAndContent[1]);
+        if (!validSyntax){
+            changeNodeVisualByEmpty((Node)typeAndContent[0], annotation.explainForSyntax());
+            result = false;
+        }
+        else if (!validAlphabet){
+            changeNodeVisualByEmpty((Node)typeAndContent[0], annotation.explainForAlphabet());
+            result = false;
+        }
+        else {
+            changeNodeVisualByEmpty((Node)typeAndContent[0], "");
         }
         return result;
     }
     
-    // am shemtxvevashi sheidzleba girdes visrolot exception-i zemot mainc gviwevs davichirot igive exception-i
     private static Object[] getNodesTypeAndContent(Field field, Object classObject){
         Object[] results = new Object[2];
         try {
@@ -598,11 +596,49 @@ public class Utils {
                 results[0] = (TextField) field.get(classObject);
                 results[1] = ((TextField) results[0]).getText();
             }
-            field.setAccessible(accessible);
             
+            field.setAccessible(accessible);
         } catch (IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return results;
     }
+    
+    private static void changeNodeVisualByEmpty(Node node, String text){
+        Parent parent = node.getParent();
+        Label nodeTitleLabel = (Label) parent.lookup(".validationMessage");
+//        requiredMsg.setText(text);
+
+        if (text.isEmpty()){
+//            requiredMsg.setVisible(false);
+//            node.setStyle("-fx-border-color: transparent");
+            Tooltip.uninstall(nodeTitleLabel, toolTip);
+            nodeTitleLabel.setTextFill(new Color(0, 0, 0, 1));
+        }
+        else {
+            node.requestFocus();
+//            node.setStyle("-fx-border-color: #ff0000");
+            toolTip.setText(text);
+            Tooltip.install(nodeTitleLabel, toolTip);
+//            requiredMsg.setVisible(true);
+            nodeTitleLabel.setTextFill(new Color(1, 0, 0, 1));
+        }
+    }
+    
+//    private static void changeNodeVisualByPattern(Node node, String explain){
+//        Parent parent = node.getParent();
+//        Label validatorExplain = (Label) parent.lookup(".validationMessage");
+//        validatorExplain.setText(explain);
+//        
+//        if (explain.isEmpty()) {
+//            node.setStyle("-fx-border-color: transparent");
+//            validatorExplain.setVisible(false);
+//        }
+//        else {
+//            node.requestFocus();
+//            node.setStyle("-fx-border-color: #ff0000");
+//            validatorExplain.setVisible(true);
+//            validatorExplain.setTextFill(new Color(1, 0, 0, 1));
+//        }
+//    }
 }

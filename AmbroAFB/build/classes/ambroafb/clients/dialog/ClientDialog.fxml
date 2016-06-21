@@ -34,28 +34,28 @@
             <HBox styleClass="w3" >
                 <children>
                     <VBox >
-                        <Label fx:id="first_name" text="%first_name" /> 
+                        <Label fx:id="first_name" text="%first_name" styleClass="validationMessage" /> 
                         <TextField fx:id="firstName" />
-                        <Label styleClass="validationMessage" visible="false" />
+                        <!--<Label styleClass="validationMessage" visible="false" />-->
                     </VBox>
                     <VBox >
-                        <Label fx:id="last_name" text="%last_name" /> 
+                        <Label fx:id="last_name" text="%last_name" styleClass="validationMessage" /> 
                         <TextField fx:id="lastName" />
-                        <Label styleClass="validationMessage" visible="false" />
+                        <!--<Label styleClass="validationMessage" visible="false" />-->
                     </VBox >
                     <VBox >
-                        <Label text="%id_number" /> 
+                        <Label text="%id_number" styleClass="validationMessage" /> 
                         <TextField fx:id="idNumber" />
-                        <Label styleClass="validationMessage" visible="false" />
+                        <!--<Label styleClass="validationMessage" visible="false" />-->
                     </VBox>
                 </children>
             </HBox>
             <HBox  styleClass="w3" >
                 <children>
                     <VBox >
-                        <Label text="%email" /> 
+                        <Label text="%email" styleClass="validationMessage" /> 
                         <TextField fx:id="email" />
-                        <Label styleClass="validationMessage" text="" visible="false" />
+                        <!--<Label styleClass="validationMessage" text="" visible="false" />-->
                     </VBox >
                     <VBox fx:id="phonesContainer">
                         <Label text="%phones" /> 
@@ -69,9 +69,9 @@
             <HBox   styleClass="w1">
                 <children>
                     <VBox >
-                        <Label text="%address" /> 
+                        <Label text="%address" styleClass="validationMessage" /> 
                         <TextField  fx:id="address" />
-                        <Label styleClass="validationMessage" visible="false" />
+                        <!--<Label styleClass="validationMessage" visible="false" />-->
                     </VBox >
                 </children>
             </HBox>

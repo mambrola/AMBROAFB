@@ -19,8 +19,20 @@ public class Annotations {
  
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    public @interface ContentEmpty {
+    public @interface ContentNotEmpty {
         boolean value() default true;
+        String explain() default "This is required.";
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface ContentMail {
+        String valueForSyntax() default ".+@.+\\..{2,}";
+        String explainForSyntax() default "The incorrect syntax. Like: ex@some.some";
+        
+        String valueForAlphabet() default 
+                "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        String explainForAlphabet() default "Only Latin alphabet in text place.";
     }
     
     @Retention(RetentionPolicy.RUNTIME)

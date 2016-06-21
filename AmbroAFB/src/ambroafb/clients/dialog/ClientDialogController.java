@@ -47,16 +47,16 @@ public class ClientDialogController implements Initializable {
     private Label first_name, last_name;
     
     @FXML  
-    @ContentEmpty
+    @ContentNotEmpty
     private TextField firstName, lastName, idNumber;
     
     @FXML 
-    @ContentEmpty 
-    @ContentPattern(value = ".+@.+\\..+", explain = "The email is invalid. Like this: ex@some.some")
+    @ContentNotEmpty 
+    @ContentMail
     private TextField email;
     
     @FXML  
-    @ContentEmpty
+    @ContentNotEmpty
     private TextField address; // this place must be because of required fields order.
     
     @FXML
@@ -99,39 +99,6 @@ public class ClientDialogController implements Initializable {
             city.         textProperty().bindBidirectional(client.cityProperty());
             country.     valueProperty().bindBidirectional(client.countryProperty());
         }
-    }
-    
-    public void changeNodeVisualByPattern(Node node, String explain){
-        Parent parent = node.getParent();
-        Label validatorExplain = (Label) parent.lookup(".validationMessage");
-        validatorExplain.setText(explain);
-        
-        if (explain.isEmpty()) {
-            node.setStyle("-fx-border-color: transparent");
-            validatorExplain.setVisible(false);
-        }
-        else {
-            node.requestFocus();
-            node.setStyle("-fx-border-color: #ff0000");
-            validatorExplain.setVisible(true);
-            validatorExplain.setTextFill(new Color(1, 0, 0, 1));
-        }
-    }
-    
-    public void changeNodeVisualByEmpty(Node ndoe, String text){
-        Parent parent = ndoe.getParent();
-        Label requiredMsg = (Label) parent.lookup(".validationMessage");
-        requiredMsg.setText(text);
-        
-        if (text.isEmpty()){
-            requiredMsg.setVisible(false);
-        }
-        else {
-            ndoe.requestFocus();
-            requiredMsg.setVisible(true);
-            requiredMsg.setTextFill(new Color(1, 0, 0, 1));
-        }
-        
     }
     
     private LocalDate getClientCreatedDate(){
