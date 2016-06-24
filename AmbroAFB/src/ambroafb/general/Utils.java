@@ -595,16 +595,16 @@ public class Utils {
         return results;
     }
     
-    private static final Map<Label, Paint> colors_map = new HashMap<>();
+    private static final Map<Label, Paint> labels_colors_map = new HashMap<>();
     
     private static void changeNodeVisualByEmpty(Node node, String text){
         Parent parent = node.getParent();
         Label nodeTitleLabel = (Label) parent.lookup(".validationMessage");
 
         if (text.isEmpty()){
-            if(colors_map.containsKey(nodeTitleLabel)){// This order of 'if' statements is correct!
-                nodeTitleLabel.setTextFill(colors_map.get(nodeTitleLabel));
-                colors_map.remove(nodeTitleLabel);
+            if(labels_colors_map.containsKey(nodeTitleLabel)){// This order of 'if' statements is correct!
+                nodeTitleLabel.setTextFill(labels_colors_map.get(nodeTitleLabel));
+                labels_colors_map.remove(nodeTitleLabel);
                 Tooltip.uninstall(nodeTitleLabel, toolTip);
             }
         }
@@ -613,7 +613,7 @@ public class Utils {
             toolTip.setText(text);
             toolTip.setStyle("-fx-background-color: gray; -fx-font-size: 8pt;");
             Tooltip.install(nodeTitleLabel, toolTip);
-            colors_map.putIfAbsent(nodeTitleLabel, nodeTitleLabel.getTextFill());
+            labels_colors_map.putIfAbsent(nodeTitleLabel, nodeTitleLabel.getTextFill());
             nodeTitleLabel.setTextFill(Color.RED);
         }
     }
