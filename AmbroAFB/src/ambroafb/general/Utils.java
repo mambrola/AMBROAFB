@@ -47,6 +47,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -336,6 +338,11 @@ public class Utils {
 
     private static void saveConfigChanges() {
         GeneralConfig.getInstance().dumpIntoDerby();
+        for (String stagePath : stages_sizes_map.keySet()) {
+//            System.out.println("stagePath: " + stagePath);
+            JSONObject json = stages_sizes_map.get(stagePath);
+            UtilsDB.getInstance().updateOrInsertDefaultParameters(stagePath, "stage_size", json);
+        }
     }
 
     // ბაზასთან ურთიორთობის მეთოდები:
@@ -616,6 +623,76 @@ public class Utils {
             Tooltip.install(nodeTitleLabel, toolTip);
             labels_colors_map.putIfAbsent(nodeTitleLabel, nodeTitleLabel.getTextFill());
             nodeTitleLabel.setTextFill(Color.RED);
+        }
+    }
+    
+    private static final Map<String, JSONObject> stages_sizes_map = new HashMap<>();
+    
+    public static void regulateStageSize(Stage stage){
+        String path = getPathForStage(stage);
+        stage.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if (!stage.isMaximized()) {
+//                GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, newValue.doubleValue(), stage.getHeight());
+                saveSize(path, "width", newValue.doubleValue());
+                
+                JSONObject js = stages_sizes_map.get(path);
+                System.out.println("js: " + js);
+            }
+        });
+
+        stage.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if (!stage.isMaximized()) {
+//                GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, stage.getWidth(), newValue.doubleValue());
+                saveSize(path, "height", newValue.doubleValue());
+                
+                JSONObject js = stages_sizes_map.get(path);
+                System.out.println("js: " + js);
+            }
+        });
+
+        stage.maximizedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//            GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, newValue);
+                saveSize(path, "isMaximaze", newValue);
+                
+                JSONObject js = stages_sizes_map.get(path);
+                System.out.println("js: " + js);
+        });
+    }
+    
+    private static void saveSize(String stagePath, String orientation, Object value){
+        try {
+            if (stages_sizes_map.containsKey(stagePath)){
+                JSONObject json = stages_sizes_map.get(stagePath);
+                json.put(orientation, value);
+            }
+            else{
+                JSONObject json = new JSONObject();
+                json.put(orientation, value);
+                stages_sizes_map.put(stagePath, json);
+            }
+        } catch (JSONException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static void setSizeFor(Stage stage){
+        String path = getPathForStage(stage);
+        try {
+            JSONObject json;
+            if (stages_sizes_map.containsKey(path))
+                json = stages_sizes_map.get(path);
+            else 
+                json = UtilsDB.getInstance().getDefaultParametersJson(path, "stage_size");
+            
+            if (json.has("isMaximaze") && json.getBoolean("isMaximaze")){
+                stage.setMaximized(true);
+            }
+            else {
+                stage.setWidth(json.getDouble("width"));
+                stage.setHeight(json.getDouble("height"));
+            }
+        } catch (JSONException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
