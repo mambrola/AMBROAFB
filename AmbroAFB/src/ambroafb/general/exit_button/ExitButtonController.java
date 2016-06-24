@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 public class ExitButtonController implements Initializable {
     
     @FXML
-
     private Button exitButton;
     
     @FXML

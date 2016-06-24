@@ -45,7 +45,7 @@ public class UtilsDB {
     
     public void createLocalUsageTables(){
         String quary = "create table " + DP_TABLE_NAME + " ( " +
-                                        " id int primary key, " +
+                                        " id int GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key, " +
                                         " target varchar(16)," +
                                         " type varchar(16)," +
                                         " json clob " +
@@ -53,9 +53,9 @@ public class UtilsDB {
         boolean exec = executeQuery(quary);
     }
 
-    private void addInitialValuesIntoDefaultParameters(String target, String type){
-        String query = "insert into " + DP_TABLE_NAME +
-                        " values (1, '" + target + "', '" + type + "', '{}')";
+    private void addInitialValuesIntoDefaultParameters(String target, String type, String jsonStr){
+        String query = "insert into " + DP_TABLE_NAME + "(target, type, json)" +
+                        " values ('" + target + "', '" + type + "', '" + jsonStr + "')";
         executeQuery(query);
     }
     
@@ -79,7 +79,7 @@ public class UtilsDB {
     public void updateOrInsertDefaultParameters(String target, String type, JSONObject json) {
         JSONObject jsonValue = getDefaultParametersJson(target, type);
         if (jsonValue == null){
-            addInitialValuesIntoDefaultParameters(target, type);
+            addInitialValuesIntoDefaultParameters(target, type, json.toString());
         }
         else {
             String query = "update " + DP_TABLE_NAME +

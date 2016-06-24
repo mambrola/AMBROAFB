@@ -335,7 +335,7 @@ public class Utils {
     }
 
     private static void saveConfigChanges() {
-        GeneralConfig.getInstance().dump();
+        GeneralConfig.getInstance().dumpIntoDerby();
     }
 
     // ბაზასთან ურთიორთობის მეთოდები:
@@ -453,8 +453,10 @@ public class Utils {
      * @param stage - which must remove
      */
     public static void removeByStage(Stage stage){
-        String path = (String) bidmap.getKey(stage);
-        Utils.removeAlsoSubstagesByPath(path);
+        if (bidmap.containsKey(stage)){
+            String path = (String) bidmap.getKey(stage);
+            Utils.removeAlsoSubstagesByPath(path);
+        }
     }
     
     /**

@@ -25,6 +25,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.tomcat.jdbc.pool.ConnectionPool;
 import org.apache.tomcat.jdbc.pool.PoolConfiguration;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * პასუხისმგებელია აპლიკაციაში არსებული კონფიგურაციების მენეჯმენტზე
@@ -41,7 +43,7 @@ public class GeneralConfig {
      */
     public static GeneralConfig getInstance() {
         if (config == null) {
-            SavedConfig conf = readConfig();
+            SavedConfig conf = readConfigFromDerby();
             if (conf == null) {
                 config = new GeneralConfig();
             } else {
@@ -62,6 +64,22 @@ public class GeneralConfig {
         } catch (IOException ex) {
             AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CONFIGURATION);
             alert.showAlert();
+        }
+        return conf;
+    }
+    
+    private static SavedConfig readConfigFromDerby(){
+        SavedConfig conf = null;
+        try {
+            JSONObject configJS = UtilsDB.getInstance().getDefaultParametersJson("afb", "configuration");
+            if (configJS != null){
+                conf = new SavedConfig(configJS.getString("language"));
+                conf.database = configJS.getString("database");
+                conf.username = configJS.getString("username");
+                conf.password = configJS.getString("password");
+            }
+        } catch (JSONException ex) {
+            Logger.getLogger(GeneralConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
         return conf;
     }
@@ -173,6 +191,19 @@ public class GeneralConfig {
         } catch (IOException ex) {
             AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_DUMP);
             alert.showAlert();
+        }
+    }
+    
+    public void dumpIntoDerby(){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("language", savedConf.language);
+            json.put("database", savedConf.database);
+            json.put("username", savedConf.username);
+            json.put("password", savedConf.password);
+            UtilsDB.getInstance().updateOrInsertDefaultParameters("afb", "configuration", json);
+        } catch (JSONException ex) {
+            Logger.getLogger(GeneralConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
