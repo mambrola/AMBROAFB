@@ -11,6 +11,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.countries.*;
+import ambroafb.general.KFZClient;
 import ambroafb.phones.PhoneComboBox;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -27,8 +28,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ambroafb.general.interfaces.Annotations.*;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
+import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.controlsfx.control.textfield.TextFields;
 
 
 /**
@@ -71,6 +84,7 @@ public class ClientDialogController implements Initializable {
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private Client client;
     private Client clientBackup;
+    private AutoCompletionBinding<String> chooseCityBinding;
     
     /**
      * Initializes the controller class.
@@ -81,6 +95,34 @@ public class ClientDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         juridical.setOnAction(this::switchJuridical);
+//        Thread accessCities = new Thread(() -> {
+            try {
+                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getServerClient().get("/generic/cities"));
+                List<String> citiesAsList = new ArrayList<>();
+                for (int i = 0; i < cities.length(); i++){
+                    citiesAsList.add(cities.getString(i));
+                }
+                chooseCityBinding = TextFields.bindAutoCompletion(
+                        city, 
+                        (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter(
+                            (cityName) -> cityName.toLowerCase().contains(param.getUserText().toLowerCase())
+                        ).collect(Collectors.toList()), 
+                        new StringConverter<String>() {
+                            @Override
+                            public String toString(String object) {
+                                return object;
+                            }
+
+                            @Override
+                            public String fromString(String string) {
+                                return "";
+                            }
+                        });
+            } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
+                Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+//        });
+//        accessCities.start();
     }
 
     public void bindClient(Client client) {
