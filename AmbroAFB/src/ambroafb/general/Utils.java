@@ -613,9 +613,7 @@ public class Utils {
             toolTip.setText(text);
             toolTip.setStyle("-fx-background-color: gray; -fx-font-size: 8pt;");
             Tooltip.install(nodeTitleLabel, toolTip);
-            if(!colors_map.containsKey(nodeTitleLabel)){
-                colors_map.put(nodeTitleLabel, nodeTitleLabel.getTextFill());
-            }
+            colors_map.putIfAbsent(nodeTitleLabel, nodeTitleLabel.getTextFill());
             nodeTitleLabel.setTextFill(Color.RED);
         }
     }
