@@ -7,13 +7,8 @@ package ambroafb.general;
 
 import ambro.AMySQLChanel;
 import ambroafb.AmbroAFB;
-import ambroafb.clients.dialog.ClientDialogController;
-import ambroafb.general.interfaces.Annotations;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -23,10 +18,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,15 +40,13 @@ import javafx.stage.WindowEvent;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import ambroafb.general.interfaces.Annotations.*;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.regex.Matcher;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 /**
  *
@@ -604,41 +595,28 @@ public class Utils {
         return results;
     }
     
+    private static final Map<Label, Paint> colors_map = new HashMap<>();
+    
     private static void changeNodeVisualByEmpty(Node node, String text){
         Parent parent = node.getParent();
         Label nodeTitleLabel = (Label) parent.lookup(".validationMessage");
-//        requiredMsg.setText(text);
 
         if (text.isEmpty()){
-//            requiredMsg.setVisible(false);
-//            node.setStyle("-fx-border-color: transparent");
-            Tooltip.uninstall(nodeTitleLabel, toolTip);
-            nodeTitleLabel.setTextFill(new Color(0, 0, 0, 1));
+            if(colors_map.containsKey(nodeTitleLabel)){// This order of 'if' statements is correct!
+                nodeTitleLabel.setTextFill(colors_map.get(nodeTitleLabel));
+                colors_map.remove(nodeTitleLabel);
+                Tooltip.uninstall(nodeTitleLabel, toolTip);
+            }
         }
         else {
             node.requestFocus();
-//            node.setStyle("-fx-border-color: #ff0000");
             toolTip.setText(text);
+            toolTip.setStyle("-fx-background-color: gray; -fx-font-size: 8pt;");
             Tooltip.install(nodeTitleLabel, toolTip);
-//            requiredMsg.setVisible(true);
-            nodeTitleLabel.setTextFill(new Color(1, 0, 0, 1));
+            if(!colors_map.containsKey(nodeTitleLabel)){
+                colors_map.put(nodeTitleLabel, nodeTitleLabel.getTextFill());
+            }
+            nodeTitleLabel.setTextFill(Color.RED);
         }
     }
-    
-//    private static void changeNodeVisualByPattern(Node node, String explain){
-//        Parent parent = node.getParent();
-//        Label validatorExplain = (Label) parent.lookup(".validationMessage");
-//        validatorExplain.setText(explain);
-//        
-//        if (explain.isEmpty()) {
-//            node.setStyle("-fx-border-color: transparent");
-//            validatorExplain.setVisible(false);
-//        }
-//        else {
-//            node.requestFocus();
-//            node.setStyle("-fx-border-color: #ff0000");
-//            validatorExplain.setVisible(true);
-//            validatorExplain.setTextFill(new Color(1, 0, 0, 1));
-//        }
-//    }
 }

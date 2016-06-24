@@ -28,7 +28,7 @@ public class Annotations {
     @Target(ElementType.FIELD)
     public @interface ContentMail {
         String valueForSyntax() default ".+@.+\\..{2,}";
-        String explainForSyntax() default "The incorrect syntax. Like: ex@some.some";
+        String explainForSyntax() default "The incorrect syntax. Like: example@some.ex";
         
         String valueForAlphabet() default 
                 "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
