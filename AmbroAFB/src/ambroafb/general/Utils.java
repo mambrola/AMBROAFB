@@ -527,8 +527,7 @@ public class Utils {
         boolean result = true;
         Field[] fields = currentClassObject.getClass().getDeclaredFields();
         
-        for (int i = 0; i < fields.length; i++) { // Field field : fields
-            Field field = fields[i];
+        for (Field field : fields) {
             if (field.isAnnotationPresent(ContentNotEmpty.class)){
                 result = result && checkValidationForIsNotEmptyAnnotation(field, currentClassObject);
             }

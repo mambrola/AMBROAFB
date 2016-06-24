@@ -41,8 +41,8 @@ public class AlertMessage extends Alert {
         
 //        getDialogPane().getScene().getStylesheets().add("/ambroafb/general/core.css");
         ((Stage)getDialogPane().getScene().getWindow()).initOwner(AmbroAFB.mainStage);
-
-        Utils.log(messageName, ex);
+        if (titleAlert.equals(Names.ALERT_ERROR_WINDOW_TITLE))
+            Utils.log(messageName, ex);
     }
     
     /**

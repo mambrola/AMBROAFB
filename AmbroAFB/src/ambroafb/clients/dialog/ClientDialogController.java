@@ -28,6 +28,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ambroafb.general.interfaces.Annotations.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
 import java.io.IOException;
@@ -95,34 +97,8 @@ public class ClientDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         juridical.setOnAction(this::switchJuridical);
-//        Thread accessCities = new Thread(() -> {
-            try {
-                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getServerClient().get("/generic/cities"));
-                List<String> citiesAsList = new ArrayList<>();
-                for (int i = 0; i < cities.length(); i++){
-                    citiesAsList.add(cities.getString(i));
-                }
-                chooseCityBinding = TextFields.bindAutoCompletion(
-                        city, 
-                        (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter(
-                            (cityName) -> cityName.toLowerCase().contains(param.getUserText().toLowerCase())
-                        ).collect(Collectors.toList()), 
-                        new StringConverter<String>() {
-                            @Override
-                            public String toString(String object) {
-                                return object;
-                            }
-
-                            @Override
-                            public String fromString(String string) {
-                                return "";
-                            }
-                        });
-            } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
-                Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-//        });
-//        accessCities.start();
+        Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
+        accessCities.start();
     }
 
     public void bindClient(Client client) {
@@ -211,4 +187,38 @@ public class ClientDialogController implements Initializable {
         return okayCancelController;
     }
     
+    private class BackgroundAccessToDB implements Runnable {
+
+        private String path;
+        
+        public BackgroundAccessToDB(String servicePath){
+            path = servicePath;
+        }
+        
+        @Override
+        public void run() {
+            try {
+                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getServerClient().get(path));
+                List<String> citiesAsList = getListFromJSONArray(cities);
+                chooseCityBinding = TextFields.bindAutoCompletion(
+                                                        city,
+                                                        (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter((cityName) ->
+                                                            cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
+                                                        .collect(Collectors.toList()), 
+                                                        null);
+            } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
+                Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        private List<String> getListFromJSONArray(JSONArray cities) throws JSONException{
+            List<String> result = new ArrayList<>();
+            for (int i = 0; i < cities.length(); i++){
+                String currCity = cities.getString(i).trim();
+                if (!currCity.isEmpty())
+                    result.add(cities.getString(i));
+            }
+            return result;
+        }
+    }
 }
