@@ -8,6 +8,7 @@ package ambroafb.phones;
 import ambroafb.general.Editable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -21,7 +22,7 @@ public class Phone implements Editable<String> {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int recId;
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+//    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int clientId;
 
     private final StringProperty number = new SimpleStringProperty();
@@ -103,7 +104,23 @@ public class Phone implements Editable<String> {
         return result;
     }
     
-    public int compare(Phone other){
-        return this.recId - other.recId;
+    /**
+     * The method compares clients phones list and pays attention size and order of them. 
+     * @param first
+     * @param second
+     * @return 
+     */
+    public static boolean compareLists(List<Phone> first, List<Phone> second) {
+        if (first.size() != second.size()) return false;
+
+        for(int i = 0; i < first.size(); i++){
+            Phone phone = first.get(i);
+            Phone otherPhone = second.get(i);
+            if ( !phone.getNumber().equals(otherPhone.getNumber()) ) return false;
+        }
+
+        return true;
     }
+    
+    
 }

@@ -5,19 +5,15 @@
  */
 package ambroafb.clients;
 
-import ambroafb.clients.filter.ClientFilter;
-import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
-import javafx.stage.Stage;
 import org.json.JSONObject;
 
 /**
@@ -34,8 +30,7 @@ public class ClientsController implements Initializable {
     private EditorPanelController editorPanelController;
     
     private final ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();;
-    private SortedList<EditorPanelable> sorterData;
-    private Stage stage;
+    
     /**
      *
      * @param url
@@ -49,16 +44,12 @@ public class ClientsController implements Initializable {
     }
 
     public void reAssignTable(JSONObject filterJson) {
-        if(filterJson != null){
+        if(filterJson != null && filterJson.length() > 0){
             clients.clear();
             Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {
                 clients.add(client);
             });
         }
-    }
-
-    void setStage(Stage stage) {
-        this.stage = stage;
     }
     
     public EditorPanelController getEditorPanelController(){

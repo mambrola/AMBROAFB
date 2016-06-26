@@ -7,11 +7,8 @@ package ambroafb.general;
 
 import ambro.AMySQLChanel;
 import ambroafb.AmbroAFB;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -21,10 +18,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +39,16 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
+import ambroafb.general.interfaces.Annotations.*;
+import java.lang.reflect.Field;
+import javafx.scene.control.TextField;
+import java.util.regex.Pattern;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -52,6 +57,7 @@ import org.apache.commons.collections.bidimap.DualHashBidiMap;
 public class Utils {
 
     private static Logger logger;
+    private static Tooltip toolTip = new Tooltip();
 
     /**
      * აკეთებს exception-ის ლოგირებას კონსოლში და ფაილში სახელად 'error.log'
@@ -99,7 +105,7 @@ public class Utils {
         }
 
         controller = new MultiSceneStage();
-        Scene scene = createScene(name);
+        Scene scene = createScene(name, null);
         controller.addScene(scene);
         addsFeaturesToStage(controller, name, title, logo);
         stages.put(name, controller);
@@ -153,7 +159,7 @@ public class Utils {
             return stage;
         }
         Stage stage = new Stage();
-        Scene scene = createScene(name);
+        Scene scene = createScene(name, null);
         stage.setScene(scene);
         addsFeaturesToStage(stage, name, title, logo);
         stages.put(name, stage);
@@ -248,28 +254,38 @@ public class Utils {
      * @return
      * @throws IOException
      */
-    public static Scene createScene(String name, HashMap<String, Object> parameters) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setResources(GeneralConfig.getInstance().getBundle());
-        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
-        return new Scene(root);
-    }
+//    public static Scene createScene(String name, HashMap<String, Object> parameters) throws IOException {
+//        FXMLLoader loader = new FXMLLoader();
+//        loader.setResources(GeneralConfig.getInstance().getBundle());
+//        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
+//        return new Scene(root);
+//    }
 
     /**
      * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით
      *
      * @param name - fxml დოკუმენტის მისამართი
+     * @param controller
      * @return
-     * @throws IOException
      */
-    public static Scene createScene(String name) throws IOException {
+    public static Scene createScene(String name, Object controller) {
+        Scene scene = null;
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(GeneralConfig.getInstance().getBundle());
-        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
-        Scene scene = new Scene(root);
-        scene.getProperties().put("controller", loader.getController());
+        if (controller != null){
+            loader.setController(controller);
+        }
+        try {
+            Parent root;
+            root = loader.load(AmbroAFB.class.getResource(name).openStream());
+            scene = new Scene(root);
+            scene.getProperties().put("controller", loader.getController());
+        } catch (IOException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return scene;
     }
+    
 
     /**
      * ინახავს მიმდინარე კონფიგურაციებს, თიშავს მიმდინარე აპლიკაციას და უშვებს
@@ -309,19 +325,24 @@ public class Utils {
      */
     public static void exitApplication() {
         GeneralConfig.getInstance().logoutServerClient();
-        try {
-            if (AmbroAFB.socket != null) {
-                AmbroAFB.socket.close();
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            if (AmbroAFB.socket != null) {
+//                AmbroAFB.socket.close(); // socket opened with "try", so close operation is not needed.
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         Platform.exit();
         System.exit(0);
     }
 
     private static void saveConfigChanges() {
-        GeneralConfig.getInstance().dump();
+        GeneralConfig.getInstance().dumpIntoDerby();
+        for (String stagePath : stages_sizes_map.keySet()) {
+//            System.out.println("stagePath: " + stagePath);
+            JSONObject json = stages_sizes_map.get(stagePath);
+            UtilsDB.getInstance().updateOrInsertDefaultParameters(stagePath, "stage_size", json);
+        }
     }
 
     // ბაზასთან ურთიორთობის მეთოდები:
@@ -439,8 +460,10 @@ public class Utils {
      * @param stage - which must remove
      */
     public static void removeByStage(Stage stage){
-        String path = (String) bidmap.getKey(stage);
-        Utils.removeAlsoSubstagesByPath(path);
+        if (bidmap.containsKey(stage)){
+            String path = (String) bidmap.getKey(stage);
+            Utils.removeAlsoSubstagesByPath(path);
+        }
     }
     
     /**
@@ -466,12 +489,10 @@ public class Utils {
     public static Object getInstanceOfClass(Class<?> obj, Class[] constructorParams, Object... args){
         Object result = null;
         try {
-            
             result = obj.getConstructor(constructorParams).newInstance(args);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("result: " + result);
         return result;
     }
     
@@ -508,5 +529,170 @@ public class Utils {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
+    }
+    
+    
+    public static boolean everyFieldContentIsValidFor(Object currentClassObject){
+        boolean result = true;
+        Field[] fields = currentClassObject.getClass().getDeclaredFields();
+        
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(ContentNotEmpty.class)){
+                result = result && checkValidationForIsNotEmptyAnnotation(field, currentClassObject);
+            }
+            if (field.isAnnotationPresent(ContentMail.class)){
+                result = result && checkValidationForContentPatternAnnotation(field, currentClassObject);
+            }
+        }
+        return result;
+    }
+    
+    private static boolean checkValidationForIsNotEmptyAnnotation(Field field, Object classObject){
+        boolean result = true;
+        ContentNotEmpty annotation = field.getAnnotation(ContentNotEmpty.class);
+
+        Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+        String text = (String)typeAndContent[1];
+        if (annotation.value() && text.isEmpty()){
+            changeNodeVisualByEmpty((Node)typeAndContent[0], annotation.explain());
+            result = false;
+        }
+        else {
+            changeNodeVisualByEmpty((Node)typeAndContent[0], "");
+        }
+        return result;
+    }
+    
+    private static boolean checkValidationForContentPatternAnnotation(Field field, Object classObject){
+        boolean result = true;
+        ContentMail annotation = field.getAnnotation(ContentMail.class);
+
+        Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+
+        boolean validSyntax = Pattern.matches(annotation.valueForSyntax(), (String)typeAndContent[1]);
+        boolean validAlphabet = Pattern.matches(annotation.valueForAlphabet(), (String)typeAndContent[1]);
+        if (!validSyntax){
+            changeNodeVisualByEmpty((Node)typeAndContent[0], annotation.explainForSyntax());
+            result = false;
+        }
+        else if (!validAlphabet){
+            changeNodeVisualByEmpty((Node)typeAndContent[0], annotation.explainForAlphabet());
+            result = false;
+        }
+        else {
+            changeNodeVisualByEmpty((Node)typeAndContent[0], "");
+        }
+        return result;
+    }
+    
+    private static Object[] getNodesTypeAndContent(Field field, Object classObject){
+        Object[] results = new Object[2];
+        try {
+            boolean accessible = field.isAccessible();
+            field.setAccessible(true);
+            
+            if (field.getType().toString().contains("TextField")){
+                results[0] = (TextField) field.get(classObject);
+                results[1] = ((TextField) results[0]).getText();
+            }
+            
+            field.setAccessible(accessible);
+        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return results;
+    }
+    
+    private static final Map<Label, Paint> labels_colors_map = new HashMap<>();
+    
+    private static void changeNodeVisualByEmpty(Node node, String text){
+        Parent parent = node.getParent();
+        Label nodeTitleLabel = (Label) parent.lookup(".validationMessage");
+
+        if (text.isEmpty()){
+            if(labels_colors_map.containsKey(nodeTitleLabel)){// This order of 'if' statements is correct!
+                nodeTitleLabel.setTextFill(labels_colors_map.get(nodeTitleLabel));
+                labels_colors_map.remove(nodeTitleLabel);
+                Tooltip.uninstall(nodeTitleLabel, toolTip);
+            }
+        }
+        else {
+            node.requestFocus();
+            toolTip.setText(text);
+            toolTip.setStyle("-fx-background-color: gray; -fx-font-size: 8pt;");
+            Tooltip.install(nodeTitleLabel, toolTip);
+            labels_colors_map.putIfAbsent(nodeTitleLabel, nodeTitleLabel.getTextFill());
+            nodeTitleLabel.setTextFill(Color.RED);
+        }
+    }
+    
+    private static final Map<String, JSONObject> stages_sizes_map = new HashMap<>();
+    
+    public static void regulateStageSize(Stage stage){
+        String path = getPathForStage(stage);
+        stage.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if (!stage.isMaximized()) {
+//                GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, newValue.doubleValue(), stage.getHeight());
+                saveSize(path, "width", newValue.doubleValue());
+                
+                JSONObject js = stages_sizes_map.get(path);
+                System.out.println("js: " + js);
+            }
+        });
+
+        stage.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if (!stage.isMaximized()) {
+//                GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, stage.getWidth(), newValue.doubleValue());
+                saveSize(path, "height", newValue.doubleValue());
+                
+                JSONObject js = stages_sizes_map.get(path);
+                System.out.println("js: " + js);
+            }
+        });
+
+        stage.maximizedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//            GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, newValue);
+                saveSize(path, "isMaximaze", newValue);
+                
+                JSONObject js = stages_sizes_map.get(path);
+                System.out.println("js: " + js);
+        });
+    }
+    
+    private static void saveSize(String stagePath, String orientation, Object value){
+        try {
+            if (stages_sizes_map.containsKey(stagePath)){
+                JSONObject json = stages_sizes_map.get(stagePath);
+                json.put(orientation, value);
+            }
+            else{
+                JSONObject json = new JSONObject();
+                json.put(orientation, value);
+                stages_sizes_map.put(stagePath, json);
+            }
+        } catch (JSONException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static void setSizeFor(Stage stage){
+        String path = getPathForStage(stage);
+        try {
+            JSONObject json;
+            if (stages_sizes_map.containsKey(path))
+                json = stages_sizes_map.get(path);
+            else 
+                json = UtilsDB.getInstance().getDefaultParametersJson(path, "stage_size");
+            
+            if (json.has("isMaximaze") && json.getBoolean("isMaximaze")){
+                stage.setMaximized(true);
+            }
+            else {
+                stage.setWidth(json.getDouble("width"));
+                stage.setHeight(json.getDouble("height"));
+            }
+        } catch (JSONException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

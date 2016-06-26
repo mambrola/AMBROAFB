@@ -5,7 +5,6 @@
  */
 package ambroafb.countries;
 
-import ambroafb.countries.Country;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 
@@ -27,6 +26,7 @@ public class CountryComboBox extends ComboBox<Country> {
                 return null;
             }
         });
+        this.getItems().addAll(Country.getAllFromDB());
     }
     
     public void selectItem(Country country){

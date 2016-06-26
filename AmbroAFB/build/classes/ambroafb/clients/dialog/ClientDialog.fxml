@@ -22,7 +22,7 @@
             <VBox>
                 <children>
                     <Label text="%date" /> 
-                    <DatePicker fx:id="openDate" />
+                    <ADatePicker fx:id="openDate" />
                 </children> 
             </VBox>
             <HBox>
@@ -34,15 +34,15 @@
             <HBox styleClass="w3" >
                 <children>
                     <VBox >
-                        <Label fx:id="first_name" text="%first_name" /> 
+                        <Label fx:id="first_name" text="%first_name" styleClass="validationMessage" /> 
                         <TextField fx:id="firstName" />
                     </VBox>
                     <VBox >
-                        <Label fx:id="last_name" text="%last_name" /> 
+                        <Label fx:id="last_name" text="%last_name" styleClass="validationMessage" /> 
                         <TextField fx:id="lastName" />
                     </VBox >
                     <VBox >
-                        <Label text="%id_number" /> 
+                        <Label text="%id_number" styleClass="validationMessage" /> 
                         <TextField fx:id="idNumber" />
                     </VBox>
                 </children>
@@ -50,12 +50,11 @@
             <HBox  styleClass="w3" >
                 <children>
                     <VBox >
-                        <Label text="%email" /> 
+                        <Label text="%email" styleClass="validationMessage" /> 
                         <TextField fx:id="email" />
                     </VBox >
                     <VBox fx:id="phonesContainer">
                         <Label text="%phones" /> 
-                        <!--<ListEditor fx:id="phone" editable="true"/>-->
                     </VBox >
                     <VBox >
                         <Label text="%fax" /> 
@@ -66,7 +65,7 @@
             <HBox   styleClass="w1">
                 <children>
                     <VBox >
-                        <Label text="%address" /> 
+                        <Label text="%address" styleClass="validationMessage" /> 
                         <TextField  fx:id="address" />
                     </VBox >
                 </children>
@@ -83,7 +82,6 @@
                     </VBox>
                     <VBox >
                         <Label text="%country" /> 
-                        <!--<ComboBox fx:id="country" promptText="%select" />-->
                         <CountryComboBox fx:id="country"/>
                     </VBox>
                 </children>

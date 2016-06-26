@@ -5,16 +5,12 @@
  */
 package ambroafb.clients.dialog;
 
-import ambroafb.AmbroAFB;
 import ambroafb.clients.Client;
-import ambroafb.general.GeneralConfig;
+import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -32,7 +28,7 @@ public class ClientDialog extends Stage implements Dialogable {
     
     public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         String ownerPath = Utils.getPathForStage(owner);
-        String clientsDialogPath = ownerPath + Dialogable.LOCAL_NAME;
+        String clientsDialogPath = ownerPath + Names.LEVEL_FOR_PATH;
         Utils.saveShowingStageByPath(clientsDialogPath, (Stage)this);
         
         Client clientObject;
@@ -44,14 +40,12 @@ public class ClientDialog extends Stage implements Dialogable {
         this.client = clientObject;
         this.clientBackup = clientObject.cloneWithID();
         
-        try {
-            Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml");
-            dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
-            dialogController.bindClient(this.client); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
-            dialogController.setNextVisibleAndActionParameters(buttonType);
-            dialogController.setBackupClient(this.clientBackup);
-            this.setScene(currentScene);
-        } catch (IOException ex) { Logger.getLogger(ClientDialog.class.getName()).log(Level.SEVERE, null, ex); }
+        Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml", null);
+        dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
+        dialogController.bindClient(this.client); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
+        dialogController.setNextVisibleAndActionParameters(buttonType);
+        dialogController.setBackupClient(this.clientBackup);
+        this.setScene(currentScene);
         setResizable(false);
         initOwner(owner);
 
@@ -59,7 +53,6 @@ public class ClientDialog extends Stage implements Dialogable {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             event.consume();
         });
-        
     }
     
     @Override

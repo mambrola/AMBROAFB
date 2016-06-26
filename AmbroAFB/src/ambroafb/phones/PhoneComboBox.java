@@ -51,24 +51,6 @@ public class PhoneComboBox extends ComboBox<Phone> {
         setConverter();
     }
     
-    /**
-     * The method compares clients phones list and pays attention size and order of them. გადასატანია ტელეფონებში
-     * @param first
-     * @param second
-     * @return 
-     */
-    public static boolean comparePhones(ObservableList<Phone> first, ObservableList<Phone> second) {
-        if (first.size() != second.size()) return false;
-
-        for(int i = 0; i < first.size(); i++){
-            Phone phone = first.get(i);
-            Phone otherPhone = second.get(i);
-            if ( !phone.getNumber().equals(otherPhone.getNumber()) ) return false;
-        }
-
-        return true;
-    }
-    
     private void makeInputWithoutLetters() {
         getEditor().textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if(!newValue.isEmpty()){

@@ -47,7 +47,6 @@ public class ListEditor<T extends Editable<String>> extends ComboBox<T> {
         getItems().addListener(itemsListener);
         
         itemsProperty().addListener((ObservableValue<? extends ObservableList<T>> observable, ObservableList<T> oldValue, ObservableList<T> newValue) -> {
-            System.out.println("changed");
             oldValue.removeListener(itemsListener);
             newValue.addListener(itemsListener);
         });

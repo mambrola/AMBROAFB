@@ -21,4 +21,8 @@ AmbroAFB/errors.log
 *.properties
 *.dat
 *.ctrl
+*.txt
+*.lck
+derby.log
+*.properties
 *.properties

@@ -13,7 +13,6 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
-import ambroafb.phones.PhoneComboBox;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -113,8 +112,8 @@ public class Client extends EditorPanelable{
         countryDescrip =    new SimpleStringProperty("");
         IDNumber =          new SimpleStringProperty("");
         phoneList = FXCollections.observableArrayList();
-        phoneNumbers = new SimpleStringProperty("");
-        fax = new SimpleStringProperty("");
+        phoneNumbers =      new SimpleStringProperty("");
+        fax =               new SimpleStringProperty("");
 
         phoneList.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
@@ -182,13 +181,7 @@ public class Client extends EditorPanelable{
                 .collect(Collectors.toList())
         );
         setFax(other.getFax());
-    }
-
-    
-
-    @Override
-    public String toString() {
-        return descrip.get() + " : " + email.get() + " : " + fullAddress.get();
+        this.createdDate = other.createdDate;
     }
 
     public static List<Client> getAllFromDB() {
@@ -240,6 +233,8 @@ public class Client extends EditorPanelable{
             String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, client_str);
             Client res = mapper.readValue(res_str, Client.class);
             client.copyFrom(res);
+            if(client.getRecId() <= 0)
+                client.setRecId(res.getRecId());
             return client;
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -439,8 +434,9 @@ public class Client extends EditorPanelable{
         return (result + phones).toLowerCase();
     }
     
-    public boolean equals(Client other){
-        boolean fieldsCompareResult =   this.isJur.get() == other.getIsJur() &&
+    public boolean compares(Client other){ // this.createdDate.equals(other.createdDate) &&
+        boolean fieldsCompareResult =   
+                                        this.isJur.get() == other.getIsJur() &&
                                         this.isRez.get() == other.getIsRez() && 
                                         this.firstName.get().equals(other.getFirstName()) &&
                                         this.lastName.get().equals(other.getLastName()) &&
@@ -451,11 +447,9 @@ public class Client extends EditorPanelable{
                                         this.country.get().equals(other.getCountry()) &&
                                         this.IDNumber.get().equals(other.getIDNumber()) &&
                                         this.fax.get().equals(other.getFax());
-        boolean equalsPhones = PhoneComboBox.comparePhones(phoneList, other.getPhoneList());
+        boolean equalsPhones = Phone.compareLists(phoneList, other.getPhoneList());
         return fieldsCompareResult && equalsPhones;
     }
-    
-    
 
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 
@@ -489,7 +483,5 @@ public class Client extends EditorPanelable{
                 }
             };
         }
-
     }
-
 }

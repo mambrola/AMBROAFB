@@ -61,6 +61,8 @@ public class Names {
     
     public static final String DIALOG_WINDOW_TITLE = "Dialog";
     
+    public static final String LEVEL_FOR_PATH = "/DialogOrFilter";
+    
     public static enum EDITOR_BUTTON_TYPE {
         DELETE, EDIT, VIEW, ADD
     } 

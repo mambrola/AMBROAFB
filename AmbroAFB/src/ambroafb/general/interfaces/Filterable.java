@@ -14,6 +14,4 @@ import org.json.JSONObject;
 public interface Filterable {
     public JSONObject getResult();
     public void setResult(boolean isOk);
-    
-    public static final String LOCAL_NAME = "/Dialog";
 }

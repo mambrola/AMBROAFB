@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -35,15 +36,17 @@ public class AmbroAFB extends Application {
     public static ServerSocket socket;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         mainStage = stage;
-        UtilsDB.initTables();
+        UtilsDB.getInstance().createLocalUsageTables();
         Utils.saveShowingStageByPath("main", mainStage);
-        Scene scene = Utils.createScene(Names.MAIN_FXML);
+        Scene scene = Utils.createScene(Names.MAIN_FXML, null);
         stage.setScene(scene);
         stage.setTitle(GeneralConfig.getInstance().getTitleFor(Names.MAIN_TITLE));
         if (Names.MAIN_LOGO != null) {
-            stage.getIcons().add(new Image(Utils.class.getResource(Names.MAIN_LOGO).openStream()));
+            try {
+                stage.getIcons().add(new Image(Utils.class.getResource(Names.MAIN_LOGO).openStream()));
+            } catch (IOException ex) { Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex); }
         }
 
         GeneralConfig conf = GeneralConfig.getInstance();
@@ -62,22 +65,9 @@ public class AmbroAFB extends Application {
         stage.setOnCloseRequest((WindowEvent we) -> {
             Utils.exit();
         });
-
-        stage.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (!stage.isMaximized()) {
-                GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, newValue.doubleValue(), stage.getHeight());
-            }
-        });
-
-        stage.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (!stage.isMaximized()) {
-                GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, stage.getWidth(), newValue.doubleValue());
-            }
-        });
-
-        stage.maximizedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            conf.setSizeFor(Names.MAIN_FXML, newValue);
-        });
+        
+        Utils.regulateStageSize(stage);
+        Utils.setSizeFor(stage);
 
         stage.show();
     }

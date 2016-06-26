@@ -25,6 +25,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.tomcat.jdbc.pool.ConnectionPool;
 import org.apache.tomcat.jdbc.pool.PoolConfiguration;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * პასუხისმგებელია აპლიკაციაში არსებული კონფიგურაციების მენეჯმენტზე
@@ -37,11 +39,11 @@ public class GeneralConfig {
 
     /**
      *
-     * @return
+     * @return ერთადერთ Instance-ს
      */
     public static GeneralConfig getInstance() {
         if (config == null) {
-            SavedConfig conf = readConfig();
+            SavedConfig conf = readConfigFromDerby();
             if (conf == null) {
                 config = new GeneralConfig();
             } else {
@@ -51,21 +53,42 @@ public class GeneralConfig {
         return config;
     }
 
-    private static SavedConfig readConfig() {
-        SavedConfig conf = null;
-        try (FileInputStream fileIn = new FileInputStream(Names.GENERAL_CONFIGURATION_FILE_NAME);
-                ObjectInputStream streamIn = new ObjectInputStream(fileIn)) {
-            conf = (SavedConfig) streamIn.readObject();
-        } catch (FileNotFoundException | ClassNotFoundException ex) {
-//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.CONFIGURATION_FILE_OR_CLASS_NOT_FOUND);
+//    private static SavedConfig readConfig() {
+//        SavedConfig conf = null;
+//        try (FileInputStream fileIn = new FileInputStream(Names.GENERAL_CONFIGURATION_FILE_NAME);
+//                ObjectInputStream streamIn = new ObjectInputStream(fileIn)) {
+//            conf = (SavedConfig) streamIn.readObject();
+//        } catch (FileNotFoundException | ClassNotFoundException ex) {
+////            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.CONFIGURATION_FILE_OR_CLASS_NOT_FOUND);
+////            alert.showAlert();
+//        } catch (IOException ex) {
+//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CONFIGURATION);
 //            alert.showAlert();
-        } catch (IOException ex) {
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CONFIGURATION);
-            alert.showAlert();
+//        }
+//        return conf;
+//    }
+    /**
+     * ესაა ის რაც ინახავს კონფიგურაციაში არსებულ მონაცემებს
+     * ეს ისეთი მონაცემებია, რომ ნებისმიერი მათგანის (არა მარტო ენის)ცვლილების შემდეგ უნდა მოხდეს გადატვირთვა
+     * @return 
+     */
+    
+    private static SavedConfig readConfigFromDerby(){
+        SavedConfig conf = null;
+        try {
+            JSONObject configJS = UtilsDB.getInstance().getDefaultParametersJson("afb", "configuration");
+            if (configJS != null){
+                conf = new SavedConfig(configJS.getString("language"));
+                conf.database = configJS.getString("database");
+                conf.username = configJS.getString("username");
+                conf.password = configJS.getString("password");
+            }
+        } catch (JSONException ex) {
+            Logger.getLogger(GeneralConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
         return conf;
     }
-
+/*აქედან დიდი ნაწილი ალბათ არის Utils, თუმცა წვრილ-წვრილი და ბევრი რაღაცაა შეიძლება ცალკე მაგ. UtilsGC(GeneralConfiguration)-ად დარჩეს*/
     public ResourceBundle bundle;
     public Locale locale;
     private KFZClient client;
@@ -100,6 +123,11 @@ public class GeneralConfig {
         return ResourceBundle.getBundle(Names.BUNDLE_TITLES_NAME, locale);
     }
 
+    /**
+     * პარამეტრებში ალბათ უნდა იყოს არა ბაზის მისამართი, არამედ "KFZ-Server"-ისა,
+     * username და password-იც უნდა იყოს უნიკალური თითოეული მომხმარებლისთვის და აქ უნდა გამოიყენებოდეს
+     * @return 
+     */
     public KFZClient getServerClient() {
         if (client == null) {
             try {
@@ -175,9 +203,25 @@ public class GeneralConfig {
             alert.showAlert();
         }
     }
+    /**
+     * ეს უნდა მოხდეს კონფიგურაციის stage-ში არსებული save-restrart ღილაკზე დაჭერისას
+     */
+    public void dumpIntoDerby(){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("language", savedConf.language);
+            json.put("database", savedConf.database);
+            json.put("username", savedConf.username);
+            json.put("password", savedConf.password);
+            UtilsDB.getInstance().updateOrInsertDefaultParameters("afb", "configuration", json);
+        } catch (JSONException ex) {
+            Logger.getLogger(GeneralConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * ანახლებს კონფიგურაციის მონაცემებს
+     * განახლება მგონი არ დაგვჭირდება, ეს მეთოდი გაეშვება პროგრამის ჩატვირთვისას
      *
      * @param language
      * @param database
@@ -206,6 +250,7 @@ public class GeneralConfig {
     /**
      * აბრუნებს მიმდინარე ენას ადამიანისთვის წაკითხვადი სახით. მაგ: English,
      * ქართული ...
+     * ეს და პირიქით Locale-ს უნდა ქონდეს, არა?
      *
      * @return
      */
@@ -215,6 +260,7 @@ public class GeneralConfig {
 
     /**
      * ქმნის და აბრუნებს ახალ კავშირს ბაზასთან მიმდინარე პარამეტრების მიხედვით
+     * როგორც ზევით (მეთოდთან change) ვთქვით pool უკვე უნდა არსებობდეს
      *
      * @return
      * @throws java.sql.SQLException
@@ -231,6 +277,11 @@ public class GeneralConfig {
         return pool.getConnection();
     }
 
+    /**
+     * get-ერებია
+     * @return 
+     */
+    
     public String getDatabase() {
         return savedConf.database;
     }
@@ -243,6 +294,12 @@ public class GeneralConfig {
         return savedConf.password;
     }
 
+    // stages:
+    /**
+     * ესენი ვფიქრობ გადასატანია Utils-ში
+     * გადასაკეთებელია JSON-ზე
+     */
+    
     public Sizes getSizeFor(String stageName) {
         return savedConf.sizes.get(stageName);
     }
@@ -261,12 +318,13 @@ public class GeneralConfig {
     }
 
     public void setSizeFor(String stageName, Sizes size) {
-        //savedConf.sizes.put(stageName, size); //Disable by Murman
+        savedConf.sizes.put(stageName, size); //Disable by Murman
     }
 
     /**
      * გადმოცემული key-ს მიხედვით ინახავს გადმოცემულ მნიშვნელობას, რომლის გაგება
      * შემდგომში მთელი აპლიკაციიდან იქნება შესაძლებელი
+     * ამ attributes-ს გამოყენების მაგალითი მთელ პროგრამაში არ მოიძებნა !!!!!
      *
      * @param key
      * @param value
@@ -298,7 +356,11 @@ public class GeneralConfig {
     public boolean hasAttribute(String key) {
         return attributes.containsKey(key);
     }
-
+    /**
+     * ისევ ვიტყვი: მგონია Locale-მ უნდა შეძლოს ეს, შეიძლება ვცდები 
+     * @param language
+     * @return 
+     */
     private static String mapLanguageToId(String language) {
         for (String key : languageIdToName.keySet()) {
             if (languageIdToName.get(key).equals(language)) {
@@ -315,6 +377,8 @@ public class GeneralConfig {
     /**
      * მინიმალური პარამეტრები, რომლებიც საჭიროა აპლიკაციის მთლიანი პარამეტრების
      * აღსადგენად
+     * 
+     * ეს შეიცვლება JSON-ით
      */
     private static class SavedConfig implements Serializable {
 
@@ -337,6 +401,8 @@ public class GeneralConfig {
 
     /**
      * stage-ის ზომების შემნახველი კლასი
+     * 
+     * ეს შეიცვლება JSON-ით
      */
     public static class Sizes implements Serializable {
 

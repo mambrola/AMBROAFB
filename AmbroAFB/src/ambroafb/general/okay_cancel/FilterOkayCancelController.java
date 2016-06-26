@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 public class FilterOkayCancelController implements Initializable {
 
     @FXML
-    private Button okay, cancel;
+    private Button okay;
     
     /**
      * Initializes the controller class.

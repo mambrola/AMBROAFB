@@ -6,9 +6,6 @@
 package ambroafb.clients;
 
 import ambroafb.general.Utils;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,23 +20,17 @@ public class Clients extends Stage {
     private ClientsController clientsController;
     
     public Clients(Stage owner) {
-        try {
-            String ownerPath = Utils.getPathForStage(owner);
-            String clientsStagePath = ownerPath + "/" + Clients.class.getSimpleName();
-            Utils.saveShowingStageByPath(clientsStagePath, (Stage)this);
-            
-            Scene scene = Utils.createScene("/ambroafb/clients/Clients.fxml");
-            clientsController = (ClientsController) scene.getProperties().get("controller");
-            clientsController.setStage((Stage)this);
-            this.setScene(scene);
-        } catch (IOException ex) { Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex); }
-        initOwner(owner);
+        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + Clients.class.getSimpleName(), (Stage)this);
+
+        Scene scene = Utils.createScene("/ambroafb/clients/Clients.fxml", null);
+        clientsController = (ClientsController) scene.getProperties().get("controller");
+        this.setScene(scene);
+        this.initOwner(owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             event.consume();
         });
-
     }
     
     public ClientsController getClientsController(){
