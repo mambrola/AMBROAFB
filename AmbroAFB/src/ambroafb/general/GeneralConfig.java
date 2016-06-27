@@ -68,16 +68,17 @@ public class GeneralConfig {
 //        return conf;
 //    }
     /**
-     * ესაა ის რაც ინახავს კონფიგურაციაში არსებულ მონაცემებს
-     * ეს ისეთი მონაცემებია, რომ ნებისმიერი მათგანის (არა მარტო ენის)ცვლილების შემდეგ უნდა მოხდეს გადატვირთვა
-     * @return 
+     * ესაა ის რაც ინახავს კონფიგურაციაში არსებულ მონაცემებს ეს ისეთი
+     * მონაცემებია, რომ ნებისმიერი მათგანის (არა მარტო ენის)ცვლილების შემდეგ
+     * უნდა მოხდეს გადატვირთვა
+     *
+     * @return
      */
-    
-    private static SavedConfig readConfigFromDerby(){
+    private static SavedConfig readConfigFromDerby() {
         SavedConfig conf = null;
         try {
             JSONObject configJS = UtilsDB.getInstance().getDefaultParametersJson("afb", "configuration");
-            if (configJS != null){
+            if (configJS != null) {
                 conf = new SavedConfig(configJS.getString("language"));
                 conf.database = configJS.getString("database");
                 conf.username = configJS.getString("username");
@@ -88,10 +89,11 @@ public class GeneralConfig {
         }
         return conf;
     }
-/*აქედან დიდი ნაწილი ალბათ არის Utils, თუმცა წვრილ-წვრილი და ბევრი რაღაცაა შეიძლება ცალკე მაგ. UtilsGC(GeneralConfiguration)-ად დარჩეს*/
+    /*აქედან დიდი ნაწილი ალბათ არის Utils, თუმცა წვრილ-წვრილი და ბევრი რაღაცაა შეიძლება ცალკე მაგ. UtilsGC(GeneralConfiguration)-ად დარჩეს*/
     public ResourceBundle bundle;
     public Locale locale;
     private KFZClient client;
+    private String kfz_username, kfz_password;
 
     private ConnectionPool pool;
     private HashMap<String, Object> attributes;
@@ -124,18 +126,27 @@ public class GeneralConfig {
     }
 
     /**
-     * პარამეტრებში ალბათ უნდა იყოს არა ბაზის მისამართი, არამედ "KFZ-Server"-ისა,
-     * username და password-იც უნდა იყოს უნიკალური თითოეული მომხმარებლისთვის და აქ უნდა გამოიყენებოდეს
-     * @return 
+     * პარამეტრებში ალბათ უნდა იყოს არა ბაზის მისამართი, არამედ
+     * "KFZ-Server"-ისა, username და password-იც უნდა იყოს უნიკალური თითოეული
+     * მომხმარებლისთვის და აქ უნდა გამოიყენებოდეს
+     *
+     * @return
      */
     public KFZClient getServerClient() {
         if (client == null) {
             try {
-                client = new KFZClient("sad", "fgh").setClientName("AmbroAFB");
+                return getServerClient("asd", "asd");
             } catch (IOException | KFZClient.KFZServerException ex) {
                 Logger.getLogger(GeneralConfig.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        return client;
+    }
+
+    public KFZClient getServerClient(String username, String password) throws IOException, KFZClient.KFZServerException {
+        kfz_username = username;
+        kfz_password = password;
+        client = new KFZClient(kfz_username, kfz_password).setClientName("AmbroAFB");
         return client;
     }
 
@@ -203,10 +214,12 @@ public class GeneralConfig {
             alert.showAlert();
         }
     }
+
     /**
-     * ეს უნდა მოხდეს კონფიგურაციის stage-ში არსებული save-restrart ღილაკზე დაჭერისას
+     * ეს უნდა მოხდეს კონფიგურაციის stage-ში არსებული save-restrart ღილაკზე
+     * დაჭერისას
      */
-    public void dumpIntoDerby(){
+    public void dumpIntoDerby() {
         JSONObject json = new JSONObject();
         try {
             json.put("language", savedConf.language);
@@ -220,8 +233,8 @@ public class GeneralConfig {
     }
 
     /**
-     * ანახლებს კონფიგურაციის მონაცემებს
-     * განახლება მგონი არ დაგვჭირდება, ეს მეთოდი გაეშვება პროგრამის ჩატვირთვისას
+     * ანახლებს კონფიგურაციის მონაცემებს განახლება მგონი არ დაგვჭირდება, ეს
+     * მეთოდი გაეშვება პროგრამის ჩატვირთვისას
      *
      * @param language
      * @param database
@@ -249,8 +262,7 @@ public class GeneralConfig {
 
     /**
      * აბრუნებს მიმდინარე ენას ადამიანისთვის წაკითხვადი სახით. მაგ: English,
-     * ქართული ...
-     * ეს და პირიქით Locale-ს უნდა ქონდეს, არა?
+     * ქართული ... ეს და პირიქით Locale-ს უნდა ქონდეს, არა?
      *
      * @return
      */
@@ -279,9 +291,9 @@ public class GeneralConfig {
 
     /**
      * get-ერებია
-     * @return 
+     *
+     * @return
      */
-    
     public String getDatabase() {
         return savedConf.database;
     }
@@ -296,10 +308,8 @@ public class GeneralConfig {
 
     // stages:
     /**
-     * ესენი ვფიქრობ გადასატანია Utils-ში
-     * გადასაკეთებელია JSON-ზე
+     * ესენი ვფიქრობ გადასატანია Utils-ში გადასაკეთებელია JSON-ზე
      */
-    
     public Sizes getSizeFor(String stageName) {
         return savedConf.sizes.get(stageName);
     }
@@ -323,8 +333,8 @@ public class GeneralConfig {
 
     /**
      * გადმოცემული key-ს მიხედვით ინახავს გადმოცემულ მნიშვნელობას, რომლის გაგება
-     * შემდგომში მთელი აპლიკაციიდან იქნება შესაძლებელი
-     * ამ attributes-ს გამოყენების მაგალითი მთელ პროგრამაში არ მოიძებნა !!!!!
+     * შემდგომში მთელი აპლიკაციიდან იქნება შესაძლებელი ამ attributes-ს
+     * გამოყენების მაგალითი მთელ პროგრამაში არ მოიძებნა !!!!!
      *
      * @param key
      * @param value
@@ -356,10 +366,12 @@ public class GeneralConfig {
     public boolean hasAttribute(String key) {
         return attributes.containsKey(key);
     }
+
     /**
-     * ისევ ვიტყვი: მგონია Locale-მ უნდა შეძლოს ეს, შეიძლება ვცდები 
+     * ისევ ვიტყვი: მგონია Locale-მ უნდა შეძლოს ეს, შეიძლება ვცდები
+     *
      * @param language
-     * @return 
+     * @return
      */
     private static String mapLanguageToId(String language) {
         for (String key : languageIdToName.keySet()) {
@@ -377,7 +389,7 @@ public class GeneralConfig {
     /**
      * მინიმალური პარამეტრები, რომლებიც საჭიროა აპლიკაციის მთლიანი პარამეტრების
      * აღსადგენად
-     * 
+     *
      * ეს შეიცვლება JSON-ით
      */
     private static class SavedConfig implements Serializable {
@@ -401,7 +413,7 @@ public class GeneralConfig {
 
     /**
      * stage-ის ზომების შემნახველი კლასი
-     * 
+     *
      * ეს შეიცვლება JSON-ით
      */
     public static class Sizes implements Serializable {

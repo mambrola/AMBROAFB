@@ -10,6 +10,7 @@ import ambroafb.general.GeneralConfig.Sizes;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.UtilsDB;
+import ambroafb.login.LoginController;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -19,8 +20,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -37,6 +36,10 @@ public class AmbroAFB extends Application {
 
     @Override
     public void start(Stage stage) {
+        if (!promptLogin()) {
+            Utils.exitApplication();
+        }
+
         mainStage = stage;
         UtilsDB.getInstance().createLocalUsageTables();
         Utils.saveShowingStageByPath("main", mainStage);
@@ -46,7 +49,9 @@ public class AmbroAFB extends Application {
         if (Names.MAIN_LOGO != null) {
             try {
                 stage.getIcons().add(new Image(Utils.class.getResource(Names.MAIN_LOGO).openStream()));
-            } catch (IOException ex) { Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex); }
+            } catch (IOException ex) {
+                Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         GeneralConfig conf = GeneralConfig.getInstance();
@@ -65,11 +70,15 @@ public class AmbroAFB extends Application {
         stage.setOnCloseRequest((WindowEvent we) -> {
             Utils.exit();
         });
-        
+
         Utils.regulateStageSize(stage);
         Utils.setSizeFor(stage);
 
         stage.show();
+    }
+
+    private boolean promptLogin() {
+        return new LoginController().prompt();
     }
 
     /**
