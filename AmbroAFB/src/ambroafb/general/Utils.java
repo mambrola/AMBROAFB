@@ -677,22 +677,22 @@ public class Utils {
     
     public static void setSizeFor(Stage stage){
         String path = getPathForStage(stage);
-        try {
-            JSONObject json;
-            if (stages_sizes_map.containsKey(path))
-                json = stages_sizes_map.get(path);
-            else 
-                json = UtilsDB.getInstance().getDefaultParametersJson(path, "stage_size");
-            
-            if (json.has("isMaximaze") && json.getBoolean("isMaximaze")){
-                stage.setMaximized(true);
-            }
-            else {
-                stage.setWidth(json.getDouble("width"));
-                stage.setHeight(json.getDouble("height"));
-            }
-        } catch (JSONException ex) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            JSONObject json;
+//            if (stages_sizes_map.containsKey(path))
+//                json = stages_sizes_map.get(path);
+//            else 
+//                json = UtilsDB.getInstance().getDefaultParametersJson(path, "stage_size");
+//            
+//            if (json.has("isMaximaze") && json.getBoolean("isMaximaze")){
+//                stage.setMaximized(true);
+//            }
+//            else {
+//                stage.setWidth(json.getDouble("width"));
+//                stage.setHeight(json.getDouble("height"));
+//            }
+//        } catch (JSONException ex) {
+//            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 }
