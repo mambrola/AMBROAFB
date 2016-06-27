@@ -32,8 +32,7 @@ public class Clients extends Stage {
             event.consume();
         });
         
-        Utils.regulateStageSize((Stage)this);
-//        Utils.setSizeFor((Stage)this);
+        Utils.setSizeFor((Stage)this);
     }
     
     public ClientsController getClientsController(){
