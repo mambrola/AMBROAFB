@@ -7,6 +7,7 @@ package ambroafb;
 
 import ambroafb.clients.Clients;
 import ambroafb.clients.filter.ClientFilter;
+import ambroafb.countries.Countries;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -20,7 +21,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
@@ -167,20 +167,32 @@ public class MainController implements Initializable {
     
     @FXML 
     private void countries(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage(
-                    "/ambroafb/countries/Countries.fxml", 
-                    config.getTitleFor("countries"), 
-                    Names.IN_OUT_LOGO,
-                    AmbroAFB.mainStage
-            );
-            stage.show();
-        }catch(IOException ex){
-            Platform.runLater(() -> {
-                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-                alert.showAlert();
-            });
+        String mainStagePath = Utils.getPathForStage(AmbroAFB.mainStage);
+        String countriesStagePath = mainStagePath + "/" + Countries.class.getSimpleName();
+        
+        Stage countriesStage = Utils.getStageForPath(countriesStagePath);
+        if (countriesStage == null || !countriesStage.isShowing()){
+            Countries countries = new Countries(AmbroAFB.mainStage);
+            countries.show();
         }
+        else {
+            countriesStage.requestFocus();
+        }
+        
+//        try{
+//            Stage stage = Utils.createStage(
+//                    "/ambroafb/countries/Countries.fxml", 
+//                    config.getTitleFor("countries"), 
+//                    Names.IN_OUT_LOGO,
+//                    AmbroAFB.mainStage
+//            );
+//            stage.show();
+//        }catch(IOException ex){
+//            Platform.runLater(() -> {
+//                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
+//                alert.showAlert();
+//            });
+//        }
     }
     
     

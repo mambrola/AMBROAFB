@@ -29,7 +29,7 @@ public class ClientsController implements Initializable {
     @FXML
     private EditorPanelController editorPanelController;
     
-    private final ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();;
+    private final ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();
     
     /**
      *

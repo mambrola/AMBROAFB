@@ -276,8 +276,7 @@ public class Utils {
             loader.setController(controller);
         }
         try {
-            Parent root;
-            root = loader.load(AmbroAFB.class.getResource(name).openStream());
+            Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
             scene = new Scene(root);
             scene.getProperties().put("controller", loader.getController());
         } catch (IOException ex) {

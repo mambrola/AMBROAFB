@@ -128,6 +128,6 @@ public class Country extends EditorPanelable{
 
     @Override
     public String toStringForSearch() {
-        return name.get();
+        return name.get().toLowerCase();
     }
 }
