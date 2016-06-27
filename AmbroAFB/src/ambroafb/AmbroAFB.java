@@ -65,22 +65,9 @@ public class AmbroAFB extends Application {
         stage.setOnCloseRequest((WindowEvent we) -> {
             Utils.exit();
         });
-
-        stage.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (!stage.isMaximized()) {
-                GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, newValue.doubleValue(), stage.getHeight());
-            }
-        });
-
-        stage.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (!stage.isMaximized()) {
-                GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, stage.getWidth(), newValue.doubleValue());
-            }
-        });
-
-        stage.maximizedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            conf.setSizeFor(Names.MAIN_FXML, newValue);
-        });
+        
+        Utils.regulateStageSize(stage);
+        Utils.setSizeFor(stage);
 
         stage.show();
     }
