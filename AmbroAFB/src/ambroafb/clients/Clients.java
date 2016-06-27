@@ -31,6 +31,8 @@ public class Clients extends Stage {
             clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             event.consume();
         });
+        
+        Utils.setSizeFor((Stage)this);
     }
     
     public ClientsController getClientsController(){

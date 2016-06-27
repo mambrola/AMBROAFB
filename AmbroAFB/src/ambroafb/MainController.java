@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
@@ -86,6 +87,7 @@ public class MainController implements Initializable {
     
     @FXML
     private void mainExit(ActionEvent event){
+        Utils.saveSizeFor(AmbroAFB.mainStage);
         Utils.exit();
     }
     

@@ -2,3 +2,6 @@
 #formNode {
   -fx-spacing: 20;
 }
+#search {
+  -fx-min-width: 250;
+}

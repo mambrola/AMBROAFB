@@ -68,12 +68,11 @@ public class AmbroAFB extends Application {
         }
 
         stage.setOnCloseRequest((WindowEvent we) -> {
+            Utils.saveSizeFor(mainStage);
             Utils.exit();
         });
-
-        Utils.regulateStageSize(stage);
-        Utils.setSizeFor(stage);
-
+        
+        Utils.setSizeFor(mainStage);
         stage.show();
     }
 
@@ -94,13 +93,12 @@ public class AmbroAFB extends Application {
                         if (signal == 1) {
                             Platform.runLater(() -> {
                                 if (mainStage != null) {
-                                    //mainStage.centerOnScreen();  უხერხულობას უფრო ქმნის, ვიდრე კომფორტს
-                                    mainStage.toFront();//წინ არ გამოდის, თუმცა taskbar-ში არსებულ პროგრამის ნიშანს ეს აციმციმებს
+                                    mainStage.toFront();
                                 }
                             });
                         }
                     } catch (IOException ex) {
-                        Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex);
+                        //Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex);
                         break;
                     }
                 }

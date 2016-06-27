@@ -23,7 +23,7 @@
     <center>
         <VBox >
             <children>
-                <ATableView fx:id="table" initializer="ambroafb.clients.Client" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+                <ATableView fx:id="table" initializer="ambroafb.clients.Client" styleClass="unicode" VBox.vgrow="ALWAYS" />
             </children>
         </VBox>
     </center>
