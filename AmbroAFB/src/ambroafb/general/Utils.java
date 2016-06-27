@@ -614,7 +614,7 @@ public class Utils {
         }
     }
     
-    public static void regulateStageSize(Stage stage){
+    public static void saveSizeFor(Stage stage){
         try {
             String path = getPathForStage(stage);
             double width = stage.getWidth();
