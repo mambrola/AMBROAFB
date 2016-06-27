@@ -657,6 +657,8 @@ public class Utils {
                 JSONObject js = stages_sizes_map.get(path);
                 System.out.println("js: " + js);
         });
+        
+//        setSizeFor(stage);
     }
     
     private static void saveSize(String stagePath, String orientation, Object value){
@@ -675,14 +677,17 @@ public class Utils {
         }
     }
     
-    public static void setSizeFor(Stage stage){
+    private static void setSizeFor(Stage stage){
         String path = getPathForStage(stage);
+        System.out.println("path: " + path);
         try {
             JSONObject json;
             if (stages_sizes_map.containsKey(path))
                 json = stages_sizes_map.get(path);
             else 
                 json = UtilsDB.getInstance().getDefaultParametersJson(path, "stage_size");
+            
+//            System.out.println("json");
             
             if (json.has("isMaximaze") && json.getBoolean("isMaximaze")){
                 stage.setMaximized(true);

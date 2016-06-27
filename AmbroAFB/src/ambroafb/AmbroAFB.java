@@ -67,7 +67,7 @@ public class AmbroAFB extends Application {
         });
         
         Utils.regulateStageSize(stage);
-        Utils.setSizeFor(stage);
+//        Utils.setSizeFor(stage);
 
         stage.show();
     }
