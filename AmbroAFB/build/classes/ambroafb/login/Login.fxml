@@ -7,26 +7,35 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane hgap="10.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
-    <columnConstraints>
-        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
-        <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-    </rowConstraints>
-    <padding>
-        <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
-    </padding>
-    <children>
-        <Label text="%username" />
-        <Label text="%password" GridPane.rowIndex="1" />
-        <TextField fx:id="username" GridPane.columnIndex="1" />
-        <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Button mnemonicParsing="false" onAction="#login" text="%enter" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Label fx:id="status" text="" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-    </children>
-</GridPane>
+<StackPane styleClass="unicode" stylesheets="/styles/css/login.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <VBox alignment="CENTER" spacing="20.0" >
+        <children>
+            <GridPane hgap="10.0" vgap="10.0">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                </rowConstraints>
+                <children>
+                    <Label text="%username" />
+                    <Label text="%password" GridPane.rowIndex="1" />
+                    <TextField fx:id="username" GridPane.columnIndex="1" />
+                    <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Button mnemonicParsing="false" onAction="#login" text="%enter" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                </children>
+                <VBox.margin>
+                    <Insets left="100.0" right="100.0" />
+                </VBox.margin>
+            </GridPane>
+            <Label fx:id="status" textFill="RED" />
+        </children>
+        <padding>
+            <Insets bottom="100.0" top="100.0" />
+        </padding>
+    </VBox>
+    <org.controlsfx.control.MaskerPane fx:id="masker" visible="false" text="%loading"/>  
+</StackPane>
