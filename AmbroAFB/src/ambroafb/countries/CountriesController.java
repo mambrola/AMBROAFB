@@ -5,6 +5,7 @@
  */
 package ambroafb.countries;
 
+import ambroafb.clients.Client;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -48,9 +49,12 @@ public class CountriesController implements Initializable {
 
     private void reAssignTable(JSONObject json) {
         countries.clear();
-        Country.getAllFromDB().stream().forEach((country) -> {
-            countries.add(country);
+        Thread t = new Thread(() -> {
+            Country.getAllFromDB().stream().forEach((country) -> {
+                countries.add(country);
+            });
         });
+        t.start();
     }
     
     
