@@ -617,11 +617,9 @@ public class Utils {
     public static void saveSizeFor(Stage stage){
         try {
             String path = getPathForStage(stage);
-            double width = stage.getWidth();
-            double height = stage.getHeight();
             JSONObject jsonForStageSize = new JSONObject();
-            jsonForStageSize.put("width", width);
-            jsonForStageSize.put("height", height);
+            jsonForStageSize.put("width", stage.getWidth());
+            jsonForStageSize.put("height", stage.getHeight());
             jsonForStageSize.put("isMaximized", stage.isMaximized());
             UtilsDB.getInstance().updateOrInsertDefaultParameters(path, "stage_size", jsonForStageSize);
         } catch (JSONException ex) {
