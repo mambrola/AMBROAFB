@@ -36,10 +36,6 @@ public class AmbroAFB extends Application {
 
     @Override
     public void start(Stage stage) {
-        if (!promptLogin()) {
-            Utils.exitApplication();
-        }
-
         mainStage = stage;
         UtilsDB.getInstance().createLocalUsageTables();
         Utils.saveShowingStageByPath("main", mainStage);
@@ -71,13 +67,22 @@ public class AmbroAFB extends Application {
             Utils.saveSizeFor(mainStage);
             Utils.exit();
         });
-        
+
         Utils.setSizeFor(mainStage);
         stage.show();
+
+        scene.getRoot().setDisable(true);
+        if (promptLogin()) {
+            scene.getRoot().setDisable(false);
+        } else {
+            Utils.exitApplication();
+        }
     }
 
     private boolean promptLogin() {
-        return new LoginController().prompt();
+        LoginController login = new LoginController();
+        login.initOwner(mainStage);
+        return login.prompt();
     }
 
     /**

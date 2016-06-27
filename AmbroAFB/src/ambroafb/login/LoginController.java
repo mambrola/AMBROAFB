@@ -54,6 +54,7 @@ public class LoginController extends Stage implements Initializable {
         prefs = Preferences.systemNodeForPackage(AmbroAFB.class);
         Scene scene = Utils.createScene("/ambroafb/login/Login.fxml", this);
         this.setScene(scene);
+        setResizable(false);
     }
 
     public boolean prompt() {
