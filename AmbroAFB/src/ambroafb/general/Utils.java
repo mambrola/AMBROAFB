@@ -325,24 +325,12 @@ public class Utils {
      */
     public static void exitApplication() {
         GeneralConfig.getInstance().logoutServerClient();
-//        try {
-//            if (AmbroAFB.socket != null) {
-//                AmbroAFB.socket.close(); // socket opened with "try", so close operation is not needed.
-//            }
-//        } catch (IOException ex) {
-//            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         Platform.exit();
         System.exit(0);
     }
 
     private static void saveConfigChanges() {
         GeneralConfig.getInstance().dumpIntoDerby();
-        for (String stagePath : stages_sizes_map.keySet()) {
-//            System.out.println("stagePath: " + stagePath);
-            JSONObject json = stages_sizes_map.get(stagePath);
-            UtilsDB.getInstance().updateOrInsertDefaultParameters(stagePath, "stage_size", json);
-        }
     }
 
     // ბაზასთან ურთიორთობის მეთოდები:
@@ -626,50 +614,14 @@ public class Utils {
         }
     }
     
-    private static final Map<String, JSONObject> stages_sizes_map = new HashMap<>();
-    
-    public static void regulateStageSize(Stage stage){
-        String path = getPathForStage(stage);
-        stage.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (!stage.isMaximized()) {
-//                GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, newValue.doubleValue(), stage.getHeight());
-                saveSize(path, "width", newValue.doubleValue());
-                
-                JSONObject js = stages_sizes_map.get(path);
-                System.out.println("js: " + js);
-            }
-        });
-
-        stage.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (!stage.isMaximized()) {
-//                GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, stage.getWidth(), newValue.doubleValue());
-                saveSize(path, "height", newValue.doubleValue());
-                
-                JSONObject js = stages_sizes_map.get(path);
-                System.out.println("js: " + js);
-            }
-        });
-
-        stage.maximizedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-//            GeneralConfig.getInstance().setSizeFor(Names.MAIN_FXML, newValue);
-                saveSize(path, "isMaximaze", newValue);
-                
-                JSONObject js = stages_sizes_map.get(path);
-                System.out.println("js: " + js);
-        });
-    }
-    
-    private static void saveSize(String stagePath, String orientation, Object value){
+    public static void saveSizeFor(Stage stage){
         try {
-            if (stages_sizes_map.containsKey(stagePath)){
-                JSONObject json = stages_sizes_map.get(stagePath);
-                json.put(orientation, value);
-            }
-            else{
-                JSONObject json = new JSONObject();
-                json.put(orientation, value);
-                stages_sizes_map.put(stagePath, json);
-            }
+            String path = getPathForStage(stage);
+            JSONObject jsonForStageSize = new JSONObject();
+            jsonForStageSize.put("width", stage.getWidth());
+            jsonForStageSize.put("height", stage.getHeight());
+            jsonForStageSize.put("isMaximized", stage.isMaximized());
+            UtilsDB.getInstance().updateOrInsertDefaultParameters(path, "stage_size", jsonForStageSize);
         } catch (JSONException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -677,22 +629,18 @@ public class Utils {
     
     public static void setSizeFor(Stage stage){
         String path = getPathForStage(stage);
-//        try {
-//            JSONObject json;
-//            if (stages_sizes_map.containsKey(path))
-//                json = stages_sizes_map.get(path);
-//            else 
-//                json = UtilsDB.getInstance().getDefaultParametersJson(path, "stage_size");
-//            
-//            if (json.has("isMaximaze") && json.getBoolean("isMaximaze")){
-//                stage.setMaximized(true);
-//            }
-//            else {
-//                stage.setWidth(json.getDouble("width"));
-//                stage.setHeight(json.getDouble("height"));
-//            }
-//        } catch (JSONException ex) {
-//            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            JSONObject json = UtilsDB.getInstance().getDefaultParametersJson(path, "stage_size");
+            if (json == null) return;
+            if (json.getBoolean("isMaximized")){
+                stage.setMaximized(true);
+            }
+            else {
+                stage.setWidth(json.getDouble("width"));
+                stage.setHeight(json.getDouble("height"));
+            }
+        } catch (JSONException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

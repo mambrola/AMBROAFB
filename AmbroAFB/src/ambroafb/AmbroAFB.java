@@ -63,12 +63,11 @@ public class AmbroAFB extends Application {
         }
 
         stage.setOnCloseRequest((WindowEvent we) -> {
+            Utils.saveSizeFor(mainStage);
             Utils.exit();
         });
         
-        Utils.regulateStageSize(stage);
-        Utils.setSizeFor(stage);
-
+        Utils.setSizeFor(mainStage);
         stage.show();
     }
 
