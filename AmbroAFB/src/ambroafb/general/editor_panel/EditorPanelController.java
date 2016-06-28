@@ -30,11 +30,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.json.JSONObject;
-import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.scene.Node;
 
 
 /**

@@ -69,7 +69,7 @@ public class GeneralConfig {
     }
 
     private GeneralConfig(String lang) {
-        this(new Locale(mapLanguageToId(lang)));
+        this(new Locale(lang));
         this.language = lang;
     }
 
@@ -174,7 +174,7 @@ public class GeneralConfig {
      * @param language
      */
     public void setLanguage(String language) {
-        this.language = language;
+        this.language = mapLanguageToId(language);
     }
 
     /**
@@ -184,7 +184,7 @@ public class GeneralConfig {
      * @return
      */
     public String getLanguage() {
-        return language;
+        return mapIdToLanguage(language);
     }
 
     /**
@@ -236,6 +236,10 @@ public class GeneralConfig {
             }
         }
         return null;
+    }
+    
+    private static String mapIdToLanguage(String lang){
+        return languageIdToName.get(lang);
     }
 
 }
