@@ -22,11 +22,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.json.JSONObject;
+import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.scene.Node;
 
 
 /**
@@ -40,17 +47,27 @@ public class EditorPanelController implements Initializable {
     private Button exit, delete, edit, view;
     
     @FXML
-    private MenuItem addBySample;
+    private SplitMenuButton add;
     
     @FXML
     private ToggleButton refresh;
     
     @FXML
+    private TextField search;
+
+
+    @FXML
+    private MenuItem addBySample;
+    
+    @FXML
     private Initializable outerController;
     
     @FXML
-    private TextField search;
+    private Region region;
 
+    @FXML
+    private HBox formNode;
+    
     private enum CLASS_TYPE {OBJECT, DIALOG, FILTER, CONTROLLER};
     
     private ObservableList<EditorPanelable> tableData;
@@ -205,7 +222,12 @@ public class EditorPanelController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+//        formNode.getChildren().remove(delete);
+//        formNode.getChildren().remove(edit);
+//        formNode.getChildren().remove(view);
+//        formNode.getChildren().remove(refresh);
+//        formNode.getChildren().remove(add);
+//        formNode.getChildren().remove(region);
     }
     
     public Button getExitButton(){
@@ -234,6 +256,22 @@ public class EditorPanelController implements Initializable {
 
     public void setOuterController(Initializable controller){
         outerController = controller;
+    }
+    
+    public void showButtonsByOrderOf(boolean... values){
+        try {
+            Field[] fields = getClass().getDeclaredFields();
+            for (int i = 0; i < values.length; i++) {
+                Field currField = fields[i];
+                if (currField.isAnnotationPresent(FXML.class) && !values[i]){
+                        Node button = (Node) currField.get(this);
+                        formNode.getChildren().remove(button);
+                }
+            }
+            formNode.getChildren().remove(region);
+        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private String getClassName(CLASS_TYPE type){

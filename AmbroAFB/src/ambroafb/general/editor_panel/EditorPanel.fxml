@@ -88,7 +88,7 @@
                 </ImageView>
             </graphic>
         </ToggleButton>
-        <Region HBox.hgrow="ALWAYS" />
+        <Region fx:id="region" HBox.hgrow="ALWAYS" />
         <TextField fx:id="search" promptText="%search" />
     </children>
     <padding>
