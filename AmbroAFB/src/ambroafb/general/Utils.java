@@ -312,12 +312,14 @@ public class Utils {
     public static ArrayList<Node> getFocusTraversableBottomChildren(Parent root) {
         ArrayList<Node> arrayList = new ArrayList<>();
         root.getChildrenUnmodifiable().stream().forEach((n) -> {
-            if (((Parent) n).getChildrenUnmodifiable().isEmpty()) {
-                if (n.isFocusTraversable()) {
-                    arrayList.add(n);
+            if (!n.getClass().toString().contains("ImageView")){
+                if (((Parent) n).getChildrenUnmodifiable().isEmpty()) {
+                    if (n.isFocusTraversable()) {
+                        arrayList.add(n);
+                    }
+                } else {
+                    arrayList.addAll(getFocusTraversableBottomChildren((Parent) n));
                 }
-            } else {
-                arrayList.addAll(getFocusTraversableBottomChildren((Parent) n));
             }
         });
         return arrayList;

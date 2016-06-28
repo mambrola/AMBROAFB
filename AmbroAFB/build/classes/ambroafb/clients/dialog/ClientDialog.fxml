@@ -99,11 +99,11 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
                 <children>
-<!--                    <ImageView fitWidth="24" fitHeight="24" >    
+                    <ImageView fitWidth="24" fitHeight="24" >    
                         <image>
                             <Image url="/images/delete2.png" />
                         </image>
-                    </ImageView>-->
+                    </ImageView>
                     <!--<graphic>-->
 <!--                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                             <Image url="/images/delete2.png" />
