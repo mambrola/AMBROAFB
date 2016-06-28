@@ -31,6 +31,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.Node;
@@ -258,20 +259,11 @@ public class EditorPanelController implements Initializable {
         outerController = controller;
     }
     
-    public void showButtonsByOrderOf(boolean... values){
-        try {
-            Field[] fields = getClass().getDeclaredFields();
-            for (int i = 0; i < values.length; i++) {
-                Field currField = fields[i];
-                if (currField.isAnnotationPresent(FXML.class) && !values[i]){
-                        Node button = (Node) currField.get(this);
-                        formNode.getChildren().remove(button);
-                }
-            }
-            formNode.getChildren().remove(region);
-        } catch (IllegalArgumentException | IllegalAccessException ex) {
-            Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+    public void removeButtonsByFxIDs(String... fxIds){
+        for (String fxId : fxIds) {
+            formNode.getChildren().remove(formNode.lookup(fxId));
         }
+        formNode.getChildren().remove(region);
     }
     
     private String getClassName(CLASS_TYPE type){
