@@ -26,8 +26,15 @@
   -fx-pref-width: 523.33333333;
 }
 .w2,
-.w3 {
+.w3,
+.w4 {
   -fx-spacing: 30;
+}
+.w4 .text-field {
+  -fx-pref-width: 523.33333333;
+}
+.w4 .combo-box {
+  -fx-pref-width: 246.66666667;
 }
 .doubleHeight {
   /*-fx-background-color: yellow;*/

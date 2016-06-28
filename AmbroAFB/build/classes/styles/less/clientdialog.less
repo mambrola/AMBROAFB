@@ -27,7 +27,7 @@
 .w2 .text-field {
     -fx-pref-width: (@formWidth - @spaceWidth)/2;
 }
-.w3 .text-field, .w3 .combo-box {
+.w3 .text-field, .w3 .combo-box, {
     -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
 }
 
@@ -36,10 +36,17 @@
 }
 
 
-.w2, .w3 {
+.w2, .w3, .w4 {
     -fx-spacing: @spaceWidth;
 }
 
+.w4 .text-field {
+    -fx-pref-width: @formWidth - @spaceWidth - (@formWidth - 2*@spaceWidth)/3;
+}
+
+.w4 .combo-box {
+    -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
+}
 
 .doubleHeight {
     /*-fx-background-color: yellow;*/
