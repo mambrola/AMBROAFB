@@ -374,7 +374,33 @@ public class Utils {
     public static Stage getStageForPath(String path) {
         return (Stage) bidmap.get(path);
     }
-
+    
+//    public static void removeHidingStages(){
+//        List<Stage> hideStages = new ArrayList<>();
+//        for (Object value : bidmap.values()) {
+//            Stage stage = (Stage) value;
+//            if (!stage.isShowing()){
+//                hideStages.add(stage);
+//            }
+//        }
+//        
+//        hideStages.stream().forEach((hideStage) -> {
+//            bidmap.removeValue(hideStage);
+//        });
+//    }
+    
+    /**
+     * The function removes stage from bidirectional map 
+     * and use "removeAlsoSubstagesByPath" method for it.
+     * @param stage - which must remove
+     */
+    public static void removeByStage(Stage stage){
+        if (bidmap.containsKey(stage)){
+            String path = (String) bidmap.getKey(stage);
+            Utils.removeAlsoSubstagesByPath(path);
+        }
+    }
+    
     /**
      * The function removes stage for the given path and also removes its
      * subStages. The function needs a helper collection to save removable
@@ -393,20 +419,6 @@ public class Utils {
             bidmap.remove((String) currPath);
         });
     }
-
-    /**
-     * The function removes stage from bidirectional map and use
-     * "removeAlsoSubstagesByPath" method for it.
-     *
-     * @param stage - which must remove
-     */
-    public static void removeByStage(Stage stage) {
-        if (bidmap.containsKey(stage)) {
-            String path = (String) bidmap.getKey(stage);
-            Utils.removeAlsoSubstagesByPath(path);
-        }
-    }
-
     /**
      * The function returns stage which associated for the given local name.
      *

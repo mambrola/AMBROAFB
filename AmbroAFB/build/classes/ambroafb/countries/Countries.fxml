@@ -17,14 +17,14 @@
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="ambroafb.countries.CountriesController">
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="menu-bar" >
-            <children>
+        <!--<HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="menu-bar" >-->
+            <!--<children>-->
                 <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
-            </children>
+<!--            </children>
             <padding>
                 <Insets bottom="3.0" left="10.0" top="3.0" />
             </padding>
-        </HBox>
+        </HBox>-->
     </top>
     <center>
         <ATableView fx:id="table" initializer="ambroafb.countries.Country" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />

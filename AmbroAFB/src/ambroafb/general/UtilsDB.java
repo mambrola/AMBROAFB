@@ -46,8 +46,8 @@ public class UtilsDB {
     public void createLocalUsageTables(){
         String quary = "create table " + DP_TABLE_NAME + " ( " +
                                         " id int generated always as identity (start with 1, increment by 1) primary key, " +
-                                        " target varchar(16)," +
-                                        " type varchar(16)," +
+                                        " target varchar(256)," +
+                                        " type varchar(256)," +
                                         " json clob " +
                                     ")";
         boolean exec = executeQuery(quary);

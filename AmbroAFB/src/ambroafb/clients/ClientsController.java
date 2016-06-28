@@ -46,9 +46,12 @@ public class ClientsController implements Initializable {
     public void reAssignTable(JSONObject filterJson) {
         if(filterJson != null && filterJson.length() > 0){
             clients.clear();
-            Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {
-                clients.add(client);
+            Thread t = new Thread(() -> {
+                Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {
+                    clients.add(client);
+                });
             });
+            t.start();
         }
     }
     
