@@ -1,12 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To setLanguage this license header, choose License Headers in Project Properties.
+ * To setLanguage this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package ambroafb;
 
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.GeneralConfig.Sizes;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.UtilsDB;
@@ -48,19 +47,6 @@ public class AmbroAFB extends Application {
             } catch (IOException ex) {
                 Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-
-        GeneralConfig conf = GeneralConfig.getInstance();
-        Sizes size = conf.getSizeFor(Names.MAIN_FXML);
-        if (size != null) {
-            if (size.width > 0) {
-                stage.setWidth(size.width);
-            }
-            if (size.height > 0) {
-                stage.setHeight(size.height);
-            }
-
-            stage.setMaximized(size.maximized);
         }
 
         stage.setOnCloseRequest((WindowEvent we) -> {

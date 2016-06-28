@@ -49,9 +49,9 @@ public class Product {
     
     public static HashMap<Integer,Product> dbGetProducts (int productId){
         HashMap<Integer,Product> products = new HashMap();
-        Utils.getArrayListsByQueryFromDB("SELECT * FROM products" +  (productId == 0 ? "" : " where rec_id = " + Integer.toString(productId)) + " ORDER BY rec_id", new String[]{"rec_id", "descrip", "remark"}).stream().forEach((row) -> {
-            products.put((int) row[0], new Product(row));
-        });
+//        Utils.getArrayListsByQueryFromDB("SELECT * FROM products" +  (productId == 0 ? "" : " where rec_id = " + Integer.toString(productId)) + " ORDER BY rec_id", new String[]{"rec_id", "descrip", "remark"}).stream().forEach((row) -> {
+//            products.put((int) row[0], new Product(row));
+//        });
         return products;
     }
     

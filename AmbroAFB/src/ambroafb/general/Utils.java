@@ -1,6 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To setLanguage this license header, choose License Headers in Project Properties.
+ * To setLanguage this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package ambroafb.general;
@@ -174,34 +174,6 @@ public class Utils {
             stage.getIcons().add(logoImage);
         }
 
-        GeneralConfig conf = GeneralConfig.getInstance();
-        GeneralConfig.Sizes size = conf.getSizeFor(name);
-        if (size != null) {
-            if (size.width > 0) {
-                stage.setWidth(size.width);
-            }
-            if (size.height > 0) {
-                stage.setHeight(size.height);
-            }
-            stage.setMaximized(size.maximized);
-        }
-
-        stage.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (!stage.isMaximized()) {
-                GeneralConfig.getInstance().setSizeFor(name, newValue.doubleValue(), stage.getHeight());
-            }
-        });
-
-        stage.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (!stage.isMaximized()) {
-                GeneralConfig.getInstance().setSizeFor(name, stage.getWidth(), newValue.doubleValue());
-            }
-        });
-
-        stage.maximizedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            GeneralConfig.getInstance().setSizeFor(name, newValue);
-        });
-
         stage.setOnCloseRequest((WindowEvent event) -> {
             stages.remove(name);
             stage.close();
@@ -260,7 +232,6 @@ public class Utils {
 //        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
 //        return new Scene(root);
 //    }
-
     /**
      * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით
      *
@@ -272,7 +243,7 @@ public class Utils {
         Scene scene = null;
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(GeneralConfig.getInstance().getBundle());
-        if (controller != null){
+        if (controller != null) {
             loader.setController(controller);
         }
         try {
@@ -284,7 +255,6 @@ public class Utils {
         }
         return scene;
     }
-    
 
     /**
      * ინახავს მიმდინარე კონფიგურაციებს, თიშავს მიმდინარე აპლიკაციას და უშვებს
@@ -336,35 +306,7 @@ public class Utils {
     }
 
     private static void saveConfigChanges() {
-        GeneralConfig.getInstance().dumpIntoDerby();
-    }
-
-    // ბაზასთან ურთიორთობის მეთოდები:
-    // შეიძლება ღირდეს მათი ახალ ფაილში, მაგ. UtilsDB გატანა
-    public static ArrayList<Object[]> getArrayListsByQueryFromDB(String query, String[] requestedColumnNames) {
-        ArrayList<Object[]> arrayList = new ArrayList<>();
-        try (Connection conn = GeneralConfig.getInstance().getConnectionToDB(); Statement statement = conn.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(query);
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            int columnCount = resultSetMetaData.getColumnCount();
-            ArrayList<String> columnNames = new ArrayList<>();
-            for (int i = 0; i < columnCount; i++) {
-                columnNames.add(i, resultSetMetaData.getColumnName(i + 1));
-            }
-            while (resultSet.next()) {
-                Object[] objectArray = new Object[columnCount];
-                for (int c = 0; c < requestedColumnNames.length; c++) {
-                    int appropriateIndex = columnNames.indexOf(requestedColumnNames[c]) + 1;
-                    objectArray[c] = AMySQLChanel.extractFronResultSet(resultSet, appropriateIndex, resultSetMetaData.getColumnTypeName(appropriateIndex));
-                }
-                arrayList.add(objectArray);
-            }
-        } catch (SQLException | NullPointerException ex) {
-            Platform.runLater(() -> {
-                new AlertMessage(Alert.AlertType.ERROR, ex, Names.SQL_ERROR).showAlert();
-            });
-        }
-        return arrayList;
+        GeneralConfig.getInstance().dumpIntoPrefs();
     }
 
     public static ArrayList<Node> getFocusTraversableBottomChildren(Parent root) {
@@ -392,54 +334,58 @@ public class Utils {
     public static boolean avoidNullAndReturnBoolean(Object object) {
         return object == null ? false : (boolean) object;
     }
-    
-    public static StringBinding avoidNull(StringProperty prop){
+
+    public static StringBinding avoidNull(StringProperty prop) {
         return Bindings.when(prop.isNull()).then("").otherwise(prop);
     }
 
     private static final BidiMap bidmap = new DualHashBidiMap();
-    
-    public static int getSize(){
+
+    public static int getSize() {
         return bidmap.size();
     }
-    
+
     /**
      * The function saves stage and its path into bidirectional map
-     * @param path  - owner path plus current stage local name.
+     *
+     * @param path - owner path plus current stage local name.
      * @param stage - current stage
      */
-    public static void saveShowingStageByPath(String path, Stage stage){
+    public static void saveShowingStageByPath(String path, Stage stage) {
         bidmap.put(path, stage);
     }
-    
+
     /**
      * The function returns path for the given stage.
+     *
      * @param stage - current stage
-     * @return 
+     * @return
      */
-    public static String getPathForStage(Stage stage){
-        return (String)bidmap.getKey(stage);
+    public static String getPathForStage(Stage stage) {
+        return (String) bidmap.getKey(stage);
     }
-    
+
     /**
      * The function returns stage for the given path
+     *
      * @param path - full path for stage (ex: main/Clients/Dialog).
      * @return
      */
-    public static Stage getStageForPath(String path){
-       return (Stage) bidmap.get(path);
+    public static Stage getStageForPath(String path) {
+        return (Stage) bidmap.get(path);
     }
-    
+
     /**
-     * The function removes stage for the given path and also removes its subStages.
-     * The function needs a helper collection to save removable object in it,
-     * because of don't mess an iterator of map.
-     * @param path - full path for stage  (ex: main/Clients/Dialog).
+     * The function removes stage for the given path and also removes its
+     * subStages. The function needs a helper collection to save removable
+     * object in it, because of don't mess an iterator of map.
+     *
+     * @param path - full path for stage (ex: main/Clients/Dialog).
      */
-    public static void removeAlsoSubstagesByPath(String path){
+    public static void removeAlsoSubstagesByPath(String path) {
         List<String> pathes = new ArrayList<>();
         bidmap.keySet().stream().forEach((key) -> {
-            if (((String)key).startsWith(path)){
+            if (((String) key).startsWith(path)) {
                 pathes.add((String) key);
             }
         });
@@ -447,40 +393,45 @@ public class Utils {
             bidmap.remove((String) currPath);
         });
     }
-    
+
     /**
-     * The function removes stage from bidirectional map 
-     * and use "removeAlsoSubstagesByPath" method for it.
+     * The function removes stage from bidirectional map and use
+     * "removeAlsoSubstagesByPath" method for it.
+     *
      * @param stage - which must remove
      */
-    public static void removeByStage(Stage stage){
-        if (bidmap.containsKey(stage)){
+    public static void removeByStage(Stage stage) {
+        if (bidmap.containsKey(stage)) {
             String path = (String) bidmap.getKey(stage);
             Utils.removeAlsoSubstagesByPath(path);
         }
     }
-    
+
     /**
      * The function returns stage which associated for the given local name.
-     * @param owner             - owner of finding stage
+     *
+     * @param owner - owner of finding stage
      * @param substageLocalName - local name of finding stage
-     * @return 
+     * @return
      */
-    public static Stage getStageFor(Stage owner, String substageLocalName){
+    public static Stage getStageFor(Stage owner, String substageLocalName) {
         String ownerPath = getPathForStage(owner);
         String substagePath = ownerPath + substageLocalName;
         Stage substage = getStageForPath(substagePath);
         return substage;
     }
-    
+
     /**
-     * It can use instead of '.getConstructor(EditorPanelable.class).newInstance(selected)'
-     * @param obj           - we need this object instance.
-     * @param constructorParams   - 'Class' parameter for created specific constructor
-     * @param args          - arguments for instance
-     * @return 
+     * It can use instead of
+     * '.getConstructor(EditorPanelable.class).newInstance(selected)'
+     *
+     * @param obj - we need this object instance.
+     * @param constructorParams - 'Class' parameter for created specific
+     * constructor
+     * @param args - arguments for instance
+     * @return
      */
-    public static Object getInstanceOfClass(Class<?> obj, Class[] constructorParams, Object... args){
+    public static Object getInstanceOfClass(Class<?> obj, Class[] constructorParams, Object... args) {
         Object result = null;
         try {
             result = obj.getConstructor(constructorParams).newInstance(args);
@@ -489,13 +440,14 @@ public class Utils {
         }
         return result;
     }
-    
+
     /**
      * It can use instead of 'Class.forName(getClassName("objectClass"))'
+     *
      * @param name - name of class for example: Client, Country.
-     * @return 
+     * @return
      */
-    public static Class getClassByName(String name){
+    public static Class getClassByName(String name) {
         Class result = null;
         try {
             result = Class.forName(name);
@@ -504,18 +456,20 @@ public class Utils {
         }
         return result;
     }
-    
+
     /**
-     * This class invokes a specific method ("methodName" parameter) for the "owner" class.
-     * @param methodName    - name of method in its class
-     * @param argsTypes     - arguments types
-     * @param owner         - class object which owned the method 
-     * @param object        - object, witch (non!) static method will be invoke
-     * @param argsValues    - arguments value for method
-     * @return              - object will be null if we invokes a void type method,
-     *                          otherwise will return a specific object of class.
+     * This class invokes a specific method ("methodName" parameter) for the
+     * "owner" class.
+     *
+     * @param methodName - name of method in its class
+     * @param argsTypes - arguments types
+     * @param owner - class object which owned the method
+     * @param object - object, witch (non!) static method will be invoke
+     * @param argsValues - arguments value for method
+     * @return - object will be null if we invokes a void type method, otherwise
+     * will return a specific object of class.
      */
-    public static Object getInvokedClassMethod(Class owner, String methodName, Class<?>[] argsTypes, Object object, Object... argsValues){
+    public static Object getInvokedClassMethod(Class owner, String methodName, Class<?>[] argsTypes, Object object, Object... argsValues) {
         Object result = null;
         try {
             result = owner.getMethod(methodName, argsTypes).invoke(object, argsValues);
@@ -524,93 +478,88 @@ public class Utils {
         }
         return result;
     }
-    
-    
-    public static boolean everyFieldContentIsValidFor(Object currentClassObject){
+
+    public static boolean everyFieldContentIsValidFor(Object currentClassObject) {
         boolean result = true;
         Field[] fields = currentClassObject.getClass().getDeclaredFields();
-        
+
         for (Field field : fields) {
-            if (field.isAnnotationPresent(ContentNotEmpty.class)){
+            if (field.isAnnotationPresent(ContentNotEmpty.class)) {
                 result = result && checkValidationForIsNotEmptyAnnotation(field, currentClassObject);
             }
-            if (field.isAnnotationPresent(ContentMail.class)){
+            if (field.isAnnotationPresent(ContentMail.class)) {
                 result = result && checkValidationForContentPatternAnnotation(field, currentClassObject);
             }
         }
         return result;
     }
-    
-    private static boolean checkValidationForIsNotEmptyAnnotation(Field field, Object classObject){
+
+    private static boolean checkValidationForIsNotEmptyAnnotation(Field field, Object classObject) {
         boolean result = true;
         ContentNotEmpty annotation = field.getAnnotation(ContentNotEmpty.class);
 
         Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
-        String text = (String)typeAndContent[1];
-        if (annotation.value() && text.isEmpty()){
-            changeNodeVisualByEmpty((Node)typeAndContent[0], annotation.explain());
+        String text = (String) typeAndContent[1];
+        if (annotation.value() && text.isEmpty()) {
+            changeNodeVisualByEmpty((Node) typeAndContent[0], annotation.explain());
             result = false;
-        }
-        else {
-            changeNodeVisualByEmpty((Node)typeAndContent[0], "");
+        } else {
+            changeNodeVisualByEmpty((Node) typeAndContent[0], "");
         }
         return result;
     }
-    
-    private static boolean checkValidationForContentPatternAnnotation(Field field, Object classObject){
+
+    private static boolean checkValidationForContentPatternAnnotation(Field field, Object classObject) {
         boolean result = true;
         ContentMail annotation = field.getAnnotation(ContentMail.class);
 
         Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
 
-        boolean validSyntax = Pattern.matches(annotation.valueForSyntax(), (String)typeAndContent[1]);
-        boolean validAlphabet = Pattern.matches(annotation.valueForAlphabet(), (String)typeAndContent[1]);
-        if (!validSyntax){
-            changeNodeVisualByEmpty((Node)typeAndContent[0], annotation.explainForSyntax());
+        boolean validSyntax = Pattern.matches(annotation.valueForSyntax(), (String) typeAndContent[1]);
+        boolean validAlphabet = Pattern.matches(annotation.valueForAlphabet(), (String) typeAndContent[1]);
+        if (!validSyntax) {
+            changeNodeVisualByEmpty((Node) typeAndContent[0], annotation.explainForSyntax());
             result = false;
-        }
-        else if (!validAlphabet){
-            changeNodeVisualByEmpty((Node)typeAndContent[0], annotation.explainForAlphabet());
+        } else if (!validAlphabet) {
+            changeNodeVisualByEmpty((Node) typeAndContent[0], annotation.explainForAlphabet());
             result = false;
-        }
-        else {
-            changeNodeVisualByEmpty((Node)typeAndContent[0], "");
+        } else {
+            changeNodeVisualByEmpty((Node) typeAndContent[0], "");
         }
         return result;
     }
-    
-    private static Object[] getNodesTypeAndContent(Field field, Object classObject){
+
+    private static Object[] getNodesTypeAndContent(Field field, Object classObject) {
         Object[] results = new Object[2];
         try {
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
-            
-            if (field.getType().toString().contains("TextField")){
+
+            if (field.getType().toString().contains("TextField")) {
                 results[0] = (TextField) field.get(classObject);
                 results[1] = ((TextField) results[0]).getText();
             }
-            
+
             field.setAccessible(accessible);
         } catch (IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return results;
     }
-    
+
     private static final Map<Label, Paint> labels_colors_map = new HashMap<>();
-    
-    private static void changeNodeVisualByEmpty(Node node, String text){
+
+    private static void changeNodeVisualByEmpty(Node node, String text) {
         Parent parent = node.getParent();
         Label nodeTitleLabel = (Label) parent.lookup(".validationMessage");
 
-        if (text.isEmpty()){
-            if(labels_colors_map.containsKey(nodeTitleLabel)){// This order of 'if' statements is correct!
+        if (text.isEmpty()) {
+            if (labels_colors_map.containsKey(nodeTitleLabel)) {// This order of 'if' statements is correct!
                 nodeTitleLabel.setTextFill(labels_colors_map.get(nodeTitleLabel));
                 labels_colors_map.remove(nodeTitleLabel);
                 Tooltip.uninstall(nodeTitleLabel, toolTip);
             }
-        }
-        else {
+        } else {
             node.requestFocus();
             toolTip.setText(text);
             toolTip.setStyle("-fx-background-color: gray; -fx-font-size: 8pt;");
@@ -619,29 +568,31 @@ public class Utils {
             nodeTitleLabel.setTextFill(Color.RED);
         }
     }
-    
-    public static void saveSizeFor(Stage stage){
+
+    public static void saveSizeFor(Stage stage) {
         try {
             String path = getPathForStage(stage);
             JSONObject jsonForStageSize = new JSONObject();
             jsonForStageSize.put("width", stage.getWidth());
             jsonForStageSize.put("height", stage.getHeight());
             jsonForStageSize.put("isMaximized", stage.isMaximized());
-            UtilsDB.getInstance().updateOrInsertDefaultParameters(path, "stage_size", jsonForStageSize);
+            GeneralConfig.prefs.put("stage_size_" + path, jsonForStageSize.toString());
         } catch (JSONException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static void setSizeFor(Stage stage){
+
+    public static void setSizeFor(Stage stage) {
         String path = getPathForStage(stage);
         try {
-            JSONObject json = UtilsDB.getInstance().getDefaultParametersJson(path, "stage_size");
-            if (json == null) return;
-            if (json.getBoolean("isMaximized")){
-                stage.setMaximized(true);
+            String json_str = GeneralConfig.prefs.get("stage_size_" + path, null);
+            if (json_str == null) {
+                return;
             }
-            else {
+            JSONObject json = new JSONObject(json_str);
+            if (json.getBoolean("isMaximized")) {
+                stage.setMaximized(true);
+            } else {
                 stage.setWidth(json.getDouble("width"));
                 stage.setHeight(json.getDouble("height"));
             }

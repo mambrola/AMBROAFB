@@ -62,9 +62,9 @@ public class InvoicesController implements Initializable {
     }
 
     private void reAssignTable() {
-        Invoice.dbGetInvoices(0).values().stream().forEach((invoice) -> {
-            table.getItems().add(invoice);
-        });
+//        Invoice.dbGetInvoices(0).values().stream().forEach((invoice) -> {
+//            table.getItems().add(invoice);
+//        });
         //panel.disablePropertyBinder(table);
     }
 }

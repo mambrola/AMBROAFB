@@ -1,32 +1,21 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To setLanguage this license header, choose License Headers in Project Properties.
+ * To setLanguage this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package ambroafb.general;
 
 //import ambro.AConnectionToDB;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import ambroafb.AmbroAFB;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.control.Alert.AlertType;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.tomcat.jdbc.pool.ConnectionPool;
-import org.apache.tomcat.jdbc.pool.PoolConfiguration;
-import org.apache.tomcat.jdbc.pool.PoolProperties;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * პასუხისმგებელია აპლიკაციაში არსებული კონფიგურაციების მენეჯმენტზე
@@ -35,7 +24,12 @@ import org.json.JSONObject;
  */
 public class GeneralConfig {
 
+    private static final String PREFS_LANGUAGE = "saved_language";
+
+    public static final String classForName = "com.mysql.jdbc.Driver";
+
     private static GeneralConfig config;
+    public static final Preferences prefs = Preferences.userNodeForPackage(AmbroAFB.class);
 
     /**
      *
@@ -43,61 +37,25 @@ public class GeneralConfig {
      */
     public static GeneralConfig getInstance() {
         if (config == null) {
-            SavedConfig conf = readConfigFromDerby();
-            if (conf == null) {
+            String lang = prefs.get(PREFS_LANGUAGE, null);
+            if (lang == null) {
                 config = new GeneralConfig();
             } else {
-                config = new GeneralConfig(conf);
+                config = new GeneralConfig(lang);
             }
         }
         return config;
     }
 
-//    private static SavedConfig readConfig() {
-//        SavedConfig conf = null;
-//        try (FileInputStream fileIn = new FileInputStream(Names.GENERAL_CONFIGURATION_FILE_NAME);
-//                ObjectInputStream streamIn = new ObjectInputStream(fileIn)) {
-//            conf = (SavedConfig) streamIn.readObject();
-//        } catch (FileNotFoundException | ClassNotFoundException ex) {
-////            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.CONFIGURATION_FILE_OR_CLASS_NOT_FOUND);
-////            alert.showAlert();
-//        } catch (IOException ex) {
-//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CONFIGURATION);
-//            alert.showAlert();
-//        }
-//        return conf;
-//    }
-    /**
-     * ესაა ის რაც ინახავს კონფიგურაციაში არსებულ მონაცემებს ეს ისეთი
-     * მონაცემებია, რომ ნებისმიერი მათგანის (არა მარტო ენის)ცვლილების შემდეგ
-     * უნდა მოხდეს გადატვირთვა
-     *
-     * @return
-     */
-    private static SavedConfig readConfigFromDerby() {
-        SavedConfig conf = null;
-        try {
-            JSONObject configJS = UtilsDB.getInstance().getDefaultParametersJson("afb", "configuration");
-            if (configJS != null) {
-                conf = new SavedConfig(configJS.getString("language"));
-                conf.database = configJS.getString("database");
-                conf.username = configJS.getString("username");
-                conf.password = configJS.getString("password");
-            }
-        } catch (JSONException ex) {
-            Logger.getLogger(GeneralConfig.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return conf;
-    }
+
     /*აქედან დიდი ნაწილი ალბათ არის Utils, თუმცა წვრილ-წვრილი და ბევრი რაღაცაა შეიძლება ცალკე მაგ. UtilsGC(GeneralConfiguration)-ად დარჩეს*/
     public ResourceBundle bundle;
     public Locale locale;
     private KFZClient client;
     private String kfz_username, kfz_password;
 
-    private ConnectionPool pool;
     private HashMap<String, Object> attributes;
-    private SavedConfig savedConf;
+    private String language;
     private static final HashMap<String, String> languageIdToName;
 
     static {
@@ -107,12 +65,12 @@ public class GeneralConfig {
     }
 
     private GeneralConfig() {
-        this(new SavedConfig(Locale.getDefault().getLanguage()));
+        this(Locale.getDefault().getLanguage());
     }
 
-    private GeneralConfig(SavedConfig conf) {
-        this(new Locale(conf.language));
-        this.savedConf = conf;
+    private GeneralConfig(String lang) {
+        this(new Locale(mapLanguageToId(lang)));
+        this.language = lang;
     }
 
     private GeneralConfig(Locale locale) {
@@ -133,13 +91,6 @@ public class GeneralConfig {
      * @return
      */
     public KFZClient getServerClient() {
-        if (client == null) {
-            try {
-                return getServerClient("asd", "asd");
-            } catch (IOException | KFZClient.KFZServerException ex) {
-                Logger.getLogger(GeneralConfig.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
         return client;
     }
 
@@ -203,33 +154,17 @@ public class GeneralConfig {
     }
 
     /**
-     * მიმდინარე კონფიგურაციის მონაცემებს ინახავს მყარ დისკზე
-     */
-    public void dump() {
-        try (FileOutputStream fileOut = new FileOutputStream(Names.GENERAL_CONFIGURATION_FILE_NAME);
-                ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-            out.writeObject(savedConf);
-        } catch (IOException ex) {
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_DUMP);
-            alert.showAlert();
-        }
-    }
-
-    /**
      * ეს უნდა მოხდეს კონფიგურაციის stage-ში არსებული save-restrart ღილაკზე
      * დაჭერისას
      */
-    public void dumpIntoDerby() {
-        JSONObject json = new JSONObject();
+    public void dumpIntoPrefs() {
+        prefs.put(PREFS_LANGUAGE, language);
         try {
-            json.put("language", savedConf.language);
-            json.put("database", savedConf.database);
-            json.put("username", savedConf.username);
-            json.put("password", savedConf.password);
-            UtilsDB.getInstance().updateOrInsertDefaultParameters("afb", "configuration", json);
-        } catch (JSONException ex) {
+            prefs.sync();
+        } catch (BackingStoreException ex) {
             Logger.getLogger(GeneralConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     /**
@@ -237,27 +172,9 @@ public class GeneralConfig {
      * მეთოდი გაეშვება პროგრამის ჩატვირთვისას
      *
      * @param language
-     * @param database
-     * @param username
-     * @param password
-     * @throws java.sql.SQLException
      */
-    public void change(String language, String database, String username, String password) throws SQLException {
-        if (pool != null) {
-            PoolProperties p = new PoolProperties();
-            p.setUrl(database);
-            p.setDriverClassName(savedConf.classForName);
-            p.setUsername(username);
-            p.setPassword(password);
-
-            pool = new ConnectionPool(p);
-        }
-        String lang = mapLanguageToId(language);
-        savedConf.language = lang;
-        savedConf.database = database;
-        savedConf.username = username;
-        savedConf.password = password;
-
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     /**
@@ -267,68 +184,7 @@ public class GeneralConfig {
      * @return
      */
     public String getLanguage() {
-        return mapIdToLanguage(savedConf.language);
-    }
-
-    /**
-     * ქმნის და აბრუნებს ახალ კავშირს ბაზასთან მიმდინარე პარამეტრების მიხედვით
-     * როგორც ზევით (მეთოდთან change) ვთქვით pool უკვე უნდა არსებობდეს
-     *
-     * @return
-     * @throws java.sql.SQLException
-     */
-    public Connection getConnectionToDB() throws SQLException {
-        if (pool == null) {
-            PoolProperties p = new PoolProperties();
-            p.setUrl(savedConf.database);
-            p.setDriverClassName(savedConf.classForName);
-            p.setUsername(savedConf.username);
-            p.setPassword(savedConf.password);
-            pool = new ConnectionPool(p);
-        }
-        return pool.getConnection();
-    }
-
-    /**
-     * get-ერებია
-     *
-     * @return
-     */
-    public String getDatabase() {
-        return savedConf.database;
-    }
-
-    public String getUsername() {
-        return savedConf.username;
-    }
-
-    public String getPassword() {
-        return savedConf.password;
-    }
-
-    // stages:
-    /**
-     * ესენი ვფიქრობ გადასატანია Utils-ში გადასაკეთებელია JSON-ზე
-     */
-    public Sizes getSizeFor(String stageName) {
-        return savedConf.sizes.get(stageName);
-    }
-
-    public void setSizeFor(String stageName, double width, double height) {
-        setSizeFor(stageName, new Sizes(width, height, false));
-    }
-
-    public void setSizeFor(String stageName, boolean maximized) {
-        Sizes size = getSizeFor(stageName);
-        if (size == null) {
-            size = new Sizes(-1, -1, true);
-        }
-        size.maximized = maximized;
-        setSizeFor(stageName, size);
-    }
-
-    public void setSizeFor(String stageName, Sizes size) {
-        savedConf.sizes.put(stageName, size); //Disable by Murman
+        return language;
     }
 
     /**
@@ -382,50 +238,4 @@ public class GeneralConfig {
         return null;
     }
 
-    private static String mapIdToLanguage(String id) {
-        return languageIdToName.get(id);
-    }
-
-    /**
-     * მინიმალური პარამეტრები, რომლებიც საჭიროა აპლიკაციის მთლიანი პარამეტრების
-     * აღსადგენად
-     *
-     * ეს შეიცვლება JSON-ით
-     */
-    private static class SavedConfig implements Serializable {
-
-        public String classForName = "com.mysql.jdbc.Driver";
-        public String language;
-        public String database;
-        public String username;
-        public String password;
-
-        public HashMap<String, Sizes> sizes;
-
-        public SavedConfig(String lan) {
-            language = lan;
-            database = "jdbc:mysql://localhost:3306/ambro_soft_afb";
-            username = "dtm";
-            password = "Dat0Tok@Murman1";
-            sizes = new HashMap<>();
-        }
-    }
-
-    /**
-     * stage-ის ზომების შემნახველი კლასი
-     *
-     * ეს შეიცვლება JSON-ით
-     */
-    public static class Sizes implements Serializable {
-
-        public double width;
-        public double height;
-        public boolean maximized;
-
-        public Sizes(double width, double height, boolean maximized) {
-            this.width = width;
-            this.height = height;
-            this.maximized = maximized;
-        }
-    }
 }

@@ -1,6 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To setLanguage this license header, choose License Headers in Project Properties.
+ * To setLanguage this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package ambroafb.login;
@@ -51,7 +51,7 @@ public class LoginController extends Stage implements Initializable {
     public LoginController() {
         super();
 
-        prefs = Preferences.systemNodeForPackage(AmbroAFB.class);
+        prefs = Preferences.userNodeForPackage(AmbroAFB.class);
         Scene scene = Utils.createScene("/ambroafb/login/Login.fxml", this);
         this.setScene(scene);
         setResizable(false);

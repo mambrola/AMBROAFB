@@ -1,6 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To setLanguage this license header, choose License Headers in Project Properties.
+ * To setLanguage this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package ambroafb.countries;
