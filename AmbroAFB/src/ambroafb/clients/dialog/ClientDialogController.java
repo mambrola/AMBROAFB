@@ -6,6 +6,7 @@
 package ambroafb.clients.dialog;
 
 import ambro.ADatePicker;
+import ambro.ANodeSlider;
 import ambroafb.clients.Client;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
@@ -35,6 +36,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
@@ -78,12 +80,18 @@ public class ClientDialogController implements Initializable {
     private CountryComboBox country;
     @FXML
     private DialogOkayCancelController okayCancelController;
+    
     @FXML
     private Button rotateToRight;
     @FXML
     private ImageView profImageView;
     @FXML
     private VBox imageVbox;
+    @FXML
+    private ANodeSlider<Label> nodeSlider;
+    @FXML
+    private Button delete, upload;
+    
 
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
@@ -104,10 +112,13 @@ public class ClientDialogController implements Initializable {
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
         rotateDegree = 0;
-        fitWidth = 380;
+        fitWidth = 378;
         fitHeight = 200;
         profImageView.setFitWidth(fitWidth);
         profImageView.setFitHeight(fitHeight);
+        
+        nodeSlider.getItems().add(new Label("DATE 1"));
+        nodeSlider.getItems().add(new Label("DATE 2"));
     }
     
     @FXML
@@ -118,6 +129,11 @@ public class ClientDialogController implements Initializable {
     @FXML
     private void deleteImage(ActionEvent event){
         System.out.println("delete");
+        Image undoImage = new Image(getClass().getResourceAsStream("/images/undo.png"));
+        ImageView undoImageView = new ImageView(undoImage);
+        undoImageView.setFitWidth(16);
+        undoImageView.setFitHeight(16);
+        delete.setGraphic(undoImageView);
     }
     
     @FXML

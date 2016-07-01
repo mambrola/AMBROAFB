@@ -100,23 +100,36 @@
                 <children>
                     <VBox fx:id="imageVbox" >
                         <children>
-                            <HBox >
-                                <children>
-                                    <Button styleClass="galleryButton" text="◁" />
-                                    <ImageView fx:id="profImageView" >    
-                                        <image>
-                                            <Image url="/images/default_profile_image.png" />
-                                        </image>
-                                    </ImageView>
-                                    <Button styleClass="galleryButton" text="▷" />
-                                </children>
+                            <HBox fx:id="profileImageFrame" >
+                                <ImageView fx:id="profImageView" >    
+                                    <image>
+                                        <Image url="/images/default_profile_image.png" />
+                                    </image>
+                                </ImageView>
                             </HBox>
                             
-                            <HBox fx:id="imageButtonsHBox" spacing="8" >
+                            <HBox fx:id="imageButtonsHBox" >
                                 <children>
-                                    <Label text="d a t e" />
-                                    <Button fx:id="upload" styleClass="middle" text="%upload" onAction="#uploadImage" />
-                                    <Button fx:id="delete" styleClass="middle" text="%detele" onAction="#deleteImage" />
+                                    <Button fx:id="delete" styleClass="middle" onAction="#deleteImage" >
+                                        <graphic>
+                                            <ImageView fitWidth="16" fitHeight="16" >
+                                                <image>
+                                                    <Image url="/images/delete2.png" />
+                                                </image>
+                                            </ImageView>
+                                        </graphic>
+                                    </Button>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button fx:id="upload" styleClass="middle" onAction="#uploadImage" >
+                                        <graphic>
+                                            <ImageView fitWidth="16" fitHeight="16" >
+                                                <image>
+                                                    <Image url="/images/upload.png" />
+                                                </image>
+                                            </ImageView>
+                                        </graphic>
+                                    </Button>
+                                    <Region HBox.hgrow="ALWAYS" />
                                     <Button fx:id="rotateToRight" styleClass="middle" prefWidth="60" onAction="#rotate" >
                                         <graphic>
                                             <ImageView fitWidth="16" fitHeight="16" >
@@ -126,6 +139,8 @@
                                             </ImageView>
                                         </graphic>
                                     </Button>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <ANodeSlider fx:id="nodeSlider" /> 
                                 </children>
                             </HBox>
                         </children>

@@ -68,9 +68,19 @@
     -fx-border-color: transparent;
 }
 
+#profileImageFrame {
+    -fx-border-width: 2;
+    -fx-border-color: black;
+    -fx-min-width: 382;
+    -fx-max-width: 382;
+}
+
+
+
 #imageVbox {
     -fx-pref-width: (@formWidth - 2*@spaceWidth - (@formWidth - 2*@spaceWidth)/3)/2;
     -fx-alignment: CENTER;
+    -fx-spacing: @gap/2;
 }
 
 .galleryButton {

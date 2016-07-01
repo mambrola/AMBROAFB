@@ -51,9 +51,16 @@
   -fx-border-width: 1;
   -fx-border-color: transparent;
 }
+#profileImageFrame {
+  -fx-border-width: 2;
+  -fx-border-color: black;
+  -fx-min-width: 382;
+  -fx-max-width: 382;
+}
 #imageVbox {
   -fx-pref-width: 246.66666667;
   -fx-alignment: CENTER;
+  -fx-spacing: 5;
 }
 #okCancelHbox {
   -fx-pref-with: 246.66666667;
