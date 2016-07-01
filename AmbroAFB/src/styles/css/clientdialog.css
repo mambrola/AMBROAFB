@@ -19,7 +19,8 @@
   -fx-pref-width: 385;
 }
 .w3 .text-field,
-.w3 .combo-box {
+.w3 .combo-box,
+.w3 > * {
   -fx-pref-width: 246.66666667;
 }
 .w3 .c2 {

@@ -28,8 +28,7 @@
             </VBox>
             <HBox>
                 <children>
-                    <CheckBox fx:id="juridical" userData="aa" /> 
-                    <Label text="%juridical" />
+                    <CheckBox fx:id="juridical" userData="aa" text="%juridical" /> 
                 </children> 
             </HBox>
             <HBox styleClass="w3" >
@@ -63,6 +62,14 @@
                     </VBox >
                 </children>
             </HBox>
+            <HBox   styleClass="w1">
+                <children>
+                    <VBox >
+                        <Label text="%address" styleClass="validationMessage" /> 
+                        <TextField  fx:id="address" />
+                    </VBox >
+                </children>
+            </HBox>
             <HBox   styleClass="w3">
                 <children>
                     <VBox >
@@ -79,22 +86,13 @@
                     </VBox>
                 </children>
             </HBox>
-            <HBox   styleClass="w4">
+            <HBox styleClass="w3" >
                 <children>
-                    <VBox >
-                        <Label text="%address" styleClass="validationMessage" /> 
-                        <TextField  fx:id="address" />
-                    </VBox >
+                    <CheckBox fx:id="rezident" text="%rezident" /> 
                     <VBox >
                         <Label text="%client_status" /> 
                         <ComboBox fx:id="status" />
                     </VBox>
-                </children>
-            </HBox>
-            <HBox >
-                <children>
-                    <CheckBox fx:id="rezident" /> 
-                    <Label text="%rezident" />
                 </children>
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
@@ -104,12 +102,7 @@
                             <Image url="/images/delete2.png" />
                         </image>
                     </ImageView>
-                    <!--<graphic>-->
-<!--                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                            <Image url="/images/delete2.png" />
-                        </ImageView>-->
-                    <!--</graphic>-->
-                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+                    <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
                 </children>
             </HBox>
         </children>
