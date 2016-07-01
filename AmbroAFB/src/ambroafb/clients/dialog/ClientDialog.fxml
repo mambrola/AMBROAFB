@@ -95,14 +95,48 @@
                     </VBox>
                 </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
+            <HBox fx:id="bottomHbox" styleClass="doubleHeight"  >
                 <children>
-                    <ImageView fitWidth="24" fitHeight="24" >    
-                        <image>
-                            <Image url="/images/delete2.png" />
-                        </image>
-                    </ImageView>
-                    <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+                    <HBox fx:id="imageHbox" >
+                        <children>
+                            <VBox>
+                                <children>
+                                    <ImageView fx:id="profImageView" >    
+                                        <image>
+                                            <Image url="/images/default_profile_image.png" />
+                                        </image>
+                                    </ImageView>
+                                    <HBox fx:id="rotateButtonsHBox" spacing="8" >
+                                        <children>
+                                            <Button fx:id="rotateToRight" prefWidth="60" onAction="#rotate" >
+                                                <graphic>
+                                                    <ImageView fitWidth="16" fitHeight="16" >
+                                                        <image>
+                                                            <Image url="/images/rightRotate.png" />
+                                                        </image>
+                                                    </ImageView>
+                                                </graphic>
+                                            </Button>
+                                            <Button fx:id="rotateToLeft" prefWidth="60" onAction="#rotate" >
+                                                <graphic>
+                                                    <ImageView fitWidth="16" fitHeight="16" >    
+                                                        <image>
+                                                            <Image url="/images/leftRotate.png" />
+                                                        </image>
+                                                    </ImageView>
+                                                </graphic>
+                                            </Button>
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
+                        </children>
+                    </HBox>
+                    <HBox fx:id="okCancelHbox" alignment="CENTER_RIGHT" spacing="30" >
+                        <children>
+                            <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+                        </children>
+                    </HBox>
                 </children>
             </HBox>
         </children>

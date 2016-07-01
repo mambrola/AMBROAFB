@@ -51,3 +51,13 @@
   -fx-border-width: 1;
   -fx-border-color: transparent;
 }
+#bottomHbox {
+  -fx-spacing: 306.66666667;
+}
+#imageHbox {
+  -fx-pref-width: 246.66666667;
+  -fx-alignment: CENTER;
+}
+#okCancelHbox {
+  -fx-pref-with: 246.66666667;
+}

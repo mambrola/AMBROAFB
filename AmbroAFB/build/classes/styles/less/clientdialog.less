@@ -1,10 +1,13 @@
 @import url("/styles/css/core.css");
 @import url("/variables.less");
 
-@formWidth  : 800;
-@gap        :  10;
-@spaceWidth :  30;
-@formHeight : 473;
+@formWidth          : 800;
+@gap                :  10;
+@spaceWidth         :  30;
+@formHeight         : 473;
+@rotateHboxSpacing  : 60;
+@profileImageWidth  : 128px;
+@profileImageHeight : 90;
 
 #formPane {
     -fx-min-height: @formHeight;
@@ -65,5 +68,33 @@
     -fx-border-color: transparent;
 }
 
+#bottomHbox {
+    //-fx-background-color: red;
+    -fx-spacing: 2*@spaceWidth + (@formWidth - 2*@spaceWidth)/3;
+}
 
+#imageHbox {
+    //-fx-background-color: green;
+    -fx-pref-width: (@formWidth - 2*@spaceWidth - (@formWidth - 2*@spaceWidth)/3)/2;
+    -fx-alignment: CENTER;
+}
 
+//#profImageView {
+//    -fx-min-width:  @profileImageWidth;
+//    -fx-max-width:  @profileImageWidth;
+//    -fx-min-height: @profileImageHeight;
+//    -fx-max-height: @profileImageHeight;
+//}
+
+#okCancelHbox {
+    //-fx-background-color: blue;
+    -fx-pref-with: (@formWidth - 2*@spaceWidth - (@formWidth - 2*@spaceWidth)/3)/2;
+}
+
+//#rotateToRight, #rotateToLeft {
+//    -fx-pref-width: (@profileImageWidth - @rotateHboxSpacing)/2;
+//}
+
+//#rotateButtonsHBox {
+//    -fx-spacing: @rotateHboxSpacing;
+//}

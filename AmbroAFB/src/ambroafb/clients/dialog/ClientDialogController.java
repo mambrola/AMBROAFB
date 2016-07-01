@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.json.JSONArray;
@@ -75,12 +78,19 @@ public class ClientDialogController implements Initializable {
     private CountryComboBox country;
     @FXML
     private DialogOkayCancelController okayCancelController;
+    @FXML
+    private Button rotateToRight, rotateToLeft;
+    @FXML
+    private ImageView profImageView;
+    @FXML
+    private HBox imageHbox;
 
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private Client client;
     private Client clientBackup;
     private AutoCompletionBinding<String> chooseCityBinding;
+    private double rotateDegree, degree, fitWidth, fitHeight;
     
     /**
      * Initializes the controller class.
@@ -93,6 +103,33 @@ public class ClientDialogController implements Initializable {
         juridical.setOnAction(this::switchJuridical);
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
+        rotateDegree = 0;
+        degree = 90;
+        fitWidth = 128;
+        fitHeight = 90;
+        profImageView.setFitWidth(fitWidth);
+        profImageView.setFitHeight(fitHeight);
+    }
+    
+    @FXML
+    private void rotate(ActionEvent event){
+        if (event.getSource() == rotateToRight){
+            rotateDegree += degree;
+            profImageView.setRotate(rotateDegree);
+        }
+        else {
+            rotateDegree -= degree;
+            profImageView.setRotate(rotateDegree);
+        }
+        
+        if (rotateDegree % 180 == 0){
+            profImageView.setFitWidth(fitWidth);
+            profImageView.setTranslateX(0);
+        }
+        else {
+            profImageView.setFitWidth(fitHeight);
+            profImageView.setTranslateX((fitWidth - fitHeight)/2);
+        }
     }
 
     public void bindClient(Client client) {

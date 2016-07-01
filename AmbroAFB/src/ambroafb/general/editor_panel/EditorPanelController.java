@@ -29,6 +29,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
 
 

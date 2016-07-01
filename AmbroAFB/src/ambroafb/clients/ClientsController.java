@@ -10,11 +10,12 @@ import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableView;
+import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
 
 /**
@@ -26,10 +27,10 @@ public class ClientsController implements Initializable {
 
     @FXML
     private ATableView<EditorPanelable> table;
-
+    
     @FXML
     private EditorPanelController editorPanelController;
-
+    
     private final ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();
 
     /**
