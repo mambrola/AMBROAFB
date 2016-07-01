@@ -1,7 +1,7 @@
 @import url("/styles/css/core.css");
 #formPane {
-  -fx-min-height: 473;
-  -fx-max-height: 473;
+  -fx-min-height: 600;
+  -fx-max-height: 600;
   -fx-min-width: 820;
   -fx-max-width: 820;
   -fx-padding: 10;
@@ -39,7 +39,7 @@
 }
 .doubleHeight {
   /*-fx-background-color: yellow;*/
-  -fx-pref-height: 105.11111111;
+  -fx-pref-height: 133.33333333;
 }
 .button {
   -fx-font-weight: bold;
@@ -51,10 +51,7 @@
   -fx-border-width: 1;
   -fx-border-color: transparent;
 }
-#bottomHbox {
-  -fx-spacing: 306.66666667;
-}
-#imageHbox {
+#imageVbox {
   -fx-pref-width: 246.66666667;
   -fx-alignment: CENTER;
 }

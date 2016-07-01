@@ -79,18 +79,18 @@ public class ClientDialogController implements Initializable {
     @FXML
     private DialogOkayCancelController okayCancelController;
     @FXML
-    private Button rotateToRight, rotateToLeft;
+    private Button rotateToRight;
     @FXML
     private ImageView profImageView;
     @FXML
-    private HBox imageHbox;
+    private VBox imageVbox;
 
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private Client client;
     private Client clientBackup;
     private AutoCompletionBinding<String> chooseCityBinding;
-    private double rotateDegree, degree, fitWidth, fitHeight;
+    private double rotateDegree, fitWidth, fitHeight;
     
     /**
      * Initializes the controller class.
@@ -104,23 +104,26 @@ public class ClientDialogController implements Initializable {
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
         rotateDegree = 0;
-        degree = 90;
-        fitWidth = 128;
-        fitHeight = 90;
+        fitWidth = 380;
+        fitHeight = 200;
         profImageView.setFitWidth(fitWidth);
         profImageView.setFitHeight(fitHeight);
     }
     
     @FXML
+    private void uploadImage(ActionEvent event){
+        System.out.println("upload");
+    }
+    
+    @FXML
+    private void deleteImage(ActionEvent event){
+        System.out.println("delete");
+    }
+    
+    @FXML
     private void rotate(ActionEvent event){
-        if (event.getSource() == rotateToRight){
-            rotateDegree += degree;
-            profImageView.setRotate(rotateDegree);
-        }
-        else {
-            rotateDegree -= degree;
-            profImageView.setRotate(rotateDegree);
-        }
+        rotateDegree += 90;
+        profImageView.setRotate(rotateDegree);
         
         if (rotateDegree % 180 == 0){
             profImageView.setFitWidth(fitWidth);
