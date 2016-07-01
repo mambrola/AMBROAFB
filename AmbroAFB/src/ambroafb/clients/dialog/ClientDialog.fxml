@@ -100,14 +100,22 @@
                 <children>
                     <VBox fx:id="imageVbox" >
                         <children>
-                            <HBox fx:id="profileImageFrame" >
-                                <ImageView fx:id="profImageView" >    
-                                    <image>
-                                        <Image url="/images/default_profile_image.png" />
-                                    </image>
-                                </ImageView>
-                            </HBox>
-                            
+                            <StackPane >
+                                <HBox fx:id="profileImageFrame" >
+                                    <ImageView fx:id="profImageView" fitWidth="378" fitHeight="200" >    
+                                        <image>
+                                            <Image url="/images/default_profile_image.png" />
+                                        </image>
+                                    </ImageView>
+                                </HBox>
+                                <!--<HBox fx:id="deletedImagePane" >-->
+                                    <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
+                                        <image>
+                                            <Image url="/images/deleted.png" />
+                                        </image>
+                                    </ImageView>
+                                <!--</HBox>-->
+                            </StackPane>
                             <HBox fx:id="imageButtonsHBox" >
                                 <children>
                                     <Button fx:id="delete" styleClass="middle" onAction="#deleteImage" >

@@ -91,6 +91,8 @@ public class ClientDialogController implements Initializable {
     private ANodeSlider<Label> nodeSlider;
     @FXML
     private Button delete, upload;
+    @FXML
+    private ImageView deletedImageView;
     
 
     private ArrayList<Node> focusTraversableNodes;
@@ -98,7 +100,6 @@ public class ClientDialogController implements Initializable {
     private Client client;
     private Client clientBackup;
     private AutoCompletionBinding<String> chooseCityBinding;
-    private double rotateDegree, fitWidth, fitHeight;
     
     /**
      * Initializes the controller class.
@@ -111,11 +112,8 @@ public class ClientDialogController implements Initializable {
         juridical.setOnAction(this::switchJuridical);
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
-        rotateDegree = 0;
-        fitWidth = 378;
-        fitHeight = 200;
-        profImageView.setFitWidth(fitWidth);
-        profImageView.setFitHeight(fitHeight);
+        profImageView.setPreserveRatio(true);
+        profImageView.setTranslateX((profImageView.getFitWidth() - profImageView.getFitHeight())/2);
         
         nodeSlider.getItems().add(new Label("DATE 1"));
         nodeSlider.getItems().add(new Label("DATE 2"));
@@ -129,26 +127,29 @@ public class ClientDialogController implements Initializable {
     @FXML
     private void deleteImage(ActionEvent event){
         System.out.println("delete");
-        Image undoImage = new Image(getClass().getResourceAsStream("/images/undo.png"));
-        ImageView undoImageView = new ImageView(undoImage);
-        undoImageView.setFitWidth(16);
-        undoImageView.setFitHeight(16);
-        delete.setGraphic(undoImageView);
+        Image deleteImage = new Image(getClass().getResourceAsStream("/images/delete2.png"));
+        boolean isNotDeleted = ((ImageView)delete.getGraphic()).getImage().equals(deleteImage);
+        if (isNotDeleted){
+            setImageToButton(delete, "/images/undo.png");
+        }
+        else {
+            setImageToButton(delete, "/images/delete2.png");
+        }
+        deletedImageView.setVisible(isNotDeleted);
+        
+    }
+    
+    private void setImageToButton(Button button, String imageURL){
+        Image image = new Image(getClass().getResourceAsStream(imageURL));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(((ImageView)button.getGraphic()).getFitWidth());
+        imageView.setFitHeight(((ImageView)button.getGraphic()).getFitHeight());
+        button.setGraphic(imageView);
     }
     
     @FXML
     private void rotate(ActionEvent event){
-        rotateDegree += 90;
-        profImageView.setRotate(rotateDegree);
-        
-        if (rotateDegree % 180 == 0){
-            profImageView.setFitWidth(fitWidth);
-            profImageView.setTranslateX(0);
-        }
-        else {
-            profImageView.setFitWidth(fitHeight);
-            profImageView.setTranslateX((fitWidth - fitHeight)/2);
-        }
+        profImageView.setRotate(profImageView.getRotate() + 90);
     }
 
     public void bindClient(Client client) {
