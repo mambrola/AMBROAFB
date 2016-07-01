@@ -31,6 +31,9 @@ public class ClientsController implements Initializable {
     @FXML
     private EditorPanelController editorPanelController;
     
+    @FXML
+    private MaskerPane masker;
+    
     private final ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();
 
     /**
@@ -49,9 +52,14 @@ public class ClientsController implements Initializable {
     public void reAssignTable(JSONObject filterJson) {
         if (filterJson != null && filterJson.length() > 0) {
             clients.clear();
+            masker.setVisible(true);
             Thread t = new Thread(() -> {
                 Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {
                     clients.add(client);
+                });
+                
+                Platform.runLater(() -> {
+                    masker.setVisible(false);
                 });
             });
             t.start();
