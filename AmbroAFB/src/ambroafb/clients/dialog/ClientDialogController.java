@@ -93,6 +93,7 @@ public class ClientDialogController implements Initializable {
     private Button delete, upload;
     @FXML
     private ImageView deletedImageView;
+    private String undoDeletePath;
     
 
     private ArrayList<Node> focusTraversableNodes;
@@ -115,6 +116,8 @@ public class ClientDialogController implements Initializable {
         profImageView.setPreserveRatio(true);
         profImageView.setTranslateX((profImageView.getFitWidth() - profImageView.getFitHeight())/2);
         
+        undoDeletePath = "/images/delete2.png";
+        
         nodeSlider.getItems().add(new Label("DATE 1"));
         nodeSlider.getItems().add(new Label("DATE 2"));
     }
@@ -127,15 +130,15 @@ public class ClientDialogController implements Initializable {
     @FXML
     private void deleteImage(ActionEvent event){
         System.out.println("delete");
-        Image deleteImage = new Image(getClass().getResourceAsStream("/images/delete2.png"));
-        boolean isNotDeleted = ((ImageView)delete.getGraphic()).getImage().equals(deleteImage);
-        if (isNotDeleted){
-            setImageToButton(delete, "/images/undo.png");
+        boolean imageDeleteNow = undoDeletePath.equals("/images/delete2.png");
+        if (imageDeleteNow){
+            undoDeletePath = "/images/undo.png";
         }
         else {
-            setImageToButton(delete, "/images/delete2.png");
+            undoDeletePath = "/images/delete2.png";
         }
-        deletedImageView.setVisible(isNotDeleted);
+        setImageToButton(delete, undoDeletePath);
+        deletedImageView.setVisible(imageDeleteNow);
         
     }
     
