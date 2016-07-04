@@ -6,8 +6,14 @@
 package ambroafb.general.image_gallery;
 
 import ambro.ANodeSlider;
+import ambroafb.general.KFZClient;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -82,5 +88,21 @@ public class ImageGalleryController implements Initializable {
     @FXML
     private void rotate(ActionEvent event){
         profImageView.setRotate(profImageView.getRotate() + 90);
+    }
+    
+    public Image rotateImage(Image img) throws IOException, KFZClient.KFZServerException {
+        BufferedImage bImage = SwingFXUtils.fromFXImage(img, null);
+
+        AffineTransform tx = new AffineTransform();
+        tx.translate(bImage.getHeight() / 2, bImage.getWidth() / 2);
+        tx.rotate(Math.PI / 2);
+        tx.translate(-bImage.getWidth() / 2, -bImage.getHeight() / 2);
+
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
+        BufferedImage rotImage = new BufferedImage(bImage.getHeight(), bImage.getWidth(), bImage.getType());
+        op.filter(bImage, rotImage);
+
+        return SwingFXUtils.toFXImage(rotImage, null);
     }
 }
