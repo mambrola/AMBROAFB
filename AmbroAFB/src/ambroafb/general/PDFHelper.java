@@ -6,6 +6,8 @@
 package ambroafb.general;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,8 +72,14 @@ public class PDFHelper implements Closeable {
             contents.drawImage(pdImage, 0, 0);
         }
     }
-    
-    public PDDocument getDocument(){
+
+    public byte[] getContent() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        doc.save(out);
+        return out.toByteArray();
+    }
+
+    public PDDocument getDocument() {
         return doc;
     }
 
