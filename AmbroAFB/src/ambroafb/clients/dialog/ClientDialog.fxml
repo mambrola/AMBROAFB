@@ -98,7 +98,7 @@
             </HBox>
             <HBox fx:id="bottomHbox" styleClass="doubleHeight"  >
                 <children>
-                    <fx:include source="/ambroafb/general/image_gallery/ImageGallery.fxml"/>
+                    <fx:include fx:id="imageGallery" source="/ambroafb/general/image_gallery/ImageGallery.fxml"/>
                     <Region HBox.hgrow="ALWAYS" /> 
                     <HBox fx:id="okCancelHbox" alignment="CENTER_RIGHT" spacing="30" >
                         <children>
