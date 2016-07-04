@@ -4,10 +4,14 @@
   -fx-border-color: black;
   -fx-min-width: 382;
   -fx-max-width: 382;
+  -fx-min-height: 202;
   -fx-max-height: 202;
   -fx-alignment: center;
 }
 #imagesGalleryRoot {
   -fx-alignment: CENTER;
   -fx-spacing: 5px;
+}
+#datesSlider {
+  -fx-pref-width: 250;
 }

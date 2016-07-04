@@ -86,7 +86,6 @@ public class ImageGalleryController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         galleryImageView.setPreserveRatio(true);
-        galleryImageView.fitWidthProperty().bind(galleryImageFrame.widthProperty());
         undoDeleteImagePath = "/images/delete2.png";
         images = new HashMap<>();
         datesSliderElems = FXCollections.observableArrayList();
