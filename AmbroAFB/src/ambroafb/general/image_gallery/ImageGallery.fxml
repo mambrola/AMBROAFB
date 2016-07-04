@@ -33,7 +33,7 @@
         </StackPane>
         <HBox fx:id="imageButtonsHBox" >
             <children>
-                <Button fx:id="deleteOrUndo" styleClass="middle" onAction="#deleteImage" >
+                <Button fx:id="deleteOrUndo" onAction="#deleteImage" >
                     <graphic>
                         <ImageView fitWidth="16" fitHeight="16" >
                             <image>
@@ -43,7 +43,7 @@
                     </graphic>
                 </Button>
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="upload" styleClass="middle" onAction="#uploadImage" >
+                <Button fx:id="upload" onAction="#uploadImage" >
                     <graphic>
                         <ImageView fitWidth="16" fitHeight="16" >
                             <image>
@@ -53,7 +53,7 @@
                     </graphic>
                 </Button>
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="rotateToRight" styleClass="middle" prefWidth="60" onAction="#rotate" >
+                <Button fx:id="rotateToRight" prefWidth="60" onAction="#rotate" >
                     <graphic>
                         <ImageView fitWidth="16" fitHeight="16" >
                             <image>

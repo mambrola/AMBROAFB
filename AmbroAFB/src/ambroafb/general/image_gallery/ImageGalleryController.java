@@ -187,6 +187,7 @@ public class ImageGalleryController implements Initializable {
                     BufferedImage bImage = ImageIO.read(file);
                     Image image = SwingFXUtils.toFXImage(bImage, null);
                     galleryImageView.setImage(image);
+                    galleryImageView.setPreserveRatio(true);
                 } catch (IOException ex) {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
