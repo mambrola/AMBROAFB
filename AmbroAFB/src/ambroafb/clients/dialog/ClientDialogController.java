@@ -13,6 +13,7 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.countries.*;
 import ambroafb.general.KFZClient;
+import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.phones.PhoneComboBox;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -60,6 +62,7 @@ public class ClientDialogController implements Initializable {
     @FXML
     private Label first_name, last_name;
     
+    // start required nodes:
     @FXML  
     @ContentNotEmpty
     private TextField firstName, lastName, idNumber;
@@ -72,6 +75,8 @@ public class ClientDialogController implements Initializable {
     @FXML  
     @ContentNotEmpty
     private TextField address; // this place must be because of required fields order.
+    // end required nodes.
+    
     
     @FXML
     private TextField fax, zipCode, city;
@@ -80,22 +85,9 @@ public class ClientDialogController implements Initializable {
     private CountryComboBox country;
     @FXML
     private DialogOkayCancelController okayCancelController;
-    
     @FXML
-//    private Button rotateToRight;
-//    @FXML
-//    private ImageView profImageView;
-//    @FXML
-//    private VBox imageVbox;
-//    @FXML
-//    private ANodeSlider<Label> nodeSlider;
-//    @FXML
-//    private Button delete, upload;
-//    @FXML
-//    private ImageView deletedImageView;
-//    private String undoDeletePath;
+    private  ImageGalleryController imageGalleryController;
     
-
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private Client client;
@@ -113,47 +105,8 @@ public class ClientDialogController implements Initializable {
         juridical.setOnAction(this::switchJuridical);
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
-        
-//        profImageView.setPreserveRatio(true);
-//        profImageView.setTranslateX((profImageView.getFitWidth() - profImageView.getFitHeight())/2);
-//        undoDeletePath = "/images/delete2.png";
-//        nodeSlider.getItems().add(new Label("DATE 1"));
-//        nodeSlider.getItems().add(new Label("DATE 2"));
     }
     
-//    @FXML
-//    private void uploadImage(ActionEvent event){
-//        System.out.println("upload");
-//    }
-    
-//    @FXML
-//    private void deleteImage(ActionEvent event){
-//        System.out.println("delete");
-//        boolean imageDeleteNow = undoDeletePath.equals("/images/delete2.png");
-//        if (imageDeleteNow){
-//            undoDeletePath = "/images/undo.png";
-//        }
-//        else {
-//            undoDeletePath = "/images/delete2.png";
-//        }
-//        setImageToButton(delete, undoDeletePath);
-//        deletedImageView.setVisible(imageDeleteNow);
-//        
-//    }
-    
-//    private void setImageToButton(Button button, String imageURL){
-//        Image image = new Image(getClass().getResourceAsStream(imageURL));
-//        ImageView imageView = new ImageView(image);
-//        imageView.setFitWidth(((ImageView)button.getGraphic()).getFitWidth());
-//        imageView.setFitHeight(((ImageView)button.getGraphic()).getFitHeight());
-//        button.setGraphic(imageView);
-//    }
-    
-//    @FXML
-//    private void rotate(ActionEvent event){
-//        profImageView.setRotate(profImageView.getRotate() + 90);
-//    }
-
     public void bindClient(Client client) {
         this.client = client;
         if (client != null) {
@@ -259,6 +212,9 @@ public class ClientDialogController implements Initializable {
                                                             cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
                                                         .collect(Collectors.toList()), 
                                                         null);
+                Platform.runLater(() -> {
+                    imageGalleryController.dowloadDatesOfImagesFrom("/clients/passport/" + client.getEmail() + "/all");
+                });
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }

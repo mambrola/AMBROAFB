@@ -6,16 +6,35 @@
 package ambroafb.general.image_gallery;
 
 import ambro.ANodeSlider;
+import ambroafb.general.AlertMessage;
+import ambroafb.general.GeneralConfig;
+import ambroafb.general.KFZClient;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import org.json.JSONArray;
+import org.json.JSONException;
+
 
 /**
  * FXML Controller class
@@ -26,17 +45,21 @@ public class ImageGalleryController implements Initializable {
 
     @FXML
     private Button deleteOrUndo, rotateToRight, upload;
-//    
-//    @FXML
-//    private HBox profileImageFrame, imageButtonsHBox;
     
     @FXML
-    private ImageView profImageView, deletedImageView;
+    private ImageView galleryImageView, deletedImageView;
     
     @FXML
-    private ANodeSlider<Label> nodeSlider;
+    private HBox galleryImageFrame;
     
-    private String undoDeletePath;
+    @FXML
+    private ANodeSlider<Label> datesSlider;
+
+    private ObservableList<Label> datesSliderElems;
+    private Map<String, ImageOfGallery> images;
+    private String undoDeleteImagePath;
+    private Calendar calendar;
+    private DateFormat formatter;
     
     /**
      * Initializes the controller class.
@@ -45,24 +68,77 @@ public class ImageGalleryController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        profImageView.setPreserveRatio(true);
-        profImageView.setTranslateX((profImageView.getFitWidth() - profImageView.getFitHeight())/2);
-        undoDeletePath = "/images/delete2.png";
-        nodeSlider.getItems().add(new Label("DATE 1"));
-        nodeSlider.getItems().add(new Label("DATE 2"));
-    }    
+        galleryImageView.setPreserveRatio(true);
+        galleryImageView.fitWidthProperty().bind(galleryImageFrame.widthProperty());
+        undoDeleteImagePath = "/images/delete2.png";
+        images = new HashMap<>();
+        datesSliderElems = datesSlider.getItems();
+        calendar = Calendar.getInstance();
+        formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        
+    }
+    
+    public void dowloadDatesOfImagesFrom(String url){
+        processAndSaveDatesFrom(url);
+        if (!datesSliderElems.isEmpty()){
+            try {
+                String date = datesSliderElems.get(0).getText();
+                String imageFullName = images.get(date).getImageFullName();
+                if (imageFullName.contains(".pdf")){
+                    System.out.println("pdf-ia da ara surati");
+                }
+                else {
+                    HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection("/clients/passport/" + imageFullName);
+                    Image image = new Image(con.getInputStream());
+                    images.get(date).setImage(image);
+                    galleryImageView.setImage(image);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    private void processAndSaveDatesFrom(String url){
+        try {
+            String imagesNames = GeneralConfig.getInstance().getServerClient().get(url);
+            JSONArray namesJson = new JSONArray(imagesNames);
+            for (int i = 0; i < namesJson.length(); i++) {
+                String fullName = namesJson.getString(i);
+                int start = fullName.indexOf("_") + 1;
+                int end = fullName.lastIndexOf(".");
+                String miliseconds = fullName.substring(start, end);
+                calendar.setTimeInMillis(Long.parseLong(miliseconds));
+                String onlyDateAndTime = formatter.format(calendar.getTime());
+                System.out.println("only: " + onlyDateAndTime);
+                
+                datesSliderElems.add(new Label(onlyDateAndTime));
+                images.put(onlyDateAndTime, new ImageOfGallery(fullName, null));
+            }
+        } catch (KFZClient.KFZServerException ex) {
+            if (ex.getStatusCode() == 404){
+                new AlertMessage(Alert.AlertType.ERROR, ex, "%image_not_found").showAlert();
+                Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (JSONException | IOException ex) {
+            Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     @FXML
     private void deleteImage(ActionEvent event){
         System.out.println("delete");
-        boolean imageDeleteNow = undoDeletePath.equals("/images/delete2.png");
+        boolean imageDeleteNow = undoDeleteImagePath.equals("/images/delete2.png");
         if (imageDeleteNow){
-            undoDeletePath = "/images/undo.png";
+            undoDeleteImagePath = "/images/undo.png";
         }
         else {
-            undoDeletePath = "/images/delete2.png";
+            undoDeleteImagePath = "/images/delete2.png";
         }
-        setImageToButton(deleteOrUndo, undoDeletePath);
+        String date = datesSlider.getValue().getText();
+        images.get(date).setIsDeleted(imageDeleteNow);
+        
+        setImageToButton(deleteOrUndo, undoDeleteImagePath);
         deletedImageView.setVisible(imageDeleteNow);
     }
     
@@ -77,10 +153,93 @@ public class ImageGalleryController implements Initializable {
     @FXML
     private void uploadImage(ActionEvent event){
         System.out.println("upload");
+        // sadacaa im qveynios dro saitidan....
     }
+    
+    private Image oldImage;
     
     @FXML
     private void rotate(ActionEvent event){
-        profImageView.setRotate(profImageView.getRotate() + 90);
+        galleryImageView.setRotate(galleryImageView.getRotate() + 90);
+//        if (galleryImageView.getRotate()){
+//            
+//        }
+        
+        double imgW = galleryImageView.getImage().getWidth();
+        double imgH = galleryImageView.getImage().getHeight();
+        System.out.println("img width: " + imgW + " img height: " + imgH);
+        
+//        printMap();
+    }
+    
+    private void setImagePos(Image image, ImageView imgView){
+        
+    }
+    
+    // -----------------------------------
+    private void printMap(){
+        for (String key : images.keySet()) {
+            ImageOfGallery image = images.get(key);
+            System.out.println(key + " " + image.getImageFullName() + 
+                                " del: " + image.isDeleted + 
+                                " add: " + image.isAdded + 
+                                " rot: " + image.isRotate);
+        }
+    }
+
+    
+    private class ImageOfGallery {
+        
+        private String imageName;
+        private Image image;
+        private boolean isDeleted;
+        private boolean isAdded;
+        private boolean isRotate;
+        
+        public ImageOfGallery(String url, Image image) {
+            this.image = image;
+            this.imageName = url;
+        }
+        
+        private Image getImage(){
+            return image;
+        }
+        
+        public String getImageFullName(){
+            return imageName;
+        }
+        
+        public void setImagePath(String  newImageURL){
+            this.imageName = newImageURL;
+        }
+        
+        public boolean isDeleted(){
+            return isDeleted;
+        }
+
+        public boolean isIsAdded() {
+            return isAdded;
+        }
+
+        public boolean isIsRotate() {
+            return isRotate;
+        }
+
+        public void setIsDeleted(boolean isDeleted) {
+            this.isDeleted = isDeleted;
+        }
+
+        public void setIsAdded(boolean isAdded) {
+            this.isAdded = isAdded;
+        }
+
+        public void setIsRotate(boolean isRotate) {
+            this.isRotate = isRotate;
+        }
+
+        private void setImage(Image image) {
+            this.image = image;
+        }
+        
     }
 }

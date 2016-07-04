@@ -1,15 +1,17 @@
 @import url("/styles/css/core.css");
 @import url("/variables.less");
 
-#profileImageFrame {
+#galleryImageFrame {
     -fx-border-width: 2;
     -fx-border-color: black;
     -fx-min-width: 382;
     -fx-max-width: 382;
+    -fx-max-height: 202;
+    -fx-max-height: 202;
+    -fx-alignment: center;
 }
 
 #imageVbox {
-    //-fx-pref-width: (@formWidth - 2*@spaceWidth - (@formWidth - 2*@spaceWidth)/3)/2;
     -fx-alignment: CENTER;
-    -fx-spacing: 5;
+    -fx-spacing: @gap/2;
 }

@@ -16,8 +16,8 @@
         fx:controller="ambroafb.general.image_gallery.ImageGalleryController" >
     <children>
         <StackPane >
-            <HBox fx:id="profileImageFrame" >
-                <ImageView fx:id="profImageView" fitWidth="378" fitHeight="200" >    
+            <HBox fx:id="galleryImageFrame" >
+                <ImageView fx:id="galleryImageView" fitWidth="380" fitHeight="200" >    
                     <image>
                         <Image url="/images/default_profile_image.png" />
                     </image>
@@ -63,7 +63,7 @@
                     </graphic>
                 </Button>
                 <Region HBox.hgrow="ALWAYS" />
-                <ANodeSlider fx:id="nodeSlider" /> 
+                <ANodeSlider fx:id="datesSlider" /> 
             </children>
         </HBox>
     </children>
