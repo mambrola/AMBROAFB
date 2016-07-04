@@ -63,7 +63,7 @@
                     </graphic>
                 </Button>
                 <Region HBox.hgrow="ALWAYS" />
-                <ANodeSlider fx:id="datesSlider" /> 
+                <jfxtras.scene.control.ListSpinner fx:id="datesSlider" prefWidth="150" /> 
             </children>
         </HBox>
     </children>

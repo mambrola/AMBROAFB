@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -46,6 +47,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
+import jfxtras.scene.control.ListSpinner;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -66,9 +68,9 @@ public class ImageGalleryController implements Initializable {
     private HBox galleryImageFrame;
 
     @FXML
-    private ANodeSlider<Label> datesSlider;
+    private ListSpinner<String> datesSlider;
 
-    private ObservableList<Label> datesSliderElems;
+    private ObservableList<String> datesSliderElems;
     private Map<String, ImageOfGallery> images;
     private String undoDeleteImagePath;
     private Calendar calendar;
@@ -87,18 +89,21 @@ public class ImageGalleryController implements Initializable {
         galleryImageView.fitWidthProperty().bind(galleryImageFrame.widthProperty());
         undoDeleteImagePath = "/images/delete2.png";
         images = new HashMap<>();
-        datesSliderElems = datesSlider.getItems();
+        datesSliderElems = FXCollections.observableArrayList();
         calendar = Calendar.getInstance();
         formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         fileChooser = new FileChooser();
         ExtensionFilter filter = new ExtensionFilter("Images files (*.png, *.jpg, *.pdf)", "*.png", "*.jpg", "*.pdf");
         fileChooser.getExtensionFilters().add(filter);
-        
+
     }
 
     public void dowloadDatesOfImagesFrom(String urlPrefix, String parameter) {
         processAndSaveDatesFrom(urlPrefix + parameter);
-        showFirstImage(urlPrefix);
+        datesSlider.indexProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
+            showImage(urlPrefix, newValue);
+        });
+        datesSlider.setIndex(0);
     }
 
     private void processAndSaveDatesFrom(String url) {
@@ -113,9 +118,10 @@ public class ImageGalleryController implements Initializable {
                 calendar.setTimeInMillis(Long.parseLong(miliseconds));
                 String onlyDateAndTime = formatter.format(calendar.getTime());
 
-                datesSliderElems.add(new Label(onlyDateAndTime));
+                datesSliderElems.add(onlyDateAndTime);
                 images.put(onlyDateAndTime, new ImageOfGallery(fullName, null));
             }
+            datesSlider.setItems(datesSliderElems);
         } catch (KFZClient.KFZServerException ex) {
             System.out.println("ex code: " + ex.getStatusCode());
             if (ex.getStatusCode() == 404) {
@@ -124,16 +130,26 @@ public class ImageGalleryController implements Initializable {
             Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void showFirstImage(String urlPrefix){
-        if (!datesSliderElems.isEmpty()) {
+
+    private void showImage(String urlPrefix, int index) {
+        if (index >= 0 && index < datesSliderElems.size()) {
             try {
-                String date = datesSliderElems.get(0).getText();
+                String date = datesSliderElems.get(index);
+                Image img = images.get(date).getImage();
+                if (img != null) {
+                    galleryImageView.setImage(img);
+                    return;
+                }
+                if (images.get(date).getPDFasImages() != null){
+                    galleryImageView.setImage(images.get(date).getPDFImageByPage(0));
+                }
                 String imageFullName = images.get(date).getImageFullName();
                 HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + imageFullName);
                 if (imageFullName.contains(".pdf")) {
-                    PDFHelper pdfHelper = new PDFHelper(con.getInputStream());
-                    images.get(date).setPDFasImages(pdfHelper.getImages());
+                    try (PDFHelper pdfHelper = new PDFHelper(con.getInputStream())) {
+                        images.get(date).setPDFasImages(pdfHelper.getImages());
+                        galleryImageView.setImage(images.get(date).getPDFImageByPage(0));
+                    }
                 } else {
                     Image image = new Image(con.getInputStream());
                     images.get(date).setImage(image);
@@ -154,7 +170,7 @@ public class ImageGalleryController implements Initializable {
         } else {
             undoDeleteImagePath = "/images/delete2.png";
         }
-        String date = datesSlider.getValue().getText();
+        String date = datesSlider.getValue();
         images.get(date).setIsDeleted(imageDeleteNow);
 
         setImageToButton(deleteOrUndo, undoDeleteImagePath);
@@ -168,20 +184,22 @@ public class ImageGalleryController implements Initializable {
         imageView.setFitHeight(((ImageView) button.getGraphic()).getFitHeight());
         button.setGraphic(imageView);
     }
-    
+
     @FXML
     private void uploadImage(ActionEvent event) {
         System.out.println("upload");
         Stage owner = (Stage) galleryImageView.getScene().getWindow();
         List<File> files = fileChooser.showOpenMultipleDialog(owner);
-        if (files == null) return;
+        if (files == null) {
+            return;
+        }
         for (File file : files) {
             fileChooser.setInitialDirectory(file.getParentFile());
             String fileName = file.getName();
             int lastPointIndex = fileName.lastIndexOf(".");
             String ext = fileName.substring(lastPointIndex + 1);
             if (ext.equals("pdf")) {
-                
+
             } else {
                 try {
                     BufferedImage bImage = ImageIO.read(file);
@@ -212,11 +230,11 @@ public class ImageGalleryController implements Initializable {
             System.out.println(key + " " + image.getImageFullName()
                     + " del: " + image.isDeleted
                     + " add: " + image.isAdded
-                    + " rot: " + image.isRotate + 
-                    " image: " + image.getImage());
+                    + " rot: " + image.isRotate
+                    + " image: " + image.getImage());
         }
     }
-    
+
     private Image rotateImage(Image img) throws IOException, KFZClient.KFZServerException {
         BufferedImage bImage = SwingFXUtils.fromFXImage(img, null);
 
@@ -271,14 +289,14 @@ public class ImageGalleryController implements Initializable {
         public boolean isIsRotate() {
             return isRotate;
         }
-        
-        public List<Image> getPDFasImages(){
+
+        public List<Image> getPDFasImages() {
             return pdfImages;
         }
-        
-        public Image getPDFImageByPage(int page){
+
+        public Image getPDFImageByPage(int page) {
             Image result = null;
-            if (page < pdfImages.size() && page >= 0){
+            if (page < pdfImages.size() && page >= 0) {
                 result = pdfImages.get(page);
             }
             return result;
@@ -305,5 +323,5 @@ public class ImageGalleryController implements Initializable {
         }
 
     }
-    
+
 }
