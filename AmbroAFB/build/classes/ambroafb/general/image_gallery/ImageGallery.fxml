@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import ambro.*?>
+
+
+<VBox   fx:id="imagesGalleryRoot" 
+        stylesheets="/styles/css/image_gallery.css"
+        xmlns:fx="http://javafx.com/fxml/1" 
+        xmlns="http://javafx.com/javafx/8"
+        fx:controller="ambroafb.general.image_gallery.ImageGalleryController" >
+    <children>
+        <StackPane >
+            <HBox fx:id="galleryImageFrame" >
+                <ImageView fx:id="galleryImageView" fitWidth="380" fitHeight="200" >    
+                    <image>
+                        <Image url="/images/default_profile_image.png" />
+                    </image>
+                </ImageView>
+            </HBox>
+            <!--<HBox fx:id="deletedImagePane" >-->
+                <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
+                    <image>
+                        <Image url="/images/deleted.png" />
+                    </image>
+                </ImageView>
+            <!--</HBox>-->
+        </StackPane>
+        <HBox fx:id="imageButtonsHBox" >
+            <children>
+                <Button fx:id="deleteOrUndo" styleClass="middle" onAction="#deleteImage" >
+                    <graphic>
+                        <ImageView fitWidth="16" fitHeight="16" >
+                            <image>
+                                <Image url="/images/delete2.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="upload" styleClass="middle" onAction="#uploadImage" >
+                    <graphic>
+                        <ImageView fitWidth="16" fitHeight="16" >
+                            <image>
+                                <Image url="/images/upload.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="rotateToRight" styleClass="middle" prefWidth="60" onAction="#rotate" >
+                    <graphic>
+                        <ImageView fitWidth="16" fitHeight="16" >
+                            <image>
+                                <Image url="/images/rightRotate.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Region HBox.hgrow="ALWAYS" />
+                <ANodeSlider fx:id="datesSlider" /> 
+            </children>
+        </HBox>
+    </children>
+</VBox>

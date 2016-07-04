@@ -1,0 +1,13 @@
+@import url("/styles/css/core.css");
+#galleryImageFrame {
+  -fx-border-width: 2;
+  -fx-border-color: black;
+  -fx-min-width: 382;
+  -fx-max-width: 382;
+  -fx-max-height: 202;
+  -fx-alignment: center;
+}
+#imagesGalleryRoot {
+  -fx-alignment: CENTER;
+  -fx-spacing: 5px;
+}

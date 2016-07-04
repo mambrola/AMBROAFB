@@ -6,12 +6,14 @@
 package ambroafb.clients.dialog;
 
 import ambro.ADatePicker;
+import ambro.ANodeSlider;
 import ambroafb.clients.Client;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.countries.*;
 import ambroafb.general.KFZClient;
+import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.phones.PhoneComboBox;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -33,8 +35,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
@@ -58,6 +62,7 @@ public class ClientDialogController implements Initializable {
     @FXML
     private Label first_name, last_name;
     
+    // start required nodes:
     @FXML  
     @ContentNotEmpty
     private TextField firstName, lastName, idNumber;
@@ -70,6 +75,8 @@ public class ClientDialogController implements Initializable {
     @FXML  
     @ContentNotEmpty
     private TextField address; // this place must be because of required fields order.
+    // end required nodes.
+    
     
     @FXML
     private TextField fax, zipCode, city;
@@ -79,18 +86,13 @@ public class ClientDialogController implements Initializable {
     @FXML
     private DialogOkayCancelController okayCancelController;
     @FXML
-    private Button rotateToRight;
-    @FXML
-    private ImageView profImageView;
-    @FXML
-    private VBox imageVbox;
-
+    private  ImageGalleryController imageGalleryController;
+    
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private Client client;
     private Client clientBackup;
     private AutoCompletionBinding<String> chooseCityBinding;
-    private double rotateDegree, fitWidth, fitHeight;
     
     /**
      * Initializes the controller class.
@@ -103,38 +105,8 @@ public class ClientDialogController implements Initializable {
         juridical.setOnAction(this::switchJuridical);
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
-        rotateDegree = 0;
-        fitWidth = 380;
-        fitHeight = 200;
-        profImageView.setFitWidth(fitWidth);
-        profImageView.setFitHeight(fitHeight);
     }
     
-    @FXML
-    private void uploadImage(ActionEvent event){
-        System.out.println("upload");
-    }
-    
-    @FXML
-    private void deleteImage(ActionEvent event){
-        System.out.println("delete");
-    }
-    
-    @FXML
-    private void rotate(ActionEvent event){
-        rotateDegree += 90;
-        profImageView.setRotate(rotateDegree);
-        
-        if (rotateDegree % 180 == 0){
-            profImageView.setFitWidth(fitWidth);
-            profImageView.setTranslateX(0);
-        }
-        else {
-            profImageView.setFitWidth(fitHeight);
-            profImageView.setTranslateX((fitWidth - fitHeight)/2);
-        }
-    }
-
     public void bindClient(Client client) {
         this.client = client;
         if (client != null) {
@@ -240,6 +212,9 @@ public class ClientDialogController implements Initializable {
                                                             cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
                                                         .collect(Collectors.toList()), 
                                                         null);
+                Platform.runLater(() -> {
+                    imageGalleryController.dowloadDatesOfImagesFrom("/clients/passport/", client.getEmail() + "/all");
+                });
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }

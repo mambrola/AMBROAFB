@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -75,8 +76,10 @@ public class DialogOkayCancelController implements Initializable {
                     Scene currScene = okay.getScene();
                     Object controller = currScene.getProperties().get("controller");
                     boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller);
-                    if (allRequiredFieldsAreValid)
+                    if (allRequiredFieldsAreValid){
+                        Node gallery = okay.getScene().lookup("#imagesGalleryRoot");
                         ((Stage) okay.getScene().getWindow()).close();
+                    }
                 });
                 alertText = "Close without saving changes?";    
                 cancel.setOnAction((ActionEvent event) -> {

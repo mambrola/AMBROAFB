@@ -312,7 +312,9 @@ public class Utils {
     public static ArrayList<Node> getFocusTraversableBottomChildren(Parent root) {
         ArrayList<Node> arrayList = new ArrayList<>();
         root.getChildrenUnmodifiable().stream().forEach((n) -> {
-            if (!n.getClass().toString().contains("ImageView")){
+            String nodeClassToString = n.getClass().toString();
+            boolean allow = !nodeClassToString.contains("ImageView") && !nodeClassToString.contains("ANodeSlider");
+            if (allow){
                 if (((Parent) n).getChildrenUnmodifiable().isEmpty()) {
                     if (n.isFocusTraversable()) {
                         arrayList.add(n);
