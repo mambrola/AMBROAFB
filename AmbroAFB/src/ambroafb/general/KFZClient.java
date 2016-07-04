@@ -149,7 +149,6 @@ public class KFZClient {
         }
         String error = readStream(con.getErrorStream());
         con.getErrorStream().close();
-        con.getInputStream().close();
         con.disconnect();
         throw new KFZServerException(error, status);
     }

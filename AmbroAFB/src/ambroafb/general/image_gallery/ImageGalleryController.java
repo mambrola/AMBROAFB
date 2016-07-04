@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -19,12 +21,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.embed.swing.SwingFXUtils;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -34,9 +40,12 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import javax.imageio.ImageIO;
 import org.json.JSONArray;
 import org.json.JSONException;
-
 
 /**
  * FXML Controller class
@@ -47,13 +56,13 @@ public class ImageGalleryController implements Initializable {
 
     @FXML
     private Button deleteOrUndo, rotateToRight, upload;
-    
+
     @FXML
     private ImageView galleryImageView, deletedImageView;
-    
+
     @FXML
     private HBox galleryImageFrame;
-    
+
     @FXML
     private ANodeSlider<Label> datesSlider;
 
@@ -62,9 +71,11 @@ public class ImageGalleryController implements Initializable {
     private String undoDeleteImagePath;
     private Calendar calendar;
     private DateFormat formatter;
-    
+    private FileChooser fileChooser;
+
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -77,19 +88,22 @@ public class ImageGalleryController implements Initializable {
         datesSliderElems = datesSlider.getItems();
         calendar = Calendar.getInstance();
         formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        fileChooser = new FileChooser();
+        ExtensionFilter filter = new ExtensionFilter("Images files (*.png, *.jpg, *.pdf)", "*.png", "*.jpg", "*.pdf");
+        fileChooser.getExtensionFilters().add(filter);
+        
         
     }
-    
-    public void dowloadDatesOfImagesFrom(String url){
-        processAndSaveDatesFrom(url);
-        if (!datesSliderElems.isEmpty()){
+
+    public void dowloadDatesOfImagesFrom(String urlDates) {
+        processAndSaveDatesFrom(urlDates);
+        if (!datesSliderElems.isEmpty()) {
             try {
                 String date = datesSliderElems.get(0).getText();
                 String imageFullName = images.get(date).getImageFullName();
-                if (imageFullName.contains(".pdf")){
+                if (imageFullName.contains(".pdf")) {
                     System.out.println("pdf-ia da ara surati");
-                }
-                else {
+                } else {
                     HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection("/clients/passport/" + imageFullName);
                     Image image = new Image(con.getInputStream());
                     images.get(date).setImage(image);
@@ -100,8 +114,8 @@ public class ImageGalleryController implements Initializable {
             }
         }
     }
-    
-    private void processAndSaveDatesFrom(String url){
+
+    private void processAndSaveDatesFrom(String url) {
         try {
             String imagesNames = GeneralConfig.getInstance().getServerClient().get(url);
             JSONArray namesJson = new JSONArray(imagesNames);
@@ -112,80 +126,91 @@ public class ImageGalleryController implements Initializable {
                 String miliseconds = fullName.substring(start, end);
                 calendar.setTimeInMillis(Long.parseLong(miliseconds));
                 String onlyDateAndTime = formatter.format(calendar.getTime());
-                System.out.println("only: " + onlyDateAndTime);
-                
+
                 datesSliderElems.add(new Label(onlyDateAndTime));
                 images.put(onlyDateAndTime, new ImageOfGallery(fullName, null));
             }
         } catch (KFZClient.KFZServerException ex) {
-            if (ex.getStatusCode() == 404){
-                new AlertMessage(Alert.AlertType.ERROR, ex, "%image_not_found").showAlert();
-                Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("ex code: " + ex.getStatusCode());
+            if (ex.getStatusCode() == 404) {
+//                datesSlider.setDisable(true);
+//                new AlertMessage(Alert.AlertType.ERROR, ex, "%image_not_found").showAlert();
+//                Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (JSONException | IOException ex) {
             Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
-    private void deleteImage(ActionEvent event){
+    private void deleteImage(ActionEvent event) {
         System.out.println("delete");
         boolean imageDeleteNow = undoDeleteImagePath.equals("/images/delete2.png");
-        if (imageDeleteNow){
+        if (imageDeleteNow) {
             undoDeleteImagePath = "/images/undo.png";
-        }
-        else {
+        } else {
             undoDeleteImagePath = "/images/delete2.png";
         }
         String date = datesSlider.getValue().getText();
         images.get(date).setIsDeleted(imageDeleteNow);
-        
+
         setImageToButton(deleteOrUndo, undoDeleteImagePath);
         deletedImageView.setVisible(imageDeleteNow);
     }
-    
-    private void setImageToButton(Button button, String imageURL){
+
+    private void setImageToButton(Button button, String imageURL) {
         Image image = new Image(getClass().getResourceAsStream(imageURL));
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(((ImageView)button.getGraphic()).getFitWidth());
-        imageView.setFitHeight(((ImageView)button.getGraphic()).getFitHeight());
+        imageView.setFitWidth(((ImageView) button.getGraphic()).getFitWidth());
+        imageView.setFitHeight(((ImageView) button.getGraphic()).getFitHeight());
         button.setGraphic(imageView);
     }
     
+    private File initialDirectory;
+
     @FXML
-    private void uploadImage(ActionEvent event){
+    private void uploadImage(ActionEvent event) {
         System.out.println("upload");
-        // sadacaa im qveynios dro saitidan....
+        Stage owner = (Stage) galleryImageView.getScene().getWindow();
+        List<File> files = fileChooser.showOpenMultipleDialog(owner);
+        
+        for (File file : files) {
+            fileChooser.setInitialDirectory(file.getParentFile());
+            String fileName = file.getName();
+            int lastPointIndex = fileName.lastIndexOf(".");
+            String ext = fileName.substring(lastPointIndex + 1);
+            if (ext.equals("pdf")) {
+
+            } else {
+                try {
+                    BufferedImage bImage = ImageIO.read(file);
+                    Image image = SwingFXUtils.toFXImage(bImage, null);
+                    galleryImageView.setImage(image);
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+// sadacaa im qveynios dro saitidan....
     }
-    
-    private Image oldImage;
-    
+
     @FXML
-    private void rotate(ActionEvent event){
+    private void rotate(ActionEvent event) {
         galleryImageView.setRotate(galleryImageView.getRotate() + 90);
-//        if (galleryImageView.getRotate()){
-//            
-//        }
         
-        double imgW = galleryImageView.getImage().getWidth();
-        double imgH = galleryImageView.getImage().getHeight();
-        System.out.println("img width: " + imgW + " img height: " + imgH);
-        
-//        printMap();
+        printMap();
     }
-    
-    private void setImagePos(Image image, ImageView imgView){
-        
-    }
-    
+
     // -----------------------------------
-    private void printMap(){
+    private void printMap() {
         for (String key : images.keySet()) {
             ImageOfGallery image = images.get(key);
-            System.out.println(key + " " + image.getImageFullName() + 
-                                " del: " + image.isDeleted + 
-                                " add: " + image.isAdded + 
-                                " rot: " + image.isRotate);
+            System.out.println(key + " " + image.getImageFullName()
+                    + " del: " + image.isDeleted
+                    + " add: " + image.isAdded
+                    + " rot: " + image.isRotate + 
+                    " image: " + image.getImage());
         }
     }
     
@@ -205,33 +230,32 @@ public class ImageGalleryController implements Initializable {
         return SwingFXUtils.toFXImage(rotImage, null);
     }
 
-    
     private class ImageOfGallery {
-        
+
         private String imageName;
         private Image image;
         private boolean isDeleted;
         private boolean isAdded;
         private boolean isRotate;
-        
+
         public ImageOfGallery(String url, Image image) {
             this.image = image;
             this.imageName = url;
         }
-        
-        private Image getImage(){
+
+        private Image getImage() {
             return image;
         }
-        
-        public String getImageFullName(){
+
+        public String getImageFullName() {
             return imageName;
         }
-        
-        public void setImagePath(String  newImageURL){
+
+        public void setImagePath(String newImageURL) {
             this.imageName = newImageURL;
         }
-        
-        public boolean isDeleted(){
+
+        public boolean isDeleted() {
             return isDeleted;
         }
 
@@ -258,7 +282,7 @@ public class ImageGalleryController implements Initializable {
         private void setImage(Image image) {
             this.image = image;
         }
-        
+
     }
     
 }
