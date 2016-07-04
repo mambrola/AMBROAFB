@@ -1,0 +1,11 @@
+@import url("/styles/css/core.css");
+#profileImageFrame {
+  -fx-border-width: 2;
+  -fx-border-color: black;
+  -fx-min-width: 382;
+  -fx-max-width: 382;
+}
+#imageVbox {
+  -fx-alignment: CENTER;
+  -fx-spacing: 5;
+}

@@ -82,18 +82,18 @@ public class ClientDialogController implements Initializable {
     private DialogOkayCancelController okayCancelController;
     
     @FXML
-    private Button rotateToRight;
-    @FXML
-    private ImageView profImageView;
-    @FXML
-    private VBox imageVbox;
-    @FXML
-    private ANodeSlider<Label> nodeSlider;
-    @FXML
-    private Button delete, upload;
-    @FXML
-    private ImageView deletedImageView;
-    private String undoDeletePath;
+//    private Button rotateToRight;
+//    @FXML
+//    private ImageView profImageView;
+//    @FXML
+//    private VBox imageVbox;
+//    @FXML
+//    private ANodeSlider<Label> nodeSlider;
+//    @FXML
+//    private Button delete, upload;
+//    @FXML
+//    private ImageView deletedImageView;
+//    private String undoDeletePath;
     
 
     private ArrayList<Node> focusTraversableNodes;
@@ -113,47 +113,46 @@ public class ClientDialogController implements Initializable {
         juridical.setOnAction(this::switchJuridical);
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
-        profImageView.setPreserveRatio(true);
-        profImageView.setTranslateX((profImageView.getFitWidth() - profImageView.getFitHeight())/2);
         
-        undoDeletePath = "/images/delete2.png";
-        
-        nodeSlider.getItems().add(new Label("DATE 1"));
-        nodeSlider.getItems().add(new Label("DATE 2"));
+//        profImageView.setPreserveRatio(true);
+//        profImageView.setTranslateX((profImageView.getFitWidth() - profImageView.getFitHeight())/2);
+//        undoDeletePath = "/images/delete2.png";
+//        nodeSlider.getItems().add(new Label("DATE 1"));
+//        nodeSlider.getItems().add(new Label("DATE 2"));
     }
     
-    @FXML
-    private void uploadImage(ActionEvent event){
-        System.out.println("upload");
-    }
+//    @FXML
+//    private void uploadImage(ActionEvent event){
+//        System.out.println("upload");
+//    }
     
-    @FXML
-    private void deleteImage(ActionEvent event){
-        System.out.println("delete");
-        boolean imageDeleteNow = undoDeletePath.equals("/images/delete2.png");
-        if (imageDeleteNow){
-            undoDeletePath = "/images/undo.png";
-        }
-        else {
-            undoDeletePath = "/images/delete2.png";
-        }
-        setImageToButton(delete, undoDeletePath);
-        deletedImageView.setVisible(imageDeleteNow);
-        
-    }
+//    @FXML
+//    private void deleteImage(ActionEvent event){
+//        System.out.println("delete");
+//        boolean imageDeleteNow = undoDeletePath.equals("/images/delete2.png");
+//        if (imageDeleteNow){
+//            undoDeletePath = "/images/undo.png";
+//        }
+//        else {
+//            undoDeletePath = "/images/delete2.png";
+//        }
+//        setImageToButton(delete, undoDeletePath);
+//        deletedImageView.setVisible(imageDeleteNow);
+//        
+//    }
     
-    private void setImageToButton(Button button, String imageURL){
-        Image image = new Image(getClass().getResourceAsStream(imageURL));
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(((ImageView)button.getGraphic()).getFitWidth());
-        imageView.setFitHeight(((ImageView)button.getGraphic()).getFitHeight());
-        button.setGraphic(imageView);
-    }
+//    private void setImageToButton(Button button, String imageURL){
+//        Image image = new Image(getClass().getResourceAsStream(imageURL));
+//        ImageView imageView = new ImageView(image);
+//        imageView.setFitWidth(((ImageView)button.getGraphic()).getFitWidth());
+//        imageView.setFitHeight(((ImageView)button.getGraphic()).getFitHeight());
+//        button.setGraphic(imageView);
+//    }
     
-    @FXML
-    private void rotate(ActionEvent event){
-        profImageView.setRotate(profImageView.getRotate() + 90);
-    }
+//    @FXML
+//    private void rotate(ActionEvent event){
+//        profImageView.setRotate(profImageView.getRotate() + 90);
+//    }
 
     public void bindClient(Client client) {
         this.client = client;
