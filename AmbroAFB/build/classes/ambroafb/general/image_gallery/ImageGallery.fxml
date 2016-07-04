@@ -9,7 +9,7 @@
 <?import ambro.*?>
 
 
-<VBox   fx:id="imageVbox" 
+<VBox   fx:id="imagesGalleryRoot" 
         stylesheets="/styles/css/image_gallery.css"
         xmlns:fx="http://javafx.com/fxml/1" 
         xmlns="http://javafx.com/javafx/8"

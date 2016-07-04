@@ -213,7 +213,7 @@ public class ClientDialogController implements Initializable {
                                                         .collect(Collectors.toList()), 
                                                         null);
                 Platform.runLater(() -> {
-                    imageGalleryController.dowloadDatesOfImagesFrom("/clients/passport/" + client.getEmail() + "/all");
+                    imageGalleryController.dowloadDatesOfImagesFrom("/clients/passport/", client.getEmail() + "/all");
                 });
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
