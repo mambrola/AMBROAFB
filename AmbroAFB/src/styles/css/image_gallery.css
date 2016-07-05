@@ -2,10 +2,10 @@
 #galleryImageFrame {
   -fx-border-width: 2;
   -fx-border-color: black;
-  -fx-min-width: 382;
-  -fx-max-width: 382;
-  -fx-min-height: 202;
-  -fx-max-height: 202;
+  -fx-min-width: 384;
+  -fx-max-width: 384;
+  -fx-min-height: 204;
+  -fx-max-height: 204;
   -fx-alignment: center;
 }
 #imagesGalleryRoot {

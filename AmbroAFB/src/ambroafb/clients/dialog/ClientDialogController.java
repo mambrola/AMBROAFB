@@ -86,7 +86,7 @@ public class ClientDialogController implements Initializable {
     @FXML
     private DialogOkayCancelController okayCancelController;
     @FXML
-    private  ImageGalleryController imageGalleryController;
+    private ImageGalleryController imageGalleryController;
     
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
@@ -213,6 +213,7 @@ public class ClientDialogController implements Initializable {
                                                         .collect(Collectors.toList()), 
                                                         null);
                 Platform.runLater(() -> {
+                    imageGalleryController.sendingURLs("/clients/passport/", client.getEmail() + "/");
                     imageGalleryController.dowloadDatesOfImagesFrom("/clients/passport/", client.getEmail() + "/all");
                 });
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {

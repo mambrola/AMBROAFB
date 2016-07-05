@@ -15,12 +15,15 @@ import ambroafb.general.KFZClient;
 import ambroafb.general.PDFHelper;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +49,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import javax.imageio.ImageIO;
 import jfxtras.scene.control.ListSpinner;
 import org.json.JSONArray;
@@ -71,12 +75,18 @@ public class ImageGalleryController implements Initializable {
     private ListSpinner<String> datesSlider;
 
     private ObservableList<String> datesSliderElems;
-    private Map<String, ImageOfGallery> images;
-    private String undoDeleteImagePath;
+    private Map<String, DocumentViewer> images;
+    private String undoOrDeleteImagePath;
     private Calendar calendar;
     private DateFormat formatter;
     private FileChooser fileChooser;
+    private String serviceURLPrefix;
+    private String parameter;
 
+    
+    private static final String GALLERY_DELETE_BUTTON_IMAGE_NAME = "/images/deleteImg.png";
+    private static final String GALLERY_UNDO_BUTTON_IMAGE_NAME = "/images/undo.png";
+    
     /**
      * Initializes the controller class.
      *
@@ -86,7 +96,7 @@ public class ImageGalleryController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         galleryImageView.setPreserveRatio(true);
-        undoDeleteImagePath = "/images/delete2.png";
+        undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
         images = new HashMap<>();
         datesSliderElems = FXCollections.observableArrayList();
         calendar = Calendar.getInstance();
@@ -94,15 +104,39 @@ public class ImageGalleryController implements Initializable {
         fileChooser = new FileChooser();
         ExtensionFilter filter = new ExtensionFilter("Images files (*.png, *.jpg, *.pdf)", "*.png", "*.jpg", "*.pdf");
         fileChooser.getExtensionFilters().add(filter);
+        datesSlider.setStringConverter(new StringConverter<String>() {
+            @Override
+            public String toString(String object) {
+                String fullName = object;
+                int start = fullName.indexOf("_") + 1;
+                int end = fullName.lastIndexOf(".");
+                String miliseconds = fullName.substring(start, end);
+                calendar.setTimeInMillis(Long.parseLong(miliseconds));
+                String onlyDateAndTime = formatter.format(calendar.getTime());
+                return onlyDateAndTime;
+            }
 
+            @Override
+            public String fromString(String string) {
+                return string;
+            }
+        });
     }
 
+    public void sendingURLs(String prefix, String parameter) {
+        serviceURLPrefix = prefix;
+        this.parameter = parameter;
+    }
+    
     public void dowloadDatesOfImagesFrom(String urlPrefix, String parameter) {
+//        showImage(urlPrefix, 0);
         processAndSaveDatesFrom(urlPrefix + parameter);
-        datesSlider.indexProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
-            showImage(urlPrefix, newValue);
-        });
-        datesSlider.setIndex(0);
+        if(datesSlider.getItems() != null && !datesSlider.getItems().isEmpty()){
+            datesSlider.indexProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
+                showImage(urlPrefix, newValue);
+            });
+            datesSlider.setIndex(0);
+        }
     }
 
     private void processAndSaveDatesFrom(String url) {
@@ -111,14 +145,13 @@ public class ImageGalleryController implements Initializable {
             JSONArray namesJson = new JSONArray(imagesNames);
             for (int i = 0; i < namesJson.length(); i++) {
                 String fullName = namesJson.getString(i);
-                int start = fullName.indexOf("_") + 1;
-                int end = fullName.lastIndexOf(".");
-                String miliseconds = fullName.substring(start, end);
-                calendar.setTimeInMillis(Long.parseLong(miliseconds));
-                String onlyDateAndTime = formatter.format(calendar.getTime());
-
-                datesSliderElems.add(onlyDateAndTime);
-                images.put(onlyDateAndTime, new ImageOfGallery(fullName, null));
+//                int start = fullName.indexOf("_") + 1;
+//                int end = fullName.lastIndexOf(".");
+//                String miliseconds = fullName.substring(start, end);
+//                calendar.setTimeInMillis(Long.parseLong(miliseconds));
+//                String onlyDateAndTime = formatter.format(calendar.getTime());                
+                datesSliderElems.add(fullName);
+                images.put(fullName, null);
             }
             datesSlider.setItems(datesSliderElems);
         } catch (KFZClient.KFZServerException ex) {
@@ -132,47 +165,67 @@ public class ImageGalleryController implements Initializable {
 
     private void showImage(String urlPrefix, int index) {
         if (index >= 0 && index < datesSliderElems.size()) {
-            try {
-                String date = datesSliderElems.get(index);
-                Image img = images.get(date).getImage();
-                if (img != null) {
-                    galleryImageView.setImage(img);
-                    return;
+            String fullName = datesSliderElems.get(index);
+            DocumentViewer viewer = images.get(fullName);
+            if (viewer == null){
+                try {
+                    HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix+fullName);
+                    viewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName);
+                    images.put(fullName, viewer);
+                } catch (IOException ex) {
+                    Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if (images.get(date).getPDFasImages() != null){
-                    galleryImageView.setImage(images.get(date).getPDFImageByPage(0));
-                }
-                String imageFullName = images.get(date).getImageFullName();
-                HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + imageFullName);
-                if (imageFullName.contains(".pdf")) {
-                    try (PDFHelper pdfHelper = new PDFHelper(con.getInputStream())) {
-                        images.get(date).setPDFasImages(pdfHelper.getImages());
-                        galleryImageView.setImage(images.get(date).getPDFImageByPage(0));
-                    }
-                } else {
-                    Image image = new Image(con.getInputStream());
-                    images.get(date).setImage(image);
-                    galleryImageView.setImage(image);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
             }
+            if (viewer != null){
+                galleryImageFrame.getChildren().setAll(viewer.getComponent());
+                deletedImageView.visibleProperty().unbind();
+                deletedImageView.visibleProperty().bind(viewer.deletedProperty());
+            }
+//            try {
+//                String date = datesSliderElems.get(index);
+//                Image img = images.get(date).getImage();
+//                if (img != null) {
+//                    galleryImageView.setImage(img);
+//                    return;
+//                }
+//                if (images.get(date).getPDFasImages() != null){
+//                    galleryImageView.setImage(images.get(date).getPDFImageByPage(0));
+//                }
+//                String imageFullName = images.get(date).getImageFullName();
+//                HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + imageFullName);
+//                if (imageFullName.contains(".pdf")) {
+////                    try (PDFHelper pdfHelper = new PDFHelper(con.getInputStream())) {
+////                        images.get(date).setPDFasImages(pdfHelper.getImages());
+////                        images.get(date).savePDFHelper(pdfHelper);
+////                        
+////                        galleryImageView.setImage(images.get(date).getPDFImageByPage(0));
+////                    }
+//                    DocumentViewer viewer = new PDFViewer(con.getInputStream(), "/images/default_profile_image.png");
+//                    galleryImageFrame.getChildren().add(viewer.getComponent());
+//                } else {
+//                    Image image = new Image(con.getInputStream());
+//                    images.get(date).setImage(image);
+//                    galleryImageView.setImage(image);
+//                }
+//            } catch (IOException ex) {
+//                Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         }
     }
 
     @FXML
     private void deleteImage(ActionEvent event) {
         System.out.println("delete");
-        boolean imageDeleteNow = undoDeleteImagePath.equals("/images/delete2.png");
+        boolean imageDeleteNow = undoOrDeleteImagePath.equals(GALLERY_DELETE_BUTTON_IMAGE_NAME);
         if (imageDeleteNow) {
-            undoDeleteImagePath = "/images/undo.png";
+            undoOrDeleteImagePath = GALLERY_UNDO_BUTTON_IMAGE_NAME;
         } else {
-            undoDeleteImagePath = "/images/delete2.png";
+            undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
         }
-        String date = datesSlider.getValue();
-        images.get(date).setIsDeleted(imageDeleteNow);
-
-        setImageToButton(deleteOrUndo, undoDeleteImagePath);
+        String fullName = datesSlider.getValue();
+        System.out.println("delete method fullname: " + fullName);
+        
+        setImageToButton(deleteOrUndo, undoOrDeleteImagePath);
         deletedImageView.setVisible(imageDeleteNow);
     }
 
@@ -224,14 +277,14 @@ public class ImageGalleryController implements Initializable {
 
     // -----------------------------------
     private void printMap() {
-        for (String key : images.keySet()) {
-            ImageOfGallery image = images.get(key);
-            System.out.println(key + " " + image.getImageFullName()
-                    + " del: " + image.isDeleted
-                    + " add: " + image.isAdded
-                    + " rot: " + image.isRotate
-                    + " image: " + image.getImage());
-        }
+//        for (String key : images.keySet()) {
+//            ImageOfGallery image = images.get(key);
+//            System.out.println(key + " " + image.getImageFullName()
+//                    + " del: " + image.isDeleted
+//                    + " add: " + image.isAdded
+//                    + " rot: " + image.isRotate
+//                    + " image: " + image.getImage());
+//        }
     }
 
     private Image rotateImage(Image img) throws IOException, KFZClient.KFZServerException {
@@ -250,77 +303,28 @@ public class ImageGalleryController implements Initializable {
         return SwingFXUtils.toFXImage(rotImage, null);
     }
 
-    private class ImageOfGallery {
 
-        private String imageName;
-        private Image image;
-        private List<Image> pdfImages;
-        private boolean isDeleted;
-        private boolean isAdded;
-        private boolean isRotate;
-
-        public ImageOfGallery(String url, Image image) {
-            this.image = image;
-            this.imageName = url;
-            pdfImages = new ArrayList<Image>();
-        }
-
-        private Image getImage() {
-            return image;
-        }
-
-        public String getImageFullName() {
-            return imageName;
-        }
-
-        public void setImagePath(String newImageURL) {
-            this.imageName = newImageURL;
-        }
-
-        public boolean isDeleted() {
-            return isDeleted;
-        }
-
-        public boolean isIsAdded() {
-            return isAdded;
-        }
-
-        public boolean isIsRotate() {
-            return isRotate;
-        }
-
-        public List<Image> getPDFasImages() {
-            return pdfImages;
-        }
-
-        public Image getPDFImageByPage(int page) {
-            Image result = null;
-            if (page < pdfImages.size() && page >= 0) {
-                result = pdfImages.get(page);
-            }
-            return result;
-        }
-
-        public void setIsDeleted(boolean isDeleted) {
-            this.isDeleted = isDeleted;
-        }
-
-        public void setIsAdded(boolean isAdded) {
-            this.isAdded = isAdded;
-        }
-
-        public void setIsRotate(boolean isRotate) {
-            this.isRotate = isRotate;
-        }
-
-        private void setImage(Image image) {
-            this.image = image;
-        }
-
-        private void setPDFasImages(List<Image> images) {
-            pdfImages = images;
-        }
-
+    public void sendDataToServer() {
+//        for (String key : images.keySet()) {
+//            ImageOfGallery imageData = images.get(key);
+//            PDFHelper pdfHelper = imageData.getPDFHelper();
+//            if (pdfHelper != null){
+//                if (imageData.isIsAdded()){
+//                    try {
+//                        String url = serviceURLPrefix + parameter + "pdf";
+//                        GeneralConfig.getInstance().getServerClient().post(url, Base64.getEncoder().encodeToString(pdfHelper.getContent()));
+//                    } catch (IOException | KFZClient.KFZServerException ex) {
+//                        Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+////                else if (){
+////                    
+////                }
+//            }
+//            else{
+//                
+//            }
+//        }
     }
 
 }

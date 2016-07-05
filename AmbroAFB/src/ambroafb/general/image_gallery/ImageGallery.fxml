@@ -17,7 +17,7 @@
     <children>
         <StackPane >
             <HBox fx:id="galleryImageFrame" >
-                <ImageView fx:id="galleryImageView" fitWidth="378" fitHeight="200" >
+                <ImageView fx:id="galleryImageView" fitWidth="380" fitHeight="200" >
                     <image>
                         <Image url="/images/default_profile_image.png" />
                     </image>
@@ -37,7 +37,7 @@
                     <graphic>
                         <ImageView fitWidth="16" fitHeight="16" >
                             <image>
-                                <Image url="/images/delete2.png" />
+                                <Image url="/images/deleteImg.png" />
                             </image>
                         </ImageView>
                     </graphic>

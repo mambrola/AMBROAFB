@@ -7,6 +7,7 @@ package ambroafb.general;
 
 import ambro.AMySQLChanel;
 import ambroafb.AmbroAFB;
+import ambroafb.general.image_gallery.ImageGalleryController;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -43,6 +44,7 @@ import ambroafb.general.interfaces.Annotations.*;
 import java.lang.reflect.Field;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
+import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
@@ -613,6 +615,25 @@ public class Utils {
                 stage.setHeight(json.getDouble("height"));
             }
         } catch (JSONException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void callGallerySendMethod(Object currSceneController) {
+        try {
+            Field[] fields = currSceneController.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                boolean oldValue = field.isAccessible();
+                field.setAccessible(true);
+                if (field.isAnnotationPresent(FXML.class)) {
+                    if (field.get(currSceneController) instanceof ImageGalleryController) {
+                        ImageGalleryController controller = (ImageGalleryController)field.get(currSceneController);
+                        controller.sendDataToServer();
+                    }
+                }
+                field.setAccessible(oldValue);
+            }
+        } catch (IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
