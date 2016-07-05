@@ -90,7 +90,7 @@ public class ImageGalleryController implements Initializable {
         images = new HashMap<>();
         datesSliderElems = FXCollections.observableArrayList();
         calendar = Calendar.getInstance();
-        formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
         fileChooser = new FileChooser();
         ExtensionFilter filter = new ExtensionFilter("Images files (*.png, *.jpg, *.pdf)", "*.png", "*.jpg", "*.pdf");
         fileChooser.getExtensionFilters().add(filter);

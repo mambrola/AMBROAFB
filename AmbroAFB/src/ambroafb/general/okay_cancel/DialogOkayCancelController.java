@@ -77,7 +77,7 @@ public class DialogOkayCancelController implements Initializable {
                     Object controller = currScene.getProperties().get("controller");
                     boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller);
                     if (allRequiredFieldsAreValid){
-                        Node gallery = okay.getScene().lookup("#imagesGalleryRoot");
+                        
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
