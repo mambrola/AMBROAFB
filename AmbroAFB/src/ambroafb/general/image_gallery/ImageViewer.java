@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -24,15 +25,18 @@ import javax.imageio.ImageIO;
  * @author dato
  */
 public class ImageViewer implements DocumentViewer {
-    
+
     private final ImageView imageView;
     private boolean isNew;
-    private BooleanProperty deletedProperty;
+    private final BooleanProperty deletedProperty = new SimpleBooleanProperty();
     private final String fullName;
     private int degree;
-    
-    public ImageViewer(InputStream stream, String imageFullName){
+
+    public ImageViewer(InputStream stream, String imageFullName) {
         imageView = new ImageView(new Image(stream));
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(380);
+        imageView.setFitHeight(200);
         fullName = imageFullName;
     }
 
@@ -62,7 +66,7 @@ public class ImageViewer implements DocumentViewer {
         try {
             BufferedImage bImage = SwingFXUtils.fromFXImage(imageView.getImage(), null);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ImageIO.write(bImage, fullName.substring(fullName.lastIndexOf(".")), out);
+            ImageIO.write(bImage, "png", out);
             result = out.toByteArray();
         } catch (IOException ex) {
             Logger.getLogger(ImageViewer.class.getName()).log(Level.SEVERE, null, ex);
@@ -74,7 +78,7 @@ public class ImageViewer implements DocumentViewer {
     public void setIsNew(boolean isNew) {
         this.isNew = isNew;
     }
-    
+
     @Override
     public boolean isNew() {
         return isNew;
@@ -94,5 +98,5 @@ public class ImageViewer implements DocumentViewer {
     public String getFullName() {
         return fullName;
     }
-    
+
 }

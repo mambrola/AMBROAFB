@@ -5,34 +5,24 @@
  */
 package ambroafb.general.image_gallery;
 
-import ambro.ANodeSlider;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
-import ambroafb.general.PDFHelper;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.embed.swing.SwingFXUtils;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,9 +30,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -83,10 +71,9 @@ public class ImageGalleryController implements Initializable {
     private String serviceURLPrefix;
     private String parameter;
 
-    
     private static final String GALLERY_DELETE_BUTTON_IMAGE_NAME = "/images/deleteImg.png";
     private static final String GALLERY_UNDO_BUTTON_IMAGE_NAME = "/images/undo.png";
-    
+
     /**
      * Initializes the controller class.
      *
@@ -127,11 +114,10 @@ public class ImageGalleryController implements Initializable {
         serviceURLPrefix = prefix;
         this.parameter = parameter;
     }
-    
+
     public void dowloadDatesOfImagesFrom(String urlPrefix, String parameter) {
-//        showImage(urlPrefix, 0);
         processAndSaveDatesFrom(urlPrefix + parameter);
-        if(datesSlider.getItems() != null && !datesSlider.getItems().isEmpty()){
+        if (datesSlider.getItems() != null && !datesSlider.getItems().isEmpty()) {
             datesSlider.indexProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
                 showImage(urlPrefix, newValue);
             });
@@ -145,11 +131,6 @@ public class ImageGalleryController implements Initializable {
             JSONArray namesJson = new JSONArray(imagesNames);
             for (int i = 0; i < namesJson.length(); i++) {
                 String fullName = namesJson.getString(i);
-//                int start = fullName.indexOf("_") + 1;
-//                int end = fullName.lastIndexOf(".");
-//                String miliseconds = fullName.substring(start, end);
-//                calendar.setTimeInMillis(Long.parseLong(miliseconds));
-//                String onlyDateAndTime = formatter.format(calendar.getTime());                
                 datesSliderElems.add(fullName);
                 images.put(fullName, null);
             }
@@ -167,66 +148,36 @@ public class ImageGalleryController implements Initializable {
         if (index >= 0 && index < datesSliderElems.size()) {
             String fullName = datesSliderElems.get(index);
             DocumentViewer viewer = images.get(fullName);
-            if (viewer == null){
+            if (viewer == null) {
                 try {
-                    HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix+fullName);
+                    HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
                     viewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName);
                     images.put(fullName, viewer);
                 } catch (IOException ex) {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            if (viewer != null){
+            if (viewer != null) {
+                final DocumentViewer dViewer = viewer;
                 galleryImageFrame.getChildren().setAll(viewer.getComponent());
                 deletedImageView.visibleProperty().unbind();
                 deletedImageView.visibleProperty().bind(viewer.deletedProperty());
+                ImageView icon = (ImageView) deleteOrUndo.getGraphic();
+                icon.imageProperty().unbind();
+                icon.imageProperty().bind(Bindings.createObjectBinding(() -> {
+                    String url = dViewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
+                    return new Image(getClass().getResourceAsStream(url));
+                }, viewer.deletedProperty()));
+
             }
-//            try {
-//                String date = datesSliderElems.get(index);
-//                Image img = images.get(date).getImage();
-//                if (img != null) {
-//                    galleryImageView.setImage(img);
-//                    return;
-//                }
-//                if (images.get(date).getPDFasImages() != null){
-//                    galleryImageView.setImage(images.get(date).getPDFImageByPage(0));
-//                }
-//                String imageFullName = images.get(date).getImageFullName();
-//                HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + imageFullName);
-//                if (imageFullName.contains(".pdf")) {
-////                    try (PDFHelper pdfHelper = new PDFHelper(con.getInputStream())) {
-////                        images.get(date).setPDFasImages(pdfHelper.getImages());
-////                        images.get(date).savePDFHelper(pdfHelper);
-////                        
-////                        galleryImageView.setImage(images.get(date).getPDFImageByPage(0));
-////                    }
-//                    DocumentViewer viewer = new PDFViewer(con.getInputStream(), "/images/default_profile_image.png");
-//                    galleryImageFrame.getChildren().add(viewer.getComponent());
-//                } else {
-//                    Image image = new Image(con.getInputStream());
-//                    images.get(date).setImage(image);
-//                    galleryImageView.setImage(image);
-//                }
-//            } catch (IOException ex) {
-//                Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
         }
     }
 
     @FXML
     private void deleteImage(ActionEvent event) {
-        System.out.println("delete");
-        boolean imageDeleteNow = undoOrDeleteImagePath.equals(GALLERY_DELETE_BUTTON_IMAGE_NAME);
-        if (imageDeleteNow) {
-            undoOrDeleteImagePath = GALLERY_UNDO_BUTTON_IMAGE_NAME;
-        } else {
-            undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
-        }
         String fullName = datesSlider.getValue();
-        System.out.println("delete method fullname: " + fullName);
-        
-        setImageToButton(deleteOrUndo, undoOrDeleteImagePath);
-        deletedImageView.setVisible(imageDeleteNow);
+        DocumentViewer viewer = images.get(fullName);
+        viewer.deleteOrUndo();
     }
 
     private void setImageToButton(Button button, String imageURL) {
@@ -245,8 +196,10 @@ public class ImageGalleryController implements Initializable {
         if (files == null) {
             return;
         }
-        for (File file : files) {
+        files.stream().map((file) -> {
             fileChooser.setInitialDirectory(file.getParentFile());
+            return file;
+        }).forEach((file) -> {
             String fileName = file.getName();
             int lastPointIndex = fileName.lastIndexOf(".");
             String ext = fileName.substring(lastPointIndex + 1);
@@ -262,69 +215,41 @@ public class ImageGalleryController implements Initializable {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }
+        });
     }
 
     @FXML
     private void rotate(ActionEvent event) {
-        try {
-            Image newImage = rotateImage(galleryImageView.getImage());
-            galleryImageView.setImage(newImage);
-        } catch (IOException | KFZClient.KFZServerException ex) {
-            Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String fullName = datesSlider.getValue();
+        DocumentViewer viewer = images.get(fullName);
+        viewer.rotate();
     }
-
-    // -----------------------------------
-    private void printMap() {
-//        for (String key : images.keySet()) {
-//            ImageOfGallery image = images.get(key);
-//            System.out.println(key + " " + image.getImageFullName()
-//                    + " del: " + image.isDeleted
-//                    + " add: " + image.isAdded
-//                    + " rot: " + image.isRotate
-//                    + " image: " + image.getImage());
-//        }
-    }
-
-    private Image rotateImage(Image img) throws IOException, KFZClient.KFZServerException {
-        BufferedImage bImage = SwingFXUtils.fromFXImage(img, null);
-
-        AffineTransform tx = new AffineTransform();
-        tx.translate(bImage.getHeight() / 2, bImage.getWidth() / 2);
-        tx.rotate(Math.PI / 2);
-        tx.translate(-bImage.getWidth() / 2, -bImage.getHeight() / 2);
-
-        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-
-        BufferedImage rotImage = new BufferedImage(bImage.getHeight(), bImage.getWidth(), bImage.getType());
-        op.filter(bImage, rotImage);
-
-        return SwingFXUtils.toFXImage(rotImage, null);
-    }
-
 
     public void sendDataToServer() {
-//        for (String key : images.keySet()) {
-//            ImageOfGallery imageData = images.get(key);
-//            PDFHelper pdfHelper = imageData.getPDFHelper();
-//            if (pdfHelper != null){
-//                if (imageData.isIsAdded()){
-//                    try {
-//                        String url = serviceURLPrefix + parameter + "pdf";
-//                        GeneralConfig.getInstance().getServerClient().post(url, Base64.getEncoder().encodeToString(pdfHelper.getContent()));
-//                    } catch (IOException | KFZClient.KFZServerException ex) {
-//                        Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                }
-////                else if (){
-////                    
-////                }
-//            }
-//            else{
-//                
-//            }
-//        }
+        images.keySet().stream().forEach((key) -> {
+            DocumentViewer viewer = images.get(key);
+            if (viewer != null) {
+                byte[] data = viewer.getContent();
+                try {
+                    if (viewer.isNew()) {
+                        GeneralConfig.getInstance().getServerClient().post(
+                                serviceURLPrefix + parameter,
+                                Base64.getEncoder().encodeToString(data)
+                        );
+                    } else if (viewer.deletedProperty().get()) {
+                        GeneralConfig.getInstance().getServerClient().call(serviceURLPrefix + key, "DELETE", null);
+                    } else if (viewer.isEdit()) {
+                        GeneralConfig.getInstance().getServerClient().call(
+                                serviceURLPrefix + key,
+                                "PUT",
+                                Base64.getEncoder().encodeToString(data)
+                        );
+                    }
+                } catch (IOException | KFZClient.KFZServerException ex) {
+                    Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
 
 }

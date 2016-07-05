@@ -11,19 +11,17 @@ import ambroafb.general.Utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -52,7 +50,7 @@ public class PDFViewer implements Initializable, DocumentViewer {
     private Map<Integer, Integer> rotatedImages;
     private Node root;
     private IntegerProperty indexProperty = new SimpleIntegerProperty(1);
-    private BooleanProperty deletedProperty;
+    private BooleanProperty deletedProperty = new SimpleBooleanProperty();
     private boolean isNew;
     private String fullName;
     
@@ -75,7 +73,6 @@ public class PDFViewer implements Initializable, DocumentViewer {
         indexProperty.addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                System.out.println("newValue: " + newValue);
                 if (newValue.intValue() >= 0 && newValue.intValue() < images.size()){
                     imageView.setImage(images.get(newValue.intValue()));
                 }
@@ -93,13 +90,11 @@ public class PDFViewer implements Initializable, DocumentViewer {
     
     @FXML
     private void upAction(ActionEvent event){
-        System.out.println("up action");
         indexProperty.set(indexProperty.get() - 1);
     }
     
     @FXML
     private void downAction(ActionEvent event){
-        System.out.println("down action");
         indexProperty.set(indexProperty.get() + 1);
     }
     

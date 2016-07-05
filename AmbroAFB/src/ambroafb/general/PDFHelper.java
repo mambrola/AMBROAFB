@@ -6,7 +6,6 @@
 package ambroafb.general;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
@@ -64,12 +63,20 @@ public class PDFHelper implements Closeable {
 
     public void replace(BufferedImage img, int index) throws IOException {
         PDPage old = doc.getPage(index);
-        PDPage newPage = new PDPage(new PDRectangle(img.getWidth(), img.getHeight()));
+        float width, height;
+        if (img.getWidth() > img.getHeight()) {
+            width = PDRectangle.LETTER.getHeight();
+            height = PDRectangle.LETTER.getWidth();
+        } else {
+            height = PDRectangle.LETTER.getHeight();
+            width = PDRectangle.LETTER.getWidth();
+        }
+        PDPage newPage = new PDPage(new PDRectangle(width, height));
         doc.getPages().insertAfter(newPage, old);
         doc.removePage(old);
         PDImageXObject pdImage = JPEGFactory.createFromImage(doc, img);
         try (PDPageContentStream contents = new PDPageContentStream(doc, newPage)) {
-            contents.drawImage(pdImage, 0, 0);
+            contents.drawImage(pdImage, 0, 0, width, height);
         }
     }
 
