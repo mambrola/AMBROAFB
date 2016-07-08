@@ -23,21 +23,21 @@
                     </image>
                 </ImageView>
             </HBox>
-            <!--<HBox fx:id="deletedImagePane" >-->
+            <HBox fx:id="deletedImagePane" >
                 <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
                     <image>
                         <Image url="/images/deleted.png" />
                     </image>
                 </ImageView>
-            <!--</HBox>-->
+            </HBox>
         </StackPane>
         <HBox fx:id="imageButtonsHBox" >
             <children>
                 <Button fx:id="deleteOrUndo" onAction="#deleteImage" >
                     <graphic>
-                        <ImageView fitWidth="16" fitHeight="16" >
+                        <ImageView fitWidth="20" fitHeight="20" >
                             <image>
-                                <Image url="/images/deleteImg.png" />
+                                <Image url="/images/delete_128.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -45,9 +45,9 @@
                 <Region HBox.hgrow="ALWAYS" />
                 <Button fx:id="upload" onAction="#uploadImage" >
                     <graphic>
-                        <ImageView fitWidth="16" fitHeight="16" >
+                        <ImageView fitWidth="20" fitHeight="20" >
                             <image>
-                                <Image url="/images/upload.png" />
+                                <Image url="/images/upload_128.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -55,9 +55,19 @@
                 <Region HBox.hgrow="ALWAYS" />
                 <Button fx:id="rotateToRight" onAction="#rotate" >
                     <graphic>
-                        <ImageView fitWidth="16" fitHeight="16" >
+                        <ImageView fitWidth="20" fitHeight="20" >
                             <image>
-                                <Image url="/images/rotate.png" />
+                                <Image url="/images/rotate_128.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="zoom" onAction="#zoom" >
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20" >
+                            <image>
+                                <Image url="/images/zoom_128.png" />
                             </image>
                         </ImageView>
                     </graphic>
