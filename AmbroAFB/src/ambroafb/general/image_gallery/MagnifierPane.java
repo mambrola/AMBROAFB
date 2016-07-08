@@ -15,7 +15,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.PerspectiveCameraBuilder;
+import javafx.scene.ParallelCamera;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.SnapshotResult;
@@ -26,11 +26,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.StackPaneBuilder;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.CircleBuilder;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.RectangleBuilder;
 import javafx.scene.transform.Scale;
 import javafx.stage.Popup;
 import javafx.util.Callback;
@@ -63,25 +60,18 @@ public class MagnifierPane extends StackPane {
         super();
         setCursor(Cursor.CROSSHAIR);
         final ImageView snapView = new ImageView();
-        final Callback<SnapshotResult, java.lang.Void> callBack = new Callback<SnapshotResult, Void>() {
-            @Override
-            public Void call(SnapshotResult result) {
-                return null;
-            }
-        };
+        final Callback<SnapshotResult, java.lang.Void> callBack = (SnapshotResult result) -> null;
         final Scale scale = new Scale();
         scale.xProperty().bind(scaleFactorProperty());
         scale.yProperty().bind(scaleFactorProperty());
         final SnapshotParameters param = new SnapshotParameters();
-        param.setCamera(PerspectiveCameraBuilder.create().fieldOfView(45).build());
+        param.setCamera(new ParallelCamera());
         param.setDepthBuffer(true);
         param.setTransform(scale);
 
-        final StackPane mainContent = StackPaneBuilder.create().build();
-        final Circle cEdge = CircleBuilder
-                .create()
-                .style("-fx-fill:radial-gradient(focus-angle 0deg , focus-distance 0% , center 50% 50% , radius 50% , #f0f8ff 93% , #696969 94% , #FaFaFa 97% , #808080);")
-                .build();
+        final StackPane mainContent = new StackPane();
+        final Circle cEdge = new Circle();
+        cEdge.setStyle("-fx-fill:radial-gradient(focus-angle 0deg , focus-distance 0% , center 50% 50% , radius 50% , #f0f8ff 93% , #696969 94% , #FaFaFa 97% , #808080);");
         cEdge.radiusProperty().bind(new DoubleBinding() {
             {
                 bind(radiusProperty(), frameWidthProperty());
@@ -93,7 +83,7 @@ public class MagnifierPane extends StackPane {
             }
         });
 
-        final Circle cClip = CircleBuilder.create().build();
+        final Circle cClip = new Circle();
         cClip.radiusProperty().bind(radiusProperty());
         cClip.translateXProperty().bind(radiusProperty());
         cClip.translateYProperty().bind(radiusProperty());
@@ -341,7 +331,7 @@ public class MagnifierPane extends StackPane {
         public Magnifier(DoubleProperty w, DoubleProperty h) {
             this.width.bind(w.multiply(2));
             this.height.bind(h.multiply(2));
-            this.clip = RectangleBuilder.create().build();
+            this.clip = new Rectangle();
             this.clip.widthProperty().bind(this.width);
             this.clip.heightProperty().bind(this.height);
             this.clip.translateXProperty().bind(transX);
