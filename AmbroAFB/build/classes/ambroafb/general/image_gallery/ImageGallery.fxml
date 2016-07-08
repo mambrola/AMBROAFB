@@ -23,13 +23,11 @@
                     </image>
                 </ImageView>
             </HBox>
-            <!--<HBox fx:id="deletedImagePane" >-->
-                <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
-                    <image>
-                        <Image url="/images/deleted.png" />
-                    </image>
-                </ImageView>
-            <!--</HBox>-->
+            <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
+                <image>
+                    <Image url="/images/deleted.png" />
+                </image>
+            </ImageView>
         </StackPane>
         <HBox fx:id="imageButtonsHBox" >
             <children>
@@ -37,7 +35,7 @@
                     <graphic>
                         <ImageView fitWidth="16" fitHeight="16" >
                             <image>
-                                <Image url="/images/deleteImg.png" />
+                                <Image url="/images/delete_128.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -47,7 +45,7 @@
                     <graphic>
                         <ImageView fitWidth="16" fitHeight="16" >
                             <image>
-                                <Image url="/images/upload.png" />
+                                <Image url="/images/upload_128.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -57,7 +55,7 @@
                     <graphic>
                         <ImageView fitWidth="16" fitHeight="16" >
                             <image>
-                                <Image url="/images/rotate.png" />
+                                <Image url="/images/rotate_128.png" />
                             </image>
                         </ImageView>
                     </graphic>
