@@ -212,10 +212,8 @@ public class ClientDialogController implements Initializable {
                                                             cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
                                                         .collect(Collectors.toList()), 
                                                         null);
-                Platform.runLater(() -> {
-                    imageGalleryController.sendingURLs("/clients/passport/", client.getEmail() + "/");
-                    imageGalleryController.dowloadDatesOfImagesFrom("/clients/passport/", client.getEmail() + "/all");
-                });
+                imageGalleryController.sendingURLs("/clients/passport/", client.getEmail() + "/");
+                imageGalleryController.dowloadDatesOfImagesFrom("/clients/passport/", client.getEmail() + "/all");
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }
