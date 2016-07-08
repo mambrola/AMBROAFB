@@ -17,7 +17,7 @@
     <children>
         <StackPane >
             <HBox fx:id="galleryImageFrame" >
-                <ImageView fx:id="galleryImageView" fitWidth="380" fitHeight="200" >
+                <ImageView fx:id="galleryImageView" preserveRatio="true" fitWidth="380" fitHeight="200" >
                     <image>
                         <Image url="/images/default_profile_image.png" />
                     </image>

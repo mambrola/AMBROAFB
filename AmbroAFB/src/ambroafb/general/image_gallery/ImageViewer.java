@@ -26,6 +26,7 @@ import javax.imageio.ImageIO;
  */
 public class ImageViewer implements DocumentViewer {
 
+    private MagnifierPane magnifier;
     private final ImageView imageView;
     private boolean isNew;
     private final BooleanProperty deletedProperty = new SimpleBooleanProperty();
@@ -38,11 +39,13 @@ public class ImageViewer implements DocumentViewer {
         imageView.setFitWidth(380);
         imageView.setFitHeight(200);
         fullName = imageFullName;
+        magnifier = new MagnifierPane();
+        magnifier.getChildren().setAll(imageView);
     }
 
     @Override
     public Node getComponent() {
-        return imageView;
+        return magnifier;
     }
 
     @Override

@@ -11,7 +11,9 @@
         xmlns:fx="http://javafx.com/fxml/1">
     
     <children>
-        <ImageView fx:id="imageView" preserveRatio="true" fitWidth="380" fitHeight="200" />
+        <ambroafb.general.image_gallery.MagnifierPane >
+            <ImageView fx:id="imageView" preserveRatio="true" fitWidth="380" fitHeight="200" />
+        </ambroafb.general.image_gallery.MagnifierPane>
         <VBox alignment="CENTER" >
             <children>
                 <Button fx:id="up"   text="▲" onAction="#upAction" />

@@ -46,7 +46,7 @@ public class MagnifierPane extends StackPane {
     private double minScale = 1, maxScale = 10;
 
     // Default values
-    private final double DEFAULT_RADIUS = 86.0D;
+    private final double DEFAULT_RADIUS = 150.0D;
     private final double DEFAULT_FRAME_WIDTH = 5.5D;
     private final double DEFAULT_SCALE_FACTOR = 3.0D;
     private final double DEFAULT_SCOPELINE_WIDTH = 1.5D;
@@ -123,22 +123,6 @@ public class MagnifierPane extends StackPane {
                     double h = clippedNode.getHeight();
                     clippedNode.transXProperty().set((clippedNode.transXProperty().get() + w / 2) * ratio - w / 2);
                     clippedNode.transYProperty().set((clippedNode.transYProperty().get() + h / 2) * ratio - h / 2);
-                }
-            }
-        });
-
-        // Adding mask implementation
-        final StackPane mask = new StackPane();
-        getChildren().add(mask);
-        final SimpleBooleanProperty maskFlag = new SimpleBooleanProperty(true);
-        getChildren().addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(javafx.collections.ListChangeListener.Change<? extends Node> param) {
-                if (maskFlag.get()) {
-                    maskFlag.set(false);
-                    getChildren().remove(mask);
-                    getChildren().add(mask);
-                    maskFlag.set(true);
                 }
             }
         });

@@ -71,7 +71,7 @@ public class ImageGalleryController implements Initializable {
     private ListSpinner<String> datesSlider;
 
     
-    private MagnifierPane magnifier;
+//    private MagnifierPane magnifier;
     private ObservableList<String> datesSliderElems;
     private Map<String, DocumentViewer> viewersMap;
     private String undoOrDeleteImagePath;
@@ -92,11 +92,10 @@ public class ImageGalleryController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        galleryImageView.setPreserveRatio(true);
-        magnifier = new MagnifierPane();
-        magnifier.getChildren().setAll(galleryImageView);
-        magnifier.setRadius(150D);
-        galleryImageFrame.getChildren().setAll(magnifier);
+//        galleryImageView.setPreserveRatio(true);
+//        magnifier = new MagnifierPane();
+//        magnifier.getChildren().setAll(galleryImageView);
+//        galleryImageFrame.getChildren().setAll(magnifier);
         undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
         viewersMap = new HashMap<>();
         datesSliderElems = FXCollections.observableArrayList();
@@ -178,7 +177,7 @@ public class ImageGalleryController implements Initializable {
             }
             if (viewer != null) {
                 final DocumentViewer dViewer = viewer;
-                magnifier.getChildren().setAll(viewer.getComponent());
+                galleryImageFrame.getChildren().setAll(viewer.getComponent());
                 deletedImageView.visibleProperty().unbind();
                 deletedImageView.visibleProperty().bind(viewer.deletedProperty());
                 ImageView icon = (ImageView) deleteOrUndo.getGraphic();
@@ -227,7 +226,7 @@ public class ImageGalleryController implements Initializable {
                 DocumentViewer viewer = (fileName.endsWith(".pdf")) ? new PDFViewer(stream, fileName)
                                                                     : new ImageViewer(stream, fileName);
                 viewer.setIsNew(true);
-                magnifier.getChildren().setAll(viewer.getComponent());
+                galleryImageFrame.getChildren().setAll(viewer.getComponent());
                 galleryImageView.setPreserveRatio(true);
                 
                 Long currTime = new Date().getTime();
