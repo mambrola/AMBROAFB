@@ -227,7 +227,7 @@ public class ImageGalleryController implements Initializable {
                 DocumentViewer viewer = (fileName.endsWith(".pdf")) ? new PDFViewer(stream, fileName)
                                                                     : new ImageViewer(stream, fileName);
                 viewer.setIsNew(true);
-                galleryImageFrame.getChildren().setAll(viewer.getComponent());
+                magnifier.getChildren().setAll(viewer.getComponent());
                 galleryImageView.setPreserveRatio(true);
                 
                 Long currTime = new Date().getTime();
@@ -274,7 +274,7 @@ public class ImageGalleryController implements Initializable {
                 try {
                     if (viewer.isNew()) {
                         GeneralConfig.getInstance().getServerClient().post(
-                                serviceURLPrefix + parameter,
+                                serviceURLPrefix + parameter + key.substring(key.lastIndexOf(".") + 1),
                                 Base64.getEncoder().encodeToString(data)
                         );
                     } else if (viewer.deletedProperty().get()) {
