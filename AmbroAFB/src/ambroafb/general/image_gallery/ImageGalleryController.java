@@ -71,8 +71,8 @@ public class ImageGalleryController implements Initializable {
     private String serviceURLPrefix;
     private String parameter;
 
-    private static final String GALLERY_DELETE_BUTTON_IMAGE_NAME = "/images/deleteImg.png";
-    private static final String GALLERY_UNDO_BUTTON_IMAGE_NAME = "/images/undo.png";
+    private static final String GALLERY_DELETE_BUTTON_IMAGE_NAME = "/images/delete_128.png";
+    private static final String GALLERY_UNDO_BUTTON_IMAGE_NAME = "/images/undo_128.png";
 
     /**
      * Initializes the controller class.
@@ -190,8 +190,7 @@ public class ImageGalleryController implements Initializable {
 
     @FXML
     private void uploadImage(ActionEvent event) {
-        System.out.println("upload");
-        Stage owner = (Stage) galleryImageView.getScene().getWindow();
+        Stage owner = (Stage) galleryImageFrame.getScene().getWindow();
         List<File> files = fileChooser.showOpenMultipleDialog(owner);
         if (files == null) {
             return;
@@ -223,6 +222,11 @@ public class ImageGalleryController implements Initializable {
         String fullName = datesSlider.getValue();
         DocumentViewer viewer = images.get(fullName);
         viewer.rotate();
+    }
+    
+    @FXML
+    private void zoom(ActionEvent event){
+        
     }
 
     public void sendDataToServer() {
