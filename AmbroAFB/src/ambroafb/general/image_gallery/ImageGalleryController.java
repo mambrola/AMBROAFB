@@ -70,6 +70,8 @@ public class ImageGalleryController implements Initializable {
     @FXML
     private ListSpinner<String> datesSlider;
 
+    
+    private MagnifierPane magnifier;
     private ObservableList<String> datesSliderElems;
     private Map<String, DocumentViewer> viewersMap;
     private String undoOrDeleteImagePath;
@@ -91,6 +93,10 @@ public class ImageGalleryController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         galleryImageView.setPreserveRatio(true);
+        magnifier = new MagnifierPane();
+        magnifier.getChildren().setAll(galleryImageView);
+        magnifier.setRadius(150D);
+        galleryImageFrame.getChildren().setAll(magnifier);
         undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
         viewersMap = new HashMap<>();
         datesSliderElems = FXCollections.observableArrayList();
@@ -172,7 +178,7 @@ public class ImageGalleryController implements Initializable {
             }
             if (viewer != null) {
                 final DocumentViewer dViewer = viewer;
-                galleryImageFrame.getChildren().setAll(viewer.getComponent());
+                magnifier.getChildren().setAll(viewer.getComponent());
                 deletedImageView.visibleProperty().unbind();
                 deletedImageView.visibleProperty().bind(viewer.deletedProperty());
                 ImageView icon = (ImageView) deleteOrUndo.getGraphic();
