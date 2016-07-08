@@ -260,11 +260,6 @@ public class ImageGalleryController implements Initializable {
         viewer.rotate();
     }
     
-    @FXML
-    private void zoom(ActionEvent event){
-        
-    }
-
     public void sendDataToServer() {
         viewersMap.keySet().stream().forEach((key) -> {
             DocumentViewer viewer = viewersMap.get(key);

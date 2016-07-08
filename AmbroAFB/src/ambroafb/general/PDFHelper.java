@@ -28,7 +28,7 @@ import org.apache.pdfbox.rendering.PDFRenderer;
  */
 public class PDFHelper implements Closeable {
 
-    private final int DPI = 300;
+    private final int DPI = 100;
     private final PDDocument doc;
     private final PDFRenderer rend;
 
