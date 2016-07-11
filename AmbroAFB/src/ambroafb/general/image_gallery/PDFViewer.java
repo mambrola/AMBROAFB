@@ -26,6 +26,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -63,6 +64,14 @@ public class PDFViewer implements Initializable, DocumentViewer {
             Scene scene = Utils.createScene("/ambroafb/general/image_gallery/PDFViewer.fxml", (Object)this);
             root = scene.getRoot();
             fullName = pdfFullName;
+            
+            up.setOnAction((ActionEvent event) -> {
+                indexProperty.set(indexProperty.get() - 1);
+            });
+            
+            down.setOnAction((ActionEvent event) -> {
+                indexProperty.set(indexProperty.get() + 1);
+            });
         } catch (IOException ex) {
             Logger.getLogger(PDFViewer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -70,12 +79,9 @@ public class PDFViewer implements Initializable, DocumentViewer {
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        indexProperty.addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if (newValue.intValue() >= 0 && newValue.intValue() < images.size()){
-                    imageView.setImage(images.get(newValue.intValue()));
-                }
+        indexProperty.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if (newValue.intValue() >= 0 && newValue.intValue() < images.size()){
+                imageView.setImage(images.get(newValue.intValue()));
             }
         });
         up.disableProperty().bind(Bindings.createBooleanBinding(()->{
@@ -86,16 +92,6 @@ public class PDFViewer implements Initializable, DocumentViewer {
             return indexProperty.get()>=images.size()-1;
         }, indexProperty));
         indexProperty.set(0);
-    }
-    
-    @FXML
-    private void upAction(ActionEvent event){
-        indexProperty.set(indexProperty.get() - 1);
-    }
-    
-    @FXML
-    private void downAction(ActionEvent event){
-        indexProperty.set(indexProperty.get() + 1);
     }
     
     @Override

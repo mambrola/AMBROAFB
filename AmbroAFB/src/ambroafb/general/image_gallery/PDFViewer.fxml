@@ -8,7 +8,7 @@
 <?import javafx.scene.image.*?>
 
 <HBox   xmlns="http://javafx.com/javafx/8"
-        xmlns:fx="http://javafx.com/fxml/1">
+        xmlns:fx="http://javafx.com/fxml/1" >
     
     <children>
         <ambroafb.general.image_gallery.MagnifierPane >
@@ -16,8 +16,8 @@
         </ambroafb.general.image_gallery.MagnifierPane>
         <VBox alignment="CENTER" >
             <children>
-                <Button fx:id="up"   text="▲" onAction="#upAction" />
-                <Button fx:id="down" text="▼" onAction="#downAction" />
+                <Button fx:id="up"   text="▲" />
+                <Button fx:id="down" text="▼" />
             </children>
         </VBox>
     </children>
