@@ -19,6 +19,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,6 +48,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import javax.imageio.ImageIO;
+import jdk.nashorn.internal.ir.ContinueNode;
 import jfxtras.scene.control.ListSpinner;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,7 +72,6 @@ public class ImageGalleryController implements Initializable {
     @FXML
     private ListSpinner<String> datesSlider;
 
-    
 //    private MagnifierPane magnifier;
     private ObservableList<String> datesSliderElems;
     private Map<String, DocumentViewer> viewersMap;
@@ -83,6 +84,7 @@ public class ImageGalleryController implements Initializable {
 
     private static final String GALLERY_DELETE_BUTTON_IMAGE_NAME = "/images/delete_128.png";
     private static final String GALLERY_UNDO_BUTTON_IMAGE_NAME = "/images/undo_128.png";
+    private static final Long PDF_AVALILABLE_BYTES = 50000L;
 
     /**
      * Initializes the controller class.
@@ -122,7 +124,7 @@ public class ImageGalleryController implements Initializable {
             }
         });
     }
-    
+
     public void sendingURLs(String prefix, String parameter) {
         serviceURLPrefix = prefix;
         this.parameter = parameter;
@@ -130,7 +132,7 @@ public class ImageGalleryController implements Initializable {
 
     public void dowloadDatesOfImagesFrom(String urlPrefix, String parameter) {
         processAndSaveDatesFrom(urlPrefix + parameter);
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             datesSlider.indexProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
                 showImage(urlPrefix, newValue);
             });
@@ -138,7 +140,7 @@ public class ImageGalleryController implements Initializable {
                 datesSlider.setIndex(0);
             }
         });
-        
+
     }
 
     private void processAndSaveDatesFrom(String url) {
@@ -150,7 +152,7 @@ public class ImageGalleryController implements Initializable {
                 datesSliderElems.add(fullName);
                 viewersMap.put(fullName, null);
             }
-            Platform.runLater(()->{
+            Platform.runLater(() -> {
                 datesSlider.setItems(datesSliderElems);
             });
         } catch (KFZClient.KFZServerException ex) {
@@ -195,7 +197,7 @@ public class ImageGalleryController implements Initializable {
     private void deleteImage(ActionEvent event) {
         String fullName = datesSlider.getValue();
         DocumentViewer viewer = viewersMap.get(fullName);
-        if(viewer != null){
+        if (viewer != null) {
             viewer.deleteOrUndo();
         }
     }
@@ -215,6 +217,7 @@ public class ImageGalleryController implements Initializable {
         if (files == null) {
             return;
         }
+        List<String> largeFilesPathes = new ArrayList<>();
         files.stream().map((file) -> {
             fileChooser.setInitialDirectory(file.getParentFile());
             return file;
@@ -223,23 +226,34 @@ public class ImageGalleryController implements Initializable {
             try {
                 String fileName = file.getName();
                 stream = new FileInputStream(file);
-                DocumentViewer viewer = (fileName.endsWith(".pdf")) ? new PDFViewer(stream, fileName)
-                                                                    : new ImageViewer(stream, fileName);
-                viewer.setIsNew(true);
-                galleryImageFrame.getChildren().setAll(viewer.getComponent());
-                galleryImageView.setPreserveRatio(true);
-                
-                Long currTime = new Date().getTime();
-                String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
-                viewersMap.put(fileFullName, viewer);
-                if (datesSlider.getItems() == null){
-                    datesSliderElems.add(fileFullName);
-                    datesSlider.setItems(datesSliderElems);
-                    datesSlider.setIndex(0);
+//                DocumentViewer viewer = (fileName.endsWith(".pdf")) ? new PDFViewer(stream, fileName)
+//                                                                    : new ImageViewer(stream, fileName);
+                DocumentViewer viewer = null;
+                if (fileName.endsWith(".pdf")) {
+                    System.out.println(file.getName() + " length is -> " + file.length());
+                    if (file.length() >= PDF_AVALILABLE_BYTES) {
+                        largeFilesPathes.add(fileName);
+                    }else
+                        viewer = new PDFViewer(stream, fileName);
+                } else {
+                    viewer = new ImageViewer(stream, fileName);
                 }
-                else {
-                    datesSliderElems.add(fileFullName);
-                    datesSlider.setIndex(datesSliderElems.size() - 1);
+                if (viewer != null) {
+                    viewer.setIsNew(true);
+                    galleryImageFrame.getChildren().setAll(viewer.getComponent());
+                    galleryImageView.setPreserveRatio(true);
+
+                    Long currTime = new Date().getTime();
+                    String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
+                    viewersMap.put(fileFullName, viewer);
+                    if (datesSlider.getItems() == null) {
+                        datesSliderElems.add(fileFullName);
+                        datesSlider.setItems(datesSliderElems);
+                        datesSlider.setIndex(0);
+                    } else {
+                        datesSliderElems.add(fileFullName);
+                        datesSlider.setIndex(datesSliderElems.size() - 1);
+                    }
                 }
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
@@ -257,9 +271,11 @@ public class ImageGalleryController implements Initializable {
     private void rotate(ActionEvent event) {
         String fullName = datesSlider.getValue();
         DocumentViewer viewer = viewersMap.get(fullName);
-        viewer.rotate();
+        if (viewer != null){
+            viewer.rotate();
+        }
     }
-    
+
     public void sendDataToServer() {
         viewersMap.keySet().stream().forEach((key) -> {
             DocumentViewer viewer = viewersMap.get(key);

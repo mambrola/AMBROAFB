@@ -1,7 +1,7 @@
 @import url("/styles/css/core.css");
 #formPane {
-  -fx-min-height: 660;
-  -fx-max-height: 660;
+  -fx-min-height: 732;
+  -fx-max-height: 732;
   -fx-min-width: 820;
   -fx-max-width: 820;
   -fx-padding: 10;
@@ -39,7 +39,7 @@
 }
 .doubleHeight {
   /*-fx-background-color: yellow;*/
-  -fx-pref-height: 146.66666667;
+  -fx-pref-height: 162.66666667;
 }
 .button {
   -fx-font-weight: bold;

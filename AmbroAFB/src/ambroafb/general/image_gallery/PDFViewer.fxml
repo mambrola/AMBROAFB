@@ -12,7 +12,7 @@
     
     <children>
         <ambroafb.general.image_gallery.MagnifierPane >
-            <ImageView fx:id="imageView" preserveRatio="true" fitWidth="380" fitHeight="200" />
+            <ImageView fx:id="imageView" preserveRatio="true" fitWidth="380" fitHeight="270" />
         </ambroafb.general.image_gallery.MagnifierPane>
         <VBox alignment="CENTER" >
             <children>
