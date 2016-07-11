@@ -35,6 +35,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.CssMetaData;
+import javafx.css.Styleable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -97,7 +99,6 @@ public class ImageGalleryController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        masker.setStyle("-fx-background-color: red;");
         defaultPages = 10;
         defaultFileChooserPath = GeneralConfig.prefs.get(UPLOAD_DIRECTORY_PATH, null);
         undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
@@ -136,6 +137,19 @@ public class ImageGalleryController implements Initializable {
         processAndSaveDatesFrom(urlPrefix + parameter);
         Platform.runLater(() -> {
             datesSlider.indexProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
+                if (newValue == 0){
+                    System.out.println("newValue == 0");
+                    datesSlider.setStyle(".left-arrow {-fx-background-color: red;}");
+                }
+                else if (newValue == datesSliderElems.size() - 1){
+                    System.out.println("newValue == size - 1");
+                    datesSlider.setStyle(".right-arrow {-fx-background-color: red;}");
+                }
+                else {
+                    System.out.println("else");
+                    datesSlider.setStyle(".ListSpinner .left-arrow {-fx-background-color: black;}");
+                    datesSlider.setStyle(".ListSpinner .right-arrow {-fx-background-color: black;}");
+                }
                 new Thread(() -> {
                     showImage(urlPrefix, newValue);
                 }).start();
