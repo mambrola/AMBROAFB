@@ -86,7 +86,7 @@ public class DialogOkayCancelController implements Initializable {
                 cancel.setOnAction((ActionEvent event) -> {
                     boolean anyFieldWasChanged = false;
                     try {
-                        anyFieldWasChanged = (boolean)cancel.getScene().getProperties().get("controller").getClass().getMethod("anyFieldChanged").invoke(cancel.getScene().getProperties().get("controller"));
+                        anyFieldWasChanged = (boolean)cancel.getScene().getProperties().get("controller").getClass().getMethod("anyComponentChanged").invoke(cancel.getScene().getProperties().get("controller"));
                     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(DialogOkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
                     if(!anyFieldWasChanged || new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
                         operationCanceled();

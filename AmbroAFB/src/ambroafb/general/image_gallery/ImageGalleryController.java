@@ -5,10 +5,11 @@
  */
 package ambroafb.general.image_gallery;
 
+import ambroafb.AmbroAFB;
+import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.PDFHelper;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,7 +18,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -27,18 +27,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -47,9 +47,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import javax.imageio.ImageIO;
-import jdk.nashorn.internal.ir.ContinueNode;
 import jfxtras.scene.control.ListSpinner;
+import org.controlsfx.control.MaskerPane;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -71,8 +70,10 @@ public class ImageGalleryController implements Initializable {
 
     @FXML
     private ListSpinner<String> datesSlider;
+    
+    @FXML
+    private MaskerPane masker;
 
-//    private MagnifierPane magnifier;
     private ObservableList<String> datesSliderElems;
     private Map<String, DocumentViewer> viewersMap;
     private String undoOrDeleteImagePath;
@@ -81,11 +82,13 @@ public class ImageGalleryController implements Initializable {
     private FileChooser fileChooser;
     private String serviceURLPrefix;
     private String parameter;
+    private int defaultPages;
+    private String defaultFileChooserPath;
 
     private static final String GALLERY_DELETE_BUTTON_IMAGE_NAME = "/images/delete_128.png";
     private static final String GALLERY_UNDO_BUTTON_IMAGE_NAME = "/images/undo_128.png";
-    private static final Long PDF_AVALILABLE_BYTES = 50000L;
-
+    private static final String UPLOAD_DIRECTORY_PATH = "upload_directory";
+    
     /**
      * Initializes the controller class.
      *
@@ -94,10 +97,9 @@ public class ImageGalleryController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        galleryImageView.setPreserveRatio(true);
-//        magnifier = new MagnifierPane();
-//        magnifier.getChildren().setAll(galleryImageView);
-//        galleryImageFrame.getChildren().setAll(magnifier);
+//        masker.setStyle("-fx-background-color: red;");
+        defaultPages = 10;
+        defaultFileChooserPath = GeneralConfig.prefs.get(UPLOAD_DIRECTORY_PATH, null);
         undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
         viewersMap = new HashMap<>();
         datesSliderElems = FXCollections.observableArrayList();
@@ -134,7 +136,9 @@ public class ImageGalleryController implements Initializable {
         processAndSaveDatesFrom(urlPrefix + parameter);
         Platform.runLater(() -> {
             datesSlider.indexProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
-                showImage(urlPrefix, newValue);
+                new Thread(() -> {
+                    showImage(urlPrefix, newValue);
+                }).start();
             });
             if (datesSlider.getItems() != null && !datesSlider.getItems().isEmpty()) {
                 datesSlider.setIndex(0);
@@ -165,6 +169,7 @@ public class ImageGalleryController implements Initializable {
     }
 
     private void showImage(String urlPrefix, int index) {
+        masker.setVisible(true);
         if (index >= 0 && index < datesSliderElems.size()) {
             String fullName = datesSliderElems.get(index);
             DocumentViewer viewer = viewersMap.get(fullName);
@@ -179,16 +184,18 @@ public class ImageGalleryController implements Initializable {
             }
             if (viewer != null) {
                 final DocumentViewer dViewer = viewer;
-                galleryImageFrame.getChildren().setAll(viewer.getComponent());
-                deletedImageView.visibleProperty().unbind();
-                deletedImageView.visibleProperty().bind(viewer.deletedProperty());
-                ImageView icon = (ImageView) deleteOrUndo.getGraphic();
-                icon.imageProperty().unbind();
-                icon.imageProperty().bind(Bindings.createObjectBinding(() -> {
-                    String url = dViewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
-                    return new Image(getClass().getResourceAsStream(url));
-                }, viewer.deletedProperty()));
-
+                Platform.runLater(() -> {
+                    galleryImageFrame.getChildren().setAll(dViewer.getComponent());
+                    deletedImageView.visibleProperty().unbind();
+                    deletedImageView.visibleProperty().bind(dViewer.deletedProperty());
+                    ImageView icon = (ImageView) deleteOrUndo.getGraphic();
+                    icon.imageProperty().unbind();
+                    icon.imageProperty().bind(Bindings.createObjectBinding(() -> {
+                        String url = dViewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
+                        return new Image(getClass().getResourceAsStream(url));
+                    }, dViewer.deletedProperty()));
+                });
+                masker.setVisible(false);
             }
         }
     }
@@ -213,65 +220,76 @@ public class ImageGalleryController implements Initializable {
     @FXML
     private void uploadImage(ActionEvent event) {
         Stage owner = (Stage) galleryImageFrame.getScene().getWindow();
-        List<File> files = fileChooser.showOpenMultipleDialog(owner);
-        if (files == null) {
-            return;
+        if (defaultFileChooserPath != null){
+            fileChooser.setInitialDirectory(new File(defaultFileChooserPath));
         }
-        List<String> largeFilesPathes = new ArrayList<>();
-        files.stream().map((file) -> {
-            fileChooser.setInitialDirectory(file.getParentFile());
-            return file;
-        }).forEach((file) -> {
-            InputStream stream = null;
-            try {
-                String fileName = file.getName();
-                stream = new FileInputStream(file);
-//                DocumentViewer viewer = (fileName.endsWith(".pdf")) ? new PDFViewer(stream, fileName)
-//                                                                    : new ImageViewer(stream, fileName);
-                DocumentViewer viewer = null;
-                if (fileName.endsWith(".pdf")) {
-                    System.out.println(file.getName() + " length is -> " + file.length());
-                    if (file.length() >= PDF_AVALILABLE_BYTES) {
-                        largeFilesPathes.add(fileName);
-                    }else
-                        viewer = new PDFViewer(stream, fileName);
-                } else {
-                    viewer = new ImageViewer(stream, fileName);
-                }
-                if (viewer != null) {
-                    viewer.setIsNew(true);
-                    galleryImageFrame.getChildren().setAll(viewer.getComponent());
-                    galleryImageView.setPreserveRatio(true);
-
-                    Long currTime = new Date().getTime();
-                    String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
-                    viewersMap.put(fileFullName, viewer);
-                    if (datesSlider.getItems() == null) {
-                        datesSliderElems.add(fileFullName);
-                        datesSlider.setItems(datesSliderElems);
-                        datesSlider.setIndex(0);
-                    } else {
-                        datesSliderElems.add(fileFullName);
-                        datesSlider.setIndex(datesSliderElems.size() - 1);
-                    }
-                }
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
+        List<File> files = fileChooser.showOpenMultipleDialog(owner);
+        if (files == null) return;
+        
+        defaultFileChooserPath = files.get(files.size() - 1).getParentFile().getPath();
+        GeneralConfig.prefs.put(UPLOAD_DIRECTORY_PATH, defaultFileChooserPath);
+        
+        List<String> largePDFsNames = new ArrayList<>();
+        new Thread(() -> {
+            for (File file : files) {
                 try {
-                    stream.close();
+                    String fileName = file.getName();
+                    DocumentViewer viewer;
+                    if (fileName.substring(fileName.lastIndexOf(".")).toLowerCase().equals(".pdf")) {
+                        PDFHelper pdfHelper = new PDFHelper(new FileInputStream(file));
+                        if(pdfHelper.getPageCount() > defaultPages){
+                            largePDFsNames.add(file.getName());
+                            continue;
+                        }
+                        viewer = new PDFViewer(new FileInputStream(file), fileName);
+                    } else {
+                        viewer = new ImageViewer(new FileInputStream(file), fileName);
+                    }
+                    viewer.setIsNew(true);
+                    Platform.runLater(() -> {
+                        galleryImageFrame.getChildren().setAll(viewer.getComponent());
+                        galleryImageView.setPreserveRatio(true);
+                        proccessViewer(viewer, fileName);
+                    });
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        });
+            showLargePDFWarning(largePDFsNames);
+        }).start();
     }
-
+    
+    private void showLargePDFWarning(List<String> largePDFsNames) {
+        String pdfs = GeneralConfig.getInstance().getTitleFor("large_pdfs") + defaultPages + ": \n";
+        String separator = ",";
+        pdfs = largePDFsNames.stream().map((largePDFName) -> largePDFName + separator).reduce(pdfs, String::concat);
+        if (pdfs.contains(separator)){
+            new AlertMessage(Alert.AlertType.WARNING, null, pdfs.substring(0, pdfs.length() - 1)).showAlert();
+        }
+    }
+    
+    private void proccessViewer(DocumentViewer viewer, String fileName){
+        Long currTime = new Date().getTime();
+        String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
+        viewersMap.put(fileFullName, viewer);
+        int index = 0;
+        if (datesSlider.getItems() == null) {
+            datesSliderElems.add(fileFullName);
+            datesSlider.setItems(datesSliderElems);
+        } else {
+            datesSliderElems.add(fileFullName);
+            index = datesSliderElems.size() - 1;
+        }
+        datesSlider.setIndex(index);
+    }
+    
     @FXML
     private void rotate(ActionEvent event) {
         String fullName = datesSlider.getValue();
         DocumentViewer viewer = viewersMap.get(fullName);
-        if (viewer != null){
+        if (viewer != null) {
             viewer.rotate();
         }
     }
@@ -303,4 +321,18 @@ public class ImageGalleryController implements Initializable {
         });
     }
 
+    /**
+     * The method returns true if user upload new file, rotate or delete existed. 
+     * False if state does not change.
+     * @return 
+     */
+    public boolean anyViewerChanged(){
+        boolean result = false;
+        for (DocumentViewer viewer : viewersMap.values()) {
+            if (viewer == null) continue;
+            result = viewer.isNew() || viewer.isEdit()|| viewer.deletedProperty().get();
+            if (result) break;
+        }
+        return result;
+    }
 }

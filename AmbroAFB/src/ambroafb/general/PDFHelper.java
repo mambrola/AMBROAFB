@@ -31,7 +31,7 @@ public class PDFHelper implements Closeable {
     private final int DPI = 100;
     private final PDDocument doc;
     private final PDFRenderer rend;
-
+    
     public PDFHelper(InputStream in) throws IOException {
         doc = PDDocument.load(in);
         rend = new PDFRenderer(doc);

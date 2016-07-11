@@ -6,7 +6,6 @@
 package ambroafb.clients.dialog;
 
 import ambro.ADatePicker;
-import ambro.ANodeSlider;
 import ambroafb.clients.Client;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
@@ -35,12 +34,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -140,8 +133,8 @@ public class ClientDialogController implements Initializable {
         this.clientBackup = backupClient;
     }
     
-    public boolean anyFieldChanged(){
-        return !client.compares(clientBackup);
+    public boolean anyComponentChanged(){
+        return !client.compares(clientBackup) || imageGalleryController.anyViewerChanged();
     }
     
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
@@ -195,7 +188,7 @@ public class ClientDialogController implements Initializable {
     
     private class BackgroundAccessToDB implements Runnable {
 
-        private String path;
+        private final String path;
         
         public BackgroundAccessToDB(String servicePath){
             path = servicePath;
