@@ -98,6 +98,12 @@ public class ClientDialogController implements Initializable {
         juridical.setOnAction(this::switchJuridical);
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
+//        imageGalleryController.setServiceURLPrefix("/clients/passport/");
+//        imageGalleryController.uploadServiceURLProperty().bind(client.emailProperty());
+        
+//        imageGalleryController.downloadServiceURLProperty().bind(observable);
+//        imageGalleryController.sendingURLs("/clients/passport/", client.getEmail() + "/");
+//        imageGalleryController.downloadDatesOfImagesFrom("/clients/passport/", client.getEmail() + "/all");
     }
     
     public void bindClient(Client client) {
@@ -206,7 +212,7 @@ public class ClientDialogController implements Initializable {
                                                         .collect(Collectors.toList()), 
                                                         null);
                 imageGalleryController.sendingURLs("/clients/passport/", client.getEmail() + "/");
-                imageGalleryController.dowloadDatesOfImagesFrom("/clients/passport/", client.getEmail() + "/all");
+                imageGalleryController.downloadDatesOfImagesFrom("/clients/passport/", client.getEmail() + "/all");
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }

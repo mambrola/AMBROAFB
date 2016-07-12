@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
 <?import ambro.*?>
+<?import ambroafb.general.image_gallery.*?>
 
 
 <VBox   fx:id="imagesGalleryRoot" 
@@ -62,7 +63,6 @@
                     </graphic>
                 </Button>
                 <Region HBox.hgrow="ALWAYS" />
-                <jfxtras.scene.control.ListSpinner fx:id="datesSlider" /> 
             </children>
         </HBox>
     </children>

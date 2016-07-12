@@ -5,7 +5,6 @@
  */
 package ambroafb.general.image_gallery;
 
-import ambroafb.AmbroAFB;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
@@ -14,7 +13,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
@@ -29,19 +27,20 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.CssMetaData;
-import javafx.css.Styleable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -68,11 +67,8 @@ public class ImageGalleryController implements Initializable {
     private ImageView galleryImageView, deletedImageView;
 
     @FXML
-    private HBox galleryImageFrame;
+    private HBox imageButtonsHBox, galleryImageFrame;
 
-    @FXML
-    private ListSpinner<String> datesSlider;
-    
     @FXML
     private MaskerPane masker;
 
@@ -86,10 +82,16 @@ public class ImageGalleryController implements Initializable {
     private String parameter;
     private int defaultPages;
     private String defaultFileChooserPath;
+    private MessageSlider msgSlider;
 
     private static final String GALLERY_DELETE_BUTTON_IMAGE_NAME = "/images/delete_128.png";
     private static final String GALLERY_UNDO_BUTTON_IMAGE_NAME = "/images/undo_128.png";
     private static final String UPLOAD_DIRECTORY_PATH = "upload_directory";
+    
+//    private StringProperty uploadingURLProperty = new SimpleStringProperty();
+//    private StringProperty downloadingURLProperty = new SimpleStringProperty();
+    
+    private StringConverter<String> con;
     
     /**
      * Initializes the controller class.
@@ -109,8 +111,26 @@ public class ImageGalleryController implements Initializable {
         fileChooser = new FileChooser();
         ExtensionFilter filter = new ExtensionFilter("Images files (*.png, *.jpg, *.pdf)", "*.png", "*.jpg", "*.pdf");
         fileChooser.getExtensionFilters().add(filter);
-        datesSlider.setStringConverter(new StringConverter<String>() {
-            @Override
+        con = new MyStringConverter();
+        msgSlider = new MessageSlider(datesSliderElems, con, rb);
+        imageButtonsHBox.getChildren().add(msgSlider);
+    }
+
+//    public StringProperty uploadServiceURLProperty(){
+//        return uploadingURLProperty;
+//    }
+//    
+//    public StringProperty downloadServiceURLProperty(){
+//        return downloadingURLProperty;
+//    }
+//    
+//    public void setServiceURLPrefix(String serviceURLPrefix){
+//        this.serviceURLPrefix = serviceURLPrefix;
+//    }
+    
+    private class MyStringConverter extends StringConverter<String> {
+
+        @Override
             public String toString(String object) {
                 String fullName = object;
                 int start = fullName.indexOf("_") + 1;
@@ -125,37 +145,26 @@ public class ImageGalleryController implements Initializable {
             public String fromString(String string) {
                 return string;
             }
-        });
+        
     }
-
+    
     public void sendingURLs(String prefix, String parameter) {
         serviceURLPrefix = prefix;
         this.parameter = parameter;
     }
 
-    public void dowloadDatesOfImagesFrom(String urlPrefix, String parameter) {
-        processAndSaveDatesFrom(urlPrefix + parameter);
+    public void downloadDatesOfImagesFrom(String urlPrefix, String parameter) {
+//        new Thread(() -> {
+            processAndSaveDatesFrom(urlPrefix + parameter);
+//        }).start();
         Platform.runLater(() -> {
-            datesSlider.indexProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
-                if (newValue == 0){
-                    System.out.println("newValue == 0");
-                    datesSlider.setStyle(".left-arrow {-fx-background-color: red;}");
-                }
-                else if (newValue == datesSliderElems.size() - 1){
-                    System.out.println("newValue == size - 1");
-                    datesSlider.setStyle(".right-arrow {-fx-background-color: red;}");
-                }
-                else {
-                    System.out.println("else");
-                    datesSlider.setStyle(".ListSpinner .left-arrow {-fx-background-color: black;}");
-                    datesSlider.setStyle(".ListSpinner .right-arrow {-fx-background-color: black;}");
-                }
+            msgSlider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
                 new Thread(() -> {
-                    showImage(urlPrefix, newValue);
+                    showImage(urlPrefix, newValue.intValue());
                 }).start();
             });
-            if (datesSlider.getItems() != null && !datesSlider.getItems().isEmpty()) {
-                datesSlider.setIndex(0);
+            if (datesSliderElems != null && !datesSliderElems.isEmpty()) {
+                msgSlider.setValueOn(0);
             }
         });
 
@@ -170,9 +179,6 @@ public class ImageGalleryController implements Initializable {
                 datesSliderElems.add(fullName);
                 viewersMap.put(fullName, null);
             }
-            Platform.runLater(() -> {
-                datesSlider.setItems(datesSliderElems);
-            });
         } catch (KFZClient.KFZServerException ex) {
             System.out.println("ex code: " + ex.getStatusCode());
             if (ex.getStatusCode() == 404) {
@@ -216,7 +222,7 @@ public class ImageGalleryController implements Initializable {
 
     @FXML
     private void deleteImage(ActionEvent event) {
-        String fullName = datesSlider.getValue();
+        String fullName = msgSlider.getValue();
         DocumentViewer viewer = viewersMap.get(fullName);
         if (viewer != null) {
             viewer.deleteOrUndo();
@@ -288,20 +294,12 @@ public class ImageGalleryController implements Initializable {
         Long currTime = new Date().getTime();
         String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
         viewersMap.put(fileFullName, viewer);
-        int index = 0;
-        if (datesSlider.getItems() == null) {
-            datesSliderElems.add(fileFullName);
-            datesSlider.setItems(datesSliderElems);
-        } else {
-            datesSliderElems.add(fileFullName);
-            index = datesSliderElems.size() - 1;
-        }
-        datesSlider.setIndex(index);
+        datesSliderElems.add(fileFullName);
     }
     
     @FXML
     private void rotate(ActionEvent event) {
-        String fullName = datesSlider.getValue();
+        String fullName = msgSlider.getValue();
         DocumentViewer viewer = viewersMap.get(fullName);
         if (viewer != null) {
             viewer.rotate();

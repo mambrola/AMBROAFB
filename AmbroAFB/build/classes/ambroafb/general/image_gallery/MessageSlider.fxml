@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root    type="javafx.scene.layout.VBox" 
+            fx:id="rootPane" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            xmlns="http://javafx.com/javafx/8" >
+    
+    <children>
+        <VBox fx:id="fieldAndSliderPane" >
+            <children>
+                <TextField fx:id="msgField" editable="false" />
+                <ScrollBar fx:id="scrollBar" min="0" max="1" />
+            </children>
+        </VBox>
+    </children>
+</fx:root>
