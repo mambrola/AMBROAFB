@@ -11,14 +11,14 @@
 
 
 <VBox   fx:id="imagesGalleryRoot" 
-        stylesheets="/styles/css/image_gallery.css"
+        stylesheets="/styles/css/imagegallery.css"
         xmlns:fx="http://javafx.com/fxml/1" 
         xmlns="http://javafx.com/javafx/8"
         fx:controller="ambroafb.general.image_gallery.ImageGalleryController" >
     <children>
         <StackPane >
             <HBox fx:id="galleryImageFrame" >
-                <ImageView fx:id="galleryImageView" preserveRatio="true" fitWidth="380" fitHeight="270" >
+                <ImageView fx:id="galleryImageView" preserveRatio="true"  >
                     <image>
                         <Image url="/images/default_profile_image.png" />
                     </image>
@@ -33,9 +33,9 @@
         </StackPane>
         <HBox fx:id="imageButtonsHBox" >
             <children>
-                <Button fx:id="deleteOrUndo" onAction="#deleteImage" >
+                <Button  fx:id="deleteOrUndo" onAction="#deleteImage" >
                     <graphic>
-                        <ImageView fitWidth="16" fitHeight="16" >
+                        <ImageView  fitWidth="16" fitHeight="16" >
                             <image>
                                 <Image url="/images/delete_128.png" />
                             </image>
@@ -45,7 +45,7 @@
                 <Region HBox.hgrow="ALWAYS" />
                 <Button fx:id="upload" onAction="#uploadImage" >
                     <graphic>
-                        <ImageView fitWidth="16" fitHeight="16" >
+                        <ImageView  fitWidth="16" fitHeight="16" >
                             <image>
                                 <Image url="/images/upload_128.png" />
                             </image>

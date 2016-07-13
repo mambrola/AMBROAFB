@@ -4,10 +4,10 @@
 @formWidth          : 800;
 @gap                :  10;
 @spaceWidth         :  30;
-@formHeight         : 732; // 473
-@rotateHboxSpacing  : 60;
-@profileImageWidth  : 128px;
-@profileImageHeight : 90;
+@formHeight         : 732;
+@rotateHboxSpacing  :  60;
+@profileImageWidth  : 128;
+@profileImageHeight :  90;
 
 #formPane {
     -fx-min-height: @formHeight;
@@ -15,6 +15,9 @@
     -fx-min-width: @formWidth + 2*@gap;
     -fx-max-width: @formWidth + 2*@gap;
     -fx-padding: @gap;
+}
+
+.vContainer {
     -fx-spacing: @gap;
 }
 
@@ -24,22 +27,28 @@
     -fx-padding: 1 0 1 2;
 }
 
-.w1 .text-field{
+.one>.couple{
+    -fx-background-color: yellow;
     -fx-pref-width: @formWidth;
 }
-.w2 .text-field {
+.oneHalf>.couple{
+    -fx-background-color: yellowgreen;
     -fx-pref-width: (@formWidth - @spaceWidth)/2;
 }
-.w3 .text-field, .w3 .combo-box, .w3>*{
+.oneThirds>.couple{
+    -fx-background-color: yellow; 
     -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
 }
 
-.w3 .c2 {
+.couple>.combo-box {
+    -fx-max-width: @formWidth;
+}
+.oneThirds {
     -fx-pref-width: 2*(@formWidth - 2*@spaceWidth)/3 + @spaceWidth;
 }
 
 
-.w2, .w3, .w4 {
+.oneHalf, .oneThirds {
     -fx-spacing: @spaceWidth;
 }
 
@@ -63,7 +72,6 @@
     -fx-opacity: 0.9;
 }
 
-#email {
-    -fx-border-width: 1;
-    -fx-border-color: transparent;
+#imageGallery {
+    -fx-min-height: 1.42*(@formWidth - 2*@spaceWidth)/3;
 }
