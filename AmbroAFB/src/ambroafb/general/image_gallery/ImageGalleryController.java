@@ -180,9 +180,8 @@ public class ImageGalleryController implements Initializable {
                 viewersMap.put(fullName, null);
             }
         } catch (KFZClient.KFZServerException ex) {
-            System.out.println("ex code: " + ex.getStatusCode());
-            if (ex.getStatusCode() == 404) {
-            }
+            System.out.println("ex code: " + ex.getStatusCode() + "  User has not images.");
+            
         } catch (JSONException | IOException ex) {
             Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
         }
