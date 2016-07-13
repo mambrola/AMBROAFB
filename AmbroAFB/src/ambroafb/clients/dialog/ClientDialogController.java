@@ -98,12 +98,6 @@ public class ClientDialogController implements Initializable {
         juridical.setOnAction(this::switchJuridical);
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
-//        imageGalleryController.setServiceURLPrefix("/clients/passport/");
-//        imageGalleryController.uploadServiceURLProperty().bind(client.emailProperty());
-        
-//        imageGalleryController.downloadServiceURLProperty().bind(observable);
-//        imageGalleryController.sendingURLs("/clients/passport/", client.getEmail() + "/");
-//        imageGalleryController.downloadDatesOfImagesFrom("/clients/passport/", client.getEmail() + "/all");
     }
     
     public void bindClient(Client client) {
@@ -143,7 +137,7 @@ public class ClientDialogController implements Initializable {
         return !client.compares(clientBackup) || imageGalleryController.anyViewerChanged();
     }
     
-    public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
+    public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType, String serviceURLPrefix) {
         openDate.setDisable(true);
         boolean editable = true;
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
@@ -154,8 +148,10 @@ public class ClientDialogController implements Initializable {
             PhoneComboBox phonesCombobox = new PhoneComboBox(client.getPhoneList(), editable);
             phonesContainer.getChildren().add(phonesCombobox);
         }
-        
         okayCancelController.setButtonsFeatures(buttonType);
+        System.out.println("daiwyebsgadmoweras...");
+        imageGalleryController.setUploadDataURL(serviceURLPrefix, client.getEmail() + "/", client.getEmail() + "/all");
+        imageGalleryController.downloadData();
     }
     
     private void switchJuridical(ActionEvent e) {
@@ -182,7 +178,6 @@ public class ClientDialogController implements Initializable {
             t.setDisable(true);
         });
     }
-
     
     public void operationCanceled(){
         ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
@@ -211,8 +206,6 @@ public class ClientDialogController implements Initializable {
                                                             cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
                                                         .collect(Collectors.toList()), 
                                                         null);
-                imageGalleryController.sendingURLs("/clients/passport/", client.getEmail() + "/");
-                imageGalleryController.downloadDatesOfImagesFrom("/clients/passport/", client.getEmail() + "/all");
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }

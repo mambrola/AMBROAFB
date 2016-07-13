@@ -29,9 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,7 +37,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -48,7 +44,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import jfxtras.scene.control.ListSpinner;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,7 +74,8 @@ public class ImageGalleryController implements Initializable {
     private DateFormat formatter;
     private FileChooser fileChooser;
     private String serviceURLPrefix;
-    private String parameter;
+    private String parameterUpload;
+    private String parameterDownload;
     private int defaultPages;
     private String defaultFileChooserPath;
     private MessageSlider msgSlider;
@@ -87,11 +83,7 @@ public class ImageGalleryController implements Initializable {
     private static final String GALLERY_DELETE_BUTTON_IMAGE_NAME = "/images/delete_128.png";
     private static final String GALLERY_UNDO_BUTTON_IMAGE_NAME = "/images/undo_128.png";
     private static final String UPLOAD_DIRECTORY_PATH = "upload_directory";
-    
-//    private StringProperty uploadingURLProperty = new SimpleStringProperty();
-//    private StringProperty downloadingURLProperty = new SimpleStringProperty();
-    
-    private StringConverter<String> con;
+    private StringConverter<String> converter;
     
     /**
      * Initializes the controller class.
@@ -111,25 +103,12 @@ public class ImageGalleryController implements Initializable {
         fileChooser = new FileChooser();
         ExtensionFilter filter = new ExtensionFilter("Images files (*.png, *.jpg, *.pdf)", "*.png", "*.jpg", "*.pdf");
         fileChooser.getExtensionFilters().add(filter);
-        con = new MyStringConverter();
-        msgSlider = new MessageSlider(datesSliderElems, con, rb);
+        converter = new ImageGalleryStringConverter();
+        msgSlider = new MessageSlider(datesSliderElems, converter, rb);
         imageButtonsHBox.getChildren().add(msgSlider);
     }
-
-//    public StringProperty uploadServiceURLProperty(){
-//        return uploadingURLProperty;
-//    }
-//    
-//    public StringProperty downloadServiceURLProperty(){
-//        return downloadingURLProperty;
-//    }
-//    
-//    public void setServiceURLPrefix(String serviceURLPrefix){
-//        this.serviceURLPrefix = serviceURLPrefix;
-//    }
     
-    private class MyStringConverter extends StringConverter<String> {
-
+    private class ImageGalleryStringConverter extends StringConverter<String> {
         @Override
             public String toString(String object) {
                 String fullName = object;
@@ -148,19 +127,20 @@ public class ImageGalleryController implements Initializable {
         
     }
     
-    public void sendingURLs(String prefix, String parameter) {
-        serviceURLPrefix = prefix;
-        this.parameter = parameter;
+    public void setUploadDataURL(String serviceURLPrefix, String parameterUpload, String parameterDownload) {
+        this.serviceURLPrefix = serviceURLPrefix;
+        this.parameterUpload = parameterUpload;
+        this.parameterDownload = parameterDownload;
     }
 
-    public void downloadDatesOfImagesFrom(String urlPrefix, String parameter) {
-//        new Thread(() -> {
-            processAndSaveDatesFrom(urlPrefix + parameter);
-//        }).start();
+    public void downloadData() {
+        new Thread(() -> {
+            processAndSaveDatasFrom(serviceURLPrefix + parameterDownload);
+        }).start();
         Platform.runLater(() -> {
             msgSlider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
                 new Thread(() -> {
-                    showImage(urlPrefix, newValue.intValue());
+                    showImage(serviceURLPrefix, newValue.intValue());
                 }).start();
             });
             if (datesSliderElems != null && !datesSliderElems.isEmpty()) {
@@ -170,7 +150,7 @@ public class ImageGalleryController implements Initializable {
 
     }
 
-    private void processAndSaveDatesFrom(String url) {
+    private void processAndSaveDatasFrom(String url) {
         try {
             String imagesNames = GeneralConfig.getInstance().getServerClient().get(url);
             JSONArray namesJson = new JSONArray(imagesNames);
@@ -188,7 +168,9 @@ public class ImageGalleryController implements Initializable {
     }
 
     private void showImage(String urlPrefix, int index) {
-        masker.setVisible(true);
+        Platform.runLater(() -> { 
+            masker.setVisible(true);
+        });
         if (index >= 0 && index < datesSliderElems.size()) {
             String fullName = datesSliderElems.get(index);
             DocumentViewer viewer = viewersMap.get(fullName);
@@ -213,8 +195,8 @@ public class ImageGalleryController implements Initializable {
                         String url = dViewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
                         return new Image(getClass().getResourceAsStream(url));
                     }, dViewer.deletedProperty()));
+                    masker.setVisible(false);
                 });
-                masker.setVisible(false);
             }
         }
     }
@@ -311,13 +293,13 @@ public class ImageGalleryController implements Initializable {
             if (viewer != null) {
                 byte[] data = viewer.getContent();
                 try {
-                    if (viewer.isNew()) {
+                    if (viewer.deletedProperty().get()) {
+                        GeneralConfig.getInstance().getServerClient().call(serviceURLPrefix + key, "DELETE", null);
+                    } else if (viewer.isNew()) {
                         GeneralConfig.getInstance().getServerClient().post(
-                                serviceURLPrefix + parameter + key.substring(key.lastIndexOf(".") + 1),
+                                serviceURLPrefix + parameterUpload + key.substring(key.lastIndexOf(".") + 1),
                                 Base64.getEncoder().encodeToString(data)
                         );
-                    } else if (viewer.deletedProperty().get()) {
-                        GeneralConfig.getInstance().getServerClient().call(serviceURLPrefix + key, "DELETE", null);
                     } else if (viewer.isEdit()) {
                         GeneralConfig.getInstance().getServerClient().call(
                                 serviceURLPrefix + key,

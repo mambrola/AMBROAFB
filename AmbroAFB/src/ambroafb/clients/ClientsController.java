@@ -52,7 +52,9 @@ public class ClientsController implements Initializable {
     public void reAssignTable(JSONObject filterJson) {
         if (filterJson != null && filterJson.length() > 0) {
             clients.clear();
-            masker.setVisible(true);
+            Platform.runLater(() -> {
+                masker.setVisible(true);
+            });
             Thread t = new Thread(() -> {
                 Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {
                     clients.add(client);

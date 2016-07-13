@@ -43,7 +43,7 @@ public class ClientDialog extends Stage implements Dialogable {
         Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml", null);
         dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
         dialogController.bindClient(this.client); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
-        dialogController.setNextVisibleAndActionParameters(buttonType);
+        dialogController.setNextVisibleAndActionParameters(buttonType, "/clients/passport/");
         dialogController.setBackupClient(this.clientBackup);
         this.setScene(currentScene);
         setResizable(false);
