@@ -288,30 +288,32 @@ public class ImageGalleryController implements Initializable {
     }
 
     public void sendDataToServer() {
-        viewersMap.keySet().stream().forEach((key) -> {
-            DocumentViewer viewer = viewersMap.get(key);
-            if (viewer != null) {
-                byte[] data = viewer.getContent();
-                try {
-                    if (viewer.deletedProperty().get()) {
-                        GeneralConfig.getInstance().getServerClient().call(serviceURLPrefix + key, "DELETE", null);
-                    } else if (viewer.isNew()) {
-                        GeneralConfig.getInstance().getServerClient().post(
-                                serviceURLPrefix + parameterUpload + key.substring(key.lastIndexOf(".") + 1),
-                                Base64.getEncoder().encodeToString(data)
-                        );
-                    } else if (viewer.isEdit()) {
-                        GeneralConfig.getInstance().getServerClient().call(
-                                serviceURLPrefix + key,
-                                "PUT",
-                                Base64.getEncoder().encodeToString(data)
-                        );
+        new Thread(() -> {
+            viewersMap.keySet().stream().forEach((key) -> {
+                DocumentViewer viewer = viewersMap.get(key);
+                if (viewer != null) {
+                    byte[] data = viewer.getContent();
+                    try {
+                        if (viewer.deletedProperty().get()) {
+                            GeneralConfig.getInstance().getServerClient().call(serviceURLPrefix + key, "DELETE", null);
+                        } else if (viewer.isNew()) {
+                            GeneralConfig.getInstance().getServerClient().post(
+                                    serviceURLPrefix + parameterUpload + key.substring(key.lastIndexOf(".") + 1),
+                                    Base64.getEncoder().encodeToString(data)
+                            );
+                        } else if (viewer.isEdit()) {
+                            GeneralConfig.getInstance().getServerClient().call(
+                                    serviceURLPrefix + key,
+                                    "PUT",
+                                    Base64.getEncoder().encodeToString(data)
+                            );
+                        }
+                    } catch (IOException | KFZClient.KFZServerException ex) {
+                        Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (IOException | KFZClient.KFZServerException ex) {
-                    Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
-        });
+            });
+        }).start();
     }
 
     /**
