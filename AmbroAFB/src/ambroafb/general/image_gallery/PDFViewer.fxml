@@ -7,16 +7,19 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
 
-<HBox   xmlns="http://javafx.com/javafx/8"
-        xmlns:fx="http://javafx.com/fxml/1" >
+<HBox alignment="CENTER" prefHeight="350" prefWidth="385" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     
     <children>
-        <ambroafb.general.image_gallery.MagnifierPane >
-            <ImageView fx:id="imageView" preserveRatio="true" fitWidth="380" fitHeight="270" />
-        </ambroafb.general.image_gallery.MagnifierPane>
-        <VBox alignment="CENTER" >
+        <HBox HBox.hgrow="ALWAYS" alignment="CENTER" >
+            <ambroafb.general.image_gallery.MagnifierPane>
+               <children>
+                   <ImageView fx:id="imageView" fitHeight="330" fitWidth="330.0" preserveRatio="true" />
+               </children>
+            </ambroafb.general.image_gallery.MagnifierPane>
+        </HBox>
+        <VBox alignment="CENTER_RIGHT" HBox.hgrow="SOMETIMES">
             <children>
-                <Button fx:id="up"   text="▲" />
+                <Button fx:id="up" text="▲" />
                 <Button fx:id="down" text="▼" />
             </children>
         </VBox>
