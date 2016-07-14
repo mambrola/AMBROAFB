@@ -15,9 +15,11 @@ import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javax.imageio.ImageIO;
 
 /**
@@ -26,26 +28,31 @@ import javax.imageio.ImageIO;
  */
 public class ImageViewer implements DocumentViewer {
 
-    private MagnifierPane magnifier;
+    private final MagnifierPane magnifier;
     private final ImageView imageView;
     private boolean isNew;
     private final BooleanProperty deletedProperty = new SimpleBooleanProperty();
     private final String fullName;
     private int degree;
+    private final HBox root;
 
     public ImageViewer(InputStream stream, String imageFullName) {
         imageView = new ImageView(new Image(stream));
         imageView.setPreserveRatio(true);
-        imageView.setFitWidth(380);
-        imageView.setFitHeight(270);
+        imageView.setFitWidth(330);
+        imageView.setFitHeight(330);
         fullName = imageFullName;
         magnifier = new MagnifierPane();
         magnifier.getChildren().setAll(imageView);
+        root = new HBox(magnifier);
+        root.setPrefSize(385, 350);
+        root.setAlignment(Pos.CENTER);
+        root.setFillHeight(false);
     }
 
     @Override
     public Node getComponent() {
-        return magnifier;
+        return root;
     }
 
     @Override
