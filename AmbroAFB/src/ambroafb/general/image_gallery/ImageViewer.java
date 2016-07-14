@@ -6,17 +6,23 @@
 package ambroafb.general.image_gallery;
 
 import ambroafb.general.KFZClient;
+import ambroafb.general.Utils;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -26,28 +32,23 @@ import javax.imageio.ImageIO;
  *
  * @author dato
  */
-public class ImageViewer implements DocumentViewer {
+public class ImageViewer implements DocumentViewer, Initializable {
 
-    private final MagnifierPane magnifier;
-    private final ImageView imageView;
+    @FXML
+    private HBox root;
+    @FXML
+    private ImageView imageView;
+
     private boolean isNew;
     private final BooleanProperty deletedProperty = new SimpleBooleanProperty();
     private final String fullName;
     private int degree;
-    private final HBox root;
+    private final InputStream stream;
 
     public ImageViewer(InputStream stream, String imageFullName) {
-        imageView = new ImageView(new Image(stream));
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(330);
-        imageView.setFitHeight(330);
         fullName = imageFullName;
-        magnifier = new MagnifierPane();
-        magnifier.getChildren().setAll(imageView);
-        root = new HBox(magnifier);
-        root.setPrefSize(385, 350);
-        root.setAlignment(Pos.CENTER);
-        root.setFillHeight(false);
+        this.stream = stream;
+        Utils.createScene("/ambroafb/general/image_gallery/ImageViewer.fxml", (Object) this);
     }
 
     @Override
@@ -107,6 +108,11 @@ public class ImageViewer implements DocumentViewer {
     @Override
     public String getFullName() {
         return fullName;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        imageView.setImage(new Image(stream));
     }
 
 }

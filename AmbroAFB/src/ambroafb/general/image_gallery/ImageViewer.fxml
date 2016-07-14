@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambroafb.general.image_gallery.*?>
+<?import javafx.scene.image.*?>
+
+<HBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1" stylesheets="/styles/css/imageviewer.css">
+    <children>
+        <MagnifierPane fx:id="magnifier">
+            <children>
+                <ImageView fx:id="imageView" fitHeight="330" fitWidth="330" preserveRatio="true"  />
+            </children>
+        </MagnifierPane>
+    </children>
+</HBox>
