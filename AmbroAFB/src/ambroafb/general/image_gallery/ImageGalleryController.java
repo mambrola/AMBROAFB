@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
@@ -43,6 +44,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONArray;
@@ -235,6 +237,7 @@ public class ImageGalleryController implements Initializable {
             for (File file : files) {
                 try {
                     String fileName = file.getName();
+                    InputStream stream = new FileInputStream(file);
                     DocumentViewer viewer;
                     if (fileName.substring(fileName.lastIndexOf(".")).toLowerCase().equals(".pdf")) {
                         PDFHelper pdfHelper = new PDFHelper(new FileInputStream(file));
@@ -242,9 +245,9 @@ public class ImageGalleryController implements Initializable {
                             largePDFsNames.add(file.getName());
                             continue;
                         }
-                        viewer = new PDFViewer(new FileInputStream(file), fileName);
+                        viewer = new PDFViewer(stream, fileName);
                     } else {
-                        viewer = new ImageViewer(new FileInputStream(file), fileName);
+                        viewer = new ImageViewer(stream, fileName);
                     }
                     viewer.setIsNew(true);
                     Platform.runLater(() -> {
