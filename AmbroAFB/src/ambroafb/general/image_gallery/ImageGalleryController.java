@@ -253,8 +253,8 @@ public class ImageGalleryController implements Initializable {
                     Platform.runLater(() -> {
                         galleryImageFrame.getChildren().setAll(viewer.getComponent());
                         galleryImageView.setPreserveRatio(true);
-                        proccessViewer(viewer, fileName);
                     });
+                    proccessViewer(viewer, fileName);
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
@@ -290,6 +290,11 @@ public class ImageGalleryController implements Initializable {
         }
     }
 
+    /**
+     * The method sends image gallery data to server in thread.
+     * So before this method, image gallery controller must known service URL prefix 
+     * and parameter by setUploadDataURL method.
+     */
     public void sendDataToServer() {
         new Thread(() -> {
             viewersMap.keySet().stream().forEach((key) -> {
