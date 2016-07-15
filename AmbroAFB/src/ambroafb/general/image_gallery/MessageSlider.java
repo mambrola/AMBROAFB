@@ -5,6 +5,7 @@
  */
 package ambroafb.general.image_gallery;
 
+import ambroafb.general.Utils;
 import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -65,9 +66,6 @@ public class MessageSlider extends VBox {
         scrollBar.setBlockIncrement(1);
         
         scrollBar.valueProperty().bindBidirectional(indexProperty);
-//        scrollBar.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-//            indexProperty.set(newValue.intValue());
-//        });
     }
     
     /**
@@ -118,9 +116,9 @@ public class MessageSlider extends VBox {
     }
 
     /**
-     * The method return current value appropriate converter.
+     * The method return current value.
      * @return - If values list is null or empty or index is out of bounds, 
-     * method returns empty string.
+     * method returns empty string. Otherwise it returns value according to stringConverter.
      */
     public String getValue() {
         String value = "";
