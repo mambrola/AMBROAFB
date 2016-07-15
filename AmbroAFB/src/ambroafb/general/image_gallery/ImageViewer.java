@@ -46,10 +46,6 @@ public class ImageViewer implements DocumentViewer, Initializable {
     private final InputStream stream;
 
     public ImageViewer(InputStream stream, String imageFullName) {
-        imageView = new ImageView(new Image(stream));
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(380);
-        imageView.setFitHeight(270);
         fullName = imageFullName;
         this.stream = stream;
         Utils.createScene("/ambroafb/general/image_gallery/ImageViewer.fxml", (Object) this);
