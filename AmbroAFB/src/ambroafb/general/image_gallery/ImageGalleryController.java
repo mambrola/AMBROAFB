@@ -131,6 +131,47 @@ public class ImageGalleryController implements Initializable {
             }
         
     }
+        
+    private void showImage(String urlPrefix, int index) {
+        if (index >= 0 && index < datesSliderElems.size()) {
+            String fullName = datesSliderElems.get(index);
+            DocumentViewer viewer = viewersMap.get(fullName);
+            if (viewer == null) {
+                new Thread(()->{
+                    try {
+                        Platform.runLater(() -> {
+                            masker.setVisible(true);
+                        });
+                        HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
+                        DocumentViewer newViewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName);
+                        Platform.runLater(() -> {
+                            viewersMap.put(fullName, newViewer);
+                            showViewerComponentOnScene(newViewer);
+                            masker.setVisible(false);
+                        });
+                    } catch (IOException ex) {
+                        Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }).start();
+            }
+            else {
+                showViewerComponentOnScene(viewer);
+            }
+        }
+    }
+    
+    private void showViewerComponentOnScene(DocumentViewer viewer){
+        final DocumentViewer dViewer = viewer;
+        galleryImageFrame.getChildren().setAll(dViewer.getComponent());
+        deletedImageView.visibleProperty().unbind();
+        deletedImageView.visibleProperty().bind(dViewer.deletedProperty());
+        ImageView icon = (ImageView) deleteOrUndo.getGraphic();
+        icon.imageProperty().unbind();
+        icon.imageProperty().bind(Bindings.createObjectBinding(() -> {
+            String url = dViewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
+            return new Image(getClass().getResourceAsStream(url));
+        }, dViewer.deletedProperty()));
+    }
     
     public void setUploadDataURL(String serviceURLPrefix, String parameterUpload, String parameterDownload) {
         this.serviceURLPrefix = serviceURLPrefix;
@@ -157,48 +198,6 @@ public class ImageGalleryController implements Initializable {
             Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void showImage(String urlPrefix, int index) {
-        if (index >= 0 && index < datesSliderElems.size()) {
-            String fullName = datesSliderElems.get(index);
-            DocumentViewer viewer = viewersMap.get(fullName);
-            if (viewer == null) {
-                new Thread(()->{
-                    try {
-                        Platform.runLater(() -> {
-                            masker.setVisible(true);
-                        });
-                        HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
-                        DocumentViewer newviewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName);
-                        Platform.runLater(() -> {
-                            viewersMap.put(fullName, newviewer);
-                            showViewerComponentOnScene(newviewer);
-                            masker.setVisible(false);
-                        });
-                    } catch (IOException ex) {
-                        Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }).start();
-            }
-            else {
-                System.out.println("else-shi shevida");
-                showViewerComponentOnScene(viewer);
-            }
-        }
-    }
-    
-    private void showViewerComponentOnScene(DocumentViewer viewer){
-        final DocumentViewer dViewer = viewer;
-        galleryImageFrame.getChildren().setAll(dViewer.getComponent());
-        deletedImageView.visibleProperty().unbind();
-        deletedImageView.visibleProperty().bind(dViewer.deletedProperty());
-        ImageView icon = (ImageView) deleteOrUndo.getGraphic();
-        icon.imageProperty().unbind();
-        icon.imageProperty().bind(Bindings.createObjectBinding(() -> {
-            String url = dViewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
-            return new Image(getClass().getResourceAsStream(url));
-        }, dViewer.deletedProperty()));
-    }
 
     @FXML
     private void deleteImage(ActionEvent event) {
@@ -209,13 +208,13 @@ public class ImageGalleryController implements Initializable {
         }
     }
 
-    private void setImageToButton(Button button, String imageURL) {
-        Image image = new Image(getClass().getResourceAsStream(imageURL));
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(((ImageView) button.getGraphic()).getFitWidth());
-        imageView.setFitHeight(((ImageView) button.getGraphic()).getFitHeight());
-        button.setGraphic(imageView);
-    }
+//    private void setImageToButton(Button button, String imageURL) {
+//        Image image = new Image(getClass().getResourceAsStream(imageURL));
+//        ImageView imageView = new ImageView(image);
+//        imageView.setFitWidth(((ImageView) button.getGraphic()).getFitWidth());
+//        imageView.setFitHeight(((ImageView) button.getGraphic()).getFitHeight());
+//        button.setGraphic(imageView);
+//    }
 
     @FXML
     private void uploadImage(ActionEvent event) {
@@ -251,7 +250,6 @@ public class ImageGalleryController implements Initializable {
                     }
                     viewer.setIsNew(true);
                     Platform.runLater(() -> {
-//                        galleryImageFrame.getChildren().setAll(viewer.getComponent());
                         proccessViewer(viewer, fileName);
                     });
                 } catch (FileNotFoundException ex) {
@@ -266,6 +264,14 @@ public class ImageGalleryController implements Initializable {
             });
         }).start();
     }
+        
+    private void proccessViewer(DocumentViewer viewer, String fileName){
+        Long currTime = new Date().getTime();
+        String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
+        viewersMap.put(fileFullName, viewer);
+        datesSliderElems.add(fileFullName);
+        msgSlider.setValueOn(datesSliderElems.size() - 1);
+    }
     
     private void showLargePDFWarning(List<String> largePDFsNames) {
         String pdfs = GeneralConfig.getInstance().getTitleFor("large_pdfs") + defaultPages + ": \n";
@@ -275,15 +281,7 @@ public class ImageGalleryController implements Initializable {
             new AlertMessage(Alert.AlertType.WARNING, null, pdfs.substring(0, pdfs.length() - 1)).showAlert();
         }
     }
-    
-    private void proccessViewer(DocumentViewer viewer, String fileName){
-        Long currTime = new Date().getTime();
-        String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
-        viewersMap.put(fileFullName, viewer);
-        datesSliderElems.add(fileFullName);
-        msgSlider.setValueOn(datesSliderElems.size() - 1);
-    }
-    
+
     @FXML
     private void rotate(ActionEvent event) {
         String fullName = msgSlider.getValue();
