@@ -1,7 +1,0 @@
-@import url("/styles/css/core.css");
-#formNode {
-  -fx-spacing: 20;
-}
-#search {
-  -fx-min-width: 250;
-}
