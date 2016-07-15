@@ -23,10 +23,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -45,7 +43,7 @@ public class PDFViewer implements Initializable, DocumentViewer {
     private ImageView imageView;
     @FXML
     private Button up, down;
-    
+
     private PDFHelper pdfHelper;
     private List<Image> images;
     private Map<Integer, Integer> rotatedImages;
@@ -54,46 +52,51 @@ public class PDFViewer implements Initializable, DocumentViewer {
     private BooleanProperty deletedProperty = new SimpleBooleanProperty();
     private boolean isNew;
     private String fullName;
-    
-    
-    public PDFViewer(InputStream stream, String pdfFullName){
+    private boolean isInvalid;
+
+    public PDFViewer(InputStream stream, String pdfFullName, int validPageNamber) {
         try {
             pdfHelper = new PDFHelper(stream);
-            images = pdfHelper.getImages();
-            rotatedImages = new HashMap<>();
-            Scene scene = Utils.createScene("/ambroafb/general/image_gallery/PDFViewer.fxml", (Object)this);
-            root = scene.getRoot();
-            fullName = pdfFullName;
-            
-            up.setOnAction((ActionEvent event) -> {
-                indexProperty.set(indexProperty.get() - 1);
-            });
-            
-            down.setOnAction((ActionEvent event) -> {
-                indexProperty.set(indexProperty.get() + 1);
-            });
+            if (pdfHelper.getPageCount() > validPageNamber) {
+                isInvalid = true;
+            } else {
+                images = pdfHelper.getImages();
+                rotatedImages = new HashMap<>();
+                Scene scene = Utils.createScene("/ambroafb/general/image_gallery/PDFViewer.fxml", (Object) this);
+                root = scene.getRoot();
+                fullName = pdfFullName;
+
+                up.setOnAction((ActionEvent event) -> {
+                    indexProperty.set(indexProperty.get() - 1);
+                });
+
+                down.setOnAction((ActionEvent event) -> {
+                    indexProperty.set(indexProperty.get() + 1);
+                });
+            }
         } catch (IOException ex) {
-            Logger.getLogger(PDFViewer.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("pdf probleeeem. davichirot esec da davamushaot baregam.");
+//            Logger.getLogger(PDFViewer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         indexProperty.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (newValue.intValue() >= 0 && newValue.intValue() < images.size()){
+            if (newValue.intValue() >= 0 && newValue.intValue() < images.size()) {
                 imageView.setImage(images.get(newValue.intValue()));
             }
         });
-        up.disableProperty().bind(Bindings.createBooleanBinding(()->{
-            return indexProperty.get()<=0;
+        up.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            return indexProperty.get() <= 0;
         }, indexProperty));
-        
-        down.disableProperty().bind(Bindings.createBooleanBinding(()->{
-            return indexProperty.get()>=images.size()-1;
+
+        down.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            return indexProperty.get() >= images.size() - 1;
         }, indexProperty));
         indexProperty.set(0);
     }
-    
+
     @Override
     public Node getComponent() {
         return root;
@@ -107,7 +110,7 @@ public class PDFViewer implements Initializable, DocumentViewer {
             images.set(indexProperty.get(), cur);
             imageView.setImage(cur);
             int deg = rotatedImages.getOrDefault(indexProperty.getValue(), 0);
-            rotatedImages.put(indexProperty.getValue(), deg+90);
+            rotatedImages.put(indexProperty.getValue(), deg + 90);
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(PDFViewer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -135,7 +138,7 @@ public class PDFViewer implements Initializable, DocumentViewer {
         }
         return result;
     }
-    
+
     @Override
     public void setIsNew(boolean isNew) {
         this.isNew = isNew;
@@ -155,13 +158,27 @@ public class PDFViewer implements Initializable, DocumentViewer {
     public boolean isEdit() {
         return getRotated().size() > 0;
     }
-    
-    public List<Integer> getRotated(){
+
+    public List<Integer> getRotated() {
         return rotatedImages.keySet().stream().filter((Integer t) -> rotatedImages.get(t) % 360 != 0).collect(Collectors.toList());
     }
 
     @Override
     public String getFullName() {
         return fullName;
+    }
+
+    @Override
+    public boolean isNotValidDocument() {
+        return isInvalid;
+    }
+
+    @Override
+    public String getInvalidationMessage() {
+        String warningMSg = "";
+        if (true){
+            warningMSg += "";
+        }
+        return warningMSg;
     }
 }

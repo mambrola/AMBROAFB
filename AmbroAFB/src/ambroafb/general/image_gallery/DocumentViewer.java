@@ -32,6 +32,8 @@ public interface DocumentViewer {
     public BooleanProperty deletedProperty();
     public boolean isEdit();
     public String getFullName();
+    public boolean isNotValidDocument();
+    public String getInvalidationMessage();
     
     default public Image rotateImage(Image img) throws IOException, KFZClient.KFZServerException {
         BufferedImage bImage = SwingFXUtils.fromFXImage(img, null);
@@ -51,10 +53,10 @@ public interface DocumentViewer {
     
     static class  Factory {
         
-        public static DocumentViewer getAppropriateViewer(InputStream stream, String fullName){
+        public static DocumentViewer getAppropriateViewer(InputStream stream, String fullName, int validPagesNumber){
             DocumentViewer viewer;
             if(fullName.endsWith("pdf")){
-                viewer = new PDFViewer(stream, fullName);
+                viewer = new PDFViewer(stream, fullName, validPagesNumber);
             }
             else {
                 viewer = new ImageViewer(stream, fullName);

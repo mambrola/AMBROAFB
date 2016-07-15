@@ -77,7 +77,7 @@ public class ImageGalleryController implements Initializable {
     private String serviceURLPrefix;
     private String parameterUpload;
     private String parameterDownload;
-    private int defaultPages;
+    private int validPDFPagesForClientDialog;
     private String defaultFileChooserPath;
     private MessageSlider msgSlider;
 
@@ -94,7 +94,7 @@ public class ImageGalleryController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        defaultPages = 10;
+        validPDFPagesForClientDialog = 10;
         defaultFileChooserPath = GeneralConfig.prefs.get(UPLOAD_DIRECTORY_PATH, null);
         undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
         viewersMap = new HashMap<>();
@@ -143,10 +143,19 @@ public class ImageGalleryController implements Initializable {
                             masker.setVisible(true);
                         });
                         HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
-                        DocumentViewer newViewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName);
+                        DocumentViewer newViewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName, validPDFPagesForClientDialog);
+                        if (newViewer.isNotValidDocument()){
+                            Platform.runLater(() -> {
+                                new AlertMessage(Alert.AlertType.WARNING, null, newViewer.getInvalidationMessage()).showAlert();
+                            });
+                        }
+                        else{
+                            Platform.runLater(() -> {
+                                viewersMap.put(fullName, newViewer);
+                                showViewerComponentOnScene(newViewer);
+                            });
+                        }
                         Platform.runLater(() -> {
-                            viewersMap.put(fullName, newViewer);
-                            showViewerComponentOnScene(newViewer);
                             masker.setVisible(false);
                         });
                     } catch (IOException ex) {
@@ -228,7 +237,7 @@ public class ImageGalleryController implements Initializable {
         defaultFileChooserPath = files.get(files.size() - 1).getParentFile().getPath();
         GeneralConfig.prefs.put(UPLOAD_DIRECTORY_PATH, defaultFileChooserPath);
         
-        List<String> largePDFsNames = new ArrayList<>();
+        List<String> invalidViewersMessages = new ArrayList<>();
         new Thread(() -> {
             Platform.runLater(()->{
                 masker.setVisible(true);
@@ -239,14 +248,14 @@ public class ImageGalleryController implements Initializable {
                     InputStream stream = new FileInputStream(file);
                     DocumentViewer viewer;
                     if (fileName.substring(fileName.lastIndexOf(".")).toLowerCase().equals(".pdf")) {
-                        PDFHelper pdfHelper = new PDFHelper(new FileInputStream(file));
-                        if(pdfHelper.getPageCount() > defaultPages){
-                            largePDFsNames.add(file.getName());
-                            continue;
-                        }
-                        viewer = new PDFViewer(stream, fileName);
+                        viewer = new PDFViewer(stream, fileName, validPDFPagesForClientDialog);
                     } else {
                         viewer = new ImageViewer(stream, fileName);
+                    }
+                    
+                    if (viewer.isNotValidDocument()){
+                        invalidViewersMessages.add(viewer.getInvalidationMessage());
+                        continue;
                     }
                     viewer.setIsNew(true);
                     Platform.runLater(() -> {
@@ -254,17 +263,20 @@ public class ImageGalleryController implements Initializable {
                     });
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             Platform.runLater(()->{
                 masker.setVisible(false);
-                showLargePDFWarning(largePDFsNames);
+                showLargePDFWarning(invalidViewersMessages);
             });
         }).start();
     }
-        
+    
+    /** ---------------------------------------???????????????????
+     * The method set index of images slider and this action cause to show new uploading file.
+     * @param viewer
+     * @param fileName 
+     */
     private void proccessViewer(DocumentViewer viewer, String fileName){
         Long currTime = new Date().getTime();
         String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
@@ -273,13 +285,18 @@ public class ImageGalleryController implements Initializable {
         msgSlider.setValueOn(datesSliderElems.size() - 1);
     }
     
-    private void showLargePDFWarning(List<String> largePDFsNames) {
-        String pdfs = GeneralConfig.getInstance().getTitleFor("large_pdfs") + defaultPages + ": \n";
-        String separator = ",";
-        pdfs = largePDFsNames.stream().map((largePDFName) -> largePDFName + separator).reduce(pdfs, String::concat);
-        if (pdfs.contains(separator)){
-            new AlertMessage(Alert.AlertType.WARNING, null, pdfs.substring(0, pdfs.length() - 1)).showAlert();
+    private void showLargePDFWarning(List<String> invalidViewersMessages) {
+        String warningMsg = "";
+        warningMsg = invalidViewersMessages.stream().map((msg) -> msg + "\n").reduce(warningMsg, String::concat);
+        if (!warningMsg.isEmpty()){
+            new AlertMessage(Alert.AlertType.WARNING, null, warningMsg).showAlert();
         }
+//        String pdfs = GeneralConfig.getInstance().getTitleFor("large_pdfs") + validPDFPagesForClientDialog + ": \n";
+//        String separator = ",";
+//        pdfs = invalidViewersMessages.stream().map((largePDFName) -> largePDFName + separator).reduce(pdfs, String::concat);
+//        if (pdfs.contains(separator)){
+//            new AlertMessage(Alert.AlertType.WARNING, null, pdfs.substring(0, pdfs.length() - 1)).showAlert();
+//        }
     }
 
     @FXML
