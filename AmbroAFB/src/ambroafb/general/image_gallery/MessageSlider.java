@@ -118,7 +118,7 @@ public class MessageSlider extends VBox {
     }
 
     /**
-     * The method return current value.
+     * The method return current value appropriate converter.
      * @return - If values list is null or empty or index is out of bounds, 
      * method returns empty string.
      */
@@ -132,18 +132,15 @@ public class MessageSlider extends VBox {
     
     /**
      * The inner class provides to listen any manipulation 
-     * on observable list (we listen only add and remove actions) and make appropriate logic.
+     * on observable list (we listen only remove actions, 
+     * because add action will cause download image permanently) and make appropriate logic.
      */
     private class ListActionListener implements ListChangeListener<String> {
 
         @Override
         public void onChanged(Change<? extends String> c) {
             while(c.next()){
-//                if (c.wasAdded()){
-//                    indexProperty.set(values.size() - 1);
-//                }
-//                else 
-                    if(c.wasRemoved()){
+                if(c.wasRemoved()){
                     if (indexProperty.getValue().intValue() == values.size()){
                         indexProperty.set(indexProperty.getValue().intValue() - 1);
                     }
