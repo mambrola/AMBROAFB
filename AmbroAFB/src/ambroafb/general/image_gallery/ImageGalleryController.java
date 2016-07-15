@@ -44,7 +44,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONArray;
@@ -108,7 +107,7 @@ public class ImageGalleryController implements Initializable {
         converter = new ImageGalleryStringConverter();
         msgSlider = new MessageSlider(datesSliderElems, converter, rb);
         imageButtonsHBox.getChildren().add(msgSlider);
-        masker.setVisible(false);
+
         msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             showImage(serviceURLPrefix, newValue.intValue());
         });
@@ -188,14 +187,9 @@ public class ImageGalleryController implements Initializable {
     
     private void showImage(String urlPrefix, int index) {
         if (index >= 0 && index < datesSliderElems.size()) {
-            System.out.println("bla  " + masker);
-//            Platform.runLater(()->{
-                masker.setVisible(true);
-//            });
-            System.out.println("blu");
+            masker.setVisible(true);
             String fullName = datesSliderElems.get(index);
             DocumentViewer viewer = viewersMap.get(fullName);
-            System.out.println("aq fullName aris: " + fullName + " viewer: " + viewer);
 
             if (viewer == null) {
                 try {
@@ -203,7 +197,6 @@ public class ImageGalleryController implements Initializable {
                     viewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName);
                     viewersMap.put(fullName, viewer);
                     showViewerComponentOnScene(viewer);
-                    System.out.println("aq movida... " + viewersMap.get(fullName));
                 } catch (IOException ex) {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -211,11 +204,7 @@ public class ImageGalleryController implements Initializable {
             else {
                 showViewerComponentOnScene(viewer);
             }
-            System.out.println("bla2");
-//            Platform.runLater(()-> {
-                masker.setVisible(false);
-//            });
-            System.out.println("blu2");
+            masker.setVisible(false);
         }
     }
     

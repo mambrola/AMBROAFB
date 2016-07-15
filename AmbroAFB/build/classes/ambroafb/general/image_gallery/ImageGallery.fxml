@@ -8,6 +8,7 @@
 <?import javafx.scene.image.*?>
 <?import ambro.*?>
 <?import ambroafb.general.image_gallery.*?>
+<?import org.controlsfx.control.*?>
 
 
 <VBox   fx:id="imagesGalleryRoot" 
@@ -16,6 +17,7 @@
         xmlns="http://javafx.com/javafx/8"
         fx:controller="ambroafb.general.image_gallery.ImageGalleryController" >
     <children>
+            <MaskerPane fx:id="masker" visible="true" text="%loading"/>
         <StackPane >
             <HBox fx:id="galleryImageFrame" >
                 <ImageView fx:id="galleryImageView" fitWidth="380" fitHeight="270" preserveRatio="true"  >
@@ -29,7 +31,6 @@
                     <Image url="/images/deleted.png" />
                 </image>
             </ImageView>
-            <org.controlsfx.control.MaskerPane fx:id="masker" visible="true" text="%loading"/>
         </StackPane>
         <HBox fx:id="imageButtonsHBox" >
             <children>
