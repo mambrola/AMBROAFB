@@ -33,6 +33,10 @@ import javafx.util.StringConverter;
 /**
  *
  * @author dato
+ * 
+ * Does not use Utils.createScene("path/MessageSlider.fxml", (Object)this); 
+ * because this class must not extend VBox, but it is needed, 
+ * that we can add MessageSlider as scene object.
  */
 public class MessageSlider extends VBox {
     
@@ -107,7 +111,7 @@ public class MessageSlider extends VBox {
      * The method returns value on given index.
      * @param index - If index is out of bounds, method sets zero indexed value.
      */
-    public void setValueOn(int index) { // ?????    upload-is dros index-i tviton scrollbar-shi ar iseteba
+    public void setValueOn(int index) {
         if (values == null) return;
         if (index < 0 || index >= values.size()){
             index = 0;
