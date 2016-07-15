@@ -13,8 +13,14 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollBar;
@@ -54,7 +60,11 @@ public class MessageSlider extends VBox {
         scrollBar.setUnitIncrement(1);
         scrollBar.setVisibleAmount(1);
         scrollBar.setBlockIncrement(1);
-        scrollBar.valueProperty().bindBidirectional(indexProperty);
+        
+//        scrollBar.indexProperty().bindBidirectional(indexProperty); // ?????????
+        scrollBar.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            indexProperty.set(newValue.intValue());
+        });
     }
     
     /**
@@ -86,10 +96,10 @@ public class MessageSlider extends VBox {
     }
 
     /**
-     * @return - ScrollBar valueProperty.
+     * @return - ScrollBar indexProperty.
      */
-    public DoubleProperty valueProperty(){
-        return scrollBar.valueProperty();
+    public IntegerProperty indexProperty(){
+        return indexProperty;
     }
 
     /**
@@ -98,11 +108,16 @@ public class MessageSlider extends VBox {
      */
     public void setValueOn(int index) {
         if (values == null) return;
-        scrollBar.setValue(-1);
         if (index < 0 || index >= values.size()){
             index = 0;
         }
-        scrollBar.setValue(index);
+//        System.out.println("scrollbar getvalue: " + scrollBar.getValue());
+//        scrollBar.setValue(index);
+//        System.out.println("scrollbar getValue: " + scrollBar.getValue());
+//        System.out.println("setValueOn. indexProp: " + indexProperty.get());
+//        indexProperty.set(-1); // ????????????
+        indexProperty.set(index);
+//        System.out.println("setValueOn. indexProp: " + indexProperty.get());
     }
 
     /**
@@ -127,10 +142,11 @@ public class MessageSlider extends VBox {
         @Override
         public void onChanged(Change<? extends String> c) {
             while(c.next()){
-                if (c.wasAdded()){
-                    indexProperty.set(values.size() - 1);
-                }
-                else if(c.wasRemoved()){
+//                if (c.wasAdded()){
+//                    indexProperty.set(values.size() - 1);
+//                }
+//                else 
+                    if(c.wasRemoved()){
                     if (indexProperty.get() == values.size()){
                         indexProperty.set(indexProperty.get() - 1);
                     }

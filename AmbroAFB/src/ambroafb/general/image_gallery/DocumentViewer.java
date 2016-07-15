@@ -52,7 +52,7 @@ public interface DocumentViewer {
     static class  Factory {
         
         public static DocumentViewer getAppropriateViewer(InputStream stream, String fullName){
-            DocumentViewer viewer = null;
+            DocumentViewer viewer;
             if(fullName.endsWith("pdf")){
                 viewer = new PDFViewer(stream, fullName);
             }

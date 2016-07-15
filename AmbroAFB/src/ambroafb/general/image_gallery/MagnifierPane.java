@@ -134,7 +134,7 @@ public class MagnifierPane extends StackPane {
                 int w = (int) (MagnifierPane.this.getWidth() * getScaleFactor());
                 int h = (int) (MagnifierPane.this.getHeight() * getScaleFactor());
                 writeImg = new WritableImage(w, h);
-
+                
                 // Get snapshot image
                 MagnifierPane.this.snapshot(callBack, param, writeImg);
                 snapView.setImage(writeImg);

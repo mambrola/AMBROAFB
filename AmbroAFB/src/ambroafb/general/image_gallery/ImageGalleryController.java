@@ -108,6 +108,10 @@ public class ImageGalleryController implements Initializable {
         converter = new ImageGalleryStringConverter();
         msgSlider = new MessageSlider(datesSliderElems, converter, rb);
         imageButtonsHBox.getChildren().add(msgSlider);
+        masker.setVisible(false);
+        msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            showImage(serviceURLPrefix, newValue.intValue());
+        });
     }
     
     private class ImageGalleryStringConverter extends StringConverter<String> {
@@ -136,23 +140,33 @@ public class ImageGalleryController implements Initializable {
     }
 
     public void downloadData() {
-        new Thread(() -> {
-            processAndSaveDatasFrom(serviceURLPrefix + parameterDownload);
-        }).start();
-        Platform.runLater(() -> {
-            msgSlider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-                new Thread(() -> {
-                    showImage(serviceURLPrefix, newValue.intValue());
-                }).start();
-            });
+//        downloadAndSaveDataFrom(serviceURLPrefix + parameterDownload);
+        try {
+            String imagesNames = GeneralConfig.getInstance().getServerClient().get(serviceURLPrefix + parameterDownload);
+            JSONArray namesJson = new JSONArray(imagesNames);
+            for (int i = 0; i < namesJson.length(); i++) {
+                String fullName = namesJson.getString(i);
+                datesSliderElems.add(fullName);
+                viewersMap.put(fullName, null);
+            }
             if (datesSliderElems != null && !datesSliderElems.isEmpty()) {
                 msgSlider.setValueOn(0);
             }
-        });
-
+        } catch (KFZClient.KFZServerException ex) {
+            System.out.println("ex code: " + ex.getStatusCode() + "  User has not images.");
+            
+        } catch (JSONException | IOException ex) {
+            Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+//            showImage(serviceURLPrefix, newValue.intValue());
+//        });
+//        if (datesSliderElems != null && !datesSliderElems.isEmpty()) {
+//            msgSlider.setValueOn(0);
+//        }
     }
 
-    private void processAndSaveDatasFrom(String url) {
+    private void downloadAndSaveDataFrom(String url) {
         try {
             String imagesNames = GeneralConfig.getInstance().getServerClient().get(url);
             JSONArray namesJson = new JSONArray(imagesNames);
@@ -161,6 +175,9 @@ public class ImageGalleryController implements Initializable {
                 datesSliderElems.add(fullName);
                 viewersMap.put(fullName, null);
             }
+            if (datesSliderElems != null && !datesSliderElems.isEmpty()) {
+                msgSlider.setValueOn(0);
+            }
         } catch (KFZClient.KFZServerException ex) {
             System.out.println("ex code: " + ex.getStatusCode() + "  User has not images.");
             
@@ -168,39 +185,51 @@ public class ImageGalleryController implements Initializable {
             Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private void showImage(String urlPrefix, int index) {
-        Platform.runLater(() -> { 
-            masker.setVisible(true);
-        });
         if (index >= 0 && index < datesSliderElems.size()) {
+            System.out.println("bla  " + masker);
+//            Platform.runLater(()->{
+                masker.setVisible(true);
+//            });
+            System.out.println("blu");
             String fullName = datesSliderElems.get(index);
             DocumentViewer viewer = viewersMap.get(fullName);
+            System.out.println("aq fullName aris: " + fullName + " viewer: " + viewer);
+
             if (viewer == null) {
                 try {
                     HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
                     viewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName);
                     viewersMap.put(fullName, viewer);
+                    showViewerComponentOnScene(viewer);
+                    System.out.println("aq movida... " + viewersMap.get(fullName));
                 } catch (IOException ex) {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            if (viewer != null) {
-                final DocumentViewer dViewer = viewer;
-                Platform.runLater(() -> {
-                    galleryImageFrame.getChildren().setAll(dViewer.getComponent());
-                    deletedImageView.visibleProperty().unbind();
-                    deletedImageView.visibleProperty().bind(dViewer.deletedProperty());
-                    ImageView icon = (ImageView) deleteOrUndo.getGraphic();
-                    icon.imageProperty().unbind();
-                    icon.imageProperty().bind(Bindings.createObjectBinding(() -> {
-                        String url = dViewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
-                        return new Image(getClass().getResourceAsStream(url));
-                    }, dViewer.deletedProperty()));
-                    masker.setVisible(false);
-                });
+            else {
+                showViewerComponentOnScene(viewer);
             }
+            System.out.println("bla2");
+//            Platform.runLater(()-> {
+                masker.setVisible(false);
+//            });
+            System.out.println("blu2");
         }
+    }
+    
+    private void showViewerComponentOnScene(DocumentViewer viewer){
+        final DocumentViewer dViewer = viewer;
+        galleryImageFrame.getChildren().setAll(dViewer.getComponent());
+        deletedImageView.visibleProperty().unbind();
+        deletedImageView.visibleProperty().bind(dViewer.deletedProperty());
+        ImageView icon = (ImageView) deleteOrUndo.getGraphic();
+        icon.imageProperty().unbind();
+        icon.imageProperty().bind(Bindings.createObjectBinding(() -> {
+            String url = dViewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
+            return new Image(getClass().getResourceAsStream(url));
+        }, dViewer.deletedProperty()));
     }
 
     @FXML
@@ -252,7 +281,7 @@ public class ImageGalleryController implements Initializable {
                     viewer.setIsNew(true);
                     Platform.runLater(() -> {
                         galleryImageFrame.getChildren().setAll(viewer.getComponent());
-                        galleryImageView.setPreserveRatio(true);
+//                        galleryImageView.setPreserveRatio(true);
                     });
                     proccessViewer(viewer, fileName);
                 } catch (FileNotFoundException ex) {

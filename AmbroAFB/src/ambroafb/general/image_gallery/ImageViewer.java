@@ -39,8 +39,8 @@ public class ImageViewer implements DocumentViewer {
     public ImageViewer(InputStream stream, String imageFullName) {
         imageView = new ImageView(new Image(stream));
         imageView.setPreserveRatio(true);
-        imageView.setFitWidth(330);
-        imageView.setFitHeight(330);
+        imageView.setFitWidth(380);
+        imageView.setFitHeight(270);
         fullName = imageFullName;
         magnifier = new MagnifierPane();
         magnifier.getChildren().setAll(imageView);
