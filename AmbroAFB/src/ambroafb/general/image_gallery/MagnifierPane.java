@@ -133,12 +133,14 @@ public class MagnifierPane extends StackPane {
                 viewer.show(MagnifierPane.this, e.getScreenX(), e.getScreenY() - (2 * getRadius()));
                 int w = (int) (MagnifierPane.this.getWidth() * getScaleFactor());
                 int h = (int) (MagnifierPane.this.getHeight() * getScaleFactor());
-                writeImg = new WritableImage(w, h);
+                if (w > 0 && h > 0) {
+                    writeImg = new WritableImage(w, h);
 
-                // Get snapshot image
-                MagnifierPane.this.snapshot(callBack, param, writeImg);
-                snapView.setImage(writeImg);
-                clippedNode.setContent(snapView);
+                    // Get snapshot image
+                    MagnifierPane.this.snapshot(callBack, param, writeImg);
+                    snapView.setImage(writeImg);
+                    clippedNode.setContent(snapView);
+                }
             }
         });
 
