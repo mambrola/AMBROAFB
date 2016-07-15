@@ -77,7 +77,7 @@ public class ImageGalleryController implements Initializable {
     private String serviceURLPrefix;
     private String parameterUpload;
     private String parameterDownload;
-    private int defaultPages;
+    private int validPDFPagesForClientDialog;
     private String defaultFileChooserPath;
     private MessageSlider msgSlider;
 
@@ -94,7 +94,7 @@ public class ImageGalleryController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        defaultPages = 10;
+        validPDFPagesForClientDialog = 10;
         defaultFileChooserPath = GeneralConfig.prefs.get(UPLOAD_DIRECTORY_PATH, null);
         undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
         viewersMap = new HashMap<>();
@@ -131,6 +131,56 @@ public class ImageGalleryController implements Initializable {
             }
         
     }
+        
+    private void showImage(String urlPrefix, int index) {
+        if (index >= 0 && index < datesSliderElems.size()) {
+            String fullName = datesSliderElems.get(index);
+            DocumentViewer viewer = viewersMap.get(fullName);
+            if (viewer == null) {
+                new Thread(()->{
+                    try {
+                        Platform.runLater(() -> {
+                            masker.setVisible(true);
+                        });
+                        HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
+                        DocumentViewer newViewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName, validPDFPagesForClientDialog);
+                        if (newViewer.isNotValidDocument()){
+                            Platform.runLater(() -> {
+                                new AlertMessage(Alert.AlertType.WARNING, null, newViewer.getInvalidationMessage()).showAlert();
+                            });
+                        }
+                        else{
+                            Platform.runLater(() -> {
+                                viewersMap.put(fullName, newViewer);
+                                showViewerComponentOnScene(newViewer);
+                            });
+                        }
+                        Platform.runLater(() -> {
+                            masker.setVisible(false);
+                        });
+                    } catch (IOException ex) {
+                        Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }).start();
+            }
+            else {
+                showViewerComponentOnScene(viewer);
+            }
+        }
+    }
+    
+    private void showViewerComponentOnScene(DocumentViewer viewer){
+        final DocumentViewer dViewer = viewer;
+        galleryImageFrame.getChildren().setAll(dViewer.getComponent());
+        deletedImageView.visibleProperty().unbind();
+        deletedImageView.visibleProperty().bind(dViewer.deletedProperty());
+        ImageView icon = (ImageView) deleteOrUndo.getGraphic();
+        icon.imageProperty().unbind();
+        icon.imageProperty().bind(Bindings.createObjectBinding(() -> {
+            String url = dViewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
+            return new Image(getClass().getResourceAsStream(url));
+        }, dViewer.deletedProperty()));
+    }
     
     public void setUploadDataURL(String serviceURLPrefix, String parameterUpload, String parameterDownload) {
         this.serviceURLPrefix = serviceURLPrefix;
@@ -157,47 +207,6 @@ public class ImageGalleryController implements Initializable {
             Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void showImage(String urlPrefix, int index) {
-        if (index >= 0 && index < datesSliderElems.size()) {
-            String fullName = datesSliderElems.get(index);
-            DocumentViewer viewer = viewersMap.get(fullName);
-            if (viewer == null) {
-                new Thread(()->{
-                    try {
-                        Platform.runLater(() -> {
-                            masker.setVisible(true);
-                        });
-                        HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
-                        DocumentViewer newviewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName);
-                        Platform.runLater(() -> {
-                            viewersMap.put(fullName, newviewer);
-                            showViewerComponentOnScene(newviewer);
-                            masker.setVisible(false);
-                        });
-                    } catch (IOException ex) {
-                        Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }).start();
-            }
-            else {
-                showViewerComponentOnScene(viewer);
-            }
-        }
-    }
-    
-    private void showViewerComponentOnScene(DocumentViewer viewer){
-        final DocumentViewer dViewer = viewer;
-        galleryImageFrame.getChildren().setAll(dViewer.getComponent());
-        deletedImageView.visibleProperty().unbind();
-        deletedImageView.visibleProperty().bind(dViewer.deletedProperty());
-        ImageView icon = (ImageView) deleteOrUndo.getGraphic();
-        icon.imageProperty().unbind();
-        icon.imageProperty().bind(Bindings.createObjectBinding(() -> {
-            String url = dViewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
-            return new Image(getClass().getResourceAsStream(url));
-        }, dViewer.deletedProperty()));
-    }
 
     @FXML
     private void deleteImage(ActionEvent event) {
@@ -208,13 +217,13 @@ public class ImageGalleryController implements Initializable {
         }
     }
 
-    private void setImageToButton(Button button, String imageURL) {
-        Image image = new Image(getClass().getResourceAsStream(imageURL));
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(((ImageView) button.getGraphic()).getFitWidth());
-        imageView.setFitHeight(((ImageView) button.getGraphic()).getFitHeight());
-        button.setGraphic(imageView);
-    }
+//    private void setImageToButton(Button button, String imageURL) {
+//        Image image = new Image(getClass().getResourceAsStream(imageURL));
+//        ImageView imageView = new ImageView(image);
+//        imageView.setFitWidth(((ImageView) button.getGraphic()).getFitWidth());
+//        imageView.setFitHeight(((ImageView) button.getGraphic()).getFitHeight());
+//        button.setGraphic(imageView);
+//    }
 
     @FXML
     private void uploadImage(ActionEvent event) {
@@ -228,7 +237,7 @@ public class ImageGalleryController implements Initializable {
         defaultFileChooserPath = files.get(files.size() - 1).getParentFile().getPath();
         GeneralConfig.prefs.put(UPLOAD_DIRECTORY_PATH, defaultFileChooserPath);
         
-        List<String> largePDFsNames = new ArrayList<>();
+        List<String> invalidViewersMessages = new ArrayList<>();
         new Thread(() -> {
             Platform.runLater(()->{
                 masker.setVisible(true);
@@ -239,49 +248,57 @@ public class ImageGalleryController implements Initializable {
                     InputStream stream = new FileInputStream(file);
                     DocumentViewer viewer;
                     if (fileName.substring(fileName.lastIndexOf(".")).toLowerCase().equals(".pdf")) {
-                        PDFHelper pdfHelper = new PDFHelper(new FileInputStream(file));
-                        if(pdfHelper.getPageCount() > defaultPages){
-                            largePDFsNames.add(file.getName());
-                            continue;
-                        }
-                        viewer = new PDFViewer(stream, fileName);
+                        viewer = new PDFViewer(stream, fileName, validPDFPagesForClientDialog);
                     } else {
                         viewer = new ImageViewer(stream, fileName);
                     }
+                    
+                    if (viewer.isNotValidDocument()){
+                        invalidViewersMessages.add(viewer.getInvalidationMessage());
+                        continue;
+                    }
                     viewer.setIsNew(true);
                     Platform.runLater(() -> {
-                        galleryImageFrame.getChildren().setAll(viewer.getComponent());
+                        proccessViewer(viewer, fileName);
                     });
-                    proccessViewer(viewer, fileName);
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             Platform.runLater(()->{
                 masker.setVisible(false);
-                showLargePDFWarning(largePDFsNames);
+                showLargePDFWarning(invalidViewersMessages);
             });
         }).start();
     }
     
-    private void showLargePDFWarning(List<String> largePDFsNames) {
-        String pdfs = GeneralConfig.getInstance().getTitleFor("large_pdfs") + defaultPages + ": \n";
-        String separator = ",";
-        pdfs = largePDFsNames.stream().map((largePDFName) -> largePDFName + separator).reduce(pdfs, String::concat);
-        if (pdfs.contains(separator)){
-            new AlertMessage(Alert.AlertType.WARNING, null, pdfs.substring(0, pdfs.length() - 1)).showAlert();
-        }
-    }
-    
+    /** ---------------------------------------???????????????????
+     * The method set index of images slider and this action cause to show new uploading file.
+     * @param viewer
+     * @param fileName 
+     */
     private void proccessViewer(DocumentViewer viewer, String fileName){
         Long currTime = new Date().getTime();
         String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
         viewersMap.put(fileFullName, viewer);
         datesSliderElems.add(fileFullName);
+        msgSlider.setValueOn(datesSliderElems.size() - 1);
     }
     
+    private void showLargePDFWarning(List<String> invalidViewersMessages) {
+        String warningMsg = "";
+        warningMsg = invalidViewersMessages.stream().map((msg) -> msg + "\n").reduce(warningMsg, String::concat);
+        if (!warningMsg.isEmpty()){
+            new AlertMessage(Alert.AlertType.WARNING, null, warningMsg).showAlert();
+        }
+//        String pdfs = GeneralConfig.getInstance().getTitleFor("large_pdfs") + validPDFPagesForClientDialog + ": \n";
+//        String separator = ",";
+//        pdfs = invalidViewersMessages.stream().map((largePDFName) -> largePDFName + separator).reduce(pdfs, String::concat);
+//        if (pdfs.contains(separator)){
+//            new AlertMessage(Alert.AlertType.WARNING, null, pdfs.substring(0, pdfs.length() - 1)).showAlert();
+//        }
+    }
+
     @FXML
     private void rotate(ActionEvent event) {
         String fullName = msgSlider.getValue();

@@ -5,6 +5,7 @@
  */
 package ambroafb.general.image_gallery;
 
+import ambroafb.general.Utils;
 import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,6 +33,10 @@ import javafx.util.StringConverter;
 /**
  *
  * @author dato
+ * 
+ * Does not use Utils.createScene("path/MessageSlider.fxml", (Object)this); 
+ * because this class must not extend VBox, but it is needed, 
+ * that we can add MessageSlider as scene object.
  */
 public class MessageSlider extends VBox {
     
@@ -39,18 +45,20 @@ public class MessageSlider extends VBox {
     @FXML
     private ScrollBar scrollBar;
 
-    private IntegerProperty indexProperty = new SimpleIntegerProperty(-1);
+    private DoubleProperty indexProperty = new SimpleDoubleProperty(-1.0);
     private ObservableList<String> values;
+    private StringConverter<String> converter;
     
     public MessageSlider(ObservableList<String> values, StringConverter<String> con, ResourceBundle rb) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MessageSlider.fxml"), rb);
         assignLoader(loader);
         this.values = values;
+        converter = con;
         msgField.textProperty().bind(Bindings.createStringBinding(() -> {
             if(invalidState())
                 return "";
-            String value = values.get(indexProperty.get());
-            return (con == null) ? value : con.toString(value);
+            String value = values.get(indexProperty.getValue().intValue());
+            return (converter == null) ? value : converter.toString(value);
         }, indexProperty));
         // deselect value in textField:
         msgField.setStyle("-fx-highlight-fill: null; -fx-highlight-text-fill: -fx-text-fill;");
@@ -61,10 +69,7 @@ public class MessageSlider extends VBox {
         scrollBar.setVisibleAmount(1);
         scrollBar.setBlockIncrement(1);
         
-//        scrollBar.indexProperty().bindBidirectional(indexProperty); // ?????????
-        scrollBar.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            indexProperty.set(newValue.intValue());
-        });
+        scrollBar.valueProperty().bindBidirectional(indexProperty);
     }
     
     /**
@@ -84,7 +89,7 @@ public class MessageSlider extends VBox {
      * @return - True - if index is out of bounds or values list is null or empty.
      */
     private boolean invalidState(){
-        return values == null || values.isEmpty() || indexProperty.get() < 0 || indexProperty.get() >= values.size();
+        return values == null || values.isEmpty() || indexProperty.getValue().intValue() < 0 || indexProperty.getValue().intValue() >= values.size();
     }
 
     /**
@@ -98,7 +103,7 @@ public class MessageSlider extends VBox {
     /**
      * @return - ScrollBar indexProperty.
      */
-    public IntegerProperty indexProperty(){
+    public DoubleProperty indexProperty(){
         return indexProperty;
     }
 
@@ -111,44 +116,35 @@ public class MessageSlider extends VBox {
         if (index < 0 || index >= values.size()){
             index = 0;
         }
-//        System.out.println("scrollbar getvalue: " + scrollBar.getValue());
-//        scrollBar.setValue(index);
-//        System.out.println("scrollbar getValue: " + scrollBar.getValue());
-//        System.out.println("setValueOn. indexProp: " + indexProperty.get());
-//        indexProperty.set(-1); // ????????????
         indexProperty.set(index);
-//        System.out.println("setValueOn. indexProp: " + indexProperty.get());
     }
 
     /**
      * The method return current value.
      * @return - If values list is null or empty or index is out of bounds, 
-     * method returns empty string.
+     * method returns empty string. Otherwise it returns value according to stringConverter.
      */
     public String getValue() {
         String value = "";
         if (!invalidState()){
-            value = values.get(indexProperty.get());
+            value = values.get(indexProperty.getValue().intValue());
         }
         return value;
     }
     
     /**
      * The inner class provides to listen any manipulation 
-     * on observable list (we listen only add and remove actions) and make appropriate logic.
+     * on observable list (we listen only remove actions, 
+     * because add action will cause download image permanently) and make appropriate logic.
      */
     private class ListActionListener implements ListChangeListener<String> {
 
         @Override
         public void onChanged(Change<? extends String> c) {
             while(c.next()){
-//                if (c.wasAdded()){
-//                    indexProperty.set(values.size() - 1);
-//                }
-//                else 
-                    if(c.wasRemoved()){
-                    if (indexProperty.get() == values.size()){
-                        indexProperty.set(indexProperty.get() - 1);
+                if(c.wasRemoved()){
+                    if (indexProperty.getValue().intValue() == values.size()){
+                        indexProperty.set(indexProperty.getValue().intValue() - 1);
                     }
                 }
                 if(values.size() > 0){

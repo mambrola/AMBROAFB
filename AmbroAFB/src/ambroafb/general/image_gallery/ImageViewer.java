@@ -52,6 +52,11 @@ public class ImageViewer implements DocumentViewer, Initializable {
     }
 
     @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        imageView.setImage(new Image(stream));
+    }
+    
+    @Override
     public Node getComponent() {
         return root;
     }
@@ -84,7 +89,7 @@ public class ImageViewer implements DocumentViewer, Initializable {
         }
         return result;
     }
-
+    
     @Override
     public void setIsNew(boolean isNew) {
         this.isNew = isNew;
@@ -111,8 +116,13 @@ public class ImageViewer implements DocumentViewer, Initializable {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        imageView.setImage(new Image(stream));
+    public boolean isNotValidDocument() {
+        return false;
+    }
+
+    @Override
+    public String getInvalidationMessage() {
+        return "invalid image"; // ???????????
     }
 
 }
