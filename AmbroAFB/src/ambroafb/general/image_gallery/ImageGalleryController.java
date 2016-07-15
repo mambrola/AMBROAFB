@@ -181,7 +181,6 @@ public class ImageGalleryController implements Initializable {
                 }).start();
             }
             else {
-                System.out.println("elseshi shevida");
                 showViewerComponentOnScene(viewer);
             }
         }
