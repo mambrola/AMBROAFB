@@ -139,35 +139,8 @@ public class ImageGalleryController implements Initializable {
     }
 
     public void downloadData() {
-//        downloadAndSaveDataFrom(serviceURLPrefix + parameterDownload);
         try {
             String imagesNames = GeneralConfig.getInstance().getServerClient().get(serviceURLPrefix + parameterDownload);
-            JSONArray namesJson = new JSONArray(imagesNames);
-            for (int i = 0; i < namesJson.length(); i++) {
-                String fullName = namesJson.getString(i);
-                datesSliderElems.add(fullName);
-                viewersMap.put(fullName, null);
-            }
-            if (datesSliderElems != null && !datesSliderElems.isEmpty()) {
-                msgSlider.setValueOn(0);
-            }
-        } catch (KFZClient.KFZServerException ex) {
-            System.out.println("ex code: " + ex.getStatusCode() + "  User has not images.");
-            
-        } catch (JSONException | IOException ex) {
-            Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-//        msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-//            showImage(serviceURLPrefix, newValue.intValue());
-//        });
-//        if (datesSliderElems != null && !datesSliderElems.isEmpty()) {
-//            msgSlider.setValueOn(0);
-//        }
-    }
-
-    private void downloadAndSaveDataFrom(String url) {
-        try {
-            String imagesNames = GeneralConfig.getInstance().getServerClient().get(url);
             JSONArray namesJson = new JSONArray(imagesNames);
             for (int i = 0; i < namesJson.length(); i++) {
                 String fullName = namesJson.getString(i);
@@ -187,24 +160,30 @@ public class ImageGalleryController implements Initializable {
     
     private void showImage(String urlPrefix, int index) {
         if (index >= 0 && index < datesSliderElems.size()) {
-            masker.setVisible(true);
             String fullName = datesSliderElems.get(index);
             DocumentViewer viewer = viewersMap.get(fullName);
-
             if (viewer == null) {
-                try {
-                    HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
-                    viewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName);
-                    viewersMap.put(fullName, viewer);
-                    showViewerComponentOnScene(viewer);
-                } catch (IOException ex) {
-                    Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new Thread(()->{
+                    try {
+                        Platform.runLater(() -> {
+                            masker.setVisible(true);
+                        });
+                        HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
+                        DocumentViewer newviewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName);
+                        Platform.runLater(() -> {
+                            viewersMap.put(fullName, newviewer);
+                            showViewerComponentOnScene(newviewer);
+                            masker.setVisible(false);
+                        });
+                    } catch (IOException ex) {
+                        Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }).start();
             }
             else {
+                System.out.println("elseshi shevida");
                 showViewerComponentOnScene(viewer);
             }
-            masker.setVisible(false);
         }
     }
     
@@ -252,6 +231,9 @@ public class ImageGalleryController implements Initializable {
         
         List<String> largePDFsNames = new ArrayList<>();
         new Thread(() -> {
+            Platform.runLater(()->{
+                masker.setVisible(true);
+            });
             for (File file : files) {
                 try {
                     String fileName = file.getName();
@@ -270,7 +252,6 @@ public class ImageGalleryController implements Initializable {
                     viewer.setIsNew(true);
                     Platform.runLater(() -> {
                         galleryImageFrame.getChildren().setAll(viewer.getComponent());
-//                        galleryImageView.setPreserveRatio(true);
                     });
                     proccessViewer(viewer, fileName);
                 } catch (FileNotFoundException ex) {
@@ -279,7 +260,10 @@ public class ImageGalleryController implements Initializable {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            showLargePDFWarning(largePDFsNames);
+            Platform.runLater(()->{
+                masker.setVisible(false);
+                showLargePDFWarning(largePDFsNames);
+            });
         }).start();
     }
     

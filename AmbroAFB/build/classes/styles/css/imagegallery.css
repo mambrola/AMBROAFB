@@ -12,3 +12,6 @@
   -fx-alignment: CENTER;
   -fx-spacing: 5px;
 }
+.masker-pane .masker-center {
+  -fx-background-color: transparent;
+}
