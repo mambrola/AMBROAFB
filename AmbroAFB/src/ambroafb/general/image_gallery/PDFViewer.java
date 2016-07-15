@@ -116,6 +116,9 @@ public class PDFViewer implements Initializable, DocumentViewer {
             cur = rotateImage(cur);
             images[indexProperty.get()] = cur;
             imageView.setImage(cur);
+            double imgViewWidth = imageView.getFitWidth();
+            imageView.setFitWidth(imageView.getFitHeight());
+            imageView.setFitHeight(imgViewWidth);
             int deg = rotatedImages.getOrDefault(indexProperty.getValue(), 0);
             rotatedImages.put(indexProperty.getValue(), deg + 90);
         } catch (IOException | KFZClient.KFZServerException ex) {

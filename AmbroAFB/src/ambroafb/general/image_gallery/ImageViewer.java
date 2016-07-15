@@ -53,7 +53,21 @@ public class ImageViewer implements DocumentViewer, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        imageView.setImage(new Image(stream));
+        imageView.setFitWidth(DocumentViewer.FIT_WIDTH);
+        imageView.setFitHeight(DocumentViewer.FIT_HEIGHT);
+        
+        Image image = new Image(stream);
+        double reqW = image.getRequestedWidth();
+        double reqH = image.getRequestedHeight();
+        System.out.println("reqW: " + reqW + " reqH: " + reqH);
+        
+        if (reqW < DocumentViewer.FIT_WIDTH) {
+            imageView.setFitWidth(reqW);
+        }
+        if (reqH < DocumentViewer.FIT_HEIGHT) {
+            imageView.setFitHeight(reqH);
+        }
+        imageView.setImage(image);
     }
     
     @Override
@@ -65,6 +79,22 @@ public class ImageViewer implements DocumentViewer, Initializable {
     public void rotate() {
         try {
             degree += 90;
+            Image image = rotateImage(imageView.getImage());
+            
+            double reqW = image.getRequestedWidth();
+            double reqH = image.getRequestedHeight();
+            System.out.println("reqW: " + reqW + " reqH: " + reqH);
+            
+            double propW = image.widthProperty().get();
+            double propH = image.heightProperty().get();
+            System.out.println("propW: " + propW + " propH: " + propH);
+            
+            if(reqH < DocumentViewer.FIT_WIDTH){
+                imageView.setFitWidth(reqH);
+            }
+            if(reqW < DocumentViewer.FIT_HEIGHT){
+                imageView.setFitHeight(reqW);
+            }
             imageView.setImage(rotateImage(imageView.getImage()));
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(ImageViewer.class.getName()).log(Level.SEVERE, null, ex);

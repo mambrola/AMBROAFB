@@ -34,6 +34,9 @@ public interface DocumentViewer {
     public boolean isNotValidDocument();
     public String getInvalidationMessage();
     
+    public static final double FIT_WIDTH = 380;
+    public static final double FIT_HEIGHT = 270;
+    
     default public Image rotateImage(Image img) throws IOException, KFZClient.KFZServerException {
         BufferedImage bImage = SwingFXUtils.fromFXImage(img, null);
 
