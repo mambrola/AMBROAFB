@@ -181,6 +181,7 @@ public class ImageGalleryController implements Initializable {
                 }).start();
             }
             else {
+                System.out.println("else-shi shevida");
                 showViewerComponentOnScene(viewer);
             }
         }
@@ -250,9 +251,9 @@ public class ImageGalleryController implements Initializable {
                     }
                     viewer.setIsNew(true);
                     Platform.runLater(() -> {
-                        galleryImageFrame.getChildren().setAll(viewer.getComponent());
+//                        galleryImageFrame.getChildren().setAll(viewer.getComponent());
+                        proccessViewer(viewer, fileName);
                     });
-                    proccessViewer(viewer, fileName);
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
@@ -280,6 +281,7 @@ public class ImageGalleryController implements Initializable {
         String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
         viewersMap.put(fileFullName, viewer);
         datesSliderElems.add(fileFullName);
+        msgSlider.setValueOn(datesSliderElems.size() - 1);
     }
     
     @FXML

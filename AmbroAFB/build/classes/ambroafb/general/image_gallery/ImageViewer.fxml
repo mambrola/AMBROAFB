@@ -8,7 +8,11 @@
 <?import ambroafb.general.image_gallery.*?>
 <?import javafx.scene.image.*?>
 
-<HBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1" stylesheets="/styles/css/imageviewer.css">
+<HBox   fx:id="root"
+        xmlns="http://javafx.com/javafx/8"
+        xmlns:fx="http://javafx.com/fxml/1" 
+        stylesheets="/styles/css/imageviewer.css">
+    
     <children>
         <MagnifierPane fx:id="magnifier">
             <children>

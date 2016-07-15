@@ -7,9 +7,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
 
-<HBox   prefWidth="385" prefHeight="350"
+<HBox   fx:id="root"
         xmlns="http://javafx.com/javafx/8"
-        xmlns:fx="http://javafx.com/fxml/1">
+        xmlns:fx="http://javafx.com/fxml/1"
+        stylesheets="/styles/css/pdfviewer.css">
     
     <children>
         <HBox alignment="CENTER" HBox.hgrow="ALWAYS" >
