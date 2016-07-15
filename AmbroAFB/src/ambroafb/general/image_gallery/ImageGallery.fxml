@@ -8,6 +8,7 @@
 <?import javafx.scene.image.*?>
 <?import ambro.*?>
 <?import ambroafb.general.image_gallery.*?>
+<?import org.controlsfx.control.*?>
 
 
 <VBox   fx:id="imagesGalleryRoot" 
@@ -18,7 +19,7 @@
     <children>
         <StackPane >
             <HBox fx:id="galleryImageFrame" >
-                <ImageView fx:id="galleryImageView" preserveRatio="true"  >
+                <ImageView fx:id="galleryImageView" fitWidth="380" fitHeight="270" preserveRatio="true"  >
                     <image>
                         <Image url="/images/default_profile_image.png" />
                     </image>
@@ -29,7 +30,7 @@
                     <Image url="/images/deleted.png" />
                 </image>
             </ImageView>
-            <org.controlsfx.control.MaskerPane fx:id="masker" visible="false" text="%loading"/>
+            <MaskerPane fx:id="masker" visible="false" text="%loading"/>
         </StackPane>
         <HBox fx:id="imageButtonsHBox" >
             <children>
