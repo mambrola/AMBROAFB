@@ -53,25 +53,24 @@ public class ImageViewer implements DocumentViewer, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        imageView.setFitWidth(DocumentViewer.FIT_WIDTH);
-        imageView.setFitHeight(DocumentViewer.FIT_HEIGHT);
-        
         Image image = new Image(stream);
-        double reqW = image.getRequestedWidth();
-        double reqH = image.getRequestedHeight();
-        System.out.println("reqW: " + reqW + " reqH: " + reqH);
+        double width = image.getWidth();
+        double height = image.getHeight();
         
-        if (reqW < DocumentViewer.FIT_WIDTH) {
-            imageView.setFitWidth(reqW);
+        if (width < DocumentViewer.FIT_WIDTH) {
+            imageView.setFitWidth(width);
         }
-        if (reqH < DocumentViewer.FIT_HEIGHT) {
-            imageView.setFitHeight(reqH);
+        if (height < DocumentViewer.FIT_HEIGHT) {
+            imageView.setFitHeight(height);
         }
         imageView.setImage(image);
     }
     
     @Override
     public Node getComponent() {
+        double propW = imageView.getFitWidth();
+        double propH = imageView.getFitHeight();
+        System.out.println("fitW: " + propW + " fitH: " + propH);
         return root;
     }
 
@@ -81,19 +80,13 @@ public class ImageViewer implements DocumentViewer, Initializable {
             degree += 90;
             Image image = rotateImage(imageView.getImage());
             
-            double reqW = image.getRequestedWidth();
-            double reqH = image.getRequestedHeight();
-            System.out.println("reqW: " + reqW + " reqH: " + reqH);
-            
-            double propW = image.widthProperty().get();
-            double propH = image.heightProperty().get();
-            System.out.println("propW: " + propW + " propH: " + propH);
-            
-            if(reqH < DocumentViewer.FIT_WIDTH){
-                imageView.setFitWidth(reqH);
+            double width = image.getRequestedWidth();
+            double height = image.getRequestedHeight();
+            if(width > DocumentViewer.FIT_WIDTH){
+                imageView.setFitWidth(DocumentViewer.FIT_WIDTH);
             }
-            if(reqW < DocumentViewer.FIT_HEIGHT){
-                imageView.setFitHeight(reqW);
+            if(height > DocumentViewer.FIT_HEIGHT){
+                imageView.setFitHeight(DocumentViewer.FIT_HEIGHT);
             }
             imageView.setImage(rotateImage(imageView.getImage()));
         } catch (IOException | KFZClient.KFZServerException ex) {

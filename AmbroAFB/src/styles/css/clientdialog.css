@@ -2,8 +2,8 @@
 #formPane {
   -fx-min-height: 732;
   -fx-max-height: 732;
-  -fx-min-width: 820;
-  -fx-max-width: 820;
+  -fx-min-width: 620;
+  -fx-max-width: 620;
   -fx-padding: 10;
 }
 .vContainer {
@@ -16,31 +16,31 @@
 }
 .one > .couple {
   -fx-background-color: yellow;
-  -fx-pref-width: 800;
+  -fx-pref-width: 600;
 }
 .oneHalf > .couple {
   -fx-background-color: yellowgreen;
-  -fx-pref-width: 385;
+  -fx-pref-width: 285;
 }
 .oneThirds > .couple {
   -fx-background-color: yellow;
-  -fx-pref-width: 246.66666667;
+  -fx-pref-width: 180;
 }
 .couple > .combo-box {
-  -fx-max-width: 800;
+  -fx-max-width: 600;
 }
 .oneThirds {
-  -fx-pref-width: 523.33333333;
+  -fx-pref-width: 390;
 }
 .oneHalf,
 .oneThirds {
   -fx-spacing: 30;
 }
 .w4 .text-field {
-  -fx-pref-width: 523.33333333;
+  -fx-pref-width: 390;
 }
 .w4 .combo-box {
-  -fx-pref-width: 246.66666667;
+  -fx-pref-width: 180;
 }
 .doubleHeight {
   /*-fx-background-color: yellow;*/
@@ -52,6 +52,7 @@
 *:disabled {
   -fx-opacity: 0.9;
 }
-#imageGallery {
-  -fx-min-height: 350.26666667;
+#imageGalleryPane {
+  -fx-background-color: blue;
+  -fx-min-height: 404.7;
 }

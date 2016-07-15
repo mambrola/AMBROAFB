@@ -1,7 +1,7 @@
 @import url("/styles/css/core.css");
 @import url("/variables.less");
 
-@formWidth          : 800;
+@formWidth          : 600;
 @gap                :  10;
 @spaceWidth         :  30;
 @formHeight         : 732;
@@ -72,6 +72,7 @@
     -fx-opacity: 0.9;
 }
 
-#imageGallery {
-    -fx-min-height: 1.42*(@formWidth - 2*@spaceWidth)/3;
+#imageGalleryPane {
+    -fx-background-color: blue;
+    -fx-min-height: 1.42*(@formWidth - @spaceWidth)/2;
 }
