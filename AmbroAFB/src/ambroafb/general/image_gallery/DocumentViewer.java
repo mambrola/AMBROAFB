@@ -15,7 +15,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 /**
  *
@@ -56,7 +55,7 @@ public interface DocumentViewer {
         public static DocumentViewer getAppropriateViewer(InputStream stream, String fullName, int validPagesNumber){
             DocumentViewer viewer;
             if(fullName.endsWith("pdf")){
-                viewer = new PDFViewer(stream, fullName, validPagesNumber);
+                viewer = new PDFViewer(stream, fullName);
             }
             else {
                 viewer = new ImageViewer(stream, fullName);

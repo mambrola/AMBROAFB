@@ -144,18 +144,9 @@ public class ImageGalleryController implements Initializable {
                         });
                         HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
                         DocumentViewer newViewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName, validPDFPagesForClientDialog);
-                        if (newViewer.isNotValidDocument()){
-                            Platform.runLater(() -> {
-                                new AlertMessage(Alert.AlertType.WARNING, null, newViewer.getInvalidationMessage()).showAlert();
-                            });
-                        }
-                        else{
-                            Platform.runLater(() -> {
-                                viewersMap.put(fullName, newViewer);
-                                showViewerComponentOnScene(newViewer);
-                            });
-                        }
                         Platform.runLater(() -> {
+                            viewersMap.put(fullName, newViewer);
+                            showViewerComponentOnScene(newViewer);
                             masker.setVisible(false);
                         });
                     } catch (IOException ex) {
@@ -217,14 +208,6 @@ public class ImageGalleryController implements Initializable {
         }
     }
 
-//    private void setImageToButton(Button button, String imageURL) {
-//        Image image = new Image(getClass().getResourceAsStream(imageURL));
-//        ImageView imageView = new ImageView(image);
-//        imageView.setFitWidth(((ImageView) button.getGraphic()).getFitWidth());
-//        imageView.setFitHeight(((ImageView) button.getGraphic()).getFitHeight());
-//        button.setGraphic(imageView);
-//    }
-
     @FXML
     private void uploadImage(ActionEvent event) {
         Stage owner = (Stage) galleryImageFrame.getScene().getWindow();
@@ -242,21 +225,17 @@ public class ImageGalleryController implements Initializable {
             Platform.runLater(()->{
                 masker.setVisible(true);
             });
-            for (File file : files) {
+            files.stream().forEach((file) -> {
                 try {
                     String fileName = file.getName();
                     InputStream stream = new FileInputStream(file);
                     DocumentViewer viewer;
                     if (fileName.substring(fileName.lastIndexOf(".")).toLowerCase().equals(".pdf")) {
-                        viewer = new PDFViewer(stream, fileName, validPDFPagesForClientDialog);
+                        viewer = new PDFViewer(stream, fileName);
                     } else {
                         viewer = new ImageViewer(stream, fileName);
                     }
                     
-                    if (viewer.isNotValidDocument()){
-                        invalidViewersMessages.add(viewer.getInvalidationMessage());
-                        continue;
-                    }
                     viewer.setIsNew(true);
                     Platform.runLater(() -> {
                         proccessViewer(viewer, fileName);
@@ -264,7 +243,7 @@ public class ImageGalleryController implements Initializable {
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
+            });
             Platform.runLater(()->{
                 masker.setVisible(false);
                 showLargePDFWarning(invalidViewersMessages);
@@ -272,8 +251,8 @@ public class ImageGalleryController implements Initializable {
         }).start();
     }
     
-    /** ---------------------------------------???????????????????
-     * The method set index of images slider and this action cause to show new uploading file.
+    /** 
+     * The method count date and set index of images slider. This action cause to show new uploading file.
      * @param viewer
      * @param fileName 
      */
@@ -291,12 +270,6 @@ public class ImageGalleryController implements Initializable {
         if (!warningMsg.isEmpty()){
             new AlertMessage(Alert.AlertType.WARNING, null, warningMsg).showAlert();
         }
-//        String pdfs = GeneralConfig.getInstance().getTitleFor("large_pdfs") + validPDFPagesForClientDialog + ": \n";
-//        String separator = ",";
-//        pdfs = invalidViewersMessages.stream().map((largePDFName) -> largePDFName + separator).reduce(pdfs, String::concat);
-//        if (pdfs.contains(separator)){
-//            new AlertMessage(Alert.AlertType.WARNING, null, pdfs.substring(0, pdfs.length() - 1)).showAlert();
-//        }
     }
 
     @FXML

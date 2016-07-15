@@ -5,6 +5,7 @@
  */
 package ambroafb.general.image_gallery;
 
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.PDFHelper;
 import ambroafb.general.Utils;
@@ -54,29 +55,24 @@ public class PDFViewer implements Initializable, DocumentViewer {
     private String fullName;
     private boolean isInvalid;
 
-    public PDFViewer(InputStream stream, String pdfFullName, int validPageNamber) {
+    public PDFViewer(InputStream stream, String pdfFullName) {
         try {
             pdfHelper = new PDFHelper(stream);
-            if (pdfHelper.getPageCount() > validPageNamber) {
-                isInvalid = true;
-            } else {
-                images = new Image[pdfHelper.getPageCount()];
-                rotatedImages = new HashMap<>();
-                Scene scene = Utils.createScene("/ambroafb/general/image_gallery/PDFViewer.fxml", (Object) this);
-                root = scene.getRoot();
-                fullName = pdfFullName;
+            images = new Image[pdfHelper.getPageCount()];
+            rotatedImages = new HashMap<>();
+            Scene scene = Utils.createScene("/ambroafb/general/image_gallery/PDFViewer.fxml", (Object) this);
+            root = scene.getRoot();
+            fullName = pdfFullName;
 
-                up.setOnAction((ActionEvent event) -> {
-                    indexProperty.set(indexProperty.get() - 1);
-                });
+            up.setOnAction((ActionEvent event) -> {
+                indexProperty.set(indexProperty.get() - 1);
+            });
 
-                down.setOnAction((ActionEvent event) -> {
-                    indexProperty.set(indexProperty.get() + 1);
-                });
-            }
+            down.setOnAction((ActionEvent event) -> {
+                indexProperty.set(indexProperty.get() + 1);
+            });
         } catch (IOException ex) {
             System.out.println("pdf probleeeem. davichirot esec da davamushaot baregam.");
-//            Logger.getLogger(PDFViewer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -188,7 +184,7 @@ public class PDFViewer implements Initializable, DocumentViewer {
     public String getInvalidationMessage() {
         String warningMSg = "";
         if (true) {
-            warningMSg += "";
+            warningMSg += ""; // GeneralConfig.getInstance().getTitleFor("large_pdfs") + validPageNamber + ": \n";
         }
         return warningMSg;
     }
