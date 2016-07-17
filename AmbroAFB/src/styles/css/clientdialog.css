@@ -1,13 +1,13 @@
 @import url("/styles/css/core.css");
 #formPane {
   /*-fx-min-height: @formHeight;*/
-  -fx-max-height: 732;
-  -fx-min-width: 620;
-  -fx-max-width: 620;
-  -fx-padding: 10;
+  -fx-max-height: 800;
+  -fx-min-width: 830;
+  -fx-max-width: 830;
+  -fx-padding: 15;
 }
 .vContainer {
-  -fx-spacing: 10;
+  -fx-spacing: 15;
 }
 .label {
   -fx-font-weight: bold;
@@ -15,27 +15,27 @@
   -fx-padding: 1 0 1 2;
 }
 .one > .couple {
-  -fx-pref-width: 600;
+  -fx-pref-width: 800;
 }
 .oneHalf > .couple {
-  -fx-pref-width: 285;
+  -fx-pref-width: 382.5;
 }
 .oneThirds > .couple {
-  -fx-pref-width: 180;
+  -fx-pref-width: 243.33333333;
 }
 .couple > .combo-box {
-  -fx-max-width: 600;
+  -fx-max-width: 800;
 }
 .oneThirds {
-  -fx-pref-width: 390;
+  -fx-pref-width: 521.66666667;
 }
 .oneHalf,
 .oneThirds {
-  -fx-spacing: 30;
+  -fx-spacing: 35;
 }
 .doubleHeight {
   /*-fx-background-color: yellow;*/
-  -fx-pref-height: 162.66666667;
+  -fx-pref-height: 177.77777778;
 }
 .button {
   -fx-font-weight: bold;
@@ -44,5 +44,6 @@
   -fx-opacity: 0.9;
 }
 #imageGallery {
-  -fx-min-height: 255.6;
+  -fx-min-height: 345.53333333;
+  -fx-max-height: 345.53333333;
 }

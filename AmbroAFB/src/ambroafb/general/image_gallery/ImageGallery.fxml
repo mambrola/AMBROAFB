@@ -17,13 +17,16 @@
         xmlns="http://javafx.com/javafx/8"
         fx:controller="ambroafb.general.image_gallery.ImageGalleryController" >
     <children>
+        <Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />
         <StackPane >
             <HBox fx:id="galleryImageFrame" >
-                <ImageView fx:id="galleryImageView" fitWidth="380" fitHeight="270" preserveRatio="true"  >
+                <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
+                <ImageView fx:id="galleryImageView" preserveRatio="true" cache="true" smooth="true" >
                     <image>
-                        <Image url="/images/default_profile_image.png" />
+                        <Image url="/images/logo.png" />
                     </image>
                 </ImageView>
+                <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
             </HBox>
             <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
                 <image>
@@ -32,6 +35,7 @@
             </ImageView>
             <MaskerPane fx:id="masker" visible="false" text="%loading"/>
         </StackPane>
+        <Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />
         <HBox fx:id="imageButtonsHBox" >
             <children>
                 <Button  fx:id="deleteOrUndo" onAction="#deleteImage" >
@@ -64,6 +68,7 @@
                     </graphic>
                 </Button>
                 <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="tm" onAction="#tm" text="TM"/>   
             </children>
         </HBox>
     </children>

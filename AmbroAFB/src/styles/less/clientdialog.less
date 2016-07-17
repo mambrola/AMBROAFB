@@ -1,13 +1,11 @@
 @import url("/styles/css/core.css");
 @import url("/variables.less");
 
-@formWidth          : 600;
-@gap                :  10;
-@spaceWidth         :  30;
-@formHeight         : 732;
-@rotateHboxSpacing  :  60;
-@profileImageWidth  : 128;
-@profileImageHeight :  90;
+@formWidth          : 800;
+@gap                :  15;
+@spaceWidth         :  35;
+@formHeight         : 800;
+@rotateHboxSpacing  :  65;
 
 #formPane {
     /*-fx-min-height: @formHeight;*/
@@ -63,4 +61,5 @@
 
 #imageGallery {
     -fx-min-height: 1.42*(@formWidth - 2*@spaceWidth)/3;
+    -fx-max-height: 1.42*(@formWidth - 2*@spaceWidth)/3;
 }

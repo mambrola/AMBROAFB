@@ -1,15 +1,16 @@
 @import url("/styles/css/core.css");
-#galleryImageFrame {
-  -fx-border-width: 2;
-  -fx-border-color: black;
-  -fx-max-width: 400;
-  -fx-max-height: 600;
-  -fx-alignment: center;
-}
 #imagesGalleryRoot {
-  -fx-alignment: CENTER;
-  -fx-spacing: 5px;
+  -fx-pref-height: 1800;
 }
-.masker-pane .masker-center {
-  -fx-background-color: transparent;
+#galleryImageFrame {
+  -fx-background-color: red;
+}
+#galleryImageView {
+  -fx-background-color: blue;
+}
+.hgrowalways {
+  -fx-background-color: green;
+}
+.vgrowalways {
+  -fx-background-color: yellow;
 }

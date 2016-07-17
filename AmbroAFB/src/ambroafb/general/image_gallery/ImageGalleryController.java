@@ -41,6 +41,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -56,6 +57,9 @@ import org.json.JSONException;
  */
 public class ImageGalleryController implements Initializable {
 
+    @FXML
+    private VBox imagesGalleryRoot;
+    
     @FXML
     private Button deleteOrUndo, rotateToRight, upload;
 
@@ -107,10 +111,27 @@ public class ImageGalleryController implements Initializable {
         converter = new ImageGalleryStringConverter();
         msgSlider = new MessageSlider(datesSliderElems, converter, rb);
         imageButtonsHBox.getChildren().add(msgSlider);
+        
+        //Murman - bind-, რაღაც ამდაგვარი უნდა გამოვიყენოთ
+//        galleryImageView.fitWidthProperty().bind(imagesGalleryRoot.widthProperty());
+//        galleryImageView.fitHeightProperty().bind(imagesGalleryRoot.heightProperty());
 
+        System.out.println( "galleryImageFrame.size: " + " : " + 
+                            galleryImageFrame.getWidth()+ " : " +
+                            galleryImageFrame.getHeight());
+        
+        galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
         msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             showImage(serviceURLPrefix, newValue.intValue());
         });
+    }
+    
+    public void tm(){
+        galleryImageView.setFitWidth(0.7*imagesGalleryRoot.getWidth());
+        //galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
+        System.out.println( "galleryImageFrame.size: " + " : " + 
+                            galleryImageFrame.getWidth()+ " : " +
+                            galleryImageFrame.getHeight());
     }
     
     private class ImageGalleryStringConverter extends StringConverter<String> {
@@ -162,6 +183,12 @@ public class ImageGalleryController implements Initializable {
     
     private void showViewerComponentOnScene(DocumentViewer viewer){
         final DocumentViewer dViewer = viewer;
+        
+        int size = galleryImageFrame.getChildren().size();
+        System.out.println("galleryImageFrame.getChildren().size(): " + size);
+        for (int i = 0; i < size; i++){
+            System.out.println("galleryImageFrame.getChildren().size(): " + galleryImageFrame.getChildren().get(i));
+        }
         galleryImageFrame.getChildren().setAll(dViewer.getComponent());
         deletedImageView.visibleProperty().unbind();
         deletedImageView.visibleProperty().bind(dViewer.deletedProperty());

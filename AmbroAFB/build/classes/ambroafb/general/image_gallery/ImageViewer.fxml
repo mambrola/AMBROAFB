@@ -16,7 +16,7 @@
     <children>
         <MagnifierPane fx:id="magnifier">
             <children>
-                <ImageView fx:id="imageView" fitWidth="380" fitHeight="270" preserveRatio="true"  />
+                <ImageView fx:id="imageView" preserveRatio="true"  />
             </children>
         </MagnifierPane>
     </children>

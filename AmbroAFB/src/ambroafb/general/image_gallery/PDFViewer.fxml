@@ -17,7 +17,7 @@
         <HBox alignment="CENTER" HBox.hgrow="ALWAYS" >
             <ambroafb.general.image_gallery.MagnifierPane>
                <children>
-                   <ImageView fx:id="imageView" fitWidth="380" fitHeight="270" preserveRatio="true" />
+                   <ImageView fx:id="imageView" preserveRatio="true" />
                </children>
             </ambroafb.general.image_gallery.MagnifierPane>
         </HBox>
