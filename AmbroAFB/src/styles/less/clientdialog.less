@@ -10,7 +10,7 @@
 @profileImageHeight :  90;
 
 #formPane {
-    -fx-min-height: @formHeight;
+    /*-fx-min-height: @formHeight;*/
     -fx-max-height: @formHeight;
     -fx-min-width: @formWidth + 2*@gap;
     -fx-max-width: @formWidth + 2*@gap;
@@ -28,15 +28,12 @@
 }
 
 .one>.couple{
-    -fx-background-color: yellow;
     -fx-pref-width: @formWidth;
 }
 .oneHalf>.couple{
-    -fx-background-color: yellowgreen;
     -fx-pref-width: (@formWidth - @spaceWidth)/2;
 }
 .oneThirds>.couple{
-    -fx-background-color: yellow; 
     -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
 }
 
@@ -52,14 +49,6 @@
     -fx-spacing: @spaceWidth;
 }
 
-.w4 .text-field {
-    -fx-pref-width: @formWidth - @spaceWidth - (@formWidth - 2*@spaceWidth)/3;
-}
-
-.w4 .combo-box {
-    -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
-}
-
 .doubleHeight {
     /*-fx-background-color: yellow;*/
     -fx-pref-height: 2 * @formHeight / 9;
@@ -72,7 +61,6 @@
     -fx-opacity: 0.9;
 }
 
-#imageGalleryPane {
-    -fx-background-color: blue;
-    -fx-min-height: 1.42*(@formWidth - @spaceWidth)/2;
+#imageGallery {
+    -fx-min-height: 1.42*(@formWidth - 2*@spaceWidth)/3;
 }

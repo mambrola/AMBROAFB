@@ -1,6 +1,6 @@
 @import url("/styles/css/core.css");
 #formPane {
-  -fx-min-height: 732;
+  /*-fx-min-height: @formHeight;*/
   -fx-max-height: 732;
   -fx-min-width: 620;
   -fx-max-width: 620;
@@ -15,15 +15,12 @@
   -fx-padding: 1 0 1 2;
 }
 .one > .couple {
-  -fx-background-color: yellow;
   -fx-pref-width: 600;
 }
 .oneHalf > .couple {
-  -fx-background-color: yellowgreen;
   -fx-pref-width: 285;
 }
 .oneThirds > .couple {
-  -fx-background-color: yellow;
   -fx-pref-width: 180;
 }
 .couple > .combo-box {
@@ -36,12 +33,6 @@
 .oneThirds {
   -fx-spacing: 30;
 }
-.w4 .text-field {
-  -fx-pref-width: 390;
-}
-.w4 .combo-box {
-  -fx-pref-width: 180;
-}
 .doubleHeight {
   /*-fx-background-color: yellow;*/
   -fx-pref-height: 162.66666667;
@@ -52,7 +43,6 @@
 *:disabled {
   -fx-opacity: 0.9;
 }
-#imageGalleryPane {
-  -fx-background-color: blue;
-  -fx-min-height: 404.7;
+#imageGallery {
+  -fx-min-height: 255.6;
 }

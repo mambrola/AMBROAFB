@@ -20,13 +20,13 @@
                               fx:controller="ambroafb.clients.dialog.ClientDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer">
         <children>
-            <HBox>
+            <HBox styleClass="oneThirds">
                 <children>
-                    <VBox>
+                    <VBox styleClass="couple">
                         <Label text="%date" /> 
                         <ADatePicker fx:id="openDate" />
                     </VBox>
-                    <VBox>
+                    <VBox styleClass="couple">
                         <Label /> 
                         <CheckBox fx:id="juridical" userData="aa" text="%juridical" />
                     </VBox>
