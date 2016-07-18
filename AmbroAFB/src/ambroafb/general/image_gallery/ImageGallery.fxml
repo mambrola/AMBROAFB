@@ -21,10 +21,10 @@
         <StackPane >
             <HBox fx:id="galleryImageFrame" >
                 <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
-                <ImageView fx:id="galleryImageView" preserveRatio="true" cache="true" smooth="true" >
-                    <image>
-                        <Image url="/images/logo.png" />
-                    </image>
+                <ImageView fx:id="galleryImageView" preserveRatio="true" cache="true"  >
+<!--                    <image>
+                        <Image fx:id="galleryImage"  url="/images/logo.png" />
+                    </image>-->
                 </ImageView>
                 <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
             </HBox>
@@ -33,7 +33,7 @@
                     <Image url="/images/deleted.png" />
                 </image>
             </ImageView>
-            <MaskerPane fx:id="masker" visible="false" text="%loading"/>
+            <!--<MaskerPane fx:id="masker" visible="false" text="%loading"/>-->
         </StackPane>
         <Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />
         <HBox fx:id="imageButtonsHBox" >

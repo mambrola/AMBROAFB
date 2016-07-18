@@ -59,6 +59,8 @@ public class ImageGalleryController implements Initializable {
 
     @FXML
     private VBox imagesGalleryRoot;
+//    @FXML
+//    private Image galleryImage;
     
     @FXML
     private Button deleteOrUndo, rotateToRight, upload;
@@ -112,11 +114,14 @@ public class ImageGalleryController implements Initializable {
         msgSlider = new MessageSlider(datesSliderElems, converter, rb);
         imageButtonsHBox.getChildren().add(msgSlider);
         
+        
+        
+        
         //Murman - bind-, რაღაც ამდაგვარი უნდა გამოვიყენოთ
 //        galleryImageView.fitWidthProperty().bind(imagesGalleryRoot.widthProperty());
 //        galleryImageView.fitHeightProperty().bind(imagesGalleryRoot.heightProperty());
 
-        System.out.println( "galleryImageFrame.size: " + " : " + 
+        System.out.println( "in - galleryImageFrame.size: " + " : " + 
                             galleryImageFrame.getWidth()+ " : " +
                             galleryImageFrame.getHeight());
         
@@ -124,14 +129,35 @@ public class ImageGalleryController implements Initializable {
         msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             showImage(serviceURLPrefix, newValue.intValue());
         });
+        Platform.runLater(this::doAfterInicialize);
+    }
+    
+    private void doAfterInicialize(){
+        System.out.println( "after - imagesGalleryRoot.size: " + " : " + 
+                            imagesGalleryRoot.getWidth()+ " : " +
+                imagesGalleryRoot.getPrefWidth() + " : " +
+                imagesGalleryRoot.getMaxWidth() + " : " +
+                imagesGalleryRoot.getMinWidth()+ " : " +
+                            imagesGalleryRoot.getHeight());
+//        System.out.println( "after - galleryImage.size: " + " : " + 
+//                            galleryImage.getWidth()+ " : " +
+//                            galleryImage.getHeight());
+        Image image = new Image("/images/logo.png");
+        if(image.getWidth() > imagesGalleryRoot.getWidth())
+            galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
+        if(image.getHeight() > imagesGalleryRoot.getHeight())
+            galleryImageView.setFitHeight(imagesGalleryRoot.getHeight());
+        
+        galleryImageView.setImage(image);
+        
     }
     
     public void tm(){
         galleryImageView.setFitWidth(0.7*imagesGalleryRoot.getWidth());
         //galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
-        System.out.println( "galleryImageFrame.size: " + " : " + 
-                            galleryImageFrame.getWidth()+ " : " +
-                            galleryImageFrame.getHeight());
+        System.out.println( "imagesGalleryRoot.size: " + " : " + 
+                            imagesGalleryRoot.getWidth()+ " : " +
+                            imagesGalleryRoot.getHeight());
     }
     
     private class ImageGalleryStringConverter extends StringConverter<String> {

@@ -35,7 +35,7 @@
 }
 .doubleHeight {
   /*-fx-background-color: yellow;*/
-  -fx-pref-height: 177.77777778;
+  -fx-pref-height: 355.55555556;
 }
 .button {
   -fx-font-weight: bold;
@@ -44,6 +44,6 @@
   -fx-opacity: 0.9;
 }
 #imageGallery {
-  -fx-min-height: 345.53333333;
-  -fx-max-height: 345.53333333;
+  -fx-min-height: 352.83333333;
+  -fx-max-height: 352.83333333;
 }
