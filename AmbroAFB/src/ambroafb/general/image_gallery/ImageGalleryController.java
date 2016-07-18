@@ -92,6 +92,9 @@ public class ImageGalleryController implements Initializable {
     private static final String UPLOAD_DIRECTORY_PATH = "upload_directory";
     private StringConverter<String> converter;
     
+    
+    private Map<String, Viewer> viewers;
+    
     /**
      * Initializes the controller class.
      *
@@ -104,6 +107,7 @@ public class ImageGalleryController implements Initializable {
         defaultFileChooserPath = GeneralConfig.prefs.get(UPLOAD_DIRECTORY_PATH, null);
         undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
         viewersMap = new HashMap<>();
+        viewers = new HashMap<>();
         datesSliderElems = FXCollections.observableArrayList();
         calendar = Calendar.getInstance();
         formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
@@ -121,9 +125,9 @@ public class ImageGalleryController implements Initializable {
 //        galleryImageView.fitWidthProperty().bind(imagesGalleryRoot.widthProperty());
 //        galleryImageView.fitHeightProperty().bind(imagesGalleryRoot.heightProperty());
 
-        System.out.println( "in - galleryImageFrame.size: " + " : " + 
-                            galleryImageFrame.getWidth()+ " : " +
-                            galleryImageFrame.getHeight());
+//        System.out.println( "in - galleryImageFrame.size: " + " : " + 
+//                            galleryImageFrame.getWidth()+ " : " +
+//                            galleryImageFrame.getHeight());
         
         galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
         msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
@@ -142,21 +146,19 @@ public class ImageGalleryController implements Initializable {
 //                imagesGalleryRoot.getMinWidth()+ " : " +
                             imagesGalleryRoot.getHeight());
         
-        System.out.println(String.format("image sizes -> width: %f       height: %f", 
-                                                        image.getWidth(), image.getHeight())); 
+//        System.out.println(String.format("image sizes -> width: %f       height: %f", 
+//                                                        image.getWidth(), image.getHeight())); 
        
         if(image.getWidth() > imagesGalleryRoot.getWidth()){
             galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
-            System.out.println("axla imageView-s fitWidth: " + galleryImageView.getFitWidth());
         }
         if(image.getHeight() > imagesGalleryRoot.getHeight()){
             galleryImageView.setFitHeight(imagesGalleryRoot.getHeight());
-            System.out.println("axla imageView-s fitHeight: " + galleryImageView.getFitHeight());
         }
         
         galleryImageView.setImage(image);
         
-    }
+   }
     
     public void tm(){
         galleryImageView.setFitWidth(0.7*imagesGalleryRoot.getWidth());
@@ -188,28 +190,53 @@ public class ImageGalleryController implements Initializable {
     private void showImage(String urlPrefix, int index) {
         if (index >= 0 && index < datesSliderElems.size()) {
             String fullName = datesSliderElems.get(index);
-            DocumentViewer viewer = viewersMap.get(fullName);
-            if (viewer == null) {
-                new Thread(()->{
+//            DocumentViewer viewer = viewersMap.get(fullName);
+            Viewer currViewer = viewers.get(fullName);
+            if (currViewer == null){
+                new Thread(() -> {
+                    Platform.runLater(() -> {
+                        masker.setVisible(true);
+                    });
+                    
                     try {
-                        Platform.runLater(() -> {
-                            masker.setVisible(true);
-                        });
                         HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
-                        DocumentViewer newViewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName, validPDFPagesForClientDialog);
+                        Viewer newViewer = new Viewer(con.getInputStream(), fullName.endsWith(".pdf"));
                         Platform.runLater(() -> {
-                            viewersMap.put(fullName, newViewer);
+                            viewers.put(fullName, newViewer);
                             showViewerComponentOnScene(newViewer);
                             masker.setVisible(false);
                         });
                     } catch (IOException ex) {
                         Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    
                 }).start();
             }
             else {
-                showViewerComponentOnScene(viewer);
+                System.out.println("else-shia");
+                showViewerComponentOnScene(currViewer);
             }
+//            if (viewer == null) {
+//                new Thread(()->{
+//                    try {
+//                        Platform.runLater(() -> {
+//                            masker.setVisible(true);
+//                        });
+//                        HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
+//                        DocumentViewer newViewer = DocumentViewer.Factory.getAppropriateViewer(con.getInputStream(), fullName, validPDFPagesForClientDialog);
+//                        Platform.runLater(() -> {
+//                            viewersMap.put(fullName, newViewer);
+//                            showViewerComponentOnScene(newViewer);
+//                            masker.setVisible(false);
+//                        });
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }).start();
+//            }
+//            else {
+//                showViewerComponentOnScene(viewer);
+//            }
         }
     }
     
@@ -232,6 +259,26 @@ public class ImageGalleryController implements Initializable {
             String url = dViewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
             return new Image(getClass().getResourceAsStream(url));
         }, dViewer.deletedProperty()));
+    }
+    
+    private void showViewerComponentOnScene(Viewer viewer){
+        
+//        int size = galleryImageFrame.getChildren().size();
+//        System.out.println("galleryImageFrame.getChildren().size(): " + size);
+//        for (int i = 0; i < size; i++){
+//            System.out.println("galleryImageFrame.getChildren().size(): " + galleryImageFrame.getChildren().get(i));
+//        }
+//        galleryImageFrame.getChildren().setAll(dViewer.getComponent());
+//        galleryImageView
+        doAfterInicialize(viewer.getImage());
+        deletedImageView.visibleProperty().unbind();
+        deletedImageView.visibleProperty().bind(viewer.deletedProperty());
+        ImageView icon = (ImageView) deleteOrUndo.getGraphic();
+        icon.imageProperty().unbind();
+        icon.imageProperty().bind(Bindings.createObjectBinding(() -> {
+            String url = viewer.deletedProperty().get() ? GALLERY_UNDO_BUTTON_IMAGE_NAME : GALLERY_DELETE_BUTTON_IMAGE_NAME;
+            return new Image(getClass().getResourceAsStream(url));
+        }, viewer.deletedProperty()));
     }
     
     public void setUploadDataURL(String serviceURLPrefix, String parameterUpload, String parameterDownload) {
@@ -263,7 +310,8 @@ public class ImageGalleryController implements Initializable {
     @FXML
     private void deleteImage(ActionEvent event) {
         String fullName = msgSlider.getValue();
-        DocumentViewer viewer = viewersMap.get(fullName);
+//        DocumentViewer viewer = viewersMap.get(fullName);
+        Viewer viewer = viewers.get(fullName);
         if (viewer != null) {
             viewer.deleteOrUndo();
         }
@@ -290,17 +338,24 @@ public class ImageGalleryController implements Initializable {
                 try {
                     String fileName = file.getName();
                     InputStream stream = new FileInputStream(file);
-                    DocumentViewer viewer;
-                    if (fileName.substring(fileName.lastIndexOf(".")).toLowerCase().equals(".pdf")) {
-                        viewer = new PDFViewer(stream, fileName);
-                    } else {
-                        viewer = new ImageViewer(stream, fileName);
-                    }
                     
+                    Viewer viewer = new Viewer(stream, fileName.substring(fileName.lastIndexOf(".")).toLowerCase().equals(".pdf"));
+                    System.out.println("last");
                     viewer.setIsNew(true);
                     Platform.runLater(() -> {
                         proccessViewer(viewer, fileName);
                     });
+//                    DocumentViewer viewer;
+//                    if (fileName.substring(fileName.lastIndexOf(".")).toLowerCase().equals(".pdf")) {
+//                        viewer = new PDFViewer(stream, fileName);
+//                    } else {
+//                        viewer = new ImageViewer(stream, fileName);
+//                    }
+//                    
+//                    viewer.setIsNew(true);
+//                    Platform.runLater(() -> {
+//                        proccessViewer(viewer, fileName);
+//                    });
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -325,6 +380,14 @@ public class ImageGalleryController implements Initializable {
         msgSlider.setValueOn(datesSliderElems.size() - 1);
     }
     
+    private void proccessViewer(Viewer viewer, String fileName){
+        Long currTime = new Date().getTime();
+        String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
+        viewers.put(fileFullName, viewer);
+        datesSliderElems.add(fileFullName);
+        msgSlider.setValueOn(datesSliderElems.size() - 1);
+    }
+    
     private void showLargePDFWarning(List<String> invalidViewersMessages) {
         String warningMsg = "";
         warningMsg = invalidViewersMessages.stream().map((msg) -> msg + "\n").reduce(warningMsg, String::concat);
@@ -336,10 +399,11 @@ public class ImageGalleryController implements Initializable {
     @FXML
     private void rotate(ActionEvent event) {
         String fullName = msgSlider.getValue();
-        DocumentViewer viewer = viewersMap.get(fullName);
+//        DocumentViewer viewer = viewersMap.get(fullName);
+        Viewer viewer = viewers.get(fullName);
         if (viewer != null) {
             viewer.rotate();
-            doAfterInicialize(viewer.getComponent());
+            doAfterInicialize(viewer.getImage());
 //            galleryImageView.setImage(viewer.getComponent());
         }
     }
