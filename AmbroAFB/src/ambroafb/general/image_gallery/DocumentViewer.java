@@ -22,7 +22,7 @@ import javafx.scene.image.Image;
  */
 public interface DocumentViewer {
     
-    public Node getComponent();
+    public Image getComponent();
     public void rotate();
     public void deleteOrUndo();
     public byte[] getContent();

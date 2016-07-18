@@ -105,8 +105,9 @@ public class PDFViewer implements Initializable, DocumentViewer {
     }
 
     @Override
-    public Node getComponent() {
-        return root;
+    public Image getComponent() {
+//        return root;
+        return null;
     }
 
     @Override

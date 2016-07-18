@@ -44,51 +44,58 @@ public class ImageViewer implements DocumentViewer, Initializable {
     private final String fullName;
     private int degree;
     private final InputStream stream;
+    
+    private Image image;
 
     public ImageViewer(InputStream stream, String imageFullName) {
         fullName = imageFullName;
         this.stream = stream;
-        Utils.createScene("/ambroafb/general/image_gallery/ImageViewer.fxml", (Object) this);
+        image = new Image(stream);
+        
+        System.out.println("image width: " + image.getWidth() + " image height: " + image.getHeight());
+//        Utils.createScene("/ambroafb/general/image_gallery/ImageViewer.fxml", (Object) this);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Image image = new Image(stream);
-        double width = image.getWidth();
-        double height = image.getHeight();
+//        image = new Image(stream);
+//        double width = image.getWidth();
+//        double height = image.getHeight();
         
-        if (width < DocumentViewer.FIT_WIDTH) {
-            imageView.setFitWidth(width);
-        }
-        if (height < DocumentViewer.FIT_HEIGHT) {
-            imageView.setFitHeight(height);
-        }
-        imageView.setImage(image);
+//        if (width < DocumentViewer.FIT_WIDTH) {
+//            imageView.setFitWidth(width);
+//        }
+//        if (height < DocumentViewer.FIT_HEIGHT) {
+//            imageView.setFitHeight(height);
+//        }
+//        imageView.setImage(image);
     }
     
     @Override
-    public Node getComponent() {
-        double propW = imageView.getFitWidth();
-        double propH = imageView.getFitHeight();
-        System.out.println("fitW: " + propW + " fitH: " + propH);
-        return root;
+    public Image getComponent() {
+//        return root;
+        return image;
     }
 
     @Override
     public void rotate() {
         try {
-            degree += 90;
-            Image image = rotateImage(imageView.getImage());
+            degree += 90; // davnashtot 360. 1. gadavsebis teoriuli problema da samomavo shemowmeba tu motrialebulia
+            Image rotatedImage = rotateImage(image);
+            image = rotatedImage;
+
+
+//            imageView.setImage(rotatedImage);
             
-            double width = image.getRequestedWidth();
-            double height = image.getRequestedHeight();
-            if(width > DocumentViewer.FIT_WIDTH){
-                imageView.setFitWidth(DocumentViewer.FIT_WIDTH);
-            }
-            if(height > DocumentViewer.FIT_HEIGHT){
-                imageView.setFitHeight(DocumentViewer.FIT_HEIGHT);
-            }
-            imageView.setImage(rotateImage(imageView.getImage()));
+//            double width = image.getRequestedWidth();
+//            double height = image.getRequestedHeight();
+//            if(width > DocumentViewer.FIT_WIDTH){
+//                imageView.setFitWidth(DocumentViewer.FIT_WIDTH);
+//            }
+//            if(height > DocumentViewer.FIT_HEIGHT){
+//                imageView.setFitHeight(DocumentViewer.FIT_HEIGHT);
+//            }
+//            imageView.setImage(rotateImage(imageView.getImage()));
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(ImageViewer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -103,9 +110,10 @@ public class ImageViewer implements DocumentViewer, Initializable {
     public byte[] getContent() {
         byte[] result = null;
         try {
-            BufferedImage bImage = SwingFXUtils.fromFXImage(imageView.getImage(), null);
+//            BufferedImage bImage = SwingFXUtils.fromFXImage(imageView.getImage(), null);
+            BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ImageIO.write(bImage, "png", out);
+            ImageIO.write(bImage, "png", out); // rato vinaxavt nebismier surats png gapartoebit?
             result = out.toByteArray();
         } catch (IOException ex) {
             Logger.getLogger(ImageViewer.class.getName()).log(Level.SEVERE, null, ex);
@@ -130,7 +138,7 @@ public class ImageViewer implements DocumentViewer, Initializable {
 
     @Override
     public boolean isEdit() {
-        return degree % 360 != 0;
+        return degree % 360 != 0; // degree != 0;
     }
 
     @Override

@@ -129,24 +129,30 @@ public class ImageGalleryController implements Initializable {
         msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             showImage(serviceURLPrefix, newValue.intValue());
         });
-        Platform.runLater(this::doAfterInicialize);
+        Platform.runLater(()->{
+            doAfterInicialize(new Image("/images/logo.png"));
+        });
     }
     
-    private void doAfterInicialize(){
+    private void doAfterInicialize(Image image){
         System.out.println( "after - imagesGalleryRoot.size: " + " : " + 
                             imagesGalleryRoot.getWidth()+ " : " +
-                imagesGalleryRoot.getPrefWidth() + " : " +
-                imagesGalleryRoot.getMaxWidth() + " : " +
-                imagesGalleryRoot.getMinWidth()+ " : " +
+//                imagesGalleryRoot.getPrefWidth() + " : " +
+//                imagesGalleryRoot.getMaxWidth() + " : " +
+//                imagesGalleryRoot.getMinWidth()+ " : " +
                             imagesGalleryRoot.getHeight());
-//        System.out.println( "after - galleryImage.size: " + " : " + 
-//                            galleryImage.getWidth()+ " : " +
-//                            galleryImage.getHeight());
-        Image image = new Image("/images/logo.png");
-        if(image.getWidth() > imagesGalleryRoot.getWidth())
+        
+        System.out.println(String.format("image sizes -> width: %f       height: %f", 
+                                                        image.getWidth(), image.getHeight())); 
+       
+        if(image.getWidth() > imagesGalleryRoot.getWidth()){
             galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
-        if(image.getHeight() > imagesGalleryRoot.getHeight())
+            System.out.println("axla imageView-s fitWidth: " + galleryImageView.getFitWidth());
+        }
+        if(image.getHeight() > imagesGalleryRoot.getHeight()){
             galleryImageView.setFitHeight(imagesGalleryRoot.getHeight());
+            System.out.println("axla imageView-s fitHeight: " + galleryImageView.getFitHeight());
+        }
         
         galleryImageView.setImage(image);
         
@@ -210,12 +216,14 @@ public class ImageGalleryController implements Initializable {
     private void showViewerComponentOnScene(DocumentViewer viewer){
         final DocumentViewer dViewer = viewer;
         
-        int size = galleryImageFrame.getChildren().size();
-        System.out.println("galleryImageFrame.getChildren().size(): " + size);
-        for (int i = 0; i < size; i++){
-            System.out.println("galleryImageFrame.getChildren().size(): " + galleryImageFrame.getChildren().get(i));
-        }
-        galleryImageFrame.getChildren().setAll(dViewer.getComponent());
+//        int size = galleryImageFrame.getChildren().size();
+//        System.out.println("galleryImageFrame.getChildren().size(): " + size);
+//        for (int i = 0; i < size; i++){
+//            System.out.println("galleryImageFrame.getChildren().size(): " + galleryImageFrame.getChildren().get(i));
+//        }
+//        galleryImageFrame.getChildren().setAll(dViewer.getComponent());
+//        galleryImageView
+        doAfterInicialize(viewer.getComponent());
         deletedImageView.visibleProperty().unbind();
         deletedImageView.visibleProperty().bind(dViewer.deletedProperty());
         ImageView icon = (ImageView) deleteOrUndo.getGraphic();
@@ -241,9 +249,9 @@ public class ImageGalleryController implements Initializable {
                 datesSliderElems.add(fullName);
                 viewersMap.put(fullName, null);
             }
-            if (datesSliderElems != null && !datesSliderElems.isEmpty()) {
-                msgSlider.setValueOn(0);
-            }
+//            if (datesSliderElems != null && !datesSliderElems.isEmpty()) {
+//                msgSlider.setValueOn(0); // +++
+//            }
         } catch (KFZClient.KFZServerException ex) {
             System.out.println("ex code: " + ex.getStatusCode() + "  User has not images.");
             
@@ -262,7 +270,7 @@ public class ImageGalleryController implements Initializable {
     }
 
     @FXML
-    private void uploadImage(ActionEvent event) {
+    private void uploadFile(ActionEvent event) {
         Stage owner = (Stage) galleryImageFrame.getScene().getWindow();
         if (defaultFileChooserPath != null){
             fileChooser.setInitialDirectory(new File(defaultFileChooserPath));
@@ -331,6 +339,8 @@ public class ImageGalleryController implements Initializable {
         DocumentViewer viewer = viewersMap.get(fullName);
         if (viewer != null) {
             viewer.rotate();
+            doAfterInicialize(viewer.getComponent());
+//            galleryImageView.setImage(viewer.getComponent());
         }
     }
 
