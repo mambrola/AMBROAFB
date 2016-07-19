@@ -159,8 +159,8 @@ public class ImageGalleryController implements Initializable {
         if(image.getWidth() > imagesGalleryRoot.getWidth()){
             galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
         }
-        if(image.getHeight() > imagesGalleryRoot.getHeight()){
-            galleryImageView.setFitHeight(imagesGalleryRoot.getHeight());
+        if(image.getHeight() > imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight()){
+            galleryImageView.setFitHeight(imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight());
         }
         imagesGalleryRoot.heightProperty().addListener(new ChangeListener<Number>() {
             @Override

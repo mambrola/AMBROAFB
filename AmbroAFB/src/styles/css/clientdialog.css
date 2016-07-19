@@ -43,7 +43,7 @@
 *:disabled {
   -fx-opacity: 0.9;
 }
-#imageGallery {
-  -fx-min-height: 352.83333333;
-  -fx-max-height: 352.83333333;
+#imageGalleryPane {
+  -fx-min-height: 555;
+  -fx-max-height: 555;
 }

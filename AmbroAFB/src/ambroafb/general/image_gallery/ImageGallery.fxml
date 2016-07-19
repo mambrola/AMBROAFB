@@ -37,7 +37,7 @@
             <children>
                 <Button  fx:id="deleteOrUndo" onAction="#deleteImage" >
                     <graphic>
-                        <ImageView  fitWidth="16" fitHeight="16" >
+                        <ImageView  fitWidth="24" fitHeight="24" >
                             <image>
                                 <Image url="/images/delete_128.png" />
                             </image>
@@ -47,7 +47,7 @@
                 <Region HBox.hgrow="ALWAYS" />
                 <Button fx:id="upload" onAction="#uploadFile" >
                     <graphic>
-                        <ImageView  fitWidth="16" fitHeight="16" >
+                        <ImageView  fitWidth="24" fitHeight="24" >
                             <image>
                                 <Image url="/images/upload_128.png" />
                             </image>
@@ -57,7 +57,7 @@
                 <Region HBox.hgrow="ALWAYS" />
                 <Button fx:id="rotateToRight" onAction="#rotate" >
                     <graphic>
-                        <ImageView fitWidth="16" fitHeight="16" >
+                        <ImageView >
                             <image>
                                 <Image url="/images/rotate_128.png" />
                             </image>
@@ -65,7 +65,6 @@
                     </graphic>
                 </Button>
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="tm" onAction="#tm" text="TM"/>   
             </children>
         </HBox>
     </children>

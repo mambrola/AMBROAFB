@@ -1,7 +1,7 @@
 @import url("/styles/css/core.css");
 #imagesGalleryRoot {
-  -fx-pref-height: 500;
-  -fx-max-height: 500;
+  -fx-pref-height: 2000;
+  -fx-max-height: 2000;
 }
 #galleryImageFrame {
   -fx-background-color: red;
