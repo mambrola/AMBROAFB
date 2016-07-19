@@ -18,19 +18,19 @@
         fx:controller="ambroafb.general.image_gallery.ImageGalleryController" >
     <children>
         <Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />
-        <StackPane >
+        <StackPane fx:id="galleryStack">
             <HBox fx:id="galleryImageFrame" >
                 <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
-                <ImageView fx:id="galleryImageView" preserveRatio="true"  >
+                <ImageView fx:id="galleryImageView" preserveRatio="true" >
                 </ImageView>
                 <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
             </HBox>
-            <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
+            <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="true" >    
                 <image>
                     <Image url="/images/deleted.png" />
                 </image>
             </ImageView>
-            <MaskerPane fx:id="masker" visible="false" text="%loading"/>
+            <MaskerPane fx:id="masker" visible="true" text="%loading"/>
         </StackPane>
         <Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />
         <HBox fx:id="imageButtonsHBox" >

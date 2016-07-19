@@ -64,7 +64,7 @@
                 </children>
             </HBox>
             <HBox styleClass="oneHalf" >
-                <VBox fx:id="imageGalleryPane" styleClass="couple, vContainer">
+                <VBox fx:id="imageGalleryPane" styleClass="couple, vContainer" >
                     <fx:include fx:id="imageGallery" source="/ambroafb/general/image_gallery/ImageGallery.fxml"/>
                 </VBox>
                 <VBox  styleClass="couple, vContainer">

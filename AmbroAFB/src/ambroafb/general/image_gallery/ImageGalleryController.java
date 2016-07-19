@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,6 +42,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -66,14 +68,16 @@ public class ImageGalleryController implements Initializable {
     private Button deleteOrUndo, rotateToRight, upload;
 
     @FXML
-    private ImageView galleryImageView, deletedImageView;
+    private ImageView galleryImageView;
+    @FXML
+    private ImageView deletedImageView;
 
     @FXML
     private HBox imageButtonsHBox, galleryImageFrame;
 
     @FXML
     private MaskerPane masker;
-
+    
     private ObservableList<String> datesSliderElems;
     private Map<String, DocumentViewer> viewersMap;
     private String undoOrDeleteImagePath;
@@ -119,8 +123,6 @@ public class ImageGalleryController implements Initializable {
         imageButtonsHBox.getChildren().add(msgSlider);
         
         
-        
-        
         //Murman - bind-, რაღაც ამდაგვარი უნდა გამოვიყენოთ
 //        galleryImageView.fitWidthProperty().bind(imagesGalleryRoot.widthProperty());
 //        galleryImageView.fitHeightProperty().bind(imagesGalleryRoot.heightProperty());
@@ -139,25 +141,44 @@ public class ImageGalleryController implements Initializable {
     }
     
     private void doAfterInicialize(Image image){
-        System.out.println( "after - imagesGalleryRoot.size: " + " : " + 
-                            imagesGalleryRoot.getWidth()+ " : " +
-//                imagesGalleryRoot.getPrefWidth() + " : " +
-//                imagesGalleryRoot.getMaxWidth() + " : " +
-//                imagesGalleryRoot.getMinWidth()+ " : " +
-                            imagesGalleryRoot.getHeight());
+        galleryImageView.setFitWidth(0);
+        galleryImageView.setFitHeight(0);
+//        System.out.println( "after - imagesGalleryRoot.size: " + " : " + 
+//                            imagesGalleryRoot.getWidth()+ " : " +
+////                imagesGalleryRoot.getPrefWidth() + " : " +
+////                imagesGalleryRoot.getMaxWidth() + " : " +
+////                imagesGalleryRoot.getMinWidth()+ " : " +
+//                            imagesGalleryRoot.getHeight());
         
 //        System.out.println(String.format("image sizes -> width: %f       height: %f", 
 //                                                        image.getWidth(), image.getHeight())); 
-       
+        System.out.println("dasetvamde...");
+        System.out.println("image width: " + image.getWidth() + " image height: " + image.getHeight());
+        System.out.println("gallery root width: " + imagesGalleryRoot.getWidth() + " gallery root height: " + imagesGalleryRoot.getHeight());
+        System.out.println("image view fitWidth: " + galleryImageView.getFitWidth() + " gallery image fitHeight: " + galleryImageView.getFitHeight());
         if(image.getWidth() > imagesGalleryRoot.getWidth()){
             galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
         }
         if(image.getHeight() > imagesGalleryRoot.getHeight()){
             galleryImageView.setFitHeight(imagesGalleryRoot.getHeight());
         }
-        
+        imagesGalleryRoot.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                System.out.println("old: " + oldValue + " new: " + newValue);
+//                if ()
+           }
+        });
+        System.out.println("kide image view fitWidth: " + galleryImageView.getFitWidth() + " galleryImageView fitHeight: " + galleryImageView.getFitHeight());
+//        galleryImageView.setFitHeight(500);
         galleryImageView.setImage(image);
+
+        System.out.println("dasetvis shemdeg...");
+        System.out.println("image width: " + image.getWidth() + " image height: " + image.getHeight());
+        System.out.println("gallery root width: " + imagesGalleryRoot.getWidth() + " gallery root height: " + imagesGalleryRoot.getHeight());
+        System.out.println("image view fitWidth: " + galleryImageView.getFitWidth() + " galleryImageView fitHeight: " + galleryImageView.getFitHeight());
         
+        System.out.println("\n\n");
    }
     
     public void tm(){
