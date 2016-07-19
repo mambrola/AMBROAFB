@@ -5,7 +5,6 @@
  */
 package ambroafb.general.image_gallery;
 
-import com.sun.jmx.snmp.ThreadContext;
 import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -63,6 +62,7 @@ public class MessageSlider extends VBox {
         scrollBar.setBlockIncrement(1);
         
         scrollBar.valueProperty().bindBidirectional(indexProperty);
+//        scrollBar.valueProperty().bind(indexProperty);
         scrollBar.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             scrollBar.setValue(Math.round(newValue.doubleValue()));
         });
@@ -113,6 +113,7 @@ public class MessageSlider extends VBox {
             index = 0;
         }
         indexProperty.set(index);
+//        scrollBar.setValue(USE_PREF_SIZE);
     }
 
     /**
@@ -138,10 +139,14 @@ public class MessageSlider extends VBox {
         @Override
         public void onChanged(Change<? extends String> c) {
             while(c.next()){
-                if(c.wasRemoved()){
-                    if (indexProperty.getValue().intValue() == values.size()){
+                if(c.wasRemoved()){ // ??? misamatebelia logika
+                    if (indexProperty.getValue().intValue() == values.size()){ // already remved.
                         indexProperty.set(indexProperty.getValue().intValue() - 1);
                     }
+//                    else{
+//                        
+//                    }
+//                    scrollBar.setValue(indexProperty.get());
                 }
                 if(values.size() > 0){
                     scrollBar.setMax(values.size() - 1);

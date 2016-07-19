@@ -5,10 +5,8 @@
  */
 package ambroafb.general.image_gallery;
 
-import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
-import ambroafb.general.PDFHelper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,7 +16,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -27,11 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,12 +36,10 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -124,15 +119,10 @@ public class ImageGalleryController implements Initializable {
         msgSlider = new MessageSlider(datesSliderElems, converter, rb);
         imageButtonsHBox.getChildren().add(msgSlider);
         
-        
         //Murman - bind-, რაღაც ამდაგვარი უნდა გამოვიყენოთ
 //        galleryImageView.fitWidthProperty().bind(imagesGalleryRoot.widthProperty());
 //        galleryImageView.fitHeightProperty().bind(imagesGalleryRoot.heightProperty());
 
-//        System.out.println( "in - galleryImageFrame.size: " + " : " + 
-//                            galleryImageFrame.getWidth()+ " : " +
-//                            galleryImageFrame.getHeight());
-        
         galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
         msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             showImage(serviceURLPrefix, newValue.intValue());
@@ -145,34 +135,13 @@ public class ImageGalleryController implements Initializable {
     private void doAfterInicialize(Image image){
         galleryImageView.setFitWidth(0);
         galleryImageView.setFitHeight(0);
-//        System.out.println( "after - imagesGalleryRoot.size: " + " : " + 
-//                            imagesGalleryRoot.getWidth()+ " : " +
-////                imagesGalleryRoot.getPrefWidth() + " : " +
-////                imagesGalleryRoot.getMaxWidth() + " : " +
-////                imagesGalleryRoot.getMinWidth()+ " : " +
-//                            imagesGalleryRoot.getHeight());
-        
-//        System.out.println(String.format("image sizes -> width: %f       height: %f", 
-//                                                        image.getWidth(), image.getHeight())); 
-//        System.out.println("dasetvamde...");
-//        System.out.println("image width: " + image.getWidth() + " image height: " + image.getHeight());
-//        System.out.println("gallery root width: " + imagesGalleryRoot.getWidth() + " gallery root height: " + imagesGalleryRoot.getHeight());
-//        System.out.println("image view fitWidth: " + galleryImageView.getFitWidth() + " gallery image fitHeight: " + galleryImageView.getFitHeight());
         if(image.getWidth() > imagesGalleryRoot.getWidth()){
             galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
         }
         if(image.getHeight() > imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight()){
             galleryImageView.setFitHeight(imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight());
         }
-//        System.out.println("kide image view fitWidth: " + galleryImageView.getFitWidth() + " galleryImageView fitHeight: " + galleryImageView.getFitHeight());
         galleryImageView.setImage(image);
-
-//        System.out.println("dasetvis shemdeg...");
-//        System.out.println("image width: " + image.getWidth() + " image height: " + image.getHeight());
-//        System.out.println("gallery root width: " + imagesGalleryRoot.getWidth() + " gallery root height: " + imagesGalleryRoot.getHeight());
-//        System.out.println("image view fitWidth: " + galleryImageView.getFitWidth() + " galleryImageView fitHeight: " + galleryImageView.getFitHeight());
-//        
-//        System.out.println("\n\n");
    }
     
     private class ImageGalleryStringConverter extends StringConverter<String> {
@@ -194,34 +163,59 @@ public class ImageGalleryController implements Initializable {
         
     }
         
+    private Map<Integer, Thread> threadMap = new ConcurrentHashMap<>();
+    
     private void showImage(String urlPrefix, int index) {
+        System.out.println("index: " + index);
         if (index >= 0 && index < datesSliderElems.size()) {
             String fullName = datesSliderElems.get(index);
             Viewer currViewer = viewers.get(fullName);
             if (currViewer == null){
-                new Thread(() -> {
-                    Platform.runLater(() -> {
-                        masker.setVisible(true);
-                    });
-                    
-                    try {
-                        HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
-                        Viewer newViewer = new Viewer(con.getInputStream(), fullName.endsWith(".pdf"));
+                
+                if (!threadMap.containsKey(index)) {
+                    Thread t = new Thread(() -> {
                         Platform.runLater(() -> {
-                            viewers.put(fullName, newViewer);
-                            showViewerComponentOnScene(newViewer);
-                            masker.setVisible(false);
+                            masker.setVisible(true);
                         });
-                    } catch (IOException ex) {
-                        Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    
-                }).start();
+
+                        try {
+                            HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
+                            Viewer newViewer = new Viewer(con.getInputStream(), fullName.endsWith(".pdf"));
+                            Platform.runLater(() -> {
+                                viewers.put(fullName, newViewer);
+                                showViewerComponentOnScene(newViewer);
+                                masker.setVisible(false);
+                            });
+                        } catch (IOException ex) {
+                            Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        threadMap.remove(index);
+                    });
+                    stopThreadFor(index - 1);
+                    stopThreadFor(index + 1);
+                    threadMap.put(index, t);
+                    System.out.println("start " + index + " thread.");
+                    t.start();
+                } else{
+                    System.out.println("aq unda gavacocxlot " + index + " thread.");
+//                    threadMap.get(index).
+                }
             }
             else {
                 System.out.println("else-shia");
                 showViewerComponentOnScene(currViewer);
             }
+        }
+    }
+    
+    private void stopThreadFor(int index){
+        if (threadMap.containsKey(index)) {
+            Thread t = threadMap.get(index);
+            System.out.println("interapt " + index + " thread.");
+            t.interrupt();
+//            if (t.getState()){
+//                
+//            }
         }
     }
     

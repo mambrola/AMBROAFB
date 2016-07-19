@@ -21,8 +21,10 @@
         <StackPane fx:id="galleryStack">
             <HBox fx:id="galleryImageFrame" >
                 <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
-                <ImageView fx:id="galleryImageView" preserveRatio="true" >
-                </ImageView>
+                <MagnifierPane >
+                    <ImageView fx:id="galleryImageView" preserveRatio="true" >
+                    </ImageView>
+                </MagnifierPane>
                 <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
             </HBox>
             <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
