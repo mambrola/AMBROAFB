@@ -136,7 +136,8 @@ public class ImageGalleryController implements Initializable {
             showImage(serviceURLPrefix, newValue.intValue());
         });
         Platform.runLater(()->{
-            doAfterInicialize(new Image("/images/logo.png"));
+            String defImageURL = GeneralConfig.getInstance().getTitleFor("def_image_url");
+            doAfterInicialize(new Image(defImageURL));
         });
     }
     

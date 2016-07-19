@@ -25,19 +25,19 @@
                 </ImageView>
                 <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
             </HBox>
-            <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="true" >    
+            <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
                 <image>
                     <Image url="/images/deleted.png" />
                 </image>
             </ImageView>
-            <MaskerPane fx:id="masker" visible="true" text="%loading"/>
+            <MaskerPane fx:id="masker" visible="false" text="%loading"/>
         </StackPane>
         <Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />
         <HBox fx:id="imageButtonsHBox" >
             <children>
                 <Button  fx:id="deleteOrUndo" onAction="#deleteImage" >
                     <graphic>
-                        <ImageView  fitWidth="24" fitHeight="24" >
+                        <ImageView  fitWidth="20" fitHeight="20" >
                             <image>
                                 <Image url="/images/delete_128.png" />
                             </image>
@@ -47,7 +47,7 @@
                 <Region HBox.hgrow="ALWAYS" />
                 <Button fx:id="upload" onAction="#uploadFile" >
                     <graphic>
-                        <ImageView  fitWidth="24" fitHeight="24" >
+                        <ImageView  fitWidth="20" fitHeight="20" >
                             <image>
                                 <Image url="/images/upload_128.png" />
                             </image>
@@ -57,7 +57,7 @@
                 <Region HBox.hgrow="ALWAYS" />
                 <Button fx:id="rotateToRight" onAction="#rotate" >
                     <graphic>
-                        <ImageView >
+                        <ImageView fitWidth="20" fitHeight="20" >
                             <image>
                                 <Image url="/images/rotate_128.png" />
                             </image>
