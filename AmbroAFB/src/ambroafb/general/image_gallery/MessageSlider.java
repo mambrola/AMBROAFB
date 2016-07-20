@@ -61,10 +61,13 @@ public class MessageSlider extends VBox {
         scrollBar.setVisibleAmount(1);
         scrollBar.setBlockIncrement(1);
         
-        scrollBar.valueProperty().bindBidirectional(indexProperty);
+//        scrollBar.valueProperty().bindBidirectional(indexProperty);
 //        scrollBar.valueProperty().bind(indexProperty);
         scrollBar.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            scrollBar.setValue(Math.round(newValue.doubleValue()));
+//            System.out.println(" scrollBar: oldValue " + oldValue + " newValue " + newValue);
+            double roundedValue = Math.round(newValue.doubleValue());
+            scrollBar.setValue(roundedValue);
+            indexProperty.set(roundedValue);
         });
     }
     
@@ -113,7 +116,7 @@ public class MessageSlider extends VBox {
             index = 0;
         }
         indexProperty.set(index);
-//        scrollBar.setValue(USE_PREF_SIZE);
+        scrollBar.setValue(indexProperty.get());
     }
 
     /**

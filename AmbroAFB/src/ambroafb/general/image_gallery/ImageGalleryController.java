@@ -77,14 +77,14 @@ public class ImageGalleryController implements Initializable {
     
     private ObservableList<String> datesSliderElems;
     private Map<String, DocumentViewer> viewersMap;
-    private String undoOrDeleteImagePath;
+//    private String undoOrDeleteImagePath;
     private Calendar calendar;
     private DateFormat formatter;
     private FileChooser fileChooser;
     private String serviceURLPrefix;
     private String parameterUpload;
     private String parameterDownload;
-    private int validPDFPagesForClientDialog;
+//    private int validPDFPagesForClientDialog;
     private String defaultFileChooserPath;
     private MessageSlider msgSlider;
 
@@ -104,9 +104,9 @@ public class ImageGalleryController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        validPDFPagesForClientDialog = 10;
+//        validPDFPagesForClientDialog = 10;
+//        undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
         defaultFileChooserPath = GeneralConfig.prefs.get(UPLOAD_DIRECTORY_PATH, null);
-        undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
         viewersMap = new HashMap<>();
         viewers = new HashMap<>();
         datesSliderElems = FXCollections.observableArrayList();
@@ -123,8 +123,9 @@ public class ImageGalleryController implements Initializable {
 //        galleryImageView.fitWidthProperty().bind(imagesGalleryRoot.widthProperty());
 //        galleryImageView.fitHeightProperty().bind(imagesGalleryRoot.heightProperty());
 
-        galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
+//        galleryImageView.setFitWidth(imagesGalleryRoot.getWidth()); // ?????????????
         msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+//            System.out.println(" indexProp: oldValue " + oldValue + " newValue " + newValue);
             showImage(serviceURLPrefix, newValue.intValue());
         });
         Platform.runLater(()->{
@@ -166,12 +167,10 @@ public class ImageGalleryController implements Initializable {
     private Map<Integer, Thread> threadMap = new ConcurrentHashMap<>();
     
     private void showImage(String urlPrefix, int index) {
-        System.out.println("index: " + index);
         if (index >= 0 && index < datesSliderElems.size()) {
             String fullName = datesSliderElems.get(index);
             Viewer currViewer = viewers.get(fullName);
             if (currViewer == null){
-                
                 if (!threadMap.containsKey(index)) {
                     Thread t = new Thread(() -> {
                         Platform.runLater(() -> {
@@ -194,15 +193,15 @@ public class ImageGalleryController implements Initializable {
                     stopThreadFor(index - 1);
                     stopThreadFor(index + 1);
                     threadMap.put(index, t);
-                    System.out.println("start " + index + " thread.");
+//                    System.out.println("start " + index + " thread.");
                     t.start();
                 } else{
-                    System.out.println("aq unda gavacocxlot " + index + " thread.");
+//                    System.out.println("aq unda gavacocxlot " + index + " thread.");
 //                    threadMap.get(index).
                 }
             }
             else {
-                System.out.println("else-shia");
+//                System.out.println("else-shia");
                 showViewerComponentOnScene(currViewer);
             }
         }
@@ -211,7 +210,7 @@ public class ImageGalleryController implements Initializable {
     private void stopThreadFor(int index){
         if (threadMap.containsKey(index)) {
             Thread t = threadMap.get(index);
-            System.out.println("interapt " + index + " thread.");
+//            System.out.println("interapt " + index + " thread.");
             t.interrupt();
 //            if (t.getState()){
 //                
