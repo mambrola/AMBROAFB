@@ -134,11 +134,6 @@ public class ImageGalleryController implements Initializable {
         pdfPagingPane.setPickOnBounds(false);
         pagingRegion.setPickOnBounds(false);
         
-        //Murman - bind-, რაღაც ამდაგვარი უნდა გამოვიყენოთ
-//        galleryImageView.fitWidthProperty().bind(imagesGalleryRoot.widthProperty());
-//        galleryImageView.fitHeightProperty().bind(imagesGalleryRoot.heightProperty());
-
-//        galleryImageView.setFitWidth(imagesGalleryRoot.getWidth()); // ?????????????
         msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             showImage(serviceURLPrefix, newValue.intValue());
         });
@@ -446,7 +441,7 @@ public class ImageGalleryController implements Initializable {
                 synchronized(lock){
                     try {
                         System.out.println("daiwyebs mocdas cotaxani " + index + " thread....");
-                        lock.wait(3000);
+                        lock.wait(1000);
 //                        while(threadMap.get(index).getThread().isInterrupted()){
                         if(msgSlider.indexProperty().get() != index){
                             System.out.println("kai xani icdis " + index + " thread.");
