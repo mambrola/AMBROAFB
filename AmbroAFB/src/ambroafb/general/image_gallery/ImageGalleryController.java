@@ -109,6 +109,7 @@ public class ImageGalleryController implements Initializable {
     
     
     private Map<String, Viewer> viewers;
+    private Map<Integer, Object> lockObjectsMap;
     
     /**
      * Initializes the controller class.
@@ -121,6 +122,7 @@ public class ImageGalleryController implements Initializable {
         defaultFileChooserPath = GeneralConfig.prefs.get(UPLOAD_DIRECTORY_PATH, null);
         viewersMap = new HashMap<>();
         viewers = new HashMap<>();
+        lockObjectsMap = new ConcurrentHashMap<>();
         datesSliderElems = FXCollections.observableArrayList();
         calendar = Calendar.getInstance();
         formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
@@ -172,47 +174,31 @@ public class ImageGalleryController implements Initializable {
             }
         
     }
-        
-    private Map<Integer, Object> threadMap = new ConcurrentHashMap<>();
+    
     
     private void showImage(String urlPrefix, int index) {
         if (index >= 0 && index < datesSliderElems.size()) {
             String fullName = datesSliderElems.get(index);
             Viewer currViewer = viewers.get(fullName);
             if (currViewer == null){
-                if (!threadMap.containsKey(index)) {
+                if (!lockObjectsMap.containsKey(index)) {
                     Thread t = new Thread(new DataDownloadRunnable(fullName, index));
-//                    stopThreadFor(index - 1);
-//                    stopThreadFor(index + 1);
                     Object lock = new Object();
-                    //ThreadComplete compl = new ThreadComplete(t, lock);
-                    threadMap.put(index, lock);
+                    lockObjectsMap.put(index, lock);
                     t.start();
                     System.out.println("daistarta " + index + " thread.");
                 } else{
                     System.out.println("aq unda gavacocxlot " + index + " thread.");
-                    threadMap.get(index).notify(); // .getLock().notify();
+                    synchronized(lockObjectsMap.get(index)){
+                        lockObjectsMap.get(index).notify();
+                    }
                 }
             }
             else {
-//                System.out.println("else-shia");
                 showViewerComponentOnScene(currViewer);
             }
         }
     }
-    
-    private final Object ob = new Object();
-    
-    private void stopThreadFor(int index){
-        if (threadMap.containsKey(index)) {
-//            threadMap.get(index).getThread().interrupt();
-//            try {
-//                threadMap.get(index).getLock().wait();
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-        }
-    }    
     
     private void showViewerComponentOnScene(Viewer viewer){
         doAfterInicialize(viewer.getImage());
@@ -437,7 +423,7 @@ public class ImageGalleryController implements Initializable {
                 HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(serviceURLPrefix + fullName);
                 Viewer newViewer = new Viewer(con.getInputStream(), fullName.endsWith(".pdf"));
                 
-                Object lock = threadMap.get(index); // .getLock();
+                Object lock = lockObjectsMap.get(index); // .getLock();
                 synchronized(lock){
                     try {
                         System.out.println("daiwyebs mocdas cotaxani " + index + " thread....");
@@ -460,7 +446,7 @@ public class ImageGalleryController implements Initializable {
             } catch (IOException ex) {
                 Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            threadMap.remove(index);
+            lockObjectsMap.remove(index);
         }
     
     }
