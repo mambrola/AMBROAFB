@@ -15,6 +15,14 @@
 .vgrowalways {
   -fx-background-color: yellow;
 }
-.masker-pane .masker-center {
+.masker-pane .masker-center,
+#up,
+#down {
   -fx-background-color: transparent;
+}
+#pdfPagingPane {
+  -fx-alignment: BOTTOM_RIGHT;
+}
+#page {
+  -fx-font-size: 24;
 }

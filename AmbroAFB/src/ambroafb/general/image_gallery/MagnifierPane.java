@@ -158,6 +158,10 @@ public class MagnifierPane extends StackPane {
         });
 
     }
+    
+    public void hide(){
+        viewer.hide();
+    }
 
     @Override
     protected void layoutChildren() {

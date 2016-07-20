@@ -29,17 +29,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -74,17 +79,26 @@ public class ImageGalleryController implements Initializable {
 
     @FXML
     private MaskerPane masker;
+    @FXML
+    private MagnifierPane magnifier;
+    
+    @FXML
+    private VBox pdfPagingPane;
+    @FXML
+    private Region pagingRegion;
+    @FXML
+    private Button up, down;
+    @FXML
+    private Label page;
     
     private ObservableList<String> datesSliderElems;
     private Map<String, DocumentViewer> viewersMap;
-//    private String undoOrDeleteImagePath;
     private Calendar calendar;
     private DateFormat formatter;
     private FileChooser fileChooser;
     private String serviceURLPrefix;
     private String parameterUpload;
     private String parameterDownload;
-//    private int validPDFPagesForClientDialog;
     private String defaultFileChooserPath;
     private MessageSlider msgSlider;
 
@@ -104,8 +118,6 @@ public class ImageGalleryController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        validPDFPagesForClientDialog = 10;
-//        undoOrDeleteImagePath = GALLERY_DELETE_BUTTON_IMAGE_NAME;
         defaultFileChooserPath = GeneralConfig.prefs.get(UPLOAD_DIRECTORY_PATH, null);
         viewersMap = new HashMap<>();
         viewers = new HashMap<>();
@@ -119,13 +131,15 @@ public class ImageGalleryController implements Initializable {
         msgSlider = new MessageSlider(datesSliderElems, converter, rb);
         imageButtonsHBox.getChildren().add(msgSlider);
         
+        pdfPagingPane.setPickOnBounds(false);
+        pagingRegion.setPickOnBounds(false);
+        
         //Murman - bind-, რაღაც ამდაგვარი უნდა გამოვიყენოთ
 //        galleryImageView.fitWidthProperty().bind(imagesGalleryRoot.widthProperty());
 //        galleryImageView.fitHeightProperty().bind(imagesGalleryRoot.heightProperty());
 
 //        galleryImageView.setFitWidth(imagesGalleryRoot.getWidth()); // ?????????????
         msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-//            System.out.println(" indexProp: oldValue " + oldValue + " newValue " + newValue);
             showImage(serviceURLPrefix, newValue.intValue());
         });
         Platform.runLater(()->{
@@ -164,7 +178,7 @@ public class ImageGalleryController implements Initializable {
         
     }
         
-    private Map<Integer, Thread> threadMap = new ConcurrentHashMap<>();
+    private Map<Integer, Object> threadMap = new ConcurrentHashMap<>();
     
     private void showImage(String urlPrefix, int index) {
         if (index >= 0 && index < datesSliderElems.size()) {
@@ -172,32 +186,17 @@ public class ImageGalleryController implements Initializable {
             Viewer currViewer = viewers.get(fullName);
             if (currViewer == null){
                 if (!threadMap.containsKey(index)) {
-                    Thread t = new Thread(() -> {
-                        Platform.runLater(() -> {
-                            masker.setVisible(true);
-                        });
-
-                        try {
-                            HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(urlPrefix + fullName);
-                            Viewer newViewer = new Viewer(con.getInputStream(), fullName.endsWith(".pdf"));
-                            Platform.runLater(() -> {
-                                viewers.put(fullName, newViewer);
-                                showViewerComponentOnScene(newViewer);
-                                masker.setVisible(false);
-                            });
-                        } catch (IOException ex) {
-                            Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        threadMap.remove(index);
-                    });
-                    stopThreadFor(index - 1);
-                    stopThreadFor(index + 1);
-                    threadMap.put(index, t);
-//                    System.out.println("start " + index + " thread.");
+                    Thread t = new Thread(new DataDownloadRunnable(fullName, index));
+//                    stopThreadFor(index - 1);
+//                    stopThreadFor(index + 1);
+                    Object lock = new Object();
+                    //ThreadComplete compl = new ThreadComplete(t, lock);
+                    threadMap.put(index, lock);
                     t.start();
+                    System.out.println("daistarta " + index + " thread.");
                 } else{
-//                    System.out.println("aq unda gavacocxlot " + index + " thread.");
-//                    threadMap.get(index).
+                    System.out.println("aq unda gavacocxlot " + index + " thread.");
+                    threadMap.get(index).notify(); // .getLock().notify();
                 }
             }
             else {
@@ -207,19 +206,41 @@ public class ImageGalleryController implements Initializable {
         }
     }
     
+    private final Object ob = new Object();
+    
     private void stopThreadFor(int index){
         if (threadMap.containsKey(index)) {
-            Thread t = threadMap.get(index);
-//            System.out.println("interapt " + index + " thread.");
-            t.interrupt();
-//            if (t.getState()){
-//                
+//            threadMap.get(index).getThread().interrupt();
+//            try {
+//                threadMap.get(index).getLock().wait();
+//            } catch (InterruptedException ex) {
+//                Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
 //            }
         }
-    }
+    }    
     
     private void showViewerComponentOnScene(Viewer viewer){
         doAfterInicialize(viewer.getImage());
+        pdfPagingPane.visibleProperty().unbind();
+        pdfPagingPane.visibleProperty().bind(viewer.pdfProperty());
+        if (viewer.pdfProperty().get()){
+            up.visibleProperty().unbind();
+            up.visibleProperty().bind(Bindings.createBooleanBinding(() -> {
+                return viewer.indexProperty().get() > 0;
+            }, viewer.indexProperty()));
+
+            down.visibleProperty().unbind();
+            down.visibleProperty().bind(Bindings.createBooleanBinding(() -> {
+                return viewer.indexProperty().get() + 1 < viewer.getPages();
+            }, viewer.indexProperty()));
+            
+            page.textProperty().unbind();
+            page.textProperty().bind(Bindings.createStringBinding(() -> {
+                return "" + (viewer.indexProperty().get() + 1);
+            }, viewer.indexProperty()));
+        }
+        
+        
         deletedImageView.visibleProperty().unbind();
         deletedImageView.visibleProperty().bind(viewer.deletedProperty());
         ImageView icon = (ImageView) deleteOrUndo.getGraphic();
@@ -243,7 +264,6 @@ public class ImageGalleryController implements Initializable {
             for (int i = 0; i < namesJson.length(); i++) {
                 String fullName = namesJson.getString(i);
                 datesSliderElems.add(fullName);
-//                System.out.println("fullName: " + fullName);
             }
             if (datesSliderElems != null && !datesSliderElems.isEmpty()) {
                 SortedList<String> sorted = datesSliderElems.sorted(Comparator.<String>naturalOrder());
@@ -331,6 +351,27 @@ public class ImageGalleryController implements Initializable {
             doAfterInicialize(viewer.getImage());
         }
     }
+    
+    @FXML
+    private void up(ActionEvent event){
+        String value = msgSlider.getValue();
+        Viewer viewer = viewers.get(value);
+        viewer.indexProperty().set(viewer.indexProperty().get() - 1);
+        doAfterInicialize(viewer.getImage());
+    }
+    
+    @FXML
+    private void down(ActionEvent event){
+        String value = msgSlider.getValue();
+        Viewer viewer = viewers.get(value);
+        viewer.indexProperty().set(viewer.indexProperty().get() + 1);
+        doAfterInicialize(viewer.getImage());
+    }
+    
+    @FXML
+    private void enterMouse(MouseEvent event){
+        magnifier.hide();
+    }
 
     /**
      * The method sends image gallery data to server in thread.
@@ -379,5 +420,72 @@ public class ImageGalleryController implements Initializable {
             if (result) break;
         }
         return result;
+    }
+    
+    private class DataDownloadRunnable implements Runnable{
+
+        private final String fullName;
+        private final int index;
+        
+        public DataDownloadRunnable(String fullName, int index){
+            this.fullName = fullName;
+            this.index = index;
+        }
+        
+        @Override
+        public void run() {
+            Platform.runLater(() -> {
+                masker.setVisible(true);
+            });
+
+            try {
+                HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(serviceURLPrefix + fullName);
+                Viewer newViewer = new Viewer(con.getInputStream(), fullName.endsWith(".pdf"));
+                
+                Object lock = threadMap.get(index); // .getLock();
+                synchronized(lock){
+                    try {
+                        System.out.println("daiwyebs mocdas cotaxani " + index + " thread....");
+                        lock.wait(3000);
+//                        while(threadMap.get(index).getThread().isInterrupted()){
+                        if(msgSlider.indexProperty().get() != index){
+                            System.out.println("kai xani icdis " + index + " thread.");
+                            lock.wait();
+                        }
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+                Platform.runLater(() -> {
+                    viewers.put(fullName, newViewer);
+                    showViewerComponentOnScene(newViewer);
+                    masker.setVisible(false);
+                });
+            } catch (IOException ex) {
+                Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            threadMap.remove(index);
+        }
+    
+    }
+    
+    private class ThreadComplete {
+        
+        private final Thread thread;
+        private final Object lock;
+        
+        public ThreadComplete(Thread thread, Object lock){
+            this.thread = thread;
+            this.lock = lock;
+        }
+        
+        public Object getLock(){
+            return lock;
+        }
+        
+        public Thread getThread(){
+            return thread;
+        }
     }
 }

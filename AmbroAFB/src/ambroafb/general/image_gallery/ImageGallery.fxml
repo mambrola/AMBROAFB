@@ -18,13 +18,14 @@
         fx:controller="ambroafb.general.image_gallery.ImageGalleryController" >
     <children>
         <Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />
-        <StackPane fx:id="galleryStack">
+        <StackPane fx:id="galleryStack" >
             <HBox fx:id="galleryImageFrame" >
                 <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
-                <MagnifierPane >
+                <MagnifierPane fx:id="magnifier" >
                     <ImageView fx:id="galleryImageView" preserveRatio="true" >
                     </ImageView>
                 </MagnifierPane>
+                
                 <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
             </HBox>
             <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
@@ -32,6 +33,12 @@
                     <Image url="/images/deleted.png" />
                 </image>
             </ImageView>
+            <VBox fx:id="pdfPagingPane" visible="false" >
+                <Region fx:id="pagingRegion" VBox.vgrow="ALWAYS" />
+                <Button fx:id="up" text="▲" onAction="#up" onMouseEntered="#enterMouse" />
+                <Label fx:id="page" />
+                <Button fx:id="down" text="▼" onAction="#down" onMouseEntered="#enterMouse" />
+            </VBox>
             <MaskerPane fx:id="masker" visible="false" text="%loading"/>
         </StackPane>
         <Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />

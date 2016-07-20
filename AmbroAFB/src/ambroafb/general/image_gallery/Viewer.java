@@ -35,30 +35,29 @@ import javax.imageio.ImageIO;
  */
 public class Viewer {
     
-    private List<Image> images;
+    private Image[] images;
     private PDFHelper pdfHelper;
     private IntegerProperty indexProperty;
     private BooleanProperty deleteProperty;
     private boolean isNew;
-    private boolean isPDF;
+    private BooleanProperty pdfProperty;
     private Map<Integer, Integer> rotatedImages;
     
     public Viewer(InputStream stream, boolean isPDF){
-        this.isPDF = isPDF;
-        images = new ArrayList<>();
         indexProperty = new SimpleIntegerProperty(1);
         deleteProperty = new SimpleBooleanProperty(false);
+        pdfProperty = new SimpleBooleanProperty(isPDF);
         rotatedImages = new HashMap<>();
         if (isPDF){
             try {
                 pdfHelper = new PDFHelper(stream);
-                images.add(pdfHelper.getImage(0));
+                images = new Image[pdfHelper.getPageCount()];
                 indexProperty.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-                    if (newValue.intValue() >= 0 && newValue.intValue() < images.size()) {
-                        if (images.get(newValue.intValue()) == null) {
+                    if (newValue.intValue() >= 0 && newValue.intValue() < images.length) {
+                        if (images[newValue.intValue()] == null) {
                             try {
                                 Image img = pdfHelper.getImage(newValue.intValue());
-                                images.add(img);
+                                images[newValue.intValue()] = img;
                             } catch (IOException ex) {
                                 Logger.getLogger(PDFViewer.class.getName()).log(Level.SEVERE, null, ex);
                             }
@@ -70,22 +69,30 @@ public class Viewer {
             }
         }
         else {
-            images.add(new Image(stream));
+            images = new Image[1];
+            images[0] = new Image(stream);
         }
         indexProperty.set(0);
     }
     
+    public int getPages(){
+        int pages = 1;
+        if (pdfProperty.get()){
+            pages = pdfHelper.getPageCount();
+        }
+        return pages;
+    }
     
     public IntegerProperty indexProperty(){
         return indexProperty;
     }
     
     public Image getImage(){
-        return images.get(indexProperty.get());
+        return images[indexProperty.get()];
     }
     
-    public boolean isPDFViewer(){
-        return isPDF;
+    public BooleanProperty pdfProperty(){
+        return pdfProperty;
     }
     
     public boolean isNew(){
@@ -110,7 +117,7 @@ public class Viewer {
 
     public void rotate() {
         try {
-            images.set(indexProperty.get(), rotateImage(images.get(indexProperty.get())));
+            images[indexProperty.get()] = rotateImage(images[indexProperty.get()]);
             int deg = rotatedImages.getOrDefault(indexProperty.getValue(), 0);
             rotatedImages.put(indexProperty.getValue(), deg + 90);
         } catch (IOException | KFZClient.KFZServerException ex) {
@@ -137,10 +144,10 @@ public class Viewer {
     public byte[] getContent() {
         byte[] result = null;
         try {
-            if (isPDF){
+            if (pdfProperty.get()){
                 getRotated().stream().forEach((Integer t) -> {
                     try {
-                        pdfHelper.replace(images.get(t), t);
+                        pdfHelper.replace(images[t], t);
                     } catch (IOException ex) {
                         Logger.getLogger(PDFViewer.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -148,7 +155,7 @@ public class Viewer {
                 result = pdfHelper.getContent();
             }
             else{
-                BufferedImage bImage = SwingFXUtils.fromFXImage(images.get(indexProperty.get()), null);
+                BufferedImage bImage = SwingFXUtils.fromFXImage(images[indexProperty.get()], null);
                 ByteArrayOutputStream outStream = new ByteArrayOutputStream();
                 ImageIO.write(bImage, "png", outStream); // other extention loses the image quality.
                 result = outStream.toByteArray();
