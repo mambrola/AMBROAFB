@@ -32,13 +32,11 @@
                 </image>
             </ImageView>
             <VBox fx:id="vPagingPane" alignment="BOTTOM_CENTER" visible="false" >
-                <!--<Region fx:id="pagingRegion" VBox.vgrow="ALWAYS" />-->
                 <HBox fx:id="hPagingPane" alignment="CENTER_RIGHT" >
-                    <!--<Region fx:id="pagingRegion" HBox.hgrow="ALWAYS" />-->
-                    <VBox alignment="CENTER" >
-                        <Button fx:id="up" text="▲" onAction="#spreadOutPDF" onMouseEntered="#enterMouse" userData="-1" />
-                        <Label  fx:id="page" onMouseEntered="#enterMouse" />
-                        <Button fx:id="down" text="▼" onAction="#spreadOutPDF" onMouseEntered="#enterMouse" userData="1"/>
+                    <VBox alignment="CENTER" onMouseEntered="#enterMouse" >
+                        <Button fx:id="up" text="▲" onAction="#spreadOutPDF" userData="-1" />
+                        <Label  fx:id="page" />
+                        <Button fx:id="down" text="▼" onAction="#spreadOutPDF" userData="1"/>
                     </VBox>
                 </HBox>
             </VBox>

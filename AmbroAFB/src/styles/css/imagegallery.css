@@ -7,15 +7,9 @@
 .masker-pane .masker-center,
 #up,
 #down {
-  /*-fx-background-color: transparent;*/
+  -fx-background-color: transparent;
 }
-/*#pdfPagingPane{
-    -fx-background-color: yellowgreen;
-    -fx-opacity: 0.5; 
-    -fx-alignment: BOTTOM_CENTER;
-}*/
 #page {
   -fx-font-size: 1.5em;
   -fx-alignment: CENTER;
-  /*-fx-background-color: yellow;*/
 }
