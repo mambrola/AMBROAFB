@@ -61,10 +61,7 @@ public class MessageSlider extends VBox {
         scrollBar.setVisibleAmount(1);
         scrollBar.setBlockIncrement(1);
         
-//        scrollBar.valueProperty().bindBidirectional(indexProperty);
-//        scrollBar.valueProperty().bind(indexProperty);
         scrollBar.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-//            System.out.println(" scrollBar: oldValue " + oldValue + " newValue " + newValue);
             double roundedValue = Math.round(newValue.doubleValue());
             scrollBar.setValue(roundedValue);
             indexProperty.set(roundedValue);
@@ -142,14 +139,12 @@ public class MessageSlider extends VBox {
         @Override
         public void onChanged(Change<? extends String> c) {
             while(c.next()){
-                if(c.wasRemoved()){ // ??? misamatebelia logika
-                    if (indexProperty.getValue().intValue() == values.size()){ // already remved.
+                if(c.wasRemoved()){
+                    // already removed elements, so index could be the same except this case:
+                    if (indexProperty.getValue().intValue() == values.size()){
                         indexProperty.set(indexProperty.getValue().intValue() - 1);
                     }
-//                    else{
-//                        
-//                    }
-//                    scrollBar.setValue(indexProperty.get());
+                    scrollBar.setValue(indexProperty.get());
                 }
                 if(values.size() > 0){
                     scrollBar.setMax(values.size() - 1);
