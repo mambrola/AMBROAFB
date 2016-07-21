@@ -58,7 +58,7 @@ public class Viewer {
                                 Image img = pdfHelper.getImage(newValue.intValue());
                                 images[newValue.intValue()] = img;
                             } catch (IOException ex) {
-                                Logger.getLogger(PDFViewer.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
                     }
@@ -148,7 +148,7 @@ public class Viewer {
                     try {
                         pdfHelper.replace(images[t], t);
                     } catch (IOException ex) {
-                        Logger.getLogger(PDFViewer.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
                 result = pdfHelper.getContent();
@@ -160,7 +160,7 @@ public class Viewer {
                 result = outStream.toByteArray();
             }
         } catch (IOException ex) {
-            Logger.getLogger(PDFViewer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }

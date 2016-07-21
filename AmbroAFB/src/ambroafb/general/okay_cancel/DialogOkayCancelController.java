@@ -5,7 +5,6 @@
  */
 package ambroafb.general.okay_cancel;
 
-import ambroafb.clients.dialog.ClientDialogController;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
@@ -17,7 +16,6 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
