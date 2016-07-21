@@ -352,9 +352,9 @@ public class ImageGalleryController implements Initializable {
     }
 
     /**
-     * The method sends image gallery data to server in thread. So before this
-     * method, image gallery controller must known service URL prefix and
-     * parameter by setUploadDataURL method. Deleted feature is priority, second
+     * The method sends image gallery data to server in thread. 
+     * So before this method, image gallery controller must known service URL prefix and
+     * parameter by "setUploadDataURL" method. Deleted feature is priority, second
      * is uploaded and last priority is to edit existing.
      */
     public void sendDataToServer() {
