@@ -26,7 +26,7 @@
                         <Label text="%password" GridPane.rowIndex="1" />
                         <TextField fx:id="username" GridPane.columnIndex="1" />
                         <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Button mnemonicParsing="false" onAction="#login" text="%enter" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Button fx:id="login" mnemonicParsing="false" onAction="#login" text="%enter" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                     </children>
                     <VBox.margin>
                         <Insets left="100.0" right="100.0" />
