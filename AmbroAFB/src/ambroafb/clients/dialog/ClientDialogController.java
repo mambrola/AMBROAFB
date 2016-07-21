@@ -158,17 +158,17 @@ public class ClientDialogController implements Initializable {
     }
     
     private void switchJuridical(ActionEvent e) {
-        double w = firstName.widthProperty().getValue() + lastName.widthProperty().getValue();
+        double w = ((VBox)firstName.getParent()).widthProperty().getValue() + ((VBox)lastName.getParent()).widthProperty().getValue();
         if (((CheckBox) e.getSource()).isSelected()) {
             first_name.setText(conf.getTitleFor("firm_name"));
             last_name.setText(conf.getTitleFor("firm_form"));
-            firstName.setPrefWidth(0.75 * w);
-            lastName.setPrefWidth(0.25 * w);
+            ((VBox)firstName.getParent()).setPrefWidth(0.75 * w);
+            ((VBox)lastName.getParent()).setPrefWidth(0.25 * w);
         } else {
             first_name.setText(conf.getTitleFor("first_name"));
             last_name.setText(conf.getTitleFor("last_name"));
-            firstName.setPrefWidth(0.50 * w);
-            lastName.setPrefWidth(0.50 * w);
+            ((VBox)firstName.getParent()).setPrefWidth(0.50 * w);
+            ((VBox)lastName.getParent()).setPrefWidth(0.50 * w);
         }
     }
     
