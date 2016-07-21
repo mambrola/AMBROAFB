@@ -43,6 +43,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -88,6 +89,9 @@ public class ImageGalleryController implements Initializable {
     private Button up, down;
     @FXML
     private Label page;
+    
+    @FXML
+    private StackPane galleryStack;
 
     private ObservableList<String> datesSliderElems;
     private Calendar calendar;

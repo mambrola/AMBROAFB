@@ -22,10 +22,8 @@
             <HBox fx:id="galleryImageFrame" >
                 <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
                 <MagnifierPane fx:id="magnifier" >
-                    <ImageView fx:id="galleryImageView" preserveRatio="true" >
-                    </ImageView>
+                    <ImageView fx:id="galleryImageView" preserveRatio="true" />
                 </MagnifierPane>
-                
                 <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
             </HBox>
             <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
