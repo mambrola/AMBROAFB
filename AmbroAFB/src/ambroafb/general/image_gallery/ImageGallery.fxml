@@ -31,11 +31,16 @@
                     <Image url="/images/deleted.png" />
                 </image>
             </ImageView>
-            <VBox fx:id="pdfPagingPane" visible="false" >
-                <Region fx:id="pagingRegion" VBox.vgrow="ALWAYS" />
-                <Button fx:id="up" text="▲" onAction="#spreadOutPDF" onMouseEntered="#enterMouse" userData="-1"/>
-                <Label  fx:id="page" onMouseEntered="#enterMouse" />
-                <Button fx:id="down" text="▼" onAction="#spreadOutPDF" onMouseEntered="#enterMouse" userData="1"/>
+            <VBox fx:id="vPagingPane" alignment="BOTTOM_CENTER" visible="false" >
+                <!--<Region fx:id="pagingRegion" VBox.vgrow="ALWAYS" />-->
+                <HBox fx:id="hPagingPane" alignment="CENTER_RIGHT" >
+                    <!--<Region fx:id="pagingRegion" HBox.hgrow="ALWAYS" />-->
+                    <VBox alignment="CENTER" >
+                        <Button fx:id="up" text="▲" onAction="#spreadOutPDF" onMouseEntered="#enterMouse" userData="-1" />
+                        <Label  fx:id="page" onMouseEntered="#enterMouse" />
+                        <Button fx:id="down" text="▼" onAction="#spreadOutPDF" onMouseEntered="#enterMouse" userData="1"/>
+                    </VBox>
+                </HBox>
             </VBox>
             <MaskerPane fx:id="masker" visible="false" text="%loading"/>
         </StackPane>

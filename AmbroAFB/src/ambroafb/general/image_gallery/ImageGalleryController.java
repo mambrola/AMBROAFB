@@ -82,9 +82,9 @@ public class ImageGalleryController implements Initializable {
     private MagnifierPane magnifier;
 
     @FXML
-    private VBox pdfPagingPane;
+    private VBox vPagingPane;
     @FXML
-    private Region pagingRegion;
+    private HBox hPagingPane;
     @FXML
     private Button up, down;
     @FXML
@@ -132,8 +132,8 @@ public class ImageGalleryController implements Initializable {
         msgSlider = new MessageSlider(datesSliderElems, converter, rb);
         imageButtonsHBox.getChildren().add(msgSlider);
 
-        pdfPagingPane.setPickOnBounds(false);
-        pagingRegion.setPickOnBounds(false);
+        vPagingPane.setPickOnBounds(false);
+        hPagingPane.setPickOnBounds(false);
 
         msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             showImage(newValue.intValue());
@@ -202,8 +202,8 @@ public class ImageGalleryController implements Initializable {
     }
 
     private void setBindingsViewerAndSceneComponents(Viewer viewer) {
-        pdfPagingPane.visibleProperty().unbind();
-        pdfPagingPane.visibleProperty().bind(viewer.pdfProperty());
+        vPagingPane.visibleProperty().unbind();
+        vPagingPane.visibleProperty().bind(viewer.pdfProperty());
         if (viewer.pdfProperty().get()) {
             up.visibleProperty().unbind();
             up.visibleProperty().bind(Bindings.createBooleanBinding(() -> {
