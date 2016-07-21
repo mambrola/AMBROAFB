@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javafx.beans.value.ObservableValue;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,7 +86,7 @@ public class ClientDialogController implements Initializable {
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private Client client;
     private Client clientBackup;
-    private AutoCompletionBinding<String> chooseCityBinding;
+//    private AutoCompletionBinding<String> chooseCityBinding;
     
     /**
      * Initializes the controller class.
@@ -98,6 +99,9 @@ public class ClientDialogController implements Initializable {
         juridical.setOnAction(this::switchJuridical);
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
+        country.valueProperty().addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
+            rezident.setSelected(newValue.getName().equals("Georgia"));
+        });
     }
     
     public void bindClient(Client client) {
@@ -199,12 +203,11 @@ public class ClientDialogController implements Initializable {
             try {
                 JSONArray cities = new JSONArray(GeneralConfig.getInstance().getServerClient().get(path));
                 List<String> citiesAsList = getListFromJSONArray(cities);
-                chooseCityBinding = TextFields.bindAutoCompletion(
-                                                        city,
-                                                        (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter((cityName) ->
-                                                            cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
-                                                        .collect(Collectors.toList()), 
-                                                        null);
+                TextFields.bindAutoCompletion(  city,
+                                                (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter((cityName) ->
+                                                    cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
+                                                .collect(Collectors.toList()), 
+                                                 null);
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }

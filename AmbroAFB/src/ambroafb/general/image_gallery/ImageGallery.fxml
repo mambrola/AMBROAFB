@@ -35,9 +35,9 @@
             </ImageView>
             <VBox fx:id="pdfPagingPane" visible="false" >
                 <Region fx:id="pagingRegion" VBox.vgrow="ALWAYS" />
-                <Button fx:id="up" text="▲" onAction="#up" onMouseEntered="#enterMouse" />
-                <Label  fx:id="page" />
-                <Button fx:id="down" text="▼" onAction="#down" onMouseEntered="#enterMouse" />
+                <Button fx:id="up" text="▲" onAction="#spreadOutPDF" onMouseEntered="#enterMouse" userData="-1"/>
+                <Label  fx:id="page" onMouseEntered="#enterMouse" />
+                <Button fx:id="down" text="▼" onAction="#spreadOutPDF" onMouseEntered="#enterMouse" userData="1"/>
             </VBox>
             <MaskerPane fx:id="masker" visible="false" text="%loading"/>
         </StackPane>

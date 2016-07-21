@@ -98,7 +98,7 @@ public class Client extends EditorPanelable{
 
     public Client() {
         isJur =             new SimpleBooleanProperty();
-        isRez =             new SimpleBooleanProperty();
+        isRez =             new SimpleBooleanProperty(true);
         firstName =         new SimpleStringProperty("");
         lastName =          new SimpleStringProperty("");
         descrip = Utils.avoidNull(firstName).concat(" ").concat(Utils.avoidNull(lastName));

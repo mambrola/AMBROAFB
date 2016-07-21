@@ -29,13 +29,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -65,7 +63,7 @@ public class ImageGalleryController implements Initializable {
     private VBox imagesGalleryRoot;
 //    @FXML
 //    private Image galleryImage;
-    
+
     @FXML
     private Button deleteOrUndo, rotateToRight, upload;
 
@@ -81,7 +79,7 @@ public class ImageGalleryController implements Initializable {
     private MaskerPane masker;
     @FXML
     private MagnifierPane magnifier;
-    
+
     @FXML
     private VBox pdfPagingPane;
     @FXML
@@ -90,9 +88,8 @@ public class ImageGalleryController implements Initializable {
     private Button up, down;
     @FXML
     private Label page;
-    
+
     private ObservableList<String> datesSliderElems;
-    private Map<String, DocumentViewer> viewersMap;
     private Calendar calendar;
     private DateFormat formatter;
     private FileChooser fileChooser;
@@ -106,11 +103,10 @@ public class ImageGalleryController implements Initializable {
     private static final String GALLERY_UNDO_BUTTON_IMAGE_NAME = "/images/undo_128.png";
     private static final String UPLOAD_DIRECTORY_PATH = "upload_directory";
     private StringConverter<String> converter;
-    
-    
+
     private Map<String, Viewer> viewers;
     private Map<Integer, Object> lockObjectsMap;
-    
+
     /**
      * Initializes the controller class.
      *
@@ -120,7 +116,6 @@ public class ImageGalleryController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         defaultFileChooserPath = GeneralConfig.prefs.get(UPLOAD_DIRECTORY_PATH, null);
-        viewersMap = new HashMap<>();
         viewers = new HashMap<>();
         lockObjectsMap = new ConcurrentHashMap<>();
         datesSliderElems = FXCollections.observableArrayList();
@@ -132,79 +127,80 @@ public class ImageGalleryController implements Initializable {
         converter = new ImageGalleryStringConverter();
         msgSlider = new MessageSlider(datesSliderElems, converter, rb);
         imageButtonsHBox.getChildren().add(msgSlider);
-        
+
         pdfPagingPane.setPickOnBounds(false);
         pagingRegion.setPickOnBounds(false);
-        
+
         msgSlider.indexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            showImage(serviceURLPrefix, newValue.intValue());
+            showImage(newValue.intValue());
         });
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             doAfterInicialize(new Image(GeneralConfig.getInstance().getTitleFor("def_image_url")));
         });
     }
-    
-    private void doAfterInicialize(Image image){
+
+    private void doAfterInicialize(Image image) {
         galleryImageView.setFitWidth(0);
         galleryImageView.setFitHeight(0);
-        if(image.getWidth() > imagesGalleryRoot.getWidth()){
+        if (image.getWidth() > imagesGalleryRoot.getWidth()) {
             galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
         }
-        if(image.getHeight() > imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight()){
+        if (image.getHeight() > imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight()) {
             galleryImageView.setFitHeight(imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight());
         }
         galleryImageView.setImage(image);
-   }
-    
-    private class ImageGalleryStringConverter extends StringConverter<String> {
-        @Override
-            public String toString(String object) {
-                String fullName = object;
-                int start = fullName.indexOf("_") + 1;
-                int end = fullName.lastIndexOf(".");
-                String miliseconds = fullName.substring(start, end);
-                calendar.setTimeInMillis(Long.parseLong(miliseconds));
-                String onlyDateAndTime = formatter.format(calendar.getTime());
-                return onlyDateAndTime;
-            }
-
-            @Override
-            public String fromString(String string) {
-                return string;
-            }
-        
     }
-    
-    
-    private void showImage(String urlPrefix, int index) {
+
+    private class ImageGalleryStringConverter extends StringConverter<String> {
+
+        @Override
+        public String toString(String object) {
+            String fullName = object;
+            int start = fullName.indexOf("_") + 1;
+            int end = fullName.lastIndexOf(".");
+            String miliseconds = fullName.substring(start, end);
+            calendar.setTimeInMillis(Long.parseLong(miliseconds));
+            String onlyDateAndTime = formatter.format(calendar.getTime());
+            return onlyDateAndTime;
+        }
+
+        @Override
+        public String fromString(String string) {
+            return string;
+        }
+
+    }
+
+    /**
+     * The method provides to show appropriate file image according to index in msgSlider.
+     * @param index - Message index in msgSlider.
+     */
+    private void showImage(int index) {
         if (index >= 0 && index < datesSliderElems.size()) {
             String fullName = datesSliderElems.get(index);
             Viewer currViewer = viewers.get(fullName);
-            if (currViewer == null){
+            if (currViewer == null) {
                 if (!lockObjectsMap.containsKey(index)) {
                     Thread t = new Thread(new DataDownloadRunnable(fullName, index));
                     Object lock = new Object();
                     lockObjectsMap.put(index, lock);
                     t.start();
-                    System.out.println("daistarta " + index + " thread.");
-                } else{
-                    System.out.println("aq unda gavacocxlot " + index + " thread.");
-                    synchronized(lockObjectsMap.get(index)){
+                } else {
+                    synchronized (lockObjectsMap.get(index)) {
                         lockObjectsMap.get(index).notify();
                     }
                 }
-            }
-            else {
-                showViewerComponentOnScene(currViewer);
+            } else {
+                doAfterInicialize(currViewer.getImage());
+                setBindingsViewerAndSceneComponents(currViewer);
             }
         }
     }
-    
-    private void showViewerComponentOnScene(Viewer viewer){
-        doAfterInicialize(viewer.getImage());
+
+    private void setBindingsViewerAndSceneComponents(Viewer viewer) {
         pdfPagingPane.visibleProperty().unbind();
         pdfPagingPane.visibleProperty().bind(viewer.pdfProperty());
-        if (viewer.pdfProperty().get()){
+        if (viewer.pdfProperty().get()) {
             up.visibleProperty().unbind();
             up.visibleProperty().bind(Bindings.createBooleanBinding(() -> {
                 return viewer.indexProperty().get() > 0;
@@ -214,14 +210,13 @@ public class ImageGalleryController implements Initializable {
             down.visibleProperty().bind(Bindings.createBooleanBinding(() -> {
                 return viewer.indexProperty().get() + 1 < viewer.getPages();
             }, viewer.indexProperty()));
-            
+
             page.textProperty().unbind();
             page.textProperty().bind(Bindings.createStringBinding(() -> {
                 return "" + (viewer.indexProperty().get() + 1);
             }, viewer.indexProperty()));
         }
-        
-        
+
         deletedImageView.visibleProperty().unbind();
         deletedImageView.visibleProperty().bind(viewer.deletedProperty());
         ImageView icon = (ImageView) deleteOrUndo.getGraphic();
@@ -231,13 +226,27 @@ public class ImageGalleryController implements Initializable {
             return new Image(getClass().getResourceAsStream(url));
         }, viewer.deletedProperty()));
     }
-    
+
+    /**
+     * The method provides to save uploading URL data. It will be use for
+     * "sendDataToServer" method. Recommended: This method must be call before
+     * "downloadData" method.
+     *
+     * @param serviceURLPrefix - The prefix of download and upload.
+     * @param parameterUpload - The parameter for upload URL.
+     * @param parameterDownload - The parameter for download URL.
+     */
     public void setUploadDataURL(String serviceURLPrefix, String parameterUpload, String parameterDownload) {
         this.serviceURLPrefix = serviceURLPrefix;
         this.parameterUpload = parameterUpload;
         this.parameterDownload = parameterDownload;
     }
 
+    /**
+     * The method provides to download data from service and show the newest
+     * image on scene. Before this method call, it must be called the
+     * "setUploadDataURL" method.
+     */
     public void downloadData() {
         try {
             String imagesNames = GeneralConfig.getInstance().getServerClient().get(serviceURLPrefix + parameterDownload);
@@ -270,17 +279,19 @@ public class ImageGalleryController implements Initializable {
     @FXML
     private void uploadFile(ActionEvent event) {
         Stage owner = (Stage) galleryImageFrame.getScene().getWindow();
-        if (defaultFileChooserPath != null){
+        if (defaultFileChooserPath != null) {
             fileChooser.setInitialDirectory(new File(defaultFileChooserPath));
         }
         List<File> files = fileChooser.showOpenMultipleDialog(owner);
-        if (files == null) return;
-        
+        if (files == null) {
+            return;
+        }
+
         defaultFileChooserPath = files.get(files.size() - 1).getParentFile().getPath();
         GeneralConfig.prefs.put(UPLOAD_DIRECTORY_PATH, defaultFileChooserPath);
-        
+
         new Thread(() -> {
-            Platform.runLater(()->{
+            Platform.runLater(() -> {
                 masker.setVisible(true);
             });
             files.stream().forEach((file) -> {
@@ -296,33 +307,27 @@ public class ImageGalleryController implements Initializable {
                     Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
-            Platform.runLater(()->{
+            Platform.runLater(() -> {
                 masker.setVisible(false);
             });
         }).start();
     }
-    
-    /** 
-     * The method count date and set index of images slider. This action cause to show new uploading file.
-     * @param viewer
-     * @param fileName 
+
+    /**
+     * The method count date and set index of images slider. The method sets
+     * msgSlider value, so this action cause to show new uploading file.
+     *
+     * @param viewer - current file on scene (PDF or image).
+     * @param fileName - current file name (PDF or image).
      */
-    private void proccessViewer(DocumentViewer viewer, String fileName){
-        Long currTime = new Date().getTime();
-        String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
-        viewersMap.put(fileFullName, viewer);
-        datesSliderElems.add(fileFullName);
-        msgSlider.setValueOn(datesSliderElems.size() - 1);
-    }
-    
-    private void proccessViewer(Viewer viewer, String fileName){
+    private void proccessViewer(Viewer viewer, String fileName) {
         Long currTime = new Date().getTime();
         String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
         viewers.put(fileFullName, viewer);
         datesSliderElems.add(fileFullName);
         msgSlider.setValueOn(datesSliderElems.size() - 1);
     }
-    
+
     @FXML
     private void rotate(ActionEvent event) {
         String fullName = msgSlider.getValue();
@@ -332,32 +337,25 @@ public class ImageGalleryController implements Initializable {
             doAfterInicialize(viewer.getImage());
         }
     }
-    
+
     @FXML
-    private void up(ActionEvent event){
-        String value = msgSlider.getValue();
-        Viewer viewer = viewers.get(value);
-        viewer.indexProperty().set(viewer.indexProperty().get() - 1);
+    private void spreadOutPDF(ActionEvent event) {
+        Button eventAppropButton = ((Button) event.getSource());
+        Viewer viewer = viewers.get(msgSlider.getValue());
+        viewer.indexProperty().set(viewer.indexProperty().get() + Integer.parseInt((String) eventAppropButton.getUserData()));
         doAfterInicialize(viewer.getImage());
     }
-    
+
     @FXML
-    private void down(ActionEvent event){
-        String value = msgSlider.getValue();
-        Viewer viewer = viewers.get(value);
-        viewer.indexProperty().set(viewer.indexProperty().get() + 1);
-        doAfterInicialize(viewer.getImage());
-    }
-    
-    @FXML
-    private void enterMouse(MouseEvent event){
+    private void enterMouse(MouseEvent event) {
         magnifier.hide();
     }
 
     /**
-     * The method sends image gallery data to server in thread.
-     * So before this method, image gallery controller must known service URL prefix 
-     * and parameter by setUploadDataURL method.
+     * The method sends image gallery data to server in thread. So before this
+     * method, image gallery controller must known service URL prefix and
+     * parameter by setUploadDataURL method. Deleted feature is priority, second
+     * is uploaded and last priority is to edit existing.
      */
     public void sendDataToServer() {
         new Thread(() -> {
@@ -389,30 +387,38 @@ public class ImageGalleryController implements Initializable {
     }
 
     /**
-     * The method returns true if user upload new file, rotate or delete existed. 
-     * False if state does not change.
-     * @return 
+     * The method returns true if user upload new file, rotate or delete
+     * existed. False if state does not change.
+     *
+     * @return
      */
-    public boolean anyViewerChanged(){
+    public boolean anyViewerChanged() {
         boolean result = false;
-        for (DocumentViewer viewer : viewersMap.values()) {
-            if (viewer == null) continue;
-            result = viewer.isNew() || viewer.isEdit()|| viewer.deletedProperty().get();
-            if (result) break;
+        for (Viewer viewer : viewers.values()) {
+            result = viewer.isNew() || viewer.isEdit() || viewer.deletedProperty().get();
+            if (result) {
+                break;
+            }
         }
         return result;
     }
-    
-    private class DataDownloadRunnable implements Runnable{
+
+    /**
+     * The class provides download data logic for background thread. It must be
+     * known a two parameter: fullName of file, because make appropriate viewer
+     * object and index of message slider for waiting current thread, if slider
+     * index had changed.
+     */
+    private class DataDownloadRunnable implements Runnable {
 
         private final String fullName;
         private final int index;
-        
-        public DataDownloadRunnable(String fullName, int index){
+
+        public DataDownloadRunnable(String fullName, int index) {
             this.fullName = fullName;
             this.index = index;
         }
-        
+
         @Override
         public void run() {
             Platform.runLater(() -> {
@@ -422,25 +428,23 @@ public class ImageGalleryController implements Initializable {
             try {
                 HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(serviceURLPrefix + fullName);
                 Viewer newViewer = new Viewer(con.getInputStream(), fullName.endsWith(".pdf"));
-                
-                Object lock = lockObjectsMap.get(index); // .getLock();
-                synchronized(lock){
+
+                Object lock = lockObjectsMap.get(index);
+                synchronized (lock) {
                     try {
-                        System.out.println("daiwyebs mocdas cotaxani " + index + " thread....");
                         lock.wait(1000);
-//                        while(threadMap.get(index).getThread().isInterrupted()){
-                        if(msgSlider.indexProperty().get() != index){
-                            System.out.println("kai xani icdis " + index + " thread.");
+                        if (msgSlider.indexProperty().get() != index) {
                             lock.wait();
                         }
                     } catch (InterruptedException ex) {
                         Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                
+
                 Platform.runLater(() -> {
                     viewers.put(fullName, newViewer);
-                    showViewerComponentOnScene(newViewer);
+                    doAfterInicialize(newViewer.getImage());
+                    setBindingsViewerAndSceneComponents(newViewer);
                     masker.setVisible(false);
                 });
             } catch (IOException ex) {
@@ -448,25 +452,6 @@ public class ImageGalleryController implements Initializable {
             }
             lockObjectsMap.remove(index);
         }
-    
-    }
-    
-    private class ThreadComplete {
-        
-        private final Thread thread;
-        private final Object lock;
-        
-        public ThreadComplete(Thread thread, Object lock){
-            this.thread = thread;
-            this.lock = lock;
-        }
-        
-        public Object getLock(){
-            return lock;
-        }
-        
-        public Thread getThread(){
-            return thread;
-        }
+
     }
 }
