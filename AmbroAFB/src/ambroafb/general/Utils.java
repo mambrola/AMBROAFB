@@ -315,7 +315,7 @@ public class Utils {
         ArrayList<Node> arrayList = new ArrayList<>();
         root.getChildrenUnmodifiable().stream().forEach((n) -> {
             String nodeClassToString = n.getClass().toString();
-            boolean allow = !nodeClassToString.contains("ImageView") && !nodeClassToString.contains("ANodeSlider");
+            boolean allow = !nodeClassToString.contains("ImageView");
             if (allow){
                 if (((Parent) n).getChildrenUnmodifiable().isEmpty()) {
                     if (n.isFocusTraversable()) {

@@ -174,7 +174,7 @@ public class ClientDialogController implements Initializable {
     
     
     /**
-     * Disables all fields on Dialog stage except phones.
+     * Disables all fields on Dialog stage.
      */
     private void setDisableComponents(){
         focusTraversableNodes.forEach((Node t) -> {
