@@ -46,8 +46,8 @@ public class ClientDialog extends Stage implements Dialogable {
         dialogController.setNextVisibleAndActionParameters(buttonType, "/clients/passport/");
         dialogController.setBackupClient(this.clientBackup);
         this.setScene(currentScene);
-        setResizable(false);
-        initOwner(owner);
+        this.setResizable(false);
+        this.initOwner(owner);
 
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
