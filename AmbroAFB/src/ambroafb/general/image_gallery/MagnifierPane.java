@@ -28,6 +28,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -167,12 +168,16 @@ public class MagnifierPane extends StackPane {
         super.layoutChildren();
         if (this.scene == null) {
             this.scene = getScene();
+            Stage ownerStage = (Stage) scene.getWindow();
             scene.addEventFilter(MouseEvent.MOUSE_MOVED, (MouseEvent event) -> {
                 double x = event.getSceneX();
                 double y = event.getSceneY();
                 Bounds thisB = localToScene(getLayoutBounds());
                 if (x < thisB.getMinX() || x > thisB.getMaxX() || y < thisB.getMinY() || y > thisB.getMaxY()) {
                     viewer.hide();
+                }
+                else if (!ownerStage.isFocused()){
+                    ownerStage.requestFocus();
                 }
             });
         }

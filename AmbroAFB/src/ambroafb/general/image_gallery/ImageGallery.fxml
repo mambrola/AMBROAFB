@@ -34,9 +34,25 @@
             <VBox fx:id="vPagingPane" alignment="BOTTOM_CENTER" visible="false" >
                 <HBox fx:id="hPagingPane" alignment="CENTER_RIGHT" >
                     <VBox alignment="CENTER" onMouseEntered="#enterMouse" >
-                        <Button fx:id="up" text="▲" onAction="#spreadOutPDF" userData="-1" />
+                        <Button fx:id="up" onAction="#spreadOutPDF" userData="-1" > <!-- text="▲▼" -->
+                            <graphic>
+                                <ImageView fitWidth="16" fitHeight="16" >
+                                    <image>
+                                        <Image url="/images/up.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                         <Label  fx:id="page" />
-                        <Button fx:id="down" text="▼" onAction="#spreadOutPDF" userData="1"/>
+                        <Button fx:id="down" onAction="#spreadOutPDF" userData="1">
+                            <graphic>
+                                <ImageView fitWidth="16" fitHeight="16" >
+                                    <image>
+                                        <Image url="/images/down.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </VBox>
                 </HBox>
             </VBox>
