@@ -104,6 +104,7 @@ public class MagnifierPane extends StackPane {
 
         viewer = new Popup();
         viewer.getContent().add(mainContent);
+        viewer.autoHideProperty().set(true);
 
         mainContent.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
 
