@@ -100,7 +100,9 @@ public class ClientDialogController implements Initializable {
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
         country.valueProperty().addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
-            rezident.setSelected(newValue.getName().equals("Georgia"));
+            if (oldValue != null && !newValue.equals(oldValue)){
+                rezident.setSelected(newValue.getName().equals("Georgia"));
+            }
         });
     }
     
