@@ -381,19 +381,6 @@ public class Utils {
         return (Stage) bidmap.get(path);
     }
     
-//    public static void removeHidingStages(){
-//        List<Stage> hideStages = new ArrayList<>();
-//        for (Object value : bidmap.values()) {
-//            Stage stage = (Stage) value;
-//            if (!stage.isShowing()){
-//                hideStages.add(stage);
-//            }
-//        }
-//        
-//        hideStages.stream().forEach((hideStage) -> {
-//            bidmap.removeValue(hideStage);
-//        });
-//    }
     
     /**
      * The function removes stage from bidirectional map 
@@ -423,6 +410,25 @@ public class Utils {
         });
         pathes.stream().forEach((currPath) -> {
             bidmap.remove((String) currPath);
+        });
+    }
+    
+    public static void hideChildrenStagesFor(Stage owner, boolean minimized){
+        String ownerPath = (String)bidmap.getKey(owner);
+        bidmap.keySet().stream().forEach((key) -> {
+            if (((String)key).startsWith(ownerPath) && !((String)key).equals(ownerPath)) {
+                System.out.println("path: " + key);
+                Stage childStage = ((Stage) bidmap.get(key));
+                
+                childStage.setIconified(minimized);
+                
+//                if(minimized){
+//                    childStage.hide();
+//                }
+//                else{
+//                    childStage.show();
+//                }
+            }
         });
     }
     
