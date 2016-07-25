@@ -314,8 +314,8 @@ public class Utils {
     public static ArrayList<Node> getFocusTraversableBottomChildren(Parent root) {
         ArrayList<Node> arrayList = new ArrayList<>();
         root.getChildrenUnmodifiable().stream().forEach((n) -> {
-            String nodeClassToString = n.getClass().toString();
-            boolean allow = !nodeClassToString.contains("ImageView");
+            boolean allow = !n.getStyleClass().contains("alwaysEnable") &&
+                            !n.getClass().toString().contains("ImageView");
             if (allow){
                 if (((Parent) n).getChildrenUnmodifiable().isEmpty()) {
                     if (n.isFocusTraversable()) {
@@ -417,7 +417,6 @@ public class Utils {
         String ownerPath = (String)bidmap.getKey(owner);
         bidmap.keySet().stream().forEach((key) -> {
             if (((String)key).startsWith(ownerPath) && !((String)key).equals(ownerPath)) {
-                System.out.println("path: " + key);
                 Stage childStage = ((Stage) bidmap.get(key));
                 
                 childStage.setIconified(minimized);

@@ -31,7 +31,7 @@
                     <Image url="/images/deleted.png" />
                 </image>
             </ImageView>
-            <VBox fx:id="vPagingPane" alignment="BOTTOM_CENTER" visible="false" >
+            <VBox fx:id="vPagingPane" styleClass="alwaysEnable" alignment="BOTTOM_CENTER" visible="false" >
                 <HBox fx:id="hPagingPane" alignment="CENTER_RIGHT" >
                     <VBox alignment="CENTER" onMouseEntered="#enterMouse" >
                         <Button fx:id="up" text="▲"  onAction="#spreadOutPDF" userData="-1" />
