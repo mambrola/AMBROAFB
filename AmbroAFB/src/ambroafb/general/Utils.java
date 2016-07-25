@@ -418,14 +418,17 @@ public class Utils {
         bidmap.keySet().stream().forEach((key) -> {
             if (((String)key).startsWith(ownerPath) && !((String)key).equals(ownerPath)) {
                 Stage childStage = ((Stage) bidmap.get(key));
+                boolean main = AmbroAFB.mainStage.isIconified();
                 
                 childStage.setIconified(minimized);
                 
 //                if(minimized){
-//                    childStage.hide();
+////                    childStage.hide();
+//                    System.out.println("chakecva. main iconf: " + main + ". child path: " + key + ". child iconf: " + childStage.isIconified());
 //                }
 //                else{
-//                    childStage.show();
+////                    childStage.show();
+//                    System.out.println("amokecva. main iconf: " + main + ". child path: " + key + ". child iconf: " + childStage.isIconified());
 //                }
             }
         });
