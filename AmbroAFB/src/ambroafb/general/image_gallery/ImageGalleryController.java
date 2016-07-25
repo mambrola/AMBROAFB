@@ -139,8 +139,8 @@ public class ImageGalleryController implements Initializable {
     private void doAfterInicialize(Image image) {
         galleryImageView.setFitWidth(0);
         galleryImageView.setFitHeight(0);
-        if (image.getWidth() > imagesGalleryRoot.getWidth()) {
-            galleryImageView.setFitWidth(imagesGalleryRoot.getWidth());
+        if (image.getWidth() > imagesGalleryRoot.getWidth() - 2*imagesGalleryRoot.getBorder().getInsets().getLeft()) {
+            galleryImageView.setFitWidth(imagesGalleryRoot.getWidth() - 2*imagesGalleryRoot.getBorder().getInsets().getLeft());
         }
         if (image.getHeight() > imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight()) {
             galleryImageView.setFitHeight(imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight());
