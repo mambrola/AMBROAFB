@@ -66,4 +66,8 @@ public class ProductsController implements Initializable {
         }
     }
     
+    
+    public EditorPanelController getEditorPanelController(){
+        return editorPanelController;
+    }
 }

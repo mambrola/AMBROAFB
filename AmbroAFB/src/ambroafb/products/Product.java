@@ -105,25 +105,29 @@ public class Product extends EditorPanelable {
     }
 
     @Override
-    public EditorPanelable cloneWithoutID() {
+    public Product cloneWithoutID() {
         Product clone = new Product();
         clone.copyFrom(this);
         return clone;
     }
 
     @Override
-    public EditorPanelable cloneWithID() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Product cloneWithID() {
+        Product clone = cloneWithoutID();
+        clone.setRecId(this.getRecId());
+        return clone;
     }
 
     @Override
     public void copyFrom(EditorPanelable other) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Product product = (Product) other;
+        setDescrip(product.getDescrip());
+        setRemark(product.getRemark());
     }
 
     @Override
     public String toStringForSearch() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return descrip.concat(" " + remark.get()).get();
     }
     
     

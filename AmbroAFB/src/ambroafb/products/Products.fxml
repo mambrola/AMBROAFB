@@ -23,7 +23,6 @@
     <center>
         <StackPane >
             <ATableView fx:id="table" initializer="ambroafb.products.Product" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
-            <!--<CheckComboBox fx:id="products" />-->
             <MaskerPane fx:id="masker" visible="false" text="%loading"/>
         </StackPane>
     </center>
