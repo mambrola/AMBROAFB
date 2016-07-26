@@ -62,7 +62,7 @@ public class ImageGalleryController implements Initializable {
     private VBox imagesGalleryRoot;
 
     @FXML
-    private Button deleteOrUndo, rotateToRight, upload;
+    private Button deleteOrUndo;
 
     @FXML
     private ImageView galleryImageView;
@@ -351,8 +351,8 @@ public class ImageGalleryController implements Initializable {
     /**
      * The method sends image gallery data to server in thread. 
      * So before this method, image gallery controller must known service URL prefix and
- parameter by "setURLData" method. Deleted feature is priority, second
- is uploaded and last priority is to edit existing.
+     * parameter by "setURLData" method. Deleted feature is priority, second
+     * is uploaded and last priority is to edit existing.
      */
     public void sendDataToServer() {
         new Thread(() -> {
