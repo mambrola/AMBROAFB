@@ -9,7 +9,6 @@ import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.DoublePropertyBase;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -89,16 +88,6 @@ public class MagnifierPane extends StackPane {
 
         final Magnifier clippedNode = new Magnifier(radiusProperty(), radiusProperty());
         clippedNode.setClip(cClip);
-//
-//        final Line vL = LineBuilder.create().stroke(Color.RED).startX(0).startY(0).endX(0).opacity(.5).build();
-//        vL.strokeWidthProperty().bind(scopeLineWidthProperty());
-//        vL.visibleProperty().bind(scopeLinesVisibleProperty());
-//        vL.endYProperty().bind(radiusProperty().multiply(2));
-//
-//        final Line hL = LineBuilder.create().stroke(Color.RED).startX(0).startY(0).endY(0).opacity(.5).build();
-//        hL.strokeWidthProperty().bind(scopeLineWidthProperty());
-//        hL.visibleProperty().bind(scopeLinesVisibleProperty());
-//        hL.endXProperty().bind(radiusProperty().multiply(2));
 
         // Adding all parts in a container.
         mainContent.getChildren().addAll(cEdge, clippedNode);
@@ -107,54 +96,43 @@ public class MagnifierPane extends StackPane {
         viewer.getContent().add(mainContent);
         viewer.autoHideProperty().set(true);
 
-        mainContent.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
-
-            @Override
-            public void handle(ScrollEvent event) {
-                double dY = event.getDeltaY();
-                double oldScale = getScaleFactor();
-                double scale = oldScale - dY / 40;
-                if (scale > minScale && scale < maxScale) {
-                    setScaleFactor(scale);
-
-                    fireEvent(new MouseEvent(MouseEvent.MOUSE_ENTERED, event.getX(), event.getY(), event.getScreenX(), event.getScreenY(), MouseButton.NONE, 0, false, false, false, false, false, false, false, false, false, false, null));
-                    double ratio = scale / oldScale;
-                    double w = clippedNode.getWidth();
-                    double h = clippedNode.getHeight();
-                    clippedNode.transXProperty().set((clippedNode.transXProperty().get() + w / 2) * ratio - w / 2);
-                    clippedNode.transYProperty().set((clippedNode.transYProperty().get() + h / 2) * ratio - h / 2);
-                }
+        mainContent.addEventFilter(ScrollEvent.SCROLL, (ScrollEvent event) -> {
+            double dY = event.getDeltaY();
+            double oldScale = getScaleFactor();
+            double scale1 = oldScale - dY / 40;
+            if (scale1 > minScale && scale1 < maxScale) {
+                setScaleFactor(scale1);
+                fireEvent(new MouseEvent(MouseEvent.MOUSE_ENTERED, event.getX(), event.getY(), event.getScreenX(), event.getScreenY(), MouseButton.NONE, 0, false, false, false, false, false, false, false, false, false, false, null));
+                double ratio = scale1 / oldScale;
+                double w = clippedNode.getWidth();
+                double h = clippedNode.getHeight();
+                clippedNode.transXProperty().set((clippedNode.transXProperty().get() + w / 2) * ratio - w / 2);
+                clippedNode.transYProperty().set((clippedNode.transYProperty().get() + h / 2) * ratio - h / 2);
             }
         });
 
-        addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                viewer.show(MagnifierPane.this, e.getScreenX(), e.getScreenY() - (2 * getRadius()));
-                int w = (int) (MagnifierPane.this.getWidth() * getScaleFactor());
-                int h = (int) (MagnifierPane.this.getHeight() * getScaleFactor());
-                if (w > 0 && h > 0) {
-                    writeImg = new WritableImage(w, h);
-
-                    // Get snapshot image
-                    MagnifierPane.this.snapshot(callBack, param, writeImg);
-                    snapView.setImage(writeImg);
-                    clippedNode.setContent(snapView);
-                }
+        addEventFilter(MouseEvent.MOUSE_ENTERED, (MouseEvent e) -> {
+            viewer.show(MagnifierPane.this, e.getScreenX(), e.getScreenY() - (2 * getRadius()));
+            int w = (int) (MagnifierPane.this.getWidth() * getScaleFactor());
+            int h = (int) (MagnifierPane.this.getHeight() * getScaleFactor());
+            if (w > 0 && h > 0) {
+                writeImg = new WritableImage(w, h);
+                
+                // Get snapshot image
+                MagnifierPane.this.snapshot(callBack, param, writeImg);
+                snapView.setImage(writeImg);
+                clippedNode.setContent(snapView);
             }
         });
 
-        addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                final double r = getRadius();
-                final double s = getScaleFactor();
-                viewer.setX(e.getScreenX());
-                viewer.setY(e.getScreenY() - (2 * r));
-
-                clippedNode.transXProperty().set((e.getX() * s) - r);
-                clippedNode.transYProperty().set((e.getY() * s) - r);
-            }
+        addEventFilter(MouseEvent.MOUSE_MOVED, (MouseEvent e) -> {
+            final double r = getRadius();
+            final double s = getScaleFactor();
+            viewer.setX(e.getScreenX());
+            viewer.setY(e.getScreenY() - (2 * r));
+            
+            clippedNode.transXProperty().set((e.getX() * s) - r);
+            clippedNode.transYProperty().set((e.getY() * s) - r);
         });
 
     }
