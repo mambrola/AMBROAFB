@@ -54,6 +54,13 @@ public class Product {
 //        });
         return products;
     }
+
+    @Override
+    public String toString() {
+        return "Product: "+ descrip.get();
+    }
+    
+    
     
     public final void setDescrip(String descrip) {
         this.descrip.set(descrip);

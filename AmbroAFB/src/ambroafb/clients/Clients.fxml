@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.*?>
 <?import ambro.* ?>
 <?import ambroafb.general.editor_panel.*?>
+<?import org.controlsfx.control.*?>
 
 
 <BorderPane id="formPane" 
@@ -24,7 +25,7 @@
         <StackPane >
             <children>
                 <ATableView fx:id="table" initializer="ambroafb.clients.Client" styleClass="unicode" VBox.vgrow="ALWAYS" />
-                <org.controlsfx.control.MaskerPane fx:id="masker" visible="false" text="%loading"/>
+                <MaskerPane fx:id="masker" visible="false" text="%loading"/>
             </children>
         </StackPane>
     </center>

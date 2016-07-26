@@ -7,10 +7,13 @@ package ambroafb.products;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
+import org.controlsfx.control.CheckComboBox;
 
 /**
  * FXML Controller class
@@ -18,67 +21,71 @@ import javafx.scene.control.TableView;
  * @author mambroladze
  */
 public class ProductsController implements Initializable {
-
-    @FXML
-    private TableView<Product> table;
     
     @FXML
-    private void delete(ActionEvent e) {
-        System.out.println("passed: Delete");
-    }
+    private CheckComboBox<Product> products;
 
-    @FXML
-    private void edit(ActionEvent e) {
-        Product selectedObject = table.getSelectionModel().getSelectedItem();
-//        ProductDialog dialog = new ProductDialog(selectedObject);
-//        dialog.showAndWait();
-//        if (dialog.isCancelled()) {
-//            System.out.println("dialog is cancelled");
-//        } else {
-//            System.out.println("changed client: " + dialog.getResult());
-//        }
-    }
-
-    @FXML
-    private void view(ActionEvent e) {
-        Product selectedObject = table.getSelectionModel().getSelectedItem();
-//        ProductDialog dialog = new ProductDialog(selectedObject);
-//        dialog.setDisabled();
-//        dialog.askClose(false);
-//        dialog.showAndWait();
-    }
-
-    @FXML
-    private void add(ActionEvent e) {
-//        ProductDialog dialog = new ProductDialog();
-//        dialog.showAndWait();
+//    @FXML
+//    private TableView<Product> table;
+    
+//    @FXML
+//    private void delete(ActionEvent e) {
+//        System.out.println("passed: Delete");
+//    }
 //
-//        if (dialog.isCancelled()){
-//            System.out.println("dialog is cancelled addClient");
-//        }else{
-//            System.out.println("changed client: "+dialog.getResult());
-//        }
-    }
-    
-    @FXML 
-    private void addBySample(ActionEvent e) {
+//    @FXML
+//    private void edit(ActionEvent e) {
 //        Product selectedObject = table.getSelectionModel().getSelectedItem();
-//        ProductDialog dialog = new ProductDialog(selectedObject);
-//        dialog.resetClient();
-//        dialog.showAndWait();
-//        if (dialog.isCancelled()){
-//            System.out.println("dialog is cancelled addBySample");
-//        }else{
-//            System.out.println("changed client: "+dialog.getResult());
+////        ProductDialog dialog = new ProductDialog(selectedObject);
+////        dialog.showAndWait();
+////        if (dialog.isCancelled()) {
+////            System.out.println("dialog is cancelled");
+////        } else {
+////            System.out.println("changed client: " + dialog.getResult());
+////        }
+//    }
 //
-//        }
-    }
+//    @FXML
+//    private void view(ActionEvent e) {
+//        Product selectedObject = table.getSelectionModel().getSelectedItem();
+////        ProductDialog dialog = new ProductDialog(selectedObject);
+////        dialog.setDisabled();
+////        dialog.askClose(false);
+////        dialog.showAndWait();
+//    }
+//
+//    @FXML
+//    private void add(ActionEvent e) {
+////        ProductDialog dialog = new ProductDialog();
+////        dialog.showAndWait();
+////
+////        if (dialog.isCancelled()){
+////            System.out.println("dialog is cancelled addClient");
+////        }else{
+////            System.out.println("changed client: "+dialog.getResult());
+////        }
+//    }
+//    
+//    @FXML 
+//    private void addBySample(ActionEvent e) {
+////        Product selectedObject = table.getSelectionModel().getSelectedItem();
+////        ProductDialog dialog = new ProductDialog(selectedObject);
+////        dialog.resetClient();
+////        dialog.showAndWait();
+////        if (dialog.isCancelled()){
+////            System.out.println("dialog is cancelled addBySample");
+////        }else{
+////            System.out.println("changed client: "+dialog.getResult());
+////
+////        }
+//    }
+//    
+//    @FXML
+//    private void refresh(ActionEvent e) {
+//        table.getItems().clear();
+//        reAssignTable();
+//    }
     
-    @FXML
-    private void refresh(ActionEvent e) {
-        table.getItems().clear();
-        reAssignTable();
-    }
     /**
      * 
      * @param url
@@ -87,12 +94,19 @@ public class ProductsController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        reAssignTable();
+        ObservableList<Product> elements = FXCollections.observableArrayList();
+        elements.add(new Product(1, "name 1", "r ???"));
+        elements.add(new Product(2, "name 2", "r ???"));
+        elements.add(new Product(3, "name 3", "r ???"));
+        products.getItems().addAll(elements);
+        
+//        reAssignTable();
     }
 
     private void reAssignTable() {
         Product.dbGetProducts(0).values().stream().forEach((product) -> {
-            table.getItems().add(product);
+            System.out.println("products: " + product);
+//            table.getItems().add(product);
         });
         //panel.disablePropertyBinder(table);
     }

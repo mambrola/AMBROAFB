@@ -12,6 +12,7 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
+import ambroafb.products.Products;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -149,20 +150,29 @@ public class MainController implements Initializable {
     
     @FXML 
     private void products(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage(
-                    "/ambroafb/products/Products.fxml", 
-                    config.getTitleFor("products"), 
-                    Names.IN_OUT_LOGO,
-                    AmbroAFB.mainStage
-            );
-            stage.show();
-        }catch(IOException ex){
-            Platform.runLater(() -> {
-                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-                alert.showAlert();
-            });
+        String productsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Products.class.getSimpleName();
+        Stage productsStage = Utils.getStageForPath(productsStagePath);
+        if (productsStage == null || !productsStage.isShowing()){
+            Products products = new Products(AmbroAFB.mainStage);
+            products.show();
         }
+        else{
+            productsStage.requestFocus();
+        }
+//        try{
+//            Stage stage = Utils.createStage(
+//                    "/ambroafb/products/Products.fxml", 
+//                    config.getTitleFor("products"), 
+//                    Names.IN_OUT_LOGO,
+//                    AmbroAFB.mainStage
+//            );
+//            stage.show();
+//        }catch(IOException ex){
+//            Platform.runLater(() -> {
+//                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
+//                alert.showAlert();
+//            });
+//        }
     }
     
     @FXML 

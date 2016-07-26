@@ -11,30 +11,28 @@
 <?import javafx.scene.layout.*?>
 <?import ambro.* ?>
 <?import ambroafb.general.editor_panel.*?>
+<?import org.controlsfx.control.*?>
 
 <BorderPane id="formPane" 
             stylesheets="/styles/css/products.css" 
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="ambroafb.products.ProductsController">
     <top>
-        <EditorPanel fx:id="panel"
-            onDelete="#delete" 
-            onEdit="#edit" 
-            onView="#view" 
-            onNew="#add"
-            onNewBySample="#addBySample" 
-            onRefresh="#refresh" />
+        <fx:include source="/ambroafb/general/editor_panel/EditorPanel.fxml" />
     </top>
     <center>
-        <!--<DialogPane fx:id="alert" styleClass="root"></DialogPane>-->
-        <ATableView fx:id="table" initializer="ambroafb.clients.Client" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+        <StackPane >
+            <!--<ATableView fx:id="table" initializer="ambroafb.clients.Client" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />-->
+            <CheckComboBox fx:id="products" />
+            <MaskerPane fx:id="masker" visible="false" text="%loading"/>
+        </StackPane>
     </center>
 </BorderPane>
 
 
 
 
-
+<!--
 stylesheets="/ambroafb/products/products.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.products.ProductsController">
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="menu-bar" >
@@ -87,7 +85,7 @@ stylesheets="/ambroafb/products/products.css" xmlns:fx="http://javafx.com/fxml/1
         </HBox>
     </top>
     <center>
-        <!--<DialogPane fx:id="alert" styleClass="root"></DialogPane>-->
+        <DialogPane fx:id="alert" styleClass="root"></DialogPane>
         <ATableView fx:id="table" initializer="ambroafb.products.Product" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
-    </center>
-</BorderPane>
+    </center>-->
+<!--</BorderPane>-->
