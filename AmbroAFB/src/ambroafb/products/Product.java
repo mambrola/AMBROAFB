@@ -106,7 +106,9 @@ public class Product extends EditorPanelable {
 
     @Override
     public EditorPanelable cloneWithoutID() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Product clone = new Product();
+        clone.copyFrom(this);
+        return clone;
     }
 
     @Override

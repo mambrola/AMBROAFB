@@ -15,7 +15,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
 
@@ -26,9 +25,6 @@ import org.json.JSONObject;
  */
 public class ProductsController implements Initializable {
     
-//    @FXML
-//    private CheckComboBox<Product> products;
-
     @FXML
     private ATableView<EditorPanelable> table;
     
