@@ -103,6 +103,10 @@ public class MessageSlider extends VBox {
         return indexProperty;
     }
 
+    public boolean isEmpty(){
+        return values.isEmpty();
+    }
+    
     /**
      * The method returns value on given index.
      * @param index - If index is out of bounds, method sets zero indexed value.

@@ -259,6 +259,7 @@ public class ImageGalleryController implements Initializable {
             }
         } catch (KFZClient.KFZServerException ex) {
             System.out.println("ex code: " + ex.getStatusCode() + "  User has not images.");
+            magnifier.showProperty().set(false);
         } catch (JSONException | IOException ex) {
             Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -345,9 +346,14 @@ public class ImageGalleryController implements Initializable {
 
     @FXML
     private void enterMouse(MouseEvent event) {
-        magnifier.hide();
+        magnifier.showProperty().set(false);
     }
-
+    
+    @FXML
+    private void exitMouse(MouseEvent event) {
+        magnifier.showProperty().set(true);
+    }
+            
     /**
      * The method sends image gallery data to server in thread. 
      * So before this method, image gallery controller must known service URL prefix and

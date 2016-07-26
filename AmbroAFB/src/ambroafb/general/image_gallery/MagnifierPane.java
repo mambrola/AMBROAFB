@@ -8,6 +8,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.DoublePropertyBase;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
@@ -53,6 +54,7 @@ public class MagnifierPane extends StackPane {
     private Scene scene;
     private WritableImage writeImg;
     final Popup viewer;
+    private BooleanProperty showProperty = new SimpleBooleanProperty(true);
 
     public MagnifierPane() {
         super();
@@ -137,10 +139,10 @@ public class MagnifierPane extends StackPane {
 
     }
     
-    public void hide(){
-        viewer.hide();
+    public BooleanProperty showProperty(){
+        return showProperty;
     }
-
+    
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
@@ -151,7 +153,7 @@ public class MagnifierPane extends StackPane {
                 double x = event.getSceneX();
                 double y = event.getSceneY();
                 Bounds thisB = localToScene(getLayoutBounds());
-                if (x < thisB.getMinX() || x > thisB.getMaxX() || y < thisB.getMinY() || y > thisB.getMaxY()) {
+                if ((x < thisB.getMinX() || x > thisB.getMaxX() || y < thisB.getMinY() || y > thisB.getMaxY()) || !showProperty.get()) {
                     viewer.hide();
                 }
                 else if (!ownerStage.isFocused()){
