@@ -142,8 +142,8 @@ public class ImageGalleryController implements Initializable {
         if (image.getWidth() > imagesGalleryRoot.getWidth() - 2*imagesGalleryRoot.getBorder().getInsets().getLeft()) {
             galleryImageView.setFitWidth(imagesGalleryRoot.getWidth() - 2*imagesGalleryRoot.getBorder().getInsets().getLeft());
         }
-        if (image.getHeight() > imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight()) {
-            galleryImageView.setFitHeight(imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight());
+        if (image.getHeight() > imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight() - 2*imagesGalleryRoot.getBorder().getInsets().getBottom()) {
+            galleryImageView.setFitHeight(imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight() - 2*imagesGalleryRoot.getBorder().getInsets().getBottom());
         }
         galleryImageView.setImage(image);
     }
@@ -225,7 +225,7 @@ public class ImageGalleryController implements Initializable {
     }
 
     /**
-     * The method provides to save uploading URL data. It will be use for
+     * The method provides to save uploading and downloading URL data. It will be use for
      * "sendDataToServer" method. Recommended: This method must be call before
      * "downloadData" method.
      *
@@ -233,7 +233,7 @@ public class ImageGalleryController implements Initializable {
      * @param parameterUpload - The parameter for upload URL.
      * @param parameterDownload - The parameter for download URL.
      */
-    public void setUploadDataURL(String serviceURLPrefix, String parameterUpload, String parameterDownload) {
+    public void setURLData(String serviceURLPrefix, String parameterUpload, String parameterDownload) {
         this.serviceURLPrefix = serviceURLPrefix;
         this.parameterUpload = parameterUpload;
         this.parameterDownload = parameterDownload;
@@ -242,7 +242,7 @@ public class ImageGalleryController implements Initializable {
     /**
      * The method provides to download data from service and show the newest
      * image on scene. Before this method call, it must be called the
-     * "setUploadDataURL" method.
+     * "setURLData" method.
      */
     public void downloadData() {
         try {
@@ -351,8 +351,8 @@ public class ImageGalleryController implements Initializable {
     /**
      * The method sends image gallery data to server in thread. 
      * So before this method, image gallery controller must known service URL prefix and
-     * parameter by "setUploadDataURL" method. Deleted feature is priority, second
-     * is uploaded and last priority is to edit existing.
+ parameter by "setURLData" method. Deleted feature is priority, second
+ is uploaded and last priority is to edit existing.
      */
     public void sendDataToServer() {
         new Thread(() -> {

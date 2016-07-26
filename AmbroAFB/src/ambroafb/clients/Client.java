@@ -96,9 +96,11 @@ public class Client extends EditorPanelable{
     @AView.Column(title = "%fax", width = "80")
     private final SimpleStringProperty fax;
 
+    private static final Country DEFAULT_COUNTRY = new Country("GE", "Georgia");
+    
     public Client() {
         isJur =             new SimpleBooleanProperty();
-        isRez =             new SimpleBooleanProperty(true);
+        isRez =             new SimpleBooleanProperty();
         firstName =         new SimpleStringProperty("");
         lastName =          new SimpleStringProperty("");
         descrip = Utils.avoidNull(firstName).concat(" ").concat(Utils.avoidNull(lastName));
@@ -108,7 +110,8 @@ public class Client extends EditorPanelable{
         city =              new SimpleStringProperty("");
         fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
         country =           new SimpleObjectProperty<>();
-        country.set(new Country("GE", "Georgia"));
+        country.set(DEFAULT_COUNTRY);
+        isRez.set(country.get().getCode().equals("GE"));
         countryDescrip =    new SimpleStringProperty("");
         IDNumber =          new SimpleStringProperty("");
         phoneList = FXCollections.observableArrayList();

@@ -155,7 +155,7 @@ public class ClientDialogController implements Initializable {
             phonesContainer.getChildren().add(phonesCombobox);
         }
         okayCancelController.setButtonsFeatures(buttonType);
-        imageGalleryController.setUploadDataURL(serviceURLPrefix, client.getEmail() + "/", client.getEmail() + "/all");
+        imageGalleryController.setURLData(serviceURLPrefix, client.getRecId() + "/", client.getRecId() + "/all");
         imageGalleryController.downloadData();
     }
     
