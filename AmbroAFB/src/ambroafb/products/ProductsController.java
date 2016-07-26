@@ -5,15 +5,19 @@
  */
 package ambroafb.products;
 
+import ambro.ATableView;
+import ambroafb.general.editor_panel.EditorPanelController;
+import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableView;
 import org.controlsfx.control.CheckComboBox;
+import org.controlsfx.control.MaskerPane;
+import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -22,69 +26,20 @@ import org.controlsfx.control.CheckComboBox;
  */
 public class ProductsController implements Initializable {
     
-    @FXML
-    private CheckComboBox<Product> products;
+//    @FXML
+//    private CheckComboBox<Product> products;
 
-//    @FXML
-//    private TableView<Product> table;
+    @FXML
+    private ATableView<EditorPanelable> table;
     
-//    @FXML
-//    private void delete(ActionEvent e) {
-//        System.out.println("passed: Delete");
-//    }
-//
-//    @FXML
-//    private void edit(ActionEvent e) {
-//        Product selectedObject = table.getSelectionModel().getSelectedItem();
-////        ProductDialog dialog = new ProductDialog(selectedObject);
-////        dialog.showAndWait();
-////        if (dialog.isCancelled()) {
-////            System.out.println("dialog is cancelled");
-////        } else {
-////            System.out.println("changed client: " + dialog.getResult());
-////        }
-//    }
-//
-//    @FXML
-//    private void view(ActionEvent e) {
-//        Product selectedObject = table.getSelectionModel().getSelectedItem();
-////        ProductDialog dialog = new ProductDialog(selectedObject);
-////        dialog.setDisabled();
-////        dialog.askClose(false);
-////        dialog.showAndWait();
-//    }
-//
-//    @FXML
-//    private void add(ActionEvent e) {
-////        ProductDialog dialog = new ProductDialog();
-////        dialog.showAndWait();
-////
-////        if (dialog.isCancelled()){
-////            System.out.println("dialog is cancelled addClient");
-////        }else{
-////            System.out.println("changed client: "+dialog.getResult());
-////        }
-//    }
-//    
-//    @FXML 
-//    private void addBySample(ActionEvent e) {
-////        Product selectedObject = table.getSelectionModel().getSelectedItem();
-////        ProductDialog dialog = new ProductDialog(selectedObject);
-////        dialog.resetClient();
-////        dialog.showAndWait();
-////        if (dialog.isCancelled()){
-////            System.out.println("dialog is cancelled addBySample");
-////        }else{
-////            System.out.println("changed client: "+dialog.getResult());
-////
-////        }
-//    }
-//    
-//    @FXML
-//    private void refresh(ActionEvent e) {
-//        table.getItems().clear();
-//        reAssignTable();
-//    }
+    @FXML
+    private EditorPanelController editorPanelController;
+    
+    @FXML
+    private MaskerPane masker;
+    
+    private final ObservableList<EditorPanelable> products = FXCollections.observableArrayList();
+    
     
     /**
      * 
@@ -94,21 +49,25 @@ public class ProductsController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ObservableList<Product> elements = FXCollections.observableArrayList();
-        elements.add(new Product(1, "name 1", "r ???"));
-        elements.add(new Product(2, "name 2", "r ???"));
-        elements.add(new Product(3, "name 3", "r ???"));
-        products.getItems().addAll(elements);
-        
-//        reAssignTable();
+        table.setBundle(rb);
+        editorPanelController.setOuterController(this);
+        editorPanelController.buttonsMainPropertysBinder(table);
+        editorPanelController.setTableDataList(table, products);
     }
-
-    private void reAssignTable() {
-        Product.dbGetProducts(0).values().stream().forEach((product) -> {
-            System.out.println("products: " + product);
-//            table.getItems().add(product);
-        });
-        //panel.disablePropertyBinder(table);
+    
+    public void reAssignTable(JSONObject jsonFilter) {
+        if (jsonFilter != null && jsonFilter.length() == 0){
+            products.clear();
+            Platform.runLater(() -> {
+                masker.setVisible(true);
+            });
+            new Thread(() -> {
+                products.setAll(Product.dbGetProducts());
+                Platform.runLater(() -> {
+                    masker.setVisible(false);
+                });
+            }).start();
+        }
     }
     
 }

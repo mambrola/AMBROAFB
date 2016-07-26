@@ -5,17 +5,15 @@
  */
 package ambroafb.countries;
 
-import ambroafb.clients.Client;
+import ambro.ATableView;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableView;
 import org.json.JSONObject;
 
 /**
@@ -26,7 +24,7 @@ import org.json.JSONObject;
 public class CountriesController implements Initializable {
 
     @FXML
-    private TableView<EditorPanelable> table;
+    private ATableView<EditorPanelable> table;
 
     @FXML
     private EditorPanelController editorPanelController;

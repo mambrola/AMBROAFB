@@ -13,6 +13,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.products.Products;
+import ambroafb.products.filter.ProductFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -155,6 +156,9 @@ public class MainController implements Initializable {
         if (productsStage == null || !productsStage.isShowing()){
             Products products = new Products(AmbroAFB.mainStage);
             products.show();
+            
+            ProductFilter filter = new ProductFilter(products);
+            products.getProductsController().reAssignTable(filter.getResult());
         }
         else{
             productsStage.requestFocus();

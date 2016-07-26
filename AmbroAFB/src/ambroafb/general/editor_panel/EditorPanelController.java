@@ -231,7 +231,7 @@ public class EditorPanelController implements Initializable {
         return exit;
     }
     
-    public void setTableDataList(TableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
+    public void setTableDataList(ATableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
         tableData = list;
         FilteredList<EditorPanelable> filteredData = new FilteredList<>(tableData, p -> true);
         search.textProperty().addListener((observable, oldValue, newValue) -> {

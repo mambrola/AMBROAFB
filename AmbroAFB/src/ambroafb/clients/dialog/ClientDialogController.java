@@ -156,6 +156,8 @@ public class ClientDialogController implements Initializable {
         }
         okayCancelController.setButtonsFeatures(buttonType);
         imageGalleryController.setURLData(serviceURLPrefix, client.getRecId() + "/", client.getRecId() + "/all");
+        System.out.println("serviceURLPrefix: " + serviceURLPrefix + ". client.getRecId(): " + client.getRecId());
+        // 91 93 98
         imageGalleryController.downloadData();
     }
     
