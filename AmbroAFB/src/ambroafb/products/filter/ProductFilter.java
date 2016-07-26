@@ -23,7 +23,7 @@ import org.json.JSONObject;
  */
 public class ProductFilter extends Stage implements Filterable, Initializable {
 
-    private JSONObject json;
+    private final JSONObject json;
     
     public ProductFilter(Stage owner){
         String productFilterPath = Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH;
