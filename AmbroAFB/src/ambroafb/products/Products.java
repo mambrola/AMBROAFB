@@ -6,8 +6,6 @@
 package ambroafb.products;
 
 import ambroafb.general.Utils;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
