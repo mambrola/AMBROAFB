@@ -42,7 +42,7 @@
             </VBox>
             <MaskerPane fx:id="masker" visible="false" text="%loading"/>
         </StackPane>
-        <Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />
+        <!--<Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />-->
         <HBox fx:id="imageButtonsHBox" >
             <children>
                 <Button  fx:id="deleteOrUndo" onAction="#deleteImage" >
