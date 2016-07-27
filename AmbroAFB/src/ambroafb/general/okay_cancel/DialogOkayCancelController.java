@@ -101,11 +101,8 @@ public class DialogOkayCancelController implements Initializable {
     }
     
     private void operationCanceled(){
-        Object ownerObject = cancel.getScene().getProperties().get("controller");
-        Utils.getInvokedClassMethod(ownerObject.getClass(), "operationCanceled", null, ownerObject);
-//        try {
-//            cancel.getScene().getProperties().get("controller").getClass().getMethod("operationCanceled").invoke(cancel.getScene().getProperties().get("controller"));
-//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(DialogOkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
+        Object controller = cancel.getScene().getProperties().get("controller");
+        Utils.getInvokedClassMethod(controller.getClass(), "operationCanceled", null, controller);
     }
     
 }
