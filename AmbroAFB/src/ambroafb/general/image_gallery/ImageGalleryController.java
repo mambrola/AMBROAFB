@@ -341,6 +341,7 @@ public class ImageGalleryController implements Initializable {
         viewers.put(fileFullName, viewer);
         datesSliderElems.add(fileFullName);
         msgSlider.setValueOn(datesSliderElems.size() - 1);
+        magnifier.showProperty().set(true);
     }
 
     @FXML
