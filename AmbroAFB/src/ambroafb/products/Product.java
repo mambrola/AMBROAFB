@@ -6,10 +6,12 @@
 package ambroafb.products;
 
 import ambro.AView;
+import ambroafb.clients.Client;
+import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.Alert;
 //import org.json.JSONArray;
 //import org.json.JSONException;
 
@@ -37,18 +40,18 @@ public class Product extends EditorPanelable {
     
     @AView.Column(title = "%remark", width = "550")
     private SimpleStringProperty remark;
-        
+    
     public Product(){
         descrip =   new SimpleStringProperty();
         remark =    new SimpleStringProperty();
     }
     
     
-    public Product(Object[] values){
-        recId = Utils.avoidNullAndReturnInt(   values[0]);
-        setDescrip( Utils.avoidNullAndReturnString(values[1]));
-        setRemark(  Utils.avoidNullAndReturnString(values[2]));
-    }
+//    public Product(Object[] values){
+//        recId = Utils.avoidNullAndReturnInt(values[0]);
+//        setDescrip( Utils.avoidNullAndReturnString(values[1]));
+//        setRemark(  Utils.avoidNullAndReturnString(values[2]));
+//    }
     
     public Product(int pi, String d, String r){
         recId = pi;
@@ -57,18 +60,35 @@ public class Product extends EditorPanelable {
     }
     
     public static Product saveOneToDB(Product product){
-        return product;
+        if (product == null) return null; 
+        try {
+            String resource = "products" + (product.recId > 0 ? "/" + product.recId : "");
+            String method = product.recId > 0 ? "PUT" : "POST";
+            ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            String product_str = mapper.writeValueAsString(product);
+            
+            String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, product_str);
+            Product res = mapper.readValue(res_str, Product.class);
+            product.copyFrom(res);
+            if(product.getRecId() <= 0)
+                product.setRecId(res.getRecId());
+            return product;
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+        }
+        return null;
     }
     
     public static boolean deleteOneFromDB(int productId){
-//        try {
-//            GeneralConfig.getInstance().getServerClient().call("clients/" + productId, "DELETE", null);
+        try {
+            GeneralConfig.getInstance().getServerClient().call("products/" + productId, "DELETE", null);
             return true;
-//        } catch (IOException | KFZClient.KFZServerException ex) {
-//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
-//        }
-//        return false;
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+        }
+        return false;
     }
     
     public static Product getOneFromDB (int productId){
