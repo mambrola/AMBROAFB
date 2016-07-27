@@ -22,7 +22,8 @@ import javafx.stage.WindowEvent;
  */
 public class ProductDialog extends Stage implements Dialogable {
     
-    private Product product, productBackup;
+    private Product product;
+    private final Product productBackup;
     
     private ProductDialogController dialogController;
     
