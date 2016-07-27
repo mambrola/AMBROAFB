@@ -26,7 +26,7 @@ public class ProductsCheckComboBox extends CheckComboBox<Product> {
                 return null;
             }
         });
-        this.getItems().setAll(Product.dbGetProducts());
+        this.getItems().setAll(Product.getAllFromDB());
     }
     
     

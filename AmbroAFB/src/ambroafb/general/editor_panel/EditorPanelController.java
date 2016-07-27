@@ -29,7 +29,6 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
 
 
@@ -116,7 +115,7 @@ public class EditorPanelController implements Initializable {
             if (result == null){
                 selected.copyFrom(backup);
             } else {
-                 Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
+                Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
             }
         }
         else {

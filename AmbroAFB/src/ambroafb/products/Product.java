@@ -6,7 +6,6 @@
 package ambroafb.products;
 
 import ambro.AView;
-import ambroafb.clients.Client;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.Utils;
@@ -15,8 +14,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
@@ -59,12 +56,26 @@ public class Product extends EditorPanelable {
         remark = new SimpleStringProperty(r);
     }
     
-    
-    public static Product dbGetProduct (int productId){
-        return null; //dbGetProducts(productId).get(productId);
+    public static Product saveOneToDB(Product product){
+        return product;
     }
     
-    public static ArrayList<Product> dbGetProducts (){
+    public static boolean deleteOneFromDB(int productId){
+//        try {
+//            GeneralConfig.getInstance().getServerClient().call("clients/" + productId, "DELETE", null);
+            return true;
+//        } catch (IOException | KFZClient.KFZServerException ex) {
+//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+//        }
+//        return false;
+    }
+    
+    public static Product getOneFromDB (int productId){
+        return null;
+    }
+    
+    public static ArrayList<Product> getAllFromDB (){
         try {
             String data = GeneralConfig.getInstance().getServerClient().get("products");
             ObjectMapper mapper = new ObjectMapper();
@@ -89,6 +100,14 @@ public class Product extends EditorPanelable {
         this.discounts = discounts;
     }
 
+    public SimpleStringProperty descriptionProperty(){
+        return descrip;
+    }
+    
+    public SimpleStringProperty remarkProperty(){
+        return remark;
+    }
+    
     public String getDescrip() {
         return descrip.get();
     }
@@ -128,6 +147,10 @@ public class Product extends EditorPanelable {
     @Override
     public String toStringForSearch() {
         return descrip.concat(" " + remark.get()).get();
+    }
+
+    public boolean compares(Product productBackup) {
+        return this.getDescrip().equals(productBackup.getDescrip()) && this.getRemark().equals(productBackup.getRemark());
     }
     
     
