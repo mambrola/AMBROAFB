@@ -149,10 +149,15 @@ public class ImageGalleryController implements Initializable {
             } else 
                 galleryImageView.setFitHeight(imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight() - 2*imagesGalleryRoot.getBorder().getInsets().getBottom());
         }
-            
         
         
-        
+        System.out.println("");
+        System.out.println("root width: " + imagesGalleryRoot.getWidth());
+        System.out.println("root height: " + imagesGalleryRoot.getHeight());
+        System.out.println("");
+        System.out.println("imageView width: " + galleryImageView.getFitWidth());
+        System.out.println("imageView height: " + galleryImageView.getFitHeight());
+
         
 //        if (image.getWidth() > imagesGalleryRoot.getWidth() - 2*imagesGalleryRoot.getBorder().getInsets().getLeft()) {
 //            galleryImageView.setFitWidth(imagesGalleryRoot.getWidth() - 2*imagesGalleryRoot.getBorder().getInsets().getLeft());

@@ -1,6 +1,5 @@
 @import url("/styles/css/core.css");
-#imagesGalleryRoot,
-#galleryStack {
+#imagesGalleryRoot {
   -fx-pref-height: 2000;
   -fx-max-height: 2000;
 }
@@ -29,12 +28,15 @@
   -fx-font-size: 1.5em;
   -fx-alignment: CENTER;
 }
-#hgrowalways {
+.hgrowalways {
   -fx-background-color: yellow;
 }
 #galleryStack {
   -fx-background-color: blue;
 }
-#vgrowalways {
+.vgrowalways {
   -fx-background-color: green;
+}
+#deletedImageView {
+  -fx-backgound-color: gray;
 }
