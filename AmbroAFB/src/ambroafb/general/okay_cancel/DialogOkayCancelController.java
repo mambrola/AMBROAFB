@@ -8,11 +8,8 @@ package ambroafb.general.okay_cancel;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -82,14 +79,12 @@ public class DialogOkayCancelController implements Initializable {
                 });
                 alertText = "Close without saving changes?";    
                 cancel.setOnAction((ActionEvent event) -> {
-                    boolean anyFieldWasChanged = false;
-                    try {
-                        anyFieldWasChanged = (boolean)cancel.getScene().getProperties().get("controller").getClass().getMethod("anyComponentChanged").invoke(cancel.getScene().getProperties().get("controller"));
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(DialogOkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
-                    if(!anyFieldWasChanged || new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
-                        operationCanceled();
-                        ((Stage) okay.getScene().getWindow()).close();
-                    }
+                        Object ownerObject = cancel.getScene().getProperties().get("controller");
+                        boolean anyFieldWasChanged = (Boolean)Utils.getInvokedClassMethod(ownerObject.getClass(), "anyComponentChanged", null, ownerObject);
+                        if(!anyFieldWasChanged || new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
+                            operationCanceled();
+                            ((Stage) okay.getScene().getWindow()).close();
+                        }
                 });
                 break;
             case VIEW:
@@ -106,9 +101,11 @@ public class DialogOkayCancelController implements Initializable {
     }
     
     private void operationCanceled(){
-        try {
-            cancel.getScene().getProperties().get("controller").getClass().getMethod("operationCanceled").invoke(cancel.getScene().getProperties().get("controller"));
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(DialogOkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
+        Object ownerObject = cancel.getScene().getProperties().get("controller");
+        Utils.getInvokedClassMethod(ownerObject.getClass(), "operationCanceled", null, ownerObject);
+//        try {
+//            cancel.getScene().getProperties().get("controller").getClass().getMethod("operationCanceled").invoke(cancel.getScene().getProperties().get("controller"));
+//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(DialogOkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
     }
     
 }
