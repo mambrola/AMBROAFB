@@ -19,13 +19,17 @@
     <children>
         <Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />
         <StackPane fx:id="galleryStack" >
-            <HBox fx:id="galleryImageFrame" >
-                <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
-                <MagnifierPane fx:id="magnifier" >
-                    <ImageView fx:id="galleryImageView" preserveRatio="true" />
-                </MagnifierPane>
-                <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
-            </HBox>
+            <VBox fx:id="galleryImageFrameVBox" alignment="CENTER" >
+                <children>
+                    <HBox fx:id="galleryImageFrameHBox" >
+                        <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
+                        <MagnifierPane fx:id="magnifier" >
+                            <ImageView fx:id="galleryImageView" preserveRatio="true" />
+                        </MagnifierPane>
+                        <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
+                    </HBox>
+                </children>
+            </VBox>
             <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
                 <image>
                     <Image url="/images/deleted.png" />

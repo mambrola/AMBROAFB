@@ -70,7 +70,7 @@ public class ImageGalleryController implements Initializable {
     private ImageView deletedImageView;
 
     @FXML
-    private HBox imageButtonsHBox, galleryImageFrame;
+    private HBox imageButtonsHBox;
 
     @FXML
     private MaskerPane masker;
@@ -290,7 +290,7 @@ public class ImageGalleryController implements Initializable {
 
     @FXML
     private void uploadFile(ActionEvent event) {
-        Stage owner = (Stage) galleryImageFrame.getScene().getWindow();
+        Stage owner = (Stage) imagesGalleryRoot.getScene().getWindow();
         if (defaultFileChooserPath != null) {
             fileChooser.setInitialDirectory(new File(defaultFileChooserPath));
         }
