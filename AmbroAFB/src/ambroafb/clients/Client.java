@@ -53,7 +53,9 @@ import org.json.JSONObject;
 public class Client extends EditorPanelable{
 
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
-    public String payPal, www, createdDate, status; // password, 
+    public String payPal, www, createdDate; // password, 
+    
+    private StringProperty status;
 
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private final SimpleBooleanProperty isJur;
@@ -117,6 +119,7 @@ public class Client extends EditorPanelable{
         phoneList = FXCollections.observableArrayList();
         phoneNumbers =      new SimpleStringProperty("");
         fax =               new SimpleStringProperty("");
+        status = new SimpleStringProperty();
 
         phoneList.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
@@ -184,6 +187,7 @@ public class Client extends EditorPanelable{
                 .collect(Collectors.toList())
         );
         setFax(other.getFax());
+        setStatus(other.getStatus());
         this.createdDate = other.createdDate;
     }
 
@@ -292,7 +296,7 @@ public class Client extends EditorPanelable{
     public SimpleStringProperty cityProperty() {
         return city;
     }
-
+    
     public StringExpression fullAddressProperty() {
         return fullAddress;
     }
@@ -311,6 +315,10 @@ public class Client extends EditorPanelable{
 
     public SimpleStringProperty faxProperty() {
         return fax;
+    }
+    
+    public StringProperty statusProperty(){
+        return status;
     }
 
     public boolean getIsJur() {
@@ -343,6 +351,14 @@ public class Client extends EditorPanelable{
 
     public String getFullAddress() {
         return fullAddress.get();
+    }
+    
+    public String getStatus() {
+        return status.get();
+    }
+
+    public void setStatus(String status) {
+        this.status.set(status);
     }
 
     public Country getCountry() {
@@ -448,7 +464,8 @@ public class Client extends EditorPanelable{
                                         this.city.get().equals(other.getCity()) &&
                                         this.country.get().equals(other.getCountry()) &&
                                         this.IDNumber.get().equals(other.getIDNumber()) &&
-                                        this.fax.get().equals(other.getFax());
+                                        this.fax.get().equals(other.getFax()) &&
+                                        this.getStatus().equals(other.getStatus());
         boolean equalsPhones = Phone.compareLists(phoneList, other.getPhoneList());
         return fieldsCompareResult && equalsPhones;
     }

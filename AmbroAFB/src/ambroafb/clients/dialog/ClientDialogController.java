@@ -35,6 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.json.JSONArray;
@@ -79,6 +80,8 @@ public class ClientDialogController implements Initializable {
     @FXML
     private CountryComboBox country;
     @FXML
+    private ComboBox status;
+    @FXML
     private DialogOkayCancelController okayCancelController;
     @FXML
     private ImageGalleryController imageGalleryController;
@@ -97,7 +100,7 @@ public class ClientDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         juridical.setOnAction(this::switchJuridical);
-        Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
+        Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities", "/clients/statuses"));
         accessCities.start();
         country.valueProperty().addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
             if (oldValue != null && !newValue.equals(oldValue)){
@@ -121,6 +124,7 @@ public class ClientDialogController implements Initializable {
             zipCode.      textProperty().bindBidirectional(client.zipCodeProperty());
             city.         textProperty().bindBidirectional(client.cityProperty());
             country.     valueProperty().bindBidirectional(client.countryProperty());
+            status.      valueProperty().bindBidirectional(client.statusProperty());
         }
     }
     
@@ -197,22 +201,28 @@ public class ClientDialogController implements Initializable {
     
     private class BackgroundAccessToDB implements Runnable {
 
-        private final String path;
+        private final String pathCities;
+        private final String pathStatuses;
         
-        public BackgroundAccessToDB(String servicePath){
-            path = servicePath;
+        public BackgroundAccessToDB(String pathForCities, String pathForStatuses){
+            pathCities = pathForCities;
+            pathStatuses = pathForStatuses;
         }
         
         @Override
         public void run() {
             try {
-                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getServerClient().get(path));
+                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getServerClient().get(pathCities));
                 List<String> citiesAsList = getListFromJSONArray(cities);
                 TextFields.bindAutoCompletion(  city,
                                                 (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter((cityName) ->
                                                     cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
                                                 .collect(Collectors.toList()), 
                                                 getStringConverter());
+                
+                JSONArray statuses = new JSONArray(GeneralConfig.getInstance().getServerClient().get(pathStatuses));
+                List<String> statusesAsList = getListFromJSONArray(statuses);
+                status.getItems().addAll(statusesAsList);
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }
