@@ -12,11 +12,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.SnapshotResult;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
@@ -58,7 +60,9 @@ public class MagnifierPane extends StackPane {
 
     public MagnifierPane() {
         super();
-        setCursor(Cursor.CROSSHAIR);
+        Image imageCursor = new Image("/images/magnifier.png");
+        setCursor(new ImageCursor(imageCursor, imageCursor.getWidth() / 2, imageCursor.getHeight() /2));
+        //setCursor(Cursor.CROSSHAIR);
         final ImageView snapView = new ImageView();
         final Callback<SnapshotResult, java.lang.Void> callBack = (SnapshotResult result) -> null;
         final Scale scale = new Scale();
