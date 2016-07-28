@@ -87,7 +87,6 @@ public class ClientDialogController implements Initializable {
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private Client client;
     private Client clientBackup;
-    private AutoCompletionBinding<String> chooseCityBinding;
     
     /**
      * Initializes the controller class.
@@ -209,7 +208,7 @@ public class ClientDialogController implements Initializable {
             try {
                 JSONArray cities = new JSONArray(GeneralConfig.getInstance().getServerClient().get(path));
                 List<String> citiesAsList = getListFromJSONArray(cities);
-                chooseCityBinding = TextFields.bindAutoCompletion(  city,
+                TextFields.bindAutoCompletion(  city,
                                                 (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter((cityName) ->
                                                     cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
                                                 .collect(Collectors.toList()), 
