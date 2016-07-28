@@ -35,6 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
+import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,7 +87,7 @@ public class ClientDialogController implements Initializable {
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private Client client;
     private Client clientBackup;
-//    private AutoCompletionBinding<String> chooseCityBinding;
+    private AutoCompletionBinding<String> chooseCityBinding;
     
     /**
      * Initializes the controller class.
@@ -208,11 +209,11 @@ public class ClientDialogController implements Initializable {
             try {
                 JSONArray cities = new JSONArray(GeneralConfig.getInstance().getServerClient().get(path));
                 List<String> citiesAsList = getListFromJSONArray(cities);
-                TextFields.bindAutoCompletion(  city,
+                chooseCityBinding = TextFields.bindAutoCompletion(  city,
                                                 (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter((cityName) ->
                                                     cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
                                                 .collect(Collectors.toList()), 
-                                                 null);
+                                                getStringConverter());
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -226,6 +227,20 @@ public class ClientDialogController implements Initializable {
                     result.add(cities.getString(i));
             }
             return result;
+        }
+        
+        private StringConverter<String> getStringConverter(){
+            return new StringConverter<String>() {
+                @Override
+                public String toString(String name) {
+                    return name;
+                }
+
+                @Override
+                public String fromString(String string) {
+                    return string;
+                }
+            };
         }
     }
 }
