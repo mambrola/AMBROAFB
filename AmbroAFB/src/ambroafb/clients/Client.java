@@ -53,7 +53,7 @@ import org.json.JSONObject;
 public class Client extends EditorPanelable{
 
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
-    public String password, payPal, www, createdDate, status;
+    public String payPal, www, createdDate, status; // password, 
 
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private final SimpleBooleanProperty isJur;

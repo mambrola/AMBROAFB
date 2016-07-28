@@ -6,6 +6,8 @@
 package ambroafb.general.interfaces;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 /**
  *
@@ -14,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public abstract class EditorPanelable {
     @JsonProperty("recId")
     public int recId;
+    public IntegerProperty idProperty = new SimpleIntegerProperty();
     
     public abstract EditorPanelable cloneWithoutID();
     public abstract EditorPanelable cloneWithID();
@@ -28,6 +31,7 @@ public abstract class EditorPanelable {
     
     public void setRecId(int recId){
         this.recId = recId;
+        idProperty.set(recId);
     };
     
     

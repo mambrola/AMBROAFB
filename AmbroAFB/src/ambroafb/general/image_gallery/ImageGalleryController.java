@@ -252,6 +252,20 @@ public class ImageGalleryController implements Initializable {
         this.parameterUpload = parameterUpload;
         this.parameterDownload = parameterDownload;
     }
+    
+    /**
+     * The method provides to update service URL parameters.
+     * After calling "setURLData" method may need to update any parameter.
+     * If some parameters are same, give a null value for them and set only change parameters.
+     * @param serviceURLPrefix
+     * @param parameterUpload
+     * @param parameterDownload 
+     */
+    public void updateURLData(String serviceURLPrefix, String parameterUpload, String parameterDownload){
+        this.serviceURLPrefix = (serviceURLPrefix != null) ? serviceURLPrefix : this.serviceURLPrefix;
+        this.parameterUpload = (parameterUpload != null) ? parameterUpload : this.parameterUpload;
+        this.parameterDownload = (parameterDownload != null) ? parameterDownload : this.parameterDownload;
+    }
 
     /**
      * The method provides to download data from service and show the newest
