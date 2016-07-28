@@ -465,7 +465,7 @@ public class Client extends EditorPanelable{
                                         this.country.get().equals(other.getCountry()) &&
                                         this.IDNumber.get().equals(other.getIDNumber()) &&
                                         this.fax.get().equals(other.getFax()) &&
-                                        this.getStatus().equals(other.getStatus());
+                                        this.status.get().equals(other.getStatus());
         boolean equalsPhones = Phone.compareLists(phoneList, other.getPhoneList());
         return fieldsCompareResult && equalsPhones;
     }

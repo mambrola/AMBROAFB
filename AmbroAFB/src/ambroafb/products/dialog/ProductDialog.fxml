@@ -36,6 +36,12 @@
                             <TextField fx:id="productRemarkField" />
                         </children>
                     </VBox>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="product_parent" />
+                            <ComboBox fx:id="productParents" />
+                        </children>
+                    </VBox>
                 </children>
             </HBox>
             <HBox fx:id="okCancelHbox" styleClass="doubleHeight" alignment="CENTER_RIGHT" spacing="30" >

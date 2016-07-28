@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
 //import org.json.JSONArray;
@@ -41,9 +43,12 @@ public class Product extends EditorPanelable {
     @AView.Column(title = "%remark", width = "550")
     private SimpleStringProperty remark;
     
+    private ObjectProperty<Product> parentProperty;
+    
     public Product(){
         descrip =   new SimpleStringProperty();
         remark =    new SimpleStringProperty();
+        parentProperty = new SimpleObjectProperty<>();
     }
     
     
@@ -57,6 +62,7 @@ public class Product extends EditorPanelable {
         recId = pi;
         descrip = new SimpleStringProperty(d);
         remark = new SimpleStringProperty(r);
+        parentProperty = new SimpleObjectProperty<>();
     }
     
     public static Product saveOneToDB(Product product){
@@ -92,6 +98,14 @@ public class Product extends EditorPanelable {
     }
     
     public static Product getOneFromDB (int productId){
+//        try {
+//            String data = GeneralConfig.getInstance().getServerClient().get("products/" + productId);
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(data, Product.class);
+//        } catch (IOException | KFZClient.KFZServerException ex) {
+//            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+//        }
         return null;
     }
     
@@ -109,7 +123,7 @@ public class Product extends EditorPanelable {
 
     @Override
     public String toString() {
-        return "Product: "+ descrip.get();
+        return descrip.get();
     }
 
     public ArrayList<ProductDiscount> getDiscounts() {
@@ -127,13 +141,25 @@ public class Product extends EditorPanelable {
     public SimpleStringProperty remarkProperty(){
         return remark;
     }
-    
+
+    public ObjectProperty<Product> parentProperty() {
+        return parentProperty;
+    }
+
     public String getDescrip() {
         return descrip.get();
     }
 
     public String getRemark() {
         return remark.get();
+    }
+
+    public int getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
     }
     
     public void setDescrip(String descrip) {
@@ -170,7 +196,9 @@ public class Product extends EditorPanelable {
     }
 
     public boolean compares(Product productBackup) {
-        return this.getDescrip().equals(productBackup.getDescrip()) && this.getRemark().equals(productBackup.getRemark());
+        return this.getDescrip().equals(productBackup.getDescrip()) &&
+               this.getRemark().equals(productBackup.getRemark())   &&
+               this.parentProperty.get().equals(productBackup.parentProperty.get());
     }
     
     

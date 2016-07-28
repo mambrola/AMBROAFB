@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -38,6 +39,9 @@ public class ProductDialogController implements Initializable {
     private TextField productNameField, productRemarkField;
     
     @FXML
+    private ComboBox<Product> productParents;
+    
+    @FXML
     private DialogOkayCancelController okayCancelController;
     
     private ArrayList<Node> focusTraversableNodes;
@@ -51,6 +55,9 @@ public class ProductDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+        new Thread(() -> {
+            productParents.getItems().addAll(Product.getAllFromDB());
+        }).start();
     }    
 
     public void bindProduct(Product product) {
@@ -58,6 +65,7 @@ public class ProductDialogController implements Initializable {
         if (product != null){
             productNameField.textProperty().bindBidirectional(product.descriptionProperty());
             productRemarkField.textProperty().bindBidirectional(product.remarkProperty());
+            productParents.valueProperty().bindBidirectional(product.parentProperty());
         }
     }
     
@@ -71,6 +79,10 @@ public class ProductDialogController implements Initializable {
             setDisableComponents();
         }
         okayCancelController.setButtonsFeatures(buttonType);
+//        int parentId = product.getParentId();
+//        if (parentId != 0){
+//            productParents.setValue(productParents.getItems().get(parentId));
+//        }
     }
 
     public void setBackupProduct(Product productBackup) {
