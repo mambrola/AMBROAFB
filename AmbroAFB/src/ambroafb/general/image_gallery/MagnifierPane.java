@@ -3,6 +3,7 @@
  */
 package ambroafb.general.image_gallery;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
@@ -11,6 +12,7 @@ import javafx.beans.property.DoublePropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Bounds;
+import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
@@ -60,7 +62,11 @@ public class MagnifierPane extends StackPane {
     public MagnifierPane() {
         super();
         Image imageCursor = new Image("/images/magnifier.png");
-        setCursor(new ImageCursor(imageCursor, imageCursor.getWidth() / 2, imageCursor.getHeight() /2));
+        ImageCursor logoCursor = new ImageCursor(imageCursor, imageCursor.getWidth() / 2, imageCursor.getHeight() /2);
+//        setCursor(new ImageCursor(imageCursor, imageCursor.getWidth() / 2, imageCursor.getHeight() /2));
+        cursorProperty().bind(Bindings.createObjectBinding(() -> {
+            return showProperty.get() ? logoCursor : Cursor.DEFAULT;
+        }, showProperty));
         //setCursor(Cursor.CROSSHAIR);
         final ImageView snapView = new ImageView();
         final Callback<SnapshotResult, java.lang.Void> callBack = (SnapshotResult result) -> null;

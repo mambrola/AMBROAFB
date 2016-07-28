@@ -30,7 +30,7 @@
                     </HBox>
                 </children>
             </VBox>
-            <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" >    
+            <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" onMouseEntered="#enterMouse" onMouseExited="#exitMouse" >    
                 <image>
                     <Image url="/images/deleted.png" />
                 </image>
