@@ -149,37 +149,7 @@ public class ImageGalleryController implements Initializable {
             } else 
                 galleryImageView.setFitHeight(imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight() - 2*imagesGalleryRoot.getBorder().getInsets().getBottom());
         }
-        
-        
-//        if (image.getWidth() > imagesGalleryRoot.getWidth() - 2*imagesGalleryRoot.getBorder().getInsets().getLeft()) {
-//            galleryImageView.setFitWidth(imagesGalleryRoot.getWidth() - 2*imagesGalleryRoot.getBorder().getInsets().getLeft());
-//        }
-//        if (image.getHeight() > imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight() - 2*imagesGalleryRoot.getBorder().getInsets().getBottom()) {
-//            galleryImageView.setFitHeight(imagesGalleryRoot.getHeight() - imageButtonsHBox.getHeight() - 2*imagesGalleryRoot.getBorder().getInsets().getBottom());
-//        }
-        
-        
         galleryImageView.setImage(image);
-    }
-
-    private class ImageGalleryStringConverter extends StringConverter<String> {
-
-        @Override
-        public String toString(String object) {
-            String fullName = object;
-            int start = fullName.indexOf("_") + 1;
-            int end = fullName.lastIndexOf(".");
-            String miliseconds = fullName.substring(start, end);
-            calendar.setTimeInMillis(Long.parseLong(miliseconds));
-            String onlyDateAndTime = formatter.format(calendar.getTime());
-            return onlyDateAndTime;
-        }
-
-        @Override
-        public String fromString(String string) {
-            return string;
-        }
-
     }
 
     /**
@@ -208,6 +178,11 @@ public class ImageGalleryController implements Initializable {
         }
     }
 
+    /**
+     * The method provides to create bindings viewer and scene components.
+     * The method unbind scene components old bindings and set new binds on new viewer.
+     * @param viewer - current view in image gallery.
+     */
     private void setBindingsViewerAndSceneComponents(Viewer viewer) {
         vPagingPane.visibleProperty().unbind();
         vPagingPane.visibleProperty().bind(viewer.pdfProperty());
@@ -433,6 +408,29 @@ public class ImageGalleryController implements Initializable {
             }
         }
         return result;
+    }
+    
+    /**
+     * The inner class provides to visual message slider content.
+     */
+    private class ImageGalleryStringConverter extends StringConverter<String> {
+
+        @Override
+        public String toString(String object) {
+            String fullName = object;
+            int start = fullName.indexOf("_") + 1;
+            int end = fullName.lastIndexOf(".");
+            String miliseconds = fullName.substring(start, end);
+            calendar.setTimeInMillis(Long.parseLong(miliseconds));
+            String onlyDateAndTime = formatter.format(calendar.getTime());
+            return onlyDateAndTime;
+        }
+
+        @Override
+        public String fromString(String string) {
+            return string;
+        }
+
     }
 
     /**
