@@ -84,7 +84,6 @@ public class EditorPanelController implements Initializable {
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.DELETE, ownerStage);
 
             EditorPanelable result = dialog.getResult();
-            System.out.println("result: " + result);
             if (result != null){
                 boolean isDeleted = (boolean) Utils.getInvokedClassMethod(objectClass, "deleteOneFromDB", new Class[]{int.class}, null, selected.recId);
                 if(isDeleted)
@@ -113,7 +112,6 @@ public class EditorPanelController implements Initializable {
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.EDIT, ownerStage);
 
             EditorPanelable result = dialog.getResult();
-            System.out.println("result: " + result);
             if (result == null){
                 selected.copyFrom(backup);
             } else {
@@ -157,7 +155,6 @@ public class EditorPanelController implements Initializable {
             Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, null, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
             
             EditorPanelable result = (EditorPanelable)dialog.getResult();
-            System.out.println("result: " + result);
             if (result != null) {
                 Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
                 result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
@@ -184,7 +181,6 @@ public class EditorPanelController implements Initializable {
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
 
             EditorPanelable result = (EditorPanelable) dialog.getResult();
-            System.out.println("result: " + result);
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
             result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
             if (result != null) {
@@ -209,9 +205,7 @@ public class EditorPanelController implements Initializable {
             Class className = Utils.getClassByName(getClassName(CLASS_TYPE.FILTER));
             Filterable filter = (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow());
             JSONObject json = filter.getResult();
-            System.out.println("json refresh: " + json);
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
-////            Object controller = exit.getScene().getProperties().get("controller");
             Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{JSONObject.class}, outerController, json);
             selectOneAgain(selected);
         }
@@ -228,12 +222,6 @@ public class EditorPanelController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        formNode.getChildren().remove(delete);
-//        formNode.getChildren().remove(edit);
-//        formNode.getChildren().remove(view);
-//        formNode.getChildren().remove(refresh);
-//        formNode.getChildren().remove(add);
-//        formNode.getChildren().remove(region);
     }
     
     public Button getExitButton(){

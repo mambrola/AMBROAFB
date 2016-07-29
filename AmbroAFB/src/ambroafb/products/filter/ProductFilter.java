@@ -27,7 +27,6 @@ public class ProductFilter extends Stage implements Filterable, Initializable {
     
     public ProductFilter(Stage owner){
         String productFilterPath = Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH;
-        System.out.println("shevinaxet: path: " + productFilterPath + "  class: " + getClass().getSimpleName() + " stage: " + (Stage)this);
         Utils.saveShowingStageByPath(productFilterPath, (Stage)this);
         
         this.initStyle(StageStyle.UNIFIED);

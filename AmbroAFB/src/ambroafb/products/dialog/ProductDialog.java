@@ -29,7 +29,6 @@ public class ProductDialog extends Stage implements Dialogable {
     
     public ProductDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner){
         String currStagePath = Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH;
-        System.out.println("shevinaxet: path: " + currStagePath + "  class: " + getClass().getSimpleName() + " stage: " + (Stage)this + " owner: " + owner);
         Utils.saveShowingStageByPath(currStagePath, (Stage)this);
         
         Product productObject;
