@@ -21,6 +21,7 @@ public class Products extends Stage {
     
     public Products(Stage owner){
         String productsPath = Utils.getPathForStage(owner) + "/" + getClass().getSimpleName();
+        System.out.println("shevinaxet: path: " + productsPath + "  class: " + getClass().getSimpleName() + " stage: " + (Stage)this);
         Utils.saveShowingStageByPath(productsPath, (Stage)this);
         
         Scene scene = Utils.createScene("/ambroafb/products/Products.fxml", null);

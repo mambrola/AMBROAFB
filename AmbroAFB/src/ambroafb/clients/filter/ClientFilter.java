@@ -37,8 +37,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     public static final String DATE_LESS = "9999-01-01";
     
     public ClientFilter(Stage owner) {
-        String ownerPath = Utils.getPathForStage(owner);
-        String clientFilterPath = ownerPath + Names.LEVEL_FOR_PATH;
+        String clientFilterPath = Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH;
         Utils.saveShowingStageByPath(clientFilterPath, (Stage)this);
         
         this.initStyle(StageStyle.UNIFIED);

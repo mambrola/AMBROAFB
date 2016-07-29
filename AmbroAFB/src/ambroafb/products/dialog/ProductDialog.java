@@ -29,6 +29,7 @@ public class ProductDialog extends Stage implements Dialogable {
     
     public ProductDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner){
         String currStagePath = Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH;
+        System.out.println("shevinaxet: path: " + currStagePath + "  class: " + getClass().getSimpleName() + " stage: " + (Stage)this + " owner: " + owner);
         Utils.saveShowingStageByPath(currStagePath, (Stage)this);
         
         Product productObject;
@@ -48,7 +49,7 @@ public class ProductDialog extends Stage implements Dialogable {
         this.setScene(currentScene);
         this.setResizable(false);
         this.initOwner(owner);
-
+        
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             event.consume();
@@ -56,8 +57,11 @@ public class ProductDialog extends Stage implements Dialogable {
     }
 
     @Override
-    public EditorPanelable getResult() {
+    public Product getResult() {
         showAndWait();
+        // If doesn't change any field. It become when user close parent stage of this stage (Products).
+            operationCanceled();
+        }
         return product;
     }
 

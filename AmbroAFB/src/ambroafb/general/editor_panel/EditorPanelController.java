@@ -84,6 +84,7 @@ public class EditorPanelController implements Initializable {
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.DELETE, ownerStage);
 
             EditorPanelable result = dialog.getResult();
+            System.out.println("result: " + result);
             if (result != null){
                 boolean isDeleted = (boolean) Utils.getInvokedClassMethod(objectClass, "deleteOneFromDB", new Class[]{int.class}, null, selected.recId);
                 if(isDeleted)
@@ -112,6 +113,7 @@ public class EditorPanelController implements Initializable {
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.EDIT, ownerStage);
 
             EditorPanelable result = dialog.getResult();
+            System.out.println("result: " + result);
             if (result == null){
                 selected.copyFrom(backup);
             } else {
@@ -155,6 +157,7 @@ public class EditorPanelController implements Initializable {
             Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, null, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
             
             EditorPanelable result = (EditorPanelable)dialog.getResult();
+            System.out.println("result: " + result);
             if (result != null) {
                 Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
                 result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
@@ -181,6 +184,7 @@ public class EditorPanelController implements Initializable {
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
 
             EditorPanelable result = (EditorPanelable) dialog.getResult();
+            System.out.println("result: " + result);
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
             result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
             if (result != null) {

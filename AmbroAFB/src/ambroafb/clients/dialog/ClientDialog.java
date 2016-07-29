@@ -58,6 +58,8 @@ public class ClientDialog extends Stage implements Dialogable {
     @Override
     public Client getResult() {
         showAndWait();
+            operationCanceled();
+        }
         return client;
     }
     

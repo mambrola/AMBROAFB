@@ -213,20 +213,6 @@ public class Utils {
     }
 
     /**
-     * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით Murman:ჩავამატე parameters
-     *
-     * @param name - fxml დოკუმენტის მისამართი
-     * @param parameters
-     * @return
-     * @throws IOException
-     */
-//    public static Scene createScene(String name, HashMap<String, Object> parameters) throws IOException {
-//        FXMLLoader loader = new FXMLLoader();
-//        loader.setResources(GeneralConfig.getInstance().getBundle());
-//        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
-//        return new Scene(root);
-//    }
-    /**
      * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით
      *
      * @param name - fxml დოკუმენტის მისამართი
@@ -405,23 +391,16 @@ public class Utils {
         });
     }
     
-    public static void hideChildrenStagesFor(Stage owner, boolean minimized){
-        String ownerPath = (String)bidmap.getKey(owner);
+    public static void hideChildrenStagesFor(Stage currStage, boolean minimized){
         bidmap.keySet().stream().forEach((key) -> {
-            if (((String)key).startsWith(ownerPath) && !((String)key).equals(ownerPath)) {
-                Stage childStage = ((Stage) bidmap.get(key));
-                boolean main = AmbroAFB.mainStage.isIconified();
-                
-                childStage.setIconified(minimized);
-                
-//                if(minimized){
-////                    childStage.hide();
-//                    System.out.println("chakecva. main iconf: " + main + ". child path: " + key + ". child iconf: " + childStage.isIconified());
-//                }
-//                else{
-////                    childStage.show();
-//                    System.out.println("amokecva. main iconf: " + main + ". child path: " + key + ". child iconf: " + childStage.isIconified());
-//                }
+            String currPath = (String)key;
+            if (currPath.equals(getPathForStage(currStage))) return;
+            String ownerPath = currPath.substring(0, currPath.lastIndexOf("/"));
+            if (!ownerPath.equals(getPathForStage(AmbroAFB.mainStage))){
+                if (bidmap.containsKey(ownerPath)){
+                    Stage owner = getStageForPath(currPath);
+                    owner.setIconified(minimized);
+                }
             }
         });
     }

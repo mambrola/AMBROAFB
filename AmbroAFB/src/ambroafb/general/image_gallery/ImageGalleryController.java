@@ -104,6 +104,8 @@ public class ImageGalleryController implements Initializable {
     private Map<String, Viewer> viewers;
     private Map<Integer, Object> lockObjectsMap;
 
+    private static final String[] extensions = new String[]{"*.pdf", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.wbm"};
+    
     /**
      * Initializes the controller class.
      *
@@ -119,7 +121,7 @@ public class ImageGalleryController implements Initializable {
         calendar = Calendar.getInstance();
         formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
         fileChooser = new FileChooser();
-        ExtensionFilter filter = new ExtensionFilter("Images files (*.png, *.jpg, *.pdf)", "*.png", "*.jpg", "*.pdf");
+        ExtensionFilter filter = new ExtensionFilter("Images and pdf", extensions);
         fileChooser.getExtensionFilters().add(filter);
         converter = new ImageGalleryStringConverter();
         msgSlider = new MessageSlider(datesSliderElems, converter, rb);

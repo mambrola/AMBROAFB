@@ -40,28 +40,19 @@ public class Product extends EditorPanelable {
     
     
     @AView.Column(title = "%descrip", width = "250")
-    private final SimpleStringProperty descrip = new SimpleStringProperty("");
+    private final SimpleStringProperty descrip;
     
     @AView.Column(title = "%remark", width = "550")
-    private final SimpleStringProperty remark = new SimpleStringProperty("");
+    private final SimpleStringProperty remark;
     
-    private final ObjectProperty<Product> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Product> parentProperty;
     
     public Product(){
+        descrip = new SimpleStringProperty("");
+        remark = new SimpleStringProperty("");
+        parentProperty = new SimpleObjectProperty<>();
     }
     
-    
-//    public Product(Object[] values){
-//        recId = Utils.avoidNullAndReturnInt(values[0]);
-//        setDescrip( Utils.avoidNullAndReturnString(values[1]));
-//        setRemark(  Utils.avoidNullAndReturnString(values[2]));
-//    }
-    
-    public Product(int pi, String d, String r){
-        recId = pi;
-        descrip.set(d);
-        remark.set(r);
-    }
     
     public static Product saveOneToDB(Product product){
         if (product == null) return null; 

@@ -119,7 +119,7 @@ public class Client extends EditorPanelable{
         phoneList = FXCollections.observableArrayList();
         phoneNumbers =      new SimpleStringProperty("");
         fax =               new SimpleStringProperty("");
-        status = new SimpleStringProperty();
+        status = new SimpleStringProperty("new");
 
         phoneList.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
