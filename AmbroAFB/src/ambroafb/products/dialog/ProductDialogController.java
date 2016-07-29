@@ -65,7 +65,7 @@ public class ProductDialogController implements Initializable {
         if (product != null){
             productNameField.textProperty().bindBidirectional(product.descriptionProperty());
             productRemarkField.textProperty().bindBidirectional(product.remarkProperty());
-            productParents.valueProperty().bindBidirectional(product.parentProperty());
+            productParents.valueProperty().bind(product.parentProperty());
         }
     }
     

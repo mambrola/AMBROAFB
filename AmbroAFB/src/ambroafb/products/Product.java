@@ -170,7 +170,8 @@ public class Product extends EditorPanelable {
     // Setters:
     public void setParentId(int parentId) {
         this.parentId.set(parentId);
-        parentProperty.set(getOneFromDB(parentId));
+        if (parentId != 0)
+            parentProperty.set(getOneFromDB(parentId));
     }
     
     public void setPrice(double price) {
