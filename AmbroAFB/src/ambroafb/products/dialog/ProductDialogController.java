@@ -79,10 +79,6 @@ public class ProductDialogController implements Initializable {
             setDisableComponents();
         }
         okayCancelController.setButtonsFeatures(buttonType);
-//        int parentId = product.getParentId();
-//        if (parentId != 0){
-//            productParents.setValue(productParents.getItems().get(parentId));
-//        }
     }
 
     public void setBackupProduct(Product productBackup) {
