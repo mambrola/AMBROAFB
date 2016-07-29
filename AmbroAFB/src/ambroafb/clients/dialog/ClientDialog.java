@@ -58,6 +58,7 @@ public class ClientDialog extends Stage implements Dialogable {
     @Override
     public Client getResult() {
         showAndWait();
+        if (client != null && client.compares(clientBackup)){
             operationCanceled();
         }
         return client;
