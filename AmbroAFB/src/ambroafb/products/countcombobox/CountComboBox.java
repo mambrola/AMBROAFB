@@ -33,8 +33,7 @@ public class CountComboBox extends ComboBox<Product> {
         this.setPrefWidth(500);
 //        box.setMinWidth(200);
 //        box.setMaxWidth(200);
-        ComboBoxCustomButtonCell buttonCell = new ComboBoxCustomButtonCell();
-        this.setButtonCell(buttonCell);
+        this.setButtonCell(new ComboBoxCustomButtonCell());
         this.setCellFactory((ListView<Product> param) -> new ComboBoxCustomCell(this));
         this.setTooltip(tooltip);
         this.setConverter(new ComboBoxConverter());
