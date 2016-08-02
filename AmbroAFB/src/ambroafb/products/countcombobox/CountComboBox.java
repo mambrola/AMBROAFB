@@ -70,7 +70,7 @@ public class CountComboBox extends ComboBox<Product> {
             super.updateItem(item, empty);
             if (item != null) {
                 CountComboBoxItem boxItem = new CountComboBoxItem();
-                boxItem.setItemName(item.getDescrip());
+                boxItem.setItemName(getConverter().toString(item));
                 boxItem.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
                     box.show();
                     int selected = box.getSelectionModel().getSelectedIndex();
@@ -101,7 +101,7 @@ public class CountComboBox extends ComboBox<Product> {
             super.updateItem(item, empty);
             if (item != null) {
                 String oldText = getText();
-                String itemName = item.getDescrip();
+                String itemName = getConverter().toString(item);
                 int itemCount = itemsMap.get(item).get();
                 String newText = oldText;
                 if (oldText.contains(itemName)) {
@@ -120,7 +120,7 @@ public class CountComboBox extends ComboBox<Product> {
                         newText = beforePartWithoutItemCount + itemCount + "-" + itemName + delimiter + afterPartOfItemName;
                     }
                 } else if (itemCount != 0) {
-                    newText = oldText + itemCount + "-" + item.getDescrip() + delimiter;
+                    newText = oldText + itemCount + "-" + getConverter().toString(item) + delimiter;
                 }
                 setText(newText);
                 tooltip.setText(newText);
