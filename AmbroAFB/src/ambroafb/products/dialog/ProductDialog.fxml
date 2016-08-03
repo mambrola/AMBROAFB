@@ -20,6 +20,9 @@
                         <Label text="%date" /> 
                         <ADatePicker fx:id="openDate" />
                     </VBox>
+                    <VBox styleClass="couple" alignment="CENTER_LEFT" >
+                        <CheckBox fx:id="isAlive" text="%product_is_alive" />
+                    </VBox>
                 </children> 
             </HBox>
             <HBox styleClass="oneThirds">
@@ -34,12 +37,6 @@
                         <children>
                             <Label text="product_remark" styleClass="validationMessage" />
                             <TextField fx:id="productRemarkField" />
-                        </children>
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <children>
-                            <Label text="product_parent" />
-                            <ComboBox fx:id="productParents" />
                         </children>
                     </VBox>
                 </children>

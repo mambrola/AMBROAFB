@@ -18,12 +18,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.util.Callback;
 //import org.json.JSONArray;
 //import org.json.JSONException;
 
@@ -33,12 +38,14 @@ import javafx.scene.control.Alert;
  */
 public class Product extends EditorPanelable {
     
-    public IntegerProperty parentId = new SimpleIntegerProperty();
+    public IntegerProperty parentId;
     public double price;
-    public boolean isOnlyGeo, isActive;
+    public boolean isOnlyGeo;
     private ArrayList<ProductDiscount> discounts;
     
-    
+    @AView.Column(title = "%product_is_alive", width = "48", cellFactory = AliveCellFactory.class)
+    private final BooleanProperty isActive;
+        
     @AView.Column(title = "%descrip", width = "250")
     private final SimpleStringProperty descrip;
     
@@ -48,6 +55,8 @@ public class Product extends EditorPanelable {
     private final ObjectProperty<Product> parentProperty;
     
     public Product(){
+        parentId = new SimpleIntegerProperty();
+        isActive = new SimpleBooleanProperty();
         descrip = new SimpleStringProperty("");
         remark = new SimpleStringProperty("");
         parentProperty = new SimpleObjectProperty<>();
@@ -119,14 +128,13 @@ public class Product extends EditorPanelable {
         return remark;
     }
     
-    public ObjectProperty<Product> getParentProperty() {
-        return parentProperty;
-    }
-    
     public ObjectProperty<Product> parentProperty() {
         return parentProperty;
     }
 
+    public BooleanProperty isAliveProperty(){
+        return isActive;
+    }
     
     // Getters:
     public int getParentId() {
@@ -142,7 +150,7 @@ public class Product extends EditorPanelable {
     }
     
     public boolean getIsActive() {
-        return isActive;
+        return isActive.get();
     }
 
     public ArrayList<ProductDiscount> getDiscounts() {
@@ -174,7 +182,7 @@ public class Product extends EditorPanelable {
     }
 
     public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+        this.isActive.set(isActive);
     }
 
     public void setDiscounts(ArrayList<ProductDiscount> discounts) {
@@ -237,7 +245,8 @@ public class Product extends EditorPanelable {
         System.out.println("productBackup.parentProperty.get(): " + productBackup.parentProperty.get());
         
         return this.getDescrip().equals(productBackup.getDescrip()) &&
-               this.getRemark().equals(productBackup.getRemark());
+               this.getRemark().equals(productBackup.getRemark())   &&
+               this.getIsActive() == productBackup.getIsActive();
     }
     
     
@@ -247,5 +256,18 @@ public class Product extends EditorPanelable {
         public int months;
         public double discount;
         
+    }
+    
+    public static class AliveCellFactory implements Callback<TableColumn<Product, Boolean>, TableCell<Product, Boolean>> {
+
+        @Override
+        public TableCell<Product, Boolean> call(TableColumn<Product, Boolean> param) {
+            return new TableCell<Product, Boolean>() {
+                @Override
+                public void updateItem(Boolean isAlive, boolean empty) {
+                    setText(empty ? null : (isAlive ? "Alive" : null));
+                }
+            };
+        }
     }
 }
