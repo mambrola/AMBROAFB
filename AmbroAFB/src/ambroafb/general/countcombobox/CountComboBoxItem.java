@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.products.countcombobox;
+package ambroafb.general.countcombobox;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -41,8 +41,7 @@ public class CountComboBoxItem extends HBox {
     private IntegerProperty numberTextProperty = new SimpleIntegerProperty(0);
     
     public CountComboBoxItem(){
-//        super();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ambroafb/products/countcombobox/CountComboBoxItem.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ambroafb/general/countcombobox/CountComboBoxItem.fxml"));
         assignLoader(loader);
         
         itemName.textProperty().bind(itemNameProperty);
