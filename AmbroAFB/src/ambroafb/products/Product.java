@@ -50,7 +50,7 @@ public class Product extends EditorPanelable {
     private final SimpleStringProperty remark;
     
     public Product(){
-        vendorCode = new SimpleStringProperty("1232");
+        vendorCode = new SimpleStringProperty("");
         isActive = new SimpleBooleanProperty();
         descrip = new SimpleStringProperty("");
         remark = new SimpleStringProperty("");

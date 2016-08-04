@@ -58,10 +58,6 @@ public class ProductDialog extends Stage implements Dialogable {
     @Override
     public Product getResult() {
         showAndWait();
-        // If doesn't change any field. It become when user close parent stage of this stage (Products).
-        if (product != null && product.compares(productBackup)){
-            operationCanceled();
-        }
         return product;
     }
 

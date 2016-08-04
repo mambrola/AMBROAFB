@@ -60,7 +60,7 @@ public class DialogOkayCancelController implements Initializable {
                     }
                 });
                 cancel.setOnAction((ActionEvent event) -> {
-//                    operationCanceled();
+                    operationCanceled();
                     ((Stage) okay.getScene().getWindow()).close();
                 });
                 break;
@@ -80,27 +80,27 @@ public class DialogOkayCancelController implements Initializable {
                     Object ownerObject = cancel.getScene().getProperties().get("controller");
                     boolean anyFieldWasChanged = (Boolean) Utils.getInvokedClassMethod(ownerObject.getClass(), "anyComponentChanged", null, ownerObject);
                     if (!anyFieldWasChanged || new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)) {
-//                        operationCanceled();
+                        operationCanceled();
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
                 break;
             case VIEW:
                 okay.setOnAction((ActionEvent event) -> {
-//                    operationCanceled();
+                    operationCanceled();
                     ((Stage) okay.getScene().getWindow()).close();
                 });
                 cancel.setOnAction((ActionEvent event) -> {
-//                    operationCanceled();
+                    operationCanceled();
                     ((Stage) okay.getScene().getWindow()).close();
                 });
                 cancel.setVisible(false);
         }
     }
     
-//    private void operationCanceled(){
-//        Object controller = cancel.getScene().getProperties().get("controller");
-//        Utils.getInvokedClassMethod(controller.getClass(), "operationCanceled", null, controller);
-//    }
+    private void operationCanceled(){
+        Object controller = cancel.getScene().getProperties().get("controller");
+        Utils.getInvokedClassMethod(controller.getClass(), "operationCanceled", null, controller);
+    }
     
 }

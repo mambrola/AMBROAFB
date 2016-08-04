@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -365,10 +367,17 @@ public class ImageGalleryController implements Initializable {
      * So before this method, image gallery controller must known service URL prefix and
      * parameter by "setURLData" method. Deleted feature is priority, second
      * is uploaded and last priority is to edit existing.
+     * @param urlParameter It is needed for upload new file on server.
+     *                     It will be concatenate on URL prefix, 
+     *                      which is already known from download method.
      */
-    public void sendDataToServer() {
+    /* Note: HashMap keySet() method does not order elements. So the method use SortedSet collection
+     *       for sort data of keySet() and send them by ordering.
+     */
+    public void sendDataToServer(String urlParameter) {
         new Thread(() -> {
-            viewers.keySet().stream().forEach((key) -> {
+            SortedSet<String> sortedSet = new TreeSet(viewers.keySet());
+            sortedSet.stream().forEach((key) -> {
                 Viewer viewer = viewers.get(key);
                 if (viewer != null) {
                     byte[] data = viewer.getContent();
@@ -377,7 +386,7 @@ public class ImageGalleryController implements Initializable {
                             GeneralConfig.getInstance().getServerClient().call(serviceURLPrefix + key, "DELETE", null);
                         } else if (viewer.isNew()) {
                             GeneralConfig.getInstance().getServerClient().post(
-                                    serviceURLPrefix + parameterUpload + key.substring(key.lastIndexOf(".") + 1),
+                                    serviceURLPrefix + urlParameter + "/" + key.substring(key.lastIndexOf(".") + 1),
                                     Base64.getEncoder().encodeToString(data)
                             );
                         } else if (viewer.isEdit()) {
@@ -394,6 +403,12 @@ public class ImageGalleryController implements Initializable {
             });
         }).start();
     }
+    
+//    private void printSet(Set<String> s){
+//        for (String elem : s) {
+//            System.out.println("elem: " + elem);
+//        }
+//    }
 
     /**
      * The method returns true if user upload new file, rotate or delete
