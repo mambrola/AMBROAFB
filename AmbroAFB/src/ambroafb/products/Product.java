@@ -19,12 +19,9 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -38,7 +35,7 @@ import javafx.util.Callback;
  */
 public class Product extends EditorPanelable {
     
-    public IntegerProperty parentId;
+    public StringProperty vendorCode;
     public double price;
     public boolean isOnlyGeo;
     private ArrayList<ProductDiscount> discounts;
@@ -52,14 +49,11 @@ public class Product extends EditorPanelable {
     @AView.Column(title = "%remark", width = "550")
     private final SimpleStringProperty remark;
     
-    private final ObjectProperty<Product> parentProperty;
-    
     public Product(){
-        parentId = new SimpleIntegerProperty();
+        vendorCode = new SimpleStringProperty("1232");
         isActive = new SimpleBooleanProperty();
         descrip = new SimpleStringProperty("");
         remark = new SimpleStringProperty("");
-        parentProperty = new SimpleObjectProperty<>();
     }
     
     
@@ -128,17 +122,13 @@ public class Product extends EditorPanelable {
         return remark;
     }
     
-    public ObjectProperty<Product> parentProperty() {
-        return parentProperty;
-    }
-
     public BooleanProperty isAliveProperty(){
         return isActive;
     }
     
     // Getters:
-    public int getParentId() {
-        return parentId.get();
+    public String getVendorCode() {
+        return vendorCode.get();
     }
     
     public double getPrice() {
@@ -167,10 +157,8 @@ public class Product extends EditorPanelable {
 
     
     // Setters:
-    public void setParentId(int parentId) {
-        this.parentId.set(parentId);
-        if (parentId != 0)
-            parentProperty.set(getOneFromDB(parentId));
+    public void setVendorCode(String code) {
+        this.vendorCode.set(code);
     }
     
     public void setPrice(double price) {
@@ -215,7 +203,7 @@ public class Product extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         Product product = (Product) other;
-        setParentId(product.getParentId());
+        setVendorCode(product.getVendorCode());
         setPrice(product.getPrice());
         setIsOnlyGeo(product.getIsOnlyGeo());
         setIsActive(product.getIsActive());
@@ -241,9 +229,6 @@ public class Product extends EditorPanelable {
      * @return  - True, if all comparable fields are equals, false otherwise.
      */
     public boolean compares(Product productBackup) {
-        System.out.println("this.parentProperty.get(): " + this.parentProperty.get());
-        System.out.println("productBackup.parentProperty.get(): " + productBackup.parentProperty.get());
-        
         return this.getDescrip().equals(productBackup.getDescrip()) &&
                this.getRemark().equals(productBackup.getRemark())   &&
                this.getIsActive() == productBackup.getIsActive();
