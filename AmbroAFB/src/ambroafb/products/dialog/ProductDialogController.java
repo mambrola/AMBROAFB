@@ -5,7 +5,6 @@
  */
 package ambroafb.products.dialog;
 
-import ambro.ADatePicker;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.*;
@@ -21,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -34,13 +34,13 @@ public class ProductDialogController implements Initializable {
     @FXML
     private VBox formPane;
     @FXML
-    private ADatePicker openDate;
-    @FXML
     private CheckBox isAlive;
     
     @FXML
     @ContentNotEmpty
-    private TextField productNameField, productRemarkField;
+    private TextField productNameField, vendorCodeField;
+    @FXML
+    private TextArea productRemark;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -66,7 +66,8 @@ public class ProductDialogController implements Initializable {
         if (product != null){
             isAlive.selectedProperty().bindBidirectional(product.isAliveProperty());
             productNameField.textProperty().bindBidirectional(product.descriptionProperty());
-            productRemarkField.textProperty().bindBidirectional(product.remarkProperty());
+            vendorCodeField.textProperty().bindBidirectional(product.vendorCodeProperty());
+            productRemark.textProperty().bindBidirectional(product.remarkProperty());
         }
     }
     
@@ -75,7 +76,6 @@ public class ProductDialogController implements Initializable {
     }
 
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType, String string) {
-        openDate.setDisable(true);
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }

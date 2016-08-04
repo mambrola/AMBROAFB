@@ -77,22 +77,25 @@ public class CountComboBox<T> extends ComboBox<T> {
                 int itemCount = itemsMap.get(item.toString()).get();
                 String newText = oldText;
                 if (oldText.contains(itemName)) {
-                    String afterPartOfItemName = StringUtils.substringAfter(oldText, itemName + delimiter);
+                    String afterPartOfItemName = StringUtils.substringAfter(oldText, itemName);
                     String beforePartOfItemName = StringUtils.substringBefore(oldText, "-" + itemName);
                     String beforePartWithoutItemCount = "";
                     if (beforePartOfItemName.lastIndexOf(delimiter) != -1){
                         beforePartWithoutItemCount = beforePartOfItemName.substring(0, beforePartOfItemName.lastIndexOf(delimiter) + delimiter.length());
                     }
-                    // before previous and next selection, title text may does not change and stay the same.
-                    if (("" + itemCount).equals(StringUtils.substringAfterLast(beforePartOfItemName, delimiter)))
-                        return;
                     if (itemCount == 0) {
+                        if (beforePartWithoutItemCount.isEmpty())
+                            afterPartOfItemName = StringUtils.substringAfter(afterPartOfItemName, delimiter);
+                        else 
+                            beforePartWithoutItemCount = StringUtils.substringBeforeLast(beforePartOfItemName, delimiter);
                         newText = beforePartWithoutItemCount + afterPartOfItemName;
                     } else {
-                        newText = beforePartWithoutItemCount + itemCount + "-" + itemName + delimiter + afterPartOfItemName;
+                        newText = beforePartWithoutItemCount + itemCount + "-" + itemName + afterPartOfItemName;
                     }
                 } else if (itemCount != 0) {
-                    newText = oldText + itemCount + "-" + item.toString() + delimiter;
+                    if (!oldText.isEmpty()) 
+                        oldText = oldText + delimiter;
+                    newText = oldText + itemCount + "-" + item.toString();
                 }
                 setText(newText);
                 tooltip.setText(newText);

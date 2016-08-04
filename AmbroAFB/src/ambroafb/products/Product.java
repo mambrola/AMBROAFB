@@ -22,6 +22,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -35,13 +36,15 @@ import javafx.util.Callback;
  */
 public class Product extends EditorPanelable {
     
-    public StringProperty vendorCode;
     public double price;
     public boolean isOnlyGeo;
     private ArrayList<ProductDiscount> discounts;
     
-    @AView.Column(title = "%product_is_alive", width = "48", cellFactory = AliveCellFactory.class)
+    @AView.Column(title = "%product_is_alive", width = "35", cellFactory = AliveCellFactory.class)
     private final BooleanProperty isActive;
+    
+    @AView.Column(title = "%product_vendor_code", width = "48", cellFactory = VendorCodeCellFactory.class)
+    public StringProperty vendorCode;
         
     @AView.Column(title = "%descrip", width = "250")
     private final SimpleStringProperty descrip;
@@ -114,6 +117,10 @@ public class Product extends EditorPanelable {
 
     
     // Get properties:
+    public StringProperty vendorCodeProperty(){
+        return vendorCode;
+    }
+    
     public SimpleStringProperty descriptionProperty(){
         return descrip;
     }
@@ -121,7 +128,7 @@ public class Product extends EditorPanelable {
     public SimpleStringProperty remarkProperty(){
         return remark;
     }
-    
+
     public BooleanProperty isAliveProperty(){
         return isActive;
     }
@@ -229,6 +236,9 @@ public class Product extends EditorPanelable {
      * @return  - True, if all comparable fields are equals, false otherwise.
      */
     public boolean compares(Product productBackup) {
+        System.out.println("this remark: " + this.getRemark());
+        System.out.println("other remark: " + productBackup.getRemark());
+        
         return this.getDescrip().equals(productBackup.getDescrip()) &&
                this.getRemark().equals(productBackup.getRemark())   &&
                this.getIsActive() == productBackup.getIsActive();
@@ -250,7 +260,22 @@ public class Product extends EditorPanelable {
             return new TableCell<Product, Boolean>() {
                 @Override
                 public void updateItem(Boolean isAlive, boolean empty) {
-                    setText(empty ? null : (isAlive ? "Alive" : null));
+                    setText(empty ? null : (isAlive ? "Al" : null));
+                    alignmentProperty().set(Pos.CENTER);
+                }
+            };
+        }
+    }
+
+    public static class VendorCodeCellFactory implements Callback<TableColumn<Product, String>, TableCell<Product, String>> {
+
+        @Override
+        public TableCell<Product, String> call(TableColumn<Product, String> param) {
+            return new TableCell<Product, String>() {
+                @Override
+                public void updateItem(String code, boolean empty) {
+                    setText(empty ? null : code);
+                    alignmentProperty().set(Pos.CENTER);
                 }
             };
         }
