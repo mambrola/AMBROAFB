@@ -12,13 +12,15 @@ import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.products.Product;
+import ambroafb.general.countcombobox.CountComboBox;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -33,13 +35,12 @@ public class ProductDialogController implements Initializable {
     private VBox formPane;
     @FXML
     private ADatePicker openDate;
+    @FXML
+    private CheckBox isAlive;
     
     @FXML
     @ContentNotEmpty
     private TextField productNameField, productRemarkField;
-    
-    @FXML
-    private ComboBox<Product> productParents;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -55,17 +56,17 @@ public class ProductDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        new Thread(() -> {
-            productParents.getItems().addAll(Product.getAllFromDB());
-        }).start();
+        CountComboBox box = new CountComboBox();
+        box.setItems(FXCollections.observableArrayList(Product.getAllFromDB()));
+        formPane.getChildren().add(box);
     }    
 
     public void bindProduct(Product product) {
         this.product = product;
         if (product != null){
+            isAlive.selectedProperty().bindBidirectional(product.isAliveProperty());
             productNameField.textProperty().bindBidirectional(product.descriptionProperty());
             productRemarkField.textProperty().bindBidirectional(product.remarkProperty());
-            productParents.valueProperty().bind(product.parentProperty());
         }
     }
     

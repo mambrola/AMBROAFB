@@ -599,7 +599,7 @@ public class Utils {
         }
     }
 
-    public static void callGallerySendMethod(Object currSceneController) {
+    public static void callGallerySendMethod(String sendingURLParameter, Object currSceneController) {
         try {
             Field[] fields = currSceneController.getClass().getDeclaredFields();
             for (Field field : fields) {
@@ -608,7 +608,7 @@ public class Utils {
                 if (field.isAnnotationPresent(FXML.class)) {
                     if (field.get(currSceneController) instanceof ImageGalleryController) {
                         ImageGalleryController controller = (ImageGalleryController)field.get(currSceneController);
-                        controller.sendDataToServer();
+                        controller.sendDataToServer(sendingURLParameter);
                     }
                 }
                 field.setAccessible(oldValue);

@@ -13,6 +13,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -48,6 +49,8 @@ public class ClientDialog extends Stage implements Dialogable {
         this.setScene(currentScene);
         this.setResizable(false);
         this.initOwner(owner);
+        if (!buttonType.equals(EDITOR_BUTTON_TYPE.VIEW))
+            this.initModality(Modality.WINDOW_MODAL);
 
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
@@ -58,9 +61,6 @@ public class ClientDialog extends Stage implements Dialogable {
     @Override
     public Client getResult() {
         showAndWait();
-        if (client != null && client.compares(clientBackup)){
-            operationCanceled();
-        }
         return client;
     }
     

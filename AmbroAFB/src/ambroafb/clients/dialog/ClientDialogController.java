@@ -161,9 +161,6 @@ public class ClientDialogController implements Initializable {
         okayCancelController.setButtonsFeatures(buttonType);
         imageGalleryController.setURLData(serviceURLPrefix, client.getRecId() + "/", client.getRecId() + "/all");
         imageGalleryController.downloadData();
-        client.idProperty.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            imageGalleryController.updateURLData(null, client.getRecId() + "/", null);
-        });
     }
     
     private void switchJuridical(ActionEvent e) {
