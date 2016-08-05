@@ -27,8 +27,8 @@
                 <Region HBox.hgrow="ALWAYS" /> 
             </children>
         </HBox>
-        <VBox fx:id="namePane" alignment="CENTER" >
+        <HBox fx:id="namePane" alignment="CENTER_LEFT" >
             <Label fx:id="itemName" textAlignment="CENTER" />
-        </VBox>
+        </HBox>
     </children>
 </fx:root>
