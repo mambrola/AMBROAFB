@@ -30,7 +30,7 @@ public class Products extends Stage {
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             productsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-            event.consume();
+//            if (event != null) event.consume();
         });
         
         Utils.setSizeFor((Stage)this);

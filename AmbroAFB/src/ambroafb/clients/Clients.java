@@ -29,7 +29,7 @@ public class Clients extends Stage {
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-            event.consume();
+//            if(event != null) event.consume();
         });
         
         Utils.setSizeFor((Stage)this);

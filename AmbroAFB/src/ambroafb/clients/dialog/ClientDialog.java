@@ -51,7 +51,7 @@ public class ClientDialog extends Stage implements Dialogable {
 
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            event.consume();
+//            if (event != null) event.consume();
         });
     }
     

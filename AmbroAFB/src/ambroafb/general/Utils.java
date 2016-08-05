@@ -362,7 +362,7 @@ public class Utils {
     
     /**
      * The function removes stage from bidirectional map 
-     * and use "removeAlsoSubstagesByPath" method for it.
+     * and use "removeAlsoSubstagesByPath" function for it.
      * @param stage - which must remove
      */
     public static void removeByStage(Stage stage){
@@ -377,7 +377,7 @@ public class Utils {
      * subStages. The function needs a helper collection to save removable
      * object in it, because of don't mess an iterator of map.
      *
-     * @param path - full path for stage (ex: main/Clients/Dialog).
+     * @param path - full path for stage (ex: main/Clients/DialogOrFilter).
      */
     public static void removeAlsoSubstagesByPath(String path) {
         List<String> pathes = new ArrayList<>();
@@ -616,5 +616,36 @@ public class Utils {
         } catch (IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * The function closes children stages and after that it close the given stage.
+     * @param stage Current stage.
+     */
+    public static void closeStageAndItsChildrenStages(Stage stage) {
+        closeOnlyChildStagesFor(stage);
+        stage.close();
+    }
+    
+    /**
+     * The function closes only child stages. Because of recursion and fact that 
+     * the given stage may have not children, this function does not close the given stage.
+     * @param owner Owner stage whose children must be close.
+     */
+    /* Note: if call getOnCloseRequest().handle(null); on the given owner stage, 
+     * the program make cyclic loop.
+     */
+    public static void closeOnlyChildStagesFor(Stage owner){
+        String ownerPath = (String) bidmap.getKey(owner);
+        bidmap.keySet().stream().forEach((key) -> {
+            String path = (String) key;
+            if (!path.equals(ownerPath) && path.startsWith(ownerPath)){
+                Stage child = (Stage)bidmap.get(path);
+                closeOnlyChildStagesFor(child);
+                if (child.getOnCloseRequest() != null){
+                    child.getOnCloseRequest().handle(null);
+                }
+            }
+        });
     }
 }
