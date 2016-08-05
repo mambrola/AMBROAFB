@@ -23,6 +23,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
@@ -34,6 +35,8 @@ public class MainController implements Initializable {
     
     private GeneralConfig config;
     
+    @FXML
+    private AnchorPane formPane;
     @FXML
     private Button back;
     
@@ -88,7 +91,7 @@ public class MainController implements Initializable {
     }
     
     @FXML
-    private void mainExit(ActionEvent event){
+    public void mainExit(ActionEvent event){
         Utils.saveSizeFor(AmbroAFB.mainStage);
         Utils.exit();
     }
@@ -163,20 +166,6 @@ public class MainController implements Initializable {
         else{
             productsStage.requestFocus();
         }
-//        try{
-//            Stage stage = Utils.createStage(
-//                    "/ambroafb/products/Products.fxml", 
-//                    config.getTitleFor("products"), 
-//                    Names.IN_OUT_LOGO,
-//                    AmbroAFB.mainStage
-//            );
-//            stage.show();
-//        }catch(IOException ex){
-//            Platform.runLater(() -> {
-//                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-//                alert.showAlert();
-//            });
-//        }
     }
     
     @FXML 
@@ -192,21 +181,6 @@ public class MainController implements Initializable {
         else {
             countriesStage.requestFocus();
         }
-        
-//        try{
-//            Stage stage = Utils.createStage(
-//                    "/ambroafb/countries/Countries.fxml", 
-//                    config.getTitleFor("countries"), 
-//                    Names.IN_OUT_LOGO,
-//                    AmbroAFB.mainStage
-//            );
-//            stage.show();
-//        }catch(IOException ex){
-//            Platform.runLater(() -> {
-//                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-//                alert.showAlert();
-//            });
-//        }
     }
     
     

@@ -34,6 +34,8 @@ import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import ambroafb.general.interfaces.Annotations.*;
 import java.lang.reflect.Field;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
 import javafx.fxml.FXML;
@@ -41,6 +43,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -620,32 +623,41 @@ public class Utils {
 
     /**
      * The function closes children stages and after that it close the given stage.
-     * @param stage Current stage.
+     * @param owner Current stage.
      */
-    public static void closeStageAndItsChildrenStages(Stage stage) {
-        closeOnlyChildStagesFor(stage);
-        stage.close();
-    }
-    
-    /**
-     * The function closes only child stages. Because of recursion and fact that 
-     * the given stage may have not children, this function does not close the given stage.
-     * @param owner Owner stage whose children must be close.
-     */
-    /* Note: if call getOnCloseRequest().handle(null); on the given owner stage, 
-     * the program make cyclic loop.
-     */
-    public static void closeOnlyChildStagesFor(Stage owner){
+    public static void closeStageAndItsChildrenStages(Stage owner) {
         String ownerPath = (String) bidmap.getKey(owner);
-        bidmap.keySet().stream().forEach((key) -> {
-            String path = (String) key;
-            if (!path.equals(ownerPath) && path.startsWith(ownerPath)){
-                Stage child = (Stage)bidmap.get(path);
-                closeOnlyChildStagesFor(child);
-                if (child.getOnCloseRequest() != null){
-                    child.getOnCloseRequest().handle(null);
+        List<String> childrenPath = getSameLevelChildrenPathes(ownerPath);
+        if (childrenPath.isEmpty()) {
+            if (ownerPath.endsWith(Names.LEVEL_FOR_PATH)) {
+                if (owner.getOnCloseRequest() == null) {
+                    owner.close();
+                } else {
+                    owner.getOnCloseRequest().handle(null);
                 }
             }
+        }
+        else {
+            childrenPath.stream().forEach((childPath) -> {
+                Stage childStage = (Stage) bidmap.get(childPath);
+                closeStageAndItsChildrenStages(childStage);
+            });
+        }
+        if (!owner.equals(AmbroAFB.mainStage)) {
+            owner.close();
+        }
+    }
+    
+    private static List<String> getSameLevelChildrenPathes(String ownerPath){
+        List<String> children = new ArrayList<>();
+        SortedSet<Object> sortedKeys = new TreeSet<>(bidmap.keySet());
+        sortedKeys.stream().forEach((key) -> {
+            String path = (String) key;
+            String pathAfterFirstSlash = StringUtils.substringAfter(path, ownerPath + "/");
+            if (!path.equals(ownerPath) && path.startsWith(ownerPath) && !pathAfterFirstSlash.contains("/")){
+                children.add(path);
+            }
         });
+        return children;
     }
 }
