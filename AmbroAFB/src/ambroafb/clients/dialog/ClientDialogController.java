@@ -90,7 +90,7 @@ public class ClientDialogController implements Initializable {
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private Client client;
     private Client clientBackup;
-    private boolean allowToClose;
+    private boolean permissionToClose;
     
     /**
      * Initializes the controller class.
@@ -108,7 +108,7 @@ public class ClientDialogController implements Initializable {
                 rezident.setSelected(newValue.getName().equals("Georgia"));
             }
         });
-        allowToClose = true;
+        permissionToClose = true;
     }
     
     private void switchJuridical(ActionEvent e) {
@@ -190,12 +190,11 @@ public class ClientDialogController implements Initializable {
     }
     
     public void changePermissionForClose(boolean value){
-        allowToClose = value;
-        System.out.println("ClientDialogController. Alert Cancel click... allowToClose: " + allowToClose);
+        permissionToClose = value;
     }
     
-    public boolean allowToClose(){
-        return allowToClose;
+    public boolean getPermissionToClose(){
+        return permissionToClose;
     }
     
     public void operationCanceled(){

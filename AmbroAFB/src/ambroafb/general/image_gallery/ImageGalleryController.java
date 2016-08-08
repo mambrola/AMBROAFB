@@ -404,12 +404,6 @@ public class ImageGalleryController implements Initializable {
         }).start();
     }
     
-//    private void printSet(Set<String> s){
-//        for (String elem : s) {
-//            System.out.println("elem: " + elem);
-//        }
-//    }
-
     /**
      * The method returns true if user upload new file, rotate or delete
      * existed. False if state does not change.

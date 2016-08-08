@@ -11,8 +11,6 @@ import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -37,8 +35,7 @@ public class ClientsController implements Initializable {
     private MaskerPane masker;
     
     private final ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();
-    private boolean allowToClose;
-    private BooleanProperty closePermission;
+    private boolean permissionToClose;
     
     /**
      *
@@ -51,8 +48,7 @@ public class ClientsController implements Initializable {
         table.setBundle(rb);
         editorPanelController.buttonsMainPropertysBinder(table);
         editorPanelController.setTableDataList(table, clients);
-        closePermission = new SimpleBooleanProperty();
-        allowToClose = true;
+        permissionToClose = true;
     }
 
     public void reAssignTable(JSONObject filterJson) {
@@ -79,11 +75,10 @@ public class ClientsController implements Initializable {
     }
     
     public void changePermissionForClose(boolean value){
-        allowToClose = value;
-        System.out.println("ClientsController. Alert Cancel click... allowToClose: " + allowToClose);
+        permissionToClose = value;
     }
     
-    public boolean allowToClose(){
-        return allowToClose;
+    public boolean getPermissionToClose(){
+        return permissionToClose;
     }
 }

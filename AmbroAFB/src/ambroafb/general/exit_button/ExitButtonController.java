@@ -30,7 +30,7 @@ public class ExitButtonController implements Initializable {
         Utils.saveSizeFor(stage);
         Utils.closeOnlyChildrenStages(stage);
         Object controller = stage.getScene().getProperties().get("controller");
-        if ((Boolean)Utils.getInvokedClassMethod(controller.getClass(), "allowToClose", null, controller)){
+        if ((Boolean)Utils.getInvokedClassMethod(controller.getClass(), "getPermissionToClose", null, controller)){
             stage.close();
         }
         Utils.removeByStage(stage);

@@ -72,7 +72,7 @@ public class DialogOkayCancelController implements Initializable {
                     Object controller = currScene.getProperties().get("controller");
                     boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller);
                     if (allRequiredFieldsAreValid){
-                        sendPermitionNoticeToAllParent(true);
+                        sendPermissionNoticeToAllParent(true);
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -84,16 +84,16 @@ public class DialogOkayCancelController implements Initializable {
                         ButtonType buttonType = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get();
                         if (buttonType.equals(ButtonType.OK)){
                             operationCanceled();
-                            sendPermitionNoticeToAllParent(true);
+                            sendPermissionNoticeToAllParent(true);
                             ((Stage) okay.getScene().getWindow()).close();
                         }
                         else{
                             System.out.println("DialogOkayCancel. Click close on alert.");
-                            sendPermitionNoticeToAllParent(false);
+                            sendPermissionNoticeToAllParent(false);
                         }
                     }else{ // This case is needed. If nothing change the real object must become null.
                         operationCanceled();
-                        sendPermitionNoticeToAllParent(true);
+                        sendPermissionNoticeToAllParent(true);
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -116,7 +116,7 @@ public class DialogOkayCancelController implements Initializable {
         Utils.getInvokedClassMethod(controller.getClass(), "operationCanceled", null, controller);
     }
 
-    private void sendPermitionNoticeToAllParent(boolean value) {
+    private void sendPermissionNoticeToAllParent(boolean value) {
         Stage stage = ((Stage) okay.getScene().getWindow());
         while(stage != null){
             Object controller = stage.getScene().getProperties().get("controller");

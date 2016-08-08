@@ -47,6 +47,7 @@ public class ProductDialogController implements Initializable {
     
     private ArrayList<Node> focusTraversableNodes;
     private Product product, productBackup;
+    private boolean permissionToClose;
     
     /**
      * Initializes the controller class.
@@ -100,5 +101,11 @@ public class ProductDialogController implements Initializable {
         ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
     }
     
+    public void changePermissionForClose(boolean value){
+        permissionToClose = value;
+    }
     
+    public boolean getPermissionToClose(){
+        return permissionToClose;
+    }
 }
