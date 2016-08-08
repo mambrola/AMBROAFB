@@ -272,20 +272,20 @@ public class Utils {
         exitApplication();
     }
 
-    /**
+    /** a
      * თიშავს აპლიკაციას კონფიგურაციების შენახვის გარეშე
      */
     public static void exitApplication() {
         GeneralConfig.getInstance().logoutServerClient();
         try {
             if (AmbroAFB.socket != null) {
-                AmbroAFB.socket.close(); // socket opened with "try", so close operation is not needed.
+                AmbroAFB.socket.close();
             }
         } catch (IOException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         Platform.exit();
-        System.exit(0);
+//        System.exit(0);
     }
 
     private static void saveConfigChanges() {
@@ -623,28 +623,28 @@ public class Utils {
 
     /**
      * The function closes children stages and after that it close the given stage.
-     * @param owner Current stage.
+     * @param currStage Current stage.
      */
-    public static void closeStageAndItsChildrenStages(Stage owner) {
-        String ownerPath = (String) bidmap.getKey(owner);
+    public static void closeStageAndItsChildrenStages(Stage currStage) {
+        String ownerPath = (String) bidmap.getKey(currStage);
         List<String> childrenPath = getSameLevelChildrenPathes(ownerPath);
         if (childrenPath.isEmpty()) {
             if (ownerPath.endsWith(Names.LEVEL_FOR_PATH)) {
-                if (owner.getOnCloseRequest() == null) {
-                    owner.close();
+                if (currStage.getOnCloseRequest() == null) {
+                    currStage.close();
                 } else {
-                    owner.getOnCloseRequest().handle(null);
+                    currStage.getOnCloseRequest().handle(null);
+                    System.out.println("daixura filterable");
                 }
             }
         }
         else {
             childrenPath.stream().forEach((childPath) -> {
-                Stage childStage = (Stage) bidmap.get(childPath);
-                closeStageAndItsChildrenStages(childStage);
+                closeStageAndItsChildrenStages((Stage) bidmap.get(childPath));
             });
-        }
-        if (!owner.equals(AmbroAFB.mainStage)) {
-            owner.close();
+//            if (!currStage.equals(AmbroAFB.mainStage) && currStage.isShowing()) {
+//                currStage.close();
+//            }
         }
     }
     
@@ -654,7 +654,9 @@ public class Utils {
         sortedKeys.stream().forEach((key) -> {
             String path = (String) key;
             String pathAfterFirstSlash = StringUtils.substringAfter(path, ownerPath + "/");
-            if (!path.equals(ownerPath) && path.startsWith(ownerPath) && !pathAfterFirstSlash.contains("/")){
+            if (!path.equals(ownerPath) && path.startsWith(ownerPath) &&
+                !pathAfterFirstSlash.contains("/") && ((Stage) bidmap.get(path)).isShowing()){
+
                 children.add(path);
             }
         });

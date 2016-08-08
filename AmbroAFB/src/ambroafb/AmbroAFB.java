@@ -50,7 +50,7 @@ public class AmbroAFB extends Application {
             }
         }
 
-        stage.setOnCloseRequest((WindowEvent we) -> {
+        stage.setOnCloseRequest((WindowEvent event) -> {
             MainController controller = (MainController) scene.getProperties().get("controller");
             controller.mainExit(null);
 //            Utils.saveSizeFor(mainStage);

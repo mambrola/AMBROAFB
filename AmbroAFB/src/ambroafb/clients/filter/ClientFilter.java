@@ -11,16 +11,19 @@ import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.UtilsDB;
 import ambroafb.general.interfaces.Filterable;
+import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +34,8 @@ import org.json.JSONObject;
 public class ClientFilter  extends Stage implements Filterable, Initializable {
     @FXML
     private ADatePicker dateBigger, dateLess;
+    @FXML
+    private FilterOkayCancelController okayCancelController;
     
     private JSONObject jSonResult;
     public static final String DATE_BIGGER = "1970-01-01";
@@ -46,6 +51,11 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         this.setScene(scene);
         this.initOwner(owner);
         this.setResizable(false);
+        
+        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
+            okayCancelController.cancel(null);
+//            if(event != null) event.consume();
+        });
     }
 
     @Override

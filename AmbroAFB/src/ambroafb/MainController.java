@@ -93,6 +93,7 @@ public class MainController implements Initializable {
     @FXML
     public void mainExit(ActionEvent event){
         Utils.saveSizeFor(AmbroAFB.mainStage);
+        Utils.closeStageAndItsChildrenStages(AmbroAFB.mainStage);
         Utils.exit();
     }
     
