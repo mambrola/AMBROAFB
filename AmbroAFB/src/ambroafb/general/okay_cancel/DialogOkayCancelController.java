@@ -56,11 +56,7 @@ public class DialogOkayCancelController implements Initializable {
                 alertText = "You Realy want Delete this item?";
                 okay.setOnAction((ActionEvent event) -> {
                     if(new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
-                        sendPermitionNoticeToAllParent(true);
                         ((Stage) okay.getScene().getWindow()).close();
-                    }
-                    else{
-                        sendPermitionNoticeToAllParent(false);
                     }
                 });
                 cancel.setOnAction((ActionEvent event) -> {
@@ -76,6 +72,7 @@ public class DialogOkayCancelController implements Initializable {
                     Object controller = currScene.getProperties().get("controller");
                     boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller);
                     if (allRequiredFieldsAreValid){
+                        sendPermitionNoticeToAllParent(true);
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -123,7 +120,7 @@ public class DialogOkayCancelController implements Initializable {
         Stage stage = ((Stage) okay.getScene().getWindow());
         while(stage != null){
             Object controller = stage.getScene().getProperties().get("controller");
-            Utils.getInvokedClassMethod(controller.getClass(), "changePermitionForClose", new Class[]{boolean.class}, controller, value);
+            Utils.getInvokedClassMethod(controller.getClass(), "changePermissionForClose", new Class[]{boolean.class}, controller, value);
             stage = (Stage) stage.getOwner();
         }
     }

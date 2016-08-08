@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -190,7 +188,7 @@ public class MainController implements Initializable {
         }
     }
     
-    public void changePermitionForClose(boolean value){
+    public void changePermissionForClose(boolean value){
         allowToClose = value;
         System.out.println("MainController. allowToClose: allowToClose: " + allowToClose);
         System.out.println("MainController. Alert Cancel click...");
@@ -226,16 +224,9 @@ public class MainController implements Initializable {
     
     
     
-    public BooleanProperty closePermission;
-    
-    public BooleanProperty closePermissionProperty(){
-        return closePermission;
-    }
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         config = GeneralConfig.getInstance();
-        closePermission = new SimpleBooleanProperty();
         allowToClose = true;
     }        
 }

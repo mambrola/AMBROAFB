@@ -6,7 +6,6 @@
 package ambroafb.clients;
 
 import ambro.ATableView;
-import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -18,7 +17,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.stage.Stage;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
 
@@ -57,19 +55,6 @@ public class ClientsController implements Initializable {
         allowToClose = true;
     }
 
-    public void bindClosePermitionToOwner(){
-        Stage owner = ((Stage) ((Stage) table.getScene().getWindow()).getOwner());
-        if (owner != null){
-            Object ownerConroller = owner.getScene().getProperties().get("controller");
-            BooleanProperty ownerClosePermission = (SimpleBooleanProperty)Utils.getInvokedClassMethod(ownerConroller.getClass(), "closePermissionProperty", null, ownerConroller);
-            ownerClosePermission.bind(this.closePermission);
-        }
-    }
-    
-    public BooleanProperty closePermissionProperty(){
-        return closePermission;
-    }
-    
     public void reAssignTable(JSONObject filterJson) {
         if (filterJson != null && filterJson.length() > 0) {
             clients.clear();
@@ -93,7 +78,7 @@ public class ClientsController implements Initializable {
         return editorPanelController;
     }
     
-    public void changePermitionForClose(boolean value){
+    public void changePermissionForClose(boolean value){
         allowToClose = value;
         System.out.println("ClientsController. Alert Cancel click... allowToClose: " + allowToClose);
     }
