@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox
+<HBox   
          alignment="CENTER_RIGHT" 
          spacing="50.0" 
          stylesheets="/styles/css/okaycancel.css" 

@@ -56,7 +56,11 @@ public class DialogOkayCancelController implements Initializable {
                 alertText = "You Realy want Delete this item?";
                 okay.setOnAction((ActionEvent event) -> {
                     if(new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
+                        sendPermitionNoticeToAllParent(true);
                         ((Stage) okay.getScene().getWindow()).close();
+                    }
+                    else{
+                        sendPermitionNoticeToAllParent(false);
                     }
                 });
                 cancel.setOnAction((ActionEvent event) -> {
@@ -79,8 +83,20 @@ public class DialogOkayCancelController implements Initializable {
                 cancel.setOnAction((ActionEvent event) -> {
                     Object ownerObject = cancel.getScene().getProperties().get("controller");
                     boolean anyFieldWasChanged = (Boolean) Utils.getInvokedClassMethod(ownerObject.getClass(), "anyComponentChanged", null, ownerObject);
-                    if (!anyFieldWasChanged || new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)) {
+                    if (anyFieldWasChanged) {
+                        ButtonType buttonType = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get();
+                        if (buttonType.equals(ButtonType.OK)){
+                            operationCanceled();
+                            sendPermitionNoticeToAllParent(true);
+                            ((Stage) okay.getScene().getWindow()).close();
+                        }
+                        else{
+                            System.out.println("DialogOkayCancel. Click close on alert.");
+                            sendPermitionNoticeToAllParent(false);
+                        }
+                    }else{ // This case is needed. If nothing change the real object must become null.
                         operationCanceled();
+                        sendPermitionNoticeToAllParent(true);
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -101,6 +117,15 @@ public class DialogOkayCancelController implements Initializable {
     private void operationCanceled(){
         Object controller = cancel.getScene().getProperties().get("controller");
         Utils.getInvokedClassMethod(controller.getClass(), "operationCanceled", null, controller);
+    }
+
+    private void sendPermitionNoticeToAllParent(boolean value) {
+        Stage stage = ((Stage) okay.getScene().getWindow());
+        while(stage != null){
+            Object controller = stage.getScene().getProperties().get("controller");
+            Utils.getInvokedClassMethod(controller.getClass(), "changePermitionForClose", new Class[]{boolean.class}, controller, value);
+            stage = (Stage) stage.getOwner();
+        }
     }
     
 }

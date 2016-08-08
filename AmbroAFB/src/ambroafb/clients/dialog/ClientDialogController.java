@@ -90,6 +90,7 @@ public class ClientDialogController implements Initializable {
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private Client client;
     private Client clientBackup;
+    private boolean allowToClose;
     
     /**
      * Initializes the controller class.
@@ -107,6 +108,22 @@ public class ClientDialogController implements Initializable {
                 rezident.setSelected(newValue.getName().equals("Georgia"));
             }
         });
+        allowToClose = true;
+    }
+    
+    private void switchJuridical(ActionEvent e) {
+        double w = ((VBox)firstName.getParent()).widthProperty().getValue() + ((VBox)lastName.getParent()).widthProperty().getValue();
+        if (((CheckBox) e.getSource()).isSelected()) {
+            first_name.setText(conf.getTitleFor("firm_name"));
+            last_name.setText(conf.getTitleFor("firm_form"));
+            ((VBox)firstName.getParent()).setPrefWidth(0.75 * w);
+            ((VBox)lastName.getParent()).setPrefWidth(0.25 * w);
+        } else {
+            first_name.setText(conf.getTitleFor("first_name"));
+            last_name.setText(conf.getTitleFor("last_name"));
+            ((VBox)firstName.getParent()).setPrefWidth(0.50 * w);
+            ((VBox)lastName.getParent()).setPrefWidth(0.50 * w);
+        }
     }
     
     public void bindClient(Client client) {
@@ -163,22 +180,6 @@ public class ClientDialogController implements Initializable {
         imageGalleryController.downloadData();
     }
     
-    private void switchJuridical(ActionEvent e) {
-        double w = ((VBox)firstName.getParent()).widthProperty().getValue() + ((VBox)lastName.getParent()).widthProperty().getValue();
-        if (((CheckBox) e.getSource()).isSelected()) {
-            first_name.setText(conf.getTitleFor("firm_name"));
-            last_name.setText(conf.getTitleFor("firm_form"));
-            ((VBox)firstName.getParent()).setPrefWidth(0.75 * w);
-            ((VBox)lastName.getParent()).setPrefWidth(0.25 * w);
-        } else {
-            first_name.setText(conf.getTitleFor("first_name"));
-            last_name.setText(conf.getTitleFor("last_name"));
-            ((VBox)firstName.getParent()).setPrefWidth(0.50 * w);
-            ((VBox)lastName.getParent()).setPrefWidth(0.50 * w);
-        }
-    }
-    
-    
     /**
      * Disables all fields on Dialog stage.
      */
@@ -186,6 +187,12 @@ public class ClientDialogController implements Initializable {
         focusTraversableNodes.forEach((Node t) -> {
             t.setDisable(true);
         });
+    }
+    
+    }
+    
+    public boolean allowToClose(){
+        return allowToClose;
     }
     
     public void operationCanceled(){

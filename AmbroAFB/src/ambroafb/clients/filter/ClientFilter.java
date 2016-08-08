@@ -54,7 +54,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             okayCancelController.cancel(null);
-//            if(event != null) event.consume();
+            if(event != null) event.consume();
         });
     }
 

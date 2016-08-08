@@ -99,4 +99,6 @@ public class ProductDialogController implements Initializable {
     public void operationCanceled(){
         ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
     }
+    
+    
 }
