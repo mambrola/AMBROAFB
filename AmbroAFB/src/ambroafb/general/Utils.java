@@ -631,27 +631,37 @@ public class Utils {
     /**
      * The function closes children stages and after that it close the given stage.
      * @param currStage Current stage.
+     * @return True if current stage must close, false otherwise.
      */
-    public static void closeOnlyChildrenStages(Stage currStage) {
-        String ownerPath = (String) bidmap.getKey(currStage);
-        List<String> childrenPath = getSameLevelChildrenPathes(ownerPath);
+    public static boolean closeOnlyChildrenStages(Stage currStage) {
+        boolean closePermissionForStage = true;
+        String currStagePath = (String) bidmap.getKey(currStage);
+        List<String> childrenPath = getFirstLevelChildrenFor(currStagePath);
         if (childrenPath.isEmpty()) {
-            if (ownerPath.endsWith(Names.LEVEL_FOR_PATH)) {
+            if (currStagePath.endsWith(Names.LEVEL_FOR_PATH)) {
                 if (currStage.getOnCloseRequest() == null) {
                     currStage.close();
                 } else {
                     currStage.getOnCloseRequest().handle(null);
                 }
+                Object controller = currStage.getScene().getProperties().get("controller");
+                closePermissionForStage = (Boolean) getInvokedClassMethod(controller.getClass(), "getPermissionToClose", null, controller);
+                System.out.println("permission: " + closePermissionForStage);
             }
         }
         else {
-            childrenPath.stream().forEach((childPath) -> {
-                closeOnlyChildrenStages((Stage) bidmap.get(childPath));
-            });
+            for (String childPath : childrenPath) {
+                closePermissionForStage = closePermissionForStage && closeOnlyChildrenStages((Stage) bidmap.get(childPath));
+                Stage childStage = (Stage) getStageForPath(childPath);
+                if (childStage.isShowing() && closePermissionForStage){
+                    childStage.close();
+                }
+            }
         }
+        return closePermissionForStage;
     }
     
-    private static List<String> getSameLevelChildrenPathes(String ownerPath){
+    private static List<String> getFirstLevelChildrenFor(String ownerPath){
         List<String> children = new ArrayList<>();
         SortedSet<Object> sortedKeys = new TreeSet<>(bidmap.keySet());
         sortedKeys.stream().forEach((key) -> {

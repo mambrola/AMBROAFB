@@ -51,6 +51,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         this.setScene(scene);
         this.initOwner(owner);
         this.setResizable(false);
+        this.setTitle("client filter");
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             okayCancelController.cancel(null);

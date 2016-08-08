@@ -35,6 +35,7 @@ public class ProductFilter extends Stage implements Filterable, Initializable {
         this.setScene(scene);
         this.initOwner(owner);
         this.setResizable(false);
+        this.setTitle("product filter");
         
         json = new JSONObject();
     }

@@ -194,6 +194,7 @@ public class ClientDialogController implements Initializable {
     }
     
     public boolean getPermissionToClose(){
+        System.out.println("kaco permission: " + permissionToClose);
         return permissionToClose;
     }
     

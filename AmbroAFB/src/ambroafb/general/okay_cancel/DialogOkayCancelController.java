@@ -72,7 +72,7 @@ public class DialogOkayCancelController implements Initializable {
                     Object controller = currScene.getProperties().get("controller");
                     boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller);
                     if (allRequiredFieldsAreValid){
-                        sendPermissionNoticeToAllParent(true);
+                        sendPermissionNotice(true);
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -84,15 +84,16 @@ public class DialogOkayCancelController implements Initializable {
                         ButtonType buttonType = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get();
                         if (buttonType.equals(ButtonType.OK)){
                             operationCanceled();
-                            sendPermissionNoticeToAllParent(true);
+                            sendPermissionNotice(true);
                             ((Stage) okay.getScene().getWindow()).close();
                         }
                         else{
-                            sendPermissionNoticeToAllParent(false);
+                            System.out.println("cancel on confirm window send " + false);
+                            sendPermissionNotice(false);
                         }
                     }else{ // This case is needed. If nothing change the real object must become null.
                         operationCanceled();
-                        sendPermissionNoticeToAllParent(true);
+                        sendPermissionNotice(true);
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -115,13 +116,13 @@ public class DialogOkayCancelController implements Initializable {
         Utils.getInvokedClassMethod(controller.getClass(), "operationCanceled", null, controller);
     }
 
-    private void sendPermissionNoticeToAllParent(boolean value) {
+    private void sendPermissionNotice(boolean value) {
         Stage stage = ((Stage) okay.getScene().getWindow());
-        while(stage != null){
+//        while(stage != null){
             Object controller = stage.getScene().getProperties().get("controller");
             Utils.getInvokedClassMethod(controller.getClass(), "changePermissionForClose", new Class[]{boolean.class}, controller, value);
-            stage = (Stage) stage.getOwner();
-        }
+//            stage = (Stage) stage.getOwner();
+//        }
     }
     
 }

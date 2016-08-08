@@ -40,7 +40,7 @@ public class MainController implements Initializable {
     @FXML
     private Button back;
     
-    private boolean permissionToClose;
+//    private boolean permissionToClose;
     
     @FXML
     private void light(ActionEvent event) {
@@ -95,8 +95,7 @@ public class MainController implements Initializable {
     @FXML
     public void mainExit(ActionEvent event){
         Utils.saveSizeFor(AmbroAFB.mainStage);
-        Utils.closeOnlyChildrenStages(AmbroAFB.mainStage);
-        if (permissionToClose){
+        if (Utils.closeOnlyChildrenStages(AmbroAFB.mainStage)){
             Utils.exit();
         }
     }
@@ -188,9 +187,9 @@ public class MainController implements Initializable {
         }
     }
     
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
+//    public void changePermissionForClose(boolean value){
+//        permissionToClose = value;
+//    }
     
     
     @FXML private void accounts(ActionEvent event) {}
@@ -225,6 +224,6 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         config = GeneralConfig.getInstance();
-        permissionToClose = true;
+//        permissionToClose = true;
     }        
 }
