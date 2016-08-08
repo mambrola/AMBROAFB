@@ -285,7 +285,7 @@ public class Utils {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         Platform.exit();
-//        System.exit(0);
+        System.exit(0);
     }
 
     private static void saveConfigChanges() {
@@ -620,12 +620,19 @@ public class Utils {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public static void closeStageAndItsChildrenStages(Stage currStage){
+        closeOnlyChildrenStages(currStage);
+        if (currStage.isShowing()){
+            currStage.close();
+        }
+    }
 
     /**
      * The function closes children stages and after that it close the given stage.
      * @param currStage Current stage.
      */
-    public static void closeStageAndItsChildrenStages(Stage currStage) {
+    public static void closeOnlyChildrenStages(Stage currStage) {
         String ownerPath = (String) bidmap.getKey(currStage);
         List<String> childrenPath = getSameLevelChildrenPathes(ownerPath);
         if (childrenPath.isEmpty()) {
@@ -633,18 +640,16 @@ public class Utils {
                 if (currStage.getOnCloseRequest() == null) {
                     currStage.close();
                 } else {
+                    System.out.println("call close handle to -  " + ((String) bidmap.getKey(currStage)));
                     currStage.getOnCloseRequest().handle(null);
-                    System.out.println("daixura filterable");
+                    System.out.println("after call close handle to -  " + ((String) bidmap.getKey(currStage)));
                 }
             }
         }
         else {
             childrenPath.stream().forEach((childPath) -> {
-                closeStageAndItsChildrenStages((Stage) bidmap.get(childPath));
+                closeOnlyChildrenStages((Stage) bidmap.get(childPath));
             });
-//            if (!currStage.equals(AmbroAFB.mainStage) && currStage.isShowing()) {
-//                currStage.close();
-//            }
         }
     }
     

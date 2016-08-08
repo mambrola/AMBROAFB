@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -39,6 +41,8 @@ public class MainController implements Initializable {
     private AnchorPane formPane;
     @FXML
     private Button back;
+    
+    private boolean allowToClose;
     
     @FXML
     private void light(ActionEvent event) {
@@ -93,8 +97,10 @@ public class MainController implements Initializable {
     @FXML
     public void mainExit(ActionEvent event){
         Utils.saveSizeFor(AmbroAFB.mainStage);
-        Utils.closeStageAndItsChildrenStages(AmbroAFB.mainStage);
-        Utils.exit();
+        Utils.closeOnlyChildrenStages(AmbroAFB.mainStage);
+        if (allowToClose){
+            Utils.exit();
+        }
     }
     
     @FXML
@@ -184,6 +190,12 @@ public class MainController implements Initializable {
         }
     }
     
+    public void changePermitionForClose(boolean value){
+        allowToClose = value;
+        System.out.println("MainController. allowToClose: allowToClose: " + allowToClose);
+        System.out.println("MainController. Alert Cancel click...");
+    }
+    
     
     @FXML private void accounts(ActionEvent event) {}
     @FXML private void balances(ActionEvent event) {}
@@ -214,10 +226,16 @@ public class MainController implements Initializable {
     
     
     
+    public BooleanProperty closePermission;
     
+    public BooleanProperty closePermissionProperty(){
+        return closePermission;
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         config = GeneralConfig.getInstance();
+        closePermission = new SimpleBooleanProperty();
+        allowToClose = true;
     }        
 }

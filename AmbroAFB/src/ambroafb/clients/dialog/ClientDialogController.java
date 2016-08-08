@@ -189,6 +189,9 @@ public class ClientDialogController implements Initializable {
         });
     }
     
+    public void changePermitionForClose(boolean value){
+        allowToClose = value;
+        System.out.println("ClientDialogController. Alert Cancel click... allowToClose: " + allowToClose);
     }
     
     public boolean allowToClose(){
