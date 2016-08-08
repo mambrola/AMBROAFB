@@ -640,9 +640,7 @@ public class Utils {
                 if (currStage.getOnCloseRequest() == null) {
                     currStage.close();
                 } else {
-                    System.out.println("call close handle to -  " + ((String) bidmap.getKey(currStage)));
                     currStage.getOnCloseRequest().handle(null);
-                    System.out.println("after call close handle to -  " + ((String) bidmap.getKey(currStage)));
                 }
             }
         }

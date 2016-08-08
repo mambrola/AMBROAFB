@@ -88,7 +88,6 @@ public class DialogOkayCancelController implements Initializable {
                             ((Stage) okay.getScene().getWindow()).close();
                         }
                         else{
-                            System.out.println("DialogOkayCancel. Click close on alert.");
                             sendPermissionNoticeToAllParent(false);
                         }
                     }else{ // This case is needed. If nothing change the real object must become null.

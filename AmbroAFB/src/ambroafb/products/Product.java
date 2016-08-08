@@ -236,12 +236,10 @@ public class Product extends EditorPanelable {
      * @return  - True, if all comparable fields are equals, false otherwise.
      */
     public boolean compares(Product productBackup) {
-        System.out.println("this remark: " + this.getRemark());
-        System.out.println("other remark: " + productBackup.getRemark());
-        
-        return this.getDescrip().equals(productBackup.getDescrip()) &&
-               this.getRemark().equals(productBackup.getRemark())   &&
-               this.getIsActive() == productBackup.getIsActive();
+        return this.getIsActive() == productBackup.getIsActive() &&
+               this.getDescrip().equals(productBackup.getDescrip()) &&
+               this.getVendorCode().equals(productBackup.getVendorCode()) &&
+               this.getRemark().equals(productBackup.getRemark());
     }
     
     

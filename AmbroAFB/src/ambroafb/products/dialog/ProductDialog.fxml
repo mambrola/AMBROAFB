@@ -37,16 +37,6 @@
                     </VBox>
                 </children>
             </HBox>
-            <HBox >
-                <children>
-                    <VBox styleClass="couple">
-                        <children>
-                            <Label text="product_remark" styleClass="validationMessage" />
-                            <TextArea fx:id="productRemark" prefRowCount="2" />
-                        </children>
-                    </VBox>
-                </children>
-            </HBox>
             <HBox styleClass="one" >
                 <children>
                     <VBox styleClass="couple">

@@ -20,7 +20,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -38,9 +37,7 @@ public class ProductDialogController implements Initializable {
     
     @FXML
     @ContentNotEmpty
-    private TextField productNameField, vendorCodeField;
-    @FXML
-    private TextArea productRemark;
+    private TextField  productNameField, vendorCodeField, productRemarkField;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -68,7 +65,7 @@ public class ProductDialogController implements Initializable {
             isAlive.selectedProperty().bindBidirectional(product.isAliveProperty());
             productNameField.textProperty().bindBidirectional(product.descriptionProperty());
             vendorCodeField.textProperty().bindBidirectional(product.vendorCodeProperty());
-            productRemark.textProperty().bindBidirectional(product.remarkProperty());
+            productRemarkField.textProperty().bindBidirectional(product.remarkProperty());
         }
     }
     
