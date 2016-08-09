@@ -11,7 +11,7 @@ import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.products.Product;
-import ambroafb.general.countcombobox.CountComboBox;
+import ambroafb.products.countcombobox.CountComboBox;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
