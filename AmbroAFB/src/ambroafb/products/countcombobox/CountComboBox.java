@@ -66,8 +66,8 @@ public class CountComboBox extends ComboBox<Product> {
             super.updateItem(item, empty);
             if (item != null) {
                 String oldText = getText();
-                String itemName = item.toString();
-                int itemCount = itemsMap.get(item.toString()).get();
+                String itemName = getConverter().toString(item);
+                int itemCount = itemsMap.get(itemName).get();
                 String newText = oldText;
                 if (oldText.contains(itemName)) {
                     String afterPartOfItemName = StringUtils.substringAfter(oldText, itemName);
@@ -88,7 +88,7 @@ public class CountComboBox extends ComboBox<Product> {
                 } else if (itemCount != 0) {
                     if (!oldText.isEmpty()) 
                         oldText = oldText + delimiter;
-                    newText = oldText + itemCount + "-" + item.toString();
+                    newText = oldText + itemCount + "-" + itemName;
                 }
                 setText(newText);
                 tooltip.setText(newText);
@@ -111,7 +111,8 @@ public class CountComboBox extends ComboBox<Product> {
             super.updateItem(item, empty);
             if (item != null) {
                 CountComboBoxItem boxItem = new CountComboBoxItem();
-                boxItem.setItemName(item.toString()); // getConverter().toString(item)
+                String itemName = getConverter().toString(item);
+                boxItem.setItemName(itemName);
                 boxItem.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
                     box.show();
                     int selected = box.getSelectionModel().getSelectedIndex();
@@ -123,7 +124,7 @@ public class CountComboBox extends ComboBox<Product> {
                         box.getSelectionModel().selectPrevious();
                     }
                 });
-                itemsMap.put(item.toString(), boxItem.itemNumberProperty());
+                itemsMap.put(itemName, boxItem.itemNumberProperty());
                 setGraphic(boxItem);
             }
         }
