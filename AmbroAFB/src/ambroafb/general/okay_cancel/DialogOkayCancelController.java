@@ -55,7 +55,8 @@ public class DialogOkayCancelController implements Initializable {
                 okay.setText("Delete");
                 alertText = "You Realy want Delete this item?";
                 okay.setOnAction((ActionEvent event) -> {
-                    if(new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
+                    String stageName = ((Stage)okay.getScene().getWindow()).getTitle();
+                    if(new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, stageName).showAndWait().get().equals(ButtonType.OK)){
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -72,7 +73,7 @@ public class DialogOkayCancelController implements Initializable {
                     Object controller = currScene.getProperties().get("controller");
                     boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller);
                     if (allRequiredFieldsAreValid){
-                        sendPermissionNotice(true);
+                        changeClosePermissionForStage(true);
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -81,19 +82,19 @@ public class DialogOkayCancelController implements Initializable {
                     Object ownerObject = cancel.getScene().getProperties().get("controller");
                     boolean anyFieldWasChanged = (Boolean) Utils.getInvokedClassMethod(ownerObject.getClass(), "anyComponentChanged", null, ownerObject);
                     if (anyFieldWasChanged) {
-                        ButtonType buttonType = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get();
+                        String stageName = ((Stage)okay.getScene().getWindow()).getTitle();
+                        ButtonType buttonType = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, stageName).showAndWait().get();
                         if (buttonType.equals(ButtonType.OK)){
                             operationCanceled();
-                            sendPermissionNotice(true);
+                            changeClosePermissionForStage(true);
                             ((Stage) okay.getScene().getWindow()).close();
                         }
                         else{
-                            System.out.println("cancel on confirm window send " + false);
-                            sendPermissionNotice(false);
+                            changeClosePermissionForStage(false);
                         }
                     }else{ // This case is needed. If nothing change the real object must become null.
                         operationCanceled();
-                        sendPermissionNotice(true);
+                        changeClosePermissionForStage(true);
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -116,13 +117,10 @@ public class DialogOkayCancelController implements Initializable {
         Utils.getInvokedClassMethod(controller.getClass(), "operationCanceled", null, controller);
     }
 
-    private void sendPermissionNotice(boolean value) {
+    private void changeClosePermissionForStage(boolean value) {
         Stage stage = ((Stage) okay.getScene().getWindow());
-//        while(stage != null){
-            Object controller = stage.getScene().getProperties().get("controller");
-            Utils.getInvokedClassMethod(controller.getClass(), "changePermissionForClose", new Class[]{boolean.class}, controller, value);
-//            stage = (Stage) stage.getOwner();
-//        }
+        Object controller = stage.getScene().getProperties().get("controller");
+        Utils.getInvokedClassMethod(controller.getClass(), "changePermissionForClose", new Class[]{boolean.class}, controller, value);
     }
     
 }

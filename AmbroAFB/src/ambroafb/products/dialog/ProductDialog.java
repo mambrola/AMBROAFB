@@ -5,6 +5,7 @@
  */
 package ambroafb.products.dialog;
 
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
@@ -48,6 +49,7 @@ public class ProductDialog extends Stage implements Dialogable {
         this.setScene(currentScene);
         this.setResizable(false);
         this.initOwner(owner);
+        this.setTitle(GeneralConfig.getInstance().getTitleFor("product_dialog_title"));
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);

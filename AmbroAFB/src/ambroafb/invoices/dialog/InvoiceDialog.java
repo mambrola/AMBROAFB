@@ -6,11 +6,9 @@
 package ambroafb.invoices.dialog;
 
 import ambroafb.AmbroAFB;
-import ambroafb.clients.Client;
 import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.KFZClient;
 import ambroafb.general.ListEditor;
 import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
@@ -97,7 +95,7 @@ public class InvoiceDialog extends Stage implements Initializable {
 
     private void onClose() {
         System.out.println("on close");
-        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?").showAndWait().get().equals(ButtonType.OK) : true;
+        boolean close = askClose ? new AlertMessage(Alert.AlertType.CONFIRMATION, null, "Do you want to exit without saving?", "").showAndWait().get().equals(ButtonType.OK) : true;
         if (close) {
             invoice = null;
             System.out.println("cancelling");

@@ -622,7 +622,7 @@ public class Utils {
     }
     
     public static void closeStageAndItsChildrenStages(Stage currStage){
-        closeOnlyChildrenStages(currStage);
+        closeStageWithChildren(currStage);
         if (currStage.isShowing()){
             currStage.close();
         }
@@ -633,8 +633,8 @@ public class Utils {
      * @param currStage Current stage.
      * @return True if current stage must close, false otherwise.
      */
-    public static boolean closeOnlyChildrenStages(Stage currStage) {
-        boolean closePermissionForStage = true;
+    public static boolean closeStageWithChildren(Stage currStage) {
+        boolean closePermission = true;
         String currStagePath = (String) bidmap.getKey(currStage);
         List<String> childrenPath = getFirstLevelChildrenFor(currStagePath);
         if (childrenPath.isEmpty()) {
@@ -645,20 +645,22 @@ public class Utils {
                     currStage.getOnCloseRequest().handle(null);
                 }
                 Object controller = currStage.getScene().getProperties().get("controller");
-                closePermissionForStage = (Boolean) getInvokedClassMethod(controller.getClass(), "getPermissionToClose", null, controller);
-                System.out.println("permission: " + closePermissionForStage);
+                closePermission = (Boolean) getInvokedClassMethod(controller.getClass(), "getPermissionToClose", null, controller);
             }
         }
         else {
             for (String childPath : childrenPath) {
-                closePermissionForStage = closePermissionForStage && closeOnlyChildrenStages((Stage) bidmap.get(childPath));
-                Stage childStage = (Stage) getStageForPath(childPath);
-                if (childStage.isShowing() && closePermissionForStage){
-                    childStage.close();
-                }
+                closePermission = closePermission && closeStageWithChildren((Stage) bidmap.get(childPath));
+                System.out.println("childPath: " + childPath + " permission: " + closePermission);
+            }
+//            !currStage.equals(AmbroAFB.mainStage) && 
+            System.out.println("Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
+            if (currStage.isShowing() && closePermission){
+                System.out.println("Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
+                currStage.close();
             }
         }
-        return closePermissionForStage;
+        return closePermission;
     }
     
     private static List<String> getFirstLevelChildrenFor(String ownerPath){

@@ -87,7 +87,7 @@ public class LoginController extends Stage implements Initializable {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                 Platform.runLater(() -> {
                     masker.setVisible(false);
-                    new AlertMessage(Alert.AlertType.ERROR, ex, "Network Error").showAlert();
+                    new AlertMessage(Alert.AlertType.ERROR, ex, "Network Error", getClass().getSimpleName()).showAlert();
                 });
             } catch (KFZClient.KFZServerException ex) {
                 if (ex.getStatusCode() == 401) {

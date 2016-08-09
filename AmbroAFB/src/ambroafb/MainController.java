@@ -48,7 +48,7 @@ public class MainController implements Initializable {
             Stage stage = Utils.createStage("/ambroafb/light/Light.fxml", config.getTitleFor("light"), "/images/innerLogo.png", AmbroAFB.mainStage);
             stage.show();
         } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION);
+            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION,  "Light");
             alert.showAlert();
         }
     }
@@ -59,7 +59,7 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             stage.show();
         } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION);
+            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Auto Dealers");
             alert.showAlert();
         }
     }
@@ -71,7 +71,7 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             stage.show();
         } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION);
+            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Account");
             alert.showAlert();
         }
     }
@@ -87,7 +87,7 @@ public class MainController implements Initializable {
             );
             stage.show();
         } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION);
+            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Configuration");
             alert.showAlert();
         }
     }
@@ -95,7 +95,7 @@ public class MainController implements Initializable {
     @FXML
     public void mainExit(ActionEvent event){
         Utils.saveSizeFor(AmbroAFB.mainStage);
-        if (Utils.closeOnlyChildrenStages(AmbroAFB.mainStage)){
+        if (Utils.closeStageWithChildren(AmbroAFB.mainStage)){
             Utils.exit();
         }
     }
@@ -111,7 +111,7 @@ public class MainController implements Initializable {
             );
             stage.show();
         }catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CAR_FINES_SCENE_START);
+            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CAR_FINES_SCENE_START, "Car Fines");
             alert.showAlert();
         }
     }
@@ -150,7 +150,7 @@ public class MainController implements Initializable {
             stage.show();
         }catch(IOException ex){
             Platform.runLater(() -> {
-                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
+                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE, "Invoices");
                 alert.showAlert();
             });
         }

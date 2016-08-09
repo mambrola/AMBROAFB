@@ -76,7 +76,7 @@ public class Product extends EditorPanelable {
             return product;
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Product").showAlert();
         }
         return null;
     }
@@ -87,7 +87,7 @@ public class Product extends EditorPanelable {
             return true;
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Product").showAlert();
         }
         return false;
     }
@@ -99,7 +99,7 @@ public class Product extends EditorPanelable {
             return mapper.readValue(data, Product.class);
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Product").showAlert();
         }
         return null;
     }

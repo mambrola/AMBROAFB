@@ -224,7 +224,7 @@ public class Client extends EditorPanelable{
             return mapper.readValue(data, Client.class);
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
         }
         return null;
     }
@@ -245,7 +245,7 @@ public class Client extends EditorPanelable{
             return client;
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
         }
         return null;
     }
@@ -256,7 +256,7 @@ public class Client extends EditorPanelable{
             return true;
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
         }
         return false;
     }
