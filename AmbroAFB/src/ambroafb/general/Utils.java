@@ -33,6 +33,7 @@ import javafx.stage.WindowEvent;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import ambroafb.general.interfaces.Annotations.*;
+import ambroafb.general.interfaces.Dialogable;
 import java.lang.reflect.Field;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -638,7 +639,9 @@ public class Utils {
         String currStagePath = (String) bidmap.getKey(currStage);
         List<String> childrenPath = getFirstLevelChildrenFor(currStagePath);
         if (childrenPath.isEmpty()) {
-            if (currStagePath.endsWith(Names.LEVEL_FOR_PATH)) {
+            System.out.println("sharp: " + (String)bidmap.getKey(currStage));
+            if (currStage instanceof Dialogable) {
+//                if (currStagePath.endsWith(Names.LEVEL_FOR_PATH)) {
                 if (currStage.getOnCloseRequest() == null) {
                     currStage.close();
                 } else {
@@ -646,19 +649,19 @@ public class Utils {
                 }
                 Object controller = currStage.getScene().getProperties().get("controller");
                 closePermission = (Boolean) getInvokedClassMethod(controller.getClass(), "getPermissionToClose", null, controller);
+            } else {
+                currStage.close();
             }
         }
         else {
+            System.out.println("Enter Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
             for (String childPath : childrenPath) {
-                closePermission = closePermission && closeStageWithChildren((Stage) bidmap.get(childPath));
-                System.out.println("childPath: " + childPath + " permission: " + closePermission);
+                closePermission = closeStageWithChildren((Stage) bidmap.get(childPath)) && closePermission;
             }
-
-            System.out.println("Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
             if (currStage.isShowing() && closePermission){
-                System.out.println("Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
                 currStage.close();
             }
+            System.out.println("Exit Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
         }
         return closePermission;
     }
