@@ -40,16 +40,16 @@ public class Product extends EditorPanelable {
     public boolean isOnlyGeo;
     private ArrayList<ProductDiscount> discounts;
     
-    @AView.Column(title = "%product_is_alive", width = "35", cellFactory = AliveCellFactory.class)
+    @AView.Column(width = "35", cellFactory = AliveCellFactory.class)
     private final BooleanProperty isActive;
     
-    @AView.Column(title = "%product_vendor_code", width = "48", cellFactory = VendorCodeCellFactory.class)
+    @AView.Column(title = "%product_vendor_code", width = "50", cellFactory = VendorCodeCellFactory.class)
     public StringProperty vendorCode;
         
     @AView.Column(title = "%descrip", width = "250")
     private final SimpleStringProperty descrip;
     
-    @AView.Column(title = "%remark", width = "550")
+    @AView.Column(title = "%remark", width = "500")
     private final SimpleStringProperty remark;
     
     public Product(){

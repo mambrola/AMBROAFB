@@ -1,8 +1,8 @@
 @import url("/styles/css/core.css");
 #formPane {
-  -fx-max-height: 800;
-  -fx-min-width: 830;
-  -fx-max-width: 830;
+  -fx-max-height: 300;
+  -fx-min-width: 530;
+  -fx-max-width: 530;
   -fx-padding: 15;
 }
 .vContainer {
@@ -14,26 +14,26 @@
   -fx-padding: 1 0 1 2;
 }
 .one > .couple {
-  -fx-pref-width: 800;
+  -fx-pref-width: 500;
 }
 .oneHalf > .couple {
-  -fx-pref-width: 382.5;
+  -fx-pref-width: 232.5;
 }
 .oneThirds > .couple {
-  -fx-pref-width: 243.33333333;
+  -fx-pref-width: 143.33333333;
 }
 .couple > .combo-box {
-  -fx-max-width: 800;
+  -fx-max-width: 500;
 }
 .oneThirds {
-  -fx-pref-width: 521.66666667;
+  -fx-pref-width: 321.66666667;
 }
 .oneHalf,
 .oneThirds {
   -fx-spacing: 35;
 }
 .doubleHeight {
-  -fx-pref-height: 355.55555556;
+  -fx-pref-height: 133.33333333;
 }
 .button {
   -fx-font-weight: bold;
