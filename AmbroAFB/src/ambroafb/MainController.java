@@ -188,6 +188,8 @@ public class MainController implements Initializable {
     
     
     @FXML private void accounts(ActionEvent event) {}
+    @FXML private void licenses(ActionEvent event) {}
+    @FXML private void balAccounts(ActionEvent event) {}
     @FXML private void balances(ActionEvent event) {}
     @FXML private void account_statments(ActionEvent event) {}
     @FXML private void other(ActionEvent event) {}
