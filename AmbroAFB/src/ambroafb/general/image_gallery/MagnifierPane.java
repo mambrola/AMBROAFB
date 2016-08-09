@@ -63,11 +63,9 @@ public class MagnifierPane extends StackPane {
         super();
         Image imageCursor = new Image("/images/magnifier.png");
         ImageCursor logoCursor = new ImageCursor(imageCursor, imageCursor.getWidth() / 2, imageCursor.getHeight() /2);
-//        setCursor(new ImageCursor(imageCursor, imageCursor.getWidth() / 2, imageCursor.getHeight() /2));
         cursorProperty().bind(Bindings.createObjectBinding(() -> {
             return showProperty.get() ? logoCursor : Cursor.DEFAULT;
         }, showProperty));
-        //setCursor(Cursor.CROSSHAIR);
         final ImageView snapView = new ImageView();
         final Callback<SnapshotResult, java.lang.Void> callBack = (SnapshotResult result) -> null;
         final Scale scale = new Scale();
@@ -123,16 +121,18 @@ public class MagnifierPane extends StackPane {
         });
 
         addEventFilter(MouseEvent.MOUSE_ENTERED, (MouseEvent e) -> {
-            viewer.show(MagnifierPane.this, e.getScreenX(), e.getScreenY() - (2 * getRadius()));
-            int w = (int) (MagnifierPane.this.getWidth() * getScaleFactor());
-            int h = (int) (MagnifierPane.this.getHeight() * getScaleFactor());
-            if (w > 0 && h > 0) {
-                writeImg = new WritableImage(w, h);
-                
-                // Get snapshot image
-                MagnifierPane.this.snapshot(callBack, param, writeImg);
-                snapView.setImage(writeImg);
-                clippedNode.setContent(snapView);
+            if (showProperty.get()) {
+                viewer.show(MagnifierPane.this, e.getScreenX(), e.getScreenY() - (2 * getRadius()));
+                int w = (int) (MagnifierPane.this.getWidth() * getScaleFactor());
+                int h = (int) (MagnifierPane.this.getHeight() * getScaleFactor());
+                if (w > 0 && h > 0) {
+                    writeImg = new WritableImage(w, h);
+
+                    // Get snapshot image
+                    MagnifierPane.this.snapshot(callBack, param, writeImg);
+                    snapView.setImage(writeImg);
+                    clippedNode.setContent(snapView);
+                }
             }
         });
 
