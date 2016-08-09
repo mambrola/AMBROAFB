@@ -653,7 +653,7 @@ public class Utils {
                 closePermission = closePermission && closeStageWithChildren((Stage) bidmap.get(childPath));
                 System.out.println("childPath: " + childPath + " permission: " + closePermission);
             }
-//            !currStage.equals(AmbroAFB.mainStage) && 
+
             System.out.println("Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
             if (currStage.isShowing() && closePermission){
                 System.out.println("Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
