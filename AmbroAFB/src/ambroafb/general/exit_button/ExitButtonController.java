@@ -28,9 +28,7 @@ public class ExitButtonController implements Initializable {
     private void exit(ActionEvent e) {
         Stage stage = (Stage) (exitButton.getScene().getWindow());
         Utils.saveSizeFor(stage);
-        if(Utils.closeStageWithChildren(stage) && stage.isShowing()){
-            //stage.close();
-        }
+        Utils.closeStageWithChildren(stage);
         Utils.removeByStage(stage);
     }
 

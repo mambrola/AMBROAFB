@@ -658,8 +658,9 @@ public class Utils {
             for (String childPath : childrenPath) {
                 closePermission = closeStageWithChildren((Stage) bidmap.get(childPath)) && closePermission;
             }
-            if (currStage.isShowing() && closePermission){
+            if (currStage.isShowing() && closePermission && !((String)bidmap.getKey(currStage)).equals("main")){
                 currStage.close();
+                System.out.println("Close Stage: " + (String)bidmap.getKey(currStage));
             }
             System.out.println("Exit Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
         }
