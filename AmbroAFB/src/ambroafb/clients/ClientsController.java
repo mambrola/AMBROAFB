@@ -35,7 +35,6 @@ public class ClientsController implements Initializable {
     private MaskerPane masker;
     
     private final ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();
-//    private boolean permissionToClose;
     
     /**
      *
@@ -48,7 +47,6 @@ public class ClientsController implements Initializable {
         table.setBundle(rb);
         editorPanelController.buttonsMainPropertysBinder(table);
         editorPanelController.setTableDataList(table, clients);
-//        permissionToClose = true;
     }
 
     public void reAssignTable(JSONObject filterJson) {
@@ -73,12 +71,4 @@ public class ClientsController implements Initializable {
     public EditorPanelController getEditorPanelController() {
         return editorPanelController;
     }
-    
-//    public void changePermissionForClose(boolean value){
-//        permissionToClose = value;
-//    }
-//    
-//    public boolean getPermissionToClose(){
-//        return permissionToClose;
-//    }
 }

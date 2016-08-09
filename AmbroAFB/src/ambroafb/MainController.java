@@ -40,8 +40,6 @@ public class MainController implements Initializable {
     @FXML
     private Button back;
     
-//    private boolean permissionToClose;
-    
     @FXML
     private void light(ActionEvent event) {
         try{
@@ -187,9 +185,6 @@ public class MainController implements Initializable {
         }
     }
     
-//    public void changePermissionForClose(boolean value){
-//        permissionToClose = value;
-//    }
     
     
     @FXML private void accounts(ActionEvent event) {}
@@ -224,6 +219,5 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         config = GeneralConfig.getInstance();
-//        permissionToClose = true;
     }        
 }

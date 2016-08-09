@@ -35,7 +35,6 @@ public class ProductsController implements Initializable {
     private MaskerPane masker;
     
     private final ObservableList<EditorPanelable> products = FXCollections.observableArrayList();
-//    private boolean permissionToClose;
     
     /**
      * 
@@ -49,7 +48,6 @@ public class ProductsController implements Initializable {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(table);
         editorPanelController.setTableDataList(table, products);
-//        permissionToClose = true;
     }
     
     public void reAssignTable(JSONObject jsonFilter) {
@@ -71,12 +69,4 @@ public class ProductsController implements Initializable {
     public EditorPanelController getEditorPanelController(){
         return editorPanelController;
     }
-    
-//    public void changePermissionForClose(boolean value){
-//        permissionToClose = value;
-//    }
-//    
-//    public boolean getPermissionToClose(){
-//        return permissionToClose;
-//    }
 }
