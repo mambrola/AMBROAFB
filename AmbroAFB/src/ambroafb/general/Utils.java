@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package ambroafb.general;
-
+    
 import ambroafb.AmbroAFB;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import java.io.File;

@@ -12,12 +12,13 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
+import ambroafb.invoices.Invoices;
+import ambroafb.invoices.filter.InvoiceFilter;
 import ambroafb.products.Products;
 import ambroafb.products.filter.ProductFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -138,19 +139,19 @@ public class MainController implements Initializable {
     
     @FXML 
     private void invoices(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage(
-                    "/ambroafb/invoices/Invoices.fxml", 
-                    config.getTitleFor("invoices"), 
-                    Names.IN_OUT_LOGO,
-                    AmbroAFB.mainStage
-            );
-            stage.show();
-        }catch(IOException ex){
-            Platform.runLater(() -> {
-                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE, "Invoices");
-                alert.showAlert();
-            });
+        String mainStagePath = Utils.getPathForStage(AmbroAFB.mainStage);
+        String invoicesStagePath = mainStagePath + "/" + Invoices.class.getSimpleName();
+        
+        Stage invoicesStage = Utils.getStageForPath(invoicesStagePath);
+        if(invoicesStage == null || !invoicesStage.isShowing()){
+            Invoices invoices = new Invoices(AmbroAFB.mainStage);
+            invoices.show();
+            
+            InvoiceFilter filter = new InvoiceFilter(invoices);
+            invoices.getInvoicesController().reAssignTable(filter.getResult());
+        }
+        else {
+            invoicesStage.requestFocus();
         }
     }
     

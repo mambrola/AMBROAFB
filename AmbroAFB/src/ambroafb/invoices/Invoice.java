@@ -6,20 +6,20 @@
 package ambroafb.invoices;
 
 import ambro.AView;
-import ambroafb.general.Utils;
+import ambroafb.general.interfaces.EditorPanelable;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.ArrayList;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.DatePicker;
 
 /**
  *
  * @author mambroladze
  */
-public class Invoice { // ვინაიდან ეს მხოლოდ ჩვენებაა და თვითო tableView-ს ველში არ ხდება ჩასწორება Property-ები არ გვჭირდება
+public class Invoice extends EditorPanelable { 
+
+// ვინაიდან ეს მხოლოდ ჩვენებაა და თვითო tableView-ს ველში არ ხდება ჩასწორება Property-ები არ გვჭირდება
     
     public int invoiceId;
     
@@ -72,4 +72,35 @@ public class Invoice { // ვინაიდან ეს მხოლოდ ჩ
         products = new SimpleStringProperty(pds.replaceAll(":;:", ",  "));
     }
     
+    public static ArrayList<Invoice> getAllFromDB (){
+        return new ArrayList<>();
+//        try {
+//            String data = GeneralConfig.getInstance().getServerClient().get("products");
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(data, new TypeReference<ArrayList<Product>>() {});
+//        } catch (IOException | KFZClient.KFZServerException ex) {
+//            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
+    }
+
+    @Override
+    public EditorPanelable cloneWithoutID() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public EditorPanelable cloneWithID() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void copyFrom(EditorPanelable other) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toStringForSearch() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
