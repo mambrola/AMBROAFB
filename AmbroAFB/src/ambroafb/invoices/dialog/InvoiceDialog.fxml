@@ -12,9 +12,9 @@
 <?import ambroafb.general.okay_cancel.* ?>
 <?import ambroafb.general.*?>
 
-<ambroafb.general.DialogPanel stylesheets="/styles/css/clientdialog.css" 
-                        xmlns:fx="http://javafx.com/fxml/1" 
-                        xmlns="http://javafx.com/javafx/8" >
+<ambroafb.general.DialogPanel   stylesheets="/styles/css/clientdialog.css" 
+                                xmlns:fx="http://javafx.com/fxml/1" 
+                                xmlns="http://javafx.com/javafx/8" >
     <VBox fx:id="formPane">
         <children>
             <HBox styleClass="w3" >
@@ -107,7 +107,7 @@
                 </children> 
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
-                <OkayCancel fx:id="okayCancel"/>
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
             </HBox>
         </children>
     </VBox>
