@@ -42,10 +42,10 @@ public class Invoice extends EditorPanelable {
     @AView.Column(title = "%invoice_n", width = "100")
     private final SimpleStringProperty invoiceNumber;
     
-    @AView.Column(title = "%invoice_status", width = "60")
+    @AView.Column(title = "%invoice_status", width = "50")
     private final SimpleStringProperty status;
     
-    @AView.Column(title = "%begin_date", width = "70")
+    @AView.Column(title = "%created_date", width = "70")
     private LocalDate createdDate;
     
     @AView.Column(title = "%begin_date", width = "70")
@@ -57,12 +57,12 @@ public class Invoice extends EditorPanelable {
     private final SimpleIntegerProperty clientId;
     private final SimpleStringProperty clientFirstName, clientLastName, clientEmail;
     
-    @AView.Column(title = "%client", width = "350")
+    @AView.Column(title = "%client", width = "300")
     private final SimpleStringProperty client;
 
     private int[] productIds;
     
-    @AView.Column(title = "%products", width = "300")
+    @AView.Column(title = "%products", width = "200")
     private SimpleStringProperty products;
         
     
