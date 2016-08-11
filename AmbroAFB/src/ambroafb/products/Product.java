@@ -221,7 +221,7 @@ public class Product extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return descrip.concat(" " + remark.get()).get().toLowerCase();
+        return getDescrip().concat(getRemark()).toLowerCase();
     }
     
     @Override
