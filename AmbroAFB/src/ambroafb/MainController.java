@@ -5,6 +5,7 @@
  */
 package ambroafb;
 
+import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Clients;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.countries.Countries;
@@ -117,8 +118,7 @@ public class MainController implements Initializable {
     
     @FXML
     private void clients(ActionEvent event) {
-        String mainStagePath = Utils.getPathForStage(AmbroAFB.mainStage);
-        String clientsStagePath = mainStagePath + "/" + Clients.class.getSimpleName();
+        String clientsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Clients.class.getSimpleName();
         
         Stage clientsStage = Utils.getStageForPath(clientsStagePath);
         if(clientsStage == null || !clientsStage.isShowing()){
@@ -139,8 +139,7 @@ public class MainController implements Initializable {
     
     @FXML 
     private void invoices(ActionEvent event) {
-        String mainStagePath = Utils.getPathForStage(AmbroAFB.mainStage);
-        String invoicesStagePath = mainStagePath + "/" + Invoices.class.getSimpleName();
+        String invoicesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Invoices.class.getSimpleName();
         
         Stage invoicesStage = Utils.getStageForPath(invoicesStagePath);
         if(invoicesStage == null || !invoicesStage.isShowing()){
@@ -173,8 +172,7 @@ public class MainController implements Initializable {
     
     @FXML 
     private void countries(ActionEvent event) {
-        String mainStagePath = Utils.getPathForStage(AmbroAFB.mainStage);
-        String countriesStagePath = mainStagePath + "/" + Countries.class.getSimpleName();
+        String countriesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Countries.class.getSimpleName();
         
         Stage countriesStage = Utils.getStageForPath(countriesStagePath);
         if (countriesStage == null || !countriesStage.isShowing()){
@@ -190,7 +188,20 @@ public class MainController implements Initializable {
     
     @FXML private void accounts(ActionEvent event) {}
     @FXML private void licenses(ActionEvent event) {}
-    @FXML private void balAccounts(ActionEvent event) {}
+    
+    @FXML private void balAccounts(ActionEvent event) {
+        String balAccountsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + BalanceAccounts.class.getSimpleName();
+        
+        Stage balAccountsStage = Utils.getStageForPath(balAccountsStagePath);
+        if (balAccountsStage == null || !balAccountsStage.isShowing()){
+            BalanceAccounts accounts = new BalanceAccounts(AmbroAFB.mainStage);
+            accounts.show();
+        }
+        else {
+            balAccountsStage.requestFocus();
+        }
+    }
+    
     @FXML private void balances(ActionEvent event) {}
     @FXML private void account_statments(ActionEvent event) {}
     @FXML private void other(ActionEvent event) {}

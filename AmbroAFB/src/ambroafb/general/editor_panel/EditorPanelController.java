@@ -26,6 +26,7 @@ import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -247,6 +248,13 @@ public class EditorPanelController implements Initializable {
         view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
         addBySample.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
     }
+    
+    public void buttonsMainPropertysBinder (TreeTableView treeTable){
+        delete.disableProperty().bind(treeTable.getSelectionModel().selectedItemProperty().isNull());
+        edit.disableProperty().bind(treeTable.getSelectionModel().selectedItemProperty().isNull());
+        view.disableProperty().bind(treeTable.getSelectionModel().selectedItemProperty().isNull());
+        addBySample.disableProperty().bind(treeTable.getSelectionModel().selectedItemProperty().isNull());
+    }
 
     public void setOuterController(Initializable controller){
         outerController = controller;
@@ -256,7 +264,7 @@ public class EditorPanelController implements Initializable {
         for (String fxId : fxIds) {
             formNode.getChildren().remove(formNode.lookup(fxId));
         }
-        formNode.getChildren().remove(region);
+//        formNode.getChildren().remove(region);
     }
     
     private String getClassName(CLASS_TYPE type){

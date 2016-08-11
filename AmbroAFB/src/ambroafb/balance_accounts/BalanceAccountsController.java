@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.countries;
+package ambroafb.balance_accounts;
 
-import ambro.ATableView;
+import ambro.ATreeTableView;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -19,46 +19,43 @@ import org.json.JSONObject;
 /**
  * FXML Controller class
  *
- * @author murman
+ * @author dato
  */
-public class CountriesController implements Initializable {
+public class BalanceAccountsController implements Initializable {
 
     @FXML
-    private ATableView<EditorPanelable> table;
-
+    private ATreeTableView<EditorPanelable> treeTable;
+    
     @FXML
     private EditorPanelController editorPanelController;
+            
     
-    private final ObservableList<EditorPanelable> countries = FXCollections.observableArrayList();;
+    private final ObservableList<EditorPanelable> accounts = FXCollections.observableArrayList();
     
     /**
      * Initializes the controller class.
-     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         editorPanelController.setOuterController(this);
-        editorPanelController.buttonsMainPropertysBinder(table);
-        editorPanelController.setTableDataList(table, countries);
+        editorPanelController.buttonsMainPropertysBinder(treeTable);
+//        editorPanelController.setTableDataList(table, accounts);
         editorPanelController.removeButtonsByFxIDs("#delete", "#edit", "#view", "#add", "#refresh");
         reAssignTable(null);
     }
 
-    private void reAssignTable(JSONObject json) {
-        countries.clear();
-        Thread t = new Thread(() -> {
-            Country.getAllFromDB().stream().forEach((country) -> {
-                countries.add(country);
+    public void reAssignTable(JSONObject filterJson){
+        accounts.clear();
+        new Thread(() -> {
+            BalanceAccount.getAllFromDB().stream().forEach((account) -> {
+                accounts.add(account);
             });
-        });
-        t.start();
+        }).start();
     }
-    
-    
+
     public EditorPanelController getEditorPanelController(){
         return editorPanelController;
     }
-
 }
