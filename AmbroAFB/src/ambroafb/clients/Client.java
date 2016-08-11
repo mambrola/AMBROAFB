@@ -53,9 +53,9 @@ import org.json.JSONObject;
 public class Client extends EditorPanelable{
 
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
-    public String payPal, www, createdDate; // password, 
+    public String payPal, www, createdDate;
     
-    private StringProperty status;
+    private final StringProperty status;
 
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private final SimpleBooleanProperty isJur;
@@ -154,43 +154,7 @@ public class Client extends EditorPanelable{
         }
     }
     
-    @Override
-    public Client cloneWithoutID() {
-        Client clone = new Client();
-        clone.copyFrom(this);
-        return clone;
-    }
-
-    @Override
-    public Client cloneWithID() {
-        Client clone = cloneWithoutID();
-        clone.recId = recId;
-        return clone;
-    }
-
-    @Override
-    public void copyFrom(EditorPanelable object) {
-        Client other = (Client) object;
-        setIsJur(other.getIsJur());
-        setIsRez(other.getIsRez());
-        setFirstName(other.getFirstName());
-        setLastName(other.getLastName());
-        setEmail(other.getEmail());
-        setAddress(other.getAddress());
-        setZipCode(other.getZipCode());
-        setCity(other.getCity());
-        setCountry(other.getCountry());
-        setIDNumber(other.getIDNumber());
-        getPhoneList().setAll(other.getPhoneList()
-                .stream()
-                .map((Phone t) -> new Phone(t.getRecId(), t.getNumber()))
-                .collect(Collectors.toList())
-        );
-        setFax(other.getFax());
-        setStatus(other.getStatus());
-        this.createdDate = other.createdDate;
-    }
-
+    // DBService methods:
     public static List<Client> getAllFromDB() {
         try {
             String data = GeneralConfig.getInstance().getServerClient().get("clients");
@@ -261,6 +225,9 @@ public class Client extends EditorPanelable{
         return false;
     }
 
+    
+    //Properties getters:
+    
     public SimpleBooleanProperty isJurProperty() {
         return isJur;
     }
@@ -321,6 +288,9 @@ public class Client extends EditorPanelable{
         return status;
     }
 
+    
+    // Getters:
+    
     public boolean getIsJur() {
         return isJur.get();
     }
@@ -390,6 +360,7 @@ public class Client extends EditorPanelable{
         return IDNumber.get();
     }
 
+     // Setters:
     public final void setIsJur(boolean isJur) {
         this.isJur.set(isJur);
     }
@@ -439,20 +410,6 @@ public class Client extends EditorPanelable{
         this.fax.set(fax);
     }
     
-    @Override
-    public String toStringForSearch(){
-        String phones = "";
-        phones = phoneList.stream().map((phoneNumber) -> phoneNumber.getNumber() + " ").reduce(phones, String::concat);
-
-        String result = firstName.concat(" " + lastName.get())
-                                .concat(" " + email.get()).concat(" " + address.get())
-                                .concat(" " + zipCode.get()).concat(" " + city.get())
-                                .concat(" " + country.getName()).concat(" " + fax.get())
-                                .concat(" " + IDNumber.get())
-                        .get();
-        return (result + phones).toLowerCase();
-    }
-    
     public boolean compares(Client other){
         boolean fieldsCompareResult =   this.isJur.get() == other.getIsJur() &&
                                         this.isRez.get() == other.getIsRez() && 
@@ -469,6 +426,60 @@ public class Client extends EditorPanelable{
         boolean equalsPhones = Phone.compareLists(phoneList, other.getPhoneList());
         return fieldsCompareResult && equalsPhones;
     }
+
+    // Override methods:
+    
+    @Override
+    public Client cloneWithoutID() {
+        Client clone = new Client();
+        clone.copyFrom(this);
+        return clone;
+    }
+
+    @Override
+    public Client cloneWithID() {
+        Client clone = cloneWithoutID();
+        clone.recId = recId;
+        return clone;
+    }
+
+    @Override
+    public void copyFrom(EditorPanelable object) {
+        Client other = (Client) object;
+        setIsJur(other.getIsJur());
+        setIsRez(other.getIsRez());
+        setFirstName(other.getFirstName());
+        setLastName(other.getLastName());
+        setEmail(other.getEmail());
+        setAddress(other.getAddress());
+        setZipCode(other.getZipCode());
+        setCity(other.getCity());
+        setCountry(other.getCountry());
+        setIDNumber(other.getIDNumber());
+        getPhoneList().setAll(other.getPhoneList()
+                .stream()
+                .map((Phone t) -> new Phone(t.getRecId(), t.getNumber()))
+                .collect(Collectors.toList())
+        );
+        setFax(other.getFax());
+        setStatus(other.getStatus());
+        this.createdDate = other.createdDate;
+    }
+
+    @Override
+    public String toStringForSearch(){
+        String phones = "";
+        phones = phoneList.stream().map((phoneNumber) -> phoneNumber.getNumber() + " ").reduce(phones, String::concat);
+
+        String result = firstName.concat(" " + lastName.get())
+                                .concat(" " + email.get()).concat(" " + address.get())
+                                .concat(" " + zipCode.get()).concat(" " + city.get())
+                                .concat(" " + country.getName()).concat(" " + fax.get())
+                                .concat(" " + IDNumber.get())
+                        .get();
+        return (result + phones).toLowerCase();
+    }
+    
 
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 

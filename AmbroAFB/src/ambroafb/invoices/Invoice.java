@@ -6,12 +6,23 @@
 package ambroafb.invoices;
 
 import ambro.AView;
+import ambroafb.general.GeneralConfig;
+import ambroafb.general.KFZClient;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.products.Product;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.util.converter.LocalDateStringConverter;
 
 /**
  *
@@ -23,10 +34,19 @@ public class Invoice extends EditorPanelable {
     
     public int invoiceId;
     
-    @AView.Column(title = "%invoice_n", width = "100")
-    private SimpleStringProperty invoiceNumber;
+    public int[] licenses;
     
-    private SimpleIntegerProperty clientId;
+    @AView.Column(width = "50")
+    private final SimpleBooleanProperty isPaid = new SimpleBooleanProperty();
+    
+    @AView.Column(title = "%invoice_n", width = "100")
+    private final SimpleStringProperty invoiceNumber;
+    
+    @AView.Column(title = "%invoice_status", width = "60")
+    private final SimpleStringProperty status = new SimpleStringProperty();
+    
+    @AView.Column(title = "%begin_date", width = "70")
+    private LocalDate createdDate;
     
     @AView.Column(title = "%begin_date", width = "70")
     private LocalDate beginDate;
@@ -34,16 +54,21 @@ public class Invoice extends EditorPanelable {
     @AView.Column(title = "%end_date", width = "70")
     private LocalDate endDate;
     
-    private SimpleStringProperty clientFirstName, clientLastName, clientEmail;
+    private final SimpleIntegerProperty clientId;
+    private final SimpleStringProperty clientFirstName, clientLastName, clientEmail;
     
     @AView.Column(title = "%client", width = "350")
-    private SimpleStringProperty client;
+    private final SimpleStringProperty client;
 
     private int[] productIds;
     
     @AView.Column(title = "%products", width = "300")
     private SimpleStringProperty products;
         
+    
+    private final DateTimeFormatter formater = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+    private final LocalDateStringConverter converter = new LocalDateStringConverter(formater, formater);
+    
     public Invoice(){
         invoiceNumber = new SimpleStringProperty();
         clientId = new SimpleIntegerProperty();
@@ -53,13 +78,11 @@ public class Invoice extends EditorPanelable {
         client = new SimpleStringProperty(clientFirstName + " " + clientLastName + ", " + clientEmail);
     }
     
-    
-    
     public Invoice(int ii, String in, int ci, Date bd, Date ed, String cfn, String cln, String ce, String pis, String pds){
         invoiceId = ci;
         invoiceNumber = new SimpleStringProperty(in);
         clientId = new SimpleIntegerProperty(ci);
-        beginDate = bd.toLocalDate();
+        createdDate = bd.toLocalDate();
         endDate = ed.toLocalDate();
         clientFirstName = new SimpleStringProperty(cfn);
         clientLastName = new SimpleStringProperty(cln); 
@@ -71,19 +94,107 @@ public class Invoice extends EditorPanelable {
             productIds[i] = Integer.parseInt(pii[i]);
         products = new SimpleStringProperty(pds.replaceAll(":;:", ",  "));
     }
+
     
+    // DBService methods:
     public static ArrayList<Invoice> getAllFromDB (){
-        return new ArrayList<>();
-//        try {
-//            String data = GeneralConfig.getInstance().getServerClient().get("products");
-//            ObjectMapper mapper = new ObjectMapper();
-//            return mapper.readValue(data, new TypeReference<ArrayList<Product>>() {});
-//        } catch (IOException | KFZClient.KFZServerException ex) {
-//            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return null;
+        try {
+            String data = GeneralConfig.getInstance().getServerClient().get("invoices");
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<Invoice>>() {});
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
+    // Properties getters:
+    public SimpleBooleanProperty paidProperty() {
+        return isPaid;
+    }
+    
+    public SimpleStringProperty invoiceNumberProperty(){
+        return invoiceNumber;
+    }
+    
+    public SimpleStringProperty statusProperty(){
+        return status;
+    }
+    
+    public SimpleStringProperty getClient(){
+        return client;
+    }
+            
+    
+    // Getters:
+    public int getInvoiceId() {
+        return invoiceId;
+    }
+
+    public boolean getIsPaind(){
+        return isPaid.get();
+    }
+
+    public int[] getLicenses() {
+        return licenses;
+    }
+    
+    public String getCreatedDate(){
+        return converter.toString(createdDate);
+    }
+
+    public String getBeginDate(){
+        return converter.toString(beginDate);
+    }
+    
+    public String getEndDate(){
+        return converter.toString(endDate);
+    }
+    
+    public String getInvoiceNumber(){
+        return invoiceNumber.get();
+    }
+    
+    public String getStatus(){
+        return status.get();
+    }
+    
+    
+    // Setters:
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
+    }
+    
+    public void setIsPaid(boolean isPaid) {
+        this.isPaid.set(isPaid);
+    }
+    
+    public void setLicenses(int[] licenses) {
+        this.licenses = licenses;
+    }
+    
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = converter.fromString(createdDate);
+    }
+    
+    public void setBeginDate(String beginDate){
+        this.beginDate = converter.fromString(beginDate);
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = converter.fromString(endDate);
+    }
+    
+    public void setInvoiceNumber(String invoiceNumber){
+        this.invoiceNumber.set(invoiceNumber);
+    }
+    
+    public void setStatus(String status){
+        this.status.set(status);
+    }
+    
+    
+    // Overrides:
     @Override
     public EditorPanelable cloneWithoutID() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -103,4 +214,5 @@ public class Invoice extends EditorPanelable {
     public String toStringForSearch() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
 }
