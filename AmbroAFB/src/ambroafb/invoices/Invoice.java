@@ -209,7 +209,7 @@ public class Invoice extends EditorPanelable {
     }
     
     
-    // Overrides:
+    // Methods override:
     @Override
     public Invoice cloneWithoutID() {
         Invoice clone = new Invoice();
