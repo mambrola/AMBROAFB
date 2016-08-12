@@ -9,11 +9,14 @@ import ambro.ATreeTableView;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TreeItem;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
 
@@ -59,32 +62,40 @@ public class BalanceAccountsController implements Initializable {
     
     private class BalanceAccountsFromDB implements Runnable {
 
+        private final ObservableList<BalanceAccount> roots = FXCollections.observableArrayList();
+        private final Map<Integer, BalanceAccount> items = new HashMap<>();
+        
         @Override
         public void run() {
             Platform.runLater(() -> {
                 masker.setVisible(true); 
             });
             BalanceAccount.getAllFromDBTest().stream().forEach((account) -> {
-                addAcountIntoTree(account);
+                makeTreeStructure(account);
             });
             Platform.runLater(() -> {
+                roots.stream().forEach((account) -> {
+                    treeTable.append(account);
+                });
                 masker.setVisible(false); 
             });
         }
         
         
-        private void addAcountIntoTree(BalanceAccount account) {
+        private void makeTreeStructure(BalanceAccount account) {
             int accountCode = account.getCode();
+            if (accountCode % 10 != 0) return;
+            items.put(accountCode, account);
             if (accountCode % 1000 == 0) {
-                Platform.runLater(() -> {
-                    treeTable.append(account);
-                    System.out.println("descrip: " + account.getDescrip());
-                });
+                    account.rowStyle.add("font" + 8 + "Size");
+                    roots.add(account);
             } else {
                 int reminder = 0;
                 if (accountCode % 100 == 0) {
                     reminder = accountCode % 1000;
+                    account.rowStyle.add("font" + 4 + "Size");
                 } else if (accountCode % 10 == 0) {
+                    account.rowStyle.add("font" + 2 + "Size");
                     reminder = accountCode % 100;
                 }
                 BalanceAccount parentAccount = getParentAccount(accountCode, reminder);
@@ -96,11 +107,8 @@ public class BalanceAccountsController implements Initializable {
         
         private BalanceAccount getParentAccount(int currAcountCode, int currAccountCodeReminder) {
             BalanceAccount result = null;
-            for (TreeItem<EditorPanelable> treeItem : treeTable.getRoot().getChildren()) {
-                BalanceAccount account = (BalanceAccount) treeItem.getValue();
-                if (account.getCode() + currAccountCodeReminder == currAcountCode) {
-                    result = account;
-                }
+            if (items.containsKey(currAcountCode - currAccountCodeReminder)){
+                result = items.get(currAcountCode - currAccountCodeReminder);
             }
             return result;
         }

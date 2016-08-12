@@ -17,6 +17,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -43,17 +44,20 @@ public class BalanceAccount extends EditorPanelable {
     private static Connection con; // for test
     
     @ATreeTableView.Children
-    private final ObservableList<EditorPanelable> childrenAccounts = FXCollections.observableArrayList();
+    public final ObservableList<EditorPanelable> childrenAccounts = FXCollections.observableArrayList();
     
     
     @AView.RowStyles
-    private final ObservableList<EditorPanelable> rowStyle = FXCollections.observableArrayList();
+    public final ObservableList<String> rowStyle = FXCollections.observableArrayList();
     
     
     public BalanceAccount(){
         code = new SimpleIntegerProperty();
         descrip = new SimpleStringProperty();
         balanceAccounts = new SimpleStringProperty();
+        balanceAccounts.bind(Bindings.createStringBinding(() -> {
+            return code.get() + " | " + descrip.get();
+        }, descrip));
     }
     
     public void addChildAccount(BalanceAccount child){
