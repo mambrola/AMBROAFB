@@ -33,7 +33,7 @@ public class BalanceAccount extends EditorPanelable {
     private final IntegerProperty code;
     private final StringProperty descrip;
     
-    @AView.Column(title = "%bal_accouns", width = "250")
+    @AView.Column(title = "%bal_accouns", width = "800")
     private final StringProperty balanceAccounts;
     
     private static Connection con; // for test
@@ -50,7 +50,6 @@ public class BalanceAccount extends EditorPanelable {
         code = new SimpleIntegerProperty();
         descrip = new SimpleStringProperty();
         balanceAccounts = new SimpleStringProperty();
-//        connectToDBTest();
     }
     
     public void addChildAccount(BalanceAccount child){

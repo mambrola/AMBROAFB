@@ -14,7 +14,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
 
@@ -46,7 +45,6 @@ public class BalanceAccountsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         editorPanelController.setOuterController(this);
         editorPanelController.removeButtonsByFxIDs("#delete", "#edit", "#view", "#add", "#refresh");
-        treeTable.getColumns().add(new TreeTableColumn<>("Column"));
         reAssignTable(null);
     }
 
