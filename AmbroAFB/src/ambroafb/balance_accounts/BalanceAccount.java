@@ -5,8 +5,24 @@
  */
 package ambroafb.balance_accounts;
 
+import ambro.ATreeTableView;
+import ambro.AView;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.EditorPanelable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -14,13 +30,110 @@ import java.util.ArrayList;
  */
 public class BalanceAccount extends EditorPanelable {
 
+    private final IntegerProperty code;
+    private final StringProperty descrip;
+    
+    @AView.Column(title = "%bal_accouns", width = "250")
+    private final StringProperty balanceAccounts;
+    
+    private static Connection con; // for test
+    
+    @ATreeTableView.Children
+    private final ObservableList<EditorPanelable> childrenAccounts = FXCollections.observableArrayList();
+    
+    
+    @AView.RowStyles
+    private final ObservableList<EditorPanelable> rowStyle = FXCollections.observableArrayList();
+    
+    
     public BalanceAccount(){
-        
+        code = new SimpleIntegerProperty();
+        descrip = new SimpleStringProperty();
+        balanceAccounts = new SimpleStringProperty();
+//        connectToDBTest();
     }
     
-    static ArrayList<BalanceAccount> getAllFromDB() {
-        return new ArrayList<>();
+    public void addChildAccount(BalanceAccount child){
+        childrenAccounts.add(child);
     }
+    
+    public void removeChildAccount(BalanceAccount child){
+        childrenAccounts.remove(child);
+    }
+    
+    public static ArrayList<BalanceAccount> getAllFromDBTest() {
+        ArrayList<BalanceAccount> list = new ArrayList<>();
+        
+        connectToDBTest();
+        Statement stm = getStatement();
+        try {
+            ResultSet set = stm.executeQuery("select * from bal_accounts");
+            while(set.next()){
+                BalanceAccount account = new BalanceAccount();
+                account.setRecId(set.getInt(1));
+                account.setCode(set.getInt(2));
+                account.setDescrip(set.getString(4));
+                list.add(account);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("[getAllFromDBTest] list size: " + list.size());
+        return list;
+    }
+    
+    private static void connectToDBTest(){
+        try {
+            Class.forName(GeneralConfig.classForName);
+            String url = "jdbc:mysql://localhost:3307/kfz_db?useUnicode=true&characterEncoding=UTF-8";
+            String user = "root";
+            String password = "Unabi11liB9leoa*1dh";
+            con = DriverManager.getConnection(url, user, password);
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private static Statement getStatement(){
+        Statement stm = null;
+        try {
+            stm = con.createStatement();
+        } catch (SQLException ex) {
+            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stm;
+    }
+    
+    
+    // Properties getters:
+    public IntegerProperty codeProperty(){
+        return code;
+    }
+    
+    public StringProperty descripProperty(){
+        return descrip;
+    }
+    
+    
+    // Getters:
+    public int getCode(){
+        return code.get();
+    }
+    
+    public String getDescrip(){
+        return descrip.get();
+    }
+    
+    
+    // Setters:
+    public void setCode(int code){
+        this.code.set(code);
+    }
+    
+    public void setDescrip(String descrip){
+        this.descrip.set(descrip);
+    }
+    
 
     @Override
     public BalanceAccount cloneWithoutID() {
@@ -38,12 +151,19 @@ public class BalanceAccount extends EditorPanelable {
 
     @Override
     public void copyFrom(EditorPanelable other) {
-        //...
+        BalanceAccount account = (BalanceAccount) other;
+        setCode(account.getCode());
+        setDescrip(account.getDescrip());
     }
 
     @Override
     public String toStringForSearch() {
-        return "";
+        return getCode() + getDescrip().toLowerCase();
+    }
+    
+    @Override
+    public String toString(){
+        return getCode() + "|" + getDescrip();
     }
     
 }

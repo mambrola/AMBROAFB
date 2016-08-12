@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import ambro.* ?>
+<?import org.controlsfx.control.*?>
 
 <BorderPane fx:id="formPane" 
             stylesheets="/styles/css/balanceaccounts.css" 
@@ -15,7 +16,11 @@
         <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
     </top>
     <center>
-        <ATreeTableView fx:id="treeTable" initializer="ambroafb.balance_accounts.BalanceAccount" styleClass="unicode" /> 
-        <!--<ATableView fx:id="table" initializer="ambroafb.balance_accounts.BalanceAccount" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />-->
+        <StackPane >
+            <children>
+                <ATreeTableView fx:id="treeTable" initializer="ambroafb.balance_accounts.BalanceAccount" styleClass="unicode" /> 
+                <MaskerPane fx:id="masker" />
+            </children>
+        </StackPane>
     </center>
 </BorderPane>
