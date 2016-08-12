@@ -77,6 +77,7 @@ public class BalanceAccountsController implements Initializable {
                 roots.stream().forEach((account) -> {
                     treeTable.append(account);
                 });
+                treeTable.expand(1);
                 masker.setVisible(false); 
             });
         }
