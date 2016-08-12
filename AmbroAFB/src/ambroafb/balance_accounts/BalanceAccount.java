@@ -18,11 +18,15 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TreeTableColumn;
+import javafx.util.Callback;
 
 /**
  *
@@ -33,7 +37,7 @@ public class BalanceAccount extends EditorPanelable {
     private final IntegerProperty code;
     private final StringProperty descrip;
     
-    @AView.Column(title = "%bal_accouns", width = "800")
+    @AView.Column(title = "%bal_accouns", width = "800", cellValueFactory = ColumnValueFactory.class)
     private final StringProperty balanceAccounts;
     
     private static Connection con; // for test
@@ -165,4 +169,11 @@ public class BalanceAccount extends EditorPanelable {
         return getCode() + "|" + getDescrip();
     }
     
+    private class ColumnValueFactory implements Callback<TreeTableColumn.CellDataFeatures<BalanceAccount, String>, ObservableValue<String>> {
+
+        @Override
+        public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<BalanceAccount, String> param) {
+            return new ReadOnlyStringWrapper(param.getValue().getValue().toString());
+        }
+    }
 }
