@@ -64,6 +64,9 @@ public class LoginController extends Stage implements Initializable {
             if (event.getCode().equals(KeyCode.ENTER))
                 login();
         });
+        if (!username.getText().isEmpty()){
+            password.requestFocus();
+        }
     }
 
     public boolean prompt() {

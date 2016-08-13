@@ -42,8 +42,8 @@ public class CountriesController implements Initializable {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(table);
         editorPanelController.setTableDataList(table, countries);
-        reAssignTable(null);
         editorPanelController.removeButtonsByFxIDs("#delete", "#edit", "#view", "#add", "#refresh");
+        reAssignTable(null);
     }
 
     private void reAssignTable(JSONObject json) {

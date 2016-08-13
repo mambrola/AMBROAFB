@@ -59,7 +59,7 @@ public class Product extends EditorPanelable {
         remark = new SimpleStringProperty("");
     }
     
-    
+    // DBService methods:
     public static Product saveOneToDB(Product product){
         if (product == null) return null; 
         try {
@@ -221,7 +221,7 @@ public class Product extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return descrip.concat(" " + remark.get()).get();
+        return getDescrip().concat(getRemark()).toLowerCase();
     }
     
     @Override

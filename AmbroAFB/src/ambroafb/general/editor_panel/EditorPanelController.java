@@ -247,7 +247,7 @@ public class EditorPanelController implements Initializable {
         view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
         addBySample.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
     }
-
+    
     public void setOuterController(Initializable controller){
         outerController = controller;
     }
@@ -256,7 +256,7 @@ public class EditorPanelController implements Initializable {
         for (String fxId : fxIds) {
             formNode.getChildren().remove(formNode.lookup(fxId));
         }
-        formNode.getChildren().remove(region);
+//        formNode.getChildren().remove(region);
     }
     
     private String getClassName(CLASS_TYPE type){
