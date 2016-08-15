@@ -188,7 +188,9 @@ public class MainController implements Initializable {
     
     @FXML private void accounts(ActionEvent event) {}
     @FXML private void licenses(ActionEvent event) {}
-    
+    @FXML private void currencies(ActionEvent event) {}
+    @FXML private void currencyRates(ActionEvent event) {}
+    @FXML private void discountsOnCount(ActionEvent event) {}
     @FXML private void balAccounts(ActionEvent event) {
         String balAccountsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + BalanceAccounts.class.getSimpleName();
         

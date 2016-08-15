@@ -62,8 +62,11 @@
                 </Menu>
                 <Menu text="%directories">
                     <items>
+                        <MenuItem onAction="#currencyRates" text="%currency_rates" />
+                        <MenuItem onAction="#discountsOnCount" text="%discounts_on_count" />
                         <MenuItem onAction="#products" text="%products" />
                         <SeparatorMenuItem />
+                        <MenuItem onAction="#currencies" text="%currencies" />
                         <MenuItem onAction="#balAccounts" text="%bal_accounts" />
                         <MenuItem onAction="#countries" text="%countries" />
                         
