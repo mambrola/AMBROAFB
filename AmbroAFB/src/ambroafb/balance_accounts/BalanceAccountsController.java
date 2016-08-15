@@ -70,7 +70,7 @@ public class BalanceAccountsController implements Initializable {
             Platform.runLater(() -> {
                 masker.setVisible(true); 
             });
-            BalanceAccount.getAllFromDBTest().stream().forEach((account) -> {
+            BalanceAccount.getAllFromDB().stream().forEach((account) -> {
                 makeTreeStructure(account);
             });
             Platform.runLater(() -> {
@@ -84,7 +84,7 @@ public class BalanceAccountsController implements Initializable {
         
         
         private void makeTreeStructure(BalanceAccount account) {
-            int accountCode = account.getCode();
+            int accountCode = account.getBalAcc();
             if (accountCode % 10 != 0) return;
             items.put(accountCode, account);
             if (accountCode % 1000 == 0) {
@@ -101,7 +101,7 @@ public class BalanceAccountsController implements Initializable {
                 }
                 BalanceAccount parentAccount = getParentAccount(accountCode, reminder);
                 if (parentAccount != null) {
-                    parentAccount.addChildAccount(account);
+                    parentAccount.childrenAccounts.add(account);
                 }
             }
         }

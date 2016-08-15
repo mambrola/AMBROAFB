@@ -8,26 +8,22 @@ package ambroafb.balance_accounts;
 import ambro.ATreeTableView;
 import ambro.AView;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.KFZClient;
 import ambroafb.general.interfaces.EditorPanelable;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TreeTableColumn;
-import javafx.util.Callback;
 
 /**
  *
@@ -35,110 +31,120 @@ import javafx.util.Callback;
  */
 public class BalanceAccount extends EditorPanelable {
 
-    private final IntegerProperty code;
-    private final StringProperty descrip;
+    private final StringProperty descrip_ka;
+    private final StringProperty descrip_en;
+    private boolean actPas;
+    private boolean level;
+    private boolean isBase;
+    private final IntegerProperty balAcc; // This place is because of balAccountDescrip binding.
     
-    @AView.Column(title = "%bal_accouns", width = "800", cellValueFactory = ColumnValueFactory.class)
-    private final StringProperty balanceAccounts;
-    
-    private static Connection con; // for test
+    @AView.Column(title = "%bal_accouns", width = "800")
+    private final StringProperty balAccountDescrip;
     
     @ATreeTableView.Children
+    @JsonIgnore
     public final ObservableList<EditorPanelable> childrenAccounts = FXCollections.observableArrayList();
     
-    
     @AView.RowStyles
+    @JsonIgnore
     public final ObservableList<String> rowStyle = FXCollections.observableArrayList();
     
     
     public BalanceAccount(){
-        code = new SimpleIntegerProperty();
-        descrip = new SimpleStringProperty();
-        balanceAccounts = new SimpleStringProperty();
-        balanceAccounts.bind(Bindings.createStringBinding(() -> {
-            return code.get() + " | " + descrip.get();
-        }, descrip));
+        balAcc = new SimpleIntegerProperty();
+        descrip_ka = new SimpleStringProperty();
+        descrip_en = new SimpleStringProperty();
+        balAccountDescrip = new SimpleStringProperty();
+        balAccountDescrip.bind(Bindings.createStringBinding(() -> {
+            String langId = GeneralConfig.getInstance().getCurrentLocal().getLanguage();
+            return balAcc.get() + " - " + ((langId.equals("ka")) ? descrip_ka.get() : descrip_en.get());
+        }, balAcc));
     }
     
-    public void addChildAccount(BalanceAccount child){
-        childrenAccounts.add(child);
-    }
     
-    public void removeChildAccount(BalanceAccount child){
-        childrenAccounts.remove(child);
-    }
-    
-    public static ArrayList<BalanceAccount> getAllFromDBTest() {
-        ArrayList<BalanceAccount> list = new ArrayList<>();
-        
-        connectToDBTest();
-        Statement stm = getStatement();
+    public static ArrayList<BalanceAccount> getAllFromDB(){
         try {
-            ResultSet set = stm.executeQuery("select * from bal_accounts");
-            while(set.next()){
-                BalanceAccount account = new BalanceAccount();
-                account.setRecId(set.getInt(1));
-                account.setCode(set.getInt(2));
-                account.setDescrip(set.getString(4));
-                list.add(account);
-            }
-        } catch (SQLException ex) {
+            String data = GeneralConfig.getInstance().getServerClient().get("balAccounts");
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<BalanceAccount>>() {});
+        } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("[getAllFromDBTest] list size: " + list.size());
-        return list;
-    }
-    
-    private static void connectToDBTest(){
-        try {
-            Class.forName(GeneralConfig.classForName);
-            String url = "jdbc:mysql://localhost:3307/kfz_db?useUnicode=true&characterEncoding=UTF-8";
-            String user = "root";
-            String password = "Unabi11liB9leoa*1dh";
-            con = DriverManager.getConnection(url, user, password);
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private static Statement getStatement(){
-        Statement stm = null;
-        try {
-            stm = con.createStatement();
-        } catch (SQLException ex) {
-            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return stm;
+        return null;
     }
     
     
     // Properties getters:
     public IntegerProperty codeProperty(){
-        return code;
+        return balAcc;
     }
     
-    public StringProperty descripProperty(){
-        return descrip;
+    public StringProperty descripKaProperty(){
+        return descrip_ka;
+    }
+
+    public StringProperty descripEnProperty() {
+        return descrip_en;
+    }
+
+    public boolean getActPas() {
+        return actPas;
+    }
+
+    public boolean getLevel() {
+        return level;
+    }
+
+    public boolean getIsBase() {
+        return isBase;
     }
     
     
     // Getters:
-    public int getCode(){
-        return code.get();
+    public int getBalAcc(){
+        return balAcc.get();
+    }
+    
+    public String getDescrip_ka(){
+        return descrip_ka.get();
+    }
+    
+    public String getDescrip_en(){
+        return descrip_en.get();
     }
     
     public String getDescrip(){
-        return descrip.get();
+        return balAccountDescrip.get();
+    }
+
+    public void setActPas(boolean act_pas) {
+        this.actPas = act_pas;
+    }
+
+    public void setLevel(boolean level) {
+        this.level = level;
+    }
+
+    public void setIsBase(boolean is_base) {
+        this.isBase = is_base;
     }
     
     
     // Setters:
-    public void setCode(int code){
-        this.code.set(code);
+    public void setBalAcc(int code){
+        this.balAcc.set(code);
+    }
+    
+    public void setDescrip_ka(String descrip){
+        this.descrip_ka.set(descrip);
+    }
+    
+    public void setDescrip_en(String descrip){
+        this.descrip_en.set(descrip);
     }
     
     public void setDescrip(String descrip){
-        this.descrip.set(descrip);
+        this.balAccountDescrip.set(descrip);
     }
     
 
@@ -159,25 +165,21 @@ public class BalanceAccount extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         BalanceAccount account = (BalanceAccount) other;
-        setCode(account.getCode());
+        setBalAcc(account.getBalAcc());
         setDescrip(account.getDescrip());
+        setActPas(account.getActPas());
+        setLevel(account.getLevel());
+        setIsBase(account.getIsBase());
     }
 
     @Override
     public String toStringForSearch() {
-        return getCode() + getDescrip().toLowerCase();
+        return getBalAcc() + getDescrip().toLowerCase();
     }
     
     @Override
     public String toString(){
-        return getCode() + "|" + getDescrip();
+        return getBalAcc() + " - " + getDescrip();
     }
     
-    private class ColumnValueFactory implements Callback<TreeTableColumn.CellDataFeatures<BalanceAccount, String>, ObservableValue<String>> {
-
-        @Override
-        public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<BalanceAccount, String> param) {
-            return new ReadOnlyStringWrapper(param.getValue().getValue().toString());
-        }
-    }
 }
