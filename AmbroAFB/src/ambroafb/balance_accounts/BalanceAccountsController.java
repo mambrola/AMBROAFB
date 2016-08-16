@@ -48,6 +48,7 @@ public class BalanceAccountsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         editorPanelController.setOuterController(this);
         editorPanelController.removeButtonsByFxIDs("#delete", "#edit", "#view", "#add", "#refresh");
+        editorPanelController.setTreeTable(treeTable);
         reAssignTable(null);
     }
 

@@ -174,7 +174,7 @@ public class BalanceAccount extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return getBalAcc() + getDescrip().toLowerCase();
+        return toString();
     }
     
     @Override

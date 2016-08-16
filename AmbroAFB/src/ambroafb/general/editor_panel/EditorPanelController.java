@@ -6,6 +6,7 @@
 package ambroafb.general.editor_panel;
 
 import ambro.ATableView;
+import ambro.ATreeTableView;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -228,17 +229,26 @@ public class EditorPanelController implements Initializable {
         return exit;
     }
     
+    /**
+     * The method saves table data list and also provides to search element in table.
+     * @param table Table component on scene.
+     * @param list  Data list of given table (At the beginning, it may be empty).
+     */
     public void setTableDataList(ATableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
         tableData = list;
         FilteredList<EditorPanelable> filteredData = new FilteredList<>(tableData, p -> true);
         search.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(object -> {
-                return (newValue == null || newValue.isEmpty()|| object.toStringForSearch().contains(newValue.toLowerCase()));
+                return (newValue == null || newValue.isEmpty() || object.toStringForSearch().contains(newValue.toLowerCase()));
             });
         });
         SortedList<EditorPanelable> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(table.comparatorProperty());
         table.setItems(sortedData);
+    }
+    
+    public void setTreeTable(ATreeTableView<EditorPanelable> treeTable){
+        treeTable.makeBindingsForSearchOn(search);
     }
     
     public void buttonsMainPropertysBinder (TableView table){
