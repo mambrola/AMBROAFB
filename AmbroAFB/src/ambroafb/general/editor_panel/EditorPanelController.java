@@ -7,6 +7,7 @@ package ambroafb.general.editor_panel;
 
 import ambro.ATableView;
 import ambro.ATreeTableView;
+import ambro.AView;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -24,7 +25,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
@@ -251,11 +251,11 @@ public class EditorPanelController implements Initializable {
         treeTable.makeBindingsForSearchOn(search);
     }
     
-    public void buttonsMainPropertysBinder (TableView table){
-        delete.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
-        edit.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
-        view.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
-        addBySample.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+    public void buttonsMainPropertysBinder (AView aView){
+        delete.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
+        edit.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
+        view.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
+        addBySample.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
     }
     
     public void setOuterController(Initializable controller){
