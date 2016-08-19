@@ -20,6 +20,6 @@
         <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
     </top>
     <center>
-        <ATableView fx:id="table" initializer="ambroafb.countries.Country" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+        <AFilterableTableView fx:id="aview" initializer="ambroafb.countries.Country" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
     </center>
 </BorderPane>

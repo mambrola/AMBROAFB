@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.*?>
+
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/balanceaccountdialog.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" 
+                              xmlns="http://javafx.com/javafx/8"
+                              fx:controller="ambroafb.balance_accounts.dialog.BalanceAccountDialogController" >
+    <VBox fx:id="formPane" styleClass="vContainer" >
+        <children>
+            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="bal_account_code" styleClass="validationMessage" />
+                            <TextField fx:id="balAccountCode" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="bal_account_name" styleClass="validationMessage" />
+                            <TextField fx:id="balAccountName" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox fx:id="okCancelHbox" styleClass="doubleHeight" alignment="CENTER_RIGHT" spacing="30" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>
+

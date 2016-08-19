@@ -5,7 +5,7 @@
  */
 package ambroafb.invoices;
 
-import ambro.ATableView;
+import ambro.AFilterableTableView;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -26,7 +26,7 @@ import org.json.JSONObject;
 public class InvoicesController implements Initializable {
 
     @FXML
-    private ATableView<EditorPanelable> table;
+    private AFilterableTableView<EditorPanelable> aview;
     
     @FXML
     private EditorPanelController editorPanelController;
@@ -44,10 +44,10 @@ public class InvoicesController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        table.setBundle(rb);
+        aview.setBundle(rb);
         editorPanelController.setOuterController(this);
-        editorPanelController.buttonsMainPropertysBinder(table);
-        editorPanelController.setTableDataList(table, invoices);
+        editorPanelController.buttonsMainPropertysBinder(aview);
+        editorPanelController.setTableDataList(aview, invoices);
     }
     
     public void reAssignTable(JSONObject jsonFilter) {

@@ -5,7 +5,7 @@
  */
 package ambroafb.clients;
 
-import ambro.ATableView;
+import ambro.AFilterableTableView;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -26,7 +26,7 @@ import org.json.JSONObject;
 public class ClientsController implements Initializable {
 
     @FXML
-    private ATableView<EditorPanelable> table;
+    private AFilterableTableView<EditorPanelable> aview;
     
     @FXML
     private EditorPanelController editorPanelController;
@@ -44,9 +44,9 @@ public class ClientsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         editorPanelController.setOuterController(this);
-        table.setBundle(rb);
-        editorPanelController.buttonsMainPropertysBinder(table);
-        editorPanelController.setTableDataList(table, clients);
+        aview.setBundle(rb);
+        editorPanelController.buttonsMainPropertysBinder(aview);
+        editorPanelController.setTableDataList(aview, clients);
     }
 
     public void reAssignTable(JSONObject filterJson) {

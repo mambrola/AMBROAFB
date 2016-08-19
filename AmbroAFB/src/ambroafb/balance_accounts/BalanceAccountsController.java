@@ -5,7 +5,7 @@
  */
 package ambroafb.balance_accounts;
 
-import ambro.ATreeTableView;
+import ambro.AFilterableTreeTableView;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -28,7 +28,7 @@ import org.json.JSONObject;
 public class BalanceAccountsController implements Initializable {
 
     @FXML
-    private ATreeTableView<EditorPanelable> treeTable;
+    private AFilterableTreeTableView<EditorPanelable> aview;
     
     @FXML
     private MaskerPane masker;
@@ -47,8 +47,8 @@ public class BalanceAccountsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         editorPanelController.setOuterController(this);
-        editorPanelController.buttonsMainPropertysBinder(treeTable);
-        editorPanelController.setTreeTable(treeTable);
+        editorPanelController.buttonsMainPropertysBinder(aview);
+        editorPanelController.setTreeTable(aview);
         reAssignTable(null);
     }
 
@@ -76,9 +76,9 @@ public class BalanceAccountsController implements Initializable {
             });
             Platform.runLater(() -> {
                 roots.stream().forEach((account) -> {
-                    treeTable.append(account);
+                    aview.append(account);
                 });
-                treeTable.expand(1);
+                aview.expand(1);
                 masker.setVisible(false); 
             });
         }

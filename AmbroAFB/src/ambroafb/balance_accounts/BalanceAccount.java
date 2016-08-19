@@ -5,7 +5,7 @@
  */
 package ambroafb.balance_accounts;
 
-import ambro.ATreeTableView;
+import ambro.AFilterableTreeTableView;
 import ambro.AView;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
@@ -14,12 +14,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -36,12 +39,14 @@ public class BalanceAccount extends EditorPanelable {
     private boolean actPas;
     private boolean level;
     private boolean isBase;
-    private final IntegerProperty balAcc; // This place is because of balAccountDescrip binding.
+    private final StringProperty balAcc; // This place is because of balAccountDescrip binding.
     
     @AView.Column(title = "%bal_accouns", width = "800")
-    private final StringProperty balAccountDescrip;
+    private final StringProperty aviewColumnText;
     
-    @ATreeTableView.Children
+    private final StringProperty currDescrip;
+    
+    @AFilterableTreeTableView.Children
     @JsonIgnore
     public final ObservableList<EditorPanelable> childrenAccounts = FXCollections.observableArrayList();
     
@@ -49,15 +54,21 @@ public class BalanceAccount extends EditorPanelable {
     @JsonIgnore
     public final ObservableList<String> rowStyle = FXCollections.observableArrayList();
     
+    private String langId;
     
     public BalanceAccount(){
-        balAcc = new SimpleIntegerProperty();
+        balAcc = new SimpleStringProperty();
         descrip_ka = new SimpleStringProperty();
         descrip_en = new SimpleStringProperty();
-        balAccountDescrip = new SimpleStringProperty();
-        balAccountDescrip.bind(Bindings.createStringBinding(() -> {
-            String langId = GeneralConfig.getInstance().getCurrentLocal().getLanguage();
-            return balAcc.get() + " - " + ((langId.equals("ka")) ? descrip_ka.get() : descrip_en.get());
+        aviewColumnText = new SimpleStringProperty();
+        currDescrip = new SimpleStringProperty();
+        langId = GeneralConfig.getInstance().getCurrentLocal().getLanguage();
+        
+        currDescrip.bind(Bindings.createStringBinding(() -> {
+            return ((langId.equals("ka")) ? descrip_ka.get() : descrip_en.get());
+        }, balAcc));
+        aviewColumnText.bind(Bindings.createStringBinding(() -> {
+            return balAcc.get() + " - " + currDescrip.get();
         }, balAcc));
     }
     
@@ -73,18 +84,34 @@ public class BalanceAccount extends EditorPanelable {
         return null;
     }
     
+    public static BalanceAccount getOneFromDB(int recId){
+        try {
+            Class.forName(GeneralConfig.getInstance().classForName);
+            String url = "jdbc:mysql://localhost:3307/kfz_db";
+            String user = "myxuser";
+            String password = "Unabi%11";
+            Connection conn = DriverManager.getConnection(url, user, password);
+            Statement stm = conn.createStatement();
+            ResultSet set = stm.executeQuery("select * from bal_accounts where rec_id = " + recId);
+            while(set.next()){
+                System.out.println("set.getString: " + set.getString(3));
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     
     // Properties getters:
-    public IntegerProperty codeProperty(){
+    public StringProperty codeProperty(){
         return balAcc;
     }
     
-    public StringProperty descripKaProperty(){
-        return descrip_ka;
-    }
-
-    public StringProperty descripEnProperty() {
-        return descrip_en;
+    public StringProperty currDescripProperty(){
+        return currDescrip;
     }
 
     public boolean getActPas() {
@@ -102,19 +129,27 @@ public class BalanceAccount extends EditorPanelable {
     
     // Getters:
     public int getBalAcc(){
-        return balAcc.get();
+        return Integer.parseInt(balAcc.get());
     }
     
+    /**
+     * For JSON
+     * @return 
+     */
     public String getDescrip_ka(){
         return descrip_ka.get();
     }
     
+    /**
+     * For JSON
+     * @return 
+     */
     public String getDescrip_en(){
         return descrip_en.get();
     }
     
-    public String getDescrip(){
-        return balAccountDescrip.get();
+    public String getAViewColumText(){
+        return aviewColumnText.get();
     }
 
     public void setActPas(boolean act_pas) {
@@ -132,19 +167,27 @@ public class BalanceAccount extends EditorPanelable {
     
     // Setters:
     public void setBalAcc(int code){
-        this.balAcc.set(code);
+        this.balAcc.set("" + code);
     }
     
+    /**
+     * For JSON
+     * @param descrip New Description for Georgia.
+     */
     public void setDescrip_ka(String descrip){
         this.descrip_ka.set(descrip);
     }
     
+    /**
+     * For JSON
+     * @param descrip New Description for English.
+     */
     public void setDescrip_en(String descrip){
         this.descrip_en.set(descrip);
     }
     
-    public void setDescrip(String descrip){
-        this.balAccountDescrip.set(descrip);
+    public void setAViewColumnText(String descrip){
+        this.aviewColumnText.set(descrip);
     }
     
 
@@ -166,7 +209,7 @@ public class BalanceAccount extends EditorPanelable {
     public void copyFrom(EditorPanelable other) {
         BalanceAccount account = (BalanceAccount) other;
         setBalAcc(account.getBalAcc());
-        setDescrip(account.getDescrip());
+        setAViewColumnText(account.getAViewColumText());
         setActPas(account.getActPas());
         setLevel(account.getLevel());
         setIsBase(account.getIsBase());
@@ -179,7 +222,12 @@ public class BalanceAccount extends EditorPanelable {
     
     @Override
     public String toString(){
-        return getBalAcc() + " - " + getDescrip();
+        return getBalAcc() + " - " + getAViewColumText();
+    }
+
+    public boolean compares(BalanceAccount balAccountBackup) {
+        return  getBalAcc() == balAccountBackup.getBalAcc() && 
+                currDescripProperty().get().equals(balAccountBackup.currDescripProperty().get());
     }
     
 }

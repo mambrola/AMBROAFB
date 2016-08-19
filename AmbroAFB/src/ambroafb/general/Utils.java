@@ -490,6 +490,9 @@ public class Utils {
                 result = result && checkValidationForIsNotEmptyAnnotation(field, currentClassObject);
             }
             if (field.isAnnotationPresent(ContentMail.class)) {
+                result = result && checkValidationForContentMailAnnotation(field, currentClassObject);
+            }
+            if (field.isAnnotationPresent(ContentPattern.class)){
                 result = result && checkValidationForContentPatternAnnotation(field, currentClassObject);
             }
         }
@@ -511,7 +514,7 @@ public class Utils {
         return result;
     }
 
-    private static boolean checkValidationForContentPatternAnnotation(Field field, Object classObject) {
+    private static boolean checkValidationForContentMailAnnotation(Field field, Object classObject) {
         boolean result = true;
         ContentMail annotation = field.getAnnotation(ContentMail.class);
 
@@ -529,6 +532,11 @@ public class Utils {
             changeNodeVisualByEmpty((Node) typeAndContent[0], "");
         }
         return result;
+    }
+    
+    private static boolean checkValidationForContentPatternAnnotation(Field field, Object classObject){
+        System.out.println("anotation logic...");
+        return true;
     }
 
     private static Object[] getNodesTypeAndContent(Field field, Object classObject) {
@@ -641,7 +649,6 @@ public class Utils {
         if (childrenPath.isEmpty()) {
             System.out.println("sharp: " + (String)bidmap.getKey(currStage));
             if (currStage instanceof Dialogable) {
-//                if (currStagePath.endsWith(Names.LEVEL_FOR_PATH)) {
                 if (currStage.getOnCloseRequest() == null) {
                     currStage.close();
                 } else {

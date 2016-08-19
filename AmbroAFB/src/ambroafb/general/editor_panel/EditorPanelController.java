@@ -5,8 +5,9 @@
  */
 package ambroafb.general.editor_panel;
 
+import ambro.AFilterableTableView;
 import ambro.ATableView;
-import ambro.ATreeTableView;
+import ambro.AFilterableTreeTableView;
 import ambro.AView;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
@@ -16,9 +17,8 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -74,7 +74,7 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (dialogStage == null || !dialogStage.isShowing()){
-            EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
+            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
             EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.getRecId());
             if (real != null) {
@@ -101,7 +101,7 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (dialogStage == null || !dialogStage.isShowing()){
-            EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
+            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
             EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.getRecId());
             if (real != null) {
@@ -131,7 +131,7 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
-            EditorPanelable selected = (EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem();
+            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT)), "getOneFromDB", new Class[]{int.class}, null, selected.getRecId());
             if (real != null) {
                 selected.copyFrom(real);
@@ -177,7 +177,7 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
-            EditorPanelable selected = ((EditorPanelable)((ATableView)exit.getScene().lookup("#table")).getSelectionModel().getSelectedItem()).cloneWithoutID();
+            EditorPanelable selected = ((EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem()).cloneWithoutID();
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
 
@@ -200,8 +200,7 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage filterStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (filterStage == null || !filterStage.isShowing()){
-            ATableView table = (ATableView)exit.getScene().lookup("#table");
-            EditorPanelable selected = (EditorPanelable)table.getSelectionModel().getSelectedItem();
+            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
  
             Class className = Utils.getClassByName(getClassName(CLASS_TYPE.FILTER));
             Filterable filter = (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow());
@@ -234,28 +233,33 @@ public class EditorPanelController implements Initializable {
      * @param table Table component on scene.
      * @param list  Data list of given table (At the beginning, it may be empty).
      */
-    public void setTableDataList(ATableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
+    public void setTableDataList(AFilterableTableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
         tableData = list;
-        FilteredList<EditorPanelable> filteredData = new FilteredList<>(tableData, p -> true);
-        search.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(object -> {
-                return (newValue == null || newValue.isEmpty() || object.toStringForSearch().contains(newValue.toLowerCase()));
-            });
-        });
-        SortedList<EditorPanelable> sortedData = new SortedList<>(filteredData);
-        sortedData.comparatorProperty().bind(table.comparatorProperty());
-        table.setItems(sortedData);
+        table.setItems(list);
+        table.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().contains(search.getText().toLowerCase()));
     }
     
-    public void setTreeTable(ATreeTableView<EditorPanelable> treeTable){
-        treeTable.makeBindingsForSearchOn(search);
+    public void setTreeTable(AFilterableTreeTableView<EditorPanelable> treeTable){
+        treeTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().contains(search.getText().toLowerCase()));
     }
     
-    public void buttonsMainPropertysBinder (AView aView){
+    public void buttonsMainPropertysBinder (AFilterableTableView<EditorPanelable> aView){
         delete.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
         edit.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
         view.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
         addBySample.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
+    }
+    
+    
+    public void buttonsMainPropertysBinder (AFilterableTreeTableView<EditorPanelable> treeTable){
+        delete.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            if (treeTable.getSelectionModel().selectedItemProperty().isNull().get())
+                return true;
+            return !treeTable.getSelectionModel().getSelectedItem().isLeaf();
+        }, treeTable.getSelectionModel().selectedItemProperty()));
+        edit.disableProperty().bind(treeTable.getCustomSelectionModel().selectedItemProperty().isNull());
+        view.disableProperty().bind(treeTable.getCustomSelectionModel().selectedItemProperty().isNull());
+        addBySample.disableProperty().bind(treeTable.getCustomSelectionModel().selectedItemProperty().isNull());
     }
     
     public void setOuterController(Initializable controller){

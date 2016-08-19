@@ -22,7 +22,7 @@
     </top>
     <center>
         <StackPane >
-            <ATableView fx:id="table" initializer="ambroafb.products.Product" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+            <AFilterableTableView fx:id="aview" initializer="ambroafb.products.Product" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
             <MaskerPane fx:id="masker" visible="false" text="%loading"/>
         </StackPane>
     </center>
