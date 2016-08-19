@@ -8,7 +8,6 @@ package ambroafb.balance_accounts.dialog;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
-import ambroafb.general.interfaces.Annotations;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
@@ -31,12 +30,12 @@ public class BalanceAccountDialogController implements Initializable {
     private VBox formPane;
     
     @FXML
-    @Annotations.ContentNotEmpty
+//    @Annotations.ContentNotEmpty
     private TextField  balAccountName;
     
     @FXML
-    @Annotations.ContentNotEmpty
-    @Annotations.ContentPattern(value="([0,9]{,4})", explain="The length must be four and content only digits.")
+//    @Annotations.ContentNotEmpty
+//    @Annotations.ContentPattern(value="([0,9]{,4})", explain="The length must be four and content only digits.")
     private TextField  balAccountCode;
     
     @FXML
@@ -60,8 +59,8 @@ public class BalanceAccountDialogController implements Initializable {
     public void bindBalAccount(BalanceAccount balAccount) {
         this.balAccount = balAccount;
         if (balAccount != null){
-            balAccountCode.textProperty().bindBidirectional(balAccount.codeProperty());
-            balAccountName.textProperty().bindBidirectional(balAccount.currDescripProperty());
+//            balAccountCode.textProperty().bindBidirectional(balAccount.codeProperty());
+//            balAccountName.textProperty().bindBidirectional(balAccount.currDescripProperty());
         }
     }
     
