@@ -10,6 +10,7 @@ import ambro.AView;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.TestDataFromDB;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -21,7 +22,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -33,15 +34,15 @@ import javafx.collections.ObservableList;
  */
 public class BalanceAccount extends EditorPanelable {
 
+    private final StringProperty balAcc;
     private final StringProperty descrip_ka;
     private final StringProperty descrip_en;
     private boolean actPas;
     private boolean level;
     private boolean isBase;
-    private final StringProperty balAcc; // This place is because of balAccountDescrip binding.
     
     @AView.Column(title = "%bal_accouns", width = "800")
-    private final StringProperty aviewColumnText;
+    private final StringExpression aviewColumnText;
     
     private final StringProperty currDescrip;
     
@@ -53,28 +54,13 @@ public class BalanceAccount extends EditorPanelable {
     @JsonIgnore
     public final ObservableList<String> rowStyle = FXCollections.observableArrayList();
     
-    private String langId;
-    
     public BalanceAccount(){
         balAcc = new SimpleStringProperty();
         descrip_ka = new SimpleStringProperty();
         descrip_en = new SimpleStringProperty();
-        aviewColumnText = new SimpleStringProperty();
-        currDescrip = new SimpleStringProperty();
-        langId = GeneralConfig.getInstance().getCurrentLocal().getLanguage();
         
-//        currDescrip.bind(Bindings.createStringBinding(() -> {
-//            return ((langId.equals("ka")) ? descrip_ka.get() : descrip_en.get());
-//        }, balAcc));
-        aviewColumnText.bind(Bindings.createStringBinding(() -> {
-            return balAcc.get() + " - " + currDescripProperty().get();
-        }, balAcc));
-//        aviewColumnText.bind(Bindings.createStringBinding(() -> {
-//            return balAcc.get() + " - " + descrip_ka.get();
-//        }, descrip_ka));
-//        aviewColumnText.bind(Bindings.createStringBinding(() -> {
-//            return balAcc.get() + " - " + descrip_en.get();
-//        }, descrip_en));
+        currDescrip = (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_ka : descrip_en;
+        aviewColumnText = Utils.avoidNull(balAcc).concat(" - ").concat(Utils.avoidNull(currDescrip));
     }
     
     
@@ -117,7 +103,7 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     public StringProperty currDescripProperty(){
-        return ((langId.equals("ka")) ? descrip_ka : descrip_en);
+        return currDescrip;
     }
 
     public boolean getActPas() {
@@ -192,10 +178,6 @@ public class BalanceAccount extends EditorPanelable {
         this.descrip_en.set(descrip);
     }
     
-    public void setAViewColumnText(String descrip){
-        this.aviewColumnText.set(descrip);
-    }
-    
 
     @Override
     public BalanceAccount cloneWithoutID() {
@@ -218,7 +200,6 @@ public class BalanceAccount extends EditorPanelable {
         setDescrip_en(account.getDescrip_en());
         setBalAcc(account.getBalAcc());
         setActPas(account.getActPas());
-//        setAViewColumnText(account.getAViewColumText());
 //        setLevel(account.getLevel());
 //        setIsBase(account.getIsBase());
     }
