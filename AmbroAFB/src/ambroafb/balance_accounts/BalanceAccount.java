@@ -55,16 +55,16 @@ public class BalanceAccount extends EditorPanelable {
     
     @AFilterableTreeTableView.Children
     @JsonIgnore
-    public final ObservableList<EditorPanelable> childrenAccounts = FXCollections.observableArrayList();
+    public final ObservableList<BalanceAccount> childrenAccounts = FXCollections.observableArrayList();
     
     @AView.RowStyles
     @JsonIgnore
     public final ObservableList<String> rowStyle = FXCollections.observableArrayList();
     
     public BalanceAccount(){
-        balAcc = new SimpleStringProperty();
-        descrip_ka = new SimpleStringProperty();
-        descrip_en = new SimpleStringProperty();
+        balAcc = new SimpleStringProperty("");
+        descrip_ka = new SimpleStringProperty("");
+        descrip_en = new SimpleStringProperty("");
         
         currDescrip = (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_ka : descrip_en;
         aviewColumnText = Utils.avoidNull(balAcc).concat(" - ").concat(Utils.avoidNull(currDescrip));
@@ -136,7 +136,7 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     public int getBalAcc(){
-        return Integer.parseInt(balAcc.get());
+        return (balAcc.isNotEmpty().get()) ? Integer.parseInt(balAcc.get()) : 0;
     }
     
     /**

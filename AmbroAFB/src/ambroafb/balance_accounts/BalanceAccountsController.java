@@ -17,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
 
@@ -28,7 +29,7 @@ import org.json.JSONObject;
 public class BalanceAccountsController implements Initializable {
 
     @FXML
-    private AFilterableTreeTableView<EditorPanelable> aview;
+    private AFilterableTreeTableView<EditorPanelable> aview; // this name is need for editorPanel
     
     @FXML
     private MaskerPane masker;
@@ -37,7 +38,7 @@ public class BalanceAccountsController implements Initializable {
     private EditorPanelController editorPanelController;
             
     
-//    private final ObservableList<EditorPanelable> accounts = FXCollections.observableArrayList();
+    private final ObservableList<BalanceAccount> roots = FXCollections.observableArrayList();
     
     /**
      * Initializes the controller class.
@@ -53,18 +54,72 @@ public class BalanceAccountsController implements Initializable {
     }
 
     public void reAssignTable(JSONObject filterJson){
-        new Thread(new BalanceAccountsFromDB()).start();
+        new Thread(new BalanceAccountsFromDB(roots)).start();
     }
     
     public EditorPanelController getEditorPanelController(){
         return editorPanelController;
     }
     
+    public boolean accountAlreadyExistForCode(String balAccCode){
+        boolean result = false;
+        for (BalanceAccount root : roots) {
+            result = result || existAccount(root, Integer.parseInt(balAccCode));
+        }
+        return result;
+    }
+    
+    private boolean existAccount(BalanceAccount account, int code){
+        boolean result = false;
+        if (account.getBalAcc() == code)
+            result = true;
+        else{
+            for (BalanceAccount childAccount : account.childrenAccounts) {
+                result = result || existAccount(childAccount, code);
+            }
+        }
+        return result;
+    }
+    
+    public boolean accountHasParent(String balAccCode){
+        boolean result = false;
+        for (BalanceAccount account : roots) {
+            result = result || containsChildForCode(account, balAccCode);
+        }
+        return result;
+    }
+    
+    private boolean containsChildForCode(BalanceAccount account, String code){
+        boolean result = false;
+        String accounCode = "" + account.getBalAcc();
+        if (isDirectChildNode(accounCode, code)) 
+            result = true;
+        else{
+            for (BalanceAccount childAccount : account.childrenAccounts) {
+                result = result || containsChildForCode(childAccount, code);
+            }
+        }
+        return result;
+    }
+    
+    private boolean isDirectChildNode(String accountCode, String code){
+        String commonPrefix = StringUtils.getCommonPrefix(accountCode, code);
+        String currAccCodeAfterPrefix = StringUtils.substringAfter(accountCode, commonPrefix);
+        String searchCodeAfterPrefix = StringUtils.substringAfter(code, commonPrefix);
+        return currAccCodeAfterPrefix.length() > 1 && 
+               currAccCodeAfterPrefix.charAt(0) == '0' && 
+               searchCodeAfterPrefix.charAt(0) != '0';
+    }
+    
     
     private class BalanceAccountsFromDB implements Runnable {
 
-        private final ObservableList<BalanceAccount> roots = FXCollections.observableArrayList();
+        private final ObservableList<BalanceAccount> roots;
         private final Map<Integer, BalanceAccount> items = new HashMap<>();
+        
+        public BalanceAccountsFromDB(ObservableList<BalanceAccount> roots){
+            this.roots = roots;
+        }
         
         @Override
         public void run() {

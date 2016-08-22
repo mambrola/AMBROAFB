@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ambroafb.general.DialogPanel id="AnchorPane" 
+            xmlns:fx="http://javafx.com/fxml/1">
+    
+    <Label text="BalanceAccountFilter" />
+    <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
+        <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
+    </HBox>
+</ambroafb.general.DialogPanel>

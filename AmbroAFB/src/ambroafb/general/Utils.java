@@ -492,8 +492,8 @@ public class Utils {
             if (field.isAnnotationPresent(ContentMail.class)) {
                 result = result && checkValidationForContentMailAnnotation(field, currentClassObject);
             }
-            if (field.isAnnotationPresent(ContentPattern.class)){
-                result = result && checkValidationForContentPatternAnnotation(field, currentClassObject);
+            if (field.isAnnotationPresent(ContentTreeItem.class)){
+                result = result && checkValidationForContentTreeItemAnnotation(field, currentClassObject);
             }
         }
         return result;
@@ -506,10 +506,10 @@ public class Utils {
         Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
         String text = (String) typeAndContent[1];
         if (annotation.value() && text.isEmpty()) {
-            changeNodeVisualByEmpty((Node) typeAndContent[0], annotation.explain());
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
             result = false;
         } else {
-            changeNodeVisualByEmpty((Node) typeAndContent[0], "");
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
         }
         return result;
     }
@@ -523,20 +523,45 @@ public class Utils {
         boolean validSyntax = Pattern.matches(annotation.valueForSyntax(), (String) typeAndContent[1]);
         boolean validAlphabet = Pattern.matches(annotation.valueForAlphabet(), (String) typeAndContent[1]);
         if (!validSyntax) {
-            changeNodeVisualByEmpty((Node) typeAndContent[0], annotation.explainForSyntax());
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explainForSyntax());
             result = false;
         } else if (!validAlphabet) {
-            changeNodeVisualByEmpty((Node) typeAndContent[0], annotation.explainForAlphabet());
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explainForAlphabet());
             result = false;
         } else {
-            changeNodeVisualByEmpty((Node) typeAndContent[0], "");
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
         }
         return result;
     }
     
-    private static boolean checkValidationForContentPatternAnnotation(Field field, Object classObject){
-        System.out.println("anotation logic...");
-        return true;
+    private static boolean checkValidationForContentTreeItemAnnotation(Field field, Object classObject){
+        boolean result = true;
+        ContentTreeItem annotation = field.getAnnotation(ContentTreeItem.class);
+        Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+        String content = (String)typeAndContent[1];
+        
+        if (content.length() != Integer.parseInt(annotation.valueForLength())){
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForLength() + annotation.valueForLength());
+            result = false;
+        }
+        else if (!Pattern.matches(annotation.valueForSyntax(), content)){
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForSyntax());
+            result = false;
+        }
+        else {
+            Object contr = getInvokedClassMethod(classObject.getClass(), "getOwnerController", null, classObject);
+            // already exist this item for this code:
+            if ((Boolean)getInvokedClassMethod(contr.getClass(), "accountAlreadyExistForCode", new Class[]{String.class}, contr, content)){
+                changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForExists());
+                result = false;
+            }
+            // item has not a parent:
+            else if (!(Boolean)getInvokedClassMethod(contr.getClass(), "accountHasParent", new Class[]{String.class}, contr, content)){
+                changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForHasNotParent());
+                result = false;
+            }
+        }
+        return result;
     }
 
     private static Object[] getNodesTypeAndContent(Field field, Object classObject) {
@@ -557,16 +582,16 @@ public class Utils {
         return results;
     }
 
-    private static final Map<Label, Paint> labels_colors_map = new HashMap<>();
+    private static final Map<Label, Paint> default_colors_map = new HashMap<>();
 
-    private static void changeNodeVisualByEmpty(Node node, String text) {
+    private static void changeNodeTitleLabelVisual(Node node, String text) {
         Parent parent = node.getParent();
         Label nodeTitleLabel = (Label) parent.lookup(".validationMessage");
 
         if (text.isEmpty()) {
-            if (labels_colors_map.containsKey(nodeTitleLabel)) {// This order of 'if' statements is correct!
-                nodeTitleLabel.setTextFill(labels_colors_map.get(nodeTitleLabel));
-                labels_colors_map.remove(nodeTitleLabel);
+            if (default_colors_map.containsKey(nodeTitleLabel)) {// This order of 'if' statements is correct!
+                nodeTitleLabel.setTextFill(default_colors_map.get(nodeTitleLabel));
+                default_colors_map.remove(nodeTitleLabel);
                 Tooltip.uninstall(nodeTitleLabel, toolTip);
             }
         } else {
@@ -574,7 +599,7 @@ public class Utils {
             toolTip.setText(text);
             toolTip.setStyle("-fx-background-color: gray; -fx-font-size: 8pt;");
             Tooltip.install(nodeTitleLabel, toolTip);
-            labels_colors_map.putIfAbsent(nodeTitleLabel, nodeTitleLabel.getTextFill());
+            default_colors_map.putIfAbsent(nodeTitleLabel, nodeTitleLabel.getTextFill());
             nodeTitleLabel.setTextFill(Color.RED);
         }
     }

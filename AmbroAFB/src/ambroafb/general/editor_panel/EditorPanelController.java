@@ -201,7 +201,7 @@ public class EditorPanelController implements Initializable {
         Stage filterStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (filterStage == null || !filterStage.isShowing()){
             EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
- 
+            
             Class className = Utils.getClassByName(getClassName(CLASS_TYPE.FILTER));
             Filterable filter = (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow());
             JSONObject json = filter.getResult();
@@ -243,23 +243,23 @@ public class EditorPanelController implements Initializable {
         treeTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().contains(search.getText().toLowerCase()));
     }
     
-    public void buttonsMainPropertysBinder (AFilterableTableView<EditorPanelable> aView){
-        delete.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
+    public void buttonsMainPropertysBinder (AView<EditorPanelable> aView){
+        if (aView instanceof AFilterableTreeTableView){
+            AFilterableTreeTableView<EditorPanelable> treeTable = (AFilterableTreeTableView)aView;
+            delete.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+                if (aView.getCustomSelectionModel().selectedItemProperty().isNull().get()) {
+                    return true;
+                }
+                return !treeTable.getSelectionModel().getSelectedItem().isLeaf();
+            }, aView.getCustomSelectionModel().selectedItemProperty()));
+        }
+        else if (aView instanceof AFilterableTableView){
+            AFilterableTableView<EditorPanelable> table = (AFilterableTableView) aView;
+            delete.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
+        }
         edit.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
         view.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
         addBySample.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
-    }
-    
-    
-    public void buttonsMainPropertysBinder (AFilterableTreeTableView<EditorPanelable> treeTable){
-        delete.disableProperty().bind(Bindings.createBooleanBinding(() -> {
-            if (treeTable.getSelectionModel().selectedItemProperty().isNull().get())
-                return true;
-            return !treeTable.getSelectionModel().getSelectedItem().isLeaf();
-        }, treeTable.getSelectionModel().selectedItemProperty()));
-        edit.disableProperty().bind(treeTable.getCustomSelectionModel().selectedItemProperty().isNull());
-        view.disableProperty().bind(treeTable.getCustomSelectionModel().selectedItemProperty().isNull());
-        addBySample.disableProperty().bind(treeTable.getCustomSelectionModel().selectedItemProperty().isNull());
     }
     
     public void setOuterController(Initializable controller){

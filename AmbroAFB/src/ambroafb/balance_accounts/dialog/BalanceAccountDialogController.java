@@ -8,6 +8,7 @@ package ambroafb.balance_accounts.dialog;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
+import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
@@ -19,6 +20,8 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 /**
  * FXML Controller class
@@ -31,13 +34,13 @@ public class BalanceAccountDialogController implements Initializable {
     private VBox formPane;
     
     @FXML
-//    @Annotations.ContentNotEmpty
-    private TextField  balAccountName;
+    @ContentNotEmpty
+    @ContentTreeItem(valueForLength = "4", valueForSyntax = "[0-9]+")
+    private TextField  balAccountCode;
     
     @FXML
-//    @Annotations.ContentNotEmpty
-//    @Annotations.ContentPattern(value="([0,9]{,4})", explain="The length must be four and content only digits.")
-    private TextField  balAccountCode;
+    @ContentNotEmpty
+    private TextField  balAccountName;
     
     @FXML
     private CheckBox actPassChecker;
@@ -77,6 +80,9 @@ public class BalanceAccountDialogController implements Initializable {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.EDIT)){
+            balAccountCode.setDisable(true);
+        }
         okayCancelController.setButtonsFeatures(buttonType);
     }
     
@@ -104,5 +110,10 @@ public class BalanceAccountDialogController implements Initializable {
     
     public boolean getPermissionToClose(){
         return permissionToClose;
+    }
+    
+    public Object getOwnerController(){
+        Window ownerStage = ((Stage)balAccountCode.getScene().getWindow()).getOwner();
+        return ownerStage.getScene().getProperties().get("controller");
     }
 }
