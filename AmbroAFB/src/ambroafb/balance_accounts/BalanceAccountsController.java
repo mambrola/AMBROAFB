@@ -86,17 +86,16 @@ public class BalanceAccountsController implements Initializable {
         
         private void makeTreeStructure(BalanceAccount account) {
             int accountCode = account.getBalAcc();
-            if (accountCode % 10 != 0) return;
             items.put(accountCode, account);
             if (accountCode % 1000 == 0) {
                     account.rowStyle.add("font" + 8 + "Size");
                     roots.add(account);
             } else {
-                int reminder = 0;
+                int reminder;
                 if (accountCode % 100 == 0) {
                     reminder = accountCode % 1000;
                     account.rowStyle.add("font" + 4 + "Size");
-                } else if (accountCode % 10 == 0) {
+                } else {
                     account.rowStyle.add("font" + 2 + "Size");
                     reminder = accountCode % 100;
                 }

@@ -231,14 +231,11 @@ public class BalanceAccount extends EditorPanelable {
     }
 
     public boolean compares(BalanceAccount balAccountBackup) {
-        System.out.println("curr bal_code: " + getBalAcc() + "  backup code: " + balAccountBackup.getBalAcc());
-        System.out.println("curr column: " + currDescripProperty().get() + "  backup column: " + balAccountBackup.currDescripProperty().get());
-        System.out.println("curr act_pas: " + getActPas() + "  backup column: " + balAccountBackup.getActPas());
-        
         return  getActPas() == balAccountBackup.getActPas() &&
                 getBalAcc() == balAccountBackup.getBalAcc() && 
                 currDescripProperty().get().equals(balAccountBackup.currDescripProperty().get());
     }
+    
     
     private class ActPasValueFactory implements Callback<TreeTableColumn.CellDataFeatures<BalanceAccount, String>, ObservableValue<String>> {
 
