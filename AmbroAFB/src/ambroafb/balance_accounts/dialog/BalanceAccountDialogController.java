@@ -16,6 +16,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -37,6 +38,9 @@ public class BalanceAccountDialogController implements Initializable {
 //    @Annotations.ContentNotEmpty
 //    @Annotations.ContentPattern(value="([0,9]{,4})", explain="The length must be four and content only digits.")
     private TextField  balAccountCode;
+    
+    @FXML
+    private CheckBox actPassChecker;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -61,6 +65,7 @@ public class BalanceAccountDialogController implements Initializable {
         if (balAccount != null){
             balAccountCode.textProperty().bindBidirectional(balAccount.codeProperty());
             balAccountName.textProperty().bindBidirectional(balAccount.currDescripProperty());
+            actPassChecker.selectedProperty().bindBidirectional(balAccount.actPasProperty());
         }
     }
     

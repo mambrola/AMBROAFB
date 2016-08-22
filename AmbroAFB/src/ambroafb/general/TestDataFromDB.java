@@ -21,16 +21,14 @@ public class TestDataFromDB {
 
     public static Statement getStatement() {
         try {
-            Class.forName(GeneralConfig.getInstance().classForName);
+            Class.forName(GeneralConfig.classForName);
             String url = "jdbc:mysql://localhost:3307/kfz_db";
             String user = "root";
             String password = "Unabi11liB9leoa*1dh";
             Connection conn = DriverManager.getConnection(url, user, password);
             Statement stm = conn.createStatement();
             return stm;
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
