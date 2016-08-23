@@ -117,6 +117,7 @@ public class BalanceAccount extends EditorPanelable {
         return currDescrip;
     }
     
+    
     public BooleanProperty actPasProperty(){
         return actPas;
     }
