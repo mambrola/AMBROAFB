@@ -298,13 +298,16 @@ public class EditorPanelController implements Initializable {
 
     private void selectOneAgain(EditorPanelable selected) {
         if (selected == null) return;
-        ATableView table = (ATableView) exit.getScene().lookup("#table");
-        int i = table.getItems().size() - 1;
-        while (i >= 0 && ((EditorPanelable) table.getItems().get(i)).getRecId() != selected.getRecId()) {
-            i--;
-        }
-        if (i >= 0) {
-            table.getSelectionModel().select(i);
+        AView aview = (AView) exit.getScene().lookup("#aview");
+        if (aview instanceof ATableView){
+            ATableView table = (ATableView)aview;
+            int i = table.getItems().size() - 1;
+            while (i >= 0 && ((EditorPanelable) table.getItems().get(i)).getRecId() != selected.getRecId()) {
+                i--;
+            }
+            if (i >= 0) {
+                table.getSelectionModel().select(i);
+            }
         }
     }
 }

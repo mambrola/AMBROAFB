@@ -54,6 +54,8 @@ public class BalanceAccountsController implements Initializable {
     }
 
     public void reAssignTable(JSONObject filterJson){
+        roots.clear();
+        aview.removeAll();
         new Thread(new BalanceAccountsFromDB(roots)).start();
     }
     
