@@ -6,6 +6,7 @@
 package ambroafb.general;
     
 import ambroafb.AmbroAFB;
+import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +35,7 @@ import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.EditorPanelable;
 import java.lang.reflect.Field;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -463,12 +465,12 @@ public class Utils {
      * This class invokes a specific method ("methodName" parameter) for the
      * "owner" class.
      *
-     * @param methodName - name of method in its class
-     * @param argsTypes - arguments types
-     * @param owner - class object which owned the method
-     * @param object - object, witch (non!) static method will be invoke
-     * @param argsValues - arguments value for method
-     * @return - object will be null if we invokes a void type method, otherwise
+     * @param owner Class object which owned the method
+     * @param methodName Name of method in its class
+     * @param argsTypes Arguments types
+     * @param object Object, witch (non!) static method will be invoke
+     * @param argsValues Arguments value for method
+     * @return object Will be null if we invokes a void type method, otherwise
      * will return a specific object of class.
      */
     public static Object getInvokedClassMethod(Class owner, String methodName, Class<?>[] argsTypes, Object object, Object... argsValues) {
@@ -481,7 +483,7 @@ public class Utils {
         return result;
     }
 
-    public static boolean everyFieldContentIsValidFor(Object currentClassObject) {
+    public static boolean everyFieldContentIsValidFor(Object currentClassObject, EDITOR_BUTTON_TYPE type) {
         boolean result = true;
         Field[] fields = currentClassObject.getClass().getDeclaredFields();
 
@@ -493,7 +495,7 @@ public class Utils {
                 result = result && checkValidationForContentMailAnnotation(field, currentClassObject);
             }
             if (field.isAnnotationPresent(ContentTreeItem.class)){
-                result = result && checkValidationForContentTreeItemAnnotation(field, currentClassObject);
+                result = result && checkValidationForContentTreeItemAnnotation(field, currentClassObject, type);
             }
         }
         return result;
@@ -514,11 +516,11 @@ public class Utils {
         return result;
     }
 
-    private static boolean checkValidationForContentMailAnnotation(Field field, Object classObject) {
+    private static boolean checkValidationForContentMailAnnotation(Field field, Object currSceneController) {
         boolean result = true;
         ContentMail annotation = field.getAnnotation(ContentMail.class);
 
-        Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+        Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
 
         boolean validSyntax = Pattern.matches(annotation.valueForSyntax(), (String) typeAndContent[1]);
         boolean validAlphabet = Pattern.matches(annotation.valueForAlphabet(), (String) typeAndContent[1]);
@@ -534,10 +536,10 @@ public class Utils {
         return result;
     }
     
-    private static boolean checkValidationForContentTreeItemAnnotation(Field field, Object classObject){
+    private static boolean checkValidationForContentTreeItemAnnotation(Field field, Object currSceneController, EDITOR_BUTTON_TYPE  type){
         boolean result = true;
         ContentTreeItem annotation = field.getAnnotation(ContentTreeItem.class);
-        Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+        Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
         String content = (String)typeAndContent[1];
         
         if (content.length() != Integer.parseInt(annotation.valueForLength())){
@@ -549,9 +551,10 @@ public class Utils {
             result = false;
         }
         else {
-            Object contr = getInvokedClassMethod(classObject.getClass(), "getOwnerController", null, classObject);
+            EditorPanelable newPanelableObject = (EditorPanelable) getInvokedClassMethod(currSceneController.getClass(), "getNewEditorPanelable", null, currSceneController);
+            Object contr = getInvokedClassMethod(currSceneController.getClass(), "getOwnerController", null, currSceneController);
             // already exist this item for this code:
-            if ((Boolean)getInvokedClassMethod(contr.getClass(), "accountAlreadyExistForCode", new Class[]{String.class}, contr, content)){
+            if ((Boolean)getInvokedClassMethod(contr.getClass(), "accountAlreadyExistForCode", new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, contr, newPanelableObject, type)){
                 changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForExists());
                 result = false;
             }

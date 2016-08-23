@@ -71,7 +71,7 @@ public class DialogOkayCancelController implements Initializable {
                 okay.setOnAction((ActionEvent event) -> {
                     Scene currScene = okay.getScene();
                     Object controller = currScene.getProperties().get("controller");
-                    boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller);
+                    boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller, type);
                     if (allRequiredFieldsAreValid){
                         changeClosePermissionForStage(true);
                         ((Stage) okay.getScene().getWindow()).close();

@@ -109,7 +109,7 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     // Properties getters:
-    public StringProperty codeProperty(){
+    public StringProperty balAccProperty(){
         return balAcc;
     }
     

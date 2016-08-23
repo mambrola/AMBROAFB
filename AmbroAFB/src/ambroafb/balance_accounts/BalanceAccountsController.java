@@ -6,10 +6,13 @@
 package ambroafb.balance_accounts;
 
 import ambro.AFilterableTreeTableView;
+import ambroafb.general.Names;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -63,24 +66,45 @@ public class BalanceAccountsController implements Initializable {
         return editorPanelController;
     }
     
-    public boolean accountAlreadyExistForCode(String balAccCode){
+    public boolean accountAlreadyExistForCode(EditorPanelable newElem, Names.EDITOR_BUTTON_TYPE type){
+        BalanceAccount newAccount = (BalanceAccount) newElem;
         boolean result = false;
-        for (BalanceAccount root : roots) {
-            result = result || existAccount(root, Integer.parseInt(balAccCode));
+        for (BalanceAccount currAcount : roots) {
+            result = result || existAccount(currAcount, newAccount, type);
         }
         return result;
     }
     
-    private boolean existAccount(BalanceAccount account, int code){
-        boolean result = false;
-        if (account.getBalAcc() == code)
-            result = true;
-        else{
-            for (BalanceAccount childAccount : account.childrenAccounts) {
-                result = result || existAccount(childAccount, code);
+    /**
+     * The method checks already exist account in tree or not. The logic is following:
+     * If method must work in edit case, then it compares treeItems values to the given search
+     * BalanceAccount. If code is the same, then calls BalanceAccount compares() method.
+     * If compares return false, it means that user want to edit account with existed code.
+     * So the method return true.
+     * If compares return true, it means that account which was found in tree and user editable 
+     * account are the same.
+     * So the method return false.
+     * @param account Current account in recursion.
+     * @param search Account which must be find.
+     * @param type DELETE, EDIT, VIEW, or ADD.
+     * @return 
+     */
+    private boolean existAccount(BalanceAccount account, BalanceAccount search, Names.EDITOR_BUTTON_TYPE type){
+        List<Boolean> valuesComparesResults = new ArrayList<>();
+        if (account.getBalAcc() == search.getBalAcc()){
+            if (type.equals(Names.EDITOR_BUTTON_TYPE.ADD)) return true;
+            valuesComparesResults.add(account.compares(search));
+        }
+        for (BalanceAccount childAccount : account.childrenAccounts) {
+            if (existAccount(childAccount, search, type)){
+                if (type.equals(Names.EDITOR_BUTTON_TYPE.ADD)) return true;
+                valuesComparesResults.add(false);
             }
         }
-        return result;
+        for (Boolean result : valuesComparesResults) {
+            if (!result) return true;
+        }
+        return false;
     }
     
     public boolean accountHasParent(String balAccCode){

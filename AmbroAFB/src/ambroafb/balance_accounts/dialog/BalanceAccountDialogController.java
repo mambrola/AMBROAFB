@@ -10,6 +10,7 @@ import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class BalanceAccountDialogController implements Initializable {
     public void bindBalAccount(BalanceAccount balAccount) {
         this.balAccount = balAccount;
         if (balAccount != null){
-            balAccountCode.textProperty().bindBidirectional(balAccount.codeProperty());
+            balAccountCode.textProperty().bindBidirectional(balAccount.balAccProperty());
             balAccountName.textProperty().bindBidirectional(balAccount.currDescripProperty());
             actPassChecker.selectedProperty().bindBidirectional(balAccount.actPasProperty());
         }
@@ -80,7 +81,7 @@ public class BalanceAccountDialogController implements Initializable {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.EDIT)){
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.EDIT) && !balAccount.childrenAccounts.isEmpty()){
             balAccountCode.setDisable(true);
         }
         okayCancelController.setButtonsFeatures(buttonType);
@@ -115,5 +116,9 @@ public class BalanceAccountDialogController implements Initializable {
     public Object getOwnerController(){
         Window ownerStage = ((Stage)balAccountCode.getScene().getWindow()).getOwner();
         return ownerStage.getScene().getProperties().get("controller");
+    }
+    
+    public EditorPanelable getNewEditorPanelable(){
+        return balAccount;
     }
 }
