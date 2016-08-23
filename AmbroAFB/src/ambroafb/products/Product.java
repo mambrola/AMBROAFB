@@ -60,6 +60,29 @@ public class Product extends EditorPanelable {
     }
     
     // DBService methods:
+    public static ArrayList<Product> getAllFromDB (){
+        try {
+            String data = GeneralConfig.getInstance().getServerClient().get("products");
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<Product>>() {});
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public static Product getOneFromDB (int productId){
+        try {
+            String data = GeneralConfig.getInstance().getServerClient().get("products/" + productId);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, Product.class);
+        } catch (IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Product").showAlert();
+        }
+        return null;
+    }
+    
     public static Product saveOneToDB(Product product){
         if (product == null) return null; 
         try {
@@ -92,29 +115,6 @@ public class Product extends EditorPanelable {
         return false;
     }
     
-    public static Product getOneFromDB (int productId){
-        try {
-            String data = GeneralConfig.getInstance().getServerClient().get("products/" + productId);
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, Product.class);
-        } catch (IOException | KFZClient.KFZServerException ex) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Product").showAlert();
-        }
-        return null;
-    }
-    
-    public static ArrayList<Product> getAllFromDB (){
-        try {
-            String data = GeneralConfig.getInstance().getServerClient().get("products");
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<Product>>() {});
-        } catch (IOException | KFZClient.KFZServerException ex) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
     
     // Get properties:
     public StringProperty vendorCodeProperty(){

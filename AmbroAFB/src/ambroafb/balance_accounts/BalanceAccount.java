@@ -108,6 +108,12 @@ public class BalanceAccount extends EditorPanelable {
         System.out.println("save balAccount ...???");
     }
     
+    public static boolean deleteOneFromDB(int productId){
+        System.out.println("delete balAccount ...???");
+        return true;
+    }
+    
+    
     // Properties getters:
     public StringProperty balAccProperty(){
         return balAcc;
