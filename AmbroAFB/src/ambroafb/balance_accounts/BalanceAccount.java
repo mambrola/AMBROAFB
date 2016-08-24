@@ -22,17 +22,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TreeTableColumn;
-import javafx.util.Callback;
 
 /**
  *
@@ -43,15 +43,19 @@ public class BalanceAccount extends EditorPanelable {
     private final StringProperty balAcc;
     private final StringProperty descrip_ka;
     private final StringProperty descrip_en;
+    private final IntegerProperty actPas;
     private boolean level;
     private boolean isBase;
     
     @AView.Column(title = "%bal_accounts", width = "500")
     private final StringExpression aviewColumnText;
-    @AView.Column(width = "50", cellFactory = ActPasValueFactory.class)
-    private final BooleanProperty actPas;
+    @AView.Column(width = "60")
+    private final StringExpression actPasColumnText;
     
     private final StringProperty currDescrip;
+    private final BooleanProperty indeterminateProperty;
+    private final BooleanProperty actPasProperty;
+    
     
     @AFilterableTreeTableView.Children
     @JsonIgnore
@@ -68,7 +72,16 @@ public class BalanceAccount extends EditorPanelable {
         
         currDescrip = (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_ka : descrip_en;
         aviewColumnText = Utils.avoidNull(balAcc).concat(" - ").concat(Utils.avoidNull(currDescrip));
-        actPas = new SimpleBooleanProperty();
+        actPas = new SimpleIntegerProperty();
+        indeterminateProperty = new SimpleBooleanProperty();
+        actPasProperty = new SimpleBooleanProperty();
+        
+        actPas.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            indeterminateProperty.set(newValue.intValue() == 3);
+            actPasProperty.set(newValue.intValue() == 1);
+        });
+        actPasColumnText = Bindings.when(indeterminateProperty).then("Act_Pas").
+                            otherwise(Bindings.when(actPasProperty).then("Act").otherwise("Pas"));
     }
     
     
@@ -94,7 +107,7 @@ public class BalanceAccount extends EditorPanelable {
                     balAccount.setBalAcc(set.getInt(2));
                     balAccount.setDescrip_ka(set.getString(3));
                     balAccount.setDescrip_en(set.getString(4));
-                    balAccount.setActPas(set.getBoolean(5));
+                    balAccount.setActPas(set.getInt(5));
                 }
                 result = balAccount;
             } catch (SQLException ex) {
@@ -123,14 +136,17 @@ public class BalanceAccount extends EditorPanelable {
         return currDescrip;
     }
     
-    
-    public BooleanProperty actPasProperty(){
-        return actPas;
+    public BooleanProperty indeterminateProperty() {
+        return indeterminateProperty;
+    }
+
+    public BooleanProperty actPasProperty() {
+        return actPasProperty;
     }
     
 
     // Getters:
-    public boolean getActPas() {
+    public int getActPas() {
         return actPas.get();
     }
 
@@ -168,7 +184,7 @@ public class BalanceAccount extends EditorPanelable {
 
     
     // Setters:
-    public void setActPas(boolean act_pas) {
+    public void setActPas(int act_pas) {
         this.actPas.set(act_pas);
     }
 
@@ -244,15 +260,15 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     
-    private class ActPasValueFactory implements Callback<TreeTableColumn.CellDataFeatures<BalanceAccount, String>, ObservableValue<String>> {
-
-        public ActPasValueFactory(){}
-        
-        @Override
-        public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<BalanceAccount, String> param) {
-            String result = param.getValue().getValue().getActPas() ? "Act" : "Pas";
-            System.out.println("result: " + result + "  actPas: " + (param.getValue().getValue().getActPas()));
-            return new ReadOnlyStringWrapper(result);
-        }
-    }
+//    private class ActPasValueFactory implements Callback<TreeTableColumn.CellDataFeatures<BalanceAccount, String>, ObservableValue<String>> {
+//
+//        public ActPasValueFactory(){}
+//        
+//        @Override
+//        public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<BalanceAccount, String> param) {
+//            String result = param.getValue().getValue().getActPas() ? "Act" : "Pas";
+//            System.out.println("result: " + result + "  actPas: " + (param.getValue().getValue().getActPas()));
+//            return new ReadOnlyStringWrapper(result);
+//        }
+//    }
 }

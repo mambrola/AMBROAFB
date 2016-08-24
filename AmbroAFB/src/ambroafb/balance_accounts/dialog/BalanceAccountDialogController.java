@@ -70,6 +70,7 @@ public class BalanceAccountDialogController implements Initializable {
             balAccountCode.textProperty().bindBidirectional(balAccount.balAccProperty());
             balAccountName.textProperty().bindBidirectional(balAccount.currDescripProperty());
             actPassChecker.selectedProperty().bindBidirectional(balAccount.actPasProperty());
+            actPassChecker.indeterminateProperty().bindBidirectional(balAccount.indeterminateProperty());
         }
     }
     

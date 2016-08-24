@@ -11,9 +11,7 @@ import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -66,6 +64,17 @@ public class BalanceAccountsController implements Initializable {
         return editorPanelController;
     }
     
+    /**
+     * The method checks already exist account in tree or not. The logic is following:
+     * If code is the same, then calls BalanceAccount compares(...) method.
+     * If compare(...) method return false, it means that user want to edit account 
+     * with existed code. So the method return true.
+     * If compare(...) method return true, it means that account which was found in tree and user editable 
+     * account are the same. So the method return false.
+     * @param newElem BalanceAccount as EditorPanelable object that must be search.
+     * @param type DELETE, EDIT, VIEW, or ADD.
+     * @return 
+     */
     public boolean accountAlreadyExistForCode(EditorPanelable newElem, Names.EDITOR_BUTTON_TYPE type){
         BalanceAccount newAccount = (BalanceAccount) newElem;
         boolean result = false;
@@ -79,7 +88,7 @@ public class BalanceAccountsController implements Initializable {
      * The method checks already exist account in tree or not. The logic is following:
      * If method must work in edit case, then it compares treeItems values to the given search
      * BalanceAccount. If code is the same, then calls BalanceAccount compares() method.
-     * If compares return false, it means that user want to edit account with existed code.
+     * If compare(...) method return false, it means that user want to edit account with existed code.
      * So the method return true.
      * If compares return true, it means that account which was found in tree and user editable 
      * account are the same.
@@ -107,22 +116,33 @@ public class BalanceAccountsController implements Initializable {
         return false;
     }
     
+    /**
+     * The method finds parent account for the given account code.
+     * @param balAccCode
+     * @return 
+     */
     public boolean accountHasParent(String balAccCode){
-        boolean result = false;
-        for (BalanceAccount account : roots) {
-            result = result || containsChildForCode(account, balAccCode);
-        }
-        return result;
+        return getParentFor((BalanceAccount)aview.getRoot().getValue(), balAccCode) != null;
     }
     
-    private boolean containsChildForCode(BalanceAccount account, String code){
-        boolean result = false;
-        String accounCode = "" + account.getBalAcc();
+    /**
+     * The method returns parent account for th given code. It finds parent in tree
+     * and starts finding from root.
+     * @param root TreeRoot
+     * @param code Founded account code.
+     * @return 
+     */
+    private BalanceAccount getParentFor(BalanceAccount root, String code){
+        BalanceAccount result = null;
+        String accounCode = (root == null) ? "" : "" + root.getBalAcc(); // root account is null.
+        ObservableList<BalanceAccount> children = (root == null) ? roots : root.childrenAccounts;
         if (isDirectChildNode(accounCode, code)) 
-            result = true;
-        else{
-            for (BalanceAccount childAccount : account.childrenAccounts) {
-                result = result || containsChildForCode(childAccount, code);
+            result = root;
+        for (BalanceAccount childAccount : children) {
+            BalanceAccount newParent = getParentFor(childAccount, code);
+            if (newParent != null){
+                result = newParent;
+                break;
             }
         }
         return result;
@@ -141,7 +161,6 @@ public class BalanceAccountsController implements Initializable {
     private class BalanceAccountsFromDB implements Runnable {
 
         private final ObservableList<BalanceAccount> roots;
-        private final Map<Integer, BalanceAccount> items = new HashMap<>();
         
         public BalanceAccountsFromDB(ObservableList<BalanceAccount> roots){
             this.roots = roots;
@@ -167,32 +186,14 @@ public class BalanceAccountsController implements Initializable {
         
         private void makeTreeStructure(BalanceAccount account) {
             int accountCode = account.getBalAcc();
-            items.put(accountCode, account);
             if (accountCode % 1000 == 0) {
-                    account.rowStyle.add("font" + 8 + "Size");
                     roots.add(account);
             } else {
-                int reminder;
-                if (accountCode % 100 == 0) {
-                    reminder = accountCode % 1000;
-                    account.rowStyle.add("font" + 4 + "Size");
-                } else {
-                    account.rowStyle.add("font" + 2 + "Size");
-                    reminder = accountCode % 100;
-                }
-                BalanceAccount parentAccount = getParentAccount(accountCode, reminder);
+                BalanceAccount parentAccount = getParentFor((BalanceAccount)aview.getRoot().getValue(), "" + accountCode);
                 if (parentAccount != null) {
                     parentAccount.childrenAccounts.add(account);
                 }
             }
-        }
-        
-        private BalanceAccount getParentAccount(int currAcountCode, int currAccountCodeReminder) {
-            BalanceAccount result = null;
-            if (items.containsKey(currAcountCode - currAccountCodeReminder)){
-                result = items.get(currAcountCode - currAccountCodeReminder);
-            }
-            return result;
         }
     }
 }

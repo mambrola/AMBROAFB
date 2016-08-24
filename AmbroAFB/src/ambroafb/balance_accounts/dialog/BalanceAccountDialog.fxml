@@ -31,7 +31,7 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label />
-                            <CheckBox fx:id="actPassChecker" text="%bal_account_act_pas" />
+                            <CheckBox fx:id="actPassChecker" text="%bal_account_act_pas" allowIndeterminate="true" />
                         </children>
                     </VBox>
                 </children>
