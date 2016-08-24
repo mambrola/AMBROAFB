@@ -123,7 +123,7 @@ public class BalanceAccount extends EditorPanelable {
     
     public static boolean deleteOneFromDB(int productId){
         System.out.println("delete balAccount ...???");
-        return true;
+        return false;
     }
     
     
