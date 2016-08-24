@@ -54,8 +54,6 @@ public class AmbroAFB extends Application {
             MainController controller = (MainController) scene.getProperties().get("controller");
             controller.mainExit(null);
             event.consume();
-//            Utils.saveSizeFor(mainStage);
-//            Utils.exit();
         });
         stage.iconifiedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             Utils.hideChildrenStagesFor(stage, !oldValue && newValue);
