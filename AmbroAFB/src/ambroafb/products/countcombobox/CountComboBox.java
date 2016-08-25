@@ -6,9 +6,14 @@
 package ambroafb.products.countcombobox;
 
 import ambroafb.products.Product;
+import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.beans.property.IntegerProperty;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringExpression;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -23,18 +28,26 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class CountComboBox extends ComboBox<Product> {
     
-    private final Map<String, IntegerProperty> itemsMap;
+    private final Map<String, StringExpression> itemsMap;
     private final Tooltip tooltip;
+    private StringExpression titleExpression;
     
     public CountComboBox(){
         itemsMap = new HashMap<>();
         tooltip = new Tooltip();
-        
+        titleExpression = Bindings.when(new SimpleBooleanProperty(true))
+                                        .then("").otherwise("");
         this.setPrefWidth(500);
         this.setConverter(new Converter());
         this.setButtonCell(new ComboBoxCustomButtonCell());
         this.setCellFactory((ListView<Product> param) -> new ComboBoxCustomCell(this));
         this.setTooltip(tooltip);
+        this.setSkin(new ComboBoxListViewSkin(this){
+            @Override
+            protected boolean isHideOnClickEnabled(){
+                return false;
+            }
+        });
     }
     
     private class Converter extends StringConverter<Product> {
@@ -65,33 +78,15 @@ public class CountComboBox extends ComboBox<Product> {
         public void updateItem(Product item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
-                String oldText = getText();
-                String itemName = getConverter().toString(item);
-                int itemCount = itemsMap.get(itemName).get();
-                String newText = oldText;
-                if (oldText.contains(itemName)) {
-                    String afterPartOfItemName = StringUtils.substringAfter(oldText, itemName);
-                    String beforePartOfItemName = StringUtils.substringBefore(oldText, "-" + itemName);
-                    String beforePartWithoutItemCount = "";
-                    if (beforePartOfItemName.lastIndexOf(delimiter) != -1){
-                        beforePartWithoutItemCount = beforePartOfItemName.substring(0, beforePartOfItemName.lastIndexOf(delimiter) + delimiter.length());
+                String title = "";
+                SortedSet<String> sortedKeys = new TreeSet<>(itemsMap.keySet());
+                for (String key : sortedKeys) {
+                    title = title.concat(itemsMap.get(key).getValueSafe());
+                    if (!itemsMap.get(key).getValueSafe().isEmpty()){
+                        title = title.concat(delimiter);
                     }
-                    if (itemCount == 0) {
-                        if (beforePartWithoutItemCount.isEmpty())
-                            afterPartOfItemName = StringUtils.substringAfter(afterPartOfItemName, delimiter);
-                        else 
-                            beforePartWithoutItemCount = StringUtils.substringBeforeLast(beforePartOfItemName, delimiter);
-                        newText = beforePartWithoutItemCount + afterPartOfItemName;
-                    } else {
-                        newText = beforePartWithoutItemCount + itemCount + "-" + itemName + afterPartOfItemName;
-                    }
-                } else if (itemCount != 0) {
-                    if (!oldText.isEmpty()) 
-                        oldText = oldText + delimiter;
-                    newText = oldText + itemCount + "-" + itemName;
                 }
-                setText(newText);
-                tooltip.setText(newText);
+                setText(StringUtils.substringBeforeLast(title, delimiter));
             }
         }
         
@@ -110,11 +105,10 @@ public class CountComboBox extends ComboBox<Product> {
         public void updateItem(Product item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
-                CountComboBoxItem boxItem = new CountComboBoxItem();
-                String itemName = getConverter().toString(item);
-                boxItem.setItemName(itemName);
+                String name = getConverter().toString(item);
+                CountComboBoxItem boxItem = new CountComboBoxItem(name);
+                itemsMap.put(name, boxItem.itemNameExpression());
                 boxItem.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-                    box.show();
                     int selected = box.getSelectionModel().getSelectedIndex();
                     if (selected == box.getItems().size() - 1) {
                         box.getSelectionModel().selectPrevious();
@@ -124,7 +118,6 @@ public class CountComboBox extends ComboBox<Product> {
                         box.getSelectionModel().selectPrevious();
                     }
                 });
-                itemsMap.put(itemName, boxItem.itemNumberProperty());
                 setGraphic(boxItem);
             }
         }

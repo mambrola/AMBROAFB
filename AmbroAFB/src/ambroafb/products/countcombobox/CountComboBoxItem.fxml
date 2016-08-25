@@ -15,7 +15,7 @@
             <children>
                 <Region HBox.hgrow="ALWAYS" /> 
                 <VBox fx:id="numberVBox" alignment="CENTER" >
-                    <Label fx:id="numberText" textAlignment="CENTER" />
+                    <Label fx:id="numberLabel" textAlignment="CENTER" text="" />
                 </VBox>
                 <Region HBox.hgrow="ALWAYS" /> 
                 <VBox fx:id="numberArrowsPane" >
@@ -28,7 +28,7 @@
             </children>
         </HBox>
         <HBox fx:id="namePane" alignment="CENTER_LEFT" >
-            <Label fx:id="itemName" textAlignment="CENTER" />
+            <Label fx:id="itemName" textAlignment="CENTER" text="" />
         </HBox>
     </children>
 </fx:root>
