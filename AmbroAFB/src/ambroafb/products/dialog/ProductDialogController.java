@@ -58,7 +58,10 @@ public class ProductDialogController implements Initializable {
         
         CountComboBox box = new CountComboBox();
         box.setItems(FXCollections.observableArrayList(Product.getAllFromDB()));
-        formPane.getChildren().add(box);
+        
+        ambroafb.general.countcombobox.CountComboBox<Product> gBox = new ambroafb.general.countcombobox.CountComboBox<>();
+        gBox.setItems(FXCollections.observableArrayList(Product.getAllFromDB()));
+        formPane.getChildren().addAll(box, gBox);
     }
 
     public void bindProduct(Product product) {

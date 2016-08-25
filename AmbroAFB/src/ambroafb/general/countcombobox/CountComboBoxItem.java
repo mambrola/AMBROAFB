@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,7 +28,7 @@ import javafx.scene.layout.HBox;
 public class CountComboBoxItem extends HBox {
 
     @FXML
-    private Label numberText, itemName, up, down;
+    private Label numberLabel, itemName, up, down;
     
     private String upFill = "▲";
     private String upTransp = "△";
@@ -38,38 +39,39 @@ public class CountComboBoxItem extends HBox {
     private int downDelimiter = 0;
     
     private StringProperty itemNameProperty = new SimpleStringProperty("");
-    private IntegerProperty numberTextProperty = new SimpleIntegerProperty(0);
+    private IntegerProperty numberProperty = new SimpleIntegerProperty(0);
+    private final StringExpression nameExpression;
     
-    public CountComboBoxItem(){
+    public CountComboBoxItem(String stringForItemLabel){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ambroafb/general/countcombobox/CountComboBoxItem.fxml"));
         assignLoader(loader);
         
-        itemName.textProperty().bind(itemNameProperty);
-        numberText.textProperty().bind(Bindings.createStringBinding(() -> {
-            return "" + numberTextProperty.get();
-        }, numberTextProperty));
+        itemName.setText(stringForItemLabel);
+        numberLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+            return "" + numberProperty.get();
+        }, numberProperty));
         
         up.setOnMousePressed((MouseEvent event) -> {
-            if (numberTextProperty.get() < upDelimiter)
-                numberTextProperty.set(numberTextProperty.get() + 1);
+            if (numberProperty.get() < upDelimiter)
+                numberProperty.set(numberProperty.get() + 1);
         });
         down.setOnMousePressed((MouseEvent event) -> {
-            if (numberTextProperty.get() > downDelimiter)
-                numberTextProperty.set(numberTextProperty.get() - 1);
+            if (numberProperty.get() > downDelimiter)
+                numberProperty.set(numberProperty.get() - 1);
         });
         
         up.textProperty().bind(Bindings.createStringBinding(() -> {
-            String text = upFill;
-            if (numberTextProperty.get() >= upDelimiter)
-                text = upTransp;
-            return text;
-        }, numberTextProperty));
+            return (numberProperty.get() >= upDelimiter) ? upTransp : upFill;
+        }, numberProperty));
         down.textProperty().bind(Bindings.createStringBinding(() -> {
-            String text = downTransp;
-            if (numberTextProperty.get() > downDelimiter)
-                text = downFill;
-            return text;
-        }, numberTextProperty));
+            return (numberProperty.get() > downDelimiter) ? downFill : downTransp;
+        }, numberProperty));
+        
+        nameExpression = Bindings.when (numberProperty.greaterThan(downDelimiter))
+                            .then(Bindings.createStringBinding(() -> {
+                                    return numberProperty.get() + "-" + stringForItemLabel;
+                                }, numberProperty))
+                            .otherwise("");
     }
     
     private void assignLoader(FXMLLoader loader) {
@@ -92,6 +94,10 @@ public class CountComboBoxItem extends HBox {
     }
     
     public IntegerProperty itemNumberProperty(){
-        return numberTextProperty;
+        return numberProperty;
+    }
+    
+    public StringExpression itemNameExpression(){
+        return nameExpression;
     }
 }
