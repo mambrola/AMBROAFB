@@ -11,9 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -30,18 +28,18 @@ public class CountComboBox extends ComboBox<Product> {
     
     private final Map<String, StringExpression> itemsMap;
     private final Tooltip tooltip;
-    private StringExpression titleExpression;
     
     public CountComboBox(){
         itemsMap = new HashMap<>();
         tooltip = new Tooltip();
-        titleExpression = Bindings.when(new SimpleBooleanProperty(true))
-                                        .then("").otherwise("");
+        
         this.setPrefWidth(500);
         this.setConverter(new Converter());
         this.setButtonCell(new ComboBoxCustomButtonCell());
         this.setCellFactory((ListView<Product> param) -> new ComboBoxCustomCell(this));
         this.setTooltip(tooltip);
+        
+        // Never hide comboBox items listView:
         this.setSkin(new ComboBoxListViewSkin(this){
             @Override
             protected boolean isHideOnClickEnabled(){
@@ -108,6 +106,8 @@ public class CountComboBox extends ComboBox<Product> {
                 String name = getConverter().toString(item);
                 CountComboBoxItem boxItem = new CountComboBoxItem(name);
                 itemsMap.put(name, boxItem.itemNameExpression());
+                
+                // ComboBox item could not select twise, so make this kind of action:
                 boxItem.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
                     int selected = box.getSelectionModel().getSelectedIndex();
                     if (selected == box.getItems().size() - 1) {

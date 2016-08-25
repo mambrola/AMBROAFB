@@ -13,9 +13,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -33,13 +31,10 @@ public class CountComboBox<T> extends ComboBox<T> {
     
     private final Map<String, StringExpression> itemsMap;
     private final Tooltip tooltip;
-    private StringExpression titleExpression;
     
     public CountComboBox(){
         itemsMap = new HashMap<>();
         tooltip = new Tooltip();
-        titleExpression = Bindings.when(new SimpleBooleanProperty(true))
-                                        .then("").otherwise("");
         
         this.setPrefWidth(500);
         this.setConverter(new Converter<>());
