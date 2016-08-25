@@ -11,11 +11,9 @@ import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.products.Product;
-import ambroafb.products.countcombobox.CountComboBox;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -55,13 +53,6 @@ public class ProductDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         permissionToClose = true;
-        
-        CountComboBox box = new CountComboBox();
-        box.setItems(FXCollections.observableArrayList(Product.getAllFromDB()));
-        
-        ambroafb.general.countcombobox.CountComboBox<Product> gBox = new ambroafb.general.countcombobox.CountComboBox<>();
-        gBox.setItems(FXCollections.observableArrayList(Product.getAllFromDB()));
-        formPane.getChildren().addAll(box, gBox);
     }
 
     public void bindProduct(Product product) {
