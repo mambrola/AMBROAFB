@@ -9,6 +9,8 @@ import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Clients;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.countries.Countries;
+import ambroafb.currency_rates.CurrencyRates;
+import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -189,7 +191,27 @@ public class MainController implements Initializable {
     @FXML private void accounts(ActionEvent event) {}
     @FXML private void licenses(ActionEvent event) {}
     @FXML private void currencies(ActionEvent event) {}
-    @FXML private void currencyRates(ActionEvent event) {}
+    
+    @FXML private void currencyRates(ActionEvent event) {
+        String currencyRatesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + CurrencyRates.class.getSimpleName();
+        
+        Stage currencyRatesStage = Utils.getStageForPath(currencyRatesStagePath);
+        if(currencyRatesStage == null || !currencyRatesStage.isShowing()){
+            CurrencyRates currencyRates = new CurrencyRates(AmbroAFB.mainStage);
+            currencyRates.show();
+            
+            CurrencyRateFilter filter = new CurrencyRateFilter(currencyRates);
+            JSONObject json = filter.getResult();
+            currencyRates.getCurrencyRatesController().reAssignTable(json);
+
+            if (json != null && json.length() == 0) 
+                currencyRates.close();
+        }
+        else {
+            currencyRatesStage.requestFocus();
+        }
+    }
+    
     @FXML private void discountsOnCount(ActionEvent event) {}
     @FXML private void balAccounts(ActionEvent event) {
         String balAccountsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + BalanceAccounts.class.getSimpleName();

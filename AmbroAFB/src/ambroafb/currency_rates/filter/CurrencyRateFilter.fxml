@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.*?>
+<?import ambroafb.currency_rates.*?>
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/currencyratefilter.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" >
+    
+    <VBox   fx:id="formPane" >
+        <HBox styleClass="w3" >
+            <children>
+                <VBox >
+                    <Label fx:id="date_biger" text="%open_date_bigger" /> 
+                    <ADatePicker fx:id="dateBigger" />
+                </VBox>
+                <VBox >
+                    <Label fx:id="date_less" text="%open_date_less" /> 
+                    <ADatePicker fx:id="dateLess" />
+                </VBox >
+                <VBox >
+                    <Label fx:id="" text="%currency_name" /> 
+                    <CurrencyRatesComboBox fx:id="currRatesComboBox" />
+                </VBox >
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
+            <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
+        </HBox>
+    </VBox>
+</ambroafb.general.DialogPanel>

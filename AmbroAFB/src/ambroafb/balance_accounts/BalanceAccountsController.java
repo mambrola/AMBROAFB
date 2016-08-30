@@ -48,6 +48,7 @@ public class BalanceAccountsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        aview.setBundle(rb);
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(aview);
         editorPanelController.setTreeTable(aview);

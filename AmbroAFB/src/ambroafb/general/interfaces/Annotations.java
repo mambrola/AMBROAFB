@@ -51,6 +51,13 @@ public class Annotations {
     
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    public @interface ContentRate {
+        String value() default "[0-9]*(.)[0-9]*";
+        String explain() default "Rate pattern is incorrect!";
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
     public @interface ContentPattern {
         String value();
         String explain();
