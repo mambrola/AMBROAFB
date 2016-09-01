@@ -205,8 +205,4 @@ public class CurrencyRate extends EditorPanelable {
                 getRate() == currencyRateBackup.getRate();
     }
     
-    private boolean equalsDates(CurrencyRate currencyRateBackup){
-        
-        return ;
-    }
 }
