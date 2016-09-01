@@ -13,9 +13,12 @@ import javafx.scene.control.ComboBox;
  */
 public class CurrencyRatesComboBox extends ComboBox<String>{
     
+    private final String allCurrencies = "All";
+    private String showOnlyCurrencies;
+    
     public CurrencyRatesComboBox(){
         giveCurrencyRatesFromDB();
-        this.getItems().add(0, "All");
+        this.getItems().add(0, allCurrencies);
     }
     
     private void giveCurrencyRatesFromDB(){
@@ -26,7 +29,18 @@ public class CurrencyRatesComboBox extends ComboBox<String>{
         }).start();
     }
 
-    public void showOnlyCurrencies(){
-        getItems().remove("All");
+    
+    public void setShowOnlyCurrencies(String showOnlyCurrencies){
+        this.showOnlyCurrencies = showOnlyCurrencies;
+        if (showOnlyCurrencies.equals("true")){
+            getItems().remove(allCurrencies);
+        }
+        else {
+            getItems().add(allCurrencies);
+        }
+    }
+    
+    public String getShowOnlyCurrencies(){
+        return showOnlyCurrencies;
     }
 }

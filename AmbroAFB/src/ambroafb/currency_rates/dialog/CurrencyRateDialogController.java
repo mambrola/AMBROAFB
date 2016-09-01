@@ -57,7 +57,6 @@ public class CurrencyRateDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         permissionToClose = true;
-        currRatesComboBox.showOnlyCurrencies();
     }
 
     public void bindCurrencyRate(CurrencyRate currRate) {

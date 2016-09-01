@@ -25,7 +25,7 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%currency_name" styleClass="validationMessage" />
-                            <CurrencyRatesComboBox fx:id="currRatesComboBox" />
+                            <CurrencyRatesComboBox fx:id="currRatesComboBox" showOnlyCurrencies="true" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple">
