@@ -5,6 +5,7 @@
  */
 package ambroafb.general;
     
+import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.image_gallery.ImageGalleryController;
@@ -573,11 +574,15 @@ public class Utils {
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
 
-            if (field.getType().toString().contains("TextField")) {
+            if (field.getType().equals(TextField.class)) {
                 results[0] = (TextField) field.get(classObject);
                 results[1] = ((TextField) results[0]).getText();
             }
-
+            else if (field.getType().equals(ADatePicker.class)){
+                ADatePicker datePicker = (ADatePicker) field.get(classObject);
+                results[0] = datePicker;
+                results[1] = datePicker.getEditor().getText();
+            }
             field.setAccessible(accessible);
         } catch (IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);

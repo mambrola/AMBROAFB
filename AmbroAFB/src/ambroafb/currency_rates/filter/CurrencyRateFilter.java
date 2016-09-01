@@ -79,9 +79,6 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
             dateBigger.setEditingValue();
             dateLess.setEditingValue();
             
-            System.out.println("filter.. dateBigger: " + dateBigger.getValue());
-            System.out.println("filter.. dateLess: " + dateLess.getValue());
-            
             jSonResult.put("dateBigger", (dateBigger.getValue() == null ? DATE_BIGGER : dateBigger.getValue()).toString());
             jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());
             jSonResult.put("currency", (currRatesComboBox.getValue() == null)? "" : currRatesComboBox.getValue());

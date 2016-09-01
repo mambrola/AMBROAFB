@@ -53,7 +53,6 @@ public class CurrencyRate extends EditorPanelable {
                 while (set.next()){
                     result.add(set.getString(1));
                 }
-                System.out.println("Get Currency Rates from DB. result size: " + result.size());
             } catch (SQLException ex) {
                 Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -87,7 +86,6 @@ public class CurrencyRate extends EditorPanelable {
                     currRate.setDate(set.getString(4));
                     result.add(currRate);
                 }
-                System.out.println("Get Currency Rates from DB. result size: " + result.size());
             } catch (SQLException | JSONException ex) {
                 Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -205,5 +203,10 @@ public class CurrencyRate extends EditorPanelable {
         return  getIso().equals(currencyRateBackup.getIso()) && 
                 getDate().equals(currencyRateBackup.getDate()) &&
                 getRate() == currencyRateBackup.getRate();
+    }
+    
+    private boolean equalsDates(CurrencyRate currencyRateBackup){
+        
+        return ;
     }
 }
