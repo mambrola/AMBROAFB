@@ -12,11 +12,14 @@ import ambroafb.products.Product;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.util.converter.LocalDateStringConverter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,16 +30,15 @@ import org.json.JSONObject;
 public class CurrencyRate extends EditorPanelable {
 
     @AView.Column(title = "%date", width = "100")
-//    private LocalDate date;
     private final StringProperty date;
     @AView.Column(title = "%descrip", width = "50")
     private final StringProperty iso;
     @AView.Column(title = "%rate", width = "80")
     private final StringProperty rate;
     
-//    private final DateTimeFormatter formater = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//    private final DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//    private final LocalDateStringConverter converter = new LocalDateStringConverter(formater, pattern);
+    private final DateTimeFormatter formater = DateTimeFormatter.ofPattern("d MMM yyy");
+    private final DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final LocalDateStringConverter converter = new LocalDateStringConverter(formater, parser);
     
     public CurrencyRate(){
         date = new SimpleStringProperty("");
@@ -148,7 +150,6 @@ public class CurrencyRate extends EditorPanelable {
     
     public String getDate() {
         return date.get();
-//        return converter.toString(date);
     }
     
     
@@ -162,8 +163,15 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public void setDate(String date) {
-        this.date.set(date);
-//        this.date = converter.fromString(date);
+        String localDateStr;
+        try {
+            LocalDate localDate = converter.fromString(date);
+            localDateStr = converter.toString(localDate);
+        } catch(Exception ex) {
+            localDateStr = date;
+        }
+        System.out.println("axla? " + localDateStr);
+        this.date.set(localDateStr);
     }
 
 
