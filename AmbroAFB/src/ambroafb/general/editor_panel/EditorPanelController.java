@@ -236,11 +236,11 @@ public class EditorPanelController implements Initializable {
     public void setTableDataList(AFilterableTableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
         tableData = list;
         table.setItems(list);
-        table.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().contains(search.getText().toLowerCase()));
+        table.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
     }
     
     public void setTreeTable(AFilterableTreeTableView<EditorPanelable> treeTable){
-        treeTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().contains(search.getText().toLowerCase()));
+        treeTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
     }
     
     public void buttonsMainPropertysBinder (AView<EditorPanelable> aView){

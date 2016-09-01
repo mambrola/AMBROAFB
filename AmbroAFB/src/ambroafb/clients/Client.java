@@ -477,7 +477,7 @@ public class Client extends EditorPanelable{
                                 .concat(" " + country.getName()).concat(" " + fax.get())
                                 .concat(" " + IDNumber.get())
                         .get();
-        return (result + phones).toLowerCase();
+        return (result + phones);
     }
     
 

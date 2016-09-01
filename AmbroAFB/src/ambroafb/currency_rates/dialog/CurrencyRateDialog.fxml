@@ -14,7 +14,7 @@
                               fx:controller="ambroafb.currency_rates.dialog.CurrencyRateDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer" >
         <children>
-            <HBox styleClass="oneThirds">
+            <HBox styleClass="oneHalf">
                 <children>
                     <VBox styleClass="couple">
                         <children>
@@ -26,6 +26,16 @@
                         <children>
                             <Label text="%currency_name" styleClass="validationMessage" />
                             <CurrencyRatesComboBox fx:id="currRatesComboBox" showOnlyCurrencies="true" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneHalf">
+                <children>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%rate_count" styleClass="validationMessage" />
+                            <TextField fx:id="count" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple">

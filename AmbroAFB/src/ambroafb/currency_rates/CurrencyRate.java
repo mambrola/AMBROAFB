@@ -6,6 +6,7 @@
 package ambroafb.currency_rates;
 
 import ambro.AView;
+import ambroafb.general.DateConverter;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -14,13 +15,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.util.converter.LocalDateStringConverter;
+import javafx.beans.value.ObservableValue;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,15 +43,13 @@ public class CurrencyRate extends EditorPanelable {
     @AView.Column(title = "%rate", width = "80")
     private final StringProperty rate;
     
-    private final DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd MMM yyy");
-    private final DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private final LocalDateStringConverter converter = new LocalDateStringConverter(formater, parser);
-    
     public static final String ALL_CURRENCY = "ALL";
     private final StringProperty descrip_ka;
     private final StringProperty descrip_en;
+    private final ObjectProperty<LocalDate> dateProperty;
     
     public CurrencyRate(){
+        dateProperty = new SimpleObjectProperty<>();
         date = new SimpleStringProperty("");
         count = new SimpleStringProperty("0");
         iso = new SimpleStringProperty("");
@@ -58,6 +58,13 @@ public class CurrencyRate extends EditorPanelable {
         rate = new SimpleStringProperty("0");
         
         currDescrip = (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_ka : descrip_en;
+        dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+            String dateStr = "";
+            if (newValue != null){
+                dateStr = DateConverter.getDayMonthnameYearBySpace(newValue);
+            }
+            date.set(dateStr);
+        });
     }
 
     public static ArrayList<String> getAllCurrencyFromDBTest() {
@@ -126,8 +133,9 @@ public class CurrencyRate extends EditorPanelable {
                 while (set.next()){
                     result.setRecId(set.getInt(1));
                     result.setIso(set.getString(2));
-                    result.setRate(set.getDouble(3));
+                    result.setCount(set.getInt(3));
                     result.setDate(set.getString(4));
+                    result.setRate(set.getDouble(5));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
@@ -148,8 +156,8 @@ public class CurrencyRate extends EditorPanelable {
     
     
     // Properties:
-    public StringProperty dateProperty(){
-        return date;
+    public ObjectProperty<LocalDate> dateProperty(){
+        return dateProperty;
     }
     
     public StringProperty countProperty(){
@@ -175,7 +183,11 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public int getCount(){
-        return Integer.parseInt(count.get());
+        int result = 0;
+        try {
+            result = Integer.parseInt(count.get());
+        } catch (Exception ex){ }
+        return result;
     }
             
     public String getIso(){
@@ -191,15 +203,19 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public double getRate(){
-        return Double.parseDouble(rate.get());
+        double result = 0;
+        try {
+            result = Double.parseDouble(rate.get());
+        } catch (Exception ex){ }
+        return result;
     }
     
     // Setters:
     public void setDate(String date) {
         String localDateStr;
         try {
-            LocalDate localDate = converter.fromString(date);
-            localDateStr = converter.toString(localDate);
+            dateProperty.set(DateConverter.getLocalDateFor(date)); // converter.fromString(date);
+            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get()); // converter.toString(localDate);
         } catch(Exception ex) {
             localDateStr = date;
         }
@@ -251,7 +267,7 @@ public class CurrencyRate extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return getIso().concat("" + getRate()).concat(getDate());
+        return getDate().concat(getIso()).concat("" + getRate()).concat(currDescrip.get());
     }
     
     /**

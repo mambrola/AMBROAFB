@@ -32,15 +32,19 @@ public class CurrencyRateDialogController implements Initializable {
 
     @FXML
     private VBox formPane;
-    @FXML
-    @ContentNotEmpty
+    
+    @FXML @ContentNotEmpty
     private ADatePicker currRateDate;
+    
     @FXML
     private CurrencyRatesComboBox currRatesComboBox;
-    @FXML
-    @ContentNotEmpty
-    @ContentRate
+    
+    @FXML @ContentNotEmpty @ContentRate
     private TextField rate;
+    
+    @FXML @ContentNotEmpty
+    private TextField count;
+    
     @FXML
     private DialogOkayCancelController okayCancelController;
     
@@ -64,9 +68,9 @@ public class CurrencyRateDialogController implements Initializable {
     public void bindCurrencyRate(CurrencyRate currRate) {
         this.currencyRate = currRate;
         if (currRate != null){
-//            currRateDate.valueProperty().bindBidirectional(currRate.dateProperty());
-            currRateDate.getEditor().textProperty().bindBidirectional(currRate.dateProperty());
+            currRateDate.valueProperty().bindBidirectional(currRate.dateProperty());
             currRatesComboBox.valueProperty().bindBidirectional(currRate.isoProperty());
+            count.textProperty().bindBidirectional(currRate.countProperty());
             rate.textProperty().bindBidirectional(currRate.rateProperty());
         }
     }

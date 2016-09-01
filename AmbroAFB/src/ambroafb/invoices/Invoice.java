@@ -238,7 +238,7 @@ public class Invoice extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return getInvoiceNumber().concat(getCreatedDate()).concat(getBeginDate()).concat(getEndDate()).toLowerCase();
+        return getInvoiceNumber().concat(getCreatedDate()).concat(getBeginDate()).concat(getEndDate());
     }
 
 }

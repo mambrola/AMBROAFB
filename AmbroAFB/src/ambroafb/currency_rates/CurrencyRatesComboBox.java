@@ -32,13 +32,15 @@ public class CurrencyRatesComboBox extends ComboBox<String>{
     
     private void giveCurrencyRatesFromDB(){
         new Thread(() -> {
-            if (showAll.get())
+            if (showAll.get()){
                 items.add(CurrencyRate.ALL_CURRENCY);
+            }
             CurrencyRate.getAllCurrencyFromDBTest().stream().forEach((rate) -> {
                 items.add(rate);
             });
             Platform.runLater(() -> {
                 this.setDisable(false);
+                this.setValue(items.get(0));
             });
         }).start();
     }

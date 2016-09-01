@@ -20,7 +20,7 @@ public abstract class EditorPanelable {
     public abstract void copyFrom(EditorPanelable other);
     
     /** The method uses to search EditorPanelable elements in list (ex. tableView list)
-     * @return Lowercase string to convenient searching.
+     * @return String to convenient searching.
      */
     public abstract String toStringForSearch();
     
