@@ -52,7 +52,7 @@ public class Annotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface ContentRate {
-        String value() default "[0-9]*(.)[0-9]*";
+        String value() default "[0-9]+(\\.[0-9]+){1}"; // "\d+(\.\d+)?"
         String explain() default "Rate pattern is incorrect!";
     }
     

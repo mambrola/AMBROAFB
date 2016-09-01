@@ -498,6 +498,9 @@ public class Utils {
             if (field.isAnnotationPresent(ContentTreeItem.class)){
                 result = result && checkValidationForContentTreeItemAnnotation(field, currentClassObject, type);
             }
+            if (field.isAnnotationPresent(ContentRate.class)){
+                result = result && checkValidationForContentRateAnnotation(field, currentClassObject);
+            }
         }
         return result;
     }
@@ -564,6 +567,19 @@ public class Utils {
                 changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForHasNotParent());
                 result = false;
             }
+        }
+        return result;
+    }
+    
+    private static boolean checkValidationForContentRateAnnotation(Field field, Object currSceneController){
+        boolean result = true;
+        ContentRate annotation = field.getAnnotation(ContentRate.class);
+        
+        Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
+        
+        if (!Pattern.matches(annotation.value(), (String)typeAndContent[1])){
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
+            result = false;
         }
         return result;
     }

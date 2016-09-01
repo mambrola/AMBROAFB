@@ -20,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ambroafb.general.Names.*;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.Annotations.ContentRate;
 import ambroafb.general.interfaces.Dialogable;
 
 /**
@@ -38,7 +39,7 @@ public class CurrencyRateDialogController implements Initializable {
     private CurrencyRatesComboBox currRatesComboBox;
     @FXML
     @ContentNotEmpty
-//    @ContentRate
+    @ContentRate
     private TextField rate;
     @FXML
     private DialogOkayCancelController okayCancelController;
