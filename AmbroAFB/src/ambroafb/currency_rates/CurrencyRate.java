@@ -32,6 +32,8 @@ public class CurrencyRate extends EditorPanelable {
 
     @AView.Column(title = "%date", width = "100")
     private final StringProperty date;
+    @AView.Column(title = "%count", width = "50")
+    private final StringProperty count;
     @AView.Column(title = "%descrip", width = "50")
     private final StringProperty iso;
     @AView.Column(title = "%descrip", width = "150")
@@ -49,6 +51,7 @@ public class CurrencyRate extends EditorPanelable {
     
     public CurrencyRate(){
         date = new SimpleStringProperty("");
+        count = new SimpleStringProperty("0");
         iso = new SimpleStringProperty("");
         descrip_ka = new SimpleStringProperty("");
         descrip_en = new SimpleStringProperty("");
@@ -78,11 +81,11 @@ public class CurrencyRate extends EditorPanelable {
         Statement stmt = TestDataFromDB.getStatement();
         if (stmt != null){
             try {
-                String query = "select currency_rates.rec_id, currency_rates.iso, currency_rates.rate, currency_rates.date, " +
+                String query = "select currency_rates.rec_id, currency_rates.iso, currency_rates.count, currency_rates.date, currency_rates.rate, " +
                                     " currencies.iso, currencies.descrip_ka, currencies.descrip_en " +
                                 " from currency_rates " +
                                     " left join currencies " + 
-                                        " on currency_rates.iso = currencies.iso" +
+                                        " on currency_rates.iso = currencies.iso " +
                                     " where date > '" + filterJson.get("dateBigger") + "' " + 
                                         " and date < '" + filterJson.getString("dateLess") + "' " +
                                         " order by date desc, currency_rates.iso;";
@@ -100,10 +103,11 @@ public class CurrencyRate extends EditorPanelable {
                     CurrencyRate currRate = new CurrencyRate();
                     currRate.setRecId(set.getInt(1));
                     currRate.setIso(set.getString(2));
-                    currRate.setRate(set.getDouble(3));
+                    currRate.setCount(set.getInt(3));
                     currRate.setDate(set.getString(4));
-                    currRate.setDescrip_ka(set.getString(6));
-                    currRate.setDescrip_en(set.getString(7));
+                    currRate.setRate(set.getDouble(5));
+                    currRate.setDescrip_ka(set.getString(7));
+                    currRate.setDescrip_en(set.getString(8));
                     result.add(currRate);
                 }
             } catch (SQLException | JSONException ex) {
@@ -148,6 +152,10 @@ public class CurrencyRate extends EditorPanelable {
         return date;
     }
     
+    public StringProperty countProperty(){
+        return count;
+    }
+    
     public StringProperty isoProperty() {
         return iso;
     }
@@ -162,6 +170,14 @@ public class CurrencyRate extends EditorPanelable {
 
     
     // Getters:
+    public String getDate() {
+        return date.get();
+    }
+    
+    public int getCount(){
+        return Integer.parseInt(count.get());
+    }
+            
     public String getIso(){
         return iso.get();
     }
@@ -178,12 +194,22 @@ public class CurrencyRate extends EditorPanelable {
         return Double.parseDouble(rate.get());
     }
     
-    public String getDate() {
-        return date.get();
+    // Setters:
+    public void setDate(String date) {
+        String localDateStr;
+        try {
+            LocalDate localDate = converter.fromString(date);
+            localDateStr = converter.toString(localDate);
+        } catch(Exception ex) {
+            localDateStr = date;
+        }
+        this.date.set(localDateStr);
     }
     
+    public void setCount(int count){
+        this.count.set("" + count);
+    }
     
-    // Setters:
     public void setIso(String iso){
         this.iso.set(iso);
     }
@@ -200,17 +226,6 @@ public class CurrencyRate extends EditorPanelable {
         this.rate.set("" + rate);
     }
     
-    public void setDate(String date) {
-        String localDateStr;
-        try {
-            LocalDate localDate = converter.fromString(date);
-            localDateStr = converter.toString(localDate);
-        } catch(Exception ex) {
-            localDateStr = date;
-        }
-        this.date.set(localDateStr);
-    }
-
 
     @Override
     public CurrencyRate cloneWithoutID() {
