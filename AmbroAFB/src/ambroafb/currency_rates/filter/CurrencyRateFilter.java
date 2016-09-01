@@ -61,6 +61,8 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
             okayCancelController.cancel(null);
             if(event != null) event.consume();
         });
+        
+        okayCancelController.disableProperty().bind(currRatesComboBox.disableProperty());
     }
     
     @Override

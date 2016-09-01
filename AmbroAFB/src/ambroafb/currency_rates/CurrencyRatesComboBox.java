@@ -5,6 +5,7 @@
  */
 package ambroafb.currency_rates;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -15,22 +16,25 @@ import javafx.scene.control.ComboBox;
  */
 public class CurrencyRatesComboBox extends ComboBox<String>{
     
-    private final String allCurrencies = "ALL";
     private String showOnlyCurrencies;
     
-    private final ObservableList<String> elements = FXCollections.observableArrayList();
+    private final ObservableList<String> items = FXCollections.observableArrayList();
     
     public CurrencyRatesComboBox(){
-        this.setItems(elements);
+        this.setItems(items);
+        this.setDisable(true);
         giveCurrencyRatesFromDB();
     }
     
     private void giveCurrencyRatesFromDB(){
         new Thread(() -> {
+            items.add(CurrencyRate.ALL_CURRENCY);
             CurrencyRate.getAllCurrencyFromDBTest().stream().forEach((rate) -> {
-                elements.add(rate);
+                items.add(rate);
             });
-            elements.add(0, allCurrencies);
+            Platform.runLater(() -> {
+                this.setDisable(false);
+            });
         }).start();
     }
 
@@ -38,10 +42,16 @@ public class CurrencyRatesComboBox extends ComboBox<String>{
     public void setShowOnlyCurrencies(String showOnlyCurrencies){
         this.showOnlyCurrencies = showOnlyCurrencies;
         if (showOnlyCurrencies.equals("true")){
-            getItems().remove(allCurrencies);
+            System.out.println("unda amoshalos....");
+            items.remove(CurrencyRate.ALL_CURRENCY);
         }
-        else {
-            getItems().add(allCurrencies);
+        else if (showOnlyCurrencies.equals("false")){
+            for (String item : items) {
+                if (item.equals(CurrencyRate.ALL_CURRENCY)){
+                    return;
+                }
+            }
+            items.add(CurrencyRate.ALL_CURRENCY);
         }
     }
     

@@ -212,7 +212,10 @@ public class MainController implements Initializable {
         }
     }
     
-    @FXML private void discountsOnCount(ActionEvent event) {}
+    @FXML private void discountsOnCount(ActionEvent event) {
+        
+    }
+    
     @FXML private void balAccounts(ActionEvent event) {
         String balAccountsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + BalanceAccounts.class.getSimpleName();
         
