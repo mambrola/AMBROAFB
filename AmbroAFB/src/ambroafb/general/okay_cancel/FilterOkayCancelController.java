@@ -47,7 +47,6 @@ public class FilterOkayCancelController implements Initializable {
         });
         
         okay.disableProperty().bind(disableProperty);
-        cancel.disableProperty().bind(disableProperty);
     }    
     
     @FXML

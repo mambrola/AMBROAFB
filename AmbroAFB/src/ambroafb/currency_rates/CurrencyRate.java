@@ -39,7 +39,7 @@ public class CurrencyRate extends EditorPanelable {
     @AView.Column(title = "%rate", width = "80")
     private final StringProperty rate;
     
-    private final DateTimeFormatter formater = DateTimeFormatter.ofPattern("d MMM yyy");
+    private final DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd MMM yyy");
     private final DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final LocalDateStringConverter converter = new LocalDateStringConverter(formater, parser);
     

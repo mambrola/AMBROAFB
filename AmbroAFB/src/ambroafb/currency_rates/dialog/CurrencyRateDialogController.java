@@ -64,6 +64,7 @@ public class CurrencyRateDialogController implements Initializable {
     public void bindCurrencyRate(CurrencyRate currRate) {
         this.currencyRate = currRate;
         if (currRate != null){
+//            currRateDate.valueProperty().bindBidirectional(currRate.dateProperty());
             currRateDate.getEditor().textProperty().bindBidirectional(currRate.dateProperty());
             currRatesComboBox.valueProperty().bindBidirectional(currRate.isoProperty());
             rate.textProperty().bindBidirectional(currRate.rateProperty());
