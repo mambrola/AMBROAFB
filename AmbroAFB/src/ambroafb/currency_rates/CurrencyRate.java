@@ -49,7 +49,7 @@ public class CurrencyRate extends EditorPanelable {
         Statement stmt = TestDataFromDB.getStatement();
         if (stmt != null){
             try {
-                ResultSet set = stmt.executeQuery("select distinct iso from currency_rates");
+                ResultSet set = stmt.executeQuery("select iso from currencies where iso != 'GEL'");
                 while (set.next()){
                     result.add(set.getString(1));
                 }

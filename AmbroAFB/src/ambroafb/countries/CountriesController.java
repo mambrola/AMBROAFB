@@ -49,12 +49,11 @@ public class CountriesController implements Initializable {
 
     private void reAssignTable(JSONObject json) {
         countries.clear();
-        Thread t = new Thread(() -> {
+        new Thread(() -> {
             Country.getAllFromDB().stream().forEach((country) -> {
                 countries.add(country);
             });
-        });
-        t.start();
+        }).start();
     }
     
     

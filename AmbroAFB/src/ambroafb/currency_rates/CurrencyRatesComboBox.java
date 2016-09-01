@@ -5,6 +5,8 @@
  */
 package ambroafb.currency_rates;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 
 /**
@@ -13,19 +15,22 @@ import javafx.scene.control.ComboBox;
  */
 public class CurrencyRatesComboBox extends ComboBox<String>{
     
-    private final String allCurrencies = "All";
+    private final String allCurrencies = "ALL";
     private String showOnlyCurrencies;
     
+    private final ObservableList<String> elements = FXCollections.observableArrayList();
+    
     public CurrencyRatesComboBox(){
+        this.setItems(elements);
         giveCurrencyRatesFromDB();
-        this.getItems().add(0, allCurrencies);
     }
     
     private void giveCurrencyRatesFromDB(){
         new Thread(() -> {
             CurrencyRate.getAllCurrencyFromDBTest().stream().forEach((rate) -> {
-                getItems().add(rate);
+                elements.add(rate);
             });
+            elements.add(0, allCurrencies);
         }).start();
     }
 
