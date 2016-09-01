@@ -79,7 +79,7 @@ public class CurrencyRate extends EditorPanelable {
         if (stmt != null){
             try {
                 String query = "select currency_rates.rec_id, currency_rates.iso, currency_rates.rate, currency_rates.date, " +
-                                    " currencies.descrip_ka, currencies.descrip_en " +
+                                    " currencies.iso, currencies.descrip_ka, currencies.descrip_en " +
                                 " from currency_rates " +
                                     " left join currencies " + 
                                         " on currency_rates.iso = currencies.iso" +
@@ -93,7 +93,7 @@ public class CurrencyRate extends EditorPanelable {
                     
                     String rightPart = query.substring(whereIndex + delimiter.length());
 
-                    query = leftPart + " iso = '" + filterJson.getString("currency") + "' and " + rightPart;
+                    query = leftPart + " currency_rates.iso = '" + filterJson.getString("currency") + "' and " + rightPart;
                 }
                 ResultSet set = stmt.executeQuery(query);
                 while (set.next()){
@@ -102,8 +102,8 @@ public class CurrencyRate extends EditorPanelable {
                     currRate.setIso(set.getString(2));
                     currRate.setRate(set.getDouble(3));
                     currRate.setDate(set.getString(4));
-                    currRate.setDescrip_ka(set.getString(5));
-                    currRate.setDescrip_en(set.getString(6));
+                    currRate.setDescrip_ka(set.getString(6));
+                    currRate.setDescrip_en(set.getString(7));
                     result.add(currRate);
                 }
             } catch (SQLException | JSONException ex) {
