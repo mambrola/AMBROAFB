@@ -22,6 +22,7 @@ import ambroafb.general.Names.*;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentRate;
 import ambroafb.general.interfaces.Dialogable;
+import javafx.scene.control.ProgressIndicator;
 
 /**
  * FXML Controller class
@@ -38,6 +39,8 @@ public class CurrencyRateDialogController implements Initializable {
     
     @FXML
     private CurrencyRatesComboBox currRatesComboBox;
+    @FXML
+    private ProgressIndicator indocator;
     
     @FXML @ContentNotEmpty @ContentRate
     private TextField rate;
@@ -63,6 +66,10 @@ public class CurrencyRateDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         permissionToClose = true;
+        indocator.visibleProperty().bind(currRatesComboBox.disableProperty());
+        
+        // From css:
+        indocator.setPrefSize(currRatesComboBox.getWidth(), currRatesComboBox.getHeight());
     }
 
     public void bindCurrencyRate(CurrencyRate currRate) {

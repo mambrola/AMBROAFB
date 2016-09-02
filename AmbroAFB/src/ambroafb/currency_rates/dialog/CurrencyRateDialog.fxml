@@ -16,7 +16,7 @@
         <children>
             <HBox styleClass="oneHalf">
                 <children>
-                    <VBox styleClass="couple">
+                    <VBox styleClass="couple" >
                         <children>
                             <Label text="%date" styleClass="validationMessage" />
                             <ADatePicker fx:id="currRateDate" />
@@ -25,7 +25,12 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%currency_name" styleClass="validationMessage" />
-                            <CurrencyRatesComboBox fx:id="currRatesComboBox" showOnlyCurrencies="true" />
+                            <StackPane styleClass="couple" style="-fx-background-color: blue;">
+                                <children>
+                                    <CurrencyRatesComboBox fx:id="currRatesComboBox" showOnlyCurrencies="true" />
+                                    <ProgressIndicator fx:id="indocator" style="-fx-background-color: red;" />
+                                </children>
+                            </StackPane>
                         </children>
                     </VBox>
                 </children>

@@ -263,6 +263,8 @@ public class CurrencyRate extends EditorPanelable {
         setIso(currencyRate.getIso());
         setRate(currencyRate.getRate());
         setDate(currencyRate.getDate());
+        setCount(currencyRate.getCount());
+        
     }
 
     @Override
@@ -276,9 +278,10 @@ public class CurrencyRate extends EditorPanelable {
      * @return  - True, if all comparable fields are equals, false otherwise.
      */
     public boolean compares(CurrencyRate currencyRateBackup) {
-        return  getIso().equals(currencyRateBackup.getIso()) && 
+        return  getIso().equals(currencyRateBackup.getIso())   && 
                 getDate().equals(currencyRateBackup.getDate()) &&
-                getRate() == currencyRateBackup.getRate();
+                getRate() == currencyRateBackup.getRate()      &&
+                getCount() == currencyRateBackup.getCount();
     }
     
 }

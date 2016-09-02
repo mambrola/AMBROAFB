@@ -23,6 +23,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressIndicator;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
@@ -40,6 +41,8 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     private ADatePicker dateBigger, dateLess;
     @FXML
     private CurrencyRatesComboBox currRatesComboBox;
+    @FXML
+    private ProgressIndicator indicator;
     @FXML
     private FilterOkayCancelController okayCancelController;
     
@@ -63,6 +66,7 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
         });
         
         okayCancelController.disableProperty().bind(currRatesComboBox.disableProperty());
+        indicator.visibleProperty().bind(currRatesComboBox.disableProperty());
     }
     
     @Override

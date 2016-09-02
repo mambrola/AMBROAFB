@@ -22,7 +22,8 @@
 .oneThirds > .couple {
   -fx-pref-width: 143.33333333;
 }
-.couple > .combo-box {
+.couple .combo-box {
+  -fx-pref-width: 143.33333333;
   -fx-max-width: 500;
 }
 .oneThirds {
