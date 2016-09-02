@@ -56,9 +56,10 @@ public class BalanceAccountsController implements Initializable {
     }
 
     public void reAssignTable(JSONObject filterJson){
+        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         roots.clear();
         aview.removeAll();
-        new Thread(new BalanceAccountsFromDB(roots)).start();
+        new Thread(new BalanceAccountsFromDB(roots, selectedIndex)).start();
     }
     
     public EditorPanelController getEditorPanelController(){
@@ -162,9 +163,11 @@ public class BalanceAccountsController implements Initializable {
     private class BalanceAccountsFromDB implements Runnable {
 
         private final ObservableList<BalanceAccount> roots;
+        private final int selectedIndex;
         
-        public BalanceAccountsFromDB(ObservableList<BalanceAccount> roots){
+        public BalanceAccountsFromDB(ObservableList<BalanceAccount> roots, int selectedIndex){
             this.roots = roots;
+            this.selectedIndex = selectedIndex;
         }
         
         @Override
@@ -180,7 +183,10 @@ public class BalanceAccountsController implements Initializable {
                     aview.append(account);
                 });
                 aview.expand(1);
-                masker.setVisible(false); 
+                masker.setVisible(false);
+//                if (selectedIndex >= 0){
+//                    aview.getSelectionModel().select(selectedIndex);
+//                }
             });
         }
         

@@ -32,14 +32,12 @@ public class ClientDialog extends Stage implements Dialogable {
         String clientsDialogPath = Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH;
         Utils.saveShowingStageByPath(clientsDialogPath, (Stage)this);
         
-        Client clientObject;
         if (object == null)
-            clientObject = new Client();
+            client = new Client();
         else
-            clientObject = (Client) object; 
+            client = (Client) object;
         
-        this.client = clientObject;
-        this.clientBackup = clientObject.cloneWithID();
+        this.clientBackup = client.cloneWithID();
         
         Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml", null);
         dialogController = (ClientDialogController) currentScene.getProperties().get("controller");

@@ -457,7 +457,7 @@ public class Utils {
         try {
             result = Class.forName(name);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }

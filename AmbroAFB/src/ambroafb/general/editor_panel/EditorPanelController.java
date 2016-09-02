@@ -201,13 +201,21 @@ public class EditorPanelController implements Initializable {
         Stage filterStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (filterStage == null || !filterStage.isShowing()){
             EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            
+//            int selectionIndex = ((AView)exit.getScene().lookup("#aview")).getCustomSelectionModel().getSelectedIndex();
             Class className = Utils.getClassByName(getClassName(CLASS_TYPE.FILTER));
-            Filterable filter = (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow());
-            JSONObject json = filter.getResult();
+            Filterable filter = (className != null) ? (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow()) : null;
+            
+            System.out.println("<EditorPanelController> filter in refresh function: " + filter);
+            
+            JSONObject json = (filter != null) ? filter.getResult() : new JSONObject();
+//            try {
+//                json.put("selected", selectionIndex);
+//            } catch (JSONException ex) {
+//                Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
             Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{JSONObject.class}, outerController, json);
-            selectOneAgain(selected);
+//            selectOneAgain(selected, selectionIndex);
         }
         else {
             filterStage.requestFocus();
@@ -233,10 +241,13 @@ public class EditorPanelController implements Initializable {
      * @param table Table component on scene.
      * @param list  Data list of given table (At the beginning, it may be empty).
      */
-    public void setTableDataList(AFilterableTableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
+    public void setTableDataList(ATableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
         tableData = list;
         table.setItems(list);
-        table.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
+        if (table instanceof AFilterableTableView){
+            AFilterableTableView<EditorPanelable> filterableTable = (AFilterableTableView) table;
+            filterableTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
+        }
     }
     
     public void setTreeTable(AFilterableTreeTableView<EditorPanelable> treeTable){
@@ -270,7 +281,6 @@ public class EditorPanelController implements Initializable {
         for (String fxId : fxIds) {
             formNode.getChildren().remove(formNode.lookup(fxId));
         }
-//        formNode.getChildren().remove(region);
     }
     
     private String getClassName(CLASS_TYPE type){
@@ -296,12 +306,13 @@ public class EditorPanelController implements Initializable {
     }
     
 
-    private void selectOneAgain(EditorPanelable selected) {
+    private void selectOneAgain(EditorPanelable selected, int selectionIndex) {
         if (selected == null) return;
         AView aview = (AView) exit.getScene().lookup("#aview");
         if (aview instanceof ATableView){
             ATableView table = (ATableView)aview;
             int i = table.getItems().size() - 1;
+            System.out.println("selected one again. i = " + i);
             while (i >= 0 && ((EditorPanelable) table.getItems().get(i)).getRecId() != selected.getRecId()) {
                 i--;
             }

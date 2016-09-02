@@ -52,6 +52,7 @@ public class InvoicesController implements Initializable {
     
     public void reAssignTable(JSONObject jsonFilter) {
         if (jsonFilter != null && jsonFilter.length() == 0){
+            int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             invoices.clear();
             Platform.runLater(() -> {
                 masker.setVisible(true);
@@ -60,6 +61,9 @@ public class InvoicesController implements Initializable {
                 invoices.setAll(Invoice.getAllFromDB());
                 Platform.runLater(() -> {
                     masker.setVisible(false);
+                    if (selectedIndex >= 0){
+                        aview.getSelectionModel().select(selectedIndex);
+                    }
                 });
             }).start();
         }

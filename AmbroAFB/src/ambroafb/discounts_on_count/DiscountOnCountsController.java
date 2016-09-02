@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.currency_rates;
+package ambroafb.discounts_on_count;
 
-import ambro.AFilterableTableView;
+import ambro.ATableView;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -23,10 +23,10 @@ import org.json.JSONObject;
  *
  * @author dato
  */
-public class CurrencyRatesController implements Initializable {
+public class DiscountOnCountsController implements Initializable {
 
     @FXML
-    private AFilterableTableView<EditorPanelable> aview;
+    private ATableView<EditorPanelable> aview;
     
     @FXML
     private MaskerPane masker;
@@ -34,7 +34,7 @@ public class CurrencyRatesController implements Initializable {
     @FXML
     private EditorPanelController editorPanelController;
     
-    private final ObservableList<EditorPanelable> currencyRates = FXCollections.observableArrayList();
+    private final ObservableList<EditorPanelable> discounts = FXCollections.observableArrayList();
     
     /**
      * Initializes the controller class.
@@ -46,30 +46,30 @@ public class CurrencyRatesController implements Initializable {
         aview.setBundle(rb);
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(aview);
-        editorPanelController.setTableDataList(aview, currencyRates);
+        editorPanelController.setTableDataList(aview, discounts);
+        editorPanelController.removeButtonsByFxIDs("#search");
+        reAssignTable(null);
     }
     
-    public void reAssignTable(JSONObject filterJson){
-        if (filterJson != null && filterJson.length() > 0){
-            int selectedIndex = aview.getSelectionModel().getSelectedIndex();
-            currencyRates.clear();
-            Platform.runLater(() -> {
-                masker.setVisible(true);
+    public void reAssignTable(JSONObject filterJson) {
+        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+        discounts.clear();
+        Platform.runLater(() -> {
+            masker.setVisible(true);
+        });
+        Thread t = new Thread(() -> {
+            DiscountOnCount.getAllFromDBTest().stream().forEach((client) -> {
+                discounts.add(client);
             });
-            
-            new Thread(() -> {
-                CurrencyRate.getFilteredFromDBTest(filterJson).stream().forEach((currRate) -> {
-                    currencyRates.add(currRate);
-                });
-                
-                Platform.runLater(() -> {
-                    masker.setVisible(false);
-                    if (selectedIndex >= 0){
-                        aview.getSelectionModel().select(selectedIndex);
-                    }
-                });
-            }).start();
-        }
+
+            Platform.runLater(() -> {
+                masker.setVisible(false);
+                if (selectedIndex >= 0){
+                    aview.getSelectionModel().select(selectedIndex);
+                }
+            });
+        });
+        t.start();
     }
 
     public EditorPanelController getEditorPanelController() {

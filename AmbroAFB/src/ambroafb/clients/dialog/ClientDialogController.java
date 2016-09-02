@@ -156,14 +156,6 @@ public class ClientDialogController implements Initializable {
         return result;
     }
     
-    public void setBackupClient(Client backupClient){
-        this.clientBackup = backupClient;
-    }
-    
-    public boolean anyComponentChanged(){
-        return !client.compares(clientBackup) || imageGalleryController.anyViewerChanged();
-    }
-    
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType, String serviceURLPrefix) {
         openDate.setDisable(true);
         boolean editable = true;
@@ -188,6 +180,15 @@ public class ClientDialogController implements Initializable {
             t.setDisable(true);
         });
     }
+    
+    public void setBackupClient(Client backupClient){
+        this.clientBackup = backupClient;
+    }
+    
+    public boolean anyComponentChanged(){
+        return !client.compares(clientBackup) || imageGalleryController.anyViewerChanged();
+    }
+    
     
     public void changePermissionForClose(boolean value){
         permissionToClose = value;

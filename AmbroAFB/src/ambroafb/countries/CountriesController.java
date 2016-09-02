@@ -10,10 +10,12 @@ import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
 
 /**
@@ -25,6 +27,8 @@ public class CountriesController implements Initializable {
 
     @FXML
     private AFilterableTableView<EditorPanelable> aview;
+    @FXML
+    private MaskerPane masker;
 
     @FXML
     private EditorPanelController editorPanelController;
@@ -48,10 +52,20 @@ public class CountriesController implements Initializable {
     }
 
     private void reAssignTable(JSONObject json) {
+        final int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         countries.clear();
         new Thread(() -> {
+            Platform.runLater(() -> {
+                masker.setVisible(true);
+            });
             Country.getAllFromDB().stream().forEach((country) -> {
                 countries.add(country);
+            });
+            Platform.runLater(() -> {
+                masker.setVisible(false);
+                if (selectedIndex >= 0){
+                    aview.getSelectionModel().select(selectedIndex);
+                }
             });
         }).start();
     }

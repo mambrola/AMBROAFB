@@ -51,6 +51,7 @@ public class ClientsController implements Initializable {
 
     public void reAssignTable(JSONObject filterJson) {
         if (filterJson != null && filterJson.length() > 0) {
+            int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             clients.clear();
             Platform.runLater(() -> {
                 masker.setVisible(true);
@@ -62,6 +63,9 @@ public class ClientsController implements Initializable {
                 
                 Platform.runLater(() -> {
                     masker.setVisible(false);
+                    if (selectedIndex >= 0){
+                        aview.getSelectionModel().select(selectedIndex);
+                    }
                 });
             });
             t.start();

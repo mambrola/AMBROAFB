@@ -11,6 +11,7 @@ import ambroafb.clients.filter.ClientFilter;
 import ambroafb.countries.Countries;
 import ambroafb.currency_rates.CurrencyRates;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
+import ambroafb.discounts_on_count.DiscountOnCounts;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -213,7 +214,16 @@ public class MainController implements Initializable {
     }
     
     @FXML private void discountsOnCount(ActionEvent event) {
+        String discountsOnCountStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + DiscountOnCounts.class.getSimpleName();
         
+        Stage discountsOnCountStage = Utils.getStageForPath(discountsOnCountStagePath);
+        if (discountsOnCountStage == null || !discountsOnCountStage.isShowing()){
+            DiscountOnCounts discountsOnCount = new DiscountOnCounts(AmbroAFB.mainStage);
+            discountsOnCount.show();
+        }
+        else {
+            discountsOnCountStage.requestFocus();
+        }
     }
     
     @FXML private void balAccounts(ActionEvent event) {

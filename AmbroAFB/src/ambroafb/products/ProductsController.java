@@ -52,14 +52,19 @@ public class ProductsController implements Initializable {
     
     public void reAssignTable(JSONObject jsonFilter) {
         if (jsonFilter != null && jsonFilter.length() == 0){
+            int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             products.clear();
-            Platform.runLater(() -> {
-                masker.setVisible(true);
-            });
+            
             new Thread(() -> {
+                Platform.runLater(() -> {
+                    masker.setVisible(true);
+                });
                 products.setAll(Product.getAllFromDB());
                 Platform.runLater(() -> {
                     masker.setVisible(false);
+                    if (selectedIndex >= 0){
+                        aview.getSelectionModel().select(selectedIndex);
+                    }
                 });
             }).start();
         }

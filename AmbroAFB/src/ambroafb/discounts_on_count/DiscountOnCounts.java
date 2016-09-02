@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.clients;
+package ambroafb.discounts_on_count;
 
 import ambroafb.general.Utils;
 import javafx.event.EventHandler;
@@ -13,29 +13,29 @@ import javafx.stage.WindowEvent;
 
 /**
  *
- * @author murman
+ * @author dato
  */
-public class Clients extends Stage {
+public class DiscountOnCounts extends Stage {
     
-    private ClientsController clientsController;
+    private DiscountOnCountsController discountsController;
     
-    public Clients(Stage owner) {
+    public DiscountOnCounts(Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
-
-        Scene scene = Utils.createScene("/ambroafb/clients/Clients.fxml", null);
-        clientsController = (ClientsController) scene.getProperties().get("controller");
+        
+        Scene scene = Utils.createScene("/ambroafb/discounts_on_count/DiscountOnCounts.fxml", null);
+        discountsController = (DiscountOnCountsController) scene.getProperties().get("controller");
         this.setScene(scene);
         this.initOwner(owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
+            discountsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if(event != null) event.consume();
         });
         
         Utils.setSizeFor((Stage)this);
     }
     
-    public ClientsController getClientsController(){
-        return clientsController;
+    public DiscountOnCountsController getDiscountOnCountsController(){
+        return discountsController;
     }
 }
