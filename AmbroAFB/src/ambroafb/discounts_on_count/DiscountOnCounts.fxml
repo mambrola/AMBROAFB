@@ -10,7 +10,7 @@
 <?import org.controlsfx.control.*?>
 
 <BorderPane id="formPane" 
-            stylesheets="/styles/css/discountsoncount.css"
+            stylesheets="/styles/css/discountoncounts.css"
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="ambroafb.discounts_on_count.DiscountOnCountsController">
     <top>
