@@ -24,11 +24,11 @@
                     </VBox>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="%currency_name" styleClass="validationMessage" />
+                            <Label text="%currency_name" />
                             <StackPane styleClass="couple" style="-fx-background-color: blue;">
                                 <children>
                                     <CurrencyRatesComboBox fx:id="currRatesComboBox" />
-                                    <ProgressIndicator fx:id="indocator" style="-fx-background-color: red;" />
+                                    <ProgressIndicator fx:id="indicator" style="-fx-background-color: red;" />
                                 </children>
                             </StackPane>
                         </children>

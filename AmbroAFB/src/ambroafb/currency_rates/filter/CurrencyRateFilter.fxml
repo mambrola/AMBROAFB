@@ -23,7 +23,7 @@
                     <ADatePicker fx:id="dateLess" />
                 </VBox >
                 <VBox >
-                    <Label fx:id="" text="%currency_name" />
+                    <Label text="%currency_name" />
                     <StackPane >
                         <children>
                             <CurrencyRatesComboBox fx:id="currRatesComboBox" />

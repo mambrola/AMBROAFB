@@ -39,7 +39,7 @@ public class CurrencyRateDialogController implements Initializable {
     @FXML
     private CurrencyRatesComboBox currRatesComboBox;
     @FXML
-    private ProgressIndicator indocator;
+    private ProgressIndicator indicator;
     
     @FXML @ContentNotEmpty 
     private TextField count;
@@ -64,8 +64,8 @@ public class CurrencyRateDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        indocator.visibleProperty().bind(currRatesComboBox.disableProperty());
-        indocator.setPrefSize(currRatesComboBox.getWidth(), currRatesComboBox.getHeight());
+        indicator.visibleProperty().bind(currRatesComboBox.visibleProperty().not());
+        indicator.setPrefSize(currRatesComboBox.getWidth(), currRatesComboBox.getHeight());
         currRatesComboBox.setShowCategoryALL(false);
         permissionToClose = true;
     }
