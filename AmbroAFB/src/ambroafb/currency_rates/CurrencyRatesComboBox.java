@@ -42,5 +42,11 @@ public class CurrencyRatesComboBox extends ComboBox<String>{
         if (!showCategoryALL){
             items.remove(CurrencyRate.ALL_CURRENCY);
         }
+        else {
+            for (String item : items) {
+                if (item.equals(CurrencyRate.ALL_CURRENCY)) return;
+            }
+            items.add(0, CurrencyRate.ALL_CURRENCY);
+        }
     }
 }
