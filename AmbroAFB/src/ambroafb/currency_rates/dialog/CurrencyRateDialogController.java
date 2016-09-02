@@ -64,10 +64,10 @@ public class CurrencyRateDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        permissionToClose = true;
         indocator.visibleProperty().bind(currRatesComboBox.disableProperty());
-        
         indocator.setPrefSize(currRatesComboBox.getWidth(), currRatesComboBox.getHeight());
+        currRatesComboBox.setShowCategoryALL(false);
+        permissionToClose = true;
     }
 
     public void bindCurrencyRate(CurrencyRate currRate) {

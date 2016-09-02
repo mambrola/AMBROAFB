@@ -27,7 +27,7 @@
                             <Label text="%currency_name" styleClass="validationMessage" />
                             <StackPane styleClass="couple" style="-fx-background-color: blue;">
                                 <children>
-                                    <CurrencyRatesComboBox fx:id="currRatesComboBox" showOnlyCurrencies="true" />
+                                    <CurrencyRatesComboBox fx:id="currRatesComboBox" />
                                     <ProgressIndicator fx:id="indocator" style="-fx-background-color: red;" />
                                 </children>
                             </StackPane>
