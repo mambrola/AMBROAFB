@@ -67,7 +67,6 @@ public class CurrencyRateDialogController implements Initializable {
         permissionToClose = true;
         indocator.visibleProperty().bind(currRatesComboBox.disableProperty());
         
-        // From css:
         indocator.setPrefSize(currRatesComboBox.getWidth(), currRatesComboBox.getHeight());
     }
 
