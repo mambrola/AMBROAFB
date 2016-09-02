@@ -19,8 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ambroafb.general.Names.*;
-import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Annotations.ContentRate;
+import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.Dialogable;
 import javafx.scene.control.ProgressIndicator;
 
@@ -42,11 +41,11 @@ public class CurrencyRateDialogController implements Initializable {
     @FXML
     private ProgressIndicator indocator;
     
-    @FXML @ContentNotEmpty @ContentRate
-    private TextField rate;
-    
-    @FXML @ContentNotEmpty
+    @FXML @ContentNotEmpty 
     private TextField count;
+    
+    @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]{1}(\\.[0-9]{4}){1}", explain = "Rate pattern is incorrect!" )
+    private TextField rate;
     
     @FXML
     private DialogOkayCancelController okayCancelController;

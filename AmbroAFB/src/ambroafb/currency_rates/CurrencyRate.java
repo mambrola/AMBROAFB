@@ -51,7 +51,7 @@ public class CurrencyRate extends EditorPanelable {
     public CurrencyRate(){
         dateProperty = new SimpleObjectProperty<>();
         date = new SimpleStringProperty("");
-        count = new SimpleStringProperty("0");
+        count = new SimpleStringProperty("1");
         iso = new SimpleStringProperty("");
         descrip_ka = new SimpleStringProperty("");
         descrip_en = new SimpleStringProperty("");

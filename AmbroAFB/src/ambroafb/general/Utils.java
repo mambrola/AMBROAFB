@@ -498,8 +498,11 @@ public class Utils {
             if (field.isAnnotationPresent(ContentTreeItem.class)){
                 result = result && checkValidationForContentTreeItemAnnotation(field, currentClassObject, type);
             }
-            if (field.isAnnotationPresent(ContentRate.class)){
-                result = result && checkValidationForContentRateAnnotation(field, currentClassObject);
+//            if (field.isAnnotationPresent(ContentRate.class)){
+//                result = result && checkValidationForContentRateAnnotation(field, currentClassObject);
+//            }
+            if (field.isAnnotationPresent(ContentPattern.class)){
+                result = result && checkValidationForContentPatternAnnotation(field, currentClassObject);
             }
         }
         return result;
@@ -571,9 +574,22 @@ public class Utils {
         return result;
     }
     
-    private static boolean checkValidationForContentRateAnnotation(Field field, Object currSceneController){
+//    private static boolean checkValidationForContentRateAnnotation(Field field, Object currSceneController){
+//        boolean result = true;
+//        ContentRate annotation = field.getAnnotation(ContentRate.class);
+//        
+//        Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
+//        
+//        if (!Pattern.matches(annotation.value(), (String)typeAndContent[1])){
+//            changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
+//            result = false;
+//        }
+//        return result;
+//    }
+    
+    private static boolean checkValidationForContentPatternAnnotation(Field field, Object currSceneController){
         boolean result = true;
-        ContentRate annotation = field.getAnnotation(ContentRate.class);
+        ContentPattern annotation = field.getAnnotation(ContentPattern.class);
         
         Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
         

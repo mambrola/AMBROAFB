@@ -30,8 +30,10 @@ public class DiscountOnCountDialogController implements Initializable {
     @FXML
     private VBox formPane;
     
-    @FXML @ContentNotEmpty
-    private TextField licenseCount, discountRate;
+    @FXML @ContentNotEmpty @ContentPattern(value = "[1-9]+", explain = "Only Integers")
+    private TextField licenseCount;
+    @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]{1,2}", explain = "Only Integers")
+    private TextField discountRate;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
