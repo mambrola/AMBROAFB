@@ -214,15 +214,15 @@ public class MainController implements Initializable {
     }
     
     @FXML private void discountsOnCount(ActionEvent event) {
-        String discountsOnCountStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + DiscountOnCounts.class.getSimpleName();
+        String discountOnCountsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + DiscountOnCounts.class.getSimpleName();
         
-        Stage discountsOnCountStage = Utils.getStageForPath(discountsOnCountStagePath);
-        if (discountsOnCountStage == null || !discountsOnCountStage.isShowing()){
-            DiscountOnCounts discountsOnCount = new DiscountOnCounts(AmbroAFB.mainStage);
-            discountsOnCount.show();
+        Stage discountOnCountsStage = Utils.getStageForPath(discountOnCountsStagePath);
+        if (discountOnCountsStage == null || !discountOnCountsStage.isShowing()){
+            DiscountOnCounts discountOnCounts = new DiscountOnCounts(AmbroAFB.mainStage);
+            discountOnCounts.show();
         }
         else {
-            discountsOnCountStage.requestFocus();
+            discountOnCountsStage.requestFocus();
         }
     }
     
