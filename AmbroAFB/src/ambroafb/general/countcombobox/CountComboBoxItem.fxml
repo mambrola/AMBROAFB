@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root    type="javafx.scene.layout.HBox"
+            fx:id="rootPane"
+            stylesheets="/styles/css/countcomboboxitem.css"
+            xmlns:fx="http://javafx.com/fxml/1" >
+    <children>
+        <HBox fx:id="numberPane" >
+            <children>
+                <Region HBox.hgrow="ALWAYS" /> 
+                <VBox fx:id="numberVBox" alignment="CENTER" >
+                    <Label fx:id="numberLabel" textAlignment="CENTER" text="" />
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" /> 
+                <VBox fx:id="numberArrowsPane" >
+                    <children>
+                        <Label fx:id="up"   />
+                        <Label fx:id="down" />
+                    </children>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" /> 
+            </children>
+        </HBox>
+        <HBox fx:id="namePane" alignment="CENTER_LEFT" >
+            <Label fx:id="itemName" textAlignment="CENTER" text="" />
+        </HBox>
+    </children>
+</fx:root>

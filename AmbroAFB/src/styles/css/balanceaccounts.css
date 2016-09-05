@@ -1,0 +1,5 @@
+@import url("/styles/css/core.css");
+#formPane {
+  -fx-pref-width: 500px;
+  -fx-max-width: 500px;
+}

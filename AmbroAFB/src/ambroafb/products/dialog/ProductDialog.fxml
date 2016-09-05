@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.*?>
+
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/productdialog.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" 
+                              xmlns="http://javafx.com/javafx/8"
+                              fx:controller="ambroafb.products.dialog.ProductDialogController" >
+    <VBox fx:id="formPane" styleClass="vContainer" >
+        <children>
+            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple" alignment="CENTER_LEFT" >
+                        <CheckBox fx:id="isAlive" text="%product_is_alive" />
+                    </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="product_name" styleClass="validationMessage" />
+                            <TextField fx:id="productNameField" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%product_vendor_code" styleClass="validationMessage" />
+                            <TextField fx:id="vendorCodeField" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="one" >
+                <children>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="product_remark" styleClass="validationMessage" />
+                            <TextField fx:id="productRemarkField" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox fx:id="okCancelHbox" styleClass="doubleHeight" alignment="CENTER_RIGHT" spacing="30" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

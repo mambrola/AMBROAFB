@@ -21,9 +21,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.controlsfx.control.MaskerPane;
 
@@ -44,6 +47,8 @@ public class LoginController extends Stage implements Initializable {
     private Label status;
     @FXML
     private MaskerPane masker;
+    @FXML
+    private Button login;
 
     private boolean loggedIn;
     private final Preferences prefs;
@@ -52,9 +57,16 @@ public class LoginController extends Stage implements Initializable {
         super();
 
         prefs = Preferences.userNodeForPackage(AmbroAFB.class);
-        Scene scene = Utils.createScene("/ambroafb/login/Login.fxml", this);
+        Scene scene = Utils.createScene("/ambroafb/login/Login.fxml", (Object)this);
         this.setScene(scene);
         setResizable(false);
+        login.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            if (event.getCode().equals(KeyCode.ENTER))
+                login();
+        });
+        if (!username.getText().isEmpty()){
+            password.requestFocus();
+        }
     }
 
     public boolean prompt() {
@@ -78,7 +90,7 @@ public class LoginController extends Stage implements Initializable {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                 Platform.runLater(() -> {
                     masker.setVisible(false);
-                    new AlertMessage(Alert.AlertType.ERROR, ex, "Network Error").showAlert();
+                    new AlertMessage(Alert.AlertType.ERROR, ex, "Network Error", getClass().getSimpleName()).showAlert();
                 });
             } catch (KFZClient.KFZServerException ex) {
                 if (ex.getStatusCode() == 401) {

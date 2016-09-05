@@ -34,6 +34,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ComboBox;
+import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,6 +80,8 @@ public class ClientDialogController implements Initializable {
     @FXML
     private CountryComboBox country;
     @FXML
+    private ComboBox status;
+    @FXML
     private DialogOkayCancelController okayCancelController;
     @FXML
     private ImageGalleryController imageGalleryController;
@@ -85,7 +90,7 @@ public class ClientDialogController implements Initializable {
     private final GeneralConfig conf = GeneralConfig.getInstance();
     private Client client;
     private Client clientBackup;
-    private AutoCompletionBinding<String> chooseCityBinding;
+    private boolean permissionToClose;
     
     /**
      * Initializes the controller class.
@@ -96,8 +101,29 @@ public class ClientDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         juridical.setOnAction(this::switchJuridical);
-        Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
+        Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities", "/clients/statuses"));
         accessCities.start();
+        country.valueProperty().addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
+            if (oldValue != null && !newValue.equals(oldValue)){
+                rezident.setSelected(newValue.getName().equals("Georgia"));
+            }
+        });
+        permissionToClose = true;
+    }
+    
+    private void switchJuridical(ActionEvent e) {
+        double w = ((VBox)firstName.getParent()).widthProperty().getValue() + ((VBox)lastName.getParent()).widthProperty().getValue();
+        if (((CheckBox) e.getSource()).isSelected()) {
+            first_name.setText(conf.getTitleFor("firm_name"));
+            last_name.setText(conf.getTitleFor("firm_form"));
+            ((VBox)firstName.getParent()).setPrefWidth(0.75 * w);
+            ((VBox)lastName.getParent()).setPrefWidth(0.25 * w);
+        } else {
+            first_name.setText(conf.getTitleFor("first_name"));
+            last_name.setText(conf.getTitleFor("last_name"));
+            ((VBox)firstName.getParent()).setPrefWidth(0.50 * w);
+            ((VBox)lastName.getParent()).setPrefWidth(0.50 * w);
+        }
     }
     
     public void bindClient(Client client) {
@@ -115,6 +141,7 @@ public class ClientDialogController implements Initializable {
             zipCode.      textProperty().bindBidirectional(client.zipCodeProperty());
             city.         textProperty().bindBidirectional(client.cityProperty());
             country.     valueProperty().bindBidirectional(client.countryProperty());
+            status.      valueProperty().bindBidirectional(client.statusProperty());
         }
     }
     
@@ -129,14 +156,6 @@ public class ClientDialogController implements Initializable {
         return result;
     }
     
-    public void setBackupClient(Client backupClient){
-        this.clientBackup = backupClient;
-    }
-    
-    public boolean anyComponentChanged(){
-        return !client.compares(clientBackup) || imageGalleryController.anyViewerChanged();
-    }
-    
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType, String serviceURLPrefix) {
         openDate.setDisable(true);
         boolean editable = true;
@@ -149,33 +168,34 @@ public class ClientDialogController implements Initializable {
             phonesContainer.getChildren().add(phonesCombobox);
         }
         okayCancelController.setButtonsFeatures(buttonType);
-        imageGalleryController.setUploadDataURL(serviceURLPrefix, client.getEmail() + "/", client.getEmail() + "/all");
+        imageGalleryController.setURLData(serviceURLPrefix, client.getRecId() + "/", client.getRecId() + "/all");
         imageGalleryController.downloadData();
     }
     
-    private void switchJuridical(ActionEvent e) {
-        double w = firstName.widthProperty().getValue() + lastName.widthProperty().getValue();
-        if (((CheckBox) e.getSource()).isSelected()) {
-            first_name.setText(conf.getTitleFor("firm_name"));
-            last_name.setText(conf.getTitleFor("firm_form"));
-            firstName.setPrefWidth(0.75 * w);
-            lastName.setPrefWidth(0.25 * w);
-        } else {
-            first_name.setText(conf.getTitleFor("first_name"));
-            last_name.setText(conf.getTitleFor("last_name"));
-            firstName.setPrefWidth(0.50 * w);
-            lastName.setPrefWidth(0.50 * w);
-        }
-    }
-    
-    
     /**
-     * Disables all fields on Dialog stage except phones.
+     * Disables all fields on Dialog stage.
      */
     private void setDisableComponents(){
         focusTraversableNodes.forEach((Node t) -> {
             t.setDisable(true);
         });
+    }
+    
+    public void setBackupClient(Client backupClient){
+        this.clientBackup = backupClient;
+    }
+    
+    public boolean anyComponentChanged(){
+        return !client.compares(clientBackup) || imageGalleryController.anyViewerChanged();
+    }
+    
+    
+    public void changePermissionForClose(boolean value){
+        permissionToClose = value;
+    }
+    
+    public boolean getPermissionToClose(){
+        return permissionToClose;
     }
     
     public void operationCanceled(){
@@ -188,23 +208,28 @@ public class ClientDialogController implements Initializable {
     
     private class BackgroundAccessToDB implements Runnable {
 
-        private final String path;
+        private final String pathCities;
+        private final String pathStatuses;
         
-        public BackgroundAccessToDB(String servicePath){
-            path = servicePath;
+        public BackgroundAccessToDB(String pathForCities, String pathForStatuses){
+            pathCities = pathForCities;
+            pathStatuses = pathForStatuses;
         }
         
         @Override
         public void run() {
             try {
-                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getServerClient().get(path));
+                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getServerClient().get(pathCities));
                 List<String> citiesAsList = getListFromJSONArray(cities);
-                chooseCityBinding = TextFields.bindAutoCompletion(
-                                                        city,
-                                                        (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter((cityName) ->
-                                                            cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
-                                                        .collect(Collectors.toList()), 
-                                                        null);
+                TextFields.bindAutoCompletion(  city,
+                                                (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter((cityName) ->
+                                                    cityName.toLowerCase().contains(param.getUserText().toLowerCase()) )
+                                                .collect(Collectors.toList()), 
+                                                getStringConverter());
+                
+                JSONArray statuses = new JSONArray(GeneralConfig.getInstance().getServerClient().get(pathStatuses));
+                List<String> statusesAsList = getListFromJSONArray(statuses);
+                status.getItems().addAll(statusesAsList);
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -218,6 +243,20 @@ public class ClientDialogController implements Initializable {
                     result.add(cities.getString(i));
             }
             return result;
+        }
+        
+        private StringConverter<String> getStringConverter(){
+            return new StringConverter<String>() {
+                @Override
+                public String toString(String name) {
+                    return name;
+                }
+
+                @Override
+                public String fromString(String string) {
+                    return string;
+                }
+            };
         }
     }
 }

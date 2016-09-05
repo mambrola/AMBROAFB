@@ -5,22 +5,30 @@
  */
 package ambroafb;
 
+import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Clients;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.countries.Countries;
+import ambroafb.currency_rates.CurrencyRates;
+import ambroafb.currency_rates.filter.CurrencyRateFilter;
+import ambroafb.discounts_on_count.DiscountOnCounts;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
+import ambroafb.invoices.Invoices;
+import ambroafb.invoices.filter.InvoiceFilter;
+import ambroafb.products.Products;
+import ambroafb.products.filter.ProductFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
@@ -33,6 +41,8 @@ public class MainController implements Initializable {
     private GeneralConfig config;
     
     @FXML
+    private AnchorPane formPane;
+    @FXML
     private Button back;
     
     @FXML
@@ -41,7 +51,7 @@ public class MainController implements Initializable {
             Stage stage = Utils.createStage("/ambroafb/light/Light.fxml", config.getTitleFor("light"), "/images/innerLogo.png", AmbroAFB.mainStage);
             stage.show();
         } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION);
+            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION,  "Light");
             alert.showAlert();
         }
     }
@@ -52,7 +62,7 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             stage.show();
         } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION);
+            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Auto Dealers");
             alert.showAlert();
         }
     }
@@ -64,7 +74,7 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             stage.show();
         } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION);
+            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Account");
             alert.showAlert();
         }
     }
@@ -80,15 +90,17 @@ public class MainController implements Initializable {
             );
             stage.show();
         } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION);
+            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Configuration");
             alert.showAlert();
         }
     }
     
     @FXML
-    private void mainExit(ActionEvent event){
+    public void mainExit(ActionEvent event){
         Utils.saveSizeFor(AmbroAFB.mainStage);
-        Utils.exit();
+        if (Utils.closeStageWithChildren(AmbroAFB.mainStage)){
+            Utils.exit();
+        }
     }
     
     @FXML
@@ -102,15 +114,14 @@ public class MainController implements Initializable {
             );
             stage.show();
         }catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CAR_FINES_SCENE_START);
+            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CAR_FINES_SCENE_START, "Car Fines");
             alert.showAlert();
         }
     }
     
     @FXML
     private void clients(ActionEvent event) {
-        String mainStagePath = Utils.getPathForStage(AmbroAFB.mainStage);
-        String clientsStagePath = mainStagePath + "/" + Clients.class.getSimpleName();
+        String clientsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Clients.class.getSimpleName();
         
         Stage clientsStage = Utils.getStageForPath(clientsStagePath);
         if(clientsStage == null || !clientsStage.isShowing()){
@@ -131,44 +142,40 @@ public class MainController implements Initializable {
     
     @FXML 
     private void invoices(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage(
-                    "/ambroafb/invoices/Invoices.fxml", 
-                    config.getTitleFor("invoices"), 
-                    Names.IN_OUT_LOGO,
-                    AmbroAFB.mainStage
-            );
-            stage.show();
-        }catch(IOException ex){
-            Platform.runLater(() -> {
-                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-                alert.showAlert();
-            });
+        String invoicesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Invoices.class.getSimpleName();
+        
+        Stage invoicesStage = Utils.getStageForPath(invoicesStagePath);
+        if(invoicesStage == null || !invoicesStage.isShowing()){
+            Invoices invoices = new Invoices(AmbroAFB.mainStage);
+            invoices.show();
+            
+            InvoiceFilter filter = new InvoiceFilter(invoices);
+            invoices.getInvoicesController().reAssignTable(filter.getResult());
+        }
+        else {
+            invoicesStage.requestFocus();
         }
     }
     
     @FXML 
     private void products(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage(
-                    "/ambroafb/products/Products.fxml", 
-                    config.getTitleFor("products"), 
-                    Names.IN_OUT_LOGO,
-                    AmbroAFB.mainStage
-            );
-            stage.show();
-        }catch(IOException ex){
-            Platform.runLater(() -> {
-                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-                alert.showAlert();
-            });
+        String productsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Products.class.getSimpleName();
+        Stage productsStage = Utils.getStageForPath(productsStagePath);
+        if (productsStage == null || !productsStage.isShowing()){
+            Products products = new Products(AmbroAFB.mainStage);
+            products.show();
+            
+            ProductFilter filter = new ProductFilter(products);
+            products.getProductsController().reAssignTable(filter.getResult());
+        }
+        else{
+            productsStage.requestFocus();
         }
     }
     
     @FXML 
     private void countries(ActionEvent event) {
-        String mainStagePath = Utils.getPathForStage(AmbroAFB.mainStage);
-        String countriesStagePath = mainStagePath + "/" + Countries.class.getSimpleName();
+        String countriesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Countries.class.getSimpleName();
         
         Stage countriesStage = Utils.getStageForPath(countriesStagePath);
         if (countriesStage == null || !countriesStage.isShowing()){
@@ -178,25 +185,60 @@ public class MainController implements Initializable {
         else {
             countriesStage.requestFocus();
         }
-        
-//        try{
-//            Stage stage = Utils.createStage(
-//                    "/ambroafb/countries/Countries.fxml", 
-//                    config.getTitleFor("countries"), 
-//                    Names.IN_OUT_LOGO,
-//                    AmbroAFB.mainStage
-//            );
-//            stage.show();
-//        }catch(IOException ex){
-//            Platform.runLater(() -> {
-//                AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_IN_OUT_START_SCENE);
-//                alert.showAlert();
-//            });
-//        }
     }
     
     
+    
     @FXML private void accounts(ActionEvent event) {}
+    @FXML private void licenses(ActionEvent event) {}
+    @FXML private void currencies(ActionEvent event) {}
+    
+    @FXML private void currencyRates(ActionEvent event) {
+        String currencyRatesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + CurrencyRates.class.getSimpleName();
+        
+        Stage currencyRatesStage = Utils.getStageForPath(currencyRatesStagePath);
+        if(currencyRatesStage == null || !currencyRatesStage.isShowing()){
+            CurrencyRates currencyRates = new CurrencyRates(AmbroAFB.mainStage);
+            currencyRates.show();
+            
+            CurrencyRateFilter filter = new CurrencyRateFilter(currencyRates);
+            JSONObject json = filter.getResult();
+            currencyRates.getCurrencyRatesController().reAssignTable(json);
+
+            if (json != null && json.length() == 0) 
+                currencyRates.close();
+        }
+        else {
+            currencyRatesStage.requestFocus();
+        }
+    }
+    
+    @FXML private void discountsOnCount(ActionEvent event) {
+        String discountOnCountsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + DiscountOnCounts.class.getSimpleName();
+        
+        Stage discountOnCountsStage = Utils.getStageForPath(discountOnCountsStagePath);
+        if (discountOnCountsStage == null || !discountOnCountsStage.isShowing()){
+            DiscountOnCounts discountOnCounts = new DiscountOnCounts(AmbroAFB.mainStage);
+            discountOnCounts.show();
+        }
+        else {
+            discountOnCountsStage.requestFocus();
+        }
+    }
+    
+    @FXML private void balAccounts(ActionEvent event) {
+        String balAccountsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + BalanceAccounts.class.getSimpleName();
+        
+        Stage balAccountsStage = Utils.getStageForPath(balAccountsStagePath);
+        if (balAccountsStage == null || !balAccountsStage.isShowing()){
+            BalanceAccounts accounts = new BalanceAccounts(AmbroAFB.mainStage);
+            accounts.show();
+        }
+        else {
+            balAccountsStage.requestFocus();
+        }
+    }
+    
     @FXML private void balances(ActionEvent event) {}
     @FXML private void account_statments(ActionEvent event) {}
     @FXML private void other(ActionEvent event) {}
@@ -222,8 +264,6 @@ public class MainController implements Initializable {
 //            });
 //        }
 //    }
-    
-    
     
     
     

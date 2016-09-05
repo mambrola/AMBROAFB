@@ -4,19 +4,15 @@
  * and open the template in the editor.
  */
 package ambroafb.general;
-
-import ambro.AMySQLChanel;
+    
+import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
+import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,19 +25,21 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import ambroafb.general.interfaces.Annotations.*;
+import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.EditorPanelable;
 import java.lang.reflect.Field;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
 import javafx.fxml.FXML;
@@ -49,6 +47,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -221,20 +220,6 @@ public class Utils {
     }
 
     /**
-     * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით Murman:ჩავამატე parameters
-     *
-     * @param name - fxml დოკუმენტის მისამართი
-     * @param parameters
-     * @return
-     * @throws IOException
-     */
-//    public static Scene createScene(String name, HashMap<String, Object> parameters) throws IOException {
-//        FXMLLoader loader = new FXMLLoader();
-//        loader.setResources(GeneralConfig.getInstance().getBundle());
-//        Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
-//        return new Scene(root);
-//    }
-    /**
      * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით
      *
      * @param name - fxml დოკუმენტის მისამართი
@@ -291,14 +276,14 @@ public class Utils {
         exitApplication();
     }
 
-    /**
+    /** a
      * თიშავს აპლიკაციას კონფიგურაციების შენახვის გარეშე
      */
     public static void exitApplication() {
         GeneralConfig.getInstance().logoutServerClient();
         try {
             if (AmbroAFB.socket != null) {
-                AmbroAFB.socket.close(); // socket opened with "try", so close operation is not needed.
+                AmbroAFB.socket.close();
             }
         } catch (IOException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
@@ -314,8 +299,8 @@ public class Utils {
     public static ArrayList<Node> getFocusTraversableBottomChildren(Parent root) {
         ArrayList<Node> arrayList = new ArrayList<>();
         root.getChildrenUnmodifiable().stream().forEach((n) -> {
-            String nodeClassToString = n.getClass().toString();
-            boolean allow = !nodeClassToString.contains("ImageView") && !nodeClassToString.contains("ANodeSlider");
+            boolean allow = !n.getStyleClass().contains("alwaysEnable") &&
+                            !n.getClass().toString().contains("ImageView");
             if (allow){
                 if (((Parent) n).getChildrenUnmodifiable().isEmpty()) {
                     if (n.isFocusTraversable()) {
@@ -381,23 +366,10 @@ public class Utils {
         return (Stage) bidmap.get(path);
     }
     
-//    public static void removeHidingStages(){
-//        List<Stage> hideStages = new ArrayList<>();
-//        for (Object value : bidmap.values()) {
-//            Stage stage = (Stage) value;
-//            if (!stage.isShowing()){
-//                hideStages.add(stage);
-//            }
-//        }
-//        
-//        hideStages.stream().forEach((hideStage) -> {
-//            bidmap.removeValue(hideStage);
-//        });
-//    }
     
     /**
      * The function removes stage from bidirectional map 
-     * and use "removeAlsoSubstagesByPath" method for it.
+     * and use "removeAlsoSubstagesByPath" function for it.
      * @param stage - which must remove
      */
     public static void removeByStage(Stage stage){
@@ -412,7 +384,7 @@ public class Utils {
      * subStages. The function needs a helper collection to save removable
      * object in it, because of don't mess an iterator of map.
      *
-     * @param path - full path for stage (ex: main/Clients/Dialog).
+     * @param path - full path for stage (ex: main/Clients/DialogOrFilter).
      */
     public static void removeAlsoSubstagesByPath(String path) {
         List<String> pathes = new ArrayList<>();
@@ -425,6 +397,21 @@ public class Utils {
             bidmap.remove((String) currPath);
         });
     }
+    
+    public static void hideChildrenStagesFor(Stage currStage, boolean minimized){
+        bidmap.keySet().stream().forEach((key) -> {
+            String currPath = (String)key;
+            if (currPath.equals(getPathForStage(currStage))) return;
+            String ownerPath = currPath.substring(0, currPath.lastIndexOf("/"));
+            if (!ownerPath.equals(getPathForStage(AmbroAFB.mainStage))){
+                if (bidmap.containsKey(ownerPath)){
+                    Stage owner = getStageForPath(currPath);
+                    owner.setIconified(minimized);
+                }
+            }
+        });
+    }
+    
     /**
      * The function returns stage which associated for the given local name.
      *
@@ -470,7 +457,7 @@ public class Utils {
         try {
             result = Class.forName(name);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
@@ -479,12 +466,12 @@ public class Utils {
      * This class invokes a specific method ("methodName" parameter) for the
      * "owner" class.
      *
-     * @param methodName - name of method in its class
-     * @param argsTypes - arguments types
-     * @param owner - class object which owned the method
-     * @param object - object, witch (non!) static method will be invoke
-     * @param argsValues - arguments value for method
-     * @return - object will be null if we invokes a void type method, otherwise
+     * @param owner Class object which owned the method
+     * @param methodName Name of method in its class
+     * @param argsTypes Arguments types
+     * @param object Object, witch (non!) static method will be invoke
+     * @param argsValues Arguments value for method
+     * @return object Will be null if we invokes a void type method, otherwise
      * will return a specific object of class.
      */
     public static Object getInvokedClassMethod(Class owner, String methodName, Class<?>[] argsTypes, Object object, Object... argsValues) {
@@ -497,7 +484,7 @@ public class Utils {
         return result;
     }
 
-    public static boolean everyFieldContentIsValidFor(Object currentClassObject) {
+    public static boolean everyFieldContentIsValidFor(Object currentClassObject, EDITOR_BUTTON_TYPE type) {
         boolean result = true;
         Field[] fields = currentClassObject.getClass().getDeclaredFields();
 
@@ -506,6 +493,12 @@ public class Utils {
                 result = result && checkValidationForIsNotEmptyAnnotation(field, currentClassObject);
             }
             if (field.isAnnotationPresent(ContentMail.class)) {
+                result = result && checkValidationForContentMailAnnotation(field, currentClassObject);
+            }
+            if (field.isAnnotationPresent(ContentTreeItem.class)){
+                result = result && checkValidationForContentTreeItemAnnotation(field, currentClassObject, type);
+            }
+            if (field.isAnnotationPresent(ContentPattern.class)){
                 result = result && checkValidationForContentPatternAnnotation(field, currentClassObject);
             }
         }
@@ -519,30 +512,74 @@ public class Utils {
         Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
         String text = (String) typeAndContent[1];
         if (annotation.value() && text.isEmpty()) {
-            changeNodeVisualByEmpty((Node) typeAndContent[0], annotation.explain());
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
             result = false;
         } else {
-            changeNodeVisualByEmpty((Node) typeAndContent[0], "");
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
         }
         return result;
     }
 
-    private static boolean checkValidationForContentPatternAnnotation(Field field, Object classObject) {
+    private static boolean checkValidationForContentMailAnnotation(Field field, Object currSceneController) {
         boolean result = true;
         ContentMail annotation = field.getAnnotation(ContentMail.class);
 
-        Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
+        Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
 
         boolean validSyntax = Pattern.matches(annotation.valueForSyntax(), (String) typeAndContent[1]);
         boolean validAlphabet = Pattern.matches(annotation.valueForAlphabet(), (String) typeAndContent[1]);
         if (!validSyntax) {
-            changeNodeVisualByEmpty((Node) typeAndContent[0], annotation.explainForSyntax());
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explainForSyntax());
             result = false;
         } else if (!validAlphabet) {
-            changeNodeVisualByEmpty((Node) typeAndContent[0], annotation.explainForAlphabet());
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explainForAlphabet());
             result = false;
         } else {
-            changeNodeVisualByEmpty((Node) typeAndContent[0], "");
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
+        }
+        return result;
+    }
+    
+    private static boolean checkValidationForContentTreeItemAnnotation(Field field, Object currSceneController, EDITOR_BUTTON_TYPE  type){
+        boolean result = true;
+        ContentTreeItem annotation = field.getAnnotation(ContentTreeItem.class);
+        Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
+        String content = (String)typeAndContent[1];
+        
+        if (content.length() != Integer.parseInt(annotation.valueForLength())){
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForLength() + annotation.valueForLength());
+            result = false;
+        }
+        else if (!Pattern.matches(annotation.valueForSyntax(), content)){
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForSyntax());
+            result = false;
+        }
+        else {
+            EditorPanelable newPanelableObject = (EditorPanelable) getInvokedClassMethod(currSceneController.getClass(), "getNewEditorPanelable", null, currSceneController);
+            Object contr = getInvokedClassMethod(currSceneController.getClass(), "getOwnerController", null, currSceneController);
+            // already exist this item for this code:
+            if ((Boolean)getInvokedClassMethod(contr.getClass(), "accountAlreadyExistForCode", new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, contr, newPanelableObject, type)){
+                changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForExists());
+                result = false;
+            }
+            // item has not a parent:
+            else if (!(Boolean)getInvokedClassMethod(contr.getClass(), "accountHasParent", new Class[]{String.class}, contr, content)){
+                changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForHasNotParent());
+                result = false;
+            }
+        }
+        return result;
+    }
+    
+    private static boolean checkValidationForContentPatternAnnotation(Field field, Object currSceneController){
+        boolean result = true;
+        ContentPattern annotation = field.getAnnotation(ContentPattern.class);
+        
+        Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
+        
+        if (!Pattern.matches(annotation.value(), (String)typeAndContent[1])){
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
+            result = false;
         }
         return result;
     }
@@ -553,11 +590,15 @@ public class Utils {
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
 
-            if (field.getType().toString().contains("TextField")) {
+            if (field.getType().equals(TextField.class)) {
                 results[0] = (TextField) field.get(classObject);
                 results[1] = ((TextField) results[0]).getText();
             }
-
+            else if (field.getType().equals(ADatePicker.class)){
+                ADatePicker datePicker = (ADatePicker) field.get(classObject);
+                results[0] = datePicker;
+                results[1] = datePicker.getEditor().getText();
+            }
             field.setAccessible(accessible);
         } catch (IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
@@ -565,16 +606,16 @@ public class Utils {
         return results;
     }
 
-    private static final Map<Label, Paint> labels_colors_map = new HashMap<>();
+    private static final Map<Label, Paint> default_colors_map = new HashMap<>();
 
-    private static void changeNodeVisualByEmpty(Node node, String text) {
+    private static void changeNodeTitleLabelVisual(Node node, String text) {
         Parent parent = node.getParent();
         Label nodeTitleLabel = (Label) parent.lookup(".validationMessage");
 
         if (text.isEmpty()) {
-            if (labels_colors_map.containsKey(nodeTitleLabel)) {// This order of 'if' statements is correct!
-                nodeTitleLabel.setTextFill(labels_colors_map.get(nodeTitleLabel));
-                labels_colors_map.remove(nodeTitleLabel);
+            if (default_colors_map.containsKey(nodeTitleLabel)) {// This order of 'if' statements is correct!
+                nodeTitleLabel.setTextFill(default_colors_map.get(nodeTitleLabel));
+                default_colors_map.remove(nodeTitleLabel);
                 Tooltip.uninstall(nodeTitleLabel, toolTip);
             }
         } else {
@@ -582,7 +623,7 @@ public class Utils {
             toolTip.setText(text);
             toolTip.setStyle("-fx-background-color: gray; -fx-font-size: 8pt;");
             Tooltip.install(nodeTitleLabel, toolTip);
-            labels_colors_map.putIfAbsent(nodeTitleLabel, nodeTitleLabel.getTextFill());
+            default_colors_map.putIfAbsent(nodeTitleLabel, nodeTitleLabel.getTextFill());
             nodeTitleLabel.setTextFill(Color.RED);
         }
     }
@@ -619,7 +660,7 @@ public class Utils {
         }
     }
 
-    public static void callGallerySendMethod(Object currSceneController) {
+    public static void callGallerySendMethod(String sendingURLParameter, Object currSceneController) {
         try {
             Field[] fields = currSceneController.getClass().getDeclaredFields();
             for (Field field : fields) {
@@ -628,7 +669,7 @@ public class Utils {
                 if (field.isAnnotationPresent(FXML.class)) {
                     if (field.get(currSceneController) instanceof ImageGalleryController) {
                         ImageGalleryController controller = (ImageGalleryController)field.get(currSceneController);
-                        controller.sendDataToServer();
+                        controller.sendDataToServer(sendingURLParameter);
                     }
                 }
                 field.setAccessible(oldValue);
@@ -636,5 +677,64 @@ public class Utils {
         } catch (IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static void closeStageAndItsChildrenStages(Stage currStage){
+        closeStageWithChildren(currStage);
+        if (currStage.isShowing()){
+            currStage.close();
+        }
+    }
+
+    /**
+     * The function closes children stages and after that it close the given stage.
+     * @param currStage Current stage.
+     * @return True if current stage must close, false otherwise.
+     */
+    public static boolean closeStageWithChildren(Stage currStage) {
+        boolean closePermission = true;
+        String currStagePath = (String) bidmap.getKey(currStage);
+        List<String> childrenPath = getFirstLevelChildrenFor(currStagePath);
+        if (childrenPath.isEmpty()) {
+            System.out.println("sharp: " + (String)bidmap.getKey(currStage));
+            if (currStage instanceof Dialogable) {
+                if (currStage.getOnCloseRequest() == null) {
+                    currStage.close();
+                } else {
+                    currStage.getOnCloseRequest().handle(null);
+                }
+                Object controller = currStage.getScene().getProperties().get("controller");
+                closePermission = (Boolean) getInvokedClassMethod(controller.getClass(), "getPermissionToClose", null, controller);
+            } else {
+                currStage.close();
+            }
+        }
+        else {
+            System.out.println("Enter Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
+            for (String childPath : childrenPath) {
+                closePermission = closeStageWithChildren((Stage) bidmap.get(childPath)) && closePermission;
+            }
+            if (currStage.isShowing() && closePermission && !((String)bidmap.getKey(currStage)).equals("main")){
+                currStage.close();
+                System.out.println("Close Stage: " + (String)bidmap.getKey(currStage));
+            }
+            System.out.println("Exit Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
+        }
+        return closePermission;
+    }
+    
+    private static List<String> getFirstLevelChildrenFor(String ownerPath){
+        List<String> children = new ArrayList<>();
+        SortedSet<Object> sortedKeys = new TreeSet<>(bidmap.keySet());
+        sortedKeys.stream().forEach((key) -> {
+            String path = (String) key;
+            String pathAfterFirstSlash = StringUtils.substringAfter(path, ownerPath + "/");
+            if (!path.equals(ownerPath) && path.startsWith(ownerPath) &&
+                !pathAfterFirstSlash.contains("/") && ((Stage) bidmap.get(path)).isShowing()){
+
+                children.add(path);
+            }
+        });
+        return children;
     }
 }

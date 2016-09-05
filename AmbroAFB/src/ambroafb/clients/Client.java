@@ -53,7 +53,9 @@ import org.json.JSONObject;
 public class Client extends EditorPanelable{
 
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
-    public String password, payPal, www, createdDate, status;
+    public String payPal, www, createdDate;
+    
+    private final StringProperty status;
 
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private final SimpleBooleanProperty isJur;
@@ -96,6 +98,8 @@ public class Client extends EditorPanelable{
     @AView.Column(title = "%fax", width = "80")
     private final SimpleStringProperty fax;
 
+    private static final Country DEFAULT_COUNTRY = new Country("GE", "Georgia");
+    
     public Client() {
         isJur =             new SimpleBooleanProperty();
         isRez =             new SimpleBooleanProperty();
@@ -108,12 +112,14 @@ public class Client extends EditorPanelable{
         city =              new SimpleStringProperty("");
         fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
         country =           new SimpleObjectProperty<>();
-        country.set(new Country("GE", "Georgia"));
+        country.set(DEFAULT_COUNTRY);
+        isRez.set(country.get().getCode().equals("GE"));
         countryDescrip =    new SimpleStringProperty("");
         IDNumber =          new SimpleStringProperty("");
         phoneList = FXCollections.observableArrayList();
         phoneNumbers =      new SimpleStringProperty("");
         fax =               new SimpleStringProperty("");
+        status = new SimpleStringProperty("new");
 
         phoneList.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
@@ -148,42 +154,7 @@ public class Client extends EditorPanelable{
         }
     }
     
-    @Override
-    public Client cloneWithoutID() {
-        Client clone = new Client();
-        clone.copyFrom(this);
-        return clone;
-    }
-
-    @Override
-    public Client cloneWithID() {
-        Client clone = cloneWithoutID();
-        clone.recId = recId;
-        return clone;
-    }
-
-    @Override
-    public void copyFrom(EditorPanelable object) {
-        Client other = (Client) object;
-        setIsJur(other.getIsJur());
-        setIsRez(other.getIsRez());
-        setFirstName(other.getFirstName());
-        setLastName(other.getLastName());
-        setEmail(other.getEmail());
-        setAddress(other.getAddress());
-        setZipCode(other.getZipCode());
-        setCity(other.getCity());
-        setCountry(other.getCountry());
-        setIDNumber(other.getIDNumber());
-        getPhoneList().setAll(other.getPhoneList()
-                .stream()
-                .map((Phone t) -> new Phone(t.getRecId(), t.getNumber()))
-                .collect(Collectors.toList())
-        );
-        setFax(other.getFax());
-        this.createdDate = other.createdDate;
-    }
-
+    // DBService methods:
     public static List<Client> getAllFromDB() {
         try {
             String data = GeneralConfig.getInstance().getServerClient().get("clients");
@@ -217,7 +188,7 @@ public class Client extends EditorPanelable{
             return mapper.readValue(data, Client.class);
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
         }
         return null;
     }
@@ -238,7 +209,7 @@ public class Client extends EditorPanelable{
             return client;
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
         }
         return null;
     }
@@ -249,11 +220,14 @@ public class Client extends EditorPanelable{
             return true;
         } catch (IOException | KFZClient.KFZServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage()).showAlert();
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
         }
         return false;
     }
 
+    
+    //Properties getters:
+    
     public SimpleBooleanProperty isJurProperty() {
         return isJur;
     }
@@ -289,7 +263,7 @@ public class Client extends EditorPanelable{
     public SimpleStringProperty cityProperty() {
         return city;
     }
-
+    
     public StringExpression fullAddressProperty() {
         return fullAddress;
     }
@@ -309,7 +283,14 @@ public class Client extends EditorPanelable{
     public SimpleStringProperty faxProperty() {
         return fax;
     }
+    
+    public StringProperty statusProperty(){
+        return status;
+    }
 
+    
+    // Getters:
+    
     public boolean getIsJur() {
         return isJur.get();
     }
@@ -341,6 +322,14 @@ public class Client extends EditorPanelable{
     public String getFullAddress() {
         return fullAddress.get();
     }
+    
+    public String getStatus() {
+        return status.get();
+    }
+
+    public void setStatus(String status) {
+        this.status.set(status);
+    }
 
     public Country getCountry() {
         return country.get();
@@ -371,6 +360,7 @@ public class Client extends EditorPanelable{
         return IDNumber.get();
     }
 
+     // Setters:
     public final void setIsJur(boolean isJur) {
         this.isJur.set(isJur);
     }
@@ -420,20 +410,6 @@ public class Client extends EditorPanelable{
         this.fax.set(fax);
     }
     
-    @Override
-    public String toStringForSearch(){
-        String phones = "";
-        phones = phoneList.stream().map((phoneNumber) -> phoneNumber.getNumber() + " ").reduce(phones, String::concat);
-
-        String result = firstName.concat(" " + lastName.get())
-                                .concat(" " + email.get()).concat(" " + address.get())
-                                .concat(" " + zipCode.get()).concat(" " + city.get())
-                                .concat(" " + country.getName()).concat(" " + fax.get())
-                                .concat(" " + IDNumber.get())
-                        .get();
-        return (result + phones).toLowerCase();
-    }
-    
     public boolean compares(Client other){
         boolean fieldsCompareResult =   this.isJur.get() == other.getIsJur() &&
                                         this.isRez.get() == other.getIsRez() && 
@@ -445,10 +421,65 @@ public class Client extends EditorPanelable{
                                         this.city.get().equals(other.getCity()) &&
                                         this.country.get().equals(other.getCountry()) &&
                                         this.IDNumber.get().equals(other.getIDNumber()) &&
-                                        this.fax.get().equals(other.getFax());
+                                        this.fax.get().equals(other.getFax()) &&
+                                        this.status.get().equals(other.getStatus());
         boolean equalsPhones = Phone.compareLists(phoneList, other.getPhoneList());
         return fieldsCompareResult && equalsPhones;
     }
+
+    // Override methods:
+    
+    @Override
+    public Client cloneWithoutID() {
+        Client clone = new Client();
+        clone.copyFrom(this);
+        return clone;
+    }
+
+    @Override
+    public Client cloneWithID() {
+        Client clone = cloneWithoutID();
+        clone.recId = recId;
+        return clone;
+    }
+
+    @Override
+    public void copyFrom(EditorPanelable object) {
+        Client other = (Client) object;
+        setIsJur(other.getIsJur());
+        setIsRez(other.getIsRez());
+        setFirstName(other.getFirstName());
+        setLastName(other.getLastName());
+        setEmail(other.getEmail());
+        setAddress(other.getAddress());
+        setZipCode(other.getZipCode());
+        setCity(other.getCity());
+        setCountry(other.getCountry());
+        setIDNumber(other.getIDNumber());
+        getPhoneList().setAll(other.getPhoneList()
+                .stream()
+                .map((Phone t) -> new Phone(t.getRecId(), t.getNumber()))
+                .collect(Collectors.toList())
+        );
+        setFax(other.getFax());
+        setStatus(other.getStatus());
+        this.createdDate = other.createdDate;
+    }
+
+    @Override
+    public String toStringForSearch(){
+        String phones = "";
+        phones = phoneList.stream().map((phoneNumber) -> phoneNumber.getNumber() + " ").reduce(phones, String::concat);
+
+        String result = firstName.concat(" " + lastName.get())
+                                .concat(" " + email.get()).concat(" " + address.get())
+                                .concat(" " + zipCode.get()).concat(" " + city.get())
+                                .concat(" " + country.getName()).concat(" " + fax.get())
+                                .concat(" " + IDNumber.get())
+                        .get();
+        return (result + phones);
+    }
+    
 
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 

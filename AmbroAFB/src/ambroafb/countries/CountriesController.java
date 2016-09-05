@@ -5,17 +5,17 @@
  */
 package ambroafb.countries;
 
-import ambroafb.clients.Client;
+import ambro.AFilterableTableView;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableView;
+import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
 
 /**
@@ -26,7 +26,9 @@ import org.json.JSONObject;
 public class CountriesController implements Initializable {
 
     @FXML
-    private TableView<EditorPanelable> table;
+    private AFilterableTableView<EditorPanelable> aview;
+    @FXML
+    private MaskerPane masker;
 
     @FXML
     private EditorPanelController editorPanelController;
@@ -41,21 +43,31 @@ public class CountriesController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        aview.setBundle(rb);
         editorPanelController.setOuterController(this);
-        editorPanelController.buttonsMainPropertysBinder(table);
-        editorPanelController.setTableDataList(table, countries);
-        reAssignTable(null);
+        editorPanelController.buttonsMainPropertysBinder(aview);
+        editorPanelController.setTableDataList(aview, countries);
         editorPanelController.removeButtonsByFxIDs("#delete", "#edit", "#view", "#add", "#refresh");
+        reAssignTable(null);
     }
 
     private void reAssignTable(JSONObject json) {
+        final int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         countries.clear();
-        Thread t = new Thread(() -> {
+        new Thread(() -> {
+            Platform.runLater(() -> {
+                masker.setVisible(true);
+            });
             Country.getAllFromDB().stream().forEach((country) -> {
                 countries.add(country);
             });
-        });
-        t.start();
+            Platform.runLater(() -> {
+                masker.setVisible(false);
+                if (selectedIndex >= 0){
+                    aview.getSelectionModel().select(selectedIndex);
+                }
+            });
+        }).start();
     }
     
     

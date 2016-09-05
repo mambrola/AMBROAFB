@@ -37,6 +37,27 @@ public class Annotations {
     
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    public @interface ContentTreeItem {
+        String valueForLength() default "1";
+        String explainForLength() default "The content length must be ";
+        
+        String valueForSyntax() default "\\w"; // [a-zA-Z_0-9]
+        String explainForSyntax() default "The content must contains only digits.";
+        
+//        String explainForIncorrectChild() default "The item is not correct child.";
+        String explainForHasNotParent() default "The item has not parent.";
+        String explainForExists() default "This item has already exist.";
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface ContentRate {
+        String value() default "[0-9]{1}(\\.[0-9]{4}){1}"; // "\d+(\.\d+)?"
+        String explain() default "Rate pattern is incorrect!";
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
     public @interface ContentPattern {
         String value();
         String explain();

@@ -11,18 +11,19 @@ import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.UtilsDB;
 import ambroafb.general.interfaces.Filterable;
+import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.controlsfx.control.MaskerPane;
+import javafx.stage.WindowEvent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,14 +34,15 @@ import org.json.JSONObject;
 public class ClientFilter  extends Stage implements Filterable, Initializable {
     @FXML
     private ADatePicker dateBigger, dateLess;
+    @FXML
+    private FilterOkayCancelController okayCancelController;
     
     private JSONObject jSonResult;
     public static final String DATE_BIGGER = "1970-01-01";
     public static final String DATE_LESS = "9999-01-01";
     
     public ClientFilter(Stage owner) {
-        String ownerPath = Utils.getPathForStage(owner);
-        String clientFilterPath = ownerPath + Names.LEVEL_FOR_PATH;
+        String clientFilterPath = Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH;
         Utils.saveShowingStageByPath(clientFilterPath, (Stage)this);
         
         this.initStyle(StageStyle.UNIFIED);
@@ -49,6 +51,11 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         this.setScene(scene);
         this.initOwner(owner);
         this.setResizable(false);
+        
+        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
+            okayCancelController.cancel(null);
+            if(event != null) event.consume();
+        });
     }
 
     @Override

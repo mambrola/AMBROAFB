@@ -1,13 +1,13 @@
 @import url("/styles/css/core.css");
 #formPane {
-  -fx-min-height: 732;
-  -fx-max-height: 732;
-  -fx-min-width: 820;
-  -fx-max-width: 820;
-  -fx-padding: 10;
+  /*-fx-min-height: @formHeight;*/
+  -fx-max-height: 800;
+  -fx-min-width: 830;
+  -fx-max-width: 830;
+  -fx-padding: 15;
 }
 .vContainer {
-  -fx-spacing: 10;
+  -fx-spacing: 15;
 }
 .label {
   -fx-font-weight: bold;
@@ -15,36 +15,27 @@
   -fx-padding: 1 0 1 2;
 }
 .one > .couple {
-  -fx-background-color: yellow;
   -fx-pref-width: 800;
 }
 .oneHalf > .couple {
-  -fx-background-color: yellowgreen;
-  -fx-pref-width: 385;
+  -fx-pref-width: 382.5;
 }
 .oneThirds > .couple {
-  -fx-background-color: yellow;
-  -fx-pref-width: 246.66666667;
+  -fx-pref-width: 243.33333333;
 }
 .couple > .combo-box {
   -fx-max-width: 800;
 }
 .oneThirds {
-  -fx-pref-width: 523.33333333;
+  -fx-pref-width: 521.66666667;
 }
 .oneHalf,
 .oneThirds {
-  -fx-spacing: 30;
-}
-.w4 .text-field {
-  -fx-pref-width: 523.33333333;
-}
-.w4 .combo-box {
-  -fx-pref-width: 246.66666667;
+  -fx-spacing: 35;
 }
 .doubleHeight {
   /*-fx-background-color: yellow;*/
-  -fx-pref-height: 162.66666667;
+  -fx-pref-height: 355.55555556;
 }
 .button {
   -fx-font-weight: bold;
@@ -52,6 +43,7 @@
 *:disabled {
   -fx-opacity: 0.9;
 }
-#imageGallery {
-  -fx-min-height: 350.26666667;
+#imageGalleryPane {
+  -fx-min-height: 555;
+  -fx-max-height: 555;
 }

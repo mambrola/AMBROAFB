@@ -5,12 +5,18 @@
  */
 package ambroafb.invoices;
 
+import ambro.AFilterableTableView;
+import ambroafb.general.editor_panel.EditorPanelController;
+import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableView;
+import org.controlsfx.control.MaskerPane;
+import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -19,52 +25,52 @@ import javafx.scene.control.TableView;
  */
 public class InvoicesController implements Initializable {
 
-    @FXML private TableView<Invoice> table;
+    @FXML
+    private AFilterableTableView<EditorPanelable> aview;
     
     @FXML
-    private void delete(ActionEvent e) {
-        Invoice invoice = table.getSelectionModel().getSelectedItem();
-    }
+    private EditorPanelController editorPanelController;
     
     @FXML
-    private void edit(ActionEvent e) {
-        Invoice invoice = table.getSelectionModel().getSelectedItem();
-    }
-
-    @FXML
-    private void view(ActionEvent e) {
-        Invoice invoice = table.getSelectionModel().getSelectedItem();
-    }
-
-    @FXML
-    private void add(ActionEvent e) {
-    }
-
-    @FXML
-    private void addBySample(ActionEvent e) {
-        Invoice invoice = table.getSelectionModel().getSelectedItem();
-    }
-
-    @FXML
-    private void refresh(ActionEvent e) {
-        table.getItems().clear();
-        reAssignTable();
-    }
+    private MaskerPane masker;
+    
+    private final ObservableList<EditorPanelable> invoices = FXCollections.observableArrayList();
     
     /**
-     * Initializes the controller class.
+     * 
      * @param url
      * @param rb
      */
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        reAssignTable();
+        aview.setBundle(rb);
+        editorPanelController.setOuterController(this);
+        editorPanelController.buttonsMainPropertysBinder(aview);
+        editorPanelController.setTableDataList(aview, invoices);
     }
-
-    private void reAssignTable() {
-//        Invoice.dbGetInvoices(0).values().stream().forEach((invoice) -> {
-//            table.getItems().add(invoice);
-//        });
-        //panel.disablePropertyBinder(table);
+    
+    public void reAssignTable(JSONObject jsonFilter) {
+        if (jsonFilter != null && jsonFilter.length() == 0){
+            int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+            invoices.clear();
+            Platform.runLater(() -> {
+                masker.setVisible(true);
+            });
+            new Thread(() -> {
+                invoices.setAll(Invoice.getAllFromDB());
+                Platform.runLater(() -> {
+                    masker.setVisible(false);
+                    if (selectedIndex >= 0){
+                        aview.getSelectionModel().select(selectedIndex);
+                    }
+                });
+            }).start();
+        }
+    }
+    
+    
+    public EditorPanelController getEditorPanelController(){
+        return editorPanelController;
     }
 }

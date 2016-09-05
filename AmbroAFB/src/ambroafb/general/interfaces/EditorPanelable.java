@@ -19,7 +19,9 @@ public abstract class EditorPanelable {
     public abstract EditorPanelable cloneWithID();
     public abstract void copyFrom(EditorPanelable other);
     
-    // Must return lowercase string.
+    /** The method uses to search EditorPanelable elements in list (ex. tableView list)
+     * @return String to convenient searching.
+     */
     public abstract String toStringForSearch();
     
     public int getRecId(){

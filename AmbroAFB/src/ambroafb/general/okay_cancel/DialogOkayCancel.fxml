@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox
+<HBox   
          alignment="CENTER_RIGHT" 
          spacing="50.0" 
          stylesheets="/styles/css/okaycancel.css" 
@@ -28,7 +28,4 @@
             </tooltip>
         </Button>
     </children>
-<!--    <padding>
-        <Insets bottom="30.0" right="50.0" top="30.0" />
-    </padding>-->
 </HBox>

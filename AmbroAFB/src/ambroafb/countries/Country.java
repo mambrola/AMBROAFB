@@ -10,7 +10,6 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.interfaces.EditorPanelable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -128,6 +127,6 @@ public class Country extends EditorPanelable{
 
     @Override
     public String toStringForSearch() {
-        return name.get().toLowerCase();
+        return name.get();
     }
 }

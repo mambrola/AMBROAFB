@@ -3,6 +3,7 @@
  */
 package ambroafb.general.image_gallery;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
@@ -10,15 +11,15 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.DoublePropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.ListChangeListener;
-import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.SnapshotResult;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
@@ -30,6 +31,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -55,10 +57,15 @@ public class MagnifierPane extends StackPane {
     private Scene scene;
     private WritableImage writeImg;
     final Popup viewer;
+    private BooleanProperty showProperty = new SimpleBooleanProperty(true);
 
     public MagnifierPane() {
         super();
-        setCursor(Cursor.CROSSHAIR);
+        Image imageCursor = new Image("/images/magnifier.png");
+        ImageCursor logoCursor = new ImageCursor(imageCursor, imageCursor.getWidth() / 2, imageCursor.getHeight() /2);
+        cursorProperty().bind(Bindings.createObjectBinding(() -> {
+            return showProperty.get() ? logoCursor : Cursor.DEFAULT;
+        }, showProperty));
         final ImageView snapView = new ImageView();
         final Callback<SnapshotResult, java.lang.Void> callBack = (SnapshotResult result) -> null;
         final Scale scale = new Scale();
@@ -90,46 +97,31 @@ public class MagnifierPane extends StackPane {
 
         final Magnifier clippedNode = new Magnifier(radiusProperty(), radiusProperty());
         clippedNode.setClip(cClip);
-//
-//        final Line vL = LineBuilder.create().stroke(Color.RED).startX(0).startY(0).endX(0).opacity(.5).build();
-//        vL.strokeWidthProperty().bind(scopeLineWidthProperty());
-//        vL.visibleProperty().bind(scopeLinesVisibleProperty());
-//        vL.endYProperty().bind(radiusProperty().multiply(2));
-//
-//        final Line hL = LineBuilder.create().stroke(Color.RED).startX(0).startY(0).endY(0).opacity(.5).build();
-//        hL.strokeWidthProperty().bind(scopeLineWidthProperty());
-//        hL.visibleProperty().bind(scopeLinesVisibleProperty());
-//        hL.endXProperty().bind(radiusProperty().multiply(2));
 
         // Adding all parts in a container.
         mainContent.getChildren().addAll(cEdge, clippedNode);
 
         viewer = new Popup();
         viewer.getContent().add(mainContent);
+        viewer.autoHideProperty().set(true);
 
-        mainContent.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
-
-            @Override
-            public void handle(ScrollEvent event) {
-                double dY = event.getDeltaY();
-                double oldScale = getScaleFactor();
-                double scale = oldScale - dY / 40;
-                if (scale > minScale && scale < maxScale) {
-                    setScaleFactor(scale);
-
-                    fireEvent(new MouseEvent(MouseEvent.MOUSE_ENTERED, event.getX(), event.getY(), event.getScreenX(), event.getScreenY(), MouseButton.NONE, 0, false, false, false, false, false, false, false, false, false, false, null));
-                    double ratio = scale / oldScale;
-                    double w = clippedNode.getWidth();
-                    double h = clippedNode.getHeight();
-                    clippedNode.transXProperty().set((clippedNode.transXProperty().get() + w / 2) * ratio - w / 2);
-                    clippedNode.transYProperty().set((clippedNode.transYProperty().get() + h / 2) * ratio - h / 2);
-                }
+        mainContent.addEventFilter(ScrollEvent.SCROLL, (ScrollEvent event) -> {
+            double dY = event.getDeltaY();
+            double oldScale = getScaleFactor();
+            double scale1 = oldScale - dY / 40;
+            if (scale1 > minScale && scale1 < maxScale) {
+                setScaleFactor(scale1);
+                fireEvent(new MouseEvent(MouseEvent.MOUSE_ENTERED, event.getX(), event.getY(), event.getScreenX(), event.getScreenY(), MouseButton.NONE, 0, false, false, false, false, false, false, false, false, false, false, null));
+                double ratio = scale1 / oldScale;
+                double w = clippedNode.getWidth();
+                double h = clippedNode.getHeight();
+                clippedNode.transXProperty().set((clippedNode.transXProperty().get() + w / 2) * ratio - w / 2);
+                clippedNode.transYProperty().set((clippedNode.transYProperty().get() + h / 2) * ratio - h / 2);
             }
         });
 
-        addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
+        addEventFilter(MouseEvent.MOUSE_ENTERED, (MouseEvent e) -> {
+            if (showProperty.get()) {
                 viewer.show(MagnifierPane.this, e.getScreenX(), e.getScreenY() - (2 * getRadius()));
                 int w = (int) (MagnifierPane.this.getWidth() * getScaleFactor());
                 int h = (int) (MagnifierPane.this.getHeight() * getScaleFactor());
@@ -144,32 +136,37 @@ public class MagnifierPane extends StackPane {
             }
         });
 
-        addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                final double r = getRadius();
-                final double s = getScaleFactor();
-                viewer.setX(e.getScreenX());
-                viewer.setY(e.getScreenY() - (2 * r));
-
-                clippedNode.transXProperty().set((e.getX() * s) - r);
-                clippedNode.transYProperty().set((e.getY() * s) - r);
-            }
+        addEventFilter(MouseEvent.MOUSE_MOVED, (MouseEvent e) -> {
+            final double r = getRadius();
+            final double s = getScaleFactor();
+            viewer.setX(e.getScreenX());
+            viewer.setY(e.getScreenY() - (2 * r));
+            
+            clippedNode.transXProperty().set((e.getX() * s) - r);
+            clippedNode.transYProperty().set((e.getY() * s) - r);
         });
 
     }
-
+    
+    public BooleanProperty showProperty(){
+        return showProperty;
+    }
+    
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
         if (this.scene == null) {
             this.scene = getScene();
+            Stage ownerStage = (Stage) scene.getWindow();
             scene.addEventFilter(MouseEvent.MOUSE_MOVED, (MouseEvent event) -> {
                 double x = event.getSceneX();
                 double y = event.getSceneY();
                 Bounds thisB = localToScene(getLayoutBounds());
-                if (x < thisB.getMinX() || x > thisB.getMaxX() || y < thisB.getMinY() || y > thisB.getMaxY()) {
+                if ((x < thisB.getMinX() || x > thisB.getMaxX() || y < thisB.getMinY() || y > thisB.getMaxY()) || !showProperty.get()) {
                     viewer.hide();
+                }
+                else if (!ownerStage.isFocused()){
+                    ownerStage.requestFocus();
                 }
             });
         }

@@ -45,20 +45,31 @@
                         </Menu>
                     </items>
                 </Menu>
-                <Menu text="%directories">
+                <Menu text="%books">
                     <items>
+                        <MenuItem onAction="#licenses" text="%licenses" />
+                        <MenuItem onAction="#invoices" text="%invoices" />
+                        <SeparatorMenuItem />
                         <MenuItem onAction="#clients" text="%clients" />
                         <MenuItem onAction="#accounts" text="%accounts" />
-                        <MenuItem onAction="#invoices" text="%invoices" />
-                        <MenuItem onAction="#products" text="%products" />
-                        <SeparatorMenuItem />
-                        <MenuItem onAction="#countries" text="%countries" />
                     </items>
                 </Menu>
                 <Menu text="%reports">
                     <items>
                         <MenuItem onAction="#balances" text="%balances" />
                         <MenuItem onAction="#account_statments" text="%account_statments" />
+                    </items>
+                </Menu>
+                <Menu text="%directories">
+                    <items>
+                        <MenuItem onAction="#currencyRates" text="%currency_rates" />
+                        <MenuItem onAction="#discountsOnCount" text="%discounts_on_count" />
+                        <MenuItem onAction="#products" text="%products" />
+                        <SeparatorMenuItem />
+                        <MenuItem onAction="#currencies" text="%currencies" />
+                        <MenuItem onAction="#balAccounts" text="%bal_accounts" />
+                        <MenuItem onAction="#countries" text="%countries" />
+                        
                     </items>
                 </Menu>
                 <Menu text="%administrator" >

@@ -10,6 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import ambro.* ?>
+<?import org.controlsfx.control.* ?>
 
 
 <BorderPane fx:id="formPane" 
@@ -17,16 +18,14 @@
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="ambroafb.countries.CountriesController">
     <top>
-        <!--<HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="menu-bar" >-->
-            <!--<children>-->
-                <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
-<!--            </children>
-            <padding>
-                <Insets bottom="3.0" left="10.0" top="3.0" />
-            </padding>
-        </HBox>-->
+        <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
     </top>
     <center>
-        <ATableView fx:id="table" initializer="ambroafb.countries.Country" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+        <StackPane >
+            <children>
+                <AFilterableTableView fx:id="aview" initializer="ambroafb.countries.Country" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+                <MaskerPane fx:id="masker" />
+            </children>
+        </StackPane>
     </center>
 </BorderPane>

@@ -5,8 +5,6 @@
  */
 package ambroafb.general;
 
-import java.util.Enumeration;
-
 /**
  *
  * @author tabramishvili

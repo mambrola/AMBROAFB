@@ -20,7 +20,7 @@ public class Clients extends Stage {
     private ClientsController clientsController;
     
     public Clients(Stage owner) {
-        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + Clients.class.getSimpleName(), (Stage)this);
+        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
 
         Scene scene = Utils.createScene("/ambroafb/clients/Clients.fxml", null);
         clientsController = (ClientsController) scene.getProperties().get("controller");
@@ -29,7 +29,7 @@ public class Clients extends Stage {
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-            event.consume();
+            if(event != null) event.consume();
         });
         
         Utils.setSizeFor((Stage)this);

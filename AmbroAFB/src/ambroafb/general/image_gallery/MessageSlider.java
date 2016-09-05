@@ -5,24 +5,16 @@
  */
 package ambroafb.general.image_gallery;
 
-import ambroafb.general.Utils;
 import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollBar;
@@ -69,7 +61,11 @@ public class MessageSlider extends VBox {
         scrollBar.setVisibleAmount(1);
         scrollBar.setBlockIncrement(1);
         
-        scrollBar.valueProperty().bindBidirectional(indexProperty);
+        scrollBar.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            double roundedValue = Math.round(newValue.doubleValue());
+            scrollBar.setValue(roundedValue);
+            indexProperty.set(roundedValue);
+        });
     }
     
     /**
@@ -107,6 +103,10 @@ public class MessageSlider extends VBox {
         return indexProperty;
     }
 
+    public boolean isEmpty(){
+        return values.isEmpty();
+    }
+    
     /**
      * The method returns value on given index.
      * @param index - If index is out of bounds, method sets zero indexed value.
@@ -117,6 +117,7 @@ public class MessageSlider extends VBox {
             index = 0;
         }
         indexProperty.set(index);
+        scrollBar.setValue(indexProperty.get());
     }
 
     /**
@@ -143,9 +144,11 @@ public class MessageSlider extends VBox {
         public void onChanged(Change<? extends String> c) {
             while(c.next()){
                 if(c.wasRemoved()){
+                    // already removed elements, so index could be the same except this case:
                     if (indexProperty.getValue().intValue() == values.size()){
                         indexProperty.set(indexProperty.getValue().intValue() - 1);
                     }
+                    scrollBar.setValue(indexProperty.get());
                 }
                 if(values.size() > 0){
                     scrollBar.setMax(values.size() - 1);

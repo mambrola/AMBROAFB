@@ -28,12 +28,14 @@ public class ExitButtonController implements Initializable {
     private void exit(ActionEvent e) {
         Stage stage = (Stage) (exitButton.getScene().getWindow());
         Utils.saveSizeFor(stage);
-        stage.close();
+        Utils.closeStageWithChildren(stage);
         Utils.removeByStage(stage);
     }
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

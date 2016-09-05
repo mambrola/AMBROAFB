@@ -1,17 +1,30 @@
 @import url("/styles/css/core.css");
-#galleryImageFrame {
-  -fx-border-width: 2;
-  -fx-border-color: black;
-  -fx-min-width: 384;
-  -fx-max-width: 384;
-  -fx-min-height: 274;
-  -fx-max-height: 274;
-  -fx-alignment: center;
+#imagesGalleryRoot,
+#galleryStack {
+  -fx-pref-height: 2000;
+  -fx-max-height: 2000;
 }
 #imagesGalleryRoot {
-  -fx-alignment: CENTER;
-  -fx-spacing: 5px;
+  -fx-border-color: black;
+  -fx-border-style: solid;
+  -fx-border-width: 1;
 }
-.masker-pane .masker-center {
+#imageButtonsHBox {
+  -fx-border-color: black;
+  -fx-border-style: solid;
+  -fx-border-width: 1 0 0 0;
+}
+.masker-pane .masker-center,
+#up,
+#down {
   -fx-background-color: transparent;
+}
+#up,
+#down,
+#page {
+  -fx-text-fill: gray;
+}
+#page {
+  -fx-font-size: 1.5em;
+  -fx-alignment: CENTER;
 }
