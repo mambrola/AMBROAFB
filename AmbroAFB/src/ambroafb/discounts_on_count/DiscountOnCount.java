@@ -7,6 +7,7 @@ package ambroafb.discounts_on_count;
 
 import ambro.AView;
 import ambroafb.general.TestDataFromDB;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -93,19 +94,11 @@ public class DiscountOnCount extends EditorPanelable {
     
     // Getters:
     public int getLicense_count(){
-        return getIntValueFor(license_count.get());
+        return Utils.getIntValueFor(license_count.get());
     }
     
     public int getDiscount_rate(){
-        return getIntValueFor(discount_rate.get());
-    }
-    
-    private int getIntValueFor(String str){
-        int result = 0;
-        try {
-            result = Integer.parseInt(str);
-        } catch (Exception ex){ }
-        return result;
+        return Utils.getIntValueFor(discount_rate.get());
     }
     
     

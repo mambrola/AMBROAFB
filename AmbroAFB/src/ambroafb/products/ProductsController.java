@@ -48,24 +48,28 @@ public class ProductsController implements Initializable {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(aview);
         editorPanelController.setTableDataList(aview, products);
+        reAssignTable(null);
     }
     
+    /**
+     * The method call firstly in initialize and secondly, when user clicks refresh button.
+     * @param jsonFilter The parameter is not need in it, 
+     *                   but this is reAssignTable() method header agreement.
+     */
     public void reAssignTable(JSONObject jsonFilter) {
-        if (jsonFilter != null && jsonFilter.length() == 0){
-            int selectedIndex = aview.getSelectionModel().getSelectedIndex();
-            products.clear();
-            masker.setVisible(true);
-            
-            new Thread(() -> {
-                products.setAll(Product.getAllFromDB());
-                Platform.runLater(() -> {
-                    masker.setVisible(false);
-                    if (selectedIndex >= 0){
-                        aview.getSelectionModel().select(selectedIndex);
-                    }
-                });
-            }).start();
-        }
+        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+        products.clear();
+        masker.setVisible(true);
+
+        new Thread(() -> {
+            products.setAll(Product.getAllFromDBTest());
+            Platform.runLater(() -> {
+                masker.setVisible(false);
+                if (selectedIndex >= 0) {
+                    aview.getSelectionModel().select(selectedIndex);
+                }
+            });
+        }).start();
     }
     
     

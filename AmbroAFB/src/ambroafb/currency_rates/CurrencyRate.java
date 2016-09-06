@@ -9,6 +9,7 @@ import ambro.AView;
 import ambroafb.general.DateConverter;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.TestDataFromDB;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.products.Product;
 import java.sql.ResultSet;
@@ -186,11 +187,7 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public int getCount(){
-        int result = 0;
-        try {
-            result = Integer.parseInt(count.get());
-        } catch (Exception ex){ }
-        return result;
+        return Utils.getIntValueFor(count.get());
     }
             
     public String getIso(){
@@ -210,12 +207,9 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public double getRate(){
-        double result = 0;
-        try {
-            result = Double.parseDouble(rate.get());
-        } catch (Exception ex){ }
-        return result;
+        return Utils.getIntValueFor(rate.get());
     }
+    
     
     // Setters:
     public void setDate(String date) {

@@ -329,6 +329,20 @@ public class Utils {
     public static StringBinding avoidNull(StringProperty prop) {
         return Bindings.when(prop.isNull()).then("").otherwise(prop);
     }
+    
+    /**
+     * The method converts string to Integer. If String is incorrect, it returns  -1 (minus 1).
+     * @param str String which must be converted to Integer.
+     * @return -1 if parameter is incorrect, otherwise - appropriate Integer value.
+     */
+    public static int getIntValueFor(String str){
+        int result = -1;
+        try {
+            result = Integer.parseInt(str);
+        } catch (Exception ex){ }
+        return result;
+    }
+    
 
     private static final BidiMap bidmap = new DualHashBidiMap();
 

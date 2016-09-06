@@ -43,8 +43,8 @@ public class ClientsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        editorPanelController.setOuterController(this);
         aview.setBundle(rb);
+        editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(aview);
         editorPanelController.setTableDataList(aview, clients);
     }
