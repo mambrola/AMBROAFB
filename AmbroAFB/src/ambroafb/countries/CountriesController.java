@@ -54,10 +54,8 @@ public class CountriesController implements Initializable {
     private void reAssignTable(JSONObject json) {
         final int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         countries.clear();
+        masker.setVisible(true);
         new Thread(() -> {
-            Platform.runLater(() -> {
-                masker.setVisible(true);
-            });
             Country.getAllFromDB().stream().forEach((country) -> {
                 countries.add(country);
             });

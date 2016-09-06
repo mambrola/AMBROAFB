@@ -53,9 +53,7 @@ public class ClientsController implements Initializable {
         if (filterJson != null && filterJson.length() > 0) {
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             clients.clear();
-            Platform.runLater(() -> {
-                masker.setVisible(true);
-            });
+            masker.setVisible(true);
             Thread t = new Thread(() -> {
                 Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {
                     clients.add(client);

@@ -54,11 +54,9 @@ public class ProductsController implements Initializable {
         if (jsonFilter != null && jsonFilter.length() == 0){
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             products.clear();
+            masker.setVisible(true);
             
             new Thread(() -> {
-                Platform.runLater(() -> {
-                    masker.setVisible(true);
-                });
                 products.setAll(Product.getAllFromDB());
                 Platform.runLater(() -> {
                     masker.setVisible(false);

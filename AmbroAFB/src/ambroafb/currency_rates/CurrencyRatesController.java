@@ -53,9 +53,7 @@ public class CurrencyRatesController implements Initializable {
         if (filterJson != null && filterJson.length() > 0){
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             currencyRates.clear();
-            Platform.runLater(() -> {
-                masker.setVisible(true);
-            });
+            masker.setVisible(true);
             
             new Thread(() -> {
                 CurrencyRate.getFilteredFromDBTest(filterJson).stream().forEach((currRate) -> {

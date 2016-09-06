@@ -54,9 +54,8 @@ public class InvoicesController implements Initializable {
         if (jsonFilter != null && jsonFilter.length() == 0){
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             invoices.clear();
-            Platform.runLater(() -> {
-                masker.setVisible(true);
-            });
+            masker.setVisible(true);
+                
             new Thread(() -> {
                 invoices.setAll(Invoice.getAllFromDB());
                 Platform.runLater(() -> {

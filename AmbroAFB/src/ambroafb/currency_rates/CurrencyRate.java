@@ -44,8 +44,9 @@ public class CurrencyRate extends EditorPanelable {
     private final StringProperty rate;
     
     public static final String ALL_CURRENCY = "ALL";
-    private final StringProperty descrip_ka;
-    private final StringProperty descrip_en;
+    private final StringProperty descrip_first;
+    private final StringProperty descrip_second;
+    private final StringProperty descrip_default;
     private final ObjectProperty<LocalDate> dateProperty;
     
     public CurrencyRate(){
@@ -53,11 +54,13 @@ public class CurrencyRate extends EditorPanelable {
         date = new SimpleStringProperty("");
         count = new SimpleStringProperty("1");
         iso = new SimpleStringProperty("");
-        descrip_ka = new SimpleStringProperty("");
-        descrip_en = new SimpleStringProperty("");
+        descrip_first = new SimpleStringProperty("");
+        descrip_second = new SimpleStringProperty("");
+        descrip_default = new SimpleStringProperty("");
         rate = new SimpleStringProperty("0");
         
-        currDescrip = (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_ka : descrip_en;
+        currDescrip = (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_first 
+                                                                                                : (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("en")) ? descrip_second : descrip_default;
         dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
             String dateStr = "";
             if (newValue != null){
@@ -89,7 +92,7 @@ public class CurrencyRate extends EditorPanelable {
         if (stmt != null){
             try {
                 String query = "select currency_rates.rec_id, currency_rates.iso, currency_rates.count, currency_rates.date, currency_rates.rate, " +
-                                    " currencies.iso, currencies.descrip_ka, currencies.descrip_en " +
+                                    " currencies.iso, currencies.descrip_first, currencies.descrip_default, currencies.descrip_second " +
                                 " from currency_rates " +
                                     " left join currencies " + 
                                         " on currency_rates.iso = currencies.iso " +
@@ -113,8 +116,8 @@ public class CurrencyRate extends EditorPanelable {
                     currRate.setCount(set.getInt(3));
                     currRate.setDate(set.getString(4));
                     currRate.setRate(set.getDouble(5));
-                    currRate.setDescrip_ka(set.getString(7));
-                    currRate.setDescrip_en(set.getString(8));
+                    currRate.setDescrip_first(set.getString(7));
+                    currRate.setDescrip_second(set.getString(8));
                     result.add(currRate);
                 }
             } catch (SQLException | JSONException ex) {
@@ -175,7 +178,7 @@ public class CurrencyRate extends EditorPanelable {
     public StringProperty rateProperty() {
         return rate;
     }
-
+    
     
     // Getters:
     public String getDate() {
@@ -194,12 +197,16 @@ public class CurrencyRate extends EditorPanelable {
         return iso.get();
     }
     
-    public String getDescrip_ka(){
-        return descrip_ka.get();
+    public String getDescrip_first(){
+        return descrip_first.get();
     }
     
-    public String getDescrip_en(){
-        return descrip_en.get();
+    public String getDescrip_second(){
+        return descrip_second.get();
+    }
+    
+    public String getDescrip_default(){
+        return descrip_default.get();
     }
     
     public double getRate(){
@@ -230,12 +237,16 @@ public class CurrencyRate extends EditorPanelable {
         this.iso.set(iso);
     }
     
-    public void setDescrip_ka(String descrip){
-        this.descrip_ka.set(descrip);
+    public void setDescrip_first(String descrip){
+        this.descrip_first.set(descrip);
     }
     
-    public void setDescrip_en(String descrip){
-        this.descrip_en.set(descrip);
+    public void setDescrip_second(String descrip){
+        this.descrip_second.set(descrip);
+    }
+    
+    public void setDescrip_default(String descrip){
+        this.descrip_default.set(descrip);
     }
     
     public void setRate(double rate){

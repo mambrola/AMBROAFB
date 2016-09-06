@@ -54,9 +54,8 @@ public class DiscountOnCountsController implements Initializable {
     public void reAssignTable(JSONObject filterJson) {
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         discounts.clear();
-        Platform.runLater(() -> {
-            masker.setVisible(true);
-        });
+        masker.setVisible(true);
+        
         Thread t = new Thread(() -> {
             DiscountOnCount.getAllFromDBTest().stream().forEach((client) -> {
                 discounts.add(client);
