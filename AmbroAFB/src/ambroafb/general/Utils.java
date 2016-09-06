@@ -423,6 +423,7 @@ public class Utils {
         String ownerPath = getPathForStage(owner);
         String substagePath = ownerPath + substageLocalName;
         Stage substage = getStageForPath(substagePath);
+        System.out.println("subStagePath: " + substagePath + "  sunstage: " + substage);
         return substage;
     }
 
@@ -696,7 +697,6 @@ public class Utils {
         String currStagePath = (String) bidmap.getKey(currStage);
         List<String> childrenPath = getFirstLevelChildrenFor(currStagePath);
         if (childrenPath.isEmpty()) {
-            System.out.println("sharp: " + (String)bidmap.getKey(currStage));
             if (currStage instanceof Dialogable) {
                 if (currStage.getOnCloseRequest() == null) {
                     currStage.close();
@@ -710,15 +710,12 @@ public class Utils {
             }
         }
         else {
-            System.out.println("Enter Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
             for (String childPath : childrenPath) {
                 closePermission = closeStageWithChildren((Stage) bidmap.get(childPath)) && closePermission;
             }
             if (currStage.isShowing() && closePermission && !((String)bidmap.getKey(currStage)).equals("main")){
                 currStage.close();
-                System.out.println("Close Stage: " + (String)bidmap.getKey(currStage));
             }
-            System.out.println("Exit Stage: " + (String)bidmap.getKey(currStage) + " currStage.isShowing(): " + currStage.isShowing() + " closePermission: " + closePermission);
         }
         return closePermission;
     }

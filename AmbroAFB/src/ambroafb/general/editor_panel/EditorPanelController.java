@@ -200,19 +200,15 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage filterStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (filterStage == null || !filterStage.isShowing()){
-            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-//            int selectionIndex = ((AView)exit.getScene().lookup("#aview")).getCustomSelectionModel().getSelectedIndex();
+            System.out.println("click refresh");
+            
+//            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             Class className = Utils.getClassByName(getClassName(CLASS_TYPE.FILTER));
             Filterable filter = (className != null) ? (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow()) : null;
             
-            System.out.println("<EditorPanelController> filter in refresh function: " + filter);
+            System.out.println("<EditorPanelController> refresh method. filter: " + filter);
             
             JSONObject json = (filter != null) ? filter.getResult() : new JSONObject();
-//            try {
-//                json.put("selected", selectionIndex);
-//            } catch (JSONException ex) {
-//                Logger.getLogger(EditorPanelController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
             Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{JSONObject.class}, outerController, json);
 //            selectOneAgain(selected, selectionIndex);
@@ -264,8 +260,7 @@ public class EditorPanelController implements Initializable {
                 return !treeTable.getSelectionModel().getSelectedItem().isLeaf();
             }, aView.getCustomSelectionModel().selectedItemProperty()));
         }
-        else if (aView instanceof AFilterableTableView){
-            AFilterableTableView<EditorPanelable> table = (AFilterableTableView) aView;
+        else if (aView instanceof ATableView){
             delete.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
         }
         edit.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());

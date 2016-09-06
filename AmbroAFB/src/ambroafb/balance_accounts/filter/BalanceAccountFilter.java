@@ -10,6 +10,7 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -25,8 +26,14 @@ public class BalanceAccountFilter extends Stage implements Filterable, Initializ
     private final JSONObject json;
     
     public BalanceAccountFilter(Stage owner){
-        String currStagePath = Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH;
-        Utils.saveShowingStageByPath(currStagePath, (Stage)this);
+        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
+        // Center of its parent:
+        this.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            setX(owner.getX() + owner.getWidth() / 2 - getWidth() / 2);
+        });
+        this.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            setY(owner.getY() + owner.getHeight()/ 2 - getHeight() / 2);
+        });
         
         this.initStyle(StageStyle.UNIFIED);
 //        this.setTitle(GeneralConfig.getInstance().getTitleFor("bal_account_filter"));
