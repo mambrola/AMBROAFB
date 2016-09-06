@@ -36,7 +36,7 @@ public class CurrencyRate extends EditorPanelable {
     private final StringProperty date;
     @AView.Column(title = "%count", width = "50")
     private final StringProperty count;
-    @AView.Column(title = "%descrip", width = "50")
+    @AView.Column(title = "%iso", width = "50")
     private final StringProperty iso;
     @AView.Column(title = "%descrip", width = "150")
     private final StringProperty currDescrip;
