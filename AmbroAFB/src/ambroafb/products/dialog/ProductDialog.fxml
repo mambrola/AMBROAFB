@@ -6,6 +6,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import ambro.*?>
+<?import ambroafb.general.mapeditor.*?>
+<?import ambroafb.currency_rates.*?>
 
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/productdialog.css" 
@@ -14,25 +16,24 @@
                               fx:controller="ambroafb.products.dialog.ProductDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer" >
         <children>
-            <HBox styleClass="oneThirds">
-                <children>
-                    <VBox styleClass="couple" alignment="CENTER_LEFT" >
-                        <CheckBox fx:id="isAlive" text="%product_is_alive" />
-                    </VBox>
-                </children> 
-            </HBox>
-            <HBox styleClass="oneThirds">
+            <HBox styleClass="oneThirds" >
                 <children>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="product_name" styleClass="validationMessage" />
-                            <TextField fx:id="productNameField" />
+                            <Label text="%abbreviation" styleClass="validationMessage"/>
+                            <TextField fx:id="abbreviation" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="%product_vendor_code" styleClass="validationMessage" />
-                            <TextField fx:id="vendorCodeField" />
+                            <Label text="%product_former" styleClass="validationMessage"/>
+                            <TextField fx:id="former" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%descrip" styleClass="validationMessage"/>
+                            <TextField fx:id="descrip" />
                         </children>
                     </VBox>
                 </children>
@@ -41,11 +42,46 @@
                 <children>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="product_remark" styleClass="validationMessage" />
-                            <TextField fx:id="productRemarkField" />
+                            <Label text="%remark" styleClass="validationMessage" />
+                            <TextField fx:id="remark" />
                         </children>
                     </VBox>
                 </children>
+            </HBox>
+            <HBox styleClass="oneThirds" >
+                <children>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%product_specific" />
+                            <ComboBox fx:id="specifics" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%monthly_price" styleClass="validationMessage" />
+                            <TextField fx:id="price" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%currency" styleClass="validationMessage" />
+                            <CurrencyRatesComboBox fx:id="currency" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneHalf">
+                <children>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%discounts" />
+                            <MapEditorComboBox fx:id="discounts" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple" alignment="CENTER_LEFT" >
+                        <CheckBox fx:id="isAlive" text="%product_is_alive" />
+                    </VBox>
+                </children> 
             </HBox>
             <HBox fx:id="okCancelHbox" styleClass="doubleHeight" alignment="CENTER_RIGHT" spacing="30" >
                 <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
@@ -53,3 +89,15 @@
         </children>
     </VBox>
 </ambroafb.general.DialogPanel>
+
+
+<!--<HBox styleClass="one" >
+                <children>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="product_remark" styleClass="validationMessage" />
+                            <TextField fx:id="productRemarkField" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>-->

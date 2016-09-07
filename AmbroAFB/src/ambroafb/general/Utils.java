@@ -343,6 +343,35 @@ public class Utils {
         return result;
     }
     
+    /**
+     * The method converts string to Double. If String is incorrect, it returns  -1 (minus 1).
+     * @param str String which must be converted to Double.
+     * @return -1 if parameter is incorrect, otherwise - appropriate Double value.
+     */
+    public static double getDoubleValueFor(String str){
+        double result = -1;
+        try {
+            result = Double.parseDouble(str);
+        } catch(Exception ex){ }
+        return result;
+    }
+    
+    /**
+     * The method compares two lists.
+     * Note: If they are equal, then they must have same order of elements.
+     * @param first The first list
+     * @param second The second lists.
+     * @return If they have another sizes or i-th element from first does not equal 
+     *          i-th element from second, then method return false. True - otherwise.
+     */
+    public static boolean compareLists(List<?> first, List<?> second) {
+        if (first.size() != second.size()) return false;
+        for (int i = 0; i < first.size(); i++) {
+            if (!first.get(i).equals(second.get(i))) return false;
+        }
+        return true;
+    }
+    
 
     private static final BidiMap bidmap = new DualHashBidiMap();
 
