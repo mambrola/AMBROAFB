@@ -364,7 +364,7 @@ public class Product extends EditorPanelable {
         this.price.set("" + price);
     }
     
-    public void setCrrency(String currency){
+    public void setCurrency(String currency){
         this.currency.set(currency);
     }
     
@@ -403,7 +403,7 @@ public class Product extends EditorPanelable {
         setDescrip(product.getDescrip());
         setRemark(product.getRemark());
         setPrice(product.getPrice());
-        setCrrency(product.getCurrency());
+        setCurrency(product.getCurrency());
         setSpecific(product.getSpecific());
         setIsActive(product.getIsActive());
         
@@ -440,18 +440,8 @@ public class Product extends EditorPanelable {
                 this.getSpecific().equals(productBackup.getSpecific()) &&
                 this.getIsActive() == productBackup.getIsActive() &&
                 Utils.compareLists(getDiscounts(), productBackup.getDiscounts());
-//                compareDiscounts(getDiscounts(), productBackup.getDiscounts());
     }
 
-    private boolean compareDiscounts(ArrayList<ProductDiscount> discounts, ArrayList<ProductDiscount> backupDiscounts) {
-        if (discounts.size() != backupDiscounts.size()) return false;
-        for (int i = 0; i < discounts.size(); i++) {
-            if (!discounts.get(i).equals(backupDiscounts.get(i))) return false;
-        }
-        return true;
-    }
-    
-    
     public static class AliveCellFactory implements Callback<TableColumn<Product, Boolean>, TableCell<Product, Boolean>> {
 
         @Override

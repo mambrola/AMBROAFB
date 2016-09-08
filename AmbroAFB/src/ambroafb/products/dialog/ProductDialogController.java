@@ -5,7 +5,6 @@
  */
 package ambroafb.products.dialog;
 
-import ambroafb.currency_rates.CurrencyRatesComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.*;
@@ -39,8 +38,8 @@ public class ProductDialogController implements Initializable {
     private TextField former;
     @FXML
     private ComboBox<String> specifics;
-    @FXML
-    private CurrencyRatesComboBox currency;
+//    @FXML
+//    private CurrencyRatesComboBox currency;
     @FXML @ContentMapEditor(explainKey = "Left number must be months counter.", explainValue = "Right number must be discount percent. Exp: 4.25")
     private MapEditorComboBox discounts;
     @FXML
@@ -71,6 +70,7 @@ public class ProductDialogController implements Initializable {
                 specifics.getItems().add(specific.getValue());
             });
         }).start();
+//        currency.setShowCategoryALL(false);
         permissionToClose = true;
     }
 
@@ -83,7 +83,7 @@ public class ProductDialogController implements Initializable {
             remark.textProperty().bindBidirectional(product.remarkProperty());
             specifics.valueProperty().bindBidirectional(product.specificProperty());
             price.textProperty().bindBidirectional(product.priceProperty());
-            currency.valueProperty().bindBidirectional(product.currencyProperty());
+//            currency.valueProperty().bindBidirectional(product.currencyProperty());
             discounts.setItemsCustom(product.getDiscounts());
             isAlive.selectedProperty().bindBidirectional(product.isAliveProperty());
         }

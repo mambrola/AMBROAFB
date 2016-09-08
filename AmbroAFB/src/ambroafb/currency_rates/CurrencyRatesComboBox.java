@@ -20,8 +20,12 @@ public class CurrencyRatesComboBox extends ComboBox<String>{
     
     public CurrencyRatesComboBox(){
         this.setItems(items);
-        this.setVisible(false);
-        giveCurrencyRatesFromDB(true);
+//        this.setVisible(false);
+        items.add(CurrencyRate.ALL_CURRENCY);
+        CurrencyRate.getAllCurrencyFromDBTest().stream().forEach((rate) -> {
+            items.add(rate);
+        });
+//        giveCurrencyRatesFromDB(true);
     }
     
     private void giveCurrencyRatesFromDB(boolean showCategoryALL){
@@ -42,6 +46,12 @@ public class CurrencyRatesComboBox extends ComboBox<String>{
     }
 
     public void setShowCategoryALL(boolean showCategoryALL) {
-        giveCurrencyRatesFromDB(showCategoryALL);
+//        giveCurrencyRatesFromDB(showCategoryALL);
+        if (getItems().contains(CurrencyRate.ALL_CURRENCY)){
+            getItems().remove(CurrencyRate.ALL_CURRENCY);
+        }
+        else {
+            getItems().add(0, CurrencyRate.ALL_CURRENCY);
+        }
     }
 }
