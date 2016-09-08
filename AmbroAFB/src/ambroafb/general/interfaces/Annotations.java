@@ -53,13 +53,20 @@ public class Annotations {
     @Target(ElementType.FIELD)
     public @interface ContentRate {
         String value() default "[0-9]{1}(\\.[0-9]{4}){1}"; // "\d+(\.\d+)?"
-        String explain() default "Rate pattern is incorrect!";
+        String explain() default "Rate pattern is incorrect! Exp:  0.1234";
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface ContentMapEditor {
+        String explainKey() default "";
+        String explainValue() default "";
     }
     
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface ContentPattern {
-        String value();
-        String explain();
+        String value() default "";
+        String explain() default "";
     }
 }

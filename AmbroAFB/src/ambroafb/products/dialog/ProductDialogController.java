@@ -41,7 +41,7 @@ public class ProductDialogController implements Initializable {
     private ComboBox<String> specifics;
     @FXML
     private CurrencyRatesComboBox currency;
-    @FXML
+    @FXML @ContentMapEditor(explainKey = "Left number must be months counter.", explainValue = "Right number must be discount percent. Exp: 4.25")
     private MapEditorComboBox discounts;
     @FXML
     private CheckBox isAlive;
@@ -84,7 +84,7 @@ public class ProductDialogController implements Initializable {
             specifics.valueProperty().bindBidirectional(product.specificProperty());
             price.textProperty().bindBidirectional(product.priceProperty());
             currency.valueProperty().bindBidirectional(product.currencyProperty());
-//            discounts.setItems(product.getDiscounts());
+            discounts.setItemsCustom(product.getDiscounts());
             isAlive.selectedProperty().bindBidirectional(product.isAliveProperty());
         }
     }

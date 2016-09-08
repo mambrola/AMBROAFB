@@ -32,14 +32,11 @@ public class ProductDialog extends Stage implements Dialogable {
         String currStagePath = Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH;
         Utils.saveShowingStageByPath(currStagePath, (Stage)this);
         
-        Product productObject;
         if (object == null)
-            productObject = new Product();
+            this.product = new Product();
         else
-            productObject = (Product) object;
-        
-        this.product = productObject;
-        this.productBackup = productObject.cloneWithID();
+            this.product = (Product) object;
+        this.productBackup = product.cloneWithID();
         
         Scene currentScene = Utils.createScene("/ambroafb/products/dialog/ProductDialog.fxml", null);
         dialogController = (ProductDialogController) currentScene.getProperties().get("controller");

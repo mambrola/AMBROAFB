@@ -7,10 +7,11 @@ package ambroafb.products;
 
 import ambro.ANodeSlider;
 import ambro.AView;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.products.helpers.ProductDiscount;
+import ambroafb.products.helpers.ProductSpecific;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,6 +24,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -59,7 +62,8 @@ public class Product extends EditorPanelable {
     private final StringProperty currency;
     
     @AView.Column(title = "%discounts", width = "80", cellFactory = DiscountCellFactory.class)
-    private ArrayList<ProductDiscount> discounts;
+    private ObservableList<ProductDiscount> discounts;
+//    private ArrayList<ProductDiscount> discounts;
     
     @AView.Column(width = "35", cellFactory = AliveCellFactory.class)
     private final BooleanProperty isActive;
@@ -72,7 +76,8 @@ public class Product extends EditorPanelable {
         specific = new SimpleStringProperty("");
         price = new SimpleStringProperty("0.0");
         currency = new SimpleStringProperty("");
-        discounts = new ArrayList<>();
+        discounts = FXCollections.observableArrayList();
+//        discounts = new ArrayList<>();
         isActive = new SimpleBooleanProperty();
         
     }
@@ -110,8 +115,8 @@ public class Product extends EditorPanelable {
                 if (ids.containsKey(rec_id)) {
                     Product product = ids.get(rec_id);
                     ProductDiscount disc = new ProductDiscount();
-                    disc.months = set.getInt(8);
-                    disc.discount = set.getDouble(9);
+                    disc.setMonths(set.getInt(8));
+                    disc.setDiscount(set.getDouble(9));
                     product.getDiscounts().add(disc);
                 } else {
                     ids.put(rec_id, pr);
@@ -124,8 +129,8 @@ public class Product extends EditorPanelable {
                     pr.setPrice(set.getDouble(6));
                     if (set.getObject(8) != null) {
                         ProductDiscount disc = new ProductDiscount();
-                        disc.months = set.getInt(8);
-                        disc.discount = set.getDouble(9);
+                        disc.setMonths(set.getInt(8));
+                        disc.setDiscount(set.getDouble(9));
                         pr.getDiscounts().add(disc);
                     }
                     ProductSpecific spec = new ProductSpecific();
@@ -203,11 +208,10 @@ public class Product extends EditorPanelable {
 
             set = stmt.executeQuery("select * from product_discounts " +
                                 " where product_id = " + productId);
-            
             while(set.next()){
                 ProductDiscount disc = new ProductDiscount();
-                disc.months = set.getInt(3);
-                disc.discount = set.getDouble(4);
+                disc.setMonths(set.getInt(3));
+                disc.setDiscount(set.getDouble(4));
                 pr.getDiscounts().add(disc);
             }
             stmt.close();
@@ -323,7 +327,10 @@ public class Product extends EditorPanelable {
         return currency.get();
     }
     
-    public ArrayList<ProductDiscount> getDiscounts() {
+//    public ArrayList<ProductDiscount> getDiscounts() {
+//        return discounts;
+//    }
+    public ObservableList<ProductDiscount> getDiscounts() {
         return discounts;
     }
     
@@ -362,8 +369,11 @@ public class Product extends EditorPanelable {
     }
     
     public void setDiscounts(ArrayList<ProductDiscount> discounts) {
-        this.discounts = discounts;
+        this.discounts = FXCollections.observableArrayList(discounts);
     }
+//    public void setDiscounts(ArrayList<ProductDiscount> discounts) {
+//        this.discounts = discounts;
+//    }
     
     public void setRemark(String remark) {
         this.remark.set(remark);
@@ -396,7 +406,12 @@ public class Product extends EditorPanelable {
         setCrrency(product.getCurrency());
         setSpecific(product.getSpecific());
         setIsActive(product.getIsActive());
-        setDiscounts(product.getDiscounts());
+        
+        final ArrayList<ProductDiscount> productDiscounts = new ArrayList<>();
+        product.getDiscounts().stream().forEach((disc) -> {
+            productDiscounts.add(disc);
+        });
+        setDiscounts(productDiscounts);
     }
 
     @Override
@@ -437,37 +452,6 @@ public class Product extends EditorPanelable {
     }
     
     
-    // Private classes:
-    public static class ProductDiscount {
-        
-        public int months;
-        public double discount;
-        
-        public boolean equals(ProductDiscount other){
-            return months == other.months && discount == other.discount;
-        }
-        
-        @Override
-        public String toString(){
-            return months + " : " + discount;
-        }
-    }
-    
-    public static class ProductSpecific {
-        
-        public String descrip_default;
-        public String descrip_first;
-        public String descrip_second;
-        
-        
-        public String getValue(){
-            String lang = GeneralConfig.getInstance().getCurrentLocal().getLanguage();
-            return (lang.equals("ka")) ? descrip_first
-                                       : (lang.equals("en")) ? descrip_second
-                                                             : descrip_default;
-        }
-    }
-    
     public static class AliveCellFactory implements Callback<TableColumn<Product, Boolean>, TableCell<Product, Boolean>> {
 
         @Override
@@ -482,24 +466,26 @@ public class Product extends EditorPanelable {
         }
     }
 
-    public static class DiscountCellFactory implements Callback<TableColumn<Product, ArrayList<ProductDiscount>>, TableCell<Product, ArrayList<ProductDiscount>>> {
+    public static class DiscountCellFactory implements Callback<TableColumn<Product, ObservableList<ProductDiscount>>, TableCell<Product, ObservableList<ProductDiscount>>> {
 
         @Override
-        public TableCell<Product, ArrayList<ProductDiscount>> call(TableColumn<Product, ArrayList<ProductDiscount>> param) {
-            return new TableCell<Product, ArrayList<ProductDiscount>>() {
+        public TableCell<Product, ObservableList<ProductDiscount>> call(TableColumn<Product, ObservableList<ProductDiscount>> param) {
+            return new TableCell<Product, ObservableList<ProductDiscount>>() {
                 @Override
-                public void updateItem(ArrayList<ProductDiscount> discounts, boolean empty) {
+                public void updateItem(ObservableList<ProductDiscount> discounts, boolean empty) {
                     if (discounts == null || discounts.isEmpty() || empty){
                         setGraphic(null);
                     }
                     else {
-                        ANodeSlider<Label> nodeSlider = new ANodeSlider<>();
-                        for (ProductDiscount dis : discounts) {
-                            Label discLabel = new Label(dis.toString());
-                            nodeSlider.getItems().add(discLabel);
-                        }
-                        System.out.println("nodeSlider size: " + nodeSlider.getItems().size());
-                        setGraphic(nodeSlider);
+//                        if (getGraphic() == null){
+//                            System.out.println("discounts: " + discounts);
+                            ANodeSlider<Label> nodeSlider = new ANodeSlider<>();
+                            discounts.stream().forEach((dis) -> {
+                                nodeSlider.getItems().add(new Label(dis.toString()));
+                            });
+                            System.out.println("nodeSlider size: " + nodeSlider.getItems().size());
+                            setGraphic(nodeSlider);
+//                        }
                     }
                 }
             };

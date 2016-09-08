@@ -37,6 +37,7 @@ import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.mapeditor.MapEditorComboBox;
 import java.lang.reflect.Field;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -545,6 +546,9 @@ public class Utils {
             if (field.isAnnotationPresent(ContentPattern.class)){
                 result = result && checkValidationForContentPatternAnnotation(field, currentClassObject);
             }
+            if (field.isAnnotationPresent(ContentMapEditor.class)){
+                result = result && checkValidationForContentMapEditorAnnotation(field, currentClassObject);
+            }
         }
         return result;
     }
@@ -627,6 +631,25 @@ public class Utils {
         }
         return result;
     }
+    
+    private static boolean checkValidationForContentMapEditorAnnotation(Field field, Object currSceneController){
+        boolean result = true;
+        ContentMapEditor annotation = field.getAnnotation(ContentMapEditor.class);
+        Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
+        MapEditorComboBox mapEditorComboBox = (MapEditorComboBox) typeAndContent[0];
+        String editorContent = (String) typeAndContent[1];
+        String keyPart = StringUtils.substringBefore(editorContent, mapEditorComboBox.getDelimiter()).trim();
+        String valuePart = StringUtils.substringAfter(editorContent, mapEditorComboBox.getDelimiter()).trim();
+        
+        boolean keyMatch = Pattern.matches(mapEditorComboBox.getKeyPattern(), keyPart);
+        boolean valueMatch = Pattern.matches(mapEditorComboBox.getValuePattern(), valuePart);
+        if (!keyMatch || !valueMatch){
+            String explain = (!keyMatch) ? annotation.explainKey() : annotation.explainValue();
+            changeNodeTitleLabelVisual(mapEditorComboBox, explain);
+            result = false;
+        }
+        return result;
+    }
 
     private static Object[] getNodesTypeAndContent(Field field, Object classObject) {
         Object[] results = new Object[2];
@@ -642,6 +665,11 @@ public class Utils {
                 ADatePicker datePicker = (ADatePicker) field.get(classObject);
                 results[0] = datePicker;
                 results[1] = datePicker.getEditor().getText();
+            }
+            else if (field.getType().equals(MapEditorComboBox.class)){
+                MapEditorComboBox mapEditor = (MapEditorComboBox)field.get(classObject);
+                results[0] = mapEditor;
+                results[1] = mapEditor.getEditor().getText();
             }
             field.setAccessible(accessible);
         } catch (IllegalArgumentException | IllegalAccessException ex) {
