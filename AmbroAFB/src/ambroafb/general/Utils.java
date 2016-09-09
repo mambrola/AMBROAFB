@@ -7,6 +7,7 @@ package ambroafb.general;
     
 import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
+import ambroafb.currency_rates.CurrencyRatesComboBox;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import java.io.File;
@@ -44,6 +45,7 @@ import java.util.TreeSet;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
@@ -558,8 +560,8 @@ public class Utils {
         ContentNotEmpty annotation = field.getAnnotation(ContentNotEmpty.class);
 
         Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
-        String text = (String) typeAndContent[1];
-        if (annotation.value() && text.isEmpty()) {
+        String value = (String) typeAndContent[1];
+        if (annotation.value() && (value == null || value.isEmpty())) {
             changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
             result = false;
         } else {
@@ -615,6 +617,9 @@ public class Utils {
                 changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForHasNotParent());
                 result = false;
             }
+            else {
+                changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
+            }
         }
         return result;
     }
@@ -628,6 +633,8 @@ public class Utils {
         if (!Pattern.matches(annotation.value(), (String)typeAndContent[1])){
             changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
             result = false;
+        } else {
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
         }
         return result;
     }
@@ -640,13 +647,21 @@ public class Utils {
         String editorContent = (String) typeAndContent[1];
         String keyPart = StringUtils.substringBefore(editorContent, mapEditorComboBox.getDelimiter()).trim();
         String valuePart = StringUtils.substringAfter(editorContent, mapEditorComboBox.getDelimiter()).trim();
-        
+
         boolean keyMatch = Pattern.matches(mapEditorComboBox.getKeyPattern(), keyPart);
         boolean valueMatch = Pattern.matches(mapEditorComboBox.getValuePattern(), valuePart);
+        String explain;
         if (!keyMatch || !valueMatch){
-            String explain = (!keyMatch) ? annotation.explainKey() : annotation.explainValue();
+            explain = (!keyMatch) ? annotation.explainKey() : annotation.explainValue();
             changeNodeTitleLabelVisual(mapEditorComboBox, explain);
             result = false;
+        }
+        else if ((keyPart.isEmpty() && !valuePart.isEmpty()) || (!keyPart.isEmpty() && valuePart.isEmpty())){
+            explain = annotation.explainEmpty();
+            changeNodeTitleLabelVisual(mapEditorComboBox, explain);
+            result = false;
+        } else {
+            changeNodeTitleLabelVisual(mapEditorComboBox, "");
         }
         return result;
     }
@@ -658,8 +673,9 @@ public class Utils {
             field.setAccessible(true);
 
             if (field.getType().equals(TextField.class)) {
-                results[0] = (TextField) field.get(classObject);
-                results[1] = ((TextField) results[0]).getText();
+                TextField textField = (TextField) field.get(classObject);
+                results[0] = textField;
+                results[1] = textField.getText();
             }
             else if (field.getType().equals(ADatePicker.class)){
                 ADatePicker datePicker = (ADatePicker) field.get(classObject);
@@ -670,6 +686,11 @@ public class Utils {
                 MapEditorComboBox mapEditor = (MapEditorComboBox)field.get(classObject);
                 results[0] = mapEditor;
                 results[1] = mapEditor.getEditor().getText();
+            }
+            else if (field.getType().equals(ComboBox.class) || field.getType().equals(CurrencyRatesComboBox.class)){
+                ComboBox comboBox = (ComboBox) field.get(classObject);
+                results[0] = comboBox;
+                results[1] = comboBox.getValue();
             }
             field.setAccessible(accessible);
         } catch (IllegalArgumentException | IllegalAccessException ex) {

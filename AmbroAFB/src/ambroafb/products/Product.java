@@ -70,11 +70,11 @@ public class Product extends EditorPanelable {
     
     public Product(){
         abbreviation = new SimpleStringProperty("");
-        former = new SimpleStringProperty("0");
+        former = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
         remark = new SimpleStringProperty("");
         specific = new SimpleStringProperty("");
-        price = new SimpleStringProperty("0.0");
+        price = new SimpleStringProperty("");
         currency = new SimpleStringProperty("");
         discounts = FXCollections.observableArrayList();
 //        discounts = new ArrayList<>();

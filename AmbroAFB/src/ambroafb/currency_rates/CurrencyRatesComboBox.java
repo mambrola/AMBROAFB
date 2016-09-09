@@ -47,11 +47,13 @@ public class CurrencyRatesComboBox extends ComboBox<String>{
 
     public void setShowCategoryALL(boolean showCategoryALL) {
 //        giveCurrencyRatesFromDB(showCategoryALL);
-        if (getItems().contains(CurrencyRate.ALL_CURRENCY)){
-            getItems().remove(CurrencyRate.ALL_CURRENCY);
+        if (!showCategoryALL){
+            if (getItems().contains(CurrencyRate.ALL_CURRENCY))
+                getItems().remove(CurrencyRate.ALL_CURRENCY);
         }
         else {
-            getItems().add(0, CurrencyRate.ALL_CURRENCY);
+            if (!getItems().contains(CurrencyRate.ALL_CURRENCY))
+                getItems().add(0, CurrencyRate.ALL_CURRENCY);
         }
     }
 }

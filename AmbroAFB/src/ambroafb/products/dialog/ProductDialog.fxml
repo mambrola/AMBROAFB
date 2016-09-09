@@ -52,7 +52,7 @@
                 <children>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="%product_specific" />
+                            <Label text="%product_specific" styleClass="validationMessage" />
                             <ComboBox fx:id="specifics" />
                         </children>
                     </VBox>

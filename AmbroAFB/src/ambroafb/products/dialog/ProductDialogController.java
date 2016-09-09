@@ -5,6 +5,7 @@
  */
 package ambroafb.products.dialog;
 
+import ambroafb.currency_rates.CurrencyRatesComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.*;
@@ -15,6 +16,8 @@ import ambroafb.products.Product;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -33,22 +36,25 @@ public class ProductDialogController implements Initializable {
     @FXML
     private VBox formPane;
     @FXML @ContentNotEmpty
-    private TextField abbreviation, descrip, remark, price;
-    @FXML @ContentNotEmpty // @ContentPattern
+    private TextField abbreviation;
+    @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]{2}", explain = "The content length must be 2.")
     private TextField former;
-    @FXML
+    @FXML @ContentNotEmpty
+    private TextField descrip, remark;
+    @FXML @ContentNotEmpty
     private ComboBox<String> specifics;
-//    @FXML
-//    private CurrencyRatesComboBox currency;
+    @FXML @ContentNotEmpty @ContentPattern(value = "(^0|[1-9]+)([.][0-9]{1,2})?", explain = "The price content is incorect. Exp: 1.25")
+    private TextField price;
+    @FXML @ContentNotEmpty
+    private CurrencyRatesComboBox currency;
     @FXML @ContentMapEditor(explainKey = "Left number must be months counter.", explainValue = "Right number must be discount percent. Exp: 4.25")
     private MapEditorComboBox discounts;
     @FXML
     private CheckBox isAlive;
     
+    private final String formerPattern = "[0-9]{1,2}";
+    private final String pricePattern = "(^0|[1-9]+)([.]|[.][0-9]{1,2})?";
     
-//    @FXML
-//    @ContentNotEmpty
-//    private TextField  productNameField, vendorCodeField, productRemarkField;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -65,12 +71,26 @@ public class ProductDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+        former.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue != null && !newValue.isEmpty()){
+                if (!Pattern.matches(formerPattern, newValue)){
+                    former.setText(oldValue);
+                }
+            }
+        });
+        price.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue != null && !newValue.isEmpty()){
+                if (!Pattern.matches(pricePattern, newValue)){
+                    price.setText(oldValue);
+                }
+            }
+        });
         new Thread(() -> {
             Product.getAllSpecifics().forEach((specific) -> {
                 specifics.getItems().add(specific.getValue());
             });
         }).start();
-//        currency.setShowCategoryALL(false);
+        currency.setShowCategoryALL(false);
         permissionToClose = true;
     }
 

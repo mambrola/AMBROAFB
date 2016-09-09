@@ -44,16 +44,8 @@ public class Annotations {
         String valueForSyntax() default "\\w"; // [a-zA-Z_0-9]
         String explainForSyntax() default "The content must contains only digits.";
         
-//        String explainForIncorrectChild() default "The item is not correct child.";
         String explainForHasNotParent() default "The item has not parent.";
         String explainForExists() default "This item has already exist.";
-    }
-    
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface ContentRate {
-        String value() default "[0-9]{1}(\\.[0-9]{4}){1}"; // "\d+(\.\d+)?"
-        String explain() default "Rate pattern is incorrect! Exp:  0.1234";
     }
     
     @Retention(RetentionPolicy.RUNTIME)
@@ -61,6 +53,7 @@ public class Annotations {
     public @interface ContentMapEditor {
         String explainKey() default "";
         String explainValue() default "";
+        String explainEmpty() default "Left or right value of delimiter must not be empty.";
     }
     
     @Retention(RetentionPolicy.RUNTIME)
