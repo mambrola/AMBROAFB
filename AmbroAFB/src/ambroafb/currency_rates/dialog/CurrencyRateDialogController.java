@@ -64,7 +64,7 @@ public class CurrencyRateDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContent(count, "(^[1][0]*)?");
-        Utils.validateTextFieldContent(rate, "(^0|[1-9][0-9]*)([.]|[.][0-9]{1,2})?");
+        Utils.validateTextFieldContent(rate, "(^0|[1-9][0-9]*)([.]|[.][0-9]{1,4})?");
 //        indicator.visibleProperty().bind(currRatesComboBox.visibleProperty().not());
 //        indicator.setPrefSize(currRatesComboBox.getWidth(), currRatesComboBox.getHeight());
         currencies.setShowCategoryALL(false);
