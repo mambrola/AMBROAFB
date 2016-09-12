@@ -126,6 +126,7 @@ public class MapEditorComboBox<T> extends ComboBox<T>{
             } else {
                 String keyInput = StringUtils.substringBefore(newValue, delimiter).trim();
                 String valueInput = StringUtils.substringAfter(newValue, delimiter).trim();
+                System.out.println("keyPattern: " + keyPattern);
                 if (!Pattern.matches(keyPattern, keyInput)) {
                     keyInput = StringUtils.substringBefore(oldValue, delimiter).trim();
                 }

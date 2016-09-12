@@ -16,8 +16,6 @@ import ambroafb.products.Product;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -43,7 +41,7 @@ public class ProductDialogController implements Initializable {
     private TextField descrip, remark;
     @FXML @ContentNotEmpty
     private ComboBox<String> specifics;
-    @FXML @ContentNotEmpty @ContentPattern(value = "(^0|[1-9]+)([.][0-9]{1,2})?", explain = "The price content is incorect. Exp: 1.25")
+    @FXML @ContentNotEmpty @ContentPattern(value = "(^0|[1-9][0-9]*)([.][0-9]{1,2})?", explain = "The price content is incorect. Exp: 1.25")
     private TextField price;
     @FXML @ContentNotEmpty
     private CurrencyRatesComboBox currency;
@@ -51,9 +49,6 @@ public class ProductDialogController implements Initializable {
     private MapEditorComboBox discounts;
     @FXML
     private CheckBox isAlive;
-    
-    private final String formerPattern = "[0-9]{1,2}";
-    private final String pricePattern = "(^0|[1-9]+)([.]|[.][0-9]{1,2})?";
     
     
     @FXML
@@ -71,20 +66,8 @@ public class ProductDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        former.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (newValue != null && !newValue.isEmpty()){
-                if (!Pattern.matches(formerPattern, newValue)){
-                    former.setText(oldValue);
-                }
-            }
-        });
-        price.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (newValue != null && !newValue.isEmpty()){
-                if (!Pattern.matches(pricePattern, newValue)){
-                    price.setText(oldValue);
-                }
-            }
-        });
+        Utils.validateTextFieldContent(former, "[0-9]{1,2}");
+        Utils.validateTextFieldContent(price, "(^0|[1-9][0-9]*)([.]|[.][0-9]{1,2})?");
         new Thread(() -> {
             Product.getAllSpecifics().forEach((specific) -> {
                 specifics.getItems().add(specific.getValue());

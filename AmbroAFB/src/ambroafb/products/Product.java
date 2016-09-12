@@ -31,8 +31,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
-//import org.json.JSONArray;
-//import org.json.JSONException;
 
 /**
  *
@@ -63,7 +61,6 @@ public class Product extends EditorPanelable {
     
     @AView.Column(title = "%discounts", width = "80", cellFactory = DiscountCellFactory.class)
     private ObservableList<ProductDiscount> discounts;
-//    private ArrayList<ProductDiscount> discounts;
     
     @AView.Column(width = "35", cellFactory = AliveCellFactory.class)
     private final BooleanProperty isActive;
@@ -77,7 +74,6 @@ public class Product extends EditorPanelable {
         price = new SimpleStringProperty("");
         currency = new SimpleStringProperty("");
         discounts = FXCollections.observableArrayList();
-//        discounts = new ArrayList<>();
         isActive = new SimpleBooleanProperty();
         
     }
@@ -299,10 +295,6 @@ public class Product extends EditorPanelable {
     
     
     // Getters:
-    public boolean getIsActive() {
-        return isActive.get();
-    }
-    
     public String getAbbreviation(){
         return abbreviation.get();
     }
@@ -311,12 +303,16 @@ public class Product extends EditorPanelable {
         return Utils.getIntValueFor(former.get());
     }
     
-    public String getSpecific(){
-        return specific.get();
-    }
-    
     public String getDescrip() {
         return descrip.get();
+    }
+    
+    public String getRemark() {
+        return remark.get();
+    }
+    
+    public String getSpecific(){
+        return specific.get();
     }
     
     public double getPrice() {
@@ -327,23 +323,16 @@ public class Product extends EditorPanelable {
         return currency.get();
     }
     
-//    public ArrayList<ProductDiscount> getDiscounts() {
-//        return discounts;
-//    }
     public ObservableList<ProductDiscount> getDiscounts() {
         return discounts;
     }
     
-    public String getRemark() {
-        return remark.get();
+    public boolean getIsActive() {
+        return isActive.get();
     }
 
     
     // Setters:
-    public void setIsActive(boolean isActive) {
-        this.isActive.set(isActive);
-    }
-
     public void setAbbreviation(String abbreviation){
         this.abbreviation.set(abbreviation);
     }
@@ -351,13 +340,17 @@ public class Product extends EditorPanelable {
     public void setFormer(int former){
         this.former.set("" + former);
     }
-    
-    public void setSpecific(String specific){
-        this.specific.set(specific);
-    }
 
     public void setDescrip(String descrip) {
         this.descrip.set(descrip);
+    }
+    
+    public void setRemark(String remark) {
+        this.remark.set(remark);
+    }
+    
+    public void setSpecific(String specific){
+        this.specific.set(specific);
     }
     
     public void setPrice(double price) {
@@ -371,12 +364,9 @@ public class Product extends EditorPanelable {
     public void setDiscounts(ArrayList<ProductDiscount> discounts) {
         this.discounts = FXCollections.observableArrayList(discounts);
     }
-//    public void setDiscounts(ArrayList<ProductDiscount> discounts) {
-//        this.discounts = discounts;
-//    }
-    
-    public void setRemark(String remark) {
-        this.remark.set(remark);
+
+    public void setIsActive(boolean isActive) {
+        this.isActive.set(isActive);
     }
 
     
@@ -467,15 +457,18 @@ public class Product extends EditorPanelable {
                         setGraphic(null);
                     }
                     else {
-//                        if (getGraphic() == null){
-//                            System.out.println("discounts: " + discounts);
-                            ANodeSlider<Label> nodeSlider = new ANodeSlider<>();
-                            discounts.stream().forEach((dis) -> {
-                                nodeSlider.getItems().add(new Label(dis.toString()));
-                            });
-                            System.out.println("nodeSlider size: " + nodeSlider.getItems().size());
-                            setGraphic(nodeSlider);
-//                        }
+                        ANodeSlider<Label> nodeSlider = new ANodeSlider<>();
+                        discounts.stream().forEach((dis) -> {
+                            nodeSlider.getItems().add(new Label(dis.toString()));
+                        });
+                        System.out.println("nodeSlider size: " + nodeSlider.getItems().size());
+                        setGraphic(nodeSlider);
+                        
+//                        MapEditorComboBox<ProductDiscount> mapEditor = new MapEditorComboBox<>();
+//                        mapEditor.setKeyPattern("(1[0-2]|[1-9])?");
+//                        mapEditor.setValuePattern("((0|[1-9]{1,2})(\\.[0-9]*)?)?");
+//                        mapEditor.setItemsCustom(discounts);
+//                        setGraphic(mapEditor);
                     }
                 }
             };
