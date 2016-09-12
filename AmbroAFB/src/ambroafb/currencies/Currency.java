@@ -16,8 +16,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 
 /**
  *
@@ -27,6 +30,7 @@ public class Currency extends EditorPanelable {
     
     @AView.Column(title = "%iso", width = "50")
     private final StringProperty iso;
+    private ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%descrip", width = "150")
     private final StringProperty descrip;
@@ -41,12 +45,21 @@ public class Currency extends EditorPanelable {
     
     public Currency(){
         iso = new SimpleStringProperty("");
+        currency = new SimpleObjectProperty<>();
         descrip_first = new SimpleStringProperty("");
         descrip_default = new SimpleStringProperty("");
         descrip_second = new SimpleStringProperty("");
         String lang = GeneralConfig.getInstance().getCurrentLocal().getLanguage();
         descrip = (lang.equals("ka")) ? descrip_first : (lang.equals("en")) ? descrip_second : descrip_default;
         symbol = new SimpleStringProperty("");
+        
+        currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
+//            iso.unbind();
+            if (currency.get() != null){
+                iso.set(currency.get().isoProperty().get());
+                descrip.set(currency.get().descripProperty().get());
+            }
+        });
     }
     
     
@@ -106,7 +119,11 @@ public class Currency extends EditorPanelable {
     
     public StringProperty isoProperty(){
         return iso;
-    } 
+    }
+    
+    public ObjectProperty<Currency> currencyProperty(){
+        return currency;
+    }
     
     public StringProperty descripProperty(){
         return descrip;
@@ -185,10 +202,10 @@ public class Currency extends EditorPanelable {
 
     @Override
     public void copyFrom(EditorPanelable other) {
-        Currency currency = (Currency) other;
-        setIso(currency.getIso());
-        setDescrip(currency.getDescrip());
-        setSymbol(currency.getSymbol());
+        Currency otherCurrency = (Currency) other;
+        setIso(otherCurrency.getIso());
+        setDescrip(otherCurrency.getDescrip());
+        setSymbol(otherCurrency.getSymbol());
     }
 
     @Override

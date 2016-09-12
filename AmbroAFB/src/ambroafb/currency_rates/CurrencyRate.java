@@ -182,7 +182,7 @@ public class CurrencyRate extends EditorPanelable {
         return iso;
     }
     
-    public ObjectProperty currencyProperty(){
+    public ObjectProperty<Currency> currencyProperty(){
         return currency;
     }
     

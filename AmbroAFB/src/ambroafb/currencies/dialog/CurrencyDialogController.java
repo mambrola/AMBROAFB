@@ -19,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ambroafb.general.interfaces.Annotations.*;
+import ambroafb.general.interfaces.Dialogable;
 
 /**
  * FXML Controller class
@@ -33,10 +34,12 @@ public class CurrencyDialogController implements Initializable {
     private CurrencyComboBox currencies;
     @FXML @ContentNotEmpty
     private TextField descrip;
-    @FXML @ContentNotEmpty @ContentPattern(value = "\\p{Currency_Symbol}", explain = "Only one symbol of current.")
+//    @FXML @ContentNotEmpty @ContentPattern(value = "\\p{Currency_Symbol}", explain = "Only one symbol of current.")
+//    @FXML @ContentNotEmpty @ContentPattern(value = "\\p", explain = "Only one symbol of current.")
+    @FXML
     private TextField symbol;
     @FXML
-    private DialogOkayCancelController okeyCancelController;
+    private DialogOkayCancelController okayCancelController;
     
     private ArrayList<Node> focusTraversableNodes;
     private Currency currency, currencyBackup;
@@ -50,7 +53,7 @@ public class CurrencyDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        Utils.validateTextFieldContent(symbol, "\\p{Currency_Symbol}");
+//        Utils.validateTextFieldContent(symbol, "\\p");
         currencies.setShowCategoryALL(false);
         permissionToClose = true;
     }    
@@ -59,21 +62,46 @@ public class CurrencyDialogController implements Initializable {
     public void bindCurrency(Currency currency) {
         this.currency = currency;
         if (currency != null){
-//            currencies.valueProperty().bindBidirectional(currency.isoProperty());
+            currencies.valueProperty().bindBidirectional(currency.currencyProperty());
             descrip.textProperty().bindBidirectional(currency.descripProperty());
             symbol.textProperty().bindBidirectional(currency.symbolProperty());
         }
     }
 
+    public boolean anyComponentChanged(){
+        return !currency.compares(currencyBackup);
+    }
+
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
+            setDisableComponents();
+        }
+        okayCancelController.setButtonsFeatures(buttonType);
     }
 
     public void setBackupCurrency(Currency currencyBackup) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.currencyBackup = currencyBackup;
+    }
+
+    public DialogOkayCancelController getOkayCancelController() {
+        return okayCancelController;
+    }
+
+    private void setDisableComponents() {
+        focusTraversableNodes.forEach((Node t) -> {
+            t.setDisable(true);
+        });
     }
     
-    public DialogOkayCancelController getOkayCancelController() {
-        return okeyCancelController;
+    public void operationCanceled(){
+        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
+    }
+    
+    public void changePermissionForClose(boolean value){
+        permissionToClose = value;
+    }
+    
+    public boolean getPermissionToClose(){
+        return permissionToClose;
     }
 }

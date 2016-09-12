@@ -103,7 +103,6 @@ public class EditorPanelController implements Initializable {
         if (dialogStage == null || !dialogStage.isShowing()){
             EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
-            
             EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.getRecId());
             if (real != null) {
                 selected.copyFrom(real);
@@ -285,6 +284,7 @@ public class EditorPanelController implements Initializable {
         String path = rtrn.substring(0, rtrn.lastIndexOf(".") + 1);
         String className = rtrn.substring(path.length(), rtrn.lastIndexOf("Controller"));
         String singularName = className.equals("Countries") ? "Country" : 
+                                className.equals("Currencies") ? "Currency" :
                               className.substring(0, className.length() - 1);
         switch (type){
             case DIALOG:
