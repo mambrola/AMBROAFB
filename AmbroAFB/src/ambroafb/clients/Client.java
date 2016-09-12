@@ -129,7 +129,7 @@ public class Client extends EditorPanelable{
         country.addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
             rebindCountry();
         });
-        countryDescrip.set(country.get().codeProperty().concat("   ").concat(country.get().nameProperty()).get());
+        countryDescrip.set(country.get().codeProperty().concat("   ").concat(country.get().descripProperty()).get());
     }
     
     private void rebindPhoneNumbers() {
@@ -150,7 +150,7 @@ public class Client extends EditorPanelable{
     private void rebindCountry() {
         countryDescrip.unbind();
         if (country.get() != null) {
-            countryDescrip.bind(country.get().codeProperty().concat("   ").concat(country.get().nameProperty()));
+            countryDescrip.bind(country.get().codeProperty().concat("   ").concat(country.get().descripProperty()));
         }
     }
     

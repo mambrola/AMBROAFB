@@ -105,7 +105,7 @@ public class ClientDialogController implements Initializable {
         accessCities.start();
         country.valueProperty().addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
             if (oldValue != null && !newValue.equals(oldValue)){
-                rezident.setSelected(newValue.getName().equals("Georgia"));
+                rezident.setSelected(newValue.getDescrip().equals("Georgia"));
             }
         });
         permissionToClose = true;

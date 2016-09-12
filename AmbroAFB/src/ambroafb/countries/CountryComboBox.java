@@ -19,7 +19,7 @@ public class CountryComboBox extends ComboBox<Country> {
         this.setConverter(new StringConverter<Country>() {
             @Override
             public String toString(Country country) {
-                return country.getCode() + "\t" + country.getName();
+                return country.getCode() + "\t" + country.getDescrip();
             }
             @Override
             public Country fromString(String string) {
