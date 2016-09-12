@@ -48,9 +48,9 @@ public class BalanceAccount extends EditorPanelable {
     private boolean isBase;
     
     @AView.Column(title = "%bal_accounts", width = "500")
-    private final StringExpression aviewColumnText;
+    private final StringExpression descripExpression;
     @AView.Column(width = "60")
-    private final StringExpression actPasColumnText;
+    private final StringExpression actPasExpression;
     
     private final StringProperty currDescrip;
     private final BooleanProperty indeterminateProperty;
@@ -71,7 +71,7 @@ public class BalanceAccount extends EditorPanelable {
         descrip_en = new SimpleStringProperty("");
         
         currDescrip = (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_ka : descrip_en;
-        aviewColumnText = Utils.avoidNull(balAcc).concat(" - ").concat(Utils.avoidNull(currDescrip));
+        descripExpression = Utils.avoidNull(balAcc).concat(" - ").concat(Utils.avoidNull(currDescrip));
         actPas = new SimpleIntegerProperty();
         indeterminateProperty = new SimpleBooleanProperty();
         actPasProperty = new SimpleBooleanProperty();
@@ -80,7 +80,7 @@ public class BalanceAccount extends EditorPanelable {
             indeterminateProperty.set(newValue.intValue() == 3);
             actPasProperty.set(newValue.intValue() == 1);
         });
-        actPasColumnText = Bindings.when(indeterminateProperty).then("Act_Pas").
+        actPasExpression = Bindings.when(indeterminateProperty).then("Act_Pas").
                             otherwise(Bindings.when(actPasProperty).then("Act").otherwise("Pas"));
     }
     
@@ -179,7 +179,7 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     public String getAViewColumText(){
-        return aviewColumnText.get();
+        return descripExpression.get();
     }
 
     
@@ -245,12 +245,12 @@ public class BalanceAccount extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return aviewColumnText.get();
+        return descripExpression.get();
     }
     
     @Override
     public String toString(){
-        return aviewColumnText.get();
+        return descripExpression.get();
     }
 
     public boolean compares(BalanceAccount balAccountBackup) {

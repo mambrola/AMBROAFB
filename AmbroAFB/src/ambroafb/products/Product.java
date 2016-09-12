@@ -20,13 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -62,7 +63,9 @@ public class Product extends EditorPanelable {
     @AView.Column(title = "%discounts", width = "80", cellFactory = DiscountCellFactory.class)
     private ObservableList<ProductDiscount> discounts;
     
-    @AView.Column(width = "35", cellFactory = AliveCellFactory.class)
+    @AView.Column(width = "35") // , cellFactory = AliveCellFactory.class
+    private final StringExpression actPasExpression;
+    
     private final BooleanProperty isActive;
     
     public Product(){
@@ -75,7 +78,7 @@ public class Product extends EditorPanelable {
         currency = new SimpleStringProperty("");
         discounts = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
-        
+        actPasExpression = Bindings.when(isActive).then("Act").otherwise("");
     }
     
     // DBService methods:
@@ -432,19 +435,19 @@ public class Product extends EditorPanelable {
                 Utils.compareLists(getDiscounts(), productBackup.getDiscounts());
     }
 
-    public static class AliveCellFactory implements Callback<TableColumn<Product, Boolean>, TableCell<Product, Boolean>> {
-
-        @Override
-        public TableCell<Product, Boolean> call(TableColumn<Product, Boolean> param) {
-            return new TableCell<Product, Boolean>() {
-                @Override
-                public void updateItem(Boolean isAlive, boolean empty) {
-                    setText(empty ? null : (isAlive ? "Al" : null));
-                    alignmentProperty().set(Pos.CENTER);
-                }
-            };
-        }
-    }
+//    public static class AliveCellFactory implements Callback<TableColumn<Product, Boolean>, TableCell<Product, Boolean>> {
+//
+//        @Override
+//        public TableCell<Product, Boolean> call(TableColumn<Product, Boolean> param) {
+//            return new TableCell<Product, Boolean>() {
+//                @Override
+//                public void updateItem(Boolean isAlive, boolean empty) {
+//                    setText(empty ? null : (isAlive ? "Al" : null));
+//                    alignmentProperty().set(Pos.CENTER);
+//                }
+//            };
+//        }
+//    }
 
     public static class DiscountCellFactory implements Callback<TableColumn<Product, ObservableList<ProductDiscount>>, TableCell<Product, ObservableList<ProductDiscount>>> {
 
