@@ -71,7 +71,6 @@ public class DiscountOnCount extends EditorPanelable {
         } catch (SQLException ex) {
             Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("getOneFromDB DiscountOnLicenseCount. rec_id: " + result.getRecId() + " licenseCount: " + result.getLicense_count() + " rate: " + result.getDiscount_rate());
         return result;
     }
 

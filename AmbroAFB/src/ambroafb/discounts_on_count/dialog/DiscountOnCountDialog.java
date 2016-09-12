@@ -39,10 +39,6 @@ public class DiscountOnCountDialog extends Stage implements Dialogable {
         
         this.discountOnCountBackup = discountOnCount.cloneWithID();
         
-        System.out.println("dialog stage class...");
-        System.out.println("discount real. license count: " + discountOnCount.getLicense_count() + " rate: " + discountOnCount.getDiscount_rate());
-        System.out.println("backup. license count: " + discountOnCountBackup.getLicense_count() + " rate: " + discountOnCountBackup.getDiscount_rate());
-        
         Scene currentScene = Utils.createScene("/ambroafb/discounts_on_count/dialog/DiscountOnCountDialog.fxml", null);
         dialogController = (DiscountOnCountDialogController) currentScene.getProperties().get("controller");
         dialogController.bindDiscountOnCount(this.discountOnCount); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
