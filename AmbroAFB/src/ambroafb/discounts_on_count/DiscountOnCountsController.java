@@ -57,8 +57,8 @@ public class DiscountOnCountsController implements Initializable {
         masker.setVisible(true);
         
         Thread t = new Thread(() -> {
-            DiscountOnCount.getAllFromDBTest().stream().forEach((client) -> {
-                discounts.add(client);
+            DiscountOnCount.getAllFromDBTest().stream().forEach((discountOnCount) -> {
+                discounts.add(discountOnCount);
             });
 
             Platform.runLater(() -> {

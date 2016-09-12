@@ -439,7 +439,7 @@ public class Client extends EditorPanelable{
     @Override
     public Client cloneWithID() {
         Client clone = cloneWithoutID();
-        clone.recId = recId;
+        clone.setRecId(this.getRecId());
         return clone;
     }
 

@@ -114,7 +114,7 @@ public class Country extends EditorPanelable{
     @Override
     public Country cloneWithID() {
         Country clone = cloneWithoutID();
-        clone.recId = recId;
+        clone.setRecId(this.getRecId());
         return clone;
     }
 

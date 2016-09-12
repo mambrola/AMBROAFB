@@ -470,7 +470,6 @@ public class Utils {
         String ownerPath = getPathForStage(owner);
         String substagePath = ownerPath + substageLocalName;
         Stage substage = getStageForPath(substagePath);
-        System.out.println("subStagePath: " + substagePath + "  sunstage: " + substage);
         return substage;
     }
 

@@ -30,9 +30,9 @@ public class DiscountOnCountDialogController implements Initializable {
     @FXML
     private VBox formPane;
     
-    @FXML @ContentNotEmpty @ContentPattern(value = "[1-9]+", explain = "Only Integers")
+    @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]+", explain = "Only Integers")
     private TextField licenseCount;
-    @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]{1,2}", explain = "Only Integers")
+    @FXML @ContentNotEmpty @ContentPattern(value = "(^0|[1-9]+)([.][0-9]{1,2})?", explain = "Only Integers")
     private TextField discountRate;
     
     @FXML
@@ -50,6 +50,8 @@ public class DiscountOnCountDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+        Utils.validateTextFieldContent(licenseCount, "(^[1-9][0-9]*)?");
+        Utils.validateTextFieldContent(discountRate, "(^0|[1-9]+)([.]|[.][0-9]{1,2})?");
         permissionToClose = true;
     }    
 

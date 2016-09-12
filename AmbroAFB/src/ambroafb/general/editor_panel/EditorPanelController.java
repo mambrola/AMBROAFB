@@ -9,6 +9,7 @@ import ambro.AFilterableTableView;
 import ambro.ATableView;
 import ambro.AFilterableTreeTableView;
 import ambro.AView;
+import ambroafb.discounts_on_count.DiscountOnCount;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -103,6 +104,14 @@ public class EditorPanelController implements Initializable {
         if (dialogStage == null || !dialogStage.isShowing()){
             EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+            
+            System.out.println("selected rec_id: " + selected.getRecId());
+            if (selected instanceof DiscountOnCount){
+                DiscountOnCount selectedDisc = (DiscountOnCount) selected;
+                System.out.println("selected item. rec_id: " + selectedDisc.getRecId() + " licens count: " + selectedDisc.getLicense_count() + " rate: " + selectedDisc.getDiscount_rate());
+            }
+            
+            
             EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.getRecId());
             if (real != null) {
                 selected.copyFrom(real);
@@ -200,7 +209,6 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage filterStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (filterStage == null || !filterStage.isShowing()){
-            System.out.println("click refresh");
             
 //            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             Class className = Utils.getClassByName(getClassName(CLASS_TYPE.FILTER));

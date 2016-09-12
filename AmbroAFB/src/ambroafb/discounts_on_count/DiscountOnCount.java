@@ -24,15 +24,15 @@ import javafx.beans.property.StringProperty;
  */
 public class DiscountOnCount extends EditorPanelable {
 
-    @AView.Column(title = "%licenses_count", width = "50")
+    @AView.Column(title = "%licenses_count", width = "100")
     private final StringProperty license_count;
     
-    @AView.Column(title = "%sales_percent", width = "50")
+    @AView.Column(title = "%sales_percent", width = "100")
     private final StringProperty discount_rate;
     
     public DiscountOnCount(){
-        license_count = new SimpleStringProperty("0");
-        discount_rate = new SimpleStringProperty("0");
+        license_count = new SimpleStringProperty("");
+        discount_rate = new SimpleStringProperty("");
     }
     
     // DB methods:
@@ -62,15 +62,16 @@ public class DiscountOnCount extends EditorPanelable {
         Statement stmt = TestDataFromDB.getStatement();
         try {
             ResultSet set = stmt.executeQuery("select * from discounts_on_licenses_count " +
-                    " where rec_id = " + recId);
-            while (set.next()) {                
+                                                " where rec_id = " + recId);
+            while (set.next()) {
+                result.setRecId(set.getInt(1));
                 result.setLicense_count(set.getInt(2));
                 result.setDiscount_rate(set.getInt(3));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        System.out.println("getOneFromDB DiscountOnLicenseCount. rec_id: " + result.getRecId() + " licenseCount: " + result.getLicense_count() + " rate: " + result.getDiscount_rate());
         return result;
     }
 
@@ -79,6 +80,7 @@ public class DiscountOnCount extends EditorPanelable {
     }
 
     public static boolean deleteOneFromDB(int id) {
+        System.out.println("delete from DB... ??");
         return false;
     }
     
@@ -122,7 +124,7 @@ public class DiscountOnCount extends EditorPanelable {
     @Override
     public DiscountOnCount cloneWithID() {
         DiscountOnCount clone = cloneWithoutID();
-        setRecId(clone.getRecId());
+        clone.setRecId(this.getRecId());
         return clone;
     }
 
