@@ -44,6 +44,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -529,6 +530,21 @@ public class Utils {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
+    }
+    
+    /**
+     * The method provides valid content into given TextField. 
+     * If content new value does not match to pattern, then content become old value.
+     * @param textField Field that must validation.
+     * @param pattern The correct syntax for textField.
+     */
+    public static void validateTextFieldContent(TextField textField, String pattern){
+        textField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue != null && !newValue.isEmpty()){
+                if (!Pattern.matches(pattern, newValue))
+                    textField.setText(oldValue);
+            }
+        });
     }
 
     public static boolean everyFieldContentIsValidFor(Object currentClassObject, EDITOR_BUTTON_TYPE type) {

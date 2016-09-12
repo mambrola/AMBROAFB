@@ -35,15 +35,15 @@ public class CurrencyRateDialogController implements Initializable {
     @FXML @ContentNotEmpty
     private ADatePicker currRateDate;
     
-    @FXML
+    @FXML @ContentNotEmpty
     private CurrencyRatesComboBox currRatesComboBox;
 //    @FXML
 //    private ProgressIndicator indicator;
     
-    @FXML @ContentNotEmpty 
+    @FXML @ContentNotEmpty @ContentPattern(value = "[1][0]+", explain = "Count must be 1 or 10 or 100 and so on.")
     private TextField count;
     
-    @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]{1}(\\.[0-9]{4}){1}", explain = "Rate pattern is incorrect!" )
+    @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]{1}([.][0-9]{4}){1}", explain = "Rate must contains \".\" and exactly 5 digits." )
     private TextField rate;
     
     @FXML
@@ -63,6 +63,8 @@ public class CurrencyRateDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+        Utils.validateTextFieldContent(count, "[1]|[1][0]+");
+        Utils.validateTextFieldContent(rate, "(^0|[1-9]+)([.]|[.][0-9]{1,4})?");
 //        indicator.visibleProperty().bind(currRatesComboBox.visibleProperty().not());
 //        indicator.setPrefSize(currRatesComboBox.getWidth(), currRatesComboBox.getHeight());
         currRatesComboBox.setShowCategoryALL(false);

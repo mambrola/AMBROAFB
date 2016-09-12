@@ -53,12 +53,12 @@ public class CurrencyRate extends EditorPanelable {
     public CurrencyRate(){
         dateProperty = new SimpleObjectProperty<>();
         date = new SimpleStringProperty("");
-        count = new SimpleStringProperty("1");
+        count = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
         descrip_first = new SimpleStringProperty("");
         descrip_second = new SimpleStringProperty("");
         descrip_default = new SimpleStringProperty("");
-        rate = new SimpleStringProperty("0");
+        rate = new SimpleStringProperty("");
         
         currDescrip = (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_first 
                                                                                                 : (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("en")) ? descrip_second : descrip_default;
@@ -207,9 +207,7 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public double getRate(){
-        System.out.println("getRate before concat: " + rate.get());
-        double res =  Utils.getDoubleValueFor(rate.get());
-        return res;
+        return Utils.getDoubleValueFor(rate.get());
     }
     
     
@@ -277,7 +275,7 @@ public class CurrencyRate extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return getDate().concat(getIso()).concat("" + getRate()).concat(currDescrip.get());
+        return getDate();
     }
     
     /**

@@ -24,7 +24,7 @@
                     </VBox>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="%currency_name" />
+                            <Label text="%currency_name" styleClass="validationMessage" />
 <!--                            <StackPane styleClass="couple" style="-fx-background-color: blue;">
                                 <children>-->
                                     <CurrencyRatesComboBox fx:id="currRatesComboBox" />
