@@ -159,7 +159,7 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     public int getBalAcc(){
-        return (balAcc.isNotEmpty().get()) ? Integer.parseInt(balAcc.get()) : 0;
+        return Utils.getIntValueFor(balAcc.get());
     }
     
     /**
@@ -254,9 +254,9 @@ public class BalanceAccount extends EditorPanelable {
     }
 
     public boolean compares(BalanceAccount balAccountBackup) {
-        return  getActPas() == balAccountBackup.getActPas() &&
-                getBalAcc() == balAccountBackup.getBalAcc() && 
-                currDescripProperty().get().equals(balAccountBackup.currDescripProperty().get());
+        return  getBalAcc() == balAccountBackup.getBalAcc() && 
+                currDescripProperty().get().equals(balAccountBackup.currDescripProperty().get()) &&
+                getActPas() == balAccountBackup.getActPas();
     }
     
     
