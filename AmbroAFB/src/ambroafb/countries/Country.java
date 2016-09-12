@@ -165,10 +165,6 @@ public class Country extends EditorPanelable{
         descrip_de.set(value);
     }
 
-    public boolean equals(Country other){
-        return getCode().equals(other.getCode()) && getDescrip().equals(other.getDescrip());
-    }
-
     @Override
     public Country cloneWithoutID() {
         Country clone = new Country();
@@ -198,5 +194,13 @@ public class Country extends EditorPanelable{
     @Override
     public String toString(){
         return getCode().concat("\t").concat(getDescrip());
+    }
+    
+    public boolean compares(Country country){
+        return this.equals(country);
+    }
+
+    public boolean equals(Country other){
+        return getCode().equals(other.getCode()) && getDescrip().equals(other.getDescrip());
     }
 }

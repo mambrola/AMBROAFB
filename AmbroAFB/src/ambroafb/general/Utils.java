@@ -7,7 +7,7 @@ package ambroafb.general;
     
 import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
-import ambroafb.currency_rates.CurrencyRatesComboBox;
+import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import java.io.File;
@@ -702,7 +702,7 @@ public class Utils {
                 results[0] = mapEditor;
                 results[1] = mapEditor.getEditor().getText();
             }
-            else if (field.getType().equals(ComboBox.class) || field.getType().equals(CurrencyRatesComboBox.class)){
+            else if (field.getType().equals(ComboBox.class) || field.getType().equals(CurrencyComboBox.class)){
                 ComboBox comboBox = (ComboBox) field.get(classObject);
                 results[0] = comboBox;
                 results[1] = comboBox.getValue();

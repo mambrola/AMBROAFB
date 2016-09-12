@@ -22,8 +22,7 @@ public class Countries extends Stage {
     public Countries(){}
     
     public Countries(Stage owner){
-        String currentStagePath = Utils.getPathForStage(owner) + "/" + Countries.class.getSimpleName();
-        Utils.saveShowingStageByPath(currentStagePath, (Stage)this);
+        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + Countries.class.getSimpleName(), (Stage)this);
         
         Scene scene = Utils.createScene("/ambroafb/countries/Countries.fxml", null);
         countriesController = (CountriesController) scene.getProperties().get("controller");

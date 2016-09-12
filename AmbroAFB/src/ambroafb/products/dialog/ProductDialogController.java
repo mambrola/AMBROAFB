@@ -5,7 +5,7 @@
  */
 package ambroafb.products.dialog;
 
-import ambroafb.currency_rates.CurrencyRatesComboBox;
+import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.*;
@@ -44,7 +44,7 @@ public class ProductDialogController implements Initializable {
     @FXML @ContentNotEmpty @ContentPattern(value = "(^0|[1-9][0-9]*)([.][0-9]{1,2})?", explain = "The price content is incorect. Exp: 1.25")
     private TextField price;
     @FXML @ContentNotEmpty
-    private CurrencyRatesComboBox currency;
+    private CurrencyComboBox currency;
     @FXML @ContentMapEditor(explainKey = "Left number must be months counter.", explainValue = "Right number must be discount percent. Exp: 4.25")
     private MapEditorComboBox discounts;
     @FXML
@@ -96,7 +96,7 @@ public class ProductDialogController implements Initializable {
         return !product.compares(productBackup);
     }
 
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType, String string) {
+    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }

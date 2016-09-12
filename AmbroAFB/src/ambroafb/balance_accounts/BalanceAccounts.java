@@ -21,8 +21,7 @@ public class BalanceAccounts extends Stage {
     
     
     public BalanceAccounts(Stage owner){
-        String currentStagePath = Utils.getPathForStage(owner) + "/" + BalanceAccounts.class.getSimpleName();
-        Utils.saveShowingStageByPath(currentStagePath, (Stage)this);
+        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + BalanceAccounts.class.getSimpleName(), (Stage)this);
         
         Scene scene = Utils.createScene("/ambroafb/balance_accounts/BalanceAccounts.fxml", null);
         balanceAccountsController = (BalanceAccountsController) scene.getProperties().get("controller");

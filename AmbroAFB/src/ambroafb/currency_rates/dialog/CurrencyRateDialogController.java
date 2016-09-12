@@ -7,7 +7,7 @@ package ambroafb.currency_rates.dialog;
 
 import ambro.ADatePicker;
 import ambroafb.currency_rates.CurrencyRate;
-import ambroafb.currency_rates.CurrencyRatesComboBox;
+import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.Utils;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
@@ -36,7 +36,7 @@ public class CurrencyRateDialogController implements Initializable {
     private ADatePicker currRateDate;
     
     @FXML @ContentNotEmpty
-    private CurrencyRatesComboBox currRatesComboBox;
+    private CurrencyComboBox currencies;
 //    @FXML
 //    private ProgressIndicator indicator;
     
@@ -67,7 +67,8 @@ public class CurrencyRateDialogController implements Initializable {
         Utils.validateTextFieldContent(rate, "(^0|[1-9][0-9]*)([.]|[.][0-9]{1,2})?");
 //        indicator.visibleProperty().bind(currRatesComboBox.visibleProperty().not());
 //        indicator.setPrefSize(currRatesComboBox.getWidth(), currRatesComboBox.getHeight());
-        currRatesComboBox.setShowCategoryALL(false);
+        currencies.setShowCategoryALL(false);
+        currencies.removeCurrency("GEL");
         permissionToClose = true;
     }
 
@@ -75,7 +76,7 @@ public class CurrencyRateDialogController implements Initializable {
         this.currencyRate = currRate;
         if (currRate != null){
             currRateDate.valueProperty().bindBidirectional(currRate.dateProperty());
-            currRatesComboBox.valueProperty().bindBidirectional(currRate.isoProperty());
+            currencies.valueProperty().bindBidirectional(currRate.currencyProperty());
             count.textProperty().bindBidirectional(currRate.countProperty());
             rate.textProperty().bindBidirectional(currRate.rateProperty());
         }

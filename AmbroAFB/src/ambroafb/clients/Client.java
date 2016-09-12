@@ -419,7 +419,7 @@ public class Client extends EditorPanelable{
                                         this.address.get().equals(other.getAddress()) &&
                                         this.zipCode.get().equals(other.getZipCode()) &&
                                         this.city.get().equals(other.getCity()) &&
-                                        this.country.get().equals(other.getCountry()) &&
+                                        this.country.get().compares(other.getCountry()) &&
                                         this.IDNumber.get().equals(other.getIDNumber()) &&
                                         this.fax.get().equals(other.getFax()) &&
                                         this.status.get().equals(other.getStatus());

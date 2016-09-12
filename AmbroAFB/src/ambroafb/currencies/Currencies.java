@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.products;
+package ambroafb.currencies;
 
 import ambroafb.general.Utils;
 import javafx.event.EventHandler;
@@ -15,27 +15,27 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class Products extends Stage {
+public class Currencies extends Stage {
     
-    private ProductsController productsController;
+    private CurrenciesController currenciesController;
     
-    public Products(Stage owner){
+    public Currencies(Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
         
-        Scene scene = Utils.createScene("/ambroafb/products/Products.fxml", null);
-        productsController = (ProductsController) scene.getProperties().get("controller");
+        Scene scene = Utils.createScene("/ambroafb/currencies/Currencies.fxml", null);
+        currenciesController = (CurrenciesController) scene.getProperties().get("controller");
         this.setScene(scene);
         this.initOwner(owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            productsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
+            currenciesController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
         
         Utils.setSizeFor((Stage)this);
     }
     
-    public ProductsController getProductsController(){
-        return productsController;
+    public CurrenciesController getCurrenciesController(){
+        return currenciesController;
     }
 }

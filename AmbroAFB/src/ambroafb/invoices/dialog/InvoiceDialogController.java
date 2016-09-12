@@ -39,7 +39,7 @@ public class InvoiceDialogController implements Initializable {
     public void bindInvoice(Invoice invoice) {
     }
 
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType, String string) {
+    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
     }
 
     public void setBackupInvoice(Invoice invoiceBackup) {

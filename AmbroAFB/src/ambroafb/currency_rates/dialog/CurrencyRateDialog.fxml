@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import ambro.*?>
-<?import ambroafb.currency_rates.*?>
+<?import ambroafb.currencies.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/currencyratedialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 
@@ -27,7 +27,7 @@
                             <Label text="%currency_name" styleClass="validationMessage" />
 <!--                            <StackPane styleClass="couple" style="-fx-background-color: blue;">
                                 <children>-->
-                                    <CurrencyRatesComboBox fx:id="currRatesComboBox" />
+                                    <CurrencyComboBox fx:id="currencies" />
 <!--                                    <ProgressIndicator fx:id="indicator" style="-fx-background-color: red;" />
                                 </children>
                             </StackPane>-->

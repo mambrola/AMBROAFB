@@ -9,6 +9,7 @@ import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Clients;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.countries.Countries;
+import ambroafb.currencies.Currencies;
 import ambroafb.currency_rates.CurrencyRates;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCounts;
@@ -187,7 +188,19 @@ public class MainController implements Initializable {
     
     @FXML private void accounts(ActionEvent event) {}
     @FXML private void licenses(ActionEvent event) {}
-    @FXML private void currencies(ActionEvent event) {}
+    
+    @FXML private void currencies(ActionEvent event) {
+        String currenciesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + CurrencyRates.class.getSimpleName();
+        
+        Stage currenciesStage = Utils.getStageForPath(currenciesStagePath);
+        if(currenciesStage == null || !currenciesStage.isShowing()){
+            Currencies currencies = new Currencies(AmbroAFB.mainStage);
+            currencies.show();
+        }
+        else {
+            currenciesStage.requestFocus();
+        }
+    }
     
     @FXML private void currencyRates(ActionEvent event) {
         String currencyRatesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + CurrencyRates.class.getSimpleName();

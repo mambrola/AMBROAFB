@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import ambro.*?>
 <?import ambroafb.general.mapeditor.*?>
-<?import ambroafb.currency_rates.*?>
+<?import ambroafb.currencies.*?>
 
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/productdialog.css" 
@@ -65,7 +65,7 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%currency" styleClass="validationMessage" />
-                            <CurrencyRatesComboBox fx:id="currency" />
+                            <CurrencyComboBox fx:id="currency" />
                         </children>
                     </VBox>
                 </children>

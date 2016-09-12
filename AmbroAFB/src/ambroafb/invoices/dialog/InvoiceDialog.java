@@ -28,8 +28,7 @@ public class InvoiceDialog extends Stage implements Dialogable {
     private InvoiceDialogController dialogController;
     
     public InvoiceDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        String currStagePath = Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH;
-        Utils.saveShowingStageByPath(currStagePath, (Stage)this);
+        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
         
         Invoice invoiceObject;
         if (object == null)
@@ -43,7 +42,7 @@ public class InvoiceDialog extends Stage implements Dialogable {
         Scene currentScene = Utils.createScene("/ambroafb/invoices/dialog/InvoiceDialog.fxml", null);
         dialogController = (InvoiceDialogController) currentScene.getProperties().get("controller");
         dialogController.bindInvoice(this.invoice);
-        dialogController.setNextVisibleAndActionParameters(buttonType, "");
+        dialogController.setNextVisibleAndActionParameters(buttonType);
         dialogController.setBackupInvoice(this.invoiceBackup);
         this.setScene(currentScene);
         this.setResizable(false);

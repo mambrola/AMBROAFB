@@ -79,7 +79,7 @@ public class BalanceAccountDialogController implements Initializable {
         return !balAccount.compares(balAccountBackup);
     }
 
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType, String string) {
+    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }

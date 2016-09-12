@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.products.dialog;
+package ambroafb.currencies.dialog;
 
+import ambroafb.currencies.Currency;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
-import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.Names.*;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.products.Product;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,46 +21,47 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class ProductDialog extends Stage implements Dialogable {
+public class CurrencyDialog extends Stage implements Dialogable {
+
+    private Currency currency;
+    private final Currency currencyBackup;
     
-    private Product product;
-    private final Product productBackup;
+    private CurrencyDialogController dialogController;
     
-    private ProductDialogController dialogController;
-    
-    public ProductDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner){
+    public CurrencyDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
         
         if (object == null)
-            this.product = new Product();
+            this.currency = new Currency();
         else
-            this.product = (Product) object;
-        this.productBackup = product.cloneWithID();
+            this.currency = (Currency) object;
+        this.currencyBackup = currency.cloneWithID();
         
-        Scene currentScene = Utils.createScene("/ambroafb/products/dialog/ProductDialog.fxml", null);
-        dialogController = (ProductDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindProduct(this.product);
+        Scene currentScene = Utils.createScene("/ambroafb/currencies/dialog/CurrencyDialog.fxml", null);
+        dialogController = (CurrencyDialogController) currentScene.getProperties().get("controller");
+        dialogController.bindCurrency(this.currency);
         dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupProduct(this.productBackup);
+        dialogController.setBackupCurrency(this.currencyBackup);
         this.setScene(currentScene);
         this.setResizable(false);
         this.initOwner(owner);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("product_dialog_title"));
+        this.setTitle(GeneralConfig.getInstance().getTitleFor("currency_dialog_title"));
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
     }
-
+    
     @Override
-    public Product getResult() {
+    public EditorPanelable getResult() {
         showAndWait();
-        return product;
+        return currency;
     }
 
     @Override
     public void operationCanceled() {
-        product = null;
+        currency = null;
     }
+    
 }

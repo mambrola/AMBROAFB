@@ -7,7 +7,7 @@ package ambroafb.currency_rates.filter;
 
 import ambro.ADatePicker;
 import ambroafb.clients.filter.ClientFilter;
-import ambroafb.currency_rates.CurrencyRatesComboBox;
+import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
@@ -40,7 +40,7 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     @FXML
     private ADatePicker dateBigger, dateLess;
     @FXML
-    private CurrencyRatesComboBox currRatesComboBox;
+    private CurrencyComboBox currencies;
 //    @FXML
 //    private ProgressIndicator indicator;
     @FXML
@@ -71,6 +71,7 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
             okayCancelController.cancel(null);
             if(event != null) event.consume();
         });
+        currencies.removeCurrency("GEL");
         
 //        okayCancelController.disableProperty().bind(currRatesComboBox.visibleProperty().not());
 //        indicator.visibleProperty().bind(currRatesComboBox.visibleProperty().not());
@@ -93,12 +94,12 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
             
             jSonResult.put("dateBigger", (dateBigger.getValue() == null ? DATE_BIGGER : dateBigger.getValue()).toString());
             jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());
-            jSonResult.put("currency", (currRatesComboBox.getValue() == null)? "" : currRatesComboBox.getValue());
+            jSonResult.put("currency", (currencies.getValue() == null)? "" : currencies.getValue().getIso());
             
             JSONObject baseJS = new JSONObject();
             baseJS.put("dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue());
             baseJS.put(  "dateLess", (  dateLess.getValue() == null) ? "" :   dateLess.getValue());
-            baseJS.put("currency", (currRatesComboBox.getValue() == null)? "" : currRatesComboBox.getValue());
+            baseJS.put("currency", (currencies.getValue() == null)? "" : currencies.getValue().getIso());
             
             UtilsDB.getInstance().updateOrInsertDefaultParameters("currency_rate", "filter", baseJS);
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
@@ -123,8 +124,8 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
  
                 dateBigger.setValue(bigger);
                 dateLess.setValue(less);
-                currRatesComboBox.setValue(currency);
-//                currRatesComboBox.changeValue(currency);
+//                currRatesComboBox.setValue(currency);
+                currencies.changeValue(currency);
             } 
         }
         catch (JSONException ex) {

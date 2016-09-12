@@ -28,8 +28,7 @@ public class BalanceAccountDialog extends Stage implements Dialogable {
     private BalanceAccountDialogController dialogController;
     
     public BalanceAccountDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        String currStagePath = Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH;
-        Utils.saveShowingStageByPath(currStagePath, (Stage)this);
+        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
         
         BalanceAccount balAccountObject;
         if (object == null)
@@ -43,7 +42,7 @@ public class BalanceAccountDialog extends Stage implements Dialogable {
         Scene currentScene = Utils.createScene("/ambroafb/balance_accounts/dialog/BalanceAccountDialog.fxml", null);
         dialogController = (BalanceAccountDialogController) currentScene.getProperties().get("controller");
         dialogController.bindBalAccount(this.balAccount);
-        dialogController.setNextVisibleAndActionParameters(buttonType, "");
+        dialogController.setNextVisibleAndActionParameters(buttonType);
         dialogController.setBackupBalAccount(this.balAccountBackup);
         this.setScene(currentScene);
         this.setResizable(false);

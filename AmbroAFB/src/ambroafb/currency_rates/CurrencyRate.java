@@ -6,8 +6,8 @@
 package ambroafb.currency_rates;
 
 import ambro.AView;
+import ambroafb.currencies.Currency;
 import ambroafb.general.DateConverter;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -39,15 +40,15 @@ public class CurrencyRate extends EditorPanelable {
     private final StringProperty count;
     @AView.Column(title = "%iso", width = "50")
     private final StringProperty iso;
+    private ObjectProperty<Currency> currency;
     @AView.Column(title = "%descrip", width = "150")
     private final StringProperty currDescrip;
     @AView.Column(title = "%rate", width = "80")
     private final StringProperty rate;
     
-    public static final String ALL_CURRENCY = "ALL";
-    private final StringProperty descrip_first;
-    private final StringProperty descrip_second;
-    private final StringProperty descrip_default;
+//    private final StringProperty descrip_first;
+//    private final StringProperty descrip_second;
+//    private final StringProperty descrip_default;
     private final ObjectProperty<LocalDate> dateProperty;
     
     public CurrencyRate(){
@@ -55,13 +56,13 @@ public class CurrencyRate extends EditorPanelable {
         date = new SimpleStringProperty("");
         count = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
-        descrip_first = new SimpleStringProperty("");
-        descrip_second = new SimpleStringProperty("");
-        descrip_default = new SimpleStringProperty("");
+        currency = new SimpleObjectProperty<>();
+        currDescrip = new SimpleStringProperty("");
+//        descrip_first = new SimpleStringProperty("");
+//        descrip_second = new SimpleStringProperty("");
+//        descrip_default = new SimpleStringProperty("");
         rate = new SimpleStringProperty("");
         
-        currDescrip = (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_first 
-                                                                                                : (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("en")) ? descrip_second : descrip_default;
         dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
             String dateStr = "";
             if (newValue != null){
@@ -69,38 +70,31 @@ public class CurrencyRate extends EditorPanelable {
             }
             date.set(dateStr);
         });
+        
+        currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
+            iso.unbind();
+            if (currency.get() != null){
+                iso.bind(currency.get().isoProperty());
+                currDescrip.bind(Bindings.when(currency.isNotNull()).then(currency.get().descripProperty()).otherwise("")); //(GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_first : (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("en")) ? descrip_second : descrip_default;
+            }
+        });
+//        iso.bind(Bindings.when(currency.isNotNull()).then(currency.get().isoProperty()).otherwise(""));
     }
 
-    public static ArrayList<String> getAllCurrencyFromDBTest() {
-        ArrayList<String> result = new ArrayList<>();
-        Statement stmt = TestDataFromDB.getStatement();
-        if (stmt != null){
-            try {
-                ResultSet set = stmt.executeQuery("select iso from currencies where iso != 'GEL';");
-                while (set.next()){
-                    result.add(set.getString(1));
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return result;
-    }
-    
     public static ArrayList<CurrencyRate> getFilteredFromDBTest(JSONObject filterJson){
         ArrayList<CurrencyRate> result = new ArrayList<>();
         Statement stmt = TestDataFromDB.getStatement();
         if (stmt != null){
             try {
                 String query = "select currency_rates.rec_id, currency_rates.iso, currency_rates.count, currency_rates.date, currency_rates.rate, " +
-                                    " currencies.iso, currencies.descrip_first, currencies.descrip_default, currencies.descrip_second " +
+                                    " currencies.iso, currencies.descrip_first, currencies.descrip_default, currencies.descrip_second, currencies.symbol " +
                                 " from currency_rates " +
                                     " left join currencies " + 
                                         " on currency_rates.iso = currencies.iso " +
                                     " where date > '" + filterJson.get("dateBigger") + "' " + 
                                         " and date < '" + filterJson.getString("dateLess") + "' " +
                                         " order by date desc, currency_rates.iso;";
-                if (!filterJson.getString("currency").equals(ALL_CURRENCY)){
+                if (!filterJson.getString("currency").equals(Currency.ALL)){
                     String delimiter = "where ";
                     int whereIndex = query.indexOf(delimiter);
                     String leftPart =  query.substring(0, whereIndex + delimiter.length());
@@ -113,12 +107,16 @@ public class CurrencyRate extends EditorPanelable {
                 while (set.next()){
                     CurrencyRate currRate = new CurrencyRate();
                     currRate.setRecId(set.getInt(1));
-                    currRate.setIso(set.getString(2));
                     currRate.setCount(set.getInt(3));
                     currRate.setDate(set.getString(4));
                     currRate.setRate(set.getDouble(5));
-                    currRate.setDescrip_first(set.getString(7));
-                    currRate.setDescrip_second(set.getString(8));
+                    Currency currency = new Currency();
+                    currency.setIso(set.getString(6));
+                    currency.setDescrip_first(set.getString(7));
+                    currency.setDescrip_default(set.getString(8));
+                    currency.setDescrip_second(set.getString(9));
+                    currency.setSymbol(set.getString(10));
+                    currRate.setCurrency(currency);
                     result.add(currRate);
                 }
             } catch (SQLException | JSONException ex) {
@@ -133,14 +131,26 @@ public class CurrencyRate extends EditorPanelable {
         Statement stmt = TestDataFromDB.getStatement();
         if (stmt != null){
             try {
-                ResultSet set = stmt.executeQuery("select * from currency_rates where rec_id = " + recId);
+                ResultSet set = stmt.executeQuery("select currency_rates.rec_id, currency_rates.count, currency_rates.date, currency_rates.rate, " +
+                                                  " currencies.iso, currencies.descrip_first, currencies.descrip_default, currencies.descrip_second, currencies.symbol " +
+                                                  " from currency_rates " +
+                                                  " left join currencies " +
+                                                  " on currency_rates.iso = currencies.iso " +
+                                                  " where currency_rates.rec_id = " + recId);
                 while (set.next()){
                     result.setRecId(set.getInt(1));
-                    result.setIso(set.getString(2));
-                    result.setCount(set.getInt(3));
-                    result.setDate(set.getString(4));
-                    result.setRate(set.getDouble(5));
+                    result.setCount(set.getInt(2));
+                    result.setDate(set.getString(3));
+                    result.setRate(set.getDouble(4));
+                    Currency currency = new Currency();
+                    currency.setIso(set.getString(5));
+                    currency.setDescrip_first(set.getString(6));
+                    currency.setDescrip_default(set.getString(7));
+                    currency.setDescrip_second(set.getString(8));
+                    currency.setSymbol(set.getString(9));
+                    result.setCurrency(currency);
                 }
+                
             } catch (SQLException ex) {
                 Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -172,6 +182,10 @@ public class CurrencyRate extends EditorPanelable {
         return iso;
     }
     
+    public ObjectProperty currencyProperty(){
+        return currency;
+    }
+    
     public StringProperty currentDescrip(){
         return currDescrip;
     }
@@ -189,22 +203,26 @@ public class CurrencyRate extends EditorPanelable {
     public int getCount(){
         return Utils.getIntValueFor(count.get());
     }
+    
+    public Currency getCurrency(){
+        return currency.get();
+    }
             
-    public String getIso(){
-        return iso.get();
-    }
+//    public String getIso(){
+//        return iso.get();
+//    }
     
-    public String getDescrip_first(){
-        return descrip_first.get();
-    }
-    
-    public String getDescrip_second(){
-        return descrip_second.get();
-    }
-    
-    public String getDescrip_default(){
-        return descrip_default.get();
-    }
+//    public String getDescrip_first(){
+//        return descrip_first.get();
+//    }
+//    
+//    public String getDescrip_second(){
+//        return descrip_second.get();
+//    }
+//    
+//    public String getDescrip_default(){
+//        return descrip_default.get();
+//    }
     
     public double getRate(){
         return Utils.getDoubleValueFor(rate.get());
@@ -227,21 +245,25 @@ public class CurrencyRate extends EditorPanelable {
         this.count.set("" + count);
     }
     
-    public void setIso(String iso){
-        this.iso.set(iso);
+    public void setCurrency(Currency currency){
+        this.currency.set(currency);
     }
     
-    public void setDescrip_first(String descrip){
-        this.descrip_first.set(descrip);
-    }
+//    public void setIso(String iso){
+//        this.iso.set(iso);
+//    }
     
-    public void setDescrip_second(String descrip){
-        this.descrip_second.set(descrip);
-    }
-    
-    public void setDescrip_default(String descrip){
-        this.descrip_default.set(descrip);
-    }
+//    public void setDescrip_first(String descrip){
+//        this.descrip_first.set(descrip);
+//    }
+//    
+//    public void setDescrip_second(String descrip){
+//        this.descrip_second.set(descrip);
+//    }
+//    
+//    public void setDescrip_default(String descrip){
+//        this.descrip_default.set(descrip);
+//    }
     
     public void setRate(double rate){
         this.rate.set("" + rate);
@@ -267,8 +289,8 @@ public class CurrencyRate extends EditorPanelable {
         CurrencyRate currencyRate = (CurrencyRate) other;
         setDate(currencyRate.getDate());
         setCount(currencyRate.getCount());
-        setIso(currencyRate.getIso());
-        currentDescrip().set(currencyRate.currentDescrip().get());
+        setCurrency(currencyRate.getCurrency());
+//        currentDescrip().set(currencyRate.currentDescrip().get());
         setRate(currencyRate.getRate());
         
     }
@@ -286,7 +308,7 @@ public class CurrencyRate extends EditorPanelable {
     public boolean compares(CurrencyRate currencyRateBackup) {
         return  getDate().equals(currencyRateBackup.getDate()) &&
                 getCount() == currencyRateBackup.getCount()    &&
-                getIso().equals(currencyRateBackup.getIso())   && 
+                getCurrency().compares(currencyRateBackup.getCurrency())   && 
                 currentDescrip().get().equals(currencyRateBackup.currentDescrip().get()) &&
                 getRate() == currencyRateBackup.getRate();
     }
