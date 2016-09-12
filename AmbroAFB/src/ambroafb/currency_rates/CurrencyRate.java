@@ -172,7 +172,7 @@ public class CurrencyRate extends EditorPanelable {
         return iso;
     }
     
-    public StringProperty descripExpression(){
+    public StringProperty currentDescrip(){
         return currDescrip;
     }
 
@@ -207,7 +207,9 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public double getRate(){
-        return Utils.getIntValueFor(rate.get());
+        System.out.println("getRate before concat: " + rate.get());
+        double res =  Utils.getDoubleValueFor(rate.get());
+        return res;
     }
     
     
@@ -265,10 +267,11 @@ public class CurrencyRate extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         CurrencyRate currencyRate = (CurrencyRate) other;
-        setIso(currencyRate.getIso());
-        setRate(currencyRate.getRate());
         setDate(currencyRate.getDate());
         setCount(currencyRate.getCount());
+        setIso(currencyRate.getIso());
+        currentDescrip().set(currencyRate.currentDescrip().get());
+        setRate(currencyRate.getRate());
         
     }
 
@@ -283,10 +286,11 @@ public class CurrencyRate extends EditorPanelable {
      * @return  - True, if all comparable fields are equals, false otherwise.
      */
     public boolean compares(CurrencyRate currencyRateBackup) {
-        return  getIso().equals(currencyRateBackup.getIso())   && 
-                getDate().equals(currencyRateBackup.getDate()) &&
-                getRate() == currencyRateBackup.getRate()      &&
-                getCount() == currencyRateBackup.getCount();
+        return  getDate().equals(currencyRateBackup.getDate()) &&
+                getCount() == currencyRateBackup.getCount()    &&
+                getIso().equals(currencyRateBackup.getIso())   && 
+                currentDescrip().get().equals(currencyRateBackup.currentDescrip().get()) &&
+                getRate() == currencyRateBackup.getRate();
     }
     
 }

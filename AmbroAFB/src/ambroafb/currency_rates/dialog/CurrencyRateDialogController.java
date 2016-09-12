@@ -21,7 +21,6 @@ import javafx.scene.layout.VBox;
 import ambroafb.general.Names.*;
 import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.Dialogable;
-import javafx.scene.control.ProgressIndicator;
 
 /**
  * FXML Controller class
@@ -38,8 +37,8 @@ public class CurrencyRateDialogController implements Initializable {
     
     @FXML
     private CurrencyRatesComboBox currRatesComboBox;
-    @FXML
-    private ProgressIndicator indicator;
+//    @FXML
+//    private ProgressIndicator indicator;
     
     @FXML @ContentNotEmpty 
     private TextField count;
@@ -64,8 +63,8 @@ public class CurrencyRateDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        indicator.visibleProperty().bind(currRatesComboBox.visibleProperty().not());
-        indicator.setPrefSize(currRatesComboBox.getWidth(), currRatesComboBox.getHeight());
+//        indicator.visibleProperty().bind(currRatesComboBox.visibleProperty().not());
+//        indicator.setPrefSize(currRatesComboBox.getWidth(), currRatesComboBox.getHeight());
         currRatesComboBox.setShowCategoryALL(false);
         permissionToClose = true;
     }
