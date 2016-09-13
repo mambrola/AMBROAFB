@@ -29,6 +29,7 @@ public class CurrencyComboBox extends ComboBox<Currency>{
         });
         
         this.setValue(allCurrensy);
+        System.out.println("comboBox kontsruqtori");
     }
     
 
@@ -63,6 +64,7 @@ public class CurrencyComboBox extends ComboBox<Currency>{
     public void changeValue(String iso) {
         for (Currency item : items) {
             if(item.getIso().equals(iso)){
+                setValue(item);
                 break;
             }
         }

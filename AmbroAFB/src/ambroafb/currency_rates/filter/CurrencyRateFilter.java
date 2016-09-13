@@ -11,7 +11,6 @@ import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
-import ambroafb.general.UtilsDB;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
@@ -70,7 +69,7 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
             if(event != null) event.consume();
         });
         currencies.removeCurrency("GEL");
-        
+        System.out.println("konstruqtori");
     }
     
     @Override
@@ -92,12 +91,9 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
             jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());
             jSonResult.put("currency", (currencies.getValue() == null)? "" : currencies.getValue().getIso());
             
-            JSONObject baseJS = new JSONObject();
-            baseJS.put("dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue());
-            baseJS.put(  "dateLess", (  dateLess.getValue() == null) ? "" :   dateLess.getValue());
-            baseJS.put("currency", (currencies.getValue() == null)? "" : currencies.getValue().getIso());
-            
-            UtilsDB.getInstance().updateOrInsertDefaultParameters("currency_rate", "filter", baseJS);
+            GeneralConfig.prefs.put("currency_rate/filter/dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue().toString());
+            GeneralConfig.prefs.put("currency_rate/filter/dateLess", (  dateLess.getValue() == null) ? "" :   dateLess.getValue().toString());
+            GeneralConfig.prefs.put("currency_rate/filter/currency", (currencies.getValue() == null)? "" : currencies.getValue().getIso());
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
     }
     
@@ -108,24 +104,18 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            JSONObject json = UtilsDB.getInstance().getDefaultParametersJson("currency_rate", "filter");
-            if (json != null && json.length() > 0){
-                String dateB = json.getString("dateBigger");
-                String dateL = json.getString(  "dateLess");
-                String currency = json.getString("currency");
-                
-                LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
-                LocalDate less   = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);
- 
-                dateBigger.setValue(bigger);
-                dateLess.setValue(less);
-                currencies.changeValue(currency);
-            } 
-        }
-        catch (JSONException ex) {
-            Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String dateB = GeneralConfig.prefs.get("currency_rate/filter/dateBigger", "");
+        String dateL = GeneralConfig.prefs.get("currency_rate/filter/dateLess", "");
+        String currency = GeneralConfig.prefs.get("currency_rate/filter/currency", "");
+
+        LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
+        LocalDate less   = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);
+
+        dateBigger.setValue(bigger);
+        dateLess.setValue(less);
+        currencies.changeValue(currency);
+        
+        System.out.println("initialize. currency: " + currency);
     }    
     
 }

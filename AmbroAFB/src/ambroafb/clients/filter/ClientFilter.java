@@ -9,7 +9,6 @@ import ambro.ADatePicker;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
-import ambroafb.general.UtilsDB;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
@@ -83,31 +82,21 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             jSonResult.put("dateBigger", (dateBigger.getValue() == null ? DATE_BIGGER : dateBigger.getValue()).toString());
             jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());
             
-            JSONObject baseJS = new JSONObject();
-            baseJS.put("dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue());
-            baseJS.put(  "dateLess", (  dateLess.getValue() == null) ? "" :   dateLess.getValue());
-            
-            UtilsDB.getInstance().updateOrInsertDefaultParameters("clients", "filter", baseJS);
+            GeneralConfig.prefs.put("clients/filter/dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue().toString());
+            GeneralConfig.prefs.put("clients/filter/dateLess", (  dateLess.getValue() == null) ? "" :   dateLess.getValue().toString());
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
     }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            JSONObject json = UtilsDB.getInstance().getDefaultParametersJson("clients", "filter");
-            if (json != null && json.length() > 0){
-                String dateB = json.getString("dateBigger");
-                String dateL = json.getString(  "dateLess");
-                
-                LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
-                LocalDate less   = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);
- 
-                dateBigger.setValue(bigger);
-                dateLess.setValue(less);
-            } 
-        }
-        catch (JSONException ex) {
-            Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String dateB = GeneralConfig.prefs.get("clients/filter/dateBigger", "");
+        String dateL = GeneralConfig.prefs.get("clients/filter/dateLess", "");
+
+        LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
+        LocalDate less = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);
+
+        dateBigger.setValue(bigger);
+        dateLess.setValue(less);
     }
+    
 }
