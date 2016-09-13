@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -63,10 +61,11 @@ public class Product extends EditorPanelable {
     @AView.Column(title = "%discounts", width = "80", cellFactory = DiscountCellFactory.class)
     private ObservableList<ProductDiscount> discounts;
     
-    @AView.Column(width = "35")
-    private final StringExpression actPasExpression;
-    
+    @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)
     private final BooleanProperty isActive;
+    
+//    private final StringExpression actPasExpression;
+    
     
     public Product(){
         abbreviation = new SimpleStringProperty("");
@@ -78,7 +77,7 @@ public class Product extends EditorPanelable {
         currency = new SimpleStringProperty("");
         discounts = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
-        actPasExpression = Bindings.when(isActive).then("Act").otherwise("");
+//        actPasExpression = Bindings.when(isActive).then("Act").otherwise("");
     }
     
     // DBService methods:
@@ -442,23 +441,30 @@ public class Product extends EditorPanelable {
             return new TableCell<Product, ObservableList<ProductDiscount>>() {
                 @Override
                 public void updateItem(ObservableList<ProductDiscount> discounts, boolean empty) {
+                    setEditable(false);
                     if (discounts == null || discounts.isEmpty() || empty){
-                        setGraphic(null);
+                        setText(null);
                     }
                     else {
                         ANodeSlider<Label> nodeSlider = new ANodeSlider<>();
                         discounts.stream().forEach((dis) -> {
                             nodeSlider.getItems().add(new Label(dis.toString()));
                         });
-                        System.out.println("nodeSlider size: " + nodeSlider.getItems().size());
                         setGraphic(nodeSlider);
-                        
-//                        MapEditorComboBox<ProductDiscount> mapEditor = new MapEditorComboBox<>();
-//                        mapEditor.setKeyPattern("(1[0-2]|[1-9])?");
-//                        mapEditor.setValuePattern("((0|[1-9]{1,2})(\\.[0-9]*)?)?");
-//                        mapEditor.setItemsCustom(discounts);
-//                        setGraphic(mapEditor);
                     }
+                }
+            };
+        }
+    }
+    
+    public static class ActPasCellFactory implements Callback<TableColumn<Product, Boolean>, TableCell<Product, Boolean>> {
+
+        @Override
+        public TableCell<Product, Boolean> call(TableColumn<Product, Boolean> param) {
+            return new TableCell<Product, Boolean>() {
+                @Override
+                public void updateItem(Boolean isAct, boolean empty) {
+                    setText(empty ? null : (isAct ? "Act" : "Pas"));
                 }
             };
         }
