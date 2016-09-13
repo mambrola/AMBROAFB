@@ -46,9 +46,6 @@ public class CurrencyRate extends EditorPanelable {
     @AView.Column(title = "%rate", width = "80")
     private final StringProperty rate;
     
-//    private final StringProperty descrip_first;
-//    private final StringProperty descrip_second;
-//    private final StringProperty descrip_default;
     private final ObjectProperty<LocalDate> dateProperty;
     
     public CurrencyRate(){
@@ -58,9 +55,6 @@ public class CurrencyRate extends EditorPanelable {
         iso = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>();
         currDescrip = new SimpleStringProperty("");
-//        descrip_first = new SimpleStringProperty("");
-//        descrip_second = new SimpleStringProperty("");
-//        descrip_default = new SimpleStringProperty("");
         rate = new SimpleStringProperty("");
         
         dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
@@ -78,7 +72,6 @@ public class CurrencyRate extends EditorPanelable {
                 currDescrip.bind(Bindings.when(currency.isNotNull()).then(currency.get().descripProperty()).otherwise("")); //(GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_first : (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("en")) ? descrip_second : descrip_default;
             }
         });
-//        iso.bind(Bindings.when(currency.isNotNull()).then(currency.get().isoProperty()).otherwise(""));
     }
 
     public static ArrayList<CurrencyRate> getFilteredFromDBTest(JSONObject filterJson){
@@ -208,22 +201,6 @@ public class CurrencyRate extends EditorPanelable {
         return currency.get();
     }
             
-//    public String getIso(){
-//        return iso.get();
-//    }
-    
-//    public String getDescrip_first(){
-//        return descrip_first.get();
-//    }
-//    
-//    public String getDescrip_second(){
-//        return descrip_second.get();
-//    }
-//    
-//    public String getDescrip_default(){
-//        return descrip_default.get();
-//    }
-    
     public double getRate(){
         return Utils.getDoubleValueFor(rate.get());
     }
@@ -248,22 +225,6 @@ public class CurrencyRate extends EditorPanelable {
     public void setCurrency(Currency currency){
         this.currency.set(currency);
     }
-    
-//    public void setIso(String iso){
-//        this.iso.set(iso);
-//    }
-    
-//    public void setDescrip_first(String descrip){
-//        this.descrip_first.set(descrip);
-//    }
-//    
-//    public void setDescrip_second(String descrip){
-//        this.descrip_second.set(descrip);
-//    }
-//    
-//    public void setDescrip_default(String descrip){
-//        this.descrip_default.set(descrip);
-//    }
     
     public void setRate(double rate){
         this.rate.set("" + rate);
@@ -290,7 +251,6 @@ public class CurrencyRate extends EditorPanelable {
         setDate(currencyRate.getDate());
         setCount(currencyRate.getCount());
         setCurrency(currencyRate.getCurrency());
-//        currentDescrip().set(currencyRate.currentDescrip().get());
         setRate(currencyRate.getRate());
         
     }

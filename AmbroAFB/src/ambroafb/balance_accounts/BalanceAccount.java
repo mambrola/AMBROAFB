@@ -44,8 +44,8 @@ public class BalanceAccount extends EditorPanelable {
     private final StringProperty descrip_ka;
     private final StringProperty descrip_en;
     private final IntegerProperty actPas;
-    private boolean level;
-    private boolean isBase;
+    private boolean level;  // for old DB
+    private boolean isBase; // for old DB
     
     @AView.Column(title = "%bal_accounts", width = "500")
     private final StringExpression descripExpression;
@@ -239,8 +239,6 @@ public class BalanceAccount extends EditorPanelable {
         setDescrip_en(account.getDescrip_en());
         setBalAcc(account.getBalAcc());
         setActPas(account.getActPas());
-//        setLevel(account.getLevel());
-//        setIsBase(account.getIsBase());
     }
 
     @Override
@@ -259,16 +257,4 @@ public class BalanceAccount extends EditorPanelable {
                 getActPas() == balAccountBackup.getActPas();
     }
     
-    
-//    private class ActPasValueFactory implements Callback<TreeTableColumn.CellDataFeatures<BalanceAccount, String>, ObservableValue<String>> {
-//
-//        public ActPasValueFactory(){}
-//        
-//        @Override
-//        public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<BalanceAccount, String> param) {
-//            String result = param.getValue().getValue().getActPas() ? "Act" : "Pas";
-//            System.out.println("result: " + result + "  actPas: " + (param.getValue().getValue().getActPas()));
-//            return new ReadOnlyStringWrapper(result);
-//        }
-//    }
 }

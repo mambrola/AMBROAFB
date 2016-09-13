@@ -200,8 +200,6 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage filterStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (filterStage == null || !filterStage.isShowing()){
-            
-//            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             Class className = Utils.getClassByName(getClassName(CLASS_TYPE.FILTER));
             Filterable filter = (className != null) ? (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow()) : null;
             
@@ -210,7 +208,6 @@ public class EditorPanelController implements Initializable {
             JSONObject json = (filter != null) ? filter.getResult() : new JSONObject();
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
             Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{JSONObject.class}, outerController, json);
-//            selectOneAgain(selected, selectionIndex);
         }
         else {
             filterStage.requestFocus();
@@ -301,19 +298,19 @@ public class EditorPanelController implements Initializable {
     }
     
 
-    private void selectOneAgain(EditorPanelable selected, int selectionIndex) {
-        if (selected == null) return;
-        AView aview = (AView) exit.getScene().lookup("#aview");
-        if (aview instanceof ATableView){
-            ATableView table = (ATableView)aview;
-            int i = table.getItems().size() - 1;
-            System.out.println("selected one again. i = " + i);
-            while (i >= 0 && ((EditorPanelable) table.getItems().get(i)).getRecId() != selected.getRecId()) {
-                i--;
-            }
-            if (i >= 0) {
-                table.getSelectionModel().select(i);
-            }
-        }
-    }
+//    private void selectOneAgain(EditorPanelable selected, int selectionIndex) {
+//        if (selected == null) return;
+//        AView aview = (AView) exit.getScene().lookup("#aview");
+//        if (aview instanceof ATableView){
+//            ATableView table = (ATableView)aview;
+//            int i = table.getItems().size() - 1;
+//            System.out.println("selected one again. i = " + i);
+//            while (i >= 0 && ((EditorPanelable) table.getItems().get(i)).getRecId() != selected.getRecId()) {
+//                i--;
+//            }
+//            if (i >= 0) {
+//                table.getSelectionModel().select(i);
+//            }
+//        }
+//    }
 }

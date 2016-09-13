@@ -97,7 +97,6 @@ public class UtilsDB {
             }
             return true;
         } catch (SQLException ex) {
-//            Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }

@@ -37,8 +37,6 @@ public class CurrencyRateDialogController implements Initializable {
     
     @FXML @ContentNotEmpty
     private CurrencyComboBox currencies;
-//    @FXML
-//    private ProgressIndicator indicator;
     
     @FXML @ContentNotEmpty @ContentPattern(value = "[1][0]*", explain = "Count must be 1 or 10 or 100 and so on.")
     private TextField count;
@@ -65,8 +63,6 @@ public class CurrencyRateDialogController implements Initializable {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContent(count, "(^[1][0]*)?");
         Utils.validateTextFieldContent(rate, "(^0|[1-9][0-9]*)([.]|[.][0-9]{1,4})?");
-//        indicator.visibleProperty().bind(currRatesComboBox.visibleProperty().not());
-//        indicator.setPrefSize(currRatesComboBox.getWidth(), currRatesComboBox.getHeight());
         currencies.setShowCategoryALL(false);
         currencies.removeCurrency("GEL");
         permissionToClose = true;

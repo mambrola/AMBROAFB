@@ -41,8 +41,6 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     private ADatePicker dateBigger, dateLess;
     @FXML
     private CurrencyComboBox currencies;
-//    @FXML
-//    private ProgressIndicator indicator;
     @FXML
     private FilterOkayCancelController okayCancelController;
     
@@ -73,8 +71,6 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
         });
         currencies.removeCurrency("GEL");
         
-//        okayCancelController.disableProperty().bind(currRatesComboBox.visibleProperty().not());
-//        indicator.visibleProperty().bind(currRatesComboBox.visibleProperty().not());
     }
     
     @Override
@@ -124,7 +120,6 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
  
                 dateBigger.setValue(bigger);
                 dateLess.setValue(less);
-//                currRatesComboBox.setValue(currency);
                 currencies.changeValue(currency);
             } 
         }

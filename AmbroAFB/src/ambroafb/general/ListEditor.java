@@ -8,7 +8,6 @@ package ambroafb.general;
 import ambroafb.phones.Phone;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -185,19 +184,5 @@ public class ListEditor<T extends Editable<String>> extends ComboBox<T> {
             }
         });
     }
-
-//    private void setItemsListener() {
-//        getItems().addListener((ListChangeListener.Change<? extends T> c) -> {
-//            itemsChanged();
-//        });
-//    }
-//
-//    private void itemsChanged() {
-//        itemsSize.set(getItems().size());
-//        if (itemsSize.get() > 0) {
-//            getSelectionModel().selectFirst();
-//            getProperties().put(SELECTED_ITEM_KEY, getSelectionModel().getSelectedItem());
-//        }
-//    }
 
 }

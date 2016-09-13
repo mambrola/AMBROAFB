@@ -63,7 +63,7 @@ public class Product extends EditorPanelable {
     @AView.Column(title = "%discounts", width = "80", cellFactory = DiscountCellFactory.class)
     private ObservableList<ProductDiscount> discounts;
     
-    @AView.Column(width = "35") // , cellFactory = AliveCellFactory.class
+    @AView.Column(width = "35")
     private final StringExpression actPasExpression;
     
     private final BooleanProperty isActive;
@@ -434,20 +434,6 @@ public class Product extends EditorPanelable {
                 this.getIsActive() == productBackup.getIsActive() &&
                 Utils.compareLists(getDiscounts(), productBackup.getDiscounts());
     }
-
-//    public static class AliveCellFactory implements Callback<TableColumn<Product, Boolean>, TableCell<Product, Boolean>> {
-//
-//        @Override
-//        public TableCell<Product, Boolean> call(TableColumn<Product, Boolean> param) {
-//            return new TableCell<Product, Boolean>() {
-//                @Override
-//                public void updateItem(Boolean isAlive, boolean empty) {
-//                    setText(empty ? null : (isAlive ? "Al" : null));
-//                    alignmentProperty().set(Pos.CENTER);
-//                }
-//            };
-//        }
-//    }
 
     public static class DiscountCellFactory implements Callback<TableColumn<Product, ObservableList<ProductDiscount>>, TableCell<Product, ObservableList<ProductDiscount>>> {
 
