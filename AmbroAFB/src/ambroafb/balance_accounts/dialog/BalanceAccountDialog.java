@@ -29,6 +29,7 @@ public class BalanceAccountDialog extends Stage implements Dialogable {
     
     public BalanceAccountDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
+        Utils.centerStageOfParent((Stage)this, owner);
         
         BalanceAccount balAccountObject;
         if (object == null)

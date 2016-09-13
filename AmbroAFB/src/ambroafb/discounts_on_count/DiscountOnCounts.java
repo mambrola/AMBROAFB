@@ -21,6 +21,7 @@ public class DiscountOnCounts extends Stage {
     
     public DiscountOnCounts(Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
+        Utils.centerStageOfParent((Stage)this, owner);
         
         Scene scene = Utils.createScene("/ambroafb/discounts_on_count/DiscountOnCounts.fxml", null);
         discountsController = (DiscountOnCountsController) scene.getProperties().get("controller");

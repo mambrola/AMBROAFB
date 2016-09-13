@@ -21,6 +21,7 @@ public class Invoices extends Stage {
     
     public Invoices(Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
+        Utils.centerStageOfParent((Stage)this, owner);
         
         Scene scene = Utils.createScene("/ambroafb/invoices/Invoices.fxml", null);
         invoicesController = (InvoicesController) scene.getProperties().get("controller");

@@ -29,7 +29,6 @@ public class CurrencyComboBox extends ComboBox<Currency>{
         });
         
         this.setValue(allCurrensy);
-        System.out.println("comboBox kontsruqtori");
     }
     
 

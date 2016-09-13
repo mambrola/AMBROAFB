@@ -376,6 +376,24 @@ public class Utils {
         return true;
     }
     
+    /**
+     * The function provides to set stage center on its parent.
+     * @param currStage The current stage which must be show.
+     * @param owner The owner stage.
+     */
+    public static void centerStageOfParent(Stage currStage, Stage owner){
+        currStage.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if (oldValue.intValue() == 0){
+                currStage.setX(owner.getX() + owner.getWidth() / 2 - currStage.getWidth() / 2);
+            }
+        });
+        currStage.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if (oldValue.intValue() == 0){
+                currStage.setY(owner.getY() + owner.getHeight()/ 2 - currStage.getHeight() / 2);
+            }
+        });
+    }
+    
 
     private static final BidiMap bidmap = new DualHashBidiMap();
 

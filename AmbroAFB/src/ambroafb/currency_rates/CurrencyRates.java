@@ -21,6 +21,7 @@ public class CurrencyRates extends Stage {
     
     public CurrencyRates(Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
+        Utils.centerStageOfParent((Stage)this, owner);
         
         Scene scene = Utils.createScene("/ambroafb/currency_rates/CurrencyRates.fxml", null);
         CurrencyRatesController = (CurrencyRatesController) scene.getProperties().get("controller");

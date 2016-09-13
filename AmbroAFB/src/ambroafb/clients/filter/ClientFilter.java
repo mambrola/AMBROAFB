@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,13 +42,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     
     public ClientFilter(Stage owner) {
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
-        // Center of its parent:
-        this.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            setX(owner.getX() + owner.getWidth() / 2 - getWidth() / 2);
-        });
-        this.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            setY(owner.getY() + owner.getHeight()/ 2 - getHeight() / 2);
-        });
+        Utils.centerStageOfParent((Stage)this, owner);
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));

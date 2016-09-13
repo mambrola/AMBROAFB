@@ -21,6 +21,7 @@ public class Currencies extends Stage {
     
     public Currencies(Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
+        Utils.centerStageOfParent((Stage)this, owner);
         
         Scene scene = Utils.createScene("/ambroafb/currencies/Currencies.fxml", null);
         currenciesController = (CurrenciesController) scene.getProperties().get("controller");
