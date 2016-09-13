@@ -34,9 +34,7 @@ public class CurrencyDialogController implements Initializable {
     private CurrencyComboBox currencies;
     @FXML @ContentNotEmpty
     private TextField descrip;
-//    @FXML @ContentNotEmpty @ContentPattern(value = "\\p{Currency_Symbol}", explain = "Only one symbol of current.")
-//    @FXML @ContentNotEmpty @ContentPattern(value = "\\p", explain = "Only one symbol of current.")
-    @FXML
+    @FXML @ContentNotEmpty @ContentPattern(value = "\\p{Sc}", explain = "Only one symbol of current.")
     private TextField symbol;
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -53,7 +51,7 @@ public class CurrencyDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-//        Utils.validateTextFieldContent(symbol, "\\p");
+        Utils.validateTextFieldContent(symbol, "\\p{Sc}");
         currencies.setShowCategoryALL(false);
         permissionToClose = true;
     }    

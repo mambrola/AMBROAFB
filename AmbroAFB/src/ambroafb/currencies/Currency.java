@@ -30,7 +30,7 @@ public class Currency extends EditorPanelable {
     
     @AView.Column(title = "%iso", width = "50")
     private final StringProperty iso;
-    private ObjectProperty<Currency> currency;
+    private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%descrip", width = "150")
     private final StringProperty descrip;
@@ -45,7 +45,7 @@ public class Currency extends EditorPanelable {
     
     public Currency(){
         iso = new SimpleStringProperty("");
-        currency = new SimpleObjectProperty<>();
+        currency = new SimpleObjectProperty<>(this);
         descrip_first = new SimpleStringProperty("");
         descrip_default = new SimpleStringProperty("");
         descrip_second = new SimpleStringProperty("");
@@ -53,13 +53,15 @@ public class Currency extends EditorPanelable {
         descrip = (lang.equals("ka")) ? descrip_first : (lang.equals("en")) ? descrip_second : descrip_default;
         symbol = new SimpleStringProperty("");
         
+        // Bind components does not work for this case. Because DB methods calls setters ("bind" and also settter is conflicted couple). So listener also call setters to change currency values:
         currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
-//            iso.unbind();
-            if (currency.get() != null){
-                iso.set(currency.get().isoProperty().get());
-                descrip.set(currency.get().descripProperty().get());
+            if (newValue != null){
+                setIso(newValue.getIso());
+                setDescrip(newValue.getDescrip());
+                setSymbol(newValue.getSymbol());
             }
         });
+        
     }
     
     
@@ -117,6 +119,7 @@ public class Currency extends EditorPanelable {
         return false;
     }
     
+    // Properties:
     public StringProperty isoProperty(){
         return iso;
     }
@@ -184,7 +187,7 @@ public class Currency extends EditorPanelable {
     public void setSymbol(String symbol){
         this.symbol.set(symbol);
     }
-
+    
     
     @Override
     public Currency cloneWithoutID() {
