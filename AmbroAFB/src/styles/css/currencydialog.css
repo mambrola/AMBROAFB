@@ -1,6 +1,8 @@
 @import url("/styles/css/core.css");
 #formPane {
   -fx-max-height: 300;
+  -fx-min-width: 330;
+  -fx-max-width: 330;
   -fx-padding: 15;
 }
 .vContainer {
@@ -12,14 +14,19 @@
   -fx-padding: 1 0 1 2;
 }
 .one > .couple {
+  -fx-pref-width: 300;
 }
 .oneHalf > .couple {
+  -fx-pref-width: 132.5;
 }
 .oneThirds > .couple {
+  -fx-pref-width: 76.66666667;
 }
 .couple > .combo-box {
+  -fx-max-width: 300;
 }
 .oneThirds {
+  -fx-pref-width: 188.33333333;
 }
 .oneHalf,
 .oneThirds {
