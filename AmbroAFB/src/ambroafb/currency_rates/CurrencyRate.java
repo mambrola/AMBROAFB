@@ -91,10 +91,11 @@ public class CurrencyRate extends EditorPanelable {
                     String delimiter = "where ";
                     int whereIndex = query.indexOf(delimiter);
                     String leftPart =  query.substring(0, whereIndex + delimiter.length());
-                    
+                    // also need currency date (USD date or EUR date).
+                    String middle = " currency_rates.iso = '" + filterJson.getString("currency") + "' and ";
                     String rightPart = query.substring(whereIndex + delimiter.length());
-
-                    query = leftPart + " currency_rates.iso = '" + filterJson.getString("currency") + "' and " + rightPart;
+                    
+                    query = leftPart + middle + rightPart;
                 }
                 ResultSet set = stmt.executeQuery(query);
                 while (set.next()){
