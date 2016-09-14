@@ -721,7 +721,7 @@ public class Utils {
             else if (field.getType().equals(ComboBox.class) || field.getType().equals(CurrencyComboBox.class)){
                 ComboBox comboBox = (ComboBox) field.get(classObject);
                 results[0] = comboBox;
-                results[1] = comboBox.getValue();
+                results[1] = comboBox.getValue().toString();
             }
             field.setAccessible(accessible);
         } catch (IllegalArgumentException | IllegalAccessException ex) {

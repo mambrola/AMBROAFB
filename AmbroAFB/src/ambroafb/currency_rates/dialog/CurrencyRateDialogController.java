@@ -62,7 +62,7 @@ public class CurrencyRateDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContent(count, "(^[1][0]*)?");
-        Utils.validateTextFieldContent(rate, "(^0|[1-9][0-9]*)([.]|[.][0-9]{1,4})?");
+        Utils.validateTextFieldContent(rate, "(^0|[1-9][0-9]*)?([.]|[.][0-9]{1,4})?");
         currencies.setShowCategoryALL(false);
         currencies.removeCurrency("GEL");
         permissionToClose = true;

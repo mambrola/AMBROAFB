@@ -67,7 +67,7 @@ public class ProductDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContent(former, "[0-9]{1,2}");
-        Utils.validateTextFieldContent(price, "(^0|[1-9][0-9]*)([.]|[.][0-9]{1,2})?");
+        Utils.validateTextFieldContent(price, "(^0|[1-9][0-9]*)?([.]|[.][0-9]{1,2})?");
         new Thread(() -> {
             Product.getAllSpecifics().forEach((specific) -> {
                 specifics.getItems().add(specific.getValue());
