@@ -14,14 +14,24 @@
                               fx:controller="ambroafb.currencies.dialog.CurrencyDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer" >
         <children>
-            <HBox styleClass="oneThirds">
+            <HBox styleClass="oneHalf">
                 <children>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%date" styleClass="validationMessage" />
+                            <ADatePicker fx:id="date" />
+                        </children>
+                    </VBox>
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%currency_name" styleClass="validationMessage" />
                             <CurrencyComboBox fx:id="currencies" />
                         </children>
                     </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneHalf">
+                <children>
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%descrip" styleClass="validationMessage" />

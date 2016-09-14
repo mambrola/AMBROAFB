@@ -64,8 +64,6 @@ public class Product extends EditorPanelable {
     @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)
     private final BooleanProperty isActive;
     
-//    private final StringExpression actPasExpression;
-    
     
     public Product(){
         abbreviation = new SimpleStringProperty("");
@@ -77,7 +75,7 @@ public class Product extends EditorPanelable {
         currency = new SimpleStringProperty("");
         discounts = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
-//        actPasExpression = Bindings.when(isActive).then("Act").otherwise("");
+        
     }
     
     // DBService methods:

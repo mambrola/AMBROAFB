@@ -6,6 +6,7 @@
 package ambroafb.currencies;
 
 import ambro.AView;
+import ambroafb.general.DateConverter;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -13,6 +14,7 @@ import ambroafb.products.Product;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +29,11 @@ import javafx.beans.value.ObservableValue;
  * @author dato
  */
 public class Currency extends EditorPanelable {
+    
+    @AView.Column(title = "%date", width = "100")
+    private final StringProperty date;
+    
+    private final ObjectProperty<LocalDate> dateProperty;
     
     @AView.Column(title = "%iso", width = "50")
     private final StringProperty iso;
@@ -44,6 +51,8 @@ public class Currency extends EditorPanelable {
     public static final String ALL = "ALL";
     
     public Currency(){
+        date = new SimpleStringProperty("");
+        dateProperty = new SimpleObjectProperty<>();
         iso = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>(this);
         descrip_first = new SimpleStringProperty("");
@@ -52,6 +61,14 @@ public class Currency extends EditorPanelable {
         String lang = GeneralConfig.getInstance().getCurrentLocal().getLanguage();
         descrip = (lang.equals("ka")) ? descrip_first : (lang.equals("en")) ? descrip_second : descrip_default;
         symbol = new SimpleStringProperty("");
+        
+        dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+            String dateStr = "";
+            if (newValue != null){
+                dateStr = DateConverter.getDayMonthnameYearBySpace(newValue);
+            }
+            date.set(dateStr);
+        });
         
         // Bind components does not work for this case. Because DB methods calls setters ("bind" and also settter is conflicted couple). So listener also call setters to change currency values:
         currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
@@ -78,6 +95,7 @@ public class Currency extends EditorPanelable {
                 curr.setDescrip_default(set.getString(4));
                 curr.setDescrip_second(set.getString(5));
                 curr.setSymbol(set.getString(6));
+                curr.setDate(set.getString(7));
                 result.add(curr);
             }
         } catch (SQLException ex) {
@@ -120,6 +138,10 @@ public class Currency extends EditorPanelable {
     }
     
     // Properties:
+    public ObjectProperty<LocalDate> dateProperty(){
+        return dateProperty;
+    }
+    
     public StringProperty isoProperty(){
         return iso;
     }
@@ -138,6 +160,10 @@ public class Currency extends EditorPanelable {
     
     
     // Getters:
+    public String getDate(){
+        return date.get();
+    }
+    
     public String getIso(){
         return iso.get();
     }
@@ -164,6 +190,17 @@ public class Currency extends EditorPanelable {
     
     
     // Setters:
+    public void setDate(String date) {
+        String localDateStr;
+        try {
+            dateProperty.set(DateConverter.parseDateWithTime(date));
+            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get());
+        } catch(Exception ex) {
+            localDateStr = date;
+        }
+        this.date.set(localDateStr);
+    }
+    
     public void setIso(String iso){
         this.iso.set(iso);
     }

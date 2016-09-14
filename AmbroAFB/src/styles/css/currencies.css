@@ -1,5 +1,5 @@
 @import url("/styles/css/core.css");
 #formPane {
-  -fx-min-width: 420;
-  -fx-max-width: 420;
+  -fx-min-width: 350;
+  -fx-max-width: 350;
 }

@@ -210,8 +210,8 @@ public class CurrencyRate extends EditorPanelable {
     public void setDate(String date) {
         String localDateStr;
         try {
-            dateProperty.set(DateConverter.getLocalDateFor(date)); // converter.fromString(date);
-            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get()); // converter.toString(localDate);
+            dateProperty.set(DateConverter.parseDateWithoutTime(date));
+            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get());
         } catch(Exception ex) {
             localDateStr = date;
         }

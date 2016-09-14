@@ -45,6 +45,11 @@ public class AlertMessage extends Alert {
             Utils.log(message, ex);
     }
     
+    public void setOwner(Stage owner){
+        this.initOwner(owner);
+        Utils.centerStageOfParent((Stage)this.getDialogPane().getScene().getWindow(), owner);
+    }
+    
     /**
      * მეთოდი უზრუნველყოფს შეცდომის ტექსტის გამოჩენას ეკრანზე. 
      * Alert-ი ჩანს მანამ სანამ მომხმარებელი არ დააჭერს OK ღილაკს. 

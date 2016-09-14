@@ -24,12 +24,7 @@
                 </VBox >
                 <VBox >
                     <Label text="%currency_name" />
-<!--                    <StackPane >
-                        <children>-->
-                            <CurrencyComboBox fx:id="currencies" />
-<!--                            <ProgressIndicator fx:id="indicator" />
-                        </children>
-                    </StackPane>-->
+                    <CurrencyComboBox fx:id="currencies" />
                 </VBox >
             </children>
         </HBox>

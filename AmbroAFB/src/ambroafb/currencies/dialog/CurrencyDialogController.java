@@ -5,6 +5,7 @@
  */
 package ambroafb.currencies.dialog;
 
+import ambro.ADatePicker;
 import ambroafb.currencies.Currency;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.Names;
@@ -30,6 +31,8 @@ public class CurrencyDialogController implements Initializable {
 
     @FXML
     private VBox formPane;
+    @FXML @ContentNotEmpty
+    private ADatePicker date;
     @FXML @ContentNotEmpty
     private CurrencyComboBox currencies;
     @FXML @ContentNotEmpty
@@ -60,6 +63,7 @@ public class CurrencyDialogController implements Initializable {
     public void bindCurrency(Currency currency) {
         this.currency = currency;
         if (currency != null){
+            date.valueProperty().bindBidirectional(currency.dateProperty());
             currencies.valueProperty().bindBidirectional(currency.currencyProperty());
             descrip.textProperty().bindBidirectional(currency.descripProperty());
             symbol.textProperty().bindBidirectional(currency.symbolProperty());

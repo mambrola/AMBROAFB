@@ -83,7 +83,9 @@ public class DialogOkayCancelController implements Initializable {
                     boolean anyFieldWasChanged = (Boolean) Utils.getInvokedClassMethod(ownerObject.getClass(), "anyComponentChanged", null, ownerObject);
                     if (anyFieldWasChanged) {
                         String stageName = ((Stage)okay.getScene().getWindow()).getTitle();
-                        ButtonType buttonType = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, stageName).showAndWait().get();
+                        AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, stageName);
+                        alert.setOwner((Stage)okay.getScene().getWindow());
+                        ButtonType buttonType = alert.showAndWait().get();
                         if (buttonType.equals(ButtonType.OK)){
                             operationCanceled();
                             changeClosePermissionForStage(true);
