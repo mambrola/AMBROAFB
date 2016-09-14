@@ -7,8 +7,6 @@ package ambroafb.general;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -26,7 +24,11 @@ public class DateConverter {
     }
     
     public static LocalDate parseDateWithoutTime(String date){
-        return getResult(date, parser);
+        LocalDate localDate = getResult(date, parser);
+        if (localDate == null){
+            localDate = getResult(date, formatter);
+        }
+        return localDate;
     }
     
     public static LocalDate parseDateWithTime(String date){
@@ -38,7 +40,7 @@ public class DateConverter {
         try {
             result = LocalDate.parse(date, pattern);
         } catch (Exception ex){
-            Logger.getLogger(DateConverter.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(DateConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
