@@ -66,6 +66,9 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             okayCancelController.cancel(null);
             if(event != null) event.consume();
         });
+        
+        countries.setValue(countries.getItems().get(0));
+        statuses.setValue(statuses.getItems().get(0));
     }
 
     @Override
@@ -85,10 +88,10 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             
             jSonResult.put("dateBigger", (dateBigger.getValue() == null ? DATE_BIGGER : dateBigger.getValue()).toString());
             jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());
-            jSonResult.put( "juridical", (  juridical.indeterminateProperty().get() ? 1 : juridical.isSelected() ? 2 : 0 ));
+            jSonResult.put( "juridical", (  juridical.indeterminateProperty().get() ? 2 : juridical.isSelected() ? 1 : 0 ));
             jSonResult.put(   "country",  countries.getValue());
             jSonResult.put(    "status",   statuses.getValue());
-            jSonResult.put(  "rezident", (  rezident.indeterminateProperty().get() ? 1 : rezident.isSelected() ? 2 : 0 ));
+            jSonResult.put(  "rezident", (  rezident.indeterminateProperty().get() ? 2 : rezident.isSelected() ? 1 : 0 ));
             
             GeneralConfig.prefs.put("clients/filter/dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue().toString());
             GeneralConfig.prefs.put(  "clients/filter/dateLess", (  dateLess.getValue() == null) ? "" :   dateLess.getValue().toString());
@@ -121,13 +124,13 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
 
         dateBigger.setValue(bigger);
         dateLess.setValue(less);
-        juridical.setSelected(jurid == 2);
-        juridical.setIndeterminate(jurid == 1);
+        juridical.setSelected(jurid == 1);
+        juridical.setIndeterminate(jurid == 2);
         if (countryId != -1)
             countries.setValue(country);
         statuses.setValue(status);
-        rezident.setIndeterminate(rez == 1);
-        rezident.setSelected(rez == 2);
+        rezident.setSelected(rez == 1);
+        rezident.setIndeterminate(rez == 2);
     }
     
 }

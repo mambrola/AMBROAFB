@@ -11,6 +11,7 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
+import ambroafb.general.TestDataFromDB;
 import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +45,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -172,17 +174,63 @@ public class Client extends EditorPanelable{
     }
     
     public static List<Client> getFilteredFromDB(JSONObject filter) {
+        List<Client> result = new ArrayList<>();
+        Statement stmt = TestDataFromDB.getStatement();
         try {
-            String data = GeneralConfig.getInstance().getServerClient().get(
-                    "clients/filter?dateFrom=" + filter.getString("dateBigger") + "&dateTo=" + filter.getString("dateLess")
-            );
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {
-            });
-        } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
+            String dateFrom = filter.getString("dateBigger");
+            String dateTo = filter.getString("dateLess");
+            int jurid = filter.getInt("juridical");
+            String isJur = (jurid == 2) ? " is_jur = 0 or is_jur = 1 " : " is_jur = " + jurid + " ";
+            Country country = (Country)filter.get("country");
+            String countryCode = (country == null || country.getCode().equals("ALL"))? "" : " country_code = '" + ((Country)filter.get("country")).getCode() + "' and ";
+            String status = filter.getString("status") == null ? "" : " status = '" + filter.getString("status") + "' and ";
+            int rez = filter.getInt("rezident");
+            String isRez = (rez == 2) ? "is_rezident = 0 or is_rezident = 1 " : " is_rezident = " + rez + " ";
+            
+            String query = "select * from clients_whole " +
+                            " where created_date >= '" + dateFrom + "' and created_date <= '" + dateTo + "' and " +
+                                   isJur + " and " + countryCode + isRez;
+            System.out.println("query: " + query);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()){
+                Client client = new Client();
+                client.setRecId(rs.getInt(1));
+                client.setEmail(rs.getString(2));
+                client.setIsJur(rs.getBoolean(3));
+                client.setFirstName(rs.getString(4));
+                client.setLastName(rs.getString(5));
+                client.setAddress(rs.getString(6));
+                client.setZipCode(rs.getString(7));
+                client.setCity(rs.getString(8));
+                Country c = new Country();
+                c.setCode(rs.getString(9));
+                client.setCountry(c);
+                client.setIsRez(rs.getBoolean(10));
+                client.setIDNumber(rs.getString(11));
+                client.setFax(rs.getString(12));
+                client.setWww(rs.getString(13));
+                client.createdDate = rs.getString(14);
+//                client.setPhoneList((Collection<Phone>) rs.getArray(16));
+                
+                System.out.println("client: " + client.toStringForSearch());
+                result.add(client);
+            }
+        } catch (Exception ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return new ArrayList<>();
+        
+        return result;
+//        try {
+//            String data = GeneralConfig.getInstance().getServerClient().get(
+//                    "clients/filter?dateFrom=" + filter.getString("dateBigger") + "&dateTo=" + filter.getString("dateLess")
+//            );
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {
+//            });
+//        } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
+//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return new ArrayList<>();
     }
 
     public static Client getOneFromDB(int id) {
