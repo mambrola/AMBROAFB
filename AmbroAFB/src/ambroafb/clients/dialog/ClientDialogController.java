@@ -7,6 +7,7 @@ package ambroafb.clients.dialog;
 
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
+import ambroafb.clients.StatusComboBox;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
@@ -35,7 +36,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.json.JSONArray;
@@ -80,7 +80,7 @@ public class ClientDialogController implements Initializable {
     @FXML
     private CountryComboBox country;
     @FXML
-    private ComboBox status;
+    private StatusComboBox status;
     @FXML
     private DialogOkayCancelController okayCancelController;
     @FXML
@@ -101,13 +101,14 @@ public class ClientDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         juridical.setOnAction(this::switchJuridical);
-        Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities", "/clients/statuses"));
+        Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
         country.valueProperty().addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
             if (oldValue != null && !newValue.equals(oldValue)){
                 rezident.setSelected(newValue.getDescrip().equals("Georgia"));
             }
         });
+        country.showCategoryAll(false);
         permissionToClose = true;
     }
     
@@ -209,11 +210,9 @@ public class ClientDialogController implements Initializable {
     private class BackgroundAccessToDB implements Runnable {
 
         private final String pathCities;
-        private final String pathStatuses;
         
-        public BackgroundAccessToDB(String pathForCities, String pathForStatuses){
+        public BackgroundAccessToDB(String pathForCities){
             pathCities = pathForCities;
-            pathStatuses = pathForStatuses;
         }
         
         @Override
@@ -227,20 +226,17 @@ public class ClientDialogController implements Initializable {
                                                 .collect(Collectors.toList()), 
                                                 getStringConverter());
                 
-                JSONArray statuses = new JSONArray(GeneralConfig.getInstance().getServerClient().get(pathStatuses));
-                List<String> statusesAsList = getListFromJSONArray(statuses);
-                status.getItems().addAll(statusesAsList);
             } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
-        private List<String> getListFromJSONArray(JSONArray cities) throws JSONException{
+        private List<String> getListFromJSONArray(JSONArray json) throws JSONException{
             List<String> result = new ArrayList<>();
-            for (int i = 0; i < cities.length(); i++){
-                String currCity = cities.getString(i).trim();
+            for (int i = 0; i < json.length(); i++){
+                String currCity = json.getString(i).trim();
                 if (!currCity.isEmpty())
-                    result.add(cities.getString(i));
+                    result.add(json.getString(i));
             }
             return result;
         }

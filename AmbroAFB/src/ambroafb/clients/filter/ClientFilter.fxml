@@ -5,23 +5,56 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import ambro.ADatePicker?>
+<?import ambro.*?>
+<?import ambroafb.clients.*?>
+<?import ambroafb.countries.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/clientfilter.css" 
                               xmlns:fx="http://javafx.com/fxml/1" >
     
     <VBox   fx:id="formPane" >
-        <HBox styleClass="w2" >
+        <HBox styleClass="w3" >
             <children>
                 <VBox >
-                    <Label fx:id="date_biger" text="%open_date_bigger" /> 
-                    <ADatePicker fx:id="dateBigger" />
+                    <children>
+                        <Label fx:id="date_biger" text="%open_date_bigger" /> 
+                        <ADatePicker fx:id="dateBigger" />
+                    </children>
                 </VBox>
                 <VBox >
-                    <Label fx:id="date_less" text="%open_date_less" /> 
-                    <ADatePicker fx:id="dateLess" />
+                    <children>
+                        <Label fx:id="date_less" text="%open_date_less" /> 
+                        <ADatePicker fx:id="dateLess" />
+                    </children>
                 </VBox >
-            
+                <VBox >
+                    <children>
+                        <Label />
+                        <CheckBox fx:id="juridical" text="%juridical" allowIndeterminate="true" />
+                    </children>
+                </VBox >
+            </children>
+        </HBox>
+        <HBox styleClass="w3" >
+            <children>
+                <VBox >
+                    <children>
+                        <Label text="%country" /> 
+                        <CountryComboBox fx:id="countries" />
+                    </children>
+                </VBox >
+                <VBox >
+                    <children>
+                        <Label text="%client_status" /> 
+                        <StatusComboBox fx:id="statuses" />
+                    </children>
+                </VBox >
+                <VBox >
+                    <children>
+                        <Label />
+                        <CheckBox fx:id="rezident" text="%rezident" allowIndeterminate="true" />
+                    </children>
+                </VBox >
             </children>
         </HBox>
         <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">

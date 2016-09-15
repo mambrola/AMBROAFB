@@ -52,9 +52,7 @@ public class Country extends EditorPanelable{
     public Country(String code, String descrip){ // for Client class.
         this();
         this.code.set(code);
-        this.descrip_de.set(descrip);
-        this.descrip_en.set(descrip);
-        this.descrip_de.set(descrip);
+        this.descrip.set(descrip);
     }
 
 //    public static Country getOneFromDB(String countryCode) throws IOException, KFZClient.KFZServerException {
@@ -95,14 +93,17 @@ public class Country extends EditorPanelable{
         ArrayList<Country> result = new ArrayList<>();
         Statement stmt = TestDataFromDB.getStatement();
         try {
-            ResultSet set = stmt.executeQuery("select * from countries");
+            ResultSet set = stmt.executeQuery("select countries.rec_id, countries.code, country_descrips.descrip " +
+                                                " from countries " +
+                                                " join country_descrips " +
+                                                " on countries.rec_id = country_descrips.country_id");
             while(set.next()){
                 Country country = new Country();
                 country.setRecId(set.getInt(1));
                 country.setCode(set.getString(2));
                 country.setDescrip_en(set.getString(3));
-                country.setDescrip_ka(set.getString(4));
-                country.setDescrip_de(set.getString(5));
+                country.setDescrip_ka(set.getString(3));
+                country.setDescrip_de(set.getString(3));
                 
                 result.add(country);
             }
@@ -201,6 +202,6 @@ public class Country extends EditorPanelable{
     }
 
     public boolean equals(Country other){
-        return getCode().equals(other.getCode()) && getDescrip().equals(other.getDescrip());
+        return getRecId() == other.getRecId() && getCode().equals(other.getCode()) && getDescrip().equals(other.getDescrip());
     }
 }

@@ -53,7 +53,7 @@ import org.json.JSONObject;
 public class Client extends EditorPanelable{
 
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
-    public String payPal, www, createdDate;
+    public String payPal, createdDate;
     
     private final StringProperty status;
 
@@ -97,6 +97,9 @@ public class Client extends EditorPanelable{
 
     @AView.Column(title = "%fax", width = "80")
     private final SimpleStringProperty fax;
+    
+    @AView.Column(title = "www address", width = "100")
+    private final SimpleStringProperty www;
 
     private static final Country DEFAULT_COUNTRY = new Country("GE", "Georgia");
     
@@ -120,6 +123,7 @@ public class Client extends EditorPanelable{
         phoneNumbers =      new SimpleStringProperty("");
         fax =               new SimpleStringProperty("");
         status = new SimpleStringProperty("new");
+        www = new SimpleStringProperty("");
 
         phoneList.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
@@ -288,6 +292,10 @@ public class Client extends EditorPanelable{
         return status;
     }
 
+    public StringProperty wwwProperty(){
+        return www;
+    }
+    
     
     // Getters:
     
@@ -359,6 +367,11 @@ public class Client extends EditorPanelable{
     public String getIDNumber() {
         return IDNumber.get();
     }
+    
+    public String getWww(){
+        return www.get();
+    }
+    
 
      // Setters:
     public final void setIsJur(boolean isJur) {
@@ -409,6 +422,11 @@ public class Client extends EditorPanelable{
     public final void setFax(String fax) {
         this.fax.set(fax);
     }
+    
+    public void setWww(String www){
+        this.www.set(www);
+    }
+    
     
     public boolean compares(Client other){
         boolean fieldsCompareResult =   this.isJur.get() == other.getIsJur() &&
@@ -473,9 +491,8 @@ public class Client extends EditorPanelable{
 
         String result = firstName.concat(" " + lastName.get())
                                 .concat(" " + email.get()).concat(" " + address.get())
-                                .concat(" " + zipCode.get()).concat(" " + city.get())
-                                .concat(" " + country.getName()).concat(" " + fax.get())
-                                .concat(" " + IDNumber.get())
+                                .concat(" " + city.get())
+                                .concat(" " + country.getName())
                         .get();
         return (result + phones);
     }
