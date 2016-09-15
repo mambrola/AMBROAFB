@@ -16,7 +16,8 @@ public class DateConverter {
     
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
     private static final DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter parserWithTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+    private static final DateTimeFormatter parserWithTimeWithoutMilisec = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter parserWithTimeWithMilisec = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
     
     
     public static String getDayMonthnameYearBySpace(LocalDate date){
@@ -31,8 +32,12 @@ public class DateConverter {
         return localDate;
     }
     
-    public static LocalDate parseDateWithTime(String date){
-        return getResult(date, parserWithTime);
+    public static LocalDate parseDateWithTimeWithoutMilisecond(String date){
+        return getResult(date, parserWithTimeWithoutMilisec);
+    }
+    
+    public static LocalDate parseDateWithTimeAndMilisecond(String date){
+        return getResult(date, parserWithTimeWithMilisec);
     }
     
     private static LocalDate getResult(String date, DateTimeFormatter pattern){

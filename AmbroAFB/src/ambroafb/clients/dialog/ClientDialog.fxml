@@ -71,6 +71,12 @@
                 <VBox  styleClass="couple, vContainer">
                     <HBox styleClass="one">
                         <VBox styleClass="couple">
+                            <Label text="www address" /> 
+                            <TextField  fx:id="www" />
+                        </VBox >
+                    </HBox>
+                    <HBox styleClass="one">
+                        <VBox styleClass="couple">
                             <Label text="%address" styleClass="validationMessage" /> 
                             <TextField  fx:id="address" />
                         </VBox >

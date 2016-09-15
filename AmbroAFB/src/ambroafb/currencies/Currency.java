@@ -193,7 +193,7 @@ public class Currency extends EditorPanelable {
     public void setDate(String date) {
         String localDateStr;
         try {
-            dateProperty.set(DateConverter.parseDateWithTime(date));
+            dateProperty.set(DateConverter.parseDateWithTimeAndMilisecond(date));
             localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get());
         } catch(Exception ex) {
             localDateStr = date;

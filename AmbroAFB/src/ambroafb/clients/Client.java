@@ -434,6 +434,7 @@ public class Client extends EditorPanelable{
                                         this.firstName.get().equals(other.getFirstName()) &&
                                         this.lastName.get().equals(other.getLastName()) &&
                                         this.email.get().equals(other.getEmail())    &&
+                                        this.www.get().equals(other.getWww()) &&
                                         this.address.get().equals(other.getAddress()) &&
                                         this.zipCode.get().equals(other.getZipCode()) &&
                                         this.city.get().equals(other.getCity()) &&
@@ -469,6 +470,7 @@ public class Client extends EditorPanelable{
         setFirstName(other.getFirstName());
         setLastName(other.getLastName());
         setEmail(other.getEmail());
+        setWww(other.getWww());
         setAddress(other.getAddress());
         setZipCode(other.getZipCode());
         setCity(other.getCity());

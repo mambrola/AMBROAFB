@@ -12,13 +12,13 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.countries.*;
+import ambroafb.general.DateConverter;
 import ambroafb.general.KFZClient;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.phones.PhoneComboBox;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -75,7 +75,7 @@ public class ClientDialogController implements Initializable {
     
     
     @FXML
-    private TextField fax, zipCode, city;
+    private TextField fax, zipCode, city, www;
     
     @FXML
     private CountryComboBox country;
@@ -130,7 +130,7 @@ public class ClientDialogController implements Initializable {
     public void bindClient(Client client) {
         this.client = client;
         if (client != null) {
-            openDate.setValue(getClientCreatedDate());
+            openDate.setValue(DateConverter.parseDateWithTimeWithoutMilisecond(client.createdDate));
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
             rezident. selectedProperty().bindBidirectional(client.isRezProperty());
             firstName.    textProperty().bindBidirectional(client.firstNameProperty());
@@ -138,23 +138,13 @@ public class ClientDialogController implements Initializable {
             idNumber.     textProperty().bindBidirectional(client.IDNumberProperty());
             email.        textProperty().bindBidirectional(client.emailProperty());
             fax.          textProperty().bindBidirectional(client.faxProperty());
+            www.          textProperty().bindBidirectional(client.wwwProperty());
             address.      textProperty().bindBidirectional(client.addressProperty());
             zipCode.      textProperty().bindBidirectional(client.zipCodeProperty());
             city.         textProperty().bindBidirectional(client.cityProperty());
             country.     valueProperty().bindBidirectional(client.countryProperty());
             status.      valueProperty().bindBidirectional(client.statusProperty());
         }
-    }
-    
-    private LocalDate getClientCreatedDate(){
-        LocalDate result = null;
-        String date = client.createdDate;
-        if (date != null){
-            int beforeTime = date.indexOf(" ");
-            String onlyDatePart = client.createdDate.substring(0, beforeTime);
-            result = LocalDate.parse(onlyDatePart);
-        }
-        return result;
     }
     
     public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType, String serviceURLPrefix) {
