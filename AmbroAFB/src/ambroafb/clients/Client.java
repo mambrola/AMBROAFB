@@ -45,6 +45,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -210,6 +211,14 @@ public class Client extends EditorPanelable{
                 client.setFax(rs.getString(12));
                 client.setWww(rs.getString(13));
                 client.createdDate = rs.getString(14);
+                String phones = rs.getString(16);
+                JSONArray phonesArray = new JSONArray(phones);
+                for (int i = 0; i < phonesArray.length(); i++) {
+                    JSONObject object = (JSONObject)phonesArray.get(i);
+                    String number = object.getString("number");
+                    Phone phone = new Phone(number);
+                    client.getPhoneList().add(phone);
+                }
 //                client.setPhoneList((Collection<Phone>) rs.getArray(16));
                 
                 System.out.println("client: " + client.toStringForSearch());
