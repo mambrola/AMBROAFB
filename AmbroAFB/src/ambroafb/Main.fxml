@@ -8,18 +8,42 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
 
-<AnchorPane fx:id="formPane" 
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="formPane" 
             stylesheets="/styles/css/main.css" 
-            xmlns:fx="http://javafx.com/fxml/1" 
             xmlns="http://javafx.com/javafx/8" 
             fx:controller="ambroafb.MainController">
     <children>
-        <MenuBar prefWidth="1500.0">
+        <MenuBar fx:id="menuBar">
             <menus>
                 <Menu text="%home">
                     <items>
                         <MenuItem onAction="#mainConfig" text="%menu_main_config" />
                         <MenuItem onAction="#mainExit" text="%exit" />
+                    </items>
+                </Menu>
+                <Menu text="%proceses">
+                    <items>
+                        <Menu text="%disposable_sells">
+                            <items>
+                                <MenuItem onAction="#tm" text="%of_service" />
+                                <MenuItem onAction="#tm" text="%of_thing" />
+                                <MenuItem onAction="#tm" text="%of_fixed_assets" />
+                            </items>
+                        </Menu>
+                        <Menu text="%permanent_buys">
+                            <items>
+                                <MenuItem onAction="#tm" text="%of_service" />
+                                <MenuItem onAction="#tm" text="%of_thing" />
+                                <MenuItem onAction="#tm" text="%of_fixed_assets" />
+                            </items>
+                        </Menu>
+                        <Menu text="%disposable_buys">
+                            <items>
+                                <MenuItem onAction="#tm" text="%of_service" />
+                                <MenuItem onAction="#tm" text="%of_thing" />
+                                <MenuItem onAction="#tm" text="%of_fixed_assets" />
+                            </items>
+                        </Menu>
                     </items>
                 </Menu>
                 <Menu text="%operations">
@@ -73,12 +97,19 @@
                         
                     </items>
                 </Menu>
-                <Menu text="%administrator" >
+                <Menu text="%administrator">
                     <items>
-                        <MenuItem onAction="#other" text="%other" />
+                        <Menu text="%mini_directories">
+                            <items>
+                                <MenuItem onAction="#clientStatuses" text="%client_statuses" />
+                                <MenuItem onAction="#licenseByInvoiceCovers" text="%license_by_invoice_covers" />
+                                <MenuItem onAction="#invoice_reissuings" text="%invoice_reissuings" />
+                                <MenuItem onAction="#productSpecifics" text="%product-specifics" />
+                            </items>
+                        </Menu>
                     </items>
                 </Menu>
-            </menus>
+            </menus>    
         </MenuBar>
     </children>
 </AnchorPane>

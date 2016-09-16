@@ -26,8 +26,12 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.json.JSONObject;
@@ -40,6 +44,8 @@ public class MainController implements Initializable {
     
     private GeneralConfig config;
     
+    @FXML
+    private MenuBar menuBar;
     @FXML
     private AnchorPane formPane;
     @FXML
@@ -209,6 +215,11 @@ public class MainController implements Initializable {
     
     @FXML private void accounts(ActionEvent event) {}
     @FXML private void licenses(ActionEvent event) {}
+    @FXML private void clientStatuses(ActionEvent event) {}
+    @FXML private void licenseByInvoiceCovers(ActionEvent event) {}
+    @FXML private void invoice_reissuings(ActionEvent event) {}
+    @FXML private void productSpecifics(ActionEvent event) {}
+    @FXML private void tm(ActionEvent event) {}
     
     @FXML private void currencies(ActionEvent event) {
         String currenciesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + CurrencyRates.class.getSimpleName();
@@ -300,5 +311,6 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         config = GeneralConfig.getInstance();
+        menuBar.prefWidthProperty ().bind (AmbroAFB.mainStage.widthProperty ());
     }        
 }
