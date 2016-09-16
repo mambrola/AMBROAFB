@@ -140,6 +140,27 @@ public class MainController implements Initializable {
         }
     }
     
+    @FXML
+    private void loggings(ActionEvent event){
+//        String loggingsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Loggings.class.getSimpleName();
+//        
+//        Stage loggings = Utils.getStageForPath(loggingsStagePath);
+//        if(loggings == null || !loggings.isShowing()){
+//            Loggings loggings = new Loggings(AmbroAFB.mainStage);
+//            loggings.show();
+//            
+//            LoggingFilter filter = new LoggingFilter(loggings);
+//            JSONObject json = filter.getResult();
+//            loggings.getLoggingsController().reAssignTable(json);
+//
+//            if (json != null && json.length() == 0) 
+//                loggings.close();
+//        }
+//        else {
+//            loggings.requestFocus();
+//        }
+    }
+    
     @FXML 
     private void invoices(ActionEvent event) {
         String invoicesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Invoices.class.getSimpleName();

@@ -46,6 +46,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -184,7 +185,7 @@ public class Client extends EditorPanelable{
             String isJur = (jurid == 2) ? " is_jur = 0 or is_jur = 1 " : " is_jur = " + jurid + " ";
             Country country = (Country)filter.get("country");
             String countryCode = (country == null || country.getCode().equals("ALL"))? "" : " country_code = '" + ((Country)filter.get("country")).getCode() + "' and ";
-            String status = filter.getString("status") == null ? "" : " status = '" + filter.getString("status") + "' and ";
+//            String status = filter.getString("status") == null ? "" : " status = '" + filter.getString("status") + "' and ";
             int rez = filter.getInt("rezident");
             String isRez = (rez == 2) ? "is_rezident = 0 or is_rezident = 1 " : " is_rezident = " + rez + " ";
             
@@ -219,9 +220,7 @@ public class Client extends EditorPanelable{
                     Phone phone = new Phone(number);
                     client.getPhoneList().add(phone);
                 }
-//                client.setPhoneList((Collection<Phone>) rs.getArray(16));
                 
-                System.out.println("client: " + client.toStringForSearch());
                 result.add(client);
             }
         } catch (Exception ex) {
@@ -240,6 +239,21 @@ public class Client extends EditorPanelable{
 //            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        return new ArrayList<>();
+    }
+    
+    public static List<String> getStatuses(){
+        ArrayList<String> result = new ArrayList<>();
+        try {
+            JSONArray statuses = new JSONArray(GeneralConfig.getInstance().getServerClient().get("/clients/statuses"));
+            for (int i = 0; i < statuses.length(); i++){
+                String status = statuses.getString(i).trim();
+                if (!status.isEmpty())
+                    result.add(status);
+            }
+        } catch (JSONException | IOException | KFZClient.KFZServerException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
     }
 
     public static Client getOneFromDB(int id) {

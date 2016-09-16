@@ -7,7 +7,6 @@ package ambroafb.clients.dialog;
 
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
-import ambroafb.clients.StatusComboBox;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
@@ -36,6 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.json.JSONArray;
@@ -80,7 +80,7 @@ public class ClientDialogController implements Initializable {
     @FXML
     private CountryComboBox country;
     @FXML
-    private StatusComboBox status;
+    private ComboBox<String> statuses;
     @FXML
     private DialogOkayCancelController okayCancelController;
     @FXML
@@ -109,6 +109,7 @@ public class ClientDialogController implements Initializable {
             }
         });
         country.showCategoryAll(false);
+        statuses.getItems().setAll(Client.getStatuses());
         permissionToClose = true;
     }
     
@@ -143,7 +144,7 @@ public class ClientDialogController implements Initializable {
             zipCode.      textProperty().bindBidirectional(client.zipCodeProperty());
             city.         textProperty().bindBidirectional(client.cityProperty());
             country.     valueProperty().bindBidirectional(client.countryProperty());
-            status.      valueProperty().bindBidirectional(client.statusProperty());
+            statuses.      valueProperty().bindBidirectional(client.statusProperty());
         }
     }
     

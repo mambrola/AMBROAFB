@@ -51,6 +51,7 @@
                         <MenuItem onAction="#invoices" text="%invoices" />
                         <SeparatorMenuItem />
                         <MenuItem onAction="#clients" text="%clients" />
+                        <MenuItem onAction="#loggings" text="%loggings" />
                         <MenuItem onAction="#accounts" text="%accounts" />
                     </items>
                 </Menu>

@@ -6,7 +6,7 @@
 package ambroafb.clients.filter;
 
 import ambro.ADatePicker;
-import ambroafb.clients.StatusComboBox;
+import ambroafb.clients.Client;
 import ambroafb.countries.Country;
 import ambroafb.countries.CountryComboBox;
 import ambroafb.general.GeneralConfig;
@@ -27,6 +27,7 @@ import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import org.controlsfx.control.CheckComboBox;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,7 +43,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     @FXML
     private CountryComboBox countries;
     @FXML
-    private StatusComboBox statuses;
+    private CheckComboBox<String> statuses;
     @FXML
     private FilterOkayCancelController okayCancelController;
     
@@ -66,9 +67,9 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             okayCancelController.cancel(null);
             if(event != null) event.consume();
         });
+        statuses.getItems().setAll(Client.getStatuses());
         
         countries.setValue(countries.getItems().get(0));
-        statuses.setValue(statuses.getItems().get(0));
     }
 
     @Override
@@ -90,7 +91,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());
             jSonResult.put( "juridical", (  juridical.indeterminateProperty().get() ? 2 : juridical.isSelected() ? 1 : 0 ));
             jSonResult.put(   "country",  countries.getValue());
-            jSonResult.put(    "status",   statuses.getValue());
+//            jSonResult.put(    "status",   statuses.getCheckModel().get);
             jSonResult.put(  "rezident", (  rezident.indeterminateProperty().get() ? 2 : rezident.isSelected() ? 1 : 0 ));
             
             GeneralConfig.prefs.put("clients/filter/dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue().toString());
@@ -100,7 +101,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             GeneralConfig.prefs.putInt(   "clients/filter/country/rec_id", (country == null) ? 0 : country.getRecId());
             GeneralConfig.prefs.put(   "clients/filter/country/code", (country == null) ? "" : country.getCode());
             GeneralConfig.prefs.put(   "clients/filter/country/descrip", (country == null) ? "" : country.getDescrip());
-            GeneralConfig.prefs.put(   "clients/filter/status", jSonResult.getString("status"));
+//            GeneralConfig.prefs.put(   "clients/filter/status", jSonResult.getString("status"));
             GeneralConfig.prefs.putInt(   "clients/filter/rezident", jSonResult.getInt("rezident"));
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
     }
@@ -128,7 +129,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         juridical.setIndeterminate(jurid == 2);
         if (countryId != -1)
             countries.setValue(country);
-        statuses.setValue(status);
+//        statuses.setValue(status);
         rezident.setSelected(rez == 1);
         rezident.setIndeterminate(rez == 2);
     }

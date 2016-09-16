@@ -2,8 +2,8 @@
 #formPane {
   -fx-min-height: 200;
   -fx-max-height: 200;
-  -fx-min-width: 470;
-  -fx-max-width: 470;
+  -fx-min-width: 480;
+  -fx-max-width: 480;
   -fx-padding: 10;
   -fx-spacing: 20;
 }
@@ -13,18 +13,18 @@
   -fx-padding: 1 0 1 2;
 }
 .w1 .text-field {
-  -fx-pref-width: 450;
+  -fx-pref-width: 460;
 }
 .w2 .text-field {
-  -fx-pref-width: 210;
+  -fx-pref-width: 215;
 }
 .w3 .text-field,
 .w3 .combo-box,
 .w3 .date-picker {
-  -fx-pref-width: 130;
+  -fx-pref-width: 133.33333333;
 }
 .w3 .c2 {
-  -fx-pref-width: 290;
+  -fx-pref-width: 296.66666667;
 }
 .w2,
 .w3 {

@@ -8,6 +8,7 @@
 <?import ambro.*?>
 <?import ambroafb.clients.*?>
 <?import ambroafb.countries.*?>
+<?import org.controlsfx.control.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/clientfilter.css" 
                               xmlns:fx="http://javafx.com/fxml/1" >
@@ -46,7 +47,7 @@
                 <VBox >
                     <children>
                         <Label text="%client_status" /> 
-                        <StatusComboBox fx:id="statuses" />
+                        <CheckComboBox fx:id="statuses" />
                     </children>
                 </VBox >
                 <VBox >
