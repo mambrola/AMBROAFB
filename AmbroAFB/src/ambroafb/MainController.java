@@ -19,6 +19,8 @@ import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.invoices.Invoices;
 import ambroafb.invoices.filter.InvoiceFilter;
+import ambroafb.licenses.Licenses;
+import ambroafb.licenses.filter.LicenseFilter;
 import ambroafb.products.Products;
 import java.io.IOException;
 import java.net.URL;
@@ -26,12 +28,9 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.json.JSONObject;
@@ -214,7 +213,27 @@ public class MainController implements Initializable {
     
     
     @FXML private void accounts(ActionEvent event) {}
-    @FXML private void licenses(ActionEvent event) {}
+    
+    @FXML private void licenses(ActionEvent event) {
+        String licensesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Licenses.class.getSimpleName();
+        
+        Stage licensesStage = Utils.getStageForPath(licensesStagePath);
+        if(licensesStage == null || !licensesStage.isShowing()){
+            Licenses licenses = new Licenses(AmbroAFB.mainStage);
+            licenses.show();
+            
+            LicenseFilter filter = new LicenseFilter(licenses);
+            JSONObject json = filter.getResult();
+            licenses.getLicensesController().reAssignTable(json);
+
+            if (json != null && json.length() == 0) 
+                licenses.close();
+        }
+        else {
+            licensesStage.requestFocus();
+        }
+    }
+    
     @FXML private void clientStatuses(ActionEvent event) {}
     @FXML private void licenseByInvoiceCovers(ActionEvent event) {}
     @FXML private void invoice_reissuings(ActionEvent event) {}
