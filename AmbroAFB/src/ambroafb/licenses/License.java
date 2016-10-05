@@ -40,6 +40,7 @@ public class License extends EditorPanelable {
         checked = new SimpleBooleanProperty();
         date = new SimpleStringProperty("");
         dateObjProperty = new SimpleObjectProperty<>();
+        licenseNumber = new SimpleStringProperty("");
     }
     
     // DB methods:
