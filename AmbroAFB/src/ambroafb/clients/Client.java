@@ -10,10 +10,10 @@ import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.KFZClient;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
+import authclient.AuthServerException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -165,11 +165,11 @@ public class Client extends EditorPanelable{
     // DBService methods:
     public static List<Client> getAllFromDB() {
         try {
-            String data = GeneralConfig.getInstance().getServerClient().get("clients");
+            String data = GeneralConfig.getInstance().getAuthClient().get("clients").getDataAsString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {
             });
-        } catch (IOException | KFZClient.KFZServerException ex) {
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new ArrayList<>();
@@ -213,13 +213,13 @@ public class Client extends EditorPanelable{
                 client.setWww(rs.getString(13));
                 client.createdDate = rs.getString(14);
                 String phones = rs.getString(16);
-                JSONArray phonesArray = new JSONArray(phones);
-                for (int i = 0; i < phonesArray.length(); i++) {
-                    JSONObject object = (JSONObject)phonesArray.get(i);
-                    String number = object.getString("number");
-                    Phone phone = new Phone(number);
-                    client.getPhoneList().add(phone);
-                }
+//                JSONArray phonesArray = new JSONArray(phones);
+//                for (int i = 0; i < phonesArray.length(); i++) {
+//                    JSONObject object = (JSONObject)phonesArray.get(i);
+//                    String number = object.getString("number");
+//                    Phone phone = new Phone(number);
+//                    client.getPhoneList().add(phone);
+//                }
                 
                 result.add(client);
             }
@@ -244,13 +244,13 @@ public class Client extends EditorPanelable{
     public static List<String> getStatuses(){
         ArrayList<String> result = new ArrayList<>();
         try {
-            JSONArray statuses = new JSONArray(GeneralConfig.getInstance().getServerClient().get("/clients/statuses"));
+            JSONArray statuses = new JSONArray(GeneralConfig.getInstance().getAuthClient().get("/clients/statuses").getDataAsString());
             for (int i = 0; i < statuses.length(); i++){
                 String status = statuses.getString(i).trim();
                 if (!status.isEmpty())
                     result.add(status);
             }
-        } catch (JSONException | IOException | KFZClient.KFZServerException ex) {
+        } catch (JSONException | IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
@@ -258,10 +258,10 @@ public class Client extends EditorPanelable{
 
     public static Client getOneFromDB(int id) {
         try {
-            String data = GeneralConfig.getInstance().getServerClient().get("clients/" + id);
+            String data = GeneralConfig.getInstance().getAuthClient().get("clients/" + id).getDataAsString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, Client.class);
-        } catch (IOException | KFZClient.KFZServerException ex) {
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
         }
@@ -276,13 +276,13 @@ public class Client extends EditorPanelable{
             ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             String client_str = mapper.writeValueAsString(client);
             
-            String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, client_str);
+            String res_str = GeneralConfig.getInstance().getAuthClient().call(resource, method, client_str).getDataAsString();
             Client res = mapper.readValue(res_str, Client.class);
             client.copyFrom(res);
             if(client.getRecId() <= 0)
                 client.setRecId(res.getRecId());
             return client;
-        } catch (IOException | KFZClient.KFZServerException ex) {
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
         }
@@ -291,9 +291,9 @@ public class Client extends EditorPanelable{
 
     public static boolean deleteOneFromDB(int id) {
         try {
-            GeneralConfig.getInstance().getServerClient().call("clients/" + id, "DELETE", null);
+            GeneralConfig.getInstance().getAuthClient().delete("clients/" + id); // call("clients/" + id, "DELETE", null).getDataAsString();
             return true;
-        } catch (IOException | KFZClient.KFZServerException ex) {
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
         }

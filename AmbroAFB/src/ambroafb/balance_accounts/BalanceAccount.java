@@ -8,10 +8,10 @@ package ambroafb.balance_accounts;
 import ambro.AFilterableTreeTableView;
 import ambro.AView;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.KFZClient;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import authclient.AuthServerException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -87,10 +87,11 @@ public class BalanceAccount extends EditorPanelable {
     
     public static ArrayList<BalanceAccount> getAllFromDB(){
         try {
-            String data = GeneralConfig.getInstance().getServerClient().get("balAccounts");
+            String data = GeneralConfig.getInstance().getAuthClient().get("balAccounts").getDataAsString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<BalanceAccount>>() {});
-        } catch (IOException | KFZClient.KFZServerException ex) {
+        } 
+        catch (IOException | AuthServerException ex) {
             Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;

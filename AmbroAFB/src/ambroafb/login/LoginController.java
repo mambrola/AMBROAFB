@@ -8,8 +8,8 @@ package ambroafb.login;
 import ambroafb.AmbroAFB;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.KFZClient;
 import ambroafb.general.Utils;
+import authclient.AuthServerException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -78,7 +78,7 @@ public class LoginController extends Stage implements Initializable {
         masker.setVisible(true);
         new Thread(() -> {
             try {
-                GeneralConfig.getInstance().getServerClient(username.getText(), password.getText());
+                GeneralConfig.getInstance().getAuthClient(username.getText(), password.getText()).login();
                 loggedIn = true;
                 prefs.put(PREFS_USERNAME, username.getText());
                 Platform.runLater(() -> {
@@ -86,13 +86,15 @@ public class LoginController extends Stage implements Initializable {
                     close();
                 });
                 return;
-            } catch (IOException ex) {
+            } 
+            catch (IOException ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                 Platform.runLater(() -> {
                     masker.setVisible(false);
                     new AlertMessage(Alert.AlertType.ERROR, ex, "Network Error", getClass().getSimpleName()).showAlert();
                 });
-            } catch (KFZClient.KFZServerException ex) {
+            } 
+            catch (AuthServerException ex) {
                 if (ex.getStatusCode() == 401) {
                     Platform.runLater(() -> {
                         masker.setVisible(false);

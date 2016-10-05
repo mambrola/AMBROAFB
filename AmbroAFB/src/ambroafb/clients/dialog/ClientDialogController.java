@@ -12,7 +12,6 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.countries.*;
 import ambroafb.general.DateConverter;
-import ambroafb.general.KFZClient;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.phones.PhoneComboBox;
 import ambroafb.general.interfaces.Dialogable;
@@ -29,6 +28,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ambroafb.general.interfaces.Annotations.*;
+import authclient.AuthServerException;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -209,7 +209,7 @@ public class ClientDialogController implements Initializable {
         @Override
         public void run() {
             try {
-                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getServerClient().get(pathCities));
+                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getAuthClient().get(pathCities).getDataAsString());
                 List<String> citiesAsList = getListFromJSONArray(cities);
                 TextFields.bindAutoCompletion(  city,
                                                 (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter((cityName) ->
@@ -217,7 +217,7 @@ public class ClientDialogController implements Initializable {
                                                 .collect(Collectors.toList()), 
                                                 getStringConverter());
                 
-            } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
+            } catch (IOException | AuthServerException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

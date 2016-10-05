@@ -7,6 +7,7 @@ package ambroafb.general;
 
 //import ambro.AConnectionToDB;
 import ambroafb.AmbroAFB;
+import authclient.AuthClient;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -52,6 +53,7 @@ public class GeneralConfig {
     public ResourceBundle bundle;
     public Locale locale;
     private KFZClient client;
+    private AuthClient authClient;
     private String kfz_username, kfz_password;
 
     private HashMap<String, Object> attributes;
@@ -93,12 +95,24 @@ public class GeneralConfig {
     public KFZClient getServerClient() {
         return client;
     }
+    
+    public AuthClient getAuthClient() {
+        return authClient;
+    }
 
     public KFZClient getServerClient(String username, String password) throws IOException, KFZClient.KFZServerException {
         kfz_username = username;
         kfz_password = password;
         client = new KFZClient(kfz_username, kfz_password).setClientName("AmbroAFB");
         return client;
+    }
+    
+    public AuthClient getAuthClient(String username, String password) {
+        kfz_username = username;
+        kfz_password = password;
+        authClient = new AuthClient(kfz_username, kfz_password);
+//        setClientName("AmbroAFB");
+        return authClient;
     }
 
     public void logoutServerClient() {

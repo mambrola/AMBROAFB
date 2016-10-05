@@ -6,7 +6,7 @@
 package ambroafb.general.image_gallery;
 
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.KFZClient;
+import authclient.AuthServerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -253,7 +253,7 @@ public class ImageGalleryController implements Initializable {
      */
     public void downloadData() {
         try {
-            String imagesNames = GeneralConfig.getInstance().getServerClient().get(serviceURLPrefix + parameterDownload);
+            String imagesNames = GeneralConfig.getInstance().getAuthClient().get(serviceURLPrefix + parameterDownload).getDataAsString();
             JSONArray namesJson = new JSONArray(imagesNames);
             for (int i = 0; i < namesJson.length(); i++) {
                 String fullName = namesJson.getString(i);
@@ -264,7 +264,7 @@ public class ImageGalleryController implements Initializable {
                 FXCollections.copy(datesSliderElems, sorted);
                 msgSlider.setValueOn(datesSliderElems.size() - 1);
             }
-        } catch (KFZClient.KFZServerException ex) {
+        } catch (AuthServerException ex) {
             System.out.println("ex code: " + ex.getStatusCode() + "  User has not images.");
             magnifier.showProperty().set(false);
         } catch (JSONException | IOException ex) {
@@ -383,20 +383,20 @@ public class ImageGalleryController implements Initializable {
                     byte[] data = viewer.getContent();
                     try {
                         if (viewer.deletedProperty().get()) {
-                            GeneralConfig.getInstance().getServerClient().call(serviceURLPrefix + key, "DELETE", null);
+                            GeneralConfig.getInstance().getAuthClient().delete(serviceURLPrefix + key); // call(serviceURLPrefix + key, "DELETE", null);
                         } else if (viewer.isNew()) {
-                            GeneralConfig.getInstance().getServerClient().post(
+                            GeneralConfig.getInstance().getAuthClient().post(
                                     serviceURLPrefix + urlParameter + "/" + key.substring(key.lastIndexOf(".") + 1),
                                     Base64.getEncoder().encodeToString(data)
                             );
                         } else if (viewer.isEdit()) {
-                            GeneralConfig.getInstance().getServerClient().call(
+                            GeneralConfig.getInstance().getAuthClient().call(
                                     serviceURLPrefix + key,
                                     "PUT",
                                     Base64.getEncoder().encodeToString(data)
                             );
                         }
-                    } catch (IOException | KFZClient.KFZServerException ex) {
+                    } catch (IOException | AuthServerException ex) {
                         Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -467,7 +467,7 @@ public class ImageGalleryController implements Initializable {
             });
 
             try {
-                HttpURLConnection con = GeneralConfig.getInstance().getServerClient().createConnection(serviceURLPrefix + fullName);
+                HttpURLConnection con = GeneralConfig.getInstance().getAuthClient().createConnection(serviceURLPrefix + fullName);
                 Viewer newViewer = new Viewer(con.getInputStream(), fullName.endsWith(".pdf"));
 
                 Object lock = lockObjectsMap.get(index);

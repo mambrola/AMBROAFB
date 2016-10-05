@@ -8,8 +8,8 @@ package ambroafb.invoices;
 import ambro.AView;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.KFZClient;
 import ambroafb.general.interfaces.EditorPanelable;
+import authclient.AuthServerException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -102,10 +102,10 @@ public class Invoice extends EditorPanelable {
     // DBService methods:
     public static ArrayList<Invoice> getAllFromDB (){
         try {
-            String data = GeneralConfig.getInstance().getServerClient().get("invoices");
+            String data = GeneralConfig.getInstance().getAuthClient().get("invoices").getDataAsString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<Invoice>>() {});
-        } catch (IOException | KFZClient.KFZServerException ex) {
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Invoice.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -113,10 +113,10 @@ public class Invoice extends EditorPanelable {
     
     public static Invoice getOneFromDB (int invoiceId){
         try {
-            String data = GeneralConfig.getInstance().getServerClient().get("invoices/" + invoiceId);
+            String data = GeneralConfig.getInstance().getAuthClient().get("invoices/" + invoiceId).getDataAsString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, Invoice.class);
-        } catch (IOException | KFZClient.KFZServerException ex) {
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Invoice.class.getName()).log(Level.SEVERE, null, ex);
             new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Invoice").showAlert();
         }
