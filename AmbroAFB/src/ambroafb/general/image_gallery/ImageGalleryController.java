@@ -383,7 +383,7 @@ public class ImageGalleryController implements Initializable {
                     byte[] data = viewer.getContent();
                     try {
                         if (viewer.deletedProperty().get()) {
-                            GeneralConfig.getInstance().getAuthClient().delete(serviceURLPrefix + key); // call(serviceURLPrefix + key, "DELETE", null);
+                            GeneralConfig.getInstance().getAuthClient().delete(serviceURLPrefix + key);
                         } else if (viewer.isNew()) {
                             GeneralConfig.getInstance().getAuthClient().post(
                                     serviceURLPrefix + urlParameter + "/" + key.substring(key.lastIndexOf(".") + 1),
