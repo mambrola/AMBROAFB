@@ -291,7 +291,7 @@ public class Client extends EditorPanelable{
 
     public static boolean deleteOneFromDB(int id) {
         try {
-            GeneralConfig.getInstance().getAuthClient().delete("clients/" + id); // call("clients/" + id, "DELETE", null).getDataAsString();
+            GeneralConfig.getInstance().getAuthClient().delete("clients/" + id);
             return true;
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
