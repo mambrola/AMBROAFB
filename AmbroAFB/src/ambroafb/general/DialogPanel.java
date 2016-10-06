@@ -11,13 +11,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
 /**
  *
  * @author tabramishvili
  */
-public class DialogPanel extends Pane {
+public class DialogPanel extends StackPane {
 
     public final Object MARKED_NODE_KEY = new Object();
     public final Object BACKUP_VALUE_KEY = new Object();

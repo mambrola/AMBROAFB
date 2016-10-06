@@ -1,35 +1,12 @@
 @import url("/styles/css/core.css");
 @import url("/variables.less");
 
-@formWidth  : 460;
+@formWidth  : 480;
 @gap        :  10;
 @spaceWidth :  30;
-@formHeight : 200;
-
-/*
-.changeFormHeight(@height){
-    @formHeight: @height;
-    
-    #formPane {
-        -fx-min-height: @formHeight;
-        -fx-max-height: @formHeight;
-        -fx-min-width: @formWidth + 2*@gap;
-        -fx-max-width: @formWidth + 2*@gap;
-        -fx-padding: @gap;
-        -fx-spacing: 2*@gap;
-    }
-
-    .doubleHeight {
-        -fx-pref-height: 2 * @formHeight / 9;
-    }
-}
-*/
 
 #formPane {
-    -fx-min-height: @formHeight;
-    -fx-max-height: @formHeight;
-    -fx-min-width: @formWidth + 2*@gap;
-    -fx-max-width: @formWidth + 2*@gap;
+    -fx-pref-width: @formWidth;
     -fx-padding: @gap;
     -fx-spacing: 2*@gap;
 }
@@ -40,7 +17,8 @@
     -fx-padding: 1 0 1 2;
 }
 
-.w1 .text-field{
+
+.w1 .text-field {
     -fx-pref-width: @formWidth;
 }
 .w2 .text-field {
@@ -50,20 +28,10 @@
     -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
 }
 
-.w3 .c2 {
-    -fx-pref-width: 2*(@formWidth - 2*@spaceWidth)/3 + @spaceWidth;
-}
-
-
-.w2, .w3 {
+ .w2, .w3 {
     -fx-spacing: @spaceWidth;
 }
 
-
-.doubleHeight {
-    /*-fx-background-color: yellow;*/
-    -fx-pref-height: 2 * @formHeight / 9;
-}
 .button {
     -fx-font-weight: bold;
 }

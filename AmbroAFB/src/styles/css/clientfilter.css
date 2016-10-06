@@ -1,27 +1,6 @@
 @import url("/styles/css/core.css");
-/*
-.changeFormHeight(@height){
-    @formHeight: @height;
-    
-    #formPane {
-        -fx-min-height: @formHeight;
-        -fx-max-height: @formHeight;
-        -fx-min-width: @formWidth + 2*@gap;
-        -fx-max-width: @formWidth + 2*@gap;
-        -fx-padding: @gap;
-        -fx-spacing: 2*@gap;
-    }
-
-    .doubleHeight {
-        -fx-pref-height: 2 * @formHeight / 9;
-    }
-}
-*/
 #formPane {
-  -fx-min-height: 200;
-  -fx-max-height: 200;
-  -fx-min-width: 480;
-  -fx-max-width: 480;
+  -fx-pref-width: 480;
   -fx-padding: 10;
   -fx-spacing: 20;
 }
@@ -31,26 +10,19 @@
   -fx-padding: 1 0 1 2;
 }
 .w1 .text-field {
-  -fx-pref-width: 460;
+  -fx-pref-width: 480;
 }
 .w2 .text-field {
-  -fx-pref-width: 215;
+  -fx-pref-width: 225;
 }
 .w3 .text-field,
 .w3 .combo-box,
 .w3 .date-picker {
-  -fx-pref-width: 133.33333333;
-}
-.w3 .c2 {
-  -fx-pref-width: 296.66666667;
+  -fx-pref-width: 140;
 }
 .w2,
 .w3 {
   -fx-spacing: 30;
-}
-.doubleHeight {
-  /*-fx-background-color: yellow;*/
-  -fx-pref-height: 44.44444444;
 }
 .button {
   -fx-font-weight: bold;
