@@ -10,6 +10,9 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.general.interfaces.EditorPanelable;
+import authclient.AuthServerException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -78,39 +81,17 @@ public class Country extends EditorPanelable{
         return country;
     }
 
-//    public static List<Country> getAllFromDB() {
-//        String countries_json;
-//        try {
-//            countries_json = GeneralConfig.getInstance().getServerClient().get("countries");
-//            ObjectMapper mapper = new ObjectMapper();
-//            return mapper.readValue(countries_json, new TypeReference<ArrayList<Country>>(){});
-//        } catch (IOException | KFZClient.KFZServerException ex) {
-//            Logger.getLogger(Country.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return new ArrayList<>();
-//    }
     public static List<Country> getAllFromDB() {
-        ArrayList<Country> result = new ArrayList<>();
-        Statement stmt = TestDataFromDB.getStatement();
         try {
-            ResultSet set = stmt.executeQuery("select countries.rec_id, countries.code, country_descrips.descrip " +
-                                                " from countries " +
-                                                " join country_descrips " +
-                                                " on countries.rec_id = country_descrips.country_id");
-            while(set.next()){
-                Country country = new Country();
-                country.setRecId(set.getInt(1));
-                country.setCode(set.getString(2));
-                country.setDescrip_en(set.getString(3));
-                country.setDescrip_ka(set.getString(3));
-                country.setDescrip_de(set.getString(3));
-                
-                result.add(country);
-            }
-        } catch (SQLException ex) {
+//            JSONObject json = new JSONObject("where: ");
+//            String countries_json = GeneralConfig.getInstance().getDBClient().select("countries", conditions)
+            String countries_json = GeneralConfig.getInstance().getAuthClient().get("countries").getDataAsString();
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(countries_json, new TypeReference<ArrayList<Country>>(){});
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Country.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return result;
+        return new ArrayList<>();
     }
 
     // Properties:

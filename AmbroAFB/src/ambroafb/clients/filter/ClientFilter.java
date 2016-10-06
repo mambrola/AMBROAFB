@@ -6,7 +6,6 @@
 package ambroafb.clients.filter;
 
 import ambro.ADatePicker;
-import ambroafb.clients.Client;
 import ambroafb.countries.Country;
 import ambroafb.countries.CountryComboBox;
 import ambroafb.general.GeneralConfig;
@@ -67,9 +66,9 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             okayCancelController.cancel(null);
             if(event != null) event.consume();
         });
-        statuses.getItems().setAll(Client.getStatuses());
+        //statuses.getItems().setAll(Client.getStatuses());
         
-        countries.setValue(countries.getItems().get(0));
+        //countries.setValue(countries.getItems().get(0));
     }
 
     @Override

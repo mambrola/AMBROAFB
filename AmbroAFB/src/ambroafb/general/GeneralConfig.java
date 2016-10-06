@@ -8,7 +8,7 @@ package ambroafb.general;
 //import ambro.AConnectionToDB;
 import ambroafb.AmbroAFB;
 import authclient.AuthClient;
-import java.io.IOException;
+import authclient.db.DBClient;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -54,7 +54,9 @@ public class GeneralConfig {
     public Locale locale;
     private KFZClient client;
     private AuthClient authClient;
-    private String kfz_username, kfz_password;
+    private DBClient dbClient;
+    private String auth_username, auth_password;
+    private String db_username, db_password;
 
     private HashMap<String, Object> attributes;
     private String language;
@@ -92,28 +94,36 @@ public class GeneralConfig {
      *
      * @return
      */
-    public KFZClient getServerClient() {
-        return client;
-    }
-    
     public AuthClient getAuthClient() {
         return authClient;
     }
 
-    public KFZClient getServerClient(String username, String password) throws IOException, KFZClient.KFZServerException {
-        kfz_username = username;
-        kfz_password = password;
-        client = new KFZClient(kfz_username, kfz_password).setClientName("AmbroAFB");
-        return client;
-    }
+//    public KFZClient getServerClient(String username, String password) throws IOException, KFZClient.KFZServerException {
+//        kfz_username = username;
+//        kfz_password = password;
+//        client = new KFZClient(kfz_username, kfz_password).setClientName("AmbroAFB");
+//        return client;
+//    }
     
     public AuthClient getAuthClient(String username, String password) {
-        kfz_username = username;
-        kfz_password = password;
-        authClient = new AuthClient(kfz_username, kfz_password);
-//        setClientName("AmbroAFB");
+        auth_username = username;
+        auth_password = password;
+        authClient = new AuthClient(auth_username, auth_password, authclient.Utils.getDefaultConfigWithClientName("AmbroAFB"));
+        dbClient = new DBClient(auth_username, auth_password, authclient.Utils.getDefaultConfigWithClientName("AmbroAFB"));
         return authClient;
     }
+    
+    public DBClient getDBClient() {
+        return dbClient;
+    }
+    
+//    public DBClient getDBClient(String username, String password) {
+//        db_username = username;
+//        db_password = password;
+//        dbClient = new DBClient(db_username, db_password, authclient.Utils.getDefaultConfigWithClientName("AmbroAFB"));
+//        return dbClient;
+//    }
+    
 
     public void logoutServerClient() {
         if (client != null) {
