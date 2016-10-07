@@ -7,6 +7,7 @@ package ambroafb.currency_rates.filter;
 
 import ambro.ADatePicker;
 import ambroafb.clients.filter.ClientFilter;
+import ambroafb.currencies.Currency;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -61,7 +62,7 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
             okayCancelController.cancel(null);
             if(event != null) event.consume();
         });
-        currencies.removeCurrency("GEL");
+        currencies.removeCurrency(Currency.NOT_SHOW);
     }
     
     @Override

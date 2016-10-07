@@ -24,7 +24,7 @@ public class CurrencyComboBox extends ComboBox<Currency>{
         allCurrensy.setIso(Currency.ALL);
         items.add(allCurrensy);
         
-        Currency.getAllFromDBTest().stream().forEach((currency) -> {
+        Currency.getAllFromDB().stream().forEach((currency) -> {
             items.add(currency);
         });
         

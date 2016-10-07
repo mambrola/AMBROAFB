@@ -11,6 +11,11 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.products.Product;
+import authclient.AuthServerException;
+import authclient.db.ConditionBuilder;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,9 +34,10 @@ import javafx.beans.value.ObservableValue;
  * @author dato
  */
 public class Currency extends EditorPanelable {
+
     
     @AView.Column(title = "%date", width = "100")
-    private final StringProperty date;
+    private final StringProperty createDate;
     
     private final ObjectProperty<LocalDate> dateProperty;
     
@@ -41,25 +47,19 @@ public class Currency extends EditorPanelable {
     
     @AView.Column(title = "%descrip", width = "150")
     private final StringProperty descrip;
-    private final StringProperty descrip_first;
-    private final StringProperty descrip_default;
-    private final StringProperty descrip_second;
     
     @AView.Column(width = "20")
     private final StringProperty symbol;
     
     public static final String ALL = "ALL";
+    public static final String NOT_SHOW = "GEL";
     
     public Currency(){
-        date = new SimpleStringProperty("");
+        createDate = new SimpleStringProperty("");
         dateProperty = new SimpleObjectProperty<>();
         iso = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>(this);
-        descrip_first = new SimpleStringProperty("");
-        descrip_default = new SimpleStringProperty("");
-        descrip_second = new SimpleStringProperty("");
-        String lang = GeneralConfig.getInstance().getCurrentLocal().getLanguage();
-        descrip = (lang.equals("ka")) ? descrip_first : (lang.equals("en")) ? descrip_second : descrip_default;
+        descrip = new SimpleStringProperty("");
         symbol = new SimpleStringProperty("");
         
         dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
@@ -67,7 +67,7 @@ public class Currency extends EditorPanelable {
             if (newValue != null){
                 dateStr = DateConverter.getDayMonthnameYearBySpace(newValue);
             }
-            date.set(dateStr);
+            createDate.set(dateStr);
         });
         
         // Bind components does not work for this case. Because DB methods calls setters ("bind" and also settter is conflicted couple). So listener also call setters to change currency values:
@@ -82,27 +82,16 @@ public class Currency extends EditorPanelable {
     }
     
     
-    public static ArrayList<Currency> getAllFromDBTest(){
-        ArrayList<Currency> result = new ArrayList<>();
-        Statement stmt = TestDataFromDB.getStatement();
+    public static ArrayList<Currency> getAllFromDB(){
         try {
-            ResultSet set = stmt.executeQuery("select * from currencies ");
-            while(set.next()){
-                Currency curr = new Currency();
-                curr.setRecId(set.getInt(1));
-                curr.setIso(set.getString(2));
-                curr.setDescrip_first(set.getString(3));
-                curr.setDescrip_default(set.getString(4));
-                curr.setDescrip_second(set.getString(5));
-                curr.setSymbol(set.getString(6));
-                curr.setDate(set.getString(7));
-                result.add(curr);
-            }
-        } catch (SQLException ex) {
+            String data = GeneralConfig.getInstance().getDBClient().select("currencies", new ConditionBuilder().build()).toString();
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<Currency>>() {});
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Currency.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return new ArrayList<>();
         
-        return result;
     }
     
     // DB methods:
@@ -114,10 +103,6 @@ public class Currency extends EditorPanelable {
             while(set.next()){
                 currency.setRecId(set.getInt(1));
                 currency.setIso(set.getString(2));
-                currency.setDescrip_first(set.getString(3));
-                currency.setDescrip_default(set.getString(4));
-                currency.setDescrip_second(set.getString(5));
-                currency.setDescrip_second(set.getString(5));
                 currency.setSymbol(set.getString(6));
             }
         } catch (SQLException ex) {
@@ -160,8 +145,8 @@ public class Currency extends EditorPanelable {
     
     
     // Getters:
-    public String getDate(){
-        return date.get();
+    public String getCreateDate(){
+        return createDate.get();
     }
     
     public String getIso(){
@@ -172,33 +157,21 @@ public class Currency extends EditorPanelable {
         return descrip.get();
     }
     
-    public String getDescrip_first(){
-        return descrip_first.get();
-    }
-    
-    public String getDescrip_default(){
-        return descrip_default.get();
-    }
-    
-    public String getDescrip_second(){
-        return descrip_second.get();
-    }
-    
     public String getSymbol(){
         return symbol.get();
     }
     
     
     // Setters:
-    public void setDate(String date) {
+    public void setCreateDate(String date) {
         String localDateStr;
         try {
-            dateProperty.set(DateConverter.parseDateWithTimeAndMilisecond(date));
+            dateProperty.set(DateConverter.parseDateWithTimeWithoutMilisecond(date));
             localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get());
         } catch(Exception ex) {
             localDateStr = date;
         }
-        this.date.set(localDateStr);
+        this.createDate.set(localDateStr);
     }
     
     public void setIso(String iso){
@@ -207,18 +180,6 @@ public class Currency extends EditorPanelable {
     
     public void setDescrip(String descrip){
         this.descrip.set(descrip);
-    }
-    
-    public void setDescrip_first(String descrip){
-        this.descrip_first.set(descrip);
-    }
-    
-    public void setDescrip_default(String descrip){
-        this.descrip_default.set(descrip);
-    }
-    
-    public void setDescrip_second(String descrip){
-        this.descrip_second.set(descrip);
     }
     
     public void setSymbol(String symbol){

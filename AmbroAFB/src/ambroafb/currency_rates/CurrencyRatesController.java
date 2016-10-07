@@ -56,7 +56,7 @@ public class CurrencyRatesController implements Initializable {
             masker.setVisible(true);
             
             new Thread(() -> {
-                CurrencyRate.getFilteredFromDBTest(filterJson).stream().forEach((currRate) -> {
+                CurrencyRate.getFilteredFromDB(filterJson).stream().forEach((currRate) -> {
                     currencyRates.add(currRate);
                 });
                 

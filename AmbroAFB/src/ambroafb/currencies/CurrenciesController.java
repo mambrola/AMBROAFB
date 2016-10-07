@@ -60,7 +60,7 @@ public class CurrenciesController implements Initializable {
         masker.setVisible(true);
         
         new Thread(() -> {
-            currencies.setAll(Currency.getAllFromDBTest());
+            currencies.setAll(Currency.getAllFromDB());
             Platform.runLater(() -> {
                 masker.setVisible(false);
                 if (selectedIndex >= 0){
