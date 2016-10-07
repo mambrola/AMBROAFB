@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
@@ -50,33 +52,34 @@ public class CurrencyRate extends EditorPanelable {
     @AView.Column(title = "%rate", width = "80")
     private final StringProperty rate;
     
-    private ObjectProperty<Currency> currency;
-    
+    private ObjectProperty<Currency> isoProperty;
     private final ObjectProperty<LocalDate> dateProperty;
+    private static final Map<String, Currency> currencies = new HashMap<>();
     
     public CurrencyRate(){
         dateProperty = new SimpleObjectProperty<>();
         date = new SimpleStringProperty("");
         count = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
-        currency = new SimpleObjectProperty<>();
+        isoProperty = new SimpleObjectProperty<>();
         rate = new SimpleStringProperty("");
         
         dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
             String dateStr = "";
             if (newValue != null){
-                dateStr = DateConverter.getDayMonthnameYearBySpace(newValue);
+//                dateStr = DateConverter.getDayMonthnameYearBySpace(newValue);
+                dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(newValue);
             }
+            System.out.println("sheicvala datePropy da axla sheicvleba date strPropy");
             date.set(dateStr);
         });
         
-//        currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
-//            iso.unbind();
-//            if (currency.get() != null){
-//                iso.bind(currency.get().isoProperty());
-//                currDescrip.bind(Bindings.when(currency.isNotNull()).then(currency.get().descripProperty()).otherwise("")); //(GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_first : (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("en")) ? descrip_second : descrip_default;
-//            }
-//        });
+        isoProperty.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
+            iso.unbind();
+            if (iso.get() != null){
+                iso.bind(isoProperty.get().isoProperty());
+            }
+        });
     }
 
     public static ArrayList<CurrencyRate> getFilteredFromDB(JSONObject filterJson){
@@ -91,6 +94,9 @@ public class CurrencyRate extends EditorPanelable {
             }
             JSONObject params = whereBuilder.condition().build();
             String data = GeneralConfig.getInstance().getDBClient().select("rates_whole", params).toString();
+            
+            System.out.println("data: " + data);
+            
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<CurrencyRate>>() {});
         } catch (IOException | AuthServerException ex) {
@@ -146,12 +152,8 @@ public class CurrencyRate extends EditorPanelable {
         return count;
     }
     
-    public StringProperty isoProperty() {
-        return iso;
-    }
-    
     public ObjectProperty<Currency> currencyProperty(){
-        return currency;
+        return isoProperty;
     }
     
     public StringProperty rateProperty() {
@@ -168,45 +170,57 @@ public class CurrencyRate extends EditorPanelable {
         return Utils.getIntValueFor(count.get());
     }
     
-    public Currency getCurrency(){
-        return currency.get();
+    public String getIso(){
+        return iso.get();
     }
             
     public double getRate(){
         return Utils.getDoubleValueFor(rate.get());
     }
     
-    public String getIso(){
-        return iso.get();
-    }
-    
     // Setters:
     public void setDate(String date) {
-        String localDateStr;
-        try {
-            dateProperty.set(DateConverter.parseDateWithTimeWithoutMilisecond(date));
-            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get());
-        } catch(Exception ex) {
-            localDateStr = date;
-        }
-        this.date.set(localDateStr);
+        LocalDate localDate = DateConverter.getInstance().parseDate(date);
+        System.out.println("localdate arsi null? : " + localDate);
+        dateProperty.set(localDate);
+        
+//        String localDateStr;
+//        try {
+//            dateProperty.set(DateConverter.parseDateWithTimeWithoutMilisecond(date));
+//            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get());
+//        } catch(Exception ex) {
+//            localDateStr = date;
+//        }
+//        this.date.set(localDateStr);
     }
     
     public void setCount(int count){
         this.count.set("" + count);
     }
     
-    public void setCurrency(Currency currency){
-        this.currency.set(currency);
+    
+    public void setIso(String iso){
+        Currency currency = currencies.get(iso);
+        try {
+            if (currency == null) {
+                JSONArray data = GeneralConfig.getInstance().getDBClient().select("currencies", new ConditionBuilder().where().and("iso", "=", iso).condition().build());
+                if (data.length() > 0) {
+                    String currencyData = data.opt(0).toString();
+                    ObjectMapper mapper = new ObjectMapper();
+                    currency = mapper.readValue(currencyData, Currency.class);
+                    currencies.put(iso, currency);
+                }
+            }
+            this.isoProperty.set(currency);
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void setRate(double rate){
         this.rate.set("" + rate);
     }
     
-    public void setIso(String iso){
-        this.iso.set(iso);
-    }
     
     @Override
     public CurrencyRate cloneWithoutID() {
@@ -224,12 +238,11 @@ public class CurrencyRate extends EditorPanelable {
 
     @Override
     public void copyFrom(EditorPanelable other) {
-        CurrencyRate currencyRate = (CurrencyRate) other;
-        setDate(currencyRate.getDate());
-        setCount(currencyRate.getCount());
-        setCurrency(currencyRate.getCurrency());
-        setRate(currencyRate.getRate());
-        
+        CurrencyRate source = (CurrencyRate) other;
+        this.setDate(source.getDate());
+        this.setCount(source.getCount());
+        this.setIso(source.getIso());
+        this.setRate(source.getRate());
     }
 
     @Override
@@ -243,10 +256,10 @@ public class CurrencyRate extends EditorPanelable {
      * @return  - True, if all comparable fields are equals, false otherwise.
      */
     public boolean compares(CurrencyRate currencyRateBackup) {
-        return  getDate().equals(currencyRateBackup.getDate()) &&
-                getCount() == currencyRateBackup.getCount()    &&
-                getCurrency().compares(currencyRateBackup.getCurrency())   && 
-                getRate() == currencyRateBackup.getRate();
+        return  this.getDate().equals(currencyRateBackup.getDate()) &&
+                this.getCount() == currencyRateBackup.getCount()    &&
+                this.getIso().equals(currencyRateBackup.getIso())   &&
+                this.getRate() == currencyRateBackup.getRate();
     }
     
 }

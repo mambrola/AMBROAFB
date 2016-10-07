@@ -131,7 +131,8 @@ public class ClientDialogController implements Initializable {
     public void bindClient(Client client) {
         this.client = client;
         if (client != null) {
-            openDate.setValue(DateConverter.parseDateWithTimeWithoutMilisecond(client.createdDate));
+//            openDate.setValue(DateConverter.parseDateWithTimeWithoutMilisecond(client.createdDate));
+            openDate.setValue(DateConverter.getInstance().parseDate(client.createdDate));
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
             rezident. selectedProperty().bindBidirectional(client.isRezProperty());
             firstName.    textProperty().bindBidirectional(client.firstNameProperty());

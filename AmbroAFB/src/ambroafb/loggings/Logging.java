@@ -90,14 +90,16 @@ public class Logging extends EditorPanelable {
     }
     
     public void setLogginDate(String logginDate){
-        String logDate;
-        try {
-            logginDateObj.set(DateConverter.parseDateWithTimeAndMilisecond(logginDate));
-            logDate = DateConverter.getDayMonthnameYearBySpace(logginDateObj.get());
-        } catch (Exception ex){
-            logDate = logginDate;
-        }
-        logginDateStr.set(logDate);
+        logginDateObj.set(DateConverter.getInstance().parseDate(logginDate));
+        
+//        String logDate;
+//        try {
+//            logginDateObj.set(DateConverter.parseDateWithTimeAndMilisecond(logginDate));
+//            logDate = DateConverter.getDayMonthnameYearBySpace(logginDateObj.get());
+//        } catch (Exception ex){
+//            logDate = logginDate;
+//        }
+//        logginDateStr.set(logDate);
     }
     
     public void setMacAddress(String macAddress){

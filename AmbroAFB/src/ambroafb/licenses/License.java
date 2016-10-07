@@ -72,14 +72,16 @@ public class License extends EditorPanelable {
     }
     
     public void setDate(String date){
-        String localDateStr;
-        try {
-            dateObjProperty.set(DateConverter.parseDateWithTimeWithoutMilisecond(date));
-            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateObjProperty.get());
-        } catch(Exception ex) {
-            localDateStr = date;
-        }
-        this.date.set(localDateStr);
+        dateObjProperty.set(DateConverter.getInstance().parseDate(date));
+        
+//        String localDateStr;
+//        try {
+//            dateObjProperty.set(DateConverter.parseDateWithTimeWithoutMilisecond(date));
+//            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateObjProperty.get());
+//        } catch(Exception ex) {
+//            localDateStr = date;
+//        }
+//        this.date.set(localDateStr);
     }
     
     

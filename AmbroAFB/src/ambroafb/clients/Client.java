@@ -14,6 +14,7 @@ import ambroafb.general.TestDataFromDB;
 import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
 import authclient.AuthServerException;
+import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -166,9 +167,9 @@ public class Client extends EditorPanelable{
     public static List<Client> getAllFromDB() {
         try {
             String data = GeneralConfig.getInstance().getAuthClient().get("clients").getDataAsString();
+            System.out.println("client data: " + data);
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {
-            });
+            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {});
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -258,7 +259,7 @@ public class Client extends EditorPanelable{
 
     public static Client getOneFromDB(int id) {
         try {
-            String data = GeneralConfig.getInstance().getAuthClient().get("clients/" + id).getDataAsString();
+            String data = GeneralConfig.getInstance().getDBClient().select("clients_whole", new ConditionBuilder().where().and("rec_id", "=", id).condition().build()).toString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, Client.class);
         } catch (IOException | AuthServerException ex) {

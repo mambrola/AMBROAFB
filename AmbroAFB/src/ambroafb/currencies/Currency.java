@@ -65,7 +65,8 @@ public class Currency extends EditorPanelable {
         dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
             String dateStr = "";
             if (newValue != null){
-                dateStr = DateConverter.getDayMonthnameYearBySpace(newValue);
+//                dateStr = DateConverter.getDayMonthnameYearBySpace(newValue);
+                dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(newValue);
             }
             createDate.set(dateStr);
         });
@@ -164,14 +165,15 @@ public class Currency extends EditorPanelable {
     
     // Setters:
     public void setCreateDate(String date) {
-        String localDateStr;
-        try {
-            dateProperty.set(DateConverter.parseDateWithTimeWithoutMilisecond(date));
-            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get());
-        } catch(Exception ex) {
-            localDateStr = date;
-        }
-        this.createDate.set(localDateStr);
+        dateProperty.set(DateConverter.getInstance().parseDate(date));
+//        String localDateStr;
+//        try {
+//            dateProperty.set(DateConverter.parseDateWithTimeWithoutMilisecond(date));
+//            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get());
+//        } catch(Exception ex) {
+//            localDateStr = date;
+//        }
+//        this.createDate.set(localDateStr);
     }
     
     public void setIso(String iso){
