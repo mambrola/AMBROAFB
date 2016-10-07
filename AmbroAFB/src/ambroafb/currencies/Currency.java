@@ -52,7 +52,6 @@ public class Currency extends EditorPanelable {
     private final StringProperty symbol;
     
     public static final String ALL = "ALL";
-//    public static final String NOT_SHOW = "GEL";
     
     public Currency(){
         createDate = new SimpleStringProperty("");

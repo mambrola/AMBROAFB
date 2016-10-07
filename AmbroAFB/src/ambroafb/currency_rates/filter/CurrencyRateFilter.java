@@ -61,7 +61,6 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
             okayCancelController.cancel(null);
             if(event != null) event.consume();
         });
-//        currencies.removeCurrency(Currency.NOT_SHOW);
     }
     
     @Override
