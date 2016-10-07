@@ -5,9 +5,17 @@
  */
 package ambroafb.currencies;
 
+import ambroafb.general.GeneralConfig;
+import authclient.AuthServerException;
+import authclient.db.ConditionBuilder;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -24,11 +32,21 @@ public class CurrencyComboBox extends ComboBox<Currency>{
         allCurrensy.setIso(Currency.ALL);
         items.add(allCurrensy);
         
-        Currency.getAllFromDB().stream().forEach((currency) -> {
-            items.add(currency);
-        });
+        try {
+            JSONArray jsonArr = GeneralConfig.getInstance().getDBClient().select("basic_params", new ConditionBuilder().where().and("param", "=", "rates_basic_iso").condition().build());
+            String removedIso = (String)((JSONObject)jsonArr.opt(0)).opt("value");
+            
+            Currency.getAllFromDB().stream().forEach((currency) -> {
+                if (!currency.getIso().equals(removedIso))
+                    items.add(currency);
+            });
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(CurrencyComboBox.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         this.setValue(allCurrensy);
+        
+        
     }
     
 

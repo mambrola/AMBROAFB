@@ -40,8 +40,6 @@ import org.json.JSONException;
  * @author dato
  */
 public class CurrencyRate extends EditorPanelable {
-
-    public String inputIso, basiIso, basicIsoRate;
     
     @AView.Column(title = "%date", width = "100")
     private final StringProperty date;
