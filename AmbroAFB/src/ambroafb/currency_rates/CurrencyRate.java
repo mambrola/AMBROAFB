@@ -70,7 +70,6 @@ public class CurrencyRate extends EditorPanelable {
 //                dateStr = DateConverter.getDayMonthnameYearBySpace(newValue);
                 dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(newValue);
             }
-            System.out.println("sheicvala datePropy da axla sheicvleba date strPropy");
             date.set(dateStr);
         });
         
@@ -180,18 +179,7 @@ public class CurrencyRate extends EditorPanelable {
     
     // Setters:
     public void setDate(String date) {
-        LocalDate localDate = DateConverter.getInstance().parseDate(date);
-        System.out.println("localdate arsi null? : " + localDate);
-        dateProperty.set(localDate);
-        
-//        String localDateStr;
-//        try {
-//            dateProperty.set(DateConverter.parseDateWithTimeWithoutMilisecond(date));
-//            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get());
-//        } catch(Exception ex) {
-//            localDateStr = date;
-//        }
-//        this.date.set(localDateStr);
+        dateProperty.set(DateConverter.getInstance().parseDate(date));
     }
     
     public void setCount(int count){
