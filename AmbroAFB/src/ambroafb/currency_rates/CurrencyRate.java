@@ -42,13 +42,13 @@ import ambroafb.general.interfaces.TableColumnWidths;
  */
 public class CurrencyRate extends EditorPanelable {
     
-    @AView.Column(title = "%date", width = TableColumnWidths.DATE)
+    @AView.Column(title = "%date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty date;
-    @AView.Column(title = "%count", width = "50")
+    @AView.Column(title = "%count", width = "50", styleClass = "textCenter")
     private final StringProperty count;
-    @AView.Column(title = "%iso", width = TableColumnWidths.ISO)
+    @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
     private final StringProperty iso;
-    @AView.Column(title = "%rate", width = "80")
+    @AView.Column(title = "%rate", width = "80", styleClass = "textRight")
     private final StringProperty rate;
     
     private ObjectProperty<Currency> isoProperty;

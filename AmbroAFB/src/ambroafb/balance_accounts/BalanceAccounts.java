@@ -19,7 +19,6 @@ public class BalanceAccounts extends Stage {
     
     private BalanceAccountsController balanceAccountsController;
     
-    
     public BalanceAccounts(Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + BalanceAccounts.class.getSimpleName(), (Stage)this);
         Utils.centerStageOfParent((Stage)this, owner);
@@ -31,7 +30,7 @@ public class BalanceAccounts extends Stage {
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             balanceAccountsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-            event.consume();
+            if(event != null) event.consume();
         });
         
         Utils.setSizeFor((Stage)this);

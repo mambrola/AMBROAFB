@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox   style="-fx-background-color: blue;"
+<HBox   
         fx:id = "formNode"
         alignment="CENTER_LEFT" 
         stylesheets="/styles/css/editorpanel.css"
