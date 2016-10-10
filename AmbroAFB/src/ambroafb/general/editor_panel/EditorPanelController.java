@@ -224,6 +224,10 @@ public class EditorPanelController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
     }
     
+    public double getPanelMinWidth(){
+        return formNode.getWidth() - region.getWidth();
+    }
+    
     public Button getExitButton(){
         return exit;
     }

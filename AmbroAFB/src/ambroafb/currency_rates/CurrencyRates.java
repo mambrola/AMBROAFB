@@ -6,6 +6,7 @@
 package ambroafb.currency_rates;
 
 import ambroafb.general.Utils;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -32,6 +33,16 @@ public class CurrencyRates extends Stage {
             CurrencyRatesController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if(event != null) event.consume();
         });
+
+        widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            double edPanMinWidth = CurrencyRatesController.getEditorPanelController().getPanelMinWidth();
+            double stageMinWidth = edPanMinWidth + 20;
+            if (newValue.doubleValue() < stageMinWidth){
+                this.setMinWidth(stageMinWidth);
+            }
+        });
+        
+        Utils.setSizeFor((Stage)this);
     }
     
     public CurrencyRatesController getCurrencyRatesController(){

@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox   
+<HBox   style="-fx-background-color: blue;"
         fx:id = "formNode"
         alignment="CENTER_LEFT" 
         stylesheets="/styles/css/editorpanel.css"
@@ -91,7 +91,4 @@
         <Region fx:id="region" HBox.hgrow="ALWAYS" />
         <TextField fx:id="search" promptText="%search" />
     </children>
-    <padding>
-        <Insets bottom="3.0" left="10.0" top="3.0" right="10.0" />
-    </padding>
 </HBox>

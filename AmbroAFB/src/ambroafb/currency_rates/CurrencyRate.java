@@ -33,6 +33,7 @@ import javafx.beans.value.ObservableValue;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
+import ambroafb.general.interfaces.TableColumnWidths;
 
 
 /**
@@ -41,11 +42,11 @@ import org.json.JSONException;
  */
 public class CurrencyRate extends EditorPanelable {
     
-    @AView.Column(title = "%date", width = "100")
+    @AView.Column(title = "%date", width = TableColumnWidths.DATE)
     private final StringProperty date;
     @AView.Column(title = "%count", width = "50")
     private final StringProperty count;
-    @AView.Column(title = "%iso", width = "50")
+    @AView.Column(title = "%iso", width = TableColumnWidths.ISO)
     private final StringProperty iso;
     @AView.Column(title = "%rate", width = "80")
     private final StringProperty rate;
@@ -65,7 +66,6 @@ public class CurrencyRate extends EditorPanelable {
         dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
             String dateStr = "";
             if (newValue != null){
-//                dateStr = DateConverter.getDayMonthnameYearBySpace(newValue);
                 dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(newValue);
             }
             date.set(dateStr);
@@ -91,8 +91,6 @@ public class CurrencyRate extends EditorPanelable {
             }
             JSONObject params = whereBuilder.condition().build();
             String data = GeneralConfig.getInstance().getDBClient().select("rates_whole", params).toString();
-            
-            System.out.println("data: " + data);
             
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<CurrencyRate>>() {});
