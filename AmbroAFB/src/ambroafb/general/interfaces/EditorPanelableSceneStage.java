@@ -64,7 +64,11 @@ public abstract class EditorPanelableSceneStage extends Stage {
     }
     
     
-    
+    /**
+     * The inner class provides to change child stage location by owners moving.
+     * 1. If child center is out of owner bounds, it will be inside the owner.
+     * 2. If owner stage moving on screen, the child stage will follow the owner.
+     */
     private class LocationListener implements ChangeListener<Number> {
         
         private final Stage child;
@@ -81,7 +85,6 @@ public abstract class EditorPanelableSceneStage extends Stage {
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             double ownerDiff = oldValue.doubleValue() - newValue.doubleValue();
             setCenter();
-//            setCenterY(newValue.doubleValue());
             if (isListenerForX){
                 child.setX(child.getX() - ownerDiff);
             }
@@ -107,16 +110,6 @@ public abstract class EditorPanelableSceneStage extends Stage {
                 child.setY(owner.getY() + owner.getHeight() - child.getHeight() / 2);
             }
         }
-        
-//        private void setCenterY(double ownerNewMinY){
-//            double childCenterY = child.getY() + child.getHeight() / 2;
-//            if (childCenterY < ownerNewMinY){
-//                child.setY(ownerNewMinY - child.getHeight() / 2 + 4);
-//            }
-//            else if(childCenterY > ownerNewMinY + owner.getWidth()){
-//                child.setY(ownerNewMinY + owner.getHeight() - child.getHeight() / 2);
-//            }
-//        }
         
     }
 }
