@@ -6,6 +6,7 @@
 package ambroafb.clients;
 
 import ambroafb.general.Utils;
+import ambroafb.general.save_button.StageUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,7 +22,6 @@ public class Clients extends Stage {
     
     public Clients(Stage owner) {
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
-        Utils.centerStageOfParent((Stage)this, owner);
         
         Scene scene = Utils.createScene("/ambroafb/clients/Clients.fxml", null);
         clientsController = (ClientsController) scene.getProperties().get("controller");
@@ -33,6 +33,7 @@ public class Clients extends Stage {
             if(event != null) event.consume();
         });
         
+        StageUtils.centerChildOf(owner, (Stage)this);
         Utils.setSizeFor((Stage)this);
     }
     

@@ -13,6 +13,7 @@ import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
+import ambroafb.general.save_button.StageUtils;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -53,7 +54,6 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     
     public ClientFilter(Stage owner) {
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
-        Utils.centerStageOfParent((Stage)this, owner);
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));
@@ -69,6 +69,8 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         //statuses.getItems().setAll(Client.getStatuses());
         
         //countries.setValue(countries.getItems().get(0));
+        
+        StageUtils.centerChildOf(owner, (Stage)this);
     }
 
     @Override

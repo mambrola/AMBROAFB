@@ -12,6 +12,7 @@ import ambroafb.general.Names.*;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.save_button.StageUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -30,7 +31,6 @@ public class CurrencyDialog extends Stage implements Dialogable {
     
     public CurrencyDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
-        Utils.centerStageOfParent((Stage)this, owner);
         
         if (object == null)
             this.currency = new Currency();
@@ -52,6 +52,8 @@ public class CurrencyDialog extends Stage implements Dialogable {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
+        
+        StageUtils.centerChildOf(owner, (Stage)this);
     }
     
     @Override

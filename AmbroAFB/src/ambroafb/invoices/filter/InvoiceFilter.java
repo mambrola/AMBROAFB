@@ -9,6 +9,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Filterable;
+import ambroafb.general.save_button.StageUtils;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
@@ -27,7 +28,6 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
     
     public InvoiceFilter(Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
-        Utils.centerStageOfParent((Stage)this, owner);
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("invoices_filter"));
@@ -37,6 +37,8 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
         this.setResizable(false);
         
         json = new JSONObject();
+        
+        StageUtils.centerChildOf(owner, (Stage)this);
     }
     
     @Override

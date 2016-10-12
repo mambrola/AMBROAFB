@@ -10,6 +10,7 @@ import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.save_button.StageUtils;
 import ambroafb.invoices.Invoice;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -29,7 +30,6 @@ public class InvoiceDialog extends Stage implements Dialogable {
     
     public InvoiceDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
-        Utils.centerStageOfParent((Stage)this, owner);
         
         Invoice invoiceObject;
         if (object == null)
@@ -54,6 +54,8 @@ public class InvoiceDialog extends Stage implements Dialogable {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
+        
+        StageUtils.centerChildOf(owner, (Stage)this);
     }
 
     @Override

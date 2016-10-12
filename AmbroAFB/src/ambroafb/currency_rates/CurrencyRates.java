@@ -6,7 +6,7 @@
 package ambroafb.currency_rates;
 
 import ambroafb.general.Utils;
-import ambroafb.general.interfaces.EditorPanelableSceneStage;
+import ambroafb.general.save_button.StageUtils;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -14,22 +14,23 @@ import javafx.stage.Stage;
  *
  * @author dato
  */
-public class CurrencyRates extends EditorPanelableSceneStage {
+public class CurrencyRates extends Stage {
     
     private final CurrencyRatesController currencyRatesController;
     
     public CurrencyRates(Stage owner){
-        super(owner);
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
-//        Utils.centerStageOfParent((Stage)this, owner);
+        Utils.setSizeFor((Stage)this);
         
+        this.setTitle("currencyRates");
         Scene scene = Utils.createScene("/ambroafb/currency_rates/CurrencyRates.fxml", null);
         currencyRatesController = (CurrencyRatesController) scene.getProperties().get("controller");
         this.setScene(scene);
-        super.setController(currencyRatesController);
-//        this.initOwner(owner);
+        this.initOwner(owner);
 
-        Utils.setSizeFor((Stage)this);
+        StageUtils.centerChildOf(owner, (Stage)this);
+        StageUtils.followChildToOwner(owner, (Stage)this);
+        StageUtils.stopStageWidthDecrease((Stage)this, () -> currencyRatesController.getEditorPanelController().getPanelMinWidth());
     }
     
     public CurrencyRatesController getCurrencyRatesController(){

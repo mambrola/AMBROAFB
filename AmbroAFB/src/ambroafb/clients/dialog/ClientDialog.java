@@ -12,6 +12,7 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.save_button.StageUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -30,7 +31,6 @@ public class ClientDialog extends Stage implements Dialogable {
     
     public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
-        Utils.centerStageOfParent((Stage)this, owner);
         
         if (object == null)
             client = new Client();
@@ -53,6 +53,8 @@ public class ClientDialog extends Stage implements Dialogable {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
+        
+        StageUtils.centerChildOf(owner, (Stage)this);
     }
     
     @Override

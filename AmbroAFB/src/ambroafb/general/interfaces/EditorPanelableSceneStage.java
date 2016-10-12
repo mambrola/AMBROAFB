@@ -32,31 +32,31 @@ public abstract class EditorPanelableSceneStage extends Stage {
         });
         
         // Stop stage width decreasing, when width is less then editorPanel minWidth:
-        this.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (controller != null) {
-                double edPanMinWidth = controller.getEditorPanelController().getPanelMinWidth();
-                double stageMinWidth = edPanMinWidth + stageFrameOffset;
-                if (newValue.doubleValue() < stageMinWidth) {
-                    this.setMinWidth(stageMinWidth);
-                }
-            }
-        });
+//        this.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+//            if (controller != null) {
+//                double edPanMinWidth = controller.getEditorPanelController().getPanelMinWidth();
+//                double stageMinWidth = edPanMinWidth + stageFrameOffset;
+//                if (newValue.doubleValue() < stageMinWidth) {
+//                    this.setMinWidth(stageMinWidth);
+//                }
+//            }
+//        });
         
-        // Center stage of his owner:
-        this.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (oldValue.intValue() == 0){
-                this.setX(owner.getX() + owner.getWidth() / 2 - this.getWidth() / 2);
-            }
-        });
-        this.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (oldValue.intValue() == 0){
-                this.setY(owner.getY() + owner.getHeight()/ 2 - this.getHeight() / 2);
-            }
-        });
+//        // Center stage of his owner:
+//        this.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+//            if (oldValue.intValue() == 0){
+//                this.setX(owner.getX() + owner.getWidth() / 2 - this.getWidth() / 2);
+//            }
+//        });
+//        this.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+//            if (oldValue.intValue() == 0){
+//                this.setY(owner.getY() + owner.getHeight()/ 2 - this.getHeight() / 2);
+//            }
+//        });
         
-        // change stage location via owner:
-        owner.xProperty().addListener(new LocationListener(this, owner, true));
-        owner.yProperty().addListener(new LocationListener(this, owner, false));
+//        // change stage location via owner:
+//        owner.xProperty().addListener(new LocationListener(this, owner, true));
+//        owner.yProperty().addListener(new LocationListener(this, owner, false));
     }
     
     public void setController(EditorPanelableSceneController controller){

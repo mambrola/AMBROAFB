@@ -6,6 +6,7 @@
 package ambroafb.countries;
 
 import ambroafb.general.Utils;
+import ambroafb.general.save_button.StageUtils;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -23,7 +24,6 @@ public class Countries extends Stage {
     
     public Countries(Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + Countries.class.getSimpleName(), (Stage)this);
-        Utils.centerStageOfParent((Stage)this, owner);
         
         Scene scene = Utils.createScene("/ambroafb/countries/Countries.fxml", null);
         countriesController = (CountriesController) scene.getProperties().get("controller");
@@ -35,6 +35,7 @@ public class Countries extends Stage {
             event.consume();
         });
         
+        StageUtils.centerChildOf(owner, (Stage)this);
         Utils.setSizeFor((Stage)this);
     }
     

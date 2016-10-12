@@ -6,6 +6,7 @@
 package ambroafb.products;
 
 import ambroafb.general.Utils;
+import ambroafb.general.save_button.StageUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,7 +22,6 @@ public class Products extends Stage {
     
     public Products(Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
-        Utils.centerStageOfParent((Stage)this, owner);
         
         Scene scene = Utils.createScene("/ambroafb/products/Products.fxml", null);
         productsController = (ProductsController) scene.getProperties().get("controller");
@@ -33,6 +33,7 @@ public class Products extends Stage {
             if (event != null) event.consume();
         });
         
+        StageUtils.centerChildOf(owner, (Stage)this);
         Utils.setSizeFor((Stage)this);
     }
     

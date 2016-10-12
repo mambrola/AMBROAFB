@@ -6,6 +6,7 @@
 package ambroafb.general;
 
 import ambroafb.AmbroAFB;
+import ambroafb.general.save_button.StageUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
@@ -47,7 +48,7 @@ public class AlertMessage extends Alert {
     
     public void setOwner(Stage owner){
         this.initOwner(owner);
-        Utils.centerStageOfParent((Stage)this.getDialogPane().getScene().getWindow(), owner);
+        StageUtils.centerChildOf(owner, (Stage)this.getDialogPane().getScene().getWindow());
     }
     
     /**

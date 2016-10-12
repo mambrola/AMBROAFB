@@ -6,6 +6,7 @@
 package ambroafb.currencies;
 
 import ambroafb.general.Utils;
+import ambroafb.general.save_button.StageUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,7 +22,6 @@ public class Currencies extends Stage {
     
     public Currencies(Stage owner){
         Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
-        Utils.centerStageOfParent((Stage)this, owner);
         
         Scene scene = Utils.createScene("/ambroafb/currencies/Currencies.fxml", null);
         currenciesController = (CurrenciesController) scene.getProperties().get("controller");
@@ -33,6 +33,7 @@ public class Currencies extends Stage {
             if (event != null) event.consume();
         });
         
+        StageUtils.centerChildOf(owner, (Stage)this);
         Utils.setSizeFor((Stage)this);
     }
     
