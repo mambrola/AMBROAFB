@@ -19,7 +19,7 @@ public class CurrencyRates extends Stage {
     private final CurrencyRatesController currencyRatesController;
     
     public CurrencyRates(Stage owner){
-        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
+        Utils.registerStageByOwner(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
         Utils.setSizeFor((Stage)this);
         
         this.setTitle("currencyRates");
@@ -29,8 +29,8 @@ public class CurrencyRates extends Stage {
         this.initOwner(owner);
 
         StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildToOwner(owner, (Stage)this);
-        StageUtils.stopStageWidthDecrease((Stage)this, () -> currencyRatesController.getEditorPanelController().getPanelMinWidth());
+//        StageUtils.followChildTo(owner, (Stage)this);
+//        StageUtils.stopStageWidthDecrease((Stage)this, () -> currencyRatesController.getEditorPanelController().getPanelMinWidth());
     }
     
     public CurrencyRatesController getCurrencyRatesController(){

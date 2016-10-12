@@ -16,6 +16,7 @@ import javafx.stage.Stage;
  */
 public class StageUtils {
     
+    // The stage frame offset (area out of scene):
     private static final double stageFrameOffset = 20;
     
     /**
@@ -24,9 +25,9 @@ public class StageUtils {
      * @param owner 
      * @param child
      */
-    public static void followChildToOwner(Stage owner, Stage child){
-        owner.xProperty().addListener(new LocationListener(child, owner, true));
-        owner.yProperty().addListener(new LocationListener(child, owner, false));
+    public static void followChildTo(Stage owner, Stage child){
+        owner.xProperty().addListener(new LocationListener(owner, child, true));
+        owner.yProperty().addListener(new LocationListener(owner, child, false));
     }
     
     /**
@@ -71,27 +72,32 @@ public class StageUtils {
      */
     private static class LocationListener implements ChangeListener<Number> {
         
-        private final Stage child;
         private final Stage owner;
+        private final Stage child;
         private final boolean isListenerForX;
         
-        public LocationListener(Stage child, Stage owner, boolean isListenerForX){
-            this.child = child;
+        public LocationListener(Stage owner, Stage child, boolean isListenerForX){
             this.owner = owner;
+            this.child = child;
             this.isListenerForX = isListenerForX;
         }
 
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-            double ownerDiff = oldValue.doubleValue() - newValue.doubleValue();
-            setCenter();
-            if (isListenerForX){
-                child.setX(child.getX() - ownerDiff);
-            }
-            else {
-                child.setY(child.getY() - ownerDiff);
+            double ownerCenterX = newValue.doubleValue() + owner.getWidth() / 2;
+            
+            if (newValue.doubleValue() > 0 && oldValue.doubleValue() > 0 && child.getX() > 0 && child.getY() > 0) {
+                double ownerDiff = oldValue.doubleValue() - newValue.doubleValue();
+                setCenter();
+                if (isListenerForX) {
+                    child.setX(child.getX() - ownerDiff);
+                } else {
+                    child.setY(child.getY() - ownerDiff);
+                }
             }
         }
+        
+//        private 
         
         private void setCenter(){
             double childCenterX = child.getX() + child.getWidth() / 2;

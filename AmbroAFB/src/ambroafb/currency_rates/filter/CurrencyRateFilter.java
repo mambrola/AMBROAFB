@@ -48,7 +48,7 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     public static final String DATE_LESS = "9999-01-01";
     
     public CurrencyRateFilter(Stage owner){
-        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
+        Utils.registerStageByOwner(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("currency_rate_filter"));
@@ -63,7 +63,7 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildToOwner(owner, (Stage)this);
+//        StageUtils.followChildTo(owner, (Stage)this);
     }
     
     @Override

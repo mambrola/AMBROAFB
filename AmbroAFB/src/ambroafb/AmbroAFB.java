@@ -38,7 +38,7 @@ public class AmbroAFB extends Application {
     public void start(Stage stage) {
         mainStage = stage;
         UtilsDB.getInstance().createLocalUsageTables();
-        Utils.saveShowingStageByPath("main", mainStage);
+        Utils.registerStageByOwner("main", mainStage);
         Scene scene = Utils.createScene(Names.MAIN_FXML, null);
         stage.setScene(scene);
         stage.setTitle(GeneralConfig.getInstance().getTitleFor(Names.MAIN_TITLE));
@@ -56,7 +56,7 @@ public class AmbroAFB extends Application {
             event.consume();
         });
         stage.iconifiedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            Utils.hideChildrenStagesFor(stage, !oldValue && newValue);
+            Utils.iconifiedChildrenStagesFor(stage, newValue);
         });
         
         Utils.setSizeFor(mainStage);

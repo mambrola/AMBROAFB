@@ -53,7 +53,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     public static final String DATE_LESS = "9999-01-01";
     
     public ClientFilter(Stage owner) {
-        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
+        Utils.registerStageByOwner(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));
@@ -61,14 +61,11 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         this.setScene(scene);
         this.initOwner(owner);
         this.setResizable(false);
-        
+
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             okayCancelController.cancel(null);
             if(event != null) event.consume();
         });
-        //statuses.getItems().setAll(Client.getStatuses());
-        
-        //countries.setValue(countries.getItems().get(0));
         
         StageUtils.centerChildOf(owner, (Stage)this);
     }

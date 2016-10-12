@@ -44,6 +44,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -389,8 +390,13 @@ public class Utils {
      * @param path - owner path plus current stage local name.
      * @param stage - current stage
      */
-    public static void saveShowingStageByPath(String path, Stage stage) {
+    public static void registerStageByOwner(String path, Stage stage) {
         bidmap.put(path, stage);
+    }
+    
+    private static void registerStageByOwner(Stage owner, Stage child, String childName){
+//        bidmap.put(getPathForStage(owner) + Names.LEVEL_FOR_PATH, child);
+        bidmap.put(getPathForStage(owner) + "/" + childName, child);
     }
 
     /**
@@ -445,18 +451,22 @@ public class Utils {
         });
     }
     
-    public static void hideChildrenStagesFor(Stage currStage, boolean minimized){
-        bidmap.keySet().stream().forEach((key) -> {
-            String currPath = (String)key;
-            if (currPath.equals(getPathForStage(currStage))) return;
-            String ownerPath = currPath.substring(0, currPath.lastIndexOf("/"));
-            if (!ownerPath.equals(getPathForStage(AmbroAFB.mainStage))){
-                if (bidmap.containsKey(ownerPath)){
-                    Stage owner = getStageForPath(currPath);
-                    owner.setIconified(minimized);
-                }
-            }
+    public static void iconifiedChildrenStagesFor(Stage currStage, boolean isMinimize){
+        String currentStagePath = getPathForStage(currStage);
+        List<String> directChildrenPathes = (List<String>) bidmap.keySet().stream()
+                                                                            .filter((key) -> isDirectChildPath((String)key, currentStagePath, "/"))
+                                                                            .collect(Collectors.toList());
+        directChildrenPathes.stream().map((childPath) -> getStageForPath(childPath)).forEach((directChildStage) -> {
+//            System.out.println("direct child of: " + currentStagePath + " is: " + childPath);
+            iconifiedChildrenStagesFor(directChildStage, isMinimize);
         });
+        currStage.setIconified(isMinimize);
+    }
+    
+    private static boolean isDirectChildPath(String childPath, String ownerPath, String delimiter){
+        return  childPath.startsWith(ownerPath) &&
+                !childPath.equals(ownerPath)   &&
+                StringUtils.countMatches(childPath, delimiter) - 1 == StringUtils.countMatches(ownerPath, delimiter);
     }
     
     /**

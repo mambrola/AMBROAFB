@@ -30,7 +30,7 @@ public class ProductDialog extends Stage implements Dialogable {
     private ProductDialogController dialogController;
     
     public ProductDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        Utils.saveShowingStageByPath(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
+        Utils.registerStageByOwner(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
         
         if (object == null)
             this.product = new Product();
