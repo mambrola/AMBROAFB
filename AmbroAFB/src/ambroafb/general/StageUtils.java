@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.general.save_button;
+package ambroafb.general;
 
 import java.util.function.Supplier;
 import javafx.beans.value.ChangeListener;

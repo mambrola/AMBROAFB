@@ -6,7 +6,7 @@
 package ambroafb.currency_rates;
 
 import ambroafb.general.Utils;
-import ambroafb.general.save_button.StageUtils;
+import ambroafb.general.StageUtils;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -29,8 +29,8 @@ public class CurrencyRates extends Stage {
         this.initOwner(owner);
 
         StageUtils.centerChildOf(owner, (Stage)this);
-//        StageUtils.followChildTo(owner, (Stage)this);
-//        StageUtils.stopStageWidthDecrease((Stage)this, () -> currencyRatesController.getEditorPanelController().getPanelMinWidth());
+        StageUtils.followChildTo(owner, (Stage)this);
+        StageUtils.stopStageWidthDecrease((Stage)this, () -> currencyRatesController.getEditorPanelController().getPanelMinWidth());
     }
     
     public CurrencyRatesController getCurrencyRatesController(){
