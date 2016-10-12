@@ -8,6 +8,8 @@ package ambroafb.general;
 import java.util.function.Supplier;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -84,38 +86,50 @@ public class StageUtils {
 
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-            double ownerCenterX = newValue.doubleValue() + owner.getWidth() / 2;
-            
-            if (newValue.doubleValue() > 0 && oldValue.doubleValue() > 0 && child.getX() > 0 && child.getY() > 0) {
-                double ownerDiff = oldValue.doubleValue() - newValue.doubleValue();
-                setCenter();
+            Coordinate ownerCenter = getCenterOf(owner);
+            if (ownerCenter != null) {
+                double ownerDelta = oldValue.doubleValue() - newValue.doubleValue();
+                setChildCenter();
                 if (isListenerForX) {
-                    child.setX(child.getX() - ownerDiff);
+                    child.setX(child.getX() - ownerDelta);
                 } else {
-                    child.setY(child.getY() - ownerDiff);
+                    child.setY(child.getY() - ownerDelta);
                 }
             }
         }
         
-//        private 
+        private Coordinate getCenterOf(Stage currStage){
+            Coordinate center = new Coordinate();
+            double halftWidth = currStage.getWidth() / 2;
+            double halfHeight = currStage.getHeight() / 2;
+            center.x = currStage.getX() + halftWidth;
+            center.y = currStage.getY() + halfHeight;
+            Rectangle2D screen = Screen.getPrimary().getVisualBounds();
+            return (center.x > screen.getMinX() && center.x < screen.getMaxX() &&
+                    center.y > screen.getMinY() && center.y < screen.getMaxY())
+                    ? center : null;
+        }
         
-        private void setCenter(){
-            double childCenterX = child.getX() + child.getWidth() / 2;
-            double childCenterY = child.getY() + child.getHeight() / 2;
-            if (childCenterX < owner.getX()){
+        private void setChildCenter(){
+            Coordinate childCenter = getCenterOf(child);
+            if (childCenter == null) return;
+            if (childCenter.x < owner.getX()){
                 child.setX(owner.getX() - child.getWidth() / 2);
             }
-            else if(childCenterX > owner.getX() + owner.getWidth()){
+            else if(childCenter.x > owner.getX() + owner.getWidth()){
                 child.setX(owner.getX() + owner.getWidth() - child.getWidth() / 2);
             }
             
-            if (childCenterY < owner.getY()){
+            if (childCenter.y < owner.getY()){
                 child.setY(owner.getY() - child.getHeight() / 2);
             }
-            else if(childCenterY > owner.getY() + owner.getHeight()){
+            else if(childCenter.y > owner.getY() + owner.getHeight()){
                 child.setY(owner.getY() + owner.getHeight() - child.getHeight() / 2);
             }
         }
         
+        private class Coordinate {
+            public double x, y;
+        }
     }
 }
