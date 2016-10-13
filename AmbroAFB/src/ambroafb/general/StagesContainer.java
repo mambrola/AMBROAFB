@@ -28,6 +28,7 @@ import org.json.JSONObject;
 public class StagesContainer {
     
     private static final BidiMap bidmap = new DualHashBidiMap();
+    private static final String pathDelimiter = "/";
 
     public static int getSize() {
         return bidmap.size();
@@ -42,7 +43,7 @@ public class StagesContainer {
     public static void registerStageByOwner(Stage owner, String childName, Stage child){
         String path = childName;
         if (owner != null && bidmap.containsValue(owner)){
-            path = getPathForStage(owner) + "/" + childName;
+            path = getPathForStage(owner) + pathDelimiter + childName;
         }
         bidmap.put(path, child);
     }
@@ -119,7 +120,7 @@ public class StagesContainer {
     public static List<String> getDirectChildrenStagesPathesOf(Stage currStage){
         String currentStagePath = getPathForStage(currStage);
         List<String> directChildrenPathes = (List<String>) bidmap.keySet().stream()
-                                                                            .filter((key) -> isDirectChildPath((String)key, currentStagePath, "/"))
+                                                                            .filter((key) -> isDirectChildPath((String)key, currentStagePath, pathDelimiter))
                                                                             .collect(Collectors.toList());
         return directChildrenPathes;
     }
@@ -139,7 +140,7 @@ public class StagesContainer {
      */
     public static Stage getStageFor(Stage owner, String substageLocalName) {
         String ownerPath = getPathForStage(owner);
-        String substagePath = ownerPath + "/" + substageLocalName;
+        String substagePath = ownerPath + pathDelimiter + substageLocalName;
         Stage substage = getStageForPath(substagePath);
         return substage;
     }
@@ -224,9 +225,9 @@ public class StagesContainer {
         SortedSet<Object> sortedKeys = new TreeSet<>(bidmap.keySet());
         sortedKeys.stream().forEach((key) -> {
             String path = (String) key;
-            String pathAfterFirstSlash = StringUtils.substringAfter(path, ownerPath + "/");
+            String pathAfterFirstSlash = StringUtils.substringAfter(path, ownerPath + pathDelimiter);
             if (!path.equals(ownerPath) && path.startsWith(ownerPath) &&
-                !pathAfterFirstSlash.contains("/") && ((Stage) bidmap.get(path)).isShowing()){
+                !pathAfterFirstSlash.contains(pathDelimiter) && ((Stage) bidmap.get(path)).isShowing()){
 
                 children.add(path);
             }
