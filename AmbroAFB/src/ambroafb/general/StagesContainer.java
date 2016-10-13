@@ -228,7 +228,6 @@ public class StagesContainer {
             String pathAfterFirstSlash = StringUtils.substringAfter(path, ownerPath + pathDelimiter);
             if (!path.equals(ownerPath) && path.startsWith(ownerPath) &&
                 !pathAfterFirstSlash.contains(pathDelimiter) && ((Stage) bidmap.get(path)).isShowing()){
-
                 children.add(path);
             }
         });
