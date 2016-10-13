@@ -369,7 +369,7 @@ public class ImageGalleryController implements Initializable {
      * is uploaded and last priority is to edit existing.
      * @param urlParameter It is needed for upload new file on server.
      *                     It will be concatenate on URL prefix, 
-     *                      which is already known from download method.
+     *                      which is already known from "setURLData" method.
      */
     /* Note: HashMap keySet() method does not order elements. So the method use SortedSet collection
      *       for sort data of keySet() and send them by ordering.

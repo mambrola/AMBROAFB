@@ -13,6 +13,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
+import ambroafb.general.image_gallery.ImageGalleryController;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -108,6 +109,9 @@ public class Client extends EditorPanelable{
 
     private static final Country DEFAULT_COUNTRY = new Country("GE", "Georgia");
     
+    
+    private ImageGalleryController clientImageGallery;
+            
     public Client() {
         isJur =             new SimpleBooleanProperty();
         isRez =             new SimpleBooleanProperty();
@@ -166,7 +170,7 @@ public class Client extends EditorPanelable{
     // DBService methods:
     public static List<Client> getAllFromDB() {
         try {
-            String data = GeneralConfig.getInstance().getAuthClient().get("clients").getDataAsString();
+            String data = GeneralConfig.getInstance().getDBClient().get("clients").getDataAsString();
             System.out.println("client data: " + data);
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {});
@@ -282,6 +286,8 @@ public class Client extends EditorPanelable{
             client.copyFrom(res);
             if(client.getRecId() <= 0)
                 client.setRecId(res.getRecId());
+            
+            client.getClientImageGallery().sendDataToServer("" + client.getRecId());
             return client;
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -444,6 +450,10 @@ public class Client extends EditorPanelable{
         return www.get();
     }
     
+    public ImageGalleryController getClientImageGallery(){
+        return clientImageGallery;
+    }
+    
 
      // Setters:
     public final void setIsJur(boolean isJur) {
@@ -497,6 +507,10 @@ public class Client extends EditorPanelable{
     
     public void setWww(String www){
         this.www.set(www);
+    }
+    
+    public void setClientImageGalelry(ImageGalleryController imageGallery){
+        this.clientImageGallery = imageGallery;
     }
     
     

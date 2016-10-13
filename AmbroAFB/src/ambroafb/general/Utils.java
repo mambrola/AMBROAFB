@@ -9,7 +9,6 @@ import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import ambroafb.general.image_gallery.ImageGalleryController;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -40,7 +39,6 @@ import java.lang.reflect.Field;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -488,24 +486,24 @@ public class Utils {
 //        return substage;
 //    }
     
-    public static void callGallerySendMethod(String sendingURLParameter, Object currSceneController) {
-        try {
-            Field[] fields = currSceneController.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                boolean oldValue = field.isAccessible();
-                field.setAccessible(true);
-                if (field.isAnnotationPresent(FXML.class)) {
-                    if (field.get(currSceneController) instanceof ImageGalleryController) {
-                        ImageGalleryController controller = (ImageGalleryController)field.get(currSceneController);
-                        controller.sendDataToServer(sendingURLParameter);
-                    }
-                }
-                field.setAccessible(oldValue);
-            }
-        } catch (IllegalArgumentException | IllegalAccessException ex) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public static void callGallerySendMethod(String sendingURLParameter, Object currSceneController) {
+//        try {
+//            Field[] fields = currSceneController.getClass().getDeclaredFields();
+//            for (Field field : fields) {
+//                boolean oldValue = field.isAccessible();
+//                field.setAccessible(true);
+//                if (field.isAnnotationPresent(FXML.class)) {
+//                    if (field.get(currSceneController) instanceof ImageGalleryController) {
+//                        ImageGalleryController controller = (ImageGalleryController)field.get(currSceneController);
+//                        controller.sendDataToServer(sendingURLParameter);
+//                    }
+//                }
+//                field.setAccessible(oldValue);
+//            }
+//        } catch (IllegalArgumentException | IllegalAccessException ex) {
+//            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 
     /**
      * It can use instead of
