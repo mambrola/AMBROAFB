@@ -15,6 +15,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -73,7 +74,7 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void delete(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (dialogStage == null || !dialogStage.isShowing()){
             EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
@@ -101,7 +102,7 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void edit(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (dialogStage == null || !dialogStage.isShowing()){
             EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
@@ -119,7 +120,7 @@ public class EditorPanelController implements Initializable {
                 selected.copyFrom(backup);
             } else {
                 Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
-                dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+                dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
                 Utils.callGallerySendMethod("" + result.getRecId(), dialogStage.getScene().getProperties().get("controller"));
             }
         }
@@ -132,7 +133,7 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void view(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             EditorPanelable real = (EditorPanelable)Utils.getInvokedClassMethod(Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT)), "getOneFromDB", new Class[]{int.class}, null, selected.getRecId());
@@ -154,7 +155,7 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void add(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
             Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, null, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
@@ -165,7 +166,7 @@ public class EditorPanelController implements Initializable {
                 result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
 
                 if (result != null) {
-                    dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+                    dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
                     Utils.callGallerySendMethod("" + result.getRecId(), dialogStage.getScene().getProperties().get("controller"));
                     tableData.add(result);
                 }
@@ -180,7 +181,7 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void addBySample(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Stage dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             EditorPanelable selected = ((EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem()).cloneWithoutID();
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
@@ -190,7 +191,7 @@ public class EditorPanelController implements Initializable {
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
             result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
             if (result != null) {
-                dialogStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+                dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
                 Utils.callGallerySendMethod("" + result.getRecId(), dialogStage.getScene().getProperties().get("controller"));
                 tableData.add(result);
             }
@@ -204,7 +205,7 @@ public class EditorPanelController implements Initializable {
     @FXML
     private void refresh(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Stage filterStage = Utils.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        Stage filterStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (filterStage == null || !filterStage.isShowing()){
             Class className = Utils.getClassByName(getClassName(CLASS_TYPE.FILTER));
             Filterable filter = (className != null) ? (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow()) : null;

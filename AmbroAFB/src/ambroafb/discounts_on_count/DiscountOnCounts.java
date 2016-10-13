@@ -7,6 +7,7 @@ package ambroafb.discounts_on_count;
 
 import ambroafb.general.Utils;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,7 +22,7 @@ public class DiscountOnCounts extends Stage {
     private DiscountOnCountsController discountsController;
     
     public DiscountOnCounts(Stage owner){
-        Utils.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
+        StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
         
         Scene scene = Utils.createScene("/ambroafb/discounts_on_count/DiscountOnCounts.fxml", null);
         discountsController = (DiscountOnCountsController) scene.getProperties().get("controller");
@@ -34,7 +35,7 @@ public class DiscountOnCounts extends Stage {
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
-        Utils.setSizeFor((Stage)this);
+        StagesContainer.setSizeFor((Stage)this);
     }
     
     public DiscountOnCountsController getDiscountOnCountsController(){

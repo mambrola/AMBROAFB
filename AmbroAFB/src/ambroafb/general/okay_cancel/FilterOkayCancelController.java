@@ -5,7 +5,7 @@
  */
 package ambroafb.general.okay_cancel;
 
-import ambroafb.general.Utils;
+import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -60,7 +60,7 @@ public class FilterOkayCancelController implements Initializable {
         ((Filterable)okay.getScene().getProperties().get("controller")).setResult(false);
         ((Stage) okay.getScene().getWindow()).close();
         
-        Utils.removeByStage((Stage) okay.getScene().getWindow());
+        StagesContainer.removeByStage((Stage) okay.getScene().getWindow());
     }
     
     public BooleanProperty disableProperty(){

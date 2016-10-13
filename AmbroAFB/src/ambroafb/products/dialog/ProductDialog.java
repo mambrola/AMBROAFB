@@ -12,6 +12,7 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import ambroafb.products.Product;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -30,7 +31,7 @@ public class ProductDialog extends Stage implements Dialogable {
     private ProductDialogController dialogController;
     
     public ProductDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        Utils.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
         if (object == null)
             this.product = new Product();

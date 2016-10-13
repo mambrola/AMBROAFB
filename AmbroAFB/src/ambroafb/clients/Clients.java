@@ -7,6 +7,7 @@ package ambroafb.clients;
 
 import ambroafb.general.Utils;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,7 +22,7 @@ public class Clients extends Stage {
     private ClientsController clientsController;
     
     public Clients(Stage owner) {
-        Utils.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
+        StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
         
         Scene scene = Utils.createScene("/ambroafb/clients/Clients.fxml", null);
         clientsController = (ClientsController) scene.getProperties().get("controller");
@@ -36,7 +37,7 @@ public class Clients extends Stage {
         StageUtils.centerChildOf(owner, (Stage)this);
         StageUtils.followChildTo(owner, (Stage)this);
         StageUtils.stopStageWidthDecrease((Stage)this, () -> clientsController.getEditorPanelController().getPanelMinWidth());
-        Utils.setSizeFor((Stage)this);
+        StagesContainer.setSizeFor((Stage)this);
     }
     
     public ClientsController getClientsController(){

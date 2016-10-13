@@ -12,6 +12,7 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -29,7 +30,7 @@ public class BalanceAccountDialog extends Stage implements Dialogable {
     private BalanceAccountDialogController dialogController;
     
     public BalanceAccountDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        Utils.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
         BalanceAccount balAccountObject;
         if (object == null)

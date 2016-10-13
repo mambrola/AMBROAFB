@@ -11,6 +11,7 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import ambroafb.invoices.Invoice;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -29,7 +30,7 @@ public class InvoiceDialog extends Stage implements Dialogable {
     private InvoiceDialogController dialogController;
     
     public InvoiceDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        Utils.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
         Invoice invoiceObject;
         if (object == null)

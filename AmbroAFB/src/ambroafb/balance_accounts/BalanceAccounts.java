@@ -7,6 +7,7 @@ package ambroafb.balance_accounts;
 
 import ambroafb.general.Utils;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,7 +22,7 @@ public class BalanceAccounts extends Stage {
     private BalanceAccountsController balanceAccountsController;
     
     public BalanceAccounts(Stage owner){
-        Utils.registerStageByOwner(owner, BalanceAccounts.class.getSimpleName(), (Stage)this);
+        StagesContainer.registerStageByOwner(owner, BalanceAccounts.class.getSimpleName(), (Stage)this);
         
         Scene scene = Utils.createScene("/ambroafb/balance_accounts/BalanceAccounts.fxml", null);
         balanceAccountsController = (BalanceAccountsController) scene.getProperties().get("controller");
@@ -34,7 +35,7 @@ public class BalanceAccounts extends Stage {
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
-        Utils.setSizeFor((Stage)this);
+        StagesContainer.setSizeFor((Stage)this);
     }
     
     public BalanceAccountsController getCountriesController(){

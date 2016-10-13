@@ -7,6 +7,7 @@ package ambroafb.invoices;
 
 import ambroafb.general.Utils;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,7 +22,7 @@ public class Invoices extends Stage {
     private InvoicesController invoicesController;
     
     public Invoices(Stage owner){
-        Utils.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
+        StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
         
         Scene scene = Utils.createScene("/ambroafb/invoices/Invoices.fxml", null);
         invoicesController = (InvoicesController) scene.getProperties().get("controller");
@@ -34,7 +35,7 @@ public class Invoices extends Stage {
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
-        Utils.setSizeFor((Stage)this);
+        StagesContainer.setSizeFor((Stage)this);
     }
     
     public InvoicesController getInvoicesController(){

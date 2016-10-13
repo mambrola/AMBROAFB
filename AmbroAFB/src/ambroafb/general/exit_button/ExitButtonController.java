@@ -5,7 +5,7 @@
  */
 package ambroafb.general.exit_button;
 
-import ambroafb.general.Utils;
+import ambroafb.general.StagesContainer;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -27,9 +27,9 @@ public class ExitButtonController implements Initializable {
     @FXML
     private void exit(ActionEvent e) {
         Stage stage = (Stage) (exitButton.getScene().getWindow());
-        Utils.saveSizeFor(stage);
-        Utils.closeStageWithChildren(stage);
-        Utils.removeByStage(stage);
+        StagesContainer.saveSizeFor(stage);
+        StagesContainer.closeStageWithChildren(stage);
+        StagesContainer.removeByStage(stage);
     }
 
     /**

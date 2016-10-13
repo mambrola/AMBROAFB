@@ -7,6 +7,7 @@ package ambroafb.currency_rates;
 
 import ambroafb.general.Utils;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,7 +22,7 @@ public class CurrencyRates extends Stage {
     private final CurrencyRatesController currencyRatesController;
     
     public CurrencyRates(Stage owner){
-        Utils.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
+        StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
         
         this.setTitle("currencyRates");
         Scene scene = Utils.createScene("/ambroafb/currency_rates/CurrencyRates.fxml", null);
@@ -37,7 +38,7 @@ public class CurrencyRates extends Stage {
         StageUtils.centerChildOf(owner, (Stage)this);
         StageUtils.followChildTo(owner, (Stage)this);
         StageUtils.stopStageWidthDecrease((Stage)this, () -> currencyRatesController.getEditorPanelController().getPanelMinWidth());
-        Utils.setSizeFor((Stage)this);
+        StagesContainer.setSizeFor((Stage)this);
     }
     
     public CurrencyRatesController getCurrencyRatesController(){

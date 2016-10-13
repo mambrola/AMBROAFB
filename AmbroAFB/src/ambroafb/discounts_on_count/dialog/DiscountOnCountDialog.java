@@ -13,6 +13,7 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -30,7 +31,7 @@ public class DiscountOnCountDialog extends Stage implements Dialogable {
     private DiscountOnCountDialogController dialogController;
     
     public DiscountOnCountDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        Utils.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
         if (object == null)
             discountOnCount = new DiscountOnCount();

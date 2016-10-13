@@ -14,6 +14,7 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -53,7 +54,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     public static final String DATE_LESS = "9999-01-01";
     
     public ClientFilter(Stage owner) {
-        Utils.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));

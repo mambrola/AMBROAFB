@@ -7,6 +7,7 @@ package ambroafb;
 
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
+import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.UtilsDB;
 import ambroafb.login.LoginController;
@@ -38,7 +39,7 @@ public class AmbroAFB extends Application {
     public void start(Stage stage) {
         mainStage = stage;
         UtilsDB.getInstance().createLocalUsageTables();
-        Utils.registerStageByOwner(null, mainStageName, mainStage);
+        StagesContainer.registerStageByOwner(null, mainStageName, mainStage);
         Scene scene = Utils.createScene(Names.MAIN_FXML, null);
         stage.setScene(scene);
         stage.setTitle(GeneralConfig.getInstance().getTitleFor(Names.MAIN_TITLE));
@@ -59,7 +60,7 @@ public class AmbroAFB extends Application {
 //            Utils.iconifiedChildrenStagesFor(stage, newValue);
 //        });
         
-        Utils.setSizeFor(mainStage);
+        StagesContainer.setSizeFor(mainStage);
         stage.show();
 
         scene.getRoot().setDisable(true);

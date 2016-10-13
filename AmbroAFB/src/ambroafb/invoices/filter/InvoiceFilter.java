@@ -10,6 +10,7 @@ import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
@@ -27,7 +28,7 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
     private final JSONObject json;
     
     public InvoiceFilter(Stage owner){
-        Utils.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("invoices_filter"));

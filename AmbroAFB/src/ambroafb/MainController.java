@@ -17,6 +17,7 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.invoices.Invoices;
 import ambroafb.invoices.filter.InvoiceFilter;
@@ -103,8 +104,8 @@ public class MainController implements Initializable {
     
     @FXML
     public void mainExit(ActionEvent event){
-        Utils.saveSizeFor(AmbroAFB.mainStage);
-        if (Utils.closeStageWithChildren(AmbroAFB.mainStage)){
+        StagesContainer.saveSizeFor(AmbroAFB.mainStage);
+        if (StagesContainer.closeStageWithChildren(AmbroAFB.mainStage)){
             Utils.exit();
         }
     }
@@ -127,9 +128,9 @@ public class MainController implements Initializable {
     
     @FXML
     private void clients(ActionEvent event) {
-        String clientsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Clients.class.getSimpleName();
+        String clientsStagePath = StagesContainer.getPathForStage(AmbroAFB.mainStage) + "/" + Clients.class.getSimpleName();
         
-        Stage clientsStage = Utils.getStageForPath(clientsStagePath);
+        Stage clientsStage = StagesContainer.getStageForPath(clientsStagePath);
         if(clientsStage == null || !clientsStage.isShowing()){
             Clients clients = new Clients(AmbroAFB.mainStage);
             clients.show();
@@ -148,9 +149,9 @@ public class MainController implements Initializable {
     
     @FXML
     private void loggings(ActionEvent event){
-//        String loggingsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Loggings.class.getSimpleName();
+//        String loggingsStagePath = StagesContainer.getPathForStage(AmbroAFB.mainStage) + "/" + Loggings.class.getSimpleName();
 //        
-//        Stage loggings = Utils.getStageForPath(loggingsStagePath);
+//        Stage loggings = StagesContainer.getStageForPath(loggingsStagePath);
 //        if(loggings == null || !loggings.isShowing()){
 //            Loggings loggings = new Loggings(AmbroAFB.mainStage);
 //            loggings.show();
@@ -169,9 +170,9 @@ public class MainController implements Initializable {
     
     @FXML 
     private void invoices(ActionEvent event) {
-        String invoicesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Invoices.class.getSimpleName();
+        String invoicesStagePath = StagesContainer.getPathForStage(AmbroAFB.mainStage) + "/" + Invoices.class.getSimpleName();
         
-        Stage invoicesStage = Utils.getStageForPath(invoicesStagePath);
+        Stage invoicesStage = StagesContainer.getStageForPath(invoicesStagePath);
         if(invoicesStage == null || !invoicesStage.isShowing()){
             Invoices invoices = new Invoices(AmbroAFB.mainStage);
             invoices.show();
@@ -186,8 +187,8 @@ public class MainController implements Initializable {
     
     @FXML 
     private void products(ActionEvent event) {
-        String productsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Products.class.getSimpleName();
-        Stage productsStage = Utils.getStageForPath(productsStagePath);
+        String productsStagePath = StagesContainer.getPathForStage(AmbroAFB.mainStage) + "/" + Products.class.getSimpleName();
+        Stage productsStage = StagesContainer.getStageForPath(productsStagePath);
         if (productsStage == null || !productsStage.isShowing()){
             Products products = new Products(AmbroAFB.mainStage);
             products.show();
@@ -199,9 +200,9 @@ public class MainController implements Initializable {
     
     @FXML 
     private void countries(ActionEvent event) {
-        String countriesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Countries.class.getSimpleName();
+        String countriesStagePath = StagesContainer.getPathForStage(AmbroAFB.mainStage) + "/" + Countries.class.getSimpleName();
         
-        Stage countriesStage = Utils.getStageForPath(countriesStagePath);
+        Stage countriesStage = StagesContainer.getStageForPath(countriesStagePath);
         if (countriesStage == null || !countriesStage.isShowing()){
             Countries countries = new Countries(AmbroAFB.mainStage);
             countries.show();
@@ -216,9 +217,9 @@ public class MainController implements Initializable {
     @FXML private void accounts(ActionEvent event) {}
     
     @FXML private void licenses(ActionEvent event) {
-        String licensesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + Licenses.class.getSimpleName();
+        String licensesStagePath = StagesContainer.getPathForStage(AmbroAFB.mainStage) + "/" + Licenses.class.getSimpleName();
         
-        Stage licensesStage = Utils.getStageForPath(licensesStagePath);
+        Stage licensesStage = StagesContainer.getStageForPath(licensesStagePath);
         if(licensesStage == null || !licensesStage.isShowing()){
             Licenses licenses = new Licenses(AmbroAFB.mainStage);
             licenses.show();
@@ -242,9 +243,9 @@ public class MainController implements Initializable {
     @FXML private void tm(ActionEvent event) {}
     
     @FXML private void currencies(ActionEvent event) {
-        String currenciesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + CurrencyRates.class.getSimpleName();
+        String currenciesStagePath = StagesContainer.getPathForStage(AmbroAFB.mainStage) + "/" + CurrencyRates.class.getSimpleName();
         
-        Stage currenciesStage = Utils.getStageForPath(currenciesStagePath);
+        Stage currenciesStage = StagesContainer.getStageForPath(currenciesStagePath);
         if(currenciesStage == null || !currenciesStage.isShowing()){
             Currencies currencies = new Currencies(AmbroAFB.mainStage);
             currencies.show();
@@ -255,9 +256,9 @@ public class MainController implements Initializable {
     }
     
     @FXML private void currencyRates(ActionEvent event) {
-        String currencyRatesStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + CurrencyRates.class.getSimpleName();
+        String currencyRatesStagePath = StagesContainer.getPathForStage(AmbroAFB.mainStage) + "/" + CurrencyRates.class.getSimpleName();
         
-        Stage currencyRatesStage = Utils.getStageForPath(currencyRatesStagePath);
+        Stage currencyRatesStage = StagesContainer.getStageForPath(currencyRatesStagePath);
         if(currencyRatesStage == null || !currencyRatesStage.isShowing()){
             CurrencyRates currencyRates = new CurrencyRates(AmbroAFB.mainStage);
             currencyRates.show();
@@ -276,9 +277,9 @@ public class MainController implements Initializable {
     }
     
     @FXML private void discountsOnCount(ActionEvent event) {
-        String discountOnCountsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + DiscountOnCounts.class.getSimpleName();
+        String discountOnCountsStagePath = StagesContainer.getPathForStage(AmbroAFB.mainStage) + "/" + DiscountOnCounts.class.getSimpleName();
         
-        Stage discountOnCountsStage = Utils.getStageForPath(discountOnCountsStagePath);
+        Stage discountOnCountsStage = StagesContainer.getStageForPath(discountOnCountsStagePath);
         if (discountOnCountsStage == null || !discountOnCountsStage.isShowing()){
             DiscountOnCounts discountOnCounts = new DiscountOnCounts(AmbroAFB.mainStage);
             discountOnCounts.show();
@@ -289,9 +290,9 @@ public class MainController implements Initializable {
     }
     
     @FXML private void balAccounts(ActionEvent event) {
-        String balAccountsStagePath = Utils.getPathForStage(AmbroAFB.mainStage) + "/" + BalanceAccounts.class.getSimpleName();
+        String balAccountsStagePath = StagesContainer.getPathForStage(AmbroAFB.mainStage) + "/" + BalanceAccounts.class.getSimpleName();
         
-        Stage balAccountsStage = Utils.getStageForPath(balAccountsStagePath);
+        Stage balAccountsStage = StagesContainer.getStageForPath(balAccountsStagePath);
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
             BalanceAccounts accounts = new BalanceAccounts(AmbroAFB.mainStage);
             accounts.show();
