@@ -422,7 +422,7 @@ public class Utils {
     /**
      * The function removes stage from bidirectional map 
      * and use "removeOnlySubstagesFor" function for it.
-     * @param stage - which must remove
+     * @param stage which must remove
      */
     public static void removeByStage(Stage stage){
         if (bidmap.containsValue(stage)){
@@ -432,7 +432,10 @@ public class Utils {
         }
     }
     
-    
+    /**
+     * The function removes only children stages of given stage from bidirectional map.
+     * @param stage which children must be remove.
+     */
     public static void removeOnlySubstagesFor(Stage stage) {
         String path = (String) bidmap.getKey(stage);
         List<String> pathes = new ArrayList<>();
@@ -762,8 +765,6 @@ public class Utils {
             jsonForStageSize.put("height", stage.getHeight());
             jsonForStageSize.put("isMaximized", stage.isMaximized());
             GeneralConfig.prefs.put("stage_size_" + path, jsonForStageSize.toString());
-            
-            System.out.println("save size: stage_size_" + path + "  value: " + jsonForStageSize.toString());
         } catch (JSONException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -773,7 +774,6 @@ public class Utils {
         String path = getPathForStage(stage);
         try {
             String json_str = GeneralConfig.prefs.get("stage_size_" + path, null);
-            System.out.println("get size: " + "  stage_size_" + path + " value: " + json_str);
             if (json_str == null) {
                 return;
             }
