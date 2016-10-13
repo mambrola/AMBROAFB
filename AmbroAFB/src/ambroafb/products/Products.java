@@ -21,7 +21,7 @@ public class Products extends Stage {
     private ProductsController productsController;
     
     public Products(Stage owner){
-        Utils.registerStageByOwner(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
+        Utils.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
         
         Scene scene = Utils.createScene("/ambroafb/products/Products.fxml", null);
         productsController = (ProductsController) scene.getProperties().get("controller");

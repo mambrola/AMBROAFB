@@ -27,7 +27,7 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
     private final JSONObject json;
     
     public InvoiceFilter(Stage owner){
-        Utils.registerStageByOwner(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
+        Utils.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("invoices_filter"));

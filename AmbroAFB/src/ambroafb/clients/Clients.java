@@ -21,7 +21,7 @@ public class Clients extends Stage {
     private ClientsController clientsController;
     
     public Clients(Stage owner) {
-        Utils.registerStageByOwner(Utils.getPathForStage(owner) + "/" + getClass().getSimpleName(), (Stage)this);
+        Utils.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
         
         Scene scene = Utils.createScene("/ambroafb/clients/Clients.fxml", null);
         clientsController = (ClientsController) scene.getProperties().get("controller");

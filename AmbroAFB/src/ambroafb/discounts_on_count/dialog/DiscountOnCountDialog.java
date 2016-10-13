@@ -30,7 +30,7 @@ public class DiscountOnCountDialog extends Stage implements Dialogable {
     private DiscountOnCountDialogController dialogController;
     
     public DiscountOnCountDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        Utils.registerStageByOwner(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
+        Utils.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
         if (object == null)
             discountOnCount = new DiscountOnCount();

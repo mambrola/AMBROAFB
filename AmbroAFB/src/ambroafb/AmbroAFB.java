@@ -32,12 +32,13 @@ public class AmbroAFB extends Application {
 
     public static Stage mainStage;
     public static ServerSocket socket;
+    private static final String mainStageName = "main";
 
     @Override
     public void start(Stage stage) {
         mainStage = stage;
         UtilsDB.getInstance().createLocalUsageTables();
-        Utils.registerStageByOwner("main", mainStage);
+        Utils.registerStageByOwner(null, mainStageName, mainStage);
         Scene scene = Utils.createScene(Names.MAIN_FXML, null);
         stage.setScene(scene);
         stage.setTitle(GeneralConfig.getInstance().getTitleFor(Names.MAIN_TITLE));

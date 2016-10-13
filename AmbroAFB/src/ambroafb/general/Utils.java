@@ -383,19 +383,29 @@ public class Utils {
         return bidmap.size();
     }
 
-    /**
-     * The function saves stage and its path into bidirectional map
-     *
-     * @param path - owner path plus current stage local name.
-     * @param stage - current stage
-     */
-    public static void registerStageByOwner(String path, Stage stage) {
-        bidmap.put(path, stage);
-    }
+//    /**
+//     * The function saves stage and its path into bidirectional map
+//     *
+//     * @param path - owner path plus current stage local name.
+//     * @param stage - current stage
+//     */
+//    public static void registerStageByOwner(String path, Stage stage) {
+//        bidmap.put(path, stage);
+//    }
     
-    private static void registerStageByOwner(Stage owner, Stage child, String childName){
+    /**
+     * The function saves child stage with path  ( path(owner).concat(childName) ). 
+     * @param owner owner stage
+     * @param childName child stage associated name
+     * @param child child
+     */
+    public static void registerStageByOwner(Stage owner, String childName, Stage child){
+        String path = childName;
+        if (owner != null && bidmap.containsValue(owner)){
+            path = getPathForStage(owner) + "/" + childName;
+        }
+        bidmap.put(path, child);
 //        bidmap.put(getPathForStage(owner) + Names.LEVEL_FOR_PATH, child);
-        bidmap.put(getPathForStage(owner) + "/" + childName, child);
     }
 
     /**
@@ -421,7 +431,7 @@ public class Utils {
     
     /**
      * The function removes stage from bidirectional map 
-     * and use "removeOnlySubstagesFor" function for it.
+     * and also removes its children stages if they exists.
      * @param stage which must remove
      */
     public static void removeByStage(Stage stage){
@@ -433,7 +443,7 @@ public class Utils {
     }
     
     /**
-     * The function removes only children stages of given stage from bidirectional map.
+     * The function removes only children stages of given stage from bidirectional map if they exists.
      * @param stage which children must be remove.
      */
     public static void removeOnlySubstagesFor(Stage stage) {

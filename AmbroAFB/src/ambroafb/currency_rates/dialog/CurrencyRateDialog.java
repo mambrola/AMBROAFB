@@ -29,7 +29,7 @@ public class CurrencyRateDialog extends Stage implements Dialogable {
     private CurrencyRateDialogController dialogController;
     
     public CurrencyRateDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        Utils.registerStageByOwner(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
+        Utils.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
         if (object == null)
             currRate = new CurrencyRate();

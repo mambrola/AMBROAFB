@@ -53,7 +53,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     public static final String DATE_LESS = "9999-01-01";
     
     public ClientFilter(Stage owner) {
-        Utils.registerStageByOwner(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
+        Utils.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));

@@ -29,7 +29,7 @@ public class InvoiceDialog extends Stage implements Dialogable {
     private InvoiceDialogController dialogController;
     
     public InvoiceDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        Utils.registerStageByOwner(Utils.getPathForStage(owner) + Names.LEVEL_FOR_PATH, (Stage)this);
+        Utils.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
         Invoice invoiceObject;
         if (object == null)
