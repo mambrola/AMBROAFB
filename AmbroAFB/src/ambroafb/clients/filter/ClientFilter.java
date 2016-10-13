@@ -68,6 +68,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
+        StageUtils.followChildTo(owner, (Stage)this);
     }
 
     @Override

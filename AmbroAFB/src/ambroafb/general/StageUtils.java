@@ -6,10 +6,9 @@
 package ambroafb.general;
 
 import java.util.function.Supplier;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -38,16 +37,24 @@ public class StageUtils {
      * @param child 
      */
     public static void centerChildOf(Stage owner, Stage child){
-        child.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (oldValue.intValue() == 0){
-                child.setX(owner.getX() + owner.getWidth() / 2 - child.getWidth() / 2);
-            }
-        });
-        child.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (oldValue.intValue() == 0){
-                child.setY(owner.getY() + owner.getHeight()/ 2 - child.getHeight() / 2);
-            }
-        });
+        if (owner == null || child == null) return;
+        controlCenter(owner, child, child.widthProperty(), true);
+        controlCenter(owner, child, child.heightProperty(), false);
+    }
+    
+    private static void controlCenter(Stage owner, Stage child, ReadOnlyDoubleProperty sizeProperty, boolean isForWidth){
+        if (sizeProperty.getValue() > 0){
+            if (isForWidth) child.setX(owner.getX() + owner.getWidth() / 2 - child.getWidth() / 2);
+            else            child.setY(owner.getY() + owner.getHeight()/ 2 - child.getHeight() / 2);
+        }
+        else {
+            sizeProperty.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+                if (oldValue.intValue() == 0){
+                    if (isForWidth) child.setX(owner.getX() + owner.getWidth() / 2 - child.getWidth() / 2);
+                    else            child.setY(owner.getY() + owner.getHeight()/ 2 - child.getHeight() / 2);
+                }
+            });
+        }
     }
     
     /**
@@ -86,50 +93,33 @@ public class StageUtils {
 
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-            Coordinate ownerCenter = getCenterOf(owner);
-            if (ownerCenter != null) {
-                double ownerDelta = oldValue.doubleValue() - newValue.doubleValue();
-                setChildCenter();
-                if (isListenerForX) {
-                    child.setX(child.getX() - ownerDelta);
-                } else {
-                    child.setY(child.getY() - ownerDelta);
-                }
+            double ownerDelta = oldValue.doubleValue() - newValue.doubleValue();
+            if (isListenerForX) {
+                child.setX(child.getX() - ownerDelta);
+            } else {
+                child.setY(child.getY() - ownerDelta);
             }
+            childCenterToParentBounds(); 
         }
         
-        private Coordinate getCenterOf(Stage currStage){
-            Coordinate center = new Coordinate();
-            double halftWidth = currStage.getWidth() / 2;
-            double halfHeight = currStage.getHeight() / 2;
-            center.x = currStage.getX() + halftWidth;
-            center.y = currStage.getY() + halfHeight;
-            Rectangle2D screen = Screen.getPrimary().getVisualBounds();
-            return (center.x > screen.getMinX() && center.x < screen.getMaxX() &&
-                    center.y > screen.getMinY() && center.y < screen.getMaxY())
-                    ? center : null;
-        }
-        
-        private void setChildCenter(){
-            Coordinate childCenter = getCenterOf(child);
-            if (childCenter == null) return;
-            if (childCenter.x < owner.getX()){
+        private void childCenterToParentBounds(){
+            double childCenterX = child.getX() + child.getWidth() / 2;
+            double childCenterY = child.getY() + child.getHeight() / 2;
+            
+            if (childCenterX < owner.getX()){
                 child.setX(owner.getX() - child.getWidth() / 2);
             }
-            else if(childCenter.x > owner.getX() + owner.getWidth()){
+            else if(childCenterX > owner.getX() + owner.getWidth()){
                 child.setX(owner.getX() + owner.getWidth() - child.getWidth() / 2);
             }
             
-            if (childCenter.y < owner.getY()){
+            if (childCenterY < owner.getY()){
                 child.setY(owner.getY() - child.getHeight() / 2);
             }
-            else if(childCenter.y > owner.getY() + owner.getHeight()){
+            else if(childCenterY > owner.getY() + owner.getHeight()){
                 child.setY(owner.getY() + owner.getHeight() - child.getHeight() / 2);
             }
         }
         
-        private class Coordinate {
-            public double x, y;
-        }
     }
 }

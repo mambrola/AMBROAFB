@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -55,9 +54,9 @@ public class AmbroAFB extends Application {
             controller.mainExit(null);
             event.consume();
         });
-        stage.iconifiedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            Utils.iconifiedChildrenStagesFor(stage, newValue);
-        });
+//        stage.iconifiedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//            Utils.iconifiedChildrenStagesFor(stage, newValue);
+//        });
         
         Utils.setSizeFor(mainStage);
         stage.show();

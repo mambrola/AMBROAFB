@@ -34,6 +34,8 @@ public class Clients extends Stage {
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
+        StageUtils.followChildTo(owner, (Stage)this);
+        StageUtils.stopStageWidthDecrease((Stage)this, () -> clientsController.getEditorPanelController().getPanelMinWidth());
         Utils.setSizeFor((Stage)this);
     }
     

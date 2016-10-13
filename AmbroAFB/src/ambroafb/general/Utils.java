@@ -44,7 +44,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -422,24 +421,20 @@ public class Utils {
     
     /**
      * The function removes stage from bidirectional map 
-     * and use "removeAlsoSubstagesByPath" function for it.
+     * and use "removeOnlySubstagesFor" function for it.
      * @param stage - which must remove
      */
     public static void removeByStage(Stage stage){
-        if (bidmap.containsKey(stage)){
+        if (bidmap.containsValue(stage)){
+            Utils.removeOnlySubstagesFor(stage);
             String path = (String) bidmap.getKey(stage);
-            Utils.removeAlsoSubstagesByPath(path);
+            bidmap.remove(path);
         }
     }
     
-    /**
-     * The function removes stage for the given path and also removes its
-     * subStages. The function needs a helper collection to save removable
-     * object in it, because of don't mess an iterator of map.
-     *
-     * @param path - full path for stage (ex: main/Clients/DialogOrFilter).
-     */
-    public static void removeAlsoSubstagesByPath(String path) {
+    
+    public static void removeOnlySubstagesFor(Stage stage) {
+        String path = (String) bidmap.getKey(stage);
         List<String> pathes = new ArrayList<>();
         bidmap.keySet().stream().forEach((key) -> {
             if (((String) key).startsWith(path)) {
@@ -448,20 +443,35 @@ public class Utils {
         });
         pathes.stream().forEach((currPath) -> {
             bidmap.remove((String) currPath);
+            System.out.println("amoishala: " + currPath);
         });
     }
     
-    public static void iconifiedChildrenStagesFor(Stage currStage, boolean isMinimize){
-        String currentStagePath = getPathForStage(currStage);
-        List<String> directChildrenPathes = (List<String>) bidmap.keySet().stream()
-                                                                            .filter((key) -> isDirectChildPath((String)key, currentStagePath, "/"))
-                                                                            .collect(Collectors.toList());
-        directChildrenPathes.stream().map((childPath) -> getStageForPath(childPath)).forEach((directChildStage) -> {
-//            System.out.println("direct child of: " + currentStagePath + " is: " + childPath);
-            iconifiedChildrenStagesFor(directChildStage, isMinimize);
-        });
-        currStage.setIconified(isMinimize);
-    }
+//    public static void iconifiedChildrenStagesFor(Stage currStage, boolean isMinimize){
+//        List<String> directChildrenPathes = getDirectChildrenStagesPathesOf(currStage);
+//        directChildrenPathes.stream().map((childPath) -> getStageForPath(childPath)).forEach((directChildStage) -> {
+//            System.out.println(getPathForStage(currStage) + " gaushva recursia " + getPathForStage(directChildStage) + "-ze" );
+//            iconifiedDirectChild(directChildStage, isMinimize);
+//        });
+//        System.out.println("daamtavra recursia " + getPathForStage(currStage) + "-ma tavis shvilebze");
+//    }
+//    
+//    private static void iconifiedDirectChild(Stage currStage, boolean isMinimize){
+//        List<String> directChildrenPathes = getDirectChildrenStagesPathesOf(currStage);
+//        directChildrenPathes.stream().map((childPath) -> getStageForPath(childPath)).forEach((directChildStage) -> {
+//            System.out.println(getPathForStage(currStage) + " gaushva recursia " + getPathForStage(directChildStage) + "-ze" );
+//            iconifiedDirectChild(directChildStage, isMinimize);
+//        });
+//        currStage.setIconified(isMinimize);
+//    }
+//    
+//    public static List<String> getDirectChildrenStagesPathesOf(Stage currStage){
+//        String currentStagePath = getPathForStage(currStage);
+//        List<String> directChildrenPathes = (List<String>) bidmap.keySet().stream()
+//                                                                            .filter((key) -> isDirectChildPath((String)key, currentStagePath, "/"))
+//                                                                            .collect(Collectors.toList());
+//        return directChildrenPathes;
+//    }
     
     private static boolean isDirectChildPath(String childPath, String ownerPath, String delimiter){
         return  childPath.startsWith(ownerPath) &&
@@ -752,6 +762,8 @@ public class Utils {
             jsonForStageSize.put("height", stage.getHeight());
             jsonForStageSize.put("isMaximized", stage.isMaximized());
             GeneralConfig.prefs.put("stage_size_" + path, jsonForStageSize.toString());
+            
+            System.out.println("save size: stage_size_" + path + "  value: " + jsonForStageSize.toString());
         } catch (JSONException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -761,6 +773,7 @@ public class Utils {
         String path = getPathForStage(stage);
         try {
             String json_str = GeneralConfig.prefs.get("stage_size_" + path, null);
+            System.out.println("get size: " + "  stage_size_" + path + " value: " + json_str);
             if (json_str == null) {
                 return;
             }

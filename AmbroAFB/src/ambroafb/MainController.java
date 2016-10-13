@@ -16,6 +16,7 @@ import ambroafb.discounts_on_count.DiscountOnCounts;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
+import ambroafb.general.StageUtils;
 import ambroafb.general.Utils;
 import ambroafb.invoices.Invoices;
 import ambroafb.invoices.filter.InvoiceFilter;
@@ -270,6 +271,7 @@ public class MainController implements Initializable {
         }
         else {
             currencyRatesStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, currencyRatesStage);
         }
     }
     

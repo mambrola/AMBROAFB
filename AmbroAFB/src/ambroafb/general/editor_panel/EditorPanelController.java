@@ -14,6 +14,7 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.StageUtils;
 import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -93,6 +94,7 @@ public class EditorPanelController implements Initializable {
         }
         else {
             dialogStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
         }
     }
     
@@ -123,6 +125,7 @@ public class EditorPanelController implements Initializable {
         }
         else {
             dialogStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
         }
     }
     
@@ -144,6 +147,7 @@ public class EditorPanelController implements Initializable {
         }
         else {
             dialogStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
         }
     }
     
@@ -169,6 +173,7 @@ public class EditorPanelController implements Initializable {
         }
         else {
             dialogStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
         }
     }
     
@@ -192,6 +197,7 @@ public class EditorPanelController implements Initializable {
         }
         else {
             dialogStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
         }
     }
     
@@ -211,6 +217,7 @@ public class EditorPanelController implements Initializable {
         }
         else {
             filterStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, filterStage);
         }
         refresh.setSelected(false);
     }
