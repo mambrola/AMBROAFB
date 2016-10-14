@@ -35,6 +35,8 @@ public class BalanceAccounts extends Stage {
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
+        StageUtils.followChildTo(owner, (Stage)this);
+        StageUtils.stopStageWidthDecrease((Stage)this, () -> balanceAccountsController.getEditorPanelController().getPanelMinWidth());
         StagesContainer.setSizeFor((Stage)this);
     }
     

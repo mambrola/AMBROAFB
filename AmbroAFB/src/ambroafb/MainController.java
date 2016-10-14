@@ -144,6 +144,7 @@ public class MainController implements Initializable {
         }
         else {
             clientsStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, clientsStage);
         }
     }
     
@@ -182,6 +183,7 @@ public class MainController implements Initializable {
         }
         else {
             invoicesStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, invoicesStage);
         }
     }
     
@@ -195,6 +197,7 @@ public class MainController implements Initializable {
         }
         else{
             productsStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, productsStage);
         }
     }
     
@@ -209,6 +212,7 @@ public class MainController implements Initializable {
         }
         else {
             countriesStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, countriesStage);
         }
     }
     
@@ -233,6 +237,7 @@ public class MainController implements Initializable {
         }
         else {
             licensesStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, licensesStage);
         }
     }
     
@@ -252,6 +257,7 @@ public class MainController implements Initializable {
         }
         else {
             currenciesStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, currenciesStage);
         }
     }
     
@@ -286,6 +292,7 @@ public class MainController implements Initializable {
         }
         else {
             discountOnCountsStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, discountOnCountsStage);
         }
     }
     
@@ -299,6 +306,7 @@ public class MainController implements Initializable {
         }
         else {
             balAccountsStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, balAccountsStage);
         }
     }
     
