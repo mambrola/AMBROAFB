@@ -8,7 +8,6 @@ package ambroafb.products;
 import ambro.ANodeSlider;
 import ambro.AView;
 import ambroafb.currencies.Currency;
-import ambroafb.discounts_on_count.DiscountOnCount;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.general.Utils;
@@ -55,13 +54,16 @@ public class Product extends EditorPanelable {
     private final StringProperty former;
     
     @AView.Column(title = "%descrip", width = "200")
-    private final SimpleStringProperty specificDescrip;
+    private final SimpleStringProperty descrip;
     
     @AView.Column(title = "%remark", width = "200")
     private final SimpleStringProperty remark;
     
     @AView.Column(title = "%product_specific", width = "170")
     private final StringProperty specific;
+    
+    @AView.Column(title = "specDescrip", width = "200")
+    private final SimpleStringProperty specificDescrip;
     
     @AView.Column(width = "50")
     private final StringProperty price;
@@ -81,9 +83,10 @@ public class Product extends EditorPanelable {
     public Product(){
         abbreviation = new SimpleStringProperty("");
         former = new SimpleStringProperty("");
-        specificDescrip = new SimpleStringProperty("");
+        descrip = new SimpleStringProperty("");
         remark = new SimpleStringProperty("");
         specific = new SimpleStringProperty("");
+        specificDescrip = new SimpleStringProperty("");
         price = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>();
@@ -101,11 +104,11 @@ public class Product extends EditorPanelable {
     public static ArrayList<Product> getAllFromDB (){
         try {
             String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().build()).toString();
-            System.out.println("data: " + data);
+            System.out.println("products data: " + data);
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<DiscountOnCount>>() {});
+            return mapper.readValue(data, new TypeReference<ArrayList<Product>>() {});
         } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new ArrayList<>();
     }
@@ -144,7 +147,7 @@ public class Product extends EditorPanelable {
                 pr.setRecId(set.getInt(1));
                 pr.setAbbreviation(set.getString(2));
                 pr.setFormer(set.getInt(3));
-                pr.setSpecificDescrip(set.getString(4));
+                pr.setDescrip(set.getString(4));
                 pr.setRemark(set.getString(5));
                 pr.setPrice(set.getDouble(6));
                 pr.setIsActive(set.getBoolean(7));
@@ -159,8 +162,8 @@ public class Product extends EditorPanelable {
                                 " where product_id = " + productId);
             while(set.next()){
                 ProductDiscount disc = new ProductDiscount();
-                disc.setMonths(set.getInt(3));
-                disc.setDiscount(set.getDouble(4));
+                disc.setDays(set.getInt(3));
+                disc.setDiscountRate(set.getDouble(4));
                 pr.getDiscounts().add(disc);
             }
             stmt.close();
@@ -223,7 +226,7 @@ public class Product extends EditorPanelable {
     }
     
     public StringProperty descriptionProperty(){
-        return specificDescrip;
+        return descrip;
     }
     
     public StringProperty remarkProperty(){
@@ -242,6 +245,10 @@ public class Product extends EditorPanelable {
         return specific;
     }
     
+    public StringProperty specificDescripProperty(){
+        return specificDescrip;
+    }
+    
     public BooleanProperty isAliveProperty(){
         return isActive;
     }
@@ -256,8 +263,8 @@ public class Product extends EditorPanelable {
         return Utils.getIntValueFor(former.get());
     }
     
-    public String getSpecificDescrip() {
-        return specificDescrip.get();
+    public String getDescrip() {
+        return descrip.get();
     }
     
     public String getRemark() {
@@ -266,6 +273,10 @@ public class Product extends EditorPanelable {
     
     public String getSpecific(){
         return specific.get();
+    }
+    
+    public String getSpecificDescrip(){
+        return specificDescrip.get();
     }
     
     public double getPrice() {
@@ -294,8 +305,8 @@ public class Product extends EditorPanelable {
         this.former.set("" + former);
     }
 
-    public void setSpecificDescrip(String descrip) {
-        this.specificDescrip.set(descrip);
+    public void setDescrip(String descrip) {
+        this.descrip.set(descrip);
     }
     
     public void setRemark(String remark) {
@@ -306,6 +317,10 @@ public class Product extends EditorPanelable {
         this.specific.set(specific);
     }
     
+    public void setSpecificDescip(String specificDescrip){
+        this.specificDescrip.set(specificDescrip);
+    }
+    
     public void setPrice(double price) {
         this.price.set("" + price);
     }
@@ -314,11 +329,8 @@ public class Product extends EditorPanelable {
         this.currency.setValue(Currency.getOneFromDB(iso));
     }
     
-//    public void setDiscounts(ArrayList<ProductDiscount> discounts) {
-//        this.discounts = FXCollections.observableArrayList(discounts);
-//    }
-    public void setDiscounts(Collection<ProductDiscount> phoneList) {
-        this.discounts = FXCollections.observableArrayList(discounts);
+    public void setDiscounts(Collection<ProductDiscount> discounts) {
+        this.discounts.addAll(discounts);
     }
 
     public void setIsActive(boolean isActive) {
@@ -346,7 +358,7 @@ public class Product extends EditorPanelable {
         Product product = (Product) other;
         setAbbreviation(product.getAbbreviation());
         setFormer(product.getFormer());
-        setSpecificDescrip(product.getSpecificDescrip());
+        setDescrip(product.getDescrip());
         setRemark(product.getRemark());
         setPrice(product.getPrice());
         setIso(product.getIso());
@@ -362,12 +374,12 @@ public class Product extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return getAbbreviation().concat(getSpecificDescrip());
+        return getAbbreviation().concat(getDescrip());
     }
     
     @Override
     public String toString() {
-        return specificDescrip.get();
+        return descrip.get();
     }
 
     
@@ -379,7 +391,7 @@ public class Product extends EditorPanelable {
     public boolean compares(Product productBackup) {
         return  this.getAbbreviation().equals(productBackup.getAbbreviation()) &&
                 this.getFormer() == productBackup.getFormer() &&
-                this.getSpecificDescrip().equals(productBackup.getSpecificDescrip()) &&
+                this.getDescrip().equals(productBackup.getDescrip()) &&
                 this.getRemark().equals(productBackup.getRemark()) &&
                 this.getPrice() == productBackup.getPrice() &&
                 this.getIso().equals(productBackup.getIso()) &&
@@ -387,7 +399,7 @@ public class Product extends EditorPanelable {
                 this.getIsActive() == productBackup.getIsActive() &&
                 Utils.compareLists(getDiscounts(), productBackup.getDiscounts());
     }
-
+    
     public static class DiscountCellFactory implements Callback<TableColumn<Product, ObservableList<ProductDiscount>>, TableCell<Product, ObservableList<ProductDiscount>>> {
 
         @Override

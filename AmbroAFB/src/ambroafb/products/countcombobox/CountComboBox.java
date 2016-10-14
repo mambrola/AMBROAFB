@@ -58,7 +58,7 @@ public class CountComboBox extends ComboBox<Product> {
         @Override
         public Product fromString(String description) {
             Product product = new Product();
-            product.setSpecificDescrip(description);
+            product.setDescrip(description);
             return product;
         }
         

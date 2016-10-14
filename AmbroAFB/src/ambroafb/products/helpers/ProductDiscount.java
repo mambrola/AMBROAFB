@@ -13,50 +13,59 @@ import ambroafb.general.Utils;
  */
 public class ProductDiscount {
 
-    private String months;
-    private String discount;
+    private String days;
+    private String discountRate;
     private String delimiter = " : ";
+    private int recId = 0;
 
     public ProductDiscount() {
     }
 
     // It is needed for MapEditor.
-    public ProductDiscount(String months, String discount) {
-        this.months = months;
-        this.discount = discount;
+    public ProductDiscount(String days, String discount) {
+        this.days = days;
+        this.discountRate = discount;
     }
     
-    public int getMonths(){
-        return Utils.getIntValueFor(months);
+    public int getDays(){
+        return Utils.getIntValueFor(days);
     }
     
-    public double getDiscount(){
-        return Utils.getDoubleValueFor(discount);
+    public double getDiscountRate(){
+        return Utils.getDoubleValueFor(discountRate);
     }
 
     public String getDelimiter(){
         return delimiter;
     } 
     
-    public void setMonths(int months){
-        this.months = "" + months;
+    public int getRecId(){
+        return recId;
     }
     
-    public void setDiscount(double discount){
-        this.discount = "" + discount;
+    public void setDays(int months){
+        this.days = "" + months;
+    }
+    
+    public void setDiscountRate(double discount){
+        this.discountRate = "" + discount;
     }
 
     public void setDelimiter(String delimiter){
         this.delimiter = delimiter;
     }
     
+    public void setRecId(int recId){
+        this.recId = recId;
+    }
+    
     public boolean equals(ProductDiscount other) {
-        return getMonths() == other.getMonths() && getDiscount() == other.getDiscount();
+        return getDays() == other.getDays() && getDiscountRate() == other.getDiscountRate();
     }
     
 
     @Override
     public String toString() {
-        return months + delimiter + discount;
+        return days + delimiter + discountRate;
     }
 }

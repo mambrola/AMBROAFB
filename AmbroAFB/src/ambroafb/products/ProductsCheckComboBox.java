@@ -18,7 +18,7 @@ public class ProductsCheckComboBox extends CheckComboBox<Product> {
         this.setConverter(new StringConverter<Product>() {
             @Override
             public String toString(Product product) {
-                return product.getSpecificDescrip() + "\t" + product.getRemark();
+                return product.getDescrip() + "\t" + product.getRemark();
             }
 
             @Override

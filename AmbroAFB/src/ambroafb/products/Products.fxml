@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.collections.*?>
 <?import java.lang.*?>
-<?import java.net.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import ambro.* ?>
-<?import ambroafb.general.editor_panel.*?>
 <?import org.controlsfx.control.*?>
 
-<BorderPane id="formPane" 
+<BorderPane fx:id="formPane" 
             stylesheets="/styles/css/products.css" 
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="ambroafb.products.ProductsController">
@@ -22,8 +17,10 @@
     </top>
     <center>
         <StackPane >
-            <AFilterableTableView fx:id="aview" initializer="ambroafb.products.Product" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
-            <MaskerPane fx:id="masker" visible="false" text="%loading"/>
+            <children>
+                <AFilterableTableView fx:id="aview" initializer="ambroafb.products.Product" styleClass="unicode" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+                <MaskerPane fx:id="masker" visible="false" text="%loading"/>
+            </children>
         </StackPane>
     </center>
 </BorderPane>
