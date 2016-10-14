@@ -8,17 +8,17 @@ package ambroafb.balance_accounts;
 import ambro.AFilterableTreeTableView;
 import ambro.AView;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.TestDataFromDB;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.AuthServerException;
+import authclient.db.ConditionBuilder;
+import authclient.db.DBClient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +33,9 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -65,6 +68,8 @@ public class BalanceAccount extends EditorPanelable {
     @JsonIgnore
     public final ObservableList<String> rowStyle = FXCollections.observableArrayList();
     
+    private static final String DB_TABLE_NAME = "bal_accounts";
+    
     public BalanceAccount(){
         balAcc = new SimpleStringProperty("");
         descrip_ka = new SimpleStringProperty("");
@@ -87,9 +92,14 @@ public class BalanceAccount extends EditorPanelable {
     
     public static ArrayList<BalanceAccount> getAllFromDB(){
         try {
-            String data = GeneralConfig.getInstance().getAuthClient().get("balAccounts").getDataAsString();
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            String allClientsData = dbClient.select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
+//            String allClientsData = dbClient.callProcedureAndGetAsJson("general_select", DB_TABLE_NAME, dbClient.getLang(), new ConditionBuilder().build()).toString();
+            
+            System.out.println("ball acc all data: " + allClientsData);
+            
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<BalanceAccount>>() {});
+            return mapper.readValue(allClientsData, new TypeReference<ArrayList<BalanceAccount>>() {});
         } 
         catch (IOException | AuthServerException ex) {
             Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,28 +108,52 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     public static BalanceAccount getOneFromDB(int recId){
-        BalanceAccount result = null;
-        Statement stmt = TestDataFromDB.getStatement();
-        if (stmt != null){
-            try {
-                ResultSet set = stmt.executeQuery("select * from bal_accounts where rec_id = " + recId);
-                BalanceAccount balAccount = new BalanceAccount();
-                while(set.next()){
-                    balAccount.setBalAcc(set.getInt(2));
-                    balAccount.setDescrip_ka(set.getString(3));
-                    balAccount.setDescrip_en(set.getString(4));
-                    balAccount.setActPas(set.getInt(5));
-                }
-                result = balAccount;
-            } catch (SQLException ex) {
-                Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, conditionBuilder.build());
+            
+            String currencyData = data.opt(0).toString();
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(currencyData, BalanceAccount.class);
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return result;
+        return null;
+        
+//        BalanceAccount result = null;
+//        Statement stmt = TestDataFromDB.getStatement();
+//        if (stmt != null){
+//            try {
+//                ResultSet set = stmt.executeQuery("select * from bal_accounts where rec_id = " + recId);
+//                BalanceAccount balAccount = new BalanceAccount();
+//                while(set.next()){
+//                    balAccount.setBalAcc(set.getInt(2));
+//                    balAccount.setDescrip_ka(set.getString(3));
+//                    balAccount.setDescrip_en(set.getString(4));
+//                    balAccount.setActPas(set.getInt(5));
+//                }
+//                result = balAccount;
+//            } catch (SQLException ex) {
+//                Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+//        return result;
     }
     
-    public static void saveOneToDB(BalanceAccount balAccount){
-        System.out.println("save balAccount ...???");
+    public static BalanceAccount saveOneToDB(BalanceAccount balAccount){
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+            JSONObject balAccountJson = new JSONObject(writer.writeValueAsString(balAccount));
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONObject newBalAccount = dbClient.callProcedureAndGetAsJson("general_insert_update", DB_TABLE_NAME, dbClient.getLang(), balAccountJson).getJSONObject(0);
+            return mapper.readValue(newBalAccount.toString(), BalanceAccount.class);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     public static boolean deleteOneFromDB(int productId){

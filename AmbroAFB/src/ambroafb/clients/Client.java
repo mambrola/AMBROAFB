@@ -109,8 +109,10 @@ public class Client extends EditorPanelable{
 
     private static final Country DEFAULT_COUNTRY = new Country("GE", "Georgia");
     
-    
     private ImageGalleryController clientImageGallery;
+    
+    private static final String DB_TABLE_NAME = "clients";
+    private static final String DB_VIEW_NAME = "clients_whole";
             
     public Client() {
         isJur =             new SimpleBooleanProperty();
@@ -170,7 +172,7 @@ public class Client extends EditorPanelable{
     // DBService methods:
     public static List<Client> getAllFromDB() {
         try {
-            String data = GeneralConfig.getInstance().getDBClient().get("clients").getDataAsString();
+            String data = GeneralConfig.getInstance().getDBClient().get(DB_VIEW_NAME).getDataAsString();
             System.out.println("client data: " + data);
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {});
@@ -263,7 +265,7 @@ public class Client extends EditorPanelable{
 
     public static Client getOneFromDB(int id) {
         try {
-            String data = GeneralConfig.getInstance().getDBClient().select("clients_whole", new ConditionBuilder().where().and("rec_id", "=", id).condition().build()).toString();
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().where().and("rec_id", "=", id).condition().build()).toString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, Client.class);
         } catch (IOException | AuthServerException ex) {

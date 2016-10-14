@@ -35,6 +35,8 @@ public class Currencies extends Stage {
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
+        StageUtils.followChildTo(owner, (Stage)this);
+        StageUtils.stopStageWidthDecrease((Stage)this, () -> currenciesController.getEditorPanelController().getPanelMinWidth());
         StagesContainer.setSizeFor((Stage)this);
     }
     

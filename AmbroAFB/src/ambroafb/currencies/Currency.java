@@ -6,19 +6,18 @@
 package ambroafb.currencies;
 
 import ambro.AView;
+import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.general.DateConverter;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.TestDataFromDB;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.products.Product;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
+import authclient.db.DBClient;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -28,6 +27,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -52,6 +54,8 @@ public class Currency extends EditorPanelable {
     private final StringProperty symbol;
     
     public static final String ALL = "ALL";
+
+    private static final String DB_TABLE_NAME = "currencies";
     
     public Currency(){
         createdDate = new SimpleStringProperty("");
@@ -83,7 +87,7 @@ public class Currency extends EditorPanelable {
     
     public static ArrayList<Currency> getAllFromDB(){
         try {
-            String data = GeneralConfig.getInstance().getDBClient().select("currencies", new ConditionBuilder().build()).toString();
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<Currency>>() {});
         } catch (IOException | AuthServerException ex) {
@@ -95,24 +99,33 @@ public class Currency extends EditorPanelable {
     
     // DB methods:
     public static Currency getOneFromDB (int recId){
-        Currency currency = new Currency();
-        Statement stmt = TestDataFromDB.getStatement();
         try {
-            ResultSet set = stmt.executeQuery("select * from currencies where rec_id = " + recId);
-            while(set.next()){
-                currency.setRecId(set.getInt(1));
-                currency.setIso(set.getString(2));
-                currency.setSymbol(set.getString(6));
-            }
-        } catch (SQLException ex) {
+            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, conditionBuilder.build());
+            
+            String currencyData = data.opt(0).toString();
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(currencyData, Currency.class);
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Currency.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        return currency;
+        return null;
     }
     
-    public static Product saveOneToDB(Product product){
-        System.out.println("save one to DB... ??");
+    public static Currency saveOneToDB(Currency currency){
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+            
+            JSONObject rateJson = new JSONObject(writer.writeValueAsString(currency));
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONObject newRate = dbClient.callProcedureAndGetAsJson("general_insert_update", DB_TABLE_NAME, dbClient.getLang(), rateJson).getJSONObject(0);
+            return mapper.readValue(newRate.toString(), Currency.class);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
     

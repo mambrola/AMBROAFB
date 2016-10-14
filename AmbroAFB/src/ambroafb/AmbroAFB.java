@@ -52,9 +52,6 @@ public class AmbroAFB extends Application {
             controller.mainExit(null);
             event.consume();
         });
-//        stage.iconifiedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-//            Utils.iconifiedChildrenStagesFor(stage, newValue);
-//        });
         
         StagesContainer.setSizeFor(mainStage);
         stage.show();

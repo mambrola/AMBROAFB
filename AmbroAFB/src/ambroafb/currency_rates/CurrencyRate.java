@@ -56,6 +56,9 @@ public class CurrencyRate extends EditorPanelable {
     private final ObjectProperty<LocalDate> dateProperty;
     private static final Map<String, Currency> currencies = new HashMap<>();
     
+    private static final String DB_TABLE_NAME = "rates";
+    private static final String DB_VIEW_NAME = "rates_whole";
+    
     public CurrencyRate(){
         dateProperty = new SimpleObjectProperty<>();
         date = new SimpleStringProperty("");
@@ -91,7 +94,7 @@ public class CurrencyRate extends EditorPanelable {
                 whereBuilder = whereBuilder.and("iso", "=", currency);
             }
             JSONObject params = whereBuilder.condition().build();
-            String data = GeneralConfig.getInstance().getDBClient().select("rates_whole", params).toString();
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
             
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<CurrencyRate>>() {});
@@ -105,7 +108,7 @@ public class CurrencyRate extends EditorPanelable {
     public static CurrencyRate getOneFromDB (int recId){
         try {
             ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
-            JSONArray data = GeneralConfig.getInstance().getDBClient().select("rates_whole", conditionBuilder.build());
+            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, conditionBuilder.build());
             String currencyData = data.opt(0).toString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(currencyData, CurrencyRate.class);
@@ -124,7 +127,7 @@ public class CurrencyRate extends EditorPanelable {
             
             JSONObject rateJson = new JSONObject(writer.writeValueAsString(currencyRate));
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newRate = dbClient.callProcedureAndGetAsJson("general_insert_update", "rates", dbClient.getLang(), rateJson).getJSONObject(0);
+            JSONObject newRate = dbClient.callProcedureAndGetAsJson("general_insert_update", DB_TABLE_NAME, dbClient.getLang(), rateJson).getJSONObject(0);
             return mapper.readValue(newRate.toString(), CurrencyRate.class);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);

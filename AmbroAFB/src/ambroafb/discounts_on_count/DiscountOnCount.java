@@ -38,6 +38,8 @@ public class DiscountOnCount extends EditorPanelable {
     @AView.Column(title = "%sales_percent", width = "100", styleClass = "textRight")
     private final StringProperty discountRate;
     
+    private static final String DB_TABLE_NAME = "discounts_on_licenses_count";
+    
     public DiscountOnCount(){
         licenseCount = new SimpleStringProperty("");
         discountRate = new SimpleStringProperty("");
@@ -46,7 +48,7 @@ public class DiscountOnCount extends EditorPanelable {
     // DB methods:
     public static ArrayList<EditorPanelable> getAllFromDB(){
         try {
-            String data = GeneralConfig.getInstance().getDBClient().select("discounts_on_licenses_count", new ConditionBuilder().build()).toString();
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<DiscountOnCount>>() {});
         } catch (IOException | AuthServerException ex) {
@@ -58,7 +60,7 @@ public class DiscountOnCount extends EditorPanelable {
     public static DiscountOnCount getOneFromDB(int recId) {
         try {
             ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
-            JSONArray data = GeneralConfig.getInstance().getDBClient().select("discounts_on_licenses_count", conditionBuilder.build());
+            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, conditionBuilder.build());
             
             String currencyData = data.opt(0).toString();
             ObjectMapper mapper = new ObjectMapper();
@@ -74,11 +76,9 @@ public class DiscountOnCount extends EditorPanelable {
             ObjectMapper mapper = new ObjectMapper();
             ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
             
-            System.out.println("gasagzavni: " + writer.writeValueAsString(discOnCount));
-            
             JSONObject discOnCountJson = new JSONObject(writer.writeValueAsString(discOnCount));
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newDiscOnCount = dbClient.callProcedureAndGetAsJson("general_insert_update", "discounts_on_licenses_count", dbClient.getLang(), discOnCountJson).getJSONObject(0);
+            JSONObject newDiscOnCount = dbClient.callProcedureAndGetAsJson("general_insert_update", DB_TABLE_NAME, dbClient.getLang(), discOnCountJson).getJSONObject(0);
             return mapper.readValue(newDiscOnCount.toString(), DiscountOnCount.class);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
