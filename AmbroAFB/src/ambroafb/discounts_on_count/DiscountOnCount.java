@@ -11,6 +11,7 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
+import authclient.db.DBClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,10 +74,9 @@ public class DiscountOnCount extends EditorPanelable {
             ObjectMapper mapper = new ObjectMapper();
             ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
             
-            System.out.println("DiscountOnCount. saveOneToDB. writer.writeValueAsString(discOnCount): " + writer.writeValueAsString(discOnCount));
-            
             JSONObject discOnCountJson = new JSONObject(writer.writeValueAsString(discOnCount));
-            JSONObject newRate = GeneralConfig.getInstance().getDBClient().insertUpdate("discounts_on_licenses_count", discOnCountJson);
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONObject newRate = dbClient.callProcedureAndGetAsJson("general_insert_update", dbClient.getLang(), discOnCountJson).getJSONObject(0);
             return mapper.readValue(newRate.toString(), DiscountOnCount.class);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
