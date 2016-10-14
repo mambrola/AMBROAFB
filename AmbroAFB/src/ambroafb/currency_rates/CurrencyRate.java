@@ -125,8 +125,7 @@ public class CurrencyRate extends EditorPanelable {
             JSONObject rateJson = new JSONObject(writer.writeValueAsString(currencyRate));
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             JSONObject newRate = dbClient.callProcedureAndGetAsJson("general_insert_update", "rates", dbClient.getLang(), rateJson).getJSONObject(0);
-//            return mapper.readValue(newRate.toString(), CurrencyRate.class);
-            return null;
+            return mapper.readValue(newRate.toString(), CurrencyRate.class);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException | AuthServerException | JSONException ex) {
