@@ -52,4 +52,4 @@ Accounting for Busines
 * (+) ჩაკეცვა / ამოკეცვის  ფუნქციონალი. (თუ გადიდებულია მშობელი ფანჯარა, ჩაკეცვა/ამოკეცვა ცუდად მუშაობს)
 * (+) stage-ის ზედა მარცხენა კუთხის კოორდინატების უარყოფითში გადასვლისას stage-ი აღარ მიყვება მშობელს
 * (-) closeStageWithChildren  StagesContainer კლასში
-* (-) textField-ების tegEx-ები
+* (-) textField-ების regular expression-ები
