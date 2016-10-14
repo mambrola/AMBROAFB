@@ -48,6 +48,10 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     private static final String DATE_BIGGER = "1970-01-01";
     private static final String DATE_LESS = "9999-01-01";
     
+    private static final String PREF_BIGGER_DATE = "currency_rate/filter/dateBigger";
+    private static final String PREF_LESS_DATE = "currency_rate/filter/dateLess";
+    private static final String PREF_CURRENCY = "currency_rate/filter/currency";
+    
     public CurrencyRateFilter(Stage owner){
         StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
@@ -88,11 +92,11 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
             
             jSonResult.put("dateBigger", (dateBigger.getValue() == null ? DATE_BIGGER : dateBigger.getValue()).toString());
             jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());
-            jSonResult.put("currency", (currencies.getValue() == null)? "" : currencies.getValue().getIso());
+            jSonResult.put(  "currency", (currencies.getValue() == null)? "" : currencies.getValue().getIso());
             
-            GeneralConfig.prefs.put("currency_rate/filter/dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue().toString());
-            GeneralConfig.prefs.put("currency_rate/filter/dateLess", (  dateLess.getValue() == null) ? "" :   dateLess.getValue().toString());
-            GeneralConfig.prefs.put("currency_rate/filter/currency", (currencies.getValue() == null)? "" : currencies.getValue().getIso());
+            GeneralConfig.prefs.put(PREF_BIGGER_DATE, (dateBigger.getValue() == null) ? "" : dateBigger.getValue().toString());
+            GeneralConfig.prefs.put(PREF_LESS_DATE, (  dateLess.getValue() == null) ? "" :   dateLess.getValue().toString());
+            GeneralConfig.prefs.put(PREF_CURRENCY, (currencies.getValue() == null)? "" : currencies.getValue().getIso());
         } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
     }
     
@@ -103,10 +107,10 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        String dateB = GeneralConfig.prefs.get("currency_rate/filter/dateBigger", "");
-        String dateL = GeneralConfig.prefs.get("currency_rate/filter/dateLess", "");
-        String currency = GeneralConfig.prefs.get("currency_rate/filter/currency", "");
-
+        String dateB = GeneralConfig.prefs.get(PREF_BIGGER_DATE, "");
+        String dateL = GeneralConfig.prefs.get(PREF_LESS_DATE, "");
+        String currency = GeneralConfig.prefs.get(PREF_CURRENCY, "");
+        
         LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
         LocalDate less   = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);
 
