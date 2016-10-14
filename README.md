@@ -39,9 +39,15 @@ Accounting for Busines
 * (+) StagesContainer კლასში შემოსატანია delimiter = "/"
 * (-) Utils კლასში არასაჭირო მეთოდების ამოშლა ან გატანა სხვა კლასებში (მაგ. SceneUtils-ში იყოს Scene-თან დაკავშირებული მეთოდები)
 * (-) MVS პატერნის გამოყენება Filter-ში
-* (-) ATableView-ს უკიდურეს მარჯვენა სვეტში ჩაემატოს setting-ები და იქ იყოს შესაძლებლობა სვეტების შიგთავსის alignment-ი შეცვალოს
+* (|) ATableView-ს contextMenu-დან იყოს შესაძლებლობა რომელ სვეტზეც ვდგავართ იმის content-ის alignment-ი ვცვალოთ
+* (-) recId-ის ვერ ცნობს callProcedureAndGetAsJson, წამოღებისას ცნობს (getDBClient().select("discounts_on_licenses_count") და ჩაწერისას ვერა.
+* (-) products_whole არ მუშაობს
+* (-) general_select-ს როგორ მიეთითოს appLanguage
+* (-) DBClient-ში select-ზე return new JSONArray(res.getDataAsString()); - ში ალბათ response უნდა გადაეცემოდეს ნაცვლად res.getDataAsString()-სა
+
 
 დასატესტია:
 * (+) ჩაკეცვა / ამოკეცვის  ფუნქციონალი. (თუ გადიდებულია მშობელი ფანჯარა, ჩაკეცვა/ამოკეცვა ცუდად მუშაობს)
 * (+) stage-ის ზედა მარცხენა კუთხის კოორდინატების უარყოფითში გადასვლისას stage-ი აღარ მიყვება მშობელს
 * (-) closeStageWithChildren  StagesContainer კლასში
+* (-) textField-ების tegEx-ები
