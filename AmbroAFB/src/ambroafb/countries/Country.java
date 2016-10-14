@@ -57,12 +57,6 @@ public class Country extends EditorPanelable{
         this.descrip.set(descrip);
     }
 
-//    public static Country getOneFromDB(String countryCode) throws IOException, KFZClient.KFZServerException {
-//        String country_json = GeneralConfig.getInstance().getServerClient().get("countries/" + countryCode);
-//        ObjectMapper mapper = new ObjectMapper();
-//        return mapper.readValue(country_json, Country.class);
-//    }
-
     public static List<Country> getAllFromDB() {
         try {
             String data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
