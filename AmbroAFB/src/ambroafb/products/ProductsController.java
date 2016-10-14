@@ -61,7 +61,7 @@ public class ProductsController implements Initializable {
         masker.setVisible(true);
 
         new Thread(() -> {
-            products.setAll(Product.getAllFromDBTest());
+            products.setAll(Product.getAllFromDB());
             Platform.runLater(() -> {
                 masker.setVisible(false);
                 if (selectedIndex >= 0) {

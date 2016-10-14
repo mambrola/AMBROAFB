@@ -35,6 +35,8 @@ public class Products extends Stage {
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
+        StageUtils.followChildTo(owner, (Stage)this);
+        StageUtils.stopStageWidthDecrease((Stage)this, () -> productsController.getEditorPanelController().getPanelMinWidth());
         StagesContainer.setSizeFor((Stage)this);
     }
     

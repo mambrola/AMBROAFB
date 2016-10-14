@@ -55,6 +55,7 @@ public class ProductDialog extends Stage implements Dialogable {
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
+        StageUtils.followChildTo(owner, (Stage)this);
     }
 
     @Override

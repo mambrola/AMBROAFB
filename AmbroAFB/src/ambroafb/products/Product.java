@@ -7,17 +7,22 @@ package ambroafb.products;
 
 import ambro.ANodeSlider;
 import ambro.AView;
+import ambroafb.discounts_on_count.DiscountOnCount;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
+import authclient.AuthServerException;
+import authclient.db.ConditionBuilder;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
@@ -79,72 +84,72 @@ public class Product extends EditorPanelable {
     }
     
     // DBService methods:
-//    public static ArrayList<Product> getAllFromDB (){
+    public static ArrayList<Product> getAllFromDB (){
+        try {
+            String data = GeneralConfig.getInstance().getDBClient().select("products_whole", new ConditionBuilder().build()).toString();
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<DiscountOnCount>>() {});
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
+    }
+    
+//    public static ArrayList<Product> getAllFromDB(){
+//        ArrayList<Product> result = new ArrayList<>();
+//        Statement stmt = TestDataFromDB.getStatement();
+//        
 //        try {
-//            String data = GeneralConfig.getInstance().getServerClient().get("products");
-//            ObjectMapper mapper = new ObjectMapper();
-//            return mapper.readValue(data, new TypeReference<ArrayList<Product>>() {});
-//        } catch (IOException | KFZClient.KFZServerException ex) {
+//            ResultSet set = stmt.executeQuery("select products.rec_id, products.abbreviation, products.former, products.descrip, products.remark, products.price, products.is_active, " +
+//                                                " product_discounts.months, product_discounts.discount_rate, " +
+//                                                " product_specifics.descrip_default, product_specifics.descrip_first, product_specifics.descrip_second " +
+//                                                " from products " +
+//                                                " left join product_discounts " +
+//                                                " on products.rec_id = product_discounts.product_id " +
+//                                                " join product_specifics " +
+//                                                " on products.specific = product_specifics.rec_id; ");
+//            Map<Integer, Product> ids = new HashMap<>();
+//            while(set.next()) {
+//                Product pr = new Product();
+//                int rec_id = set.getInt(1);
+//                
+//                if (ids.containsKey(rec_id)) {
+//                    Product product = ids.get(rec_id);
+//                    ProductDiscount disc = new ProductDiscount();
+//                    disc.setMonths(set.getInt(8));
+//                    disc.setDiscount(set.getDouble(9));
+//                    product.getDiscounts().add(disc);
+//                } else {
+//                    ids.put(rec_id, pr);
+//                    pr.setRecId(rec_id);
+//                    pr.setIsActive(set.getBoolean(7));
+//                    pr.setAbbreviation(set.getString(2));
+//                    pr.setFormer(set.getInt(3));
+//                    pr.setDescrip(set.getString(4));
+//                    pr.setRemark(set.getString(5));
+//                    pr.setPrice(set.getDouble(6));
+//                    if (set.getObject(8) != null) {
+//                        ProductDiscount disc = new ProductDiscount();
+//                        disc.setMonths(set.getInt(8));
+//                        disc.setDiscount(set.getDouble(9));
+//                        pr.getDiscounts().add(disc);
+//                    }
+//                    ProductSpecific spec = new ProductSpecific();
+//                    spec.descrip_default = set.getString(10);
+//                    spec.descrip_first = set.getString(11);
+//                    spec.descrip_second = set.getString(12);
+//                    pr.setSpecific(spec.getValue());
+//
+//                    result.add(pr);
+//                }
+//            }
+//            stmt.close();
+//        } catch (SQLException ex) {
 //            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-//        return null;
+//        
+//        return result;
 //    }
-    
-    public static ArrayList<Product> getAllFromDBTest(){
-        ArrayList<Product> result = new ArrayList<>();
-        Statement stmt = TestDataFromDB.getStatement();
-        
-        try {
-            ResultSet set = stmt.executeQuery("select products.rec_id, products.abbreviation, products.former, products.descrip, products.remark, products.price, products.is_active, " +
-                                                " product_discounts.months, product_discounts.discount_rate, " +
-                                                " product_specifics.descrip_default, product_specifics.descrip_first, product_specifics.descrip_second " +
-                                                " from products " +
-                                                " left join product_discounts " +
-                                                " on products.rec_id = product_discounts.product_id " +
-                                                " join product_specifics " +
-                                                " on products.specific = product_specifics.rec_id; ");
-            Map<Integer, Product> ids = new HashMap<>();
-            while(set.next()) {
-                Product pr = new Product();
-                int rec_id = set.getInt(1);
-                
-                if (ids.containsKey(rec_id)) {
-                    Product product = ids.get(rec_id);
-                    ProductDiscount disc = new ProductDiscount();
-                    disc.setMonths(set.getInt(8));
-                    disc.setDiscount(set.getDouble(9));
-                    product.getDiscounts().add(disc);
-                } else {
-                    ids.put(rec_id, pr);
-                    pr.setRecId(rec_id);
-                    pr.setIsActive(set.getBoolean(7));
-                    pr.setAbbreviation(set.getString(2));
-                    pr.setFormer(set.getInt(3));
-                    pr.setDescrip(set.getString(4));
-                    pr.setRemark(set.getString(5));
-                    pr.setPrice(set.getDouble(6));
-                    if (set.getObject(8) != null) {
-                        ProductDiscount disc = new ProductDiscount();
-                        disc.setMonths(set.getInt(8));
-                        disc.setDiscount(set.getDouble(9));
-                        pr.getDiscounts().add(disc);
-                    }
-                    ProductSpecific spec = new ProductSpecific();
-                    spec.descrip_default = set.getString(10);
-                    spec.descrip_first = set.getString(11);
-                    spec.descrip_second = set.getString(12);
-                    pr.setSpecific(spec.getValue());
-
-                    result.add(pr);
-                }
-            }
-            stmt.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return result;
-    }
     
 //    public static Product getOneFromDB (int productId){
 //        try {
