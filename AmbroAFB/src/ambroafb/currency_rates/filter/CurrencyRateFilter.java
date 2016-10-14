@@ -45,18 +45,14 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     private FilterOkayCancelController okayCancelController;
     
     private JSONObject jSonResult;
-    public static final String DATE_BIGGER = "1970-01-01";
-    public static final String DATE_LESS = "9999-01-01";
+    private static final String DATE_BIGGER = "1970-01-01";
+    private static final String DATE_LESS = "9999-01-01";
     
     public CurrencyRateFilter(Stage owner){
         StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
-        this.initStyle(StageStyle.UNIFIED);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("currency_rate_filter"));
         Scene scene = Utils.createScene("/ambroafb/currency_rates/filter/CurrencyRateFilter.fxml", (CurrencyRateFilter)this);
-        this.setScene(scene);
-        this.initOwner(owner);
-        this.setResizable(false);
+        setStageFeatures(scene, owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             okayCancelController.cancel(null);
@@ -65,6 +61,14 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
         
         StageUtils.centerChildOf(owner, (Stage)this);
         StageUtils.followChildTo(owner, (Stage)this);
+    }
+    
+    private void setStageFeatures(Scene scene, Stage owner){
+        this.setScene(scene);
+        this.initOwner(owner);
+        this.initStyle(StageStyle.UNIFIED);
+        this.setTitle(GeneralConfig.getInstance().getTitleFor("currency_rate_filter"));
+        this.setResizable(false);
     }
     
     @Override

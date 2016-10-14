@@ -33,22 +33,17 @@ public class AmbroAFB extends Application {
 
     public static Stage mainStage;
     public static ServerSocket socket;
-    private static final String mainStageName = "main";
 
     @Override
     public void start(Stage stage) {
         mainStage = stage;
         UtilsDB.getInstance().createLocalUsageTables();
-        StagesContainer.registerStageByOwner(null, mainStageName, mainStage);
+        StagesContainer.registerStageByOwner(null, getClass().getSimpleName(), mainStage);
         Scene scene = Utils.createScene(Names.MAIN_FXML, null);
         stage.setScene(scene);
         stage.setTitle(GeneralConfig.getInstance().getTitleFor(Names.MAIN_TITLE));
         if (Names.MAIN_LOGO != null) {
-            try {
-                stage.getIcons().add(new Image(Utils.class.getResource(Names.MAIN_LOGO).openStream()));
-            } catch (IOException ex) {
-                Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            stage.getIcons().add(new Image(Names.MAIN_LOGO));
         }
 
         stage.setOnCloseRequest((WindowEvent event) -> {

@@ -37,7 +37,7 @@ public class Currency extends EditorPanelable {
 
     
     @AView.Column(title = "%date", width = "100")
-    private final StringProperty createDate;
+    private final StringProperty createdDate;
     
     private final ObjectProperty<LocalDate> dateProperty;
     
@@ -54,7 +54,7 @@ public class Currency extends EditorPanelable {
     public static final String ALL = "ALL";
     
     public Currency(){
-        createDate = new SimpleStringProperty("");
+        createdDate = new SimpleStringProperty("");
         dateProperty = new SimpleObjectProperty<>();
         iso = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>(this);
@@ -66,7 +66,7 @@ public class Currency extends EditorPanelable {
             if (newValue != null){
                 dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(newValue);
             }
-            createDate.set(dateStr);
+            createdDate.set(dateStr);
         });
         
         // Bind components does not work for this case. Because DB methods calls setters ("bind" and also settter is conflicted couple). So listener also call setters to change currency values:
@@ -144,8 +144,8 @@ public class Currency extends EditorPanelable {
     
     
     // Getters:
-    public String getCreateDate(){
-        return createDate.get();
+    public String getCreatedDate(){
+        return createdDate.get();
     }
     
     public String getIso(){
@@ -162,7 +162,7 @@ public class Currency extends EditorPanelable {
     
     
     // Setters:
-    public void setCreateDate(String date) {
+    public void setCreatedDate(String date) {
         dateProperty.set(DateConverter.getInstance().parseDate(date));
 //        String localDateStr;
 //        try {
