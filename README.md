@@ -41,9 +41,10 @@ Accounting for Busines
 * (-) MVS პატერნის გამოყენება Filter-ში
 * (|) ATableView-ს contextMenu-დან იყოს შესაძლებლობა რომელ სვეტზეც ვდგავართ იმის content-ის alignment-ი ვცვალოთ
 * (-) recId-ის ვერ ცნობს callProcedureAndGetAsJson, წამოღებისას ცნობს (getDBClient().select("discounts_on_licenses_count") და ჩაწერისას ვერა.
-* (-) products_whole არ მუშაობს
+* (-) products_whole ?
 * (-) general_select-ს როგორ მიეთითოს appLanguage
 * (-) DBClient-ში select-ზე return new JSONArray(res.getDataAsString()); - ში ალბათ response უნდა გადაეცემოდეს ნაცვლად res.getDataAsString()-სა
+* (-) 1) BallanceAccount-ებში მოდის ორი descrip-ი. 2) actPas არის boolean. ადრე შეიძლებოდა რომ actPas ერთდროულად ყოფილიყო ანგარიში, შეიცვალა ეს?
 
 
 დასატესტია:
