@@ -30,6 +30,7 @@ Accounting for Busines
 
 კითხვები რომლებიც საჭიროებენ დასაბუთებულ ახსნას:
 * როცა stage დაიხურება ამოიშალოს თუ არა  bidmap-იდან?
+* iso-ს bind და set-ის შემტხვევები შესაბამისად CurrencyRate-სა და Currency (ასევე Product) კლასებში. იგივეა Country Client-ებში
 
 
 დასახვეწია:
@@ -46,6 +47,13 @@ Accounting for Busines
 * (+) DBClient-ში select-ზე return new JSONArray(res.getDataAsString()); - ში ალბათ response უნდა გადაეცემოდეს ნაცვლად res.getDataAsString()-სა
 * (-) BallanceAccount-ებში მოდის ორი descrip-ი. 
 * (+) BallanceAccount-ებში actPas არის boolean. ადრე შეიძლებოდა რომ actPas ერთდროულად ყოფილიყო ანგარიში
+* (-) DBUtils რომელიც პასუხისმგებელი იქნება DBService-ისთან ურთიერთობაზე
+* (-) currency-ის განმეორებადი კოდი ყველგან სადაც iso string მოდის ბაზიდან (მაგ. CurrencyRate). მოგვარება -> Product კლასში
+* (+) StagesContainer.getPathForStage შესაცვლელია getPathForStage(owner, stageName)
+* (-) ბაზის სტატიკურ მეთოდებში კოპირების გამო error ex-ში ან სადმე შესაძლოა იყოს ჩარჩენილი სხვადასხვა კლასის class ცვლადი...
+* (-) product-ებში ზოგს მოაქვს ველი descrip და ასევე specificesrcip და ზოგს მხოლოდ specificesrcip
+* (-) product-ების width დაპატარავებისას editorPanel-ის region-ის ადგილი უჩვეულოდ დიდა რჩება
+* (-) fxml, css, less ფაილები   (formPane_ზე Min და Max width-ები // sheidzleba tavdapirvel zomas vusetavdit, tumca arc esaa sachiro)
 
 
 დასატესტია:
