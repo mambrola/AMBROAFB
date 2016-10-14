@@ -99,10 +99,18 @@ public class Currency extends EditorPanelable {
     
     // DB methods:
     public static Currency getOneFromDB (int recId){
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+        return getOneFromDBHelper(conditionBuilder);
+    }
+    
+    public static Currency getOneFromDB (String iso){
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("iso", "=", iso).condition();
+        return getOneFromDBHelper(conditionBuilder);
+    }
+    
+    private static Currency getOneFromDBHelper(ConditionBuilder conditionBuilder){
         try {
-            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
             JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, conditionBuilder.build());
-            
             String currencyData = data.opt(0).toString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(currencyData, Currency.class);

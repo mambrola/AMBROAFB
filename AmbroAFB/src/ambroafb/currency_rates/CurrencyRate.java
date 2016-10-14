@@ -104,7 +104,6 @@ public class CurrencyRate extends EditorPanelable {
         return new ArrayList<>();
     }
     
-    
     public static CurrencyRate getOneFromDB (int recId){
         try {
             ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();

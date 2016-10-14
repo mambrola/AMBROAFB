@@ -7,11 +7,13 @@ package ambroafb.products;
 
 import ambro.ANodeSlider;
 import ambro.AView;
+import ambroafb.currencies.Currency;
 import ambroafb.discounts_on_count.DiscountOnCount;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.TestDataFromDB;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
 import authclient.AuthServerException;
@@ -23,12 +25,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -49,7 +55,7 @@ public class Product extends EditorPanelable {
     private final StringProperty former;
     
     @AView.Column(title = "%descrip", width = "200")
-    private final SimpleStringProperty descrip;
+    private final SimpleStringProperty specificDescrip;
     
     @AView.Column(title = "%remark", width = "200")
     private final SimpleStringProperty remark;
@@ -60,8 +66,9 @@ public class Product extends EditorPanelable {
     @AView.Column(width = "50")
     private final StringProperty price;
     
-    @AView.Column(title = "%currency", width = "50")
-    private final StringProperty currency;
+    @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
+    private final StringProperty iso;
+    private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%discounts", width = "80", cellFactory = DiscountCellFactory.class)
     private ObservableList<ProductDiscount> discounts;
@@ -69,24 +76,32 @@ public class Product extends EditorPanelable {
     @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)
     private final BooleanProperty isActive;
     
+    private static final String DB_VIEW_NAME = "products_whole";
     
     public Product(){
         abbreviation = new SimpleStringProperty("");
         former = new SimpleStringProperty("");
-        descrip = new SimpleStringProperty("");
+        specificDescrip = new SimpleStringProperty("");
         remark = new SimpleStringProperty("");
         specific = new SimpleStringProperty("");
         price = new SimpleStringProperty("");
-        currency = new SimpleStringProperty("");
+        iso = new SimpleStringProperty("");
+        currency = new SimpleObjectProperty<>();
         discounts = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
         
+        currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
+            if (newValue != null) {
+                iso.set(newValue.getIso());
+            }
+        });
     }
     
     // DBService methods:
     public static ArrayList<Product> getAllFromDB (){
         try {
-            String data = GeneralConfig.getInstance().getDBClient().select("products_whole", new ConditionBuilder().build()).toString();
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().build()).toString();
+            System.out.println("data: " + data);
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<DiscountOnCount>>() {});
         } catch (IOException | AuthServerException ex) {
@@ -95,73 +110,6 @@ public class Product extends EditorPanelable {
         return new ArrayList<>();
     }
     
-//    public static ArrayList<Product> getAllFromDB(){
-//        ArrayList<Product> result = new ArrayList<>();
-//        Statement stmt = TestDataFromDB.getStatement();
-//        
-//        try {
-//            ResultSet set = stmt.executeQuery("select products.rec_id, products.abbreviation, products.former, products.descrip, products.remark, products.price, products.is_active, " +
-//                                                " product_discounts.months, product_discounts.discount_rate, " +
-//                                                " product_specifics.descrip_default, product_specifics.descrip_first, product_specifics.descrip_second " +
-//                                                " from products " +
-//                                                " left join product_discounts " +
-//                                                " on products.rec_id = product_discounts.product_id " +
-//                                                " join product_specifics " +
-//                                                " on products.specific = product_specifics.rec_id; ");
-//            Map<Integer, Product> ids = new HashMap<>();
-//            while(set.next()) {
-//                Product pr = new Product();
-//                int rec_id = set.getInt(1);
-//                
-//                if (ids.containsKey(rec_id)) {
-//                    Product product = ids.get(rec_id);
-//                    ProductDiscount disc = new ProductDiscount();
-//                    disc.setMonths(set.getInt(8));
-//                    disc.setDiscount(set.getDouble(9));
-//                    product.getDiscounts().add(disc);
-//                } else {
-//                    ids.put(rec_id, pr);
-//                    pr.setRecId(rec_id);
-//                    pr.setIsActive(set.getBoolean(7));
-//                    pr.setAbbreviation(set.getString(2));
-//                    pr.setFormer(set.getInt(3));
-//                    pr.setDescrip(set.getString(4));
-//                    pr.setRemark(set.getString(5));
-//                    pr.setPrice(set.getDouble(6));
-//                    if (set.getObject(8) != null) {
-//                        ProductDiscount disc = new ProductDiscount();
-//                        disc.setMonths(set.getInt(8));
-//                        disc.setDiscount(set.getDouble(9));
-//                        pr.getDiscounts().add(disc);
-//                    }
-//                    ProductSpecific spec = new ProductSpecific();
-//                    spec.descrip_default = set.getString(10);
-//                    spec.descrip_first = set.getString(11);
-//                    spec.descrip_second = set.getString(12);
-//                    pr.setSpecific(spec.getValue());
-//
-//                    result.add(pr);
-//                }
-//            }
-//            stmt.close();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
-//        return result;
-//    }
-    
-//    public static Product getOneFromDB (int productId){
-//        try {
-//            String data = GeneralConfig.getInstance().getServerClient().get("products/" + productId);
-//            ObjectMapper mapper = new ObjectMapper();
-//            return mapper.readValue(data, Product.class);
-//        } catch (IOException | KFZClient.KFZServerException ex) {
-//            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Product").showAlert();
-//        }
-//        return null;
-//    }
     
     public static ArrayList<ProductSpecific> getAllSpecifics(){
         ArrayList<ProductSpecific> result = new ArrayList<>();
@@ -196,7 +144,7 @@ public class Product extends EditorPanelable {
                 pr.setRecId(set.getInt(1));
                 pr.setAbbreviation(set.getString(2));
                 pr.setFormer(set.getInt(3));
-                pr.setDescrip(set.getString(4));
+                pr.setSpecificDescrip(set.getString(4));
                 pr.setRemark(set.getString(5));
                 pr.setPrice(set.getDouble(6));
                 pr.setIsActive(set.getBoolean(7));
@@ -275,7 +223,7 @@ public class Product extends EditorPanelable {
     }
     
     public StringProperty descriptionProperty(){
-        return descrip;
+        return specificDescrip;
     }
     
     public StringProperty remarkProperty(){
@@ -286,7 +234,7 @@ public class Product extends EditorPanelable {
         return price;
     }
     
-    public StringProperty currencyProperty(){
+    public ObjectProperty currencyProperty(){
         return currency;
     }
     
@@ -308,8 +256,8 @@ public class Product extends EditorPanelable {
         return Utils.getIntValueFor(former.get());
     }
     
-    public String getDescrip() {
-        return descrip.get();
+    public String getSpecificDescrip() {
+        return specificDescrip.get();
     }
     
     public String getRemark() {
@@ -324,8 +272,8 @@ public class Product extends EditorPanelable {
         return Utils.getDoubleValueFor(price.get());
     }
     
-    public String getCurrency(){
-        return currency.get();
+    public String getIso(){
+        return iso.get();
     }
     
     public ObservableList<ProductDiscount> getDiscounts() {
@@ -346,8 +294,8 @@ public class Product extends EditorPanelable {
         this.former.set("" + former);
     }
 
-    public void setDescrip(String descrip) {
-        this.descrip.set(descrip);
+    public void setSpecificDescrip(String descrip) {
+        this.specificDescrip.set(descrip);
     }
     
     public void setRemark(String remark) {
@@ -362,11 +310,14 @@ public class Product extends EditorPanelable {
         this.price.set("" + price);
     }
     
-    public void setCurrency(String currency){
-        this.currency.set(currency);
+    public void setIso(String iso){
+        this.currency.setValue(Currency.getOneFromDB(iso));
     }
     
-    public void setDiscounts(ArrayList<ProductDiscount> discounts) {
+//    public void setDiscounts(ArrayList<ProductDiscount> discounts) {
+//        this.discounts = FXCollections.observableArrayList(discounts);
+//    }
+    public void setDiscounts(Collection<ProductDiscount> phoneList) {
         this.discounts = FXCollections.observableArrayList(discounts);
     }
 
@@ -395,10 +346,10 @@ public class Product extends EditorPanelable {
         Product product = (Product) other;
         setAbbreviation(product.getAbbreviation());
         setFormer(product.getFormer());
-        setDescrip(product.getDescrip());
+        setSpecificDescrip(product.getSpecificDescrip());
         setRemark(product.getRemark());
         setPrice(product.getPrice());
-        setCurrency(product.getCurrency());
+        setIso(product.getIso());
         setSpecific(product.getSpecific());
         setIsActive(product.getIsActive());
         
@@ -411,12 +362,12 @@ public class Product extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return getAbbreviation().concat(getDescrip());
+        return getAbbreviation().concat(getSpecificDescrip());
     }
     
     @Override
     public String toString() {
-        return descrip.get();
+        return specificDescrip.get();
     }
 
     
@@ -428,10 +379,10 @@ public class Product extends EditorPanelable {
     public boolean compares(Product productBackup) {
         return  this.getAbbreviation().equals(productBackup.getAbbreviation()) &&
                 this.getFormer() == productBackup.getFormer() &&
-                this.getDescrip().equals(productBackup.getDescrip()) &&
+                this.getSpecificDescrip().equals(productBackup.getSpecificDescrip()) &&
                 this.getRemark().equals(productBackup.getRemark()) &&
                 this.getPrice() == productBackup.getPrice() &&
-                this.getCurrency().equals(productBackup.getCurrency()) &&
+                this.getIso().equals(productBackup.getIso()) &&
                 this.getSpecific().equals(productBackup.getSpecific()) &&
                 this.getIsActive() == productBackup.getIsActive() &&
                 Utils.compareLists(getDiscounts(), productBackup.getDiscounts());
