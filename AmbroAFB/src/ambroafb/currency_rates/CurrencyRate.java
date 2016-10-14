@@ -34,6 +34,7 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import ambroafb.general.interfaces.TableColumnWidths;
+import authclient.db.DBClient;
 
 
 /**
@@ -122,8 +123,10 @@ public class CurrencyRate extends EditorPanelable {
             System.out.println("currencyRate. saveOneToDB. writer.writeValueAsString(currencyRate): " + writer.writeValueAsString(currencyRate));
             
             JSONObject rateJson = new JSONObject(writer.writeValueAsString(currencyRate));
-            JSONObject newRate = GeneralConfig.getInstance().getDBClient().insertUpdate("rates", rateJson);
-            return mapper.readValue(newRate.toString(), CurrencyRate.class);
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONObject newRate = dbClient.callProcedureAndGetAsJson("general_insert_update", "rates", dbClient.getLang(), rateJson).getJSONObject(0);
+//            return mapper.readValue(newRate.toString(), CurrencyRate.class);
+            return null;
         } catch (JsonProcessingException ex) {
             Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException | AuthServerException | JSONException ex) {
