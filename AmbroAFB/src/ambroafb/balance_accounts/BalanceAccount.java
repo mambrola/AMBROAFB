@@ -44,8 +44,8 @@ import org.json.JSONObject;
 public class BalanceAccount extends EditorPanelable {
 
     private final StringProperty balAcc;
-    private final StringProperty descrip_ka;
-    private final StringProperty descrip_en;
+    private final StringProperty descripKa;
+    private final StringProperty descripEn;
     private final IntegerProperty actPas;
     private boolean level;  // for old DB
     private boolean isBase; // for old DB
@@ -72,10 +72,10 @@ public class BalanceAccount extends EditorPanelable {
     
     public BalanceAccount(){
         balAcc = new SimpleStringProperty("");
-        descrip_ka = new SimpleStringProperty("");
-        descrip_en = new SimpleStringProperty("");
+        descripKa = new SimpleStringProperty("");
+        descripEn = new SimpleStringProperty("");
         
-        currDescrip = (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descrip_ka : descrip_en;
+        currDescrip = (GeneralConfig.getInstance().getCurrentLocal().getLanguage().equals("ka")) ? descripKa : descripEn;
         descripExpression = Utils.avoidNull(balAcc).concat(" - ").concat(Utils.avoidNull(currDescrip));
         actPas = new SimpleIntegerProperty();
         indeterminateProperty = new SimpleBooleanProperty();
@@ -128,8 +128,8 @@ public class BalanceAccount extends EditorPanelable {
 //                BalanceAccount balAccount = new BalanceAccount();
 //                while(set.next()){
 //                    balAccount.setBalAcc(set.getInt(2));
-//                    balAccount.setDescrip_ka(set.getString(3));
-//                    balAccount.setDescrip_en(set.getString(4));
+//                    balAccount.setDescripKa(set.getString(3));
+//                    balAccount.setDescripEn(set.getString(4));
 //                    balAccount.setActPas(set.getInt(5));
 //                }
 //                result = balAccount;
@@ -201,16 +201,16 @@ public class BalanceAccount extends EditorPanelable {
      * For JSON
      * @return 
      */
-    public String getDescrip_ka(){
-        return descrip_ka.get();
+    public String getDescripKa(){
+        return descripKa.get();
     }
     
     /**
      * For JSON
      * @return 
      */
-    public String getDescrip_en(){
-        return descrip_en.get();
+    public String getDescripEn(){
+        return descripEn.get();
     }
     
     public String getAViewColumText(){
@@ -239,16 +239,16 @@ public class BalanceAccount extends EditorPanelable {
      * For JSON
      * @param descrip New Description for Georgia.
      */
-    public void setDescrip_ka(String descrip){
-        this.descrip_ka.set(descrip);
+    public void setDescripKa(String descrip){
+        this.descripKa.set(descrip);
     }
     
     /**
      * For JSON
      * @param descrip New Description for English.
      */
-    public void setDescrip_en(String descrip){
-        this.descrip_en.set(descrip);
+    public void setDescripEn(String descrip){
+        this.descripEn.set(descrip);
     }
     
 
@@ -270,8 +270,8 @@ public class BalanceAccount extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         BalanceAccount account = (BalanceAccount) other;
-        setDescrip_ka(account.getDescrip_ka());
-        setDescrip_en(account.getDescrip_en());
+        setDescripKa(account.getDescripKa());
+        setDescripEn(account.getDescripEn());
         setBalAcc(account.getBalAcc());
         setActPas(account.getActPas());
     }
