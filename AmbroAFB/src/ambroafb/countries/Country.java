@@ -8,21 +8,19 @@ package ambroafb.countries;
 import ambro.AView;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.KFZClient;
-import ambroafb.general.TestDataFromDB;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.AuthServerException;
+import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.json.JSONArray;
 
 /**
  *
@@ -42,6 +40,7 @@ public class Country extends EditorPanelable{
     private final StringProperty descrip_ka;
     private final StringProperty descrip_de;
 
+    private static final String DB_TABLE_NAME = "countries";
     
     public Country() {
         code = new SimpleStringProperty();
@@ -63,35 +62,30 @@ public class Country extends EditorPanelable{
 //        ObjectMapper mapper = new ObjectMapper();
 //        return mapper.readValue(country_json, Country.class);
 //    }
-    public static Country getOneFromDB(int recId) throws IOException, KFZClient.KFZServerException {
-        Country country = new Country();
-        Statement stmt = TestDataFromDB.getStatement();
-        try {
-            ResultSet set = stmt.executeQuery("select * from countries where rec_id = " + recId);
-            while(set.next()){
-                country.setRecId(set.getInt(1));
-                country.setCode(set.getString(2));
-                country.setDescrip_en(set.getString(3));
-                country.setDescrip_ka(set.getString(4));
-                country.setDescrip_de(set.getString(5));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Country.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return country;
-    }
 
     public static List<Country> getAllFromDB() {
         try {
-//            JSONObject json = new JSONObject("where: ");
-//            String countries_json = GeneralConfig.getInstance().getDBClient().select("countries", conditions)
-            String countries_json = GeneralConfig.getInstance().getAuthClient().get("countries").getDataAsString();
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(countries_json, new TypeReference<ArrayList<Country>>(){});
+            return mapper.readValue(data, new TypeReference<ArrayList<Country>>() {});
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Country.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new ArrayList<>();
+    }
+    
+    public static Country getOneFromDB(int recId) throws IOException, KFZClient.KFZServerException {
+        try {
+            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, conditionBuilder.build());
+            
+            String countryData = data.opt(0).toString();
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(countryData, Country.class);
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(Country.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     // Properties:
