@@ -24,3 +24,11 @@
     -fx-pref-width: 100;
 }
 
+.textRight {
+    -fx-alignment: CENTER-RIGHT;
+}
+
+.textCenter {
+    -fx-alignment: CENTER;
+}
+

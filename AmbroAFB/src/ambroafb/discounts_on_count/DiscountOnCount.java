@@ -6,17 +6,24 @@
 package ambroafb.discounts_on_count;
 
 import ambro.AView;
-import ambroafb.general.TestDataFromDB;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import authclient.AuthServerException;
+import authclient.db.ConditionBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -24,58 +31,59 @@ import javafx.beans.property.StringProperty;
  */
 public class DiscountOnCount extends EditorPanelable {
 
-    @AView.Column(title = "%licenses_count", width = "100")
-    private final StringProperty license_count;
+    @AView.Column(title = "%licenses_count", width = "200", styleClass = "textRight")
+    private final StringProperty licenseCount;
     
-    @AView.Column(title = "%sales_percent", width = "100")
-    private final StringProperty discount_rate;
+    @AView.Column(title = "%sales_percent", width = "100", styleClass = "textRight")
+    private final StringProperty discountRate;
     
     public DiscountOnCount(){
-        license_count = new SimpleStringProperty("");
-        discount_rate = new SimpleStringProperty("");
+        licenseCount = new SimpleStringProperty("");
+        discountRate = new SimpleStringProperty("");
     }
     
     // DB methods:
-    public static ArrayList<EditorPanelable> getAllFromDBTest(){
-        ArrayList<EditorPanelable> result = new ArrayList<>();
-        
-        Statement stmt = TestDataFromDB.getStatement();
+    public static ArrayList<EditorPanelable> getAllFromDB(){
         try {
-            ResultSet set = stmt.executeQuery("select * from discounts_on_licenses_count; ");
-            while (set.next()){
-                DiscountOnCount discOnCount = new DiscountOnCount();
-                discOnCount.setRecId(set.getInt(1));
-                discOnCount.setLicense_count(set.getInt(2));
-                discOnCount.setDiscount_rate(set.getInt(3));
-                result.add(discOnCount);
-            }
-        } catch (SQLException ex) {
+            String data = GeneralConfig.getInstance().getDBClient().select("discounts_on_licenses_count", new ConditionBuilder().build()).toString();
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<DiscountOnCount>>() {});
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        return result;
+        return new ArrayList<>();
     }
     
     public static DiscountOnCount getOneFromDB(int recId) {
-        DiscountOnCount result = new DiscountOnCount();
-        
-        Statement stmt = TestDataFromDB.getStatement();
         try {
-            ResultSet set = stmt.executeQuery("select * from discounts_on_licenses_count " +
-                                                " where rec_id = " + recId);
-            while (set.next()) {
-                result.setRecId(set.getInt(1));
-                result.setLicense_count(set.getInt(2));
-                result.setDiscount_rate(set.getInt(3));
-            }
-        } catch (SQLException ex) {
+            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+            JSONArray data = GeneralConfig.getInstance().getDBClient().select("discounts_on_licenses_count", conditionBuilder.build());
+            
+            String currencyData = data.opt(0).toString();
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(currencyData, DiscountOnCount.class);
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return result;
+        return null;
     }
 
-    public static void saveOneToDB(DiscountOnCount discOnCount) {
-        System.out.println("save one to DB... ??");
+    public static DiscountOnCount saveOneToDB(DiscountOnCount discOnCount) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+            
+            System.out.println("DiscountOnCount. saveOneToDB. writer.writeValueAsString(discOnCount): " + writer.writeValueAsString(discOnCount));
+            
+            JSONObject discOnCountJson = new JSONObject(writer.writeValueAsString(discOnCount));
+            JSONObject newRate = GeneralConfig.getInstance().getDBClient().insertUpdate("discounts_on_licenses_count", discOnCountJson);
+            return mapper.readValue(newRate.toString(), DiscountOnCount.class);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public static boolean deleteOneFromDB(int id) {
@@ -85,31 +93,31 @@ public class DiscountOnCount extends EditorPanelable {
     
     // Properties:
     public StringProperty licenseCountProperty(){
-        return license_count;
+        return licenseCount;
     }
     
     public StringProperty discountRateProperty(){
-        return discount_rate;
+        return discountRate;
     }
     
     
     // Getters:
-    public int getLicense_count(){
-        return Utils.getIntValueFor(license_count.get());
+    public int getLicenseCount(){
+        return Utils.getIntValueFor(licenseCount.get());
     }
     
-    public int getDiscount_rate(){
-        return Utils.getIntValueFor(discount_rate.get());
+    public int getDiscountRate(){
+        return Utils.getIntValueFor(discountRate.get());
     }
     
     
     // Settres:
-    public void setLicense_count(int count){
-        this.license_count.set("" + count);
+    public void setLicenseCount(int count){
+        this.licenseCount.set("" + count);
     }
     
-    public void setDiscount_rate(int rate){
-        this.discount_rate.set("" + rate);
+    public void setDiscountRate(int rate){
+        this.discountRate.set("" + rate);
     }
     
     
@@ -130,8 +138,8 @@ public class DiscountOnCount extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         DiscountOnCount discCount = (DiscountOnCount) other;
-        setLicense_count(discCount.getLicense_count());
-        setDiscount_rate(discCount.getDiscount_rate());
+        setLicenseCount(discCount.getLicenseCount());
+        setDiscountRate(discCount.getDiscountRate());
     }
 
     @Override
@@ -140,8 +148,8 @@ public class DiscountOnCount extends EditorPanelable {
     }
 
     public boolean compares(DiscountOnCount discCountBackup) {
-        return  getLicense_count() == discCountBackup.getLicense_count() &&
-                getDiscount_rate() == discCountBackup.getDiscount_rate();
+        return  getLicenseCount() == discCountBackup.getLicenseCount() &&
+                getDiscountRate() == discCountBackup.getDiscountRate();
     }
     
 }

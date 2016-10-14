@@ -567,7 +567,7 @@ public class Utils {
      * @param textField Field that must validation.
      * @param pattern The correct syntax for textField.
      */
-    public static void validateTextFieldContent(TextField textField, String pattern){
+    public static void validateTextFieldContentListener(TextField textField, String pattern){
         textField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue != null && !newValue.isEmpty()){
                 if (!Pattern.matches(pattern, newValue))

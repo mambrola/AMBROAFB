@@ -54,7 +54,7 @@ public class CurrencyDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        Utils.validateTextFieldContent(symbol, "\\p{Sc}");
+        Utils.validateTextFieldContentListener(symbol, "\\p{Sc}");
         currencies.setShowCategoryALL(false);
         permissionToClose = true;
     }    

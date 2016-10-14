@@ -61,7 +61,7 @@ public class BalanceAccountDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        Utils.validateTextFieldContent(balAccountCode, "[1-9][0-9]*");
+        Utils.validateTextFieldContentListener(balAccountCode, "[1-9][0-9]*");
         permissionToClose = true;
     }    
 

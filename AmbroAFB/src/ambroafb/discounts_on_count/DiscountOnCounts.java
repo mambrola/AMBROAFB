@@ -35,6 +35,8 @@ public class DiscountOnCounts extends Stage {
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
+        StageUtils.followChildTo(owner, (Stage)this);
+        StageUtils.stopStageWidthDecrease(owner, () -> discountsController.getEditorPanelController().getPanelMinWidth());
         StagesContainer.setSizeFor((Stage)this);
     }
     
