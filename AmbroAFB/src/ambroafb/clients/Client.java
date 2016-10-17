@@ -230,7 +230,11 @@ public class Client extends EditorPanelable{
             whereBuilder.and("country_code", "=", country.getCode());
         }
         if (status != null){
-            //whereBuilder.and("", dateTo, status)
+            whereBuilder.andGroup();
+            status.stream().forEach((clientStatus) -> {
+                whereBuilder.or("status", "=", clientStatus.getClientStatusId());
+            });
+            
         }
         
         try {
