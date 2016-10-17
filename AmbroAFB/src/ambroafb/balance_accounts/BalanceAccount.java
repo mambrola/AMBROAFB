@@ -119,25 +119,6 @@ public class BalanceAccount extends EditorPanelable {
             Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-        
-//        BalanceAccount result = null;
-//        Statement stmt = TestDataFromDB.getStatement();
-//        if (stmt != null){
-//            try {
-//                ResultSet set = stmt.executeQuery("select * from bal_accounts where rec_id = " + recId);
-//                BalanceAccount balAccount = new BalanceAccount();
-//                while(set.next()){
-//                    balAccount.setBalAcc(set.getInt(2));
-//                    balAccount.setDescripKa(set.getString(3));
-//                    balAccount.setDescripEn(set.getString(4));
-//                    balAccount.setActPas(set.getInt(5));
-//                }
-//                result = balAccount;
-//            } catch (SQLException ex) {
-//                Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//        return result;
     }
     
     public static BalanceAccount saveOneToDB(BalanceAccount balAccount){

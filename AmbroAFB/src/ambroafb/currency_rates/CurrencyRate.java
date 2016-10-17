@@ -21,8 +21,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
@@ -49,12 +47,10 @@ public class CurrencyRate extends EditorPanelable {
     private final StringProperty count;
     @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
     private final StringProperty iso;
+    private final ObjectProperty<Currency> currency;
     @AView.Column(title = "%rate", width = "80", styleClass = "textRight")
     private final StringProperty rate;
-    
-    private ObjectProperty<Currency> isoProperty;
     private final ObjectProperty<LocalDate> dateProperty;
-    private static final Map<String, Currency> currencies = new HashMap<>();
     
     private static final String DB_TABLE_NAME = "rates";
     private static final String DB_VIEW_NAME = "rates_whole";
@@ -64,7 +60,7 @@ public class CurrencyRate extends EditorPanelable {
         date = new SimpleStringProperty("");
         count = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
-        isoProperty = new SimpleObjectProperty<>();
+        currency = new SimpleObjectProperty<>();
         rate = new SimpleStringProperty("");
         
         dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
@@ -75,10 +71,9 @@ public class CurrencyRate extends EditorPanelable {
             date.set(dateStr);
         });
         
-        isoProperty.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
-            iso.unbind();
-            if (iso.get() != null){
-                iso.bind(isoProperty.get().isoProperty());
+        currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
+            if (newValue != null) {
+                iso.set(newValue.getIso());
             }
         });
     }
@@ -152,7 +147,7 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public ObjectProperty<Currency> currencyProperty(){
-        return isoProperty;
+        return currency;
     }
     
     public StringProperty rateProperty() {
@@ -186,23 +181,8 @@ public class CurrencyRate extends EditorPanelable {
         this.count.set("" + count);
     }
     
-    
-    public void setIso(String iso){
-        Currency currency = currencies.get(iso);
-        try {
-            if (currency == null) {
-                JSONArray data = GeneralConfig.getInstance().getDBClient().select("currencies", new ConditionBuilder().where().and("iso", "=", iso).condition().build());
-                if (data.length() > 0) {
-                    String currencyData = data.opt(0).toString();
-                    ObjectMapper mapper = new ObjectMapper();
-                    currency = mapper.readValue(currencyData, Currency.class);
-                    currencies.put(iso, currency);
-                }
-            }
-            this.isoProperty.set(currency);
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void setIso(String iso) {
+        this.currency.setValue(Currency.getOneFromDB(iso));
     }
     
     public void setRate(double rate){

@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
@@ -53,8 +55,9 @@ public class Currency extends EditorPanelable {
     @AView.Column(width = "20")
     private final StringProperty symbol;
     
+    private static final Map<String, Currency> currencies = new HashMap<>();
+    
     public static final String ALL = "ALL";
-
     private static final String DB_TABLE_NAME = "currencies";
     
     public Currency(){
@@ -85,6 +88,7 @@ public class Currency extends EditorPanelable {
     }
     
     
+    // DB methods:
     public static ArrayList<Currency> getAllFromDB(){
         try {
             String data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
@@ -97,15 +101,23 @@ public class Currency extends EditorPanelable {
         
     }
     
-    // DB methods:
     public static Currency getOneFromDB (int recId){
         ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
         return getOneFromDBHelper(conditionBuilder);
     }
     
+    
     public static Currency getOneFromDB (String iso){
-        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("iso", "=", iso).condition();
-        return getOneFromDBHelper(conditionBuilder);
+        Currency result;
+        if (currencies.containsKey(iso)){
+            result = currencies.get(iso).cloneWithID();
+        }
+        else {
+            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("iso", "=", iso).condition();
+            result = getOneFromDBHelper(conditionBuilder);
+            currencies.put(iso, result);
+        }
+        return result;
     }
     
     private static Currency getOneFromDBHelper(ConditionBuilder conditionBuilder){
@@ -184,15 +196,7 @@ public class Currency extends EditorPanelable {
     
     // Setters:
     public void setCreatedDate(String date) {
-        dateProperty.set(DateConverter.getInstance().parseDate(date));
-//        String localDateStr;
-//        try {
-//            dateProperty.set(DateConverter.parseDateWithTimeWithoutMilisecond(date));
-//            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateProperty.get());
-//        } catch(Exception ex) {
-//            localDateStr = date;
-//        }
-//        this.createDate.set(localDateStr);
+        this.dateProperty.set(DateConverter.getInstance().parseDate(date));
     }
     
     public void setIso(String iso){
