@@ -324,8 +324,9 @@ public class Product extends EditorPanelable {
         setFormer(product.getFormer());
         setDescrip(product.getDescrip());
         setRemark(product.getRemark());
-        setSpecific(product.getSpecific());
-        setSpecificDescip(product.getSpecificDescrip());
+        specificProperty().set(product.specificProperty().get());
+        //setSpecific(product.getSpecific());
+        //setSpecificDescip(product.getSpecificDescrip());
         setPrice(product.getPrice());
         setIso(product.getIso());
         setIsActive(product.getIsActive());
@@ -354,21 +355,12 @@ public class Product extends EditorPanelable {
      * @return  - True, if all comparable fields are equals, false otherwise.
      */
     public boolean compares(Product productBackup) {
-//        System.out.println("this.getAbbreviation().equals(productBackup.getAbbreviation()): " + (this.getAbbreviation().equals(productBackup.getAbbreviation())));
-//        System.out.println("this.getFormer() == productBackup.getFormer(): " + (this.getFormer() == productBackup.getFormer()));
-//        System.out.println("this.getDescrip().equals(productBackup.getDescrip()): " + (this.getDescrip().equals(productBackup.getDescrip()) ));
-//        System.out.println("this.getRemark().equals(productBackup.getRemark()): " + (this.getRemark().equals(productBackup.getRemark())));
-//        System.out.println("this.getSpecificDescrip().equals(productBackup.getSpecificDescrip()): " + (this.getSpecificDescrip().equals(productBackup.getSpecificDescrip())));
-//        System.out.println("this.getPrice() == productBackup.getPrice(): " + (this.getPrice() == productBackup.getPrice()));
-//        System.out.println("this.getIso().equals(productBackup.getIso()): " + (this.getIso().equals(productBackup.getIso())));
-//        System.out.println("this.getIsActive() == productBackup.getIsActive(): " + (this.getIsActive() == productBackup.getIsActive()));
-//        System.out.println("Utils.compareLists(getDiscounts(), productBackup.getDiscounts()): " + (Utils.compareLists(getDiscounts(), productBackup.getDiscounts())));
-        
         return  this.getAbbreviation().equals(productBackup.getAbbreviation()) &&
                 this.getFormer() == productBackup.getFormer() &&
                 this.getDescrip().equals(productBackup.getDescrip()) &&
                 this.getRemark().equals(productBackup.getRemark()) &&
-                this.getSpecificDescrip().equals(productBackup.getSpecificDescrip()) &&
+                this.specificProperty().get().equals(productBackup.specificProperty().get()) &&
+                //this.getSpecificDescrip().equals(productBackup.getSpecificDescrip()) &&
                 this.getPrice() == productBackup.getPrice() &&
                 this.getIso().equals(productBackup.getIso()) &&
                 this.getIsActive() == productBackup.getIsActive() &&
