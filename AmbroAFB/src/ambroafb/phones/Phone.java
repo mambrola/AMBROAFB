@@ -23,7 +23,7 @@ public class Phone implements Editable<String> {
     private int recId;
     
 //    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    private int clientId;
+//    private int clientId;
 
     private final StringProperty number = new SimpleStringProperty();
 
@@ -47,13 +47,13 @@ public class Phone implements Editable<String> {
         this.recId = id;
     }
     
-    public int getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
-    }
+//    public int getClientId() {
+//        return clientId;
+//    }
+//
+//    public void setClientId(int clientId) {
+//        this.clientId = clientId;
+//    }
 
     public String getNumber() {
         return number.get();

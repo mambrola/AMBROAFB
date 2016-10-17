@@ -5,6 +5,8 @@
  */
 package ambroafb.countries;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 
@@ -14,25 +16,28 @@ import javafx.util.StringConverter;
  */
 public class CountryComboBox extends ComboBox<Country> {
     
+    private final ObservableList<Country> items = FXCollections.observableArrayList();
     public final Country all = new Country();
     
     public CountryComboBox(){
+        this.setItems(items);
         all.setRecId(0);
         all.setCode("ALL");
-        all.setDescrip("ALL Country");
+        all.setDescrip("");
+        items.add(all);
 
         this.setConverter(new StringConverter<Country>() {
             @Override
             public String toString(Country country) {
-                return country.getCode();
+                return country.toString();
             }
             @Override
             public Country fromString(String string) {
                 return null;
             }
         });
-        this.getItems().addAll(Country.getAllFromDB());
-        this.getItems().add(0, all);
+        items.addAll(Country.getAllFromDB());
+        this.setValue(all);
     }
     
     public void selectItem(Country country){

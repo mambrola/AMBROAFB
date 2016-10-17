@@ -6,24 +6,23 @@
 package ambroafb.clients;
 
 import ambro.AView;
+import ambroafb.clients.helper.Status;
 import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.TestDataFromDB;
 import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
+import authclient.db.DBClient;
+import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,8 +46,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -61,13 +58,13 @@ public class Client extends EditorPanelable{
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
     public String payPal, createdDate;
     
-    private final StringProperty status;
+//    private final StringProperty status;
 
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private final SimpleBooleanProperty isJur;
 
     @AView.Column(width = "24", cellFactory = RezCellFactory.class)
-    private final SimpleBooleanProperty isRez;
+    private final SimpleBooleanProperty isRezident;
 
     private final SimpleStringProperty firstName, lastName;
 
@@ -98,14 +95,20 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private final SimpleStringProperty phoneNumbers;
 
-    @JsonProperty("phoneNumbers")
-    private final ObservableList<Phone> phoneList;
+//    @JsonProperty("phoneNumbers")
+    private final ObservableList<Phone> phones;
 
     @AView.Column(title = "%fax", width = "80")
     private final SimpleStringProperty fax;
     
     @AView.Column(title = "www address", width = "100")
     private final SimpleStringProperty www;
+    
+    private final ObjectProperty<Status> status;
+    
+    private final SimpleStringProperty remark;
+    
+    private final SimpleStringProperty countryCode;
 
     private static final Country DEFAULT_COUNTRY = new Country("GE", "Georgia");
     
@@ -113,10 +116,12 @@ public class Client extends EditorPanelable{
     
     private static final String DB_TABLE_NAME = "clients";
     private static final String DB_VIEW_NAME = "clients_whole";
+    private static final String DB_STATUS_TABLE = "client_status_descrips";
+    
             
     public Client() {
         isJur =             new SimpleBooleanProperty();
-        isRez =             new SimpleBooleanProperty();
+        isRezident =             new SimpleBooleanProperty();
         firstName =         new SimpleStringProperty("");
         lastName =          new SimpleStringProperty("");
         descrip = Utils.avoidNull(firstName).concat(" ").concat(Utils.avoidNull(lastName));
@@ -127,16 +132,19 @@ public class Client extends EditorPanelable{
         fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
         country =           new SimpleObjectProperty<>();
         country.set(DEFAULT_COUNTRY);
-        isRez.set(country.get().getCode().equals("GE"));
+        isRezident.set(country.get().getCode().equals("GE"));
         countryDescrip =    new SimpleStringProperty("");
         IDNumber =          new SimpleStringProperty("");
-        phoneList = FXCollections.observableArrayList();
+        phones = FXCollections.observableArrayList();
         phoneNumbers =      new SimpleStringProperty("");
         fax =               new SimpleStringProperty("");
-        status = new SimpleStringProperty("new");
+        status = new SimpleObjectProperty();
+        status.set(new Status());
         www = new SimpleStringProperty("");
+        remark = new SimpleStringProperty("");
+        countryCode = new SimpleStringProperty("");
 
-        phoneList.addListener((ListChangeListener.Change<? extends Phone> c) -> {
+        phones.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
         });
         rebindPhoneNumbers();
@@ -149,7 +157,7 @@ public class Client extends EditorPanelable{
     
     private void rebindPhoneNumbers() {
         phoneNumbers.unbind();
-        phoneNumbers.bind(phoneList
+        phoneNumbers.bind(phones
                 .stream()
                 .map(Phone::numberProperty)
                 .reduce(new SimpleStringProperty(""), (StringProperty t, StringProperty u) -> {
@@ -182,87 +190,61 @@ public class Client extends EditorPanelable{
         return new ArrayList<>();
     }
     
-    public static List<Client> getFilteredFromDB(JSONObject filter) {
-        List<Client> result = new ArrayList<>();
-        Statement stmt = TestDataFromDB.getStatement();
+    public static List<Status> getAllStatusFromDB(){
         try {
-            String dateFrom = filter.getString("dateBigger");
-            String dateTo = filter.getString("dateLess");
-            int jurid = filter.getInt("juridical");
-            String isJur = (jurid == 2) ? " is_jur = 0 or is_jur = 1 " : " is_jur = " + jurid + " ";
-            Country country = (Country)filter.get("country");
-            String countryCode = (country == null || country.getCode().equals("ALL"))? "" : " country_code = '" + ((Country)filter.get("country")).getCode() + "' and ";
-//            String status = filter.getString("status") == null ? "" : " status = '" + filter.getString("status") + "' and ";
-            int rez = filter.getInt("rezident");
-            String isRez = (rez == 2) ? "is_rezident = 0 or is_rezident = 1 " : " is_rezident = " + rez + " ";
-            
-            String query = "select * from clients_whole " +
-                            " where created_date >= '" + dateFrom + "' and created_date <= '" + dateTo + "' and " +
-                                   isJur + " and " + countryCode + isRez;
-            System.out.println("query: " + query);
-            ResultSet rs = stmt.executeQuery(query);
-            while(rs.next()){
-                Client client = new Client();
-                client.setRecId(rs.getInt(1));
-                client.setEmail(rs.getString(2));
-                client.setIsJur(rs.getBoolean(3));
-                client.setFirstName(rs.getString(4));
-                client.setLastName(rs.getString(5));
-                client.setAddress(rs.getString(6));
-                client.setZipCode(rs.getString(7));
-                client.setCity(rs.getString(8));
-                Country c = new Country();
-                c.setCode(rs.getString(9));
-                client.setCountry(c);
-                client.setIsRez(rs.getBoolean(10));
-                client.setIDNumber(rs.getString(11));
-                client.setFax(rs.getString(12));
-                client.setWww(rs.getString(13));
-                client.createdDate = rs.getString(14);
-                String phones = rs.getString(16);
-//                JSONArray phonesArray = new JSONArray(phones);
-//                for (int i = 0; i < phonesArray.length(); i++) {
-//                    JSONObject object = (JSONObject)phonesArray.get(i);
-//                    String number = object.getString("number");
-//                    Phone phone = new Phone(number);
-//                    client.getPhoneList().add(phone);
-//                }
-                
-                result.add(client);
-            }
-        } catch (Exception ex) {
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            ConditionBuilder condition = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition();
+            String data = dbClient.select(DB_STATUS_TABLE, condition.build()).toString();
+            System.out.println("client status data: " + data);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<Status>>() {});
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        return result;
-//        try {
-//            String data = GeneralConfig.getInstance().getServerClient().get(
-//                    "clients/filter?dateFrom=" + filter.getString("dateBigger") + "&dateTo=" + filter.getString("dateLess")
-//            );
-//            ObjectMapper mapper = new ObjectMapper();
-//            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {
-//            });
-//        } catch (IOException | KFZClient.KFZServerException | JSONException ex) {
-//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return new ArrayList<>();
+        return new ArrayList<>();
     }
     
-    public static List<String> getStatuses(){
-        ArrayList<String> result = new ArrayList<>();
+    public static List<Client> getFilteredFromDB(JSONObject filter) {
+        String dateFrom = filter.optString("dateBigger");
+        String dateTo = filter.optString("dateLess");
+        ObservableList<Status> status = (ObservableList<Status>)filter.opt("statuses"); // ++++++++++++++++++++++++++++++++
+//        System.out.println("client status: " + status);
+        int jurid = filter.optInt("juridical");
+        Country country = (Country)filter.opt("country");
+        int rez = filter.optInt("rezident");
+        
+        WhereBuilder whereBuilder = new ConditionBuilder().where().and("created_date", ">=", dateFrom).and("created_date", "<=", dateTo);
+        if (jurid == 2){
+            whereBuilder.andGroup().or("is_jur", "=", 0).or("is_jur", "=", 1);
+        }
+        else {
+            whereBuilder.and("is_jur", "=", jurid);
+        }
+        if (rez == 2){
+            whereBuilder.andGroup().or("is_rezident", "=", 0).or("is_rezident", "=", 1);
+        }
+        else {
+            whereBuilder.and("is_rezident", "=", rez);
+        }
+        if (country != null && !country.getCode().equals(Country.ALL)){
+            whereBuilder.and("country_code", "=", country.getCode());
+        }
+        if (status != null){
+            //whereBuilder.and("", dateTo, status)
+        }
+        
         try {
-            JSONArray statuses = new JSONArray(GeneralConfig.getInstance().getAuthClient().get("/clients/statuses").getDataAsString());
-            for (int i = 0; i < statuses.length(); i++){
-                String status = statuses.getString(i).trim();
-                if (!status.isEmpty())
-                    result.add(status);
-            }
-        } catch (JSONException | IOException | AuthServerException ex) {
+            JSONObject params = whereBuilder.condition().build();
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
+            System.out.println("client filtered data: " + data);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {});
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return result;
+        return new ArrayList<>();
     }
-
+    
     public static Client getOneFromDB(int id) {
         try {
             String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().where().and("rec_id", "=", id).condition().build()).toString();
@@ -277,24 +259,24 @@ public class Client extends EditorPanelable{
 
     public static Client saveOneToDB(Client client) {
         if (client == null) return null; 
-        try {
-            String resource = "clients" + (client.recId > 0 ? "/" + client.recId : "");
-            String method = client.recId > 0 ? "PUT" : "POST";
-            ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            String client_str = mapper.writeValueAsString(client);
-            
-            String res_str = GeneralConfig.getInstance().getAuthClient().call(resource, method, client_str).getDataAsString();
-            Client res = mapper.readValue(res_str, Client.class);
-            client.copyFrom(res);
-            if(client.getRecId() <= 0)
-                client.setRecId(res.getRecId());
-            
-            client.getClientImageGallery().sendDataToServer("" + client.getRecId());
-            return client;
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
-        }
+//        try {
+//            String resource = "clients" + (client.recId > 0 ? "/" + client.recId : "");
+//            String method = client.recId > 0 ? "PUT" : "POST";
+//            ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+//            String client_str = mapper.writeValueAsString(client);
+//            
+//            String res_str = GeneralConfig.getInstance().getAuthClient().call(resource, method, client_str).getDataAsString();
+//            Client res = mapper.readValue(res_str, Client.class);
+//            client.copyFrom(res);
+//            if(client.getRecId() <= 0)
+//                client.setRecId(res.getRecId());
+//            
+//            client.getClientImageGallery().sendDataToServer("" + client.getRecId());
+//            return client;
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
+//        }
         return null;
     }
 
@@ -311,13 +293,12 @@ public class Client extends EditorPanelable{
 
     
     //Properties getters:
-    
     public SimpleBooleanProperty isJurProperty() {
         return isJur;
     }
 
     public SimpleBooleanProperty isRezProperty() {
-        return isRez;
+        return isRezident;
     }
 
     public SimpleStringProperty firstNameProperty() {
@@ -368,7 +349,7 @@ public class Client extends EditorPanelable{
         return fax;
     }
     
-    public StringProperty statusProperty(){
+    public ObjectProperty statusProperty(){
         return status;
     }
 
@@ -376,15 +357,22 @@ public class Client extends EditorPanelable{
         return www;
     }
     
+    public StringProperty remarkProperty(){
+        return remark;
+    }
+    
+    public StringProperty countryCodeProperty(){
+        return countryCode;
+    }
+    
     
     // Getters:
-    
     public boolean getIsJur() {
         return isJur.get();
     }
 
-    public boolean getIsRez() {
-        return isRez.get();
+    public boolean getIsRezident() {
+        return isRezident.get();
     }
 
     public String getFirstName() {
@@ -411,20 +399,37 @@ public class Client extends EditorPanelable{
         return fullAddress.get();
     }
     
-    public String getStatus() {
-        return status.get();
+    public int getStatus() {
+        return status.get().getClientStatusId();
     }
-
-    public void setStatus(String status) {
-        this.status.set(status);
+    
+    public String getStatusDescrip(){
+        return status.get().getDescrip();
+    }
+    
+    public String getRemark(){
+        return remark.get();
+    }
+    
+    public String getCountryCode(){
+        return countryCode.get();
+    }
+    
+    
+    public void setStatus(int status) {
+        this.status.get().setClientStatusId(status);
+    }
+    
+    public void setStatusDescrip(String statusDescrip){
+        this.status.get().setDescrip(statusDescrip);
     }
 
     public Country getCountry() {
         return country.get();
     }
 
-    public ObservableList<Phone> getPhoneList() {
-        return phoneList;
+    public ObservableList<Phone> getPhones() {
+        return phones;
     }
 
     public String getPhoneNumbers() {
@@ -452,6 +457,14 @@ public class Client extends EditorPanelable{
         return www.get();
     }
     
+    public void setRemark(String remark){
+        this.remark.set(remark);
+    }
+    
+    public void setCountryCode(String countryCode){
+        this.countryCode.set(countryCode);
+    }
+    
     public ImageGalleryController getClientImageGallery(){
         return clientImageGallery;
     }
@@ -462,8 +475,8 @@ public class Client extends EditorPanelable{
         this.isJur.set(isJur);
     }
 
-    public final void setIsRez(boolean isRez) {
-        this.isRez.set(isRez);
+    public final void setIsRezident(boolean isRez) {
+        this.isRezident.set(isRez);
     }
 
     public final void setFirstName(String firstName) {
@@ -499,8 +512,8 @@ public class Client extends EditorPanelable{
         this.IDNumber.set(IDNumber);
     }
 
-    public final void setPhoneList(Collection<Phone> phoneList) {
-        this.phoneList.setAll(phoneList);
+    public final void setPhones(Collection<Phone> phones) {
+        this.phones.setAll(phones);
     }
 
     public final void setFax(String fax) {
@@ -518,7 +531,7 @@ public class Client extends EditorPanelable{
     
     public boolean compares(Client other){
         boolean fieldsCompareResult =   this.isJur.get() == other.getIsJur() &&
-                                        this.isRez.get() == other.getIsRez() && 
+                                        this.isRezident.get() == other.getIsRezident() && 
                                         this.firstName.get().equals(other.getFirstName()) &&
                                         this.lastName.get().equals(other.getLastName()) &&
                                         this.email.get().equals(other.getEmail())    &&
@@ -530,12 +543,11 @@ public class Client extends EditorPanelable{
                                         this.IDNumber.get().equals(other.getIDNumber()) &&
                                         this.fax.get().equals(other.getFax()) &&
                                         this.status.get().equals(other.getStatus());
-        boolean equalsPhones = Phone.compareLists(phoneList, other.getPhoneList());
+        boolean equalsPhones = Phone.compareLists(phones, other.getPhones());
         return fieldsCompareResult && equalsPhones;
     }
 
     // Override methods:
-    
     @Override
     public Client cloneWithoutID() {
         Client clone = new Client();
@@ -554,7 +566,7 @@ public class Client extends EditorPanelable{
     public void copyFrom(EditorPanelable object) {
         Client other = (Client) object;
         setIsJur(other.getIsJur());
-        setIsRez(other.getIsRez());
+        setIsRezident(other.getIsRezident());
         setFirstName(other.getFirstName());
         setLastName(other.getLastName());
         setEmail(other.getEmail());
@@ -564,7 +576,7 @@ public class Client extends EditorPanelable{
         setCity(other.getCity());
         setCountry(other.getCountry());
         setIDNumber(other.getIDNumber());
-        getPhoneList().setAll(other.getPhoneList()
+        getPhones().setAll(other.getPhones()
                 .stream()
                 .map((Phone t) -> new Phone(t.getRecId(), t.getNumber()))
                 .collect(Collectors.toList())
@@ -577,7 +589,7 @@ public class Client extends EditorPanelable{
     @Override
     public String toStringForSearch(){
         String phones = "";
-        phones = phoneList.stream().map((phoneNumber) -> phoneNumber.getNumber() + " ").reduce(phones, String::concat);
+        phones = this.phones.stream().map((phoneNumber) -> phoneNumber.getNumber() + " ").reduce(phones, String::concat);
 
         String result = firstName.concat(" " + lastName.get())
                                 .concat(" " + email.get()).concat(" " + address.get())

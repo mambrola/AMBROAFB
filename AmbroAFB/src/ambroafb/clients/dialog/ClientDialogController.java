@@ -7,6 +7,7 @@ package ambroafb.clients.dialog;
 
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
+import ambroafb.clients.helper.Status;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
@@ -80,7 +81,7 @@ public class ClientDialogController implements Initializable {
     @FXML
     private CountryComboBox country;
     @FXML
-    private ComboBox<String> statuses;
+    private ComboBox<Status> statuses;
     @FXML
     private DialogOkayCancelController okayCancelController;
     @FXML
@@ -109,7 +110,7 @@ public class ClientDialogController implements Initializable {
             }
         });
         country.showCategoryAll(false);
-        statuses.getItems().setAll(Client.getStatuses());
+        statuses.getItems().setAll(Client.getAllStatusFromDB());
         permissionToClose = true;
     }
     
@@ -157,7 +158,7 @@ public class ClientDialogController implements Initializable {
             editable = false;
         }
         if (client != null){
-            PhoneComboBox phonesCombobox = new PhoneComboBox(client.getPhoneList(), editable);
+            PhoneComboBox phonesCombobox = new PhoneComboBox(client.getPhones(), editable);
             phonesContainer.getChildren().add(phonesCombobox);
         }
         okayCancelController.setButtonsFeatures(buttonType);

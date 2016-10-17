@@ -17,14 +17,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
-import ambroafb.general.interfaces.EditorPanelableSceneController;
 
 /**
  * FXML Controller class
  *
  * @author dato
  */
-public class CurrencyRatesController implements Initializable, EditorPanelableSceneController {
+public class CurrencyRatesController implements Initializable {
 
     @FXML
     private AFilterableTableView<EditorPanelable> aview;
@@ -71,7 +70,6 @@ public class CurrencyRatesController implements Initializable, EditorPanelableSc
         }
     }
 
-    @Override
     public EditorPanelController getEditorPanelController() {
         return editorPanelController;
     }

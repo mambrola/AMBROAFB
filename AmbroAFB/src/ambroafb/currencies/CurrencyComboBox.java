@@ -9,8 +9,10 @@ import ambroafb.general.GeneralConfig;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -36,10 +38,9 @@ public class CurrencyComboBox extends ComboBox<Currency>{
             JSONArray jsonArr = GeneralConfig.getInstance().getDBClient().select("basic_params", new ConditionBuilder().where().and("param", "=", "rates_basic_iso").condition().build());
             String removedIso = (String)((JSONObject)jsonArr.opt(0)).opt("value");
             
-            Currency.getAllFromDB().stream().forEach((currency) -> {
-                if (!currency.getIso().equals(removedIso))
-                    items.add(currency);
-            });
+            ArrayList<Currency> filteredCurrencies = (ArrayList<Currency>)Currency.getAllFromDB().stream().filter((Currency currency) -> !currency.getIso().equals(removedIso)).collect(Collectors.toList());
+            items.addAll(filteredCurrencies);
+            
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(CurrencyComboBox.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -53,11 +54,11 @@ public class CurrencyComboBox extends ComboBox<Currency>{
     public void setShowCategoryALL(boolean showCategoryALL) {
         if (!showCategoryALL){
             if (getItems().contains(allCurrensy))
-                getItems().remove(allCurrensy);
+                items.remove(allCurrensy);
         }
         else {
             if (!getItems().contains(allCurrensy))
-                getItems().add(0, allCurrensy);
+                items.add(0, allCurrensy);
         }
     }
     

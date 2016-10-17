@@ -28,27 +28,18 @@ import org.json.JSONArray;
  */
 public class Country extends EditorPanelable{
 
-    public String name; // for Client class and for old dbdatas (now is "descrip").
-    
     @AView.Column(width = "30")
     private final StringProperty code;
 
     @AView.Column(title = "%descrip", width = "250")
     private final StringProperty descrip;
     
-    private final StringProperty descrip_en;
-    private final StringProperty descrip_ka;
-    private final StringProperty descrip_de;
-
     private static final String DB_TABLE_NAME = "countries";
+    public static final String ALL = "ALL";
     
     public Country() {
         code = new SimpleStringProperty();
-        descrip_en = new SimpleStringProperty("");
-        descrip_ka = new SimpleStringProperty("");
-        descrip_de = new SimpleStringProperty("");
-        String lang = GeneralConfig.getInstance().getCurrentLocal().getLanguage();
-        descrip = lang.equals("ka") ? descrip_ka : (lang.equals("en")) ? descrip_en : descrip_de; 
+        descrip = new SimpleStringProperty("");
     }
     
     public Country(String code, String descrip){ // for Client class.
@@ -101,19 +92,6 @@ public class Country extends EditorPanelable{
         return descrip.get();
     }
     
-    public String getDescrip_ka() {
-        return descrip_ka.get();
-    }
-    
-    public String getDescrip_en() {
-        return descrip_en.get();
-    }
-    
-    public String getDescrip_de() {
-        return descrip_de.get();
-    }
-
-    
     // Setters:
     public void setCode(String value) {
         code.set(value);
@@ -121,18 +99,6 @@ public class Country extends EditorPanelable{
 
     public void setDescrip(String value){
         this.descrip.set(value);
-    }
-
-    public void setDescrip_ka(String value) {
-        descrip_ka.set(value);
-    }
-    
-    public void setDescrip_en(String value) {
-        descrip_en.set(value);
-    }
-    
-    public void setDescrip_de(String value) {
-        descrip_de.set(value);
     }
 
     @Override

@@ -234,11 +234,11 @@ public class Product extends EditorPanelable {
     }
     
     public int getSpecific(){
-        return specific.get();
+        return productSpecific.get().getRecId();
     }
     
     public String getSpecificDescrip(){
-        return specificDescrip.get();
+        return productSpecific.get().getDescrip();
     }
     
     public double getPrice() {
@@ -276,12 +276,10 @@ public class Product extends EditorPanelable {
     }
     
     public void setSpecific(int specific){
-//        this.specific.set(specific);
         this.productSpecific.get().setRecId(specific);
     }
     
     public void setSpecificDescip(String specificDescrip){
-//        this.specificDescrip.set(specificDescrip);
         this.productSpecific.get().setDescrip(specificDescrip);
     }
     
