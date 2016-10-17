@@ -27,6 +27,10 @@ Accounting for Busines
 იხილეთ "სტუქტურის სურათი.pdf"
 
 
++  -> მოგვარებულია
+-  -> მოსაგვარებელია
+|  -> კარგი იქნებოდა ყოფილიყო
+
 
 კითხვები რომლებიც საჭიროებენ დასაბუთებულ ახსნას:
 * როცა stage დაიხურება ამოიშალოს თუ არა  bidmap-იდან?
@@ -42,18 +46,31 @@ Accounting for Busines
 * (-) MVS პატერნის გამოყენება Filter-ში
 * (|) ATableView-ს contextMenu-დან იყოს შესაძლებლობა რომელ სვეტზეც ვდგავართ იმის content-ის alignment-ი ვცვალოთ
 * (-) recId-ის ვერ ცნობს callProcedureAndGetAsJson, წამოღებისას ცნობს (getDBClient().select("discounts_on_licenses_count") და ჩაწერისას ვერა.
+* (-) DBUtils რომელიც პასუხისმგებელი იქნება DBService-ისთან ურთიერთობაზე
+* (-) currency-ის განმეორებადი კოდი ყველგან სადაც iso string მოდის ბაზიდან (მაგ. CurrencyRate). მოგვარება -> Product კლასში
+* (+) StagesContainer.getPathForStage შესაცვლელია getPathForStage(owner, stageName)
+* (-) ბაზის სტატიკურ მეთოდებში კოპირების გამო error ex-ში ან სადმე შესაძლოა იყოს ჩარჩენილი სხვადასხვა კლასის class ცვლადი...
+* (+) product-ებში ზოგს მოაქვს ველი descrip და ასევე specificesrcip და ზოგს მხოლოდ specificesrcip
+* (+) product-ების width დაპატარავებისას editorPanel-ის region-ის ადგილი უჩვეულოდ დიდა რჩება
+* (-) fxml, css, less ფაილები   (formPane_ზე Min და Max width_ები  // sheidzleba tavdapirvel zomas vusetavdit, tumca arc esaa sachiro)
+* (|) UML დიაგრამები
+* (-) Editorpanelable კლასების db მეთოდები ერთ სტილზე
+* (+) product-ების დიალოგში ორჯერ ჩნდება ფასდაკლებები mapEditor-ში. (discounts.addAll() შეიცვალა discounts.setAll()-ით)
+* (-) შესამოწმებელია ყველა Editorpanelable კლასში compare/copyFrom მეთოდების სისწორე
+* (-) client-ში რეზიდენტობა
+* (-) ALL currencies-ში და country-ში
+* (-) Client-ის compare მეთოდში Phone.copmareList-ის მაგივრად Utils.compareList
+
+
+ბაზა: 
 * (+) products_whole ?
 * (+) general_select-ს როგორ მიეთითოს appLanguage
 * (+) DBClient-ში select-ზე return new JSONArray(res.getDataAsString()); - ში ალბათ response უნდა გადაეცემოდეს ნაცვლად res.getDataAsString()-სა
 * (-) BallanceAccount-ებში მოდის ორი descrip-ი. 
 * (+) BallanceAccount-ებში actPas არის boolean. ადრე შეიძლებოდა რომ actPas ერთდროულად ყოფილიყო ანგარიში
-* (-) DBUtils რომელიც პასუხისმგებელი იქნება DBService-ისთან ურთიერთობაზე
-* (-) currency-ის განმეორებადი კოდი ყველგან სადაც iso string მოდის ბაზიდან (მაგ. CurrencyRate). მოგვარება -> Product კლასში
-* (+) StagesContainer.getPathForStage შესაცვლელია getPathForStage(owner, stageName)
-* (-) ბაზის სტატიკურ მეთოდებში კოპირების გამო error ex-ში ან სადმე შესაძლოა იყოს ჩარჩენილი სხვადასხვა კლასის class ცვლადი...
-* (-) product-ებში ზოგს მოაქვს ველი descrip და ასევე specificesrcip და ზოგს მხოლოდ specificesrcip
-* (-) product-ების width დაპატარავებისას editorPanel-ის region-ის ადგილი უჩვეულოდ დიდა რჩება
-* (-) fxml, css, less ფაილები   (formPane_ზე Min და Max width-ები // sheidzleba tavdapirvel zomas vusetavdit, tumca arc esaa sachiro)
+* (-) product_specific_descrips და product_specifics ცხრილები ?
+* (-) წაშლის პროცედურა
+* () approved Client_Status _descrips
 
 
 დასატესტია:
@@ -61,3 +78,6 @@ Accounting for Busines
 * (+) stage-ის ზედა მარცხენა კუთხის კოორდინატების უარყოფითში გადასვლისას stage-ი აღარ მიყვება მშობელს
 * (-) closeStageWithChildren  StagesContainer კლასში
 * (-) textField-ების regular expression-ები
+
+
+
