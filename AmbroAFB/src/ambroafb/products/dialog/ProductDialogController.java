@@ -13,6 +13,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.mapeditor.MapEditorComboBox;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.products.Product;
+import ambroafb.products.ProductsSpecificsComboBox;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -20,7 +21,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -40,7 +40,7 @@ public class ProductDialogController implements Initializable {
     @FXML @ContentNotEmpty
     private TextField descrip, remark;
     @FXML @ContentNotEmpty
-    private ComboBox<String> specifics;
+    private ProductsSpecificsComboBox specifics;
     @FXML @ContentNotEmpty @ContentPattern(value = "(^0|[1-9][0-9]*)([.][0-9]{1,2})?", explain = "The price content is incorect. Exp: 1.25")
     private TextField price;
     @FXML @ContentNotEmpty
@@ -68,11 +68,6 @@ public class ProductDialogController implements Initializable {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContentListener(former, "[0-9]{1,2}");
         Utils.validateTextFieldContentListener(price, "(^0|[1-9][0-9]*)?([.]|[.][0-9]{1,2})?");
-        new Thread(() -> {
-            Product.getAllSpecifics().forEach((specific) -> {
-                specifics.getItems().add(specific.getValue());
-            });
-        }).start();
         currency.setShowCategoryALL(false);
         permissionToClose = true;
     }
@@ -86,7 +81,7 @@ public class ProductDialogController implements Initializable {
             remark.textProperty().bindBidirectional(product.remarkProperty());
             specifics.valueProperty().bindBidirectional(product.specificProperty());
             price.textProperty().bindBidirectional(product.priceProperty());
-//            currency.valueProperty().bindBidirectional(product.currencyProperty());
+            currency.valueProperty().bindBidirectional(product.currencyProperty());
             discounts.setItemsCustom(product.getDiscounts());
             isAlive.selectedProperty().bindBidirectional(product.isAliveProperty());
         }

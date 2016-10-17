@@ -8,6 +8,7 @@
 <?import ambro.*?>
 <?import ambroafb.general.mapeditor.*?>
 <?import ambroafb.currencies.*?>
+<?import ambroafb.products.*?>
 
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/productdialog.css" 
@@ -53,7 +54,7 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%product_specific" styleClass="validationMessage" />
-                            <ComboBox fx:id="specifics" />
+                            <ProductsSpecificsComboBox fx:id="specifics" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple">

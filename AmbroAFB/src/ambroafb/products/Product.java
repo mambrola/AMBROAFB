@@ -8,8 +8,8 @@ package ambroafb.products;
 import ambro.ANodeSlider;
 import ambro.AView;
 import ambroafb.currencies.Currency;
+import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.TestDataFromDB;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
@@ -17,19 +17,21 @@ import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
+import authclient.db.DBClient;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -40,6 +42,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -48,10 +53,10 @@ import javafx.util.Callback;
 public class Product extends EditorPanelable {
     
     @AView.Column(width = "30")
-    private final StringProperty abbreviation;
+    private final SimpleStringProperty abbreviation;
     
     @AView.Column(width = "30")
-    private final StringProperty former;
+    private final SimpleStringProperty former;
     
     @AView.Column(title = "%descrip", width = "200")
     private final SimpleStringProperty descrip;
@@ -59,39 +64,51 @@ public class Product extends EditorPanelable {
     @AView.Column(title = "%remark", width = "200")
     private final SimpleStringProperty remark;
     
-    @AView.Column(title = "%product_specific", width = "170")
-    private final StringProperty specific;
-    
-    @AView.Column(title = "specDescrip", width = "200")
+    @AView.Column(title = "%product_specific", width = "200")
     private final SimpleStringProperty specificDescrip;
+    private final IntegerProperty specific;
+    private final ObjectProperty<ProductSpecific> productSpecific;
     
     @AView.Column(width = "50")
-    private final StringProperty price;
+    private final SimpleStringProperty price;
     
     @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
-    private final StringProperty iso;
+    private final SimpleStringProperty iso;
     private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%discounts", width = "80", cellFactory = DiscountCellFactory.class)
-    private ObservableList<ProductDiscount> discounts;
+    private final ObservableList<ProductDiscount> discounts;
     
     @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)
-    private final BooleanProperty isActive;
+    private final SimpleBooleanProperty isActive;
     
     private static final String DB_VIEW_NAME = "products_whole";
+    private static final String DB_SPECIFIC_TABLE_NAME = "product_specific_descrips";
+    private static final String DB_TABLE_NAME = "products";
+    
     
     public Product(){
         abbreviation = new SimpleStringProperty("");
         former = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
         remark = new SimpleStringProperty("");
-        specific = new SimpleStringProperty("");
+        specific = new SimpleIntegerProperty();
         specificDescrip = new SimpleStringProperty("");
+        productSpecific = new SimpleObjectProperty<>();
         price = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>();
         discounts = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
+        
+        ProductSpecific spec = new ProductSpecific();
+        productSpecific.set(spec);
+        productSpecific.addListener((ObservableValue<? extends ProductSpecific> observable, ProductSpecific oldValue, ProductSpecific newValue) -> {
+            if (newValue != null){
+                specific.set(newValue.getRecId());
+                specificDescrip.set(newValue.getDescrip());
+            }
+        });
         
         currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
             if (newValue != null) {
@@ -115,100 +132,45 @@ public class Product extends EditorPanelable {
     
     
     public static ArrayList<ProductSpecific> getAllSpecifics(){
-        ArrayList<ProductSpecific> result = new ArrayList<>();
-        Statement stmt = TestDataFromDB.getStatement();
         try {
-            ResultSet set = stmt.executeQuery("select * from product_specifics");
-            while(set.next()){
-                ProductSpecific spec = new ProductSpecific();
-                spec.descrip_default = set.getString(2);
-                spec.descrip_first = set.getString(3);
-                spec.descrip_second = set.getString(4);
-                result.add(spec);
-            }
-        } catch (SQLException ex) {
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_SPECIFIC_TABLE_NAME, new ConditionBuilder().build()).toString();
+            System.out.println("products specific data: " + data);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<ProductSpecific>>() {});
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return result;
+        return new ArrayList<>();
     }
     
     public static Product getOneFromDB (int productId){
-        Product pr = null;
-        Statement stmt = TestDataFromDB.getStatement();
         try {
-            pr = new Product();
-            ResultSet set = stmt.executeQuery("select 	  products.rec_id, products.abbreviation, products.former, products.descrip, products.remark, products.price, products.is_active, " +
-                                                        " product_specifics.descrip_default, product_specifics.descrip_first, product_specifics.descrip_second " +
-                                                        " from products " +
-                                                        " join product_specifics " +
-                                                        " on products.specific = product_specifics.rec_id " +
-                                                        " where products.rec_id = " + productId);
-            while(set.next()){
-                pr.setRecId(set.getInt(1));
-                pr.setAbbreviation(set.getString(2));
-                pr.setFormer(set.getInt(3));
-                pr.setDescrip(set.getString(4));
-                pr.setRemark(set.getString(5));
-                pr.setPrice(set.getDouble(6));
-                pr.setIsActive(set.getBoolean(7));
-                ProductSpecific spec = new ProductSpecific();
-                spec.descrip_default = set.getString(8);
-                spec.descrip_first = set.getString(9);
-                spec.descrip_second = set.getString(10);
-                pr.setSpecific(spec.getValue());
-            }
-
-            set = stmt.executeQuery("select * from product_discounts " +
-                                " where product_id = " + productId);
-            while(set.next()){
-                ProductDiscount disc = new ProductDiscount();
-                disc.setDays(set.getInt(3));
-                disc.setDiscountRate(set.getDouble(4));
-                pr.getDiscounts().add(disc);
-            }
-            stmt.close();
-        } catch (SQLException ex) {
+            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", productId).condition();
+            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, conditionBuilder.build());
+            String productData = data.opt(0).toString();
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(productData, Product.class);
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return pr;
-    }
-    
-//    public static Product saveOneToDB(Product product){
-//        if (product == null) return null; 
-//        try {
-//            String resource = "products" + (product.recId > 0 ? "/" + product.recId : "");
-//            String method = product.recId > 0 ? "PUT" : "POST";
-//            ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
-//            String product_str = mapper.writeValueAsString(product);
-//            
-//            String res_str = GeneralConfig.getInstance().getServerClient().call(resource, method, product_str);
-//            Product res = mapper.readValue(res_str, Product.class);
-//            product.copyFrom(res);
-//            if(product.getRecId() <= 0)
-//                product.setRecId(res.getRecId());
-//            return product;
-//        } catch (IOException | KFZClient.KFZServerException ex) {
-//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Product").showAlert();
-//        }
-//        return null;
-//    }
-    
-    public static Product saveOneToDB(Product product){
-        System.out.println("save one to DB... ??");
         return null;
     }
     
-//    public static boolean deleteOneFromDB(int productId){
-//        try {
-//            GeneralConfig.getInstance().getServerClient().call("products/" + productId, "DELETE", null);
-//            return true;
-//        } catch (IOException | KFZClient.KFZServerException ex) {
-//            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Product").showAlert();
-//        }
-//        return false;
-//    }
+    public static Product saveOneToDB(Product product){
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+            JSONObject productJson = new JSONObject(writer.writeValueAsString(product));
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONObject newProduct = dbClient.callProcedureAndGetAsJson("general_insert_update", DB_TABLE_NAME, dbClient.getLang(), productJson).getJSONObject(0);
+            return mapper.readValue(newProduct.toString(), Product.class);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     
     public static boolean deleteOneFromDB(int productId){
         System.out.println("delete from db...??");
@@ -241,8 +203,8 @@ public class Product extends EditorPanelable {
         return currency;
     }
     
-    public StringProperty specificProperty(){
-        return specific;
+    public ObjectProperty specificProperty(){
+        return productSpecific;
     }
     
     public StringProperty specificDescripProperty(){
@@ -271,7 +233,7 @@ public class Product extends EditorPanelable {
         return remark.get();
     }
     
-    public String getSpecific(){
+    public int getSpecific(){
         return specific.get();
     }
     
@@ -313,12 +275,14 @@ public class Product extends EditorPanelable {
         this.remark.set(remark);
     }
     
-    public void setSpecific(String specific){
-        this.specific.set(specific);
+    public void setSpecific(int specific){
+//        this.specific.set(specific);
+        this.productSpecific.get().setRecId(specific);
     }
     
     public void setSpecificDescip(String specificDescrip){
-        this.specificDescrip.set(specificDescrip);
+//        this.specificDescrip.set(specificDescrip);
+        this.productSpecific.get().setDescrip(specificDescrip);
     }
     
     public void setPrice(double price) {
@@ -330,7 +294,7 @@ public class Product extends EditorPanelable {
     }
     
     public void setDiscounts(Collection<ProductDiscount> discounts) {
-        this.discounts.addAll(discounts);
+        this.discounts.setAll(discounts);
     }
 
     public void setIsActive(boolean isActive) {
@@ -360,9 +324,10 @@ public class Product extends EditorPanelable {
         setFormer(product.getFormer());
         setDescrip(product.getDescrip());
         setRemark(product.getRemark());
+        setSpecific(product.getSpecific());
+        setSpecificDescip(product.getSpecificDescrip());
         setPrice(product.getPrice());
         setIso(product.getIso());
-        setSpecific(product.getSpecific());
         setIsActive(product.getIsActive());
         
         final ArrayList<ProductDiscount> productDiscounts = new ArrayList<>();
@@ -389,13 +354,23 @@ public class Product extends EditorPanelable {
      * @return  - True, if all comparable fields are equals, false otherwise.
      */
     public boolean compares(Product productBackup) {
+//        System.out.println("this.getAbbreviation().equals(productBackup.getAbbreviation()): " + (this.getAbbreviation().equals(productBackup.getAbbreviation())));
+//        System.out.println("this.getFormer() == productBackup.getFormer(): " + (this.getFormer() == productBackup.getFormer()));
+//        System.out.println("this.getDescrip().equals(productBackup.getDescrip()): " + (this.getDescrip().equals(productBackup.getDescrip()) ));
+//        System.out.println("this.getRemark().equals(productBackup.getRemark()): " + (this.getRemark().equals(productBackup.getRemark())));
+//        System.out.println("this.getSpecificDescrip().equals(productBackup.getSpecificDescrip()): " + (this.getSpecificDescrip().equals(productBackup.getSpecificDescrip())));
+//        System.out.println("this.getPrice() == productBackup.getPrice(): " + (this.getPrice() == productBackup.getPrice()));
+//        System.out.println("this.getIso().equals(productBackup.getIso()): " + (this.getIso().equals(productBackup.getIso())));
+//        System.out.println("this.getIsActive() == productBackup.getIsActive(): " + (this.getIsActive() == productBackup.getIsActive()));
+//        System.out.println("Utils.compareLists(getDiscounts(), productBackup.getDiscounts()): " + (Utils.compareLists(getDiscounts(), productBackup.getDiscounts())));
+        
         return  this.getAbbreviation().equals(productBackup.getAbbreviation()) &&
                 this.getFormer() == productBackup.getFormer() &&
                 this.getDescrip().equals(productBackup.getDescrip()) &&
                 this.getRemark().equals(productBackup.getRemark()) &&
+                this.getSpecificDescrip().equals(productBackup.getSpecificDescrip()) &&
                 this.getPrice() == productBackup.getPrice() &&
                 this.getIso().equals(productBackup.getIso()) &&
-                this.getSpecific().equals(productBackup.getSpecific()) &&
                 this.getIsActive() == productBackup.getIsActive() &&
                 Utils.compareLists(getDiscounts(), productBackup.getDiscounts());
     }
