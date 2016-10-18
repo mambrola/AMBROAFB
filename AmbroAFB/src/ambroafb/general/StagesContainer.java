@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -36,9 +37,9 @@ public class StagesContainer {
 
     /**
      * The function saves child stage with path  ( path(owner).concat(childName) ). 
-     * @param owner owner stage
-     * @param childName child stage associated name
-     * @param child child
+     * @param owner The Owner stage
+     * @param childName Child stage associated name
+     * @param child The child stage
      */
     public static void registerStageByOwner(Stage owner, String childName, Stage child){
         String path = childName;
@@ -51,8 +52,8 @@ public class StagesContainer {
     /**
      * The function returns path for the given stage.
      *
-     * @param stage - current stage
-     * @return
+     * @param stage The current stage
+     * @return Null if container does not contains stage, Otherwise - full path of stage.
      */
     public static String getPathForStage(Stage stage) {
         return (String) bidmap.getKey(stage);
@@ -61,8 +62,8 @@ public class StagesContainer {
     /**
      * The function returns stage for the given path
      *
-     * @param path - full path for stage (ex: main/Clients/Dialog).
-     * @return
+     * @param path The full path for stage (ex: main/Clients/Dialog).
+     * @return Null if container does not contains path, Otherwise - stage.
      */
     public static Stage getStageForPath(String path) {
         return (Stage) bidmap.get(path);
@@ -88,12 +89,17 @@ public class StagesContainer {
      */
     public static void removeOnlySubstagesFor(Stage stage) {
         String path = (String) bidmap.getKey(stage);
-        List<String> pathes = new ArrayList<>();
-        bidmap.keySet().stream().forEach((key) -> {
-            if (((String) key).startsWith(path)) {
-                pathes.add((String) key);
+        List<String> pathes = (ArrayList<String>)bidmap.keySet().stream().filter(new Predicate() {
+            @Override
+            public boolean test(Object key) {
+                return ((String) key).startsWith(path) && !((String) key).equals(path);
             }
-        });
+        }).collect(Collectors.toList());
+//        bidmap.keySet().stream().forEach((key) -> {
+//            if (((String) key).startsWith(path) && !((String) key).equals(path)) {
+//                pathes.add((String) key);
+//            }
+//        });
         pathes.stream().forEach((currPath) -> {
             bidmap.remove((String) currPath);
         });
@@ -134,15 +140,13 @@ public class StagesContainer {
     /**
      * The function returns stage which associated for the given local name.
      *
-     * @param owner - owner of finding stage
-     * @param substageLocalName - local name of finding stage
-     * @return
+     * @param owner The owner of finding stage
+     * @param substageLocalName Local name of finding stage
+     * @return Null if does not exist appropriate stage. Otherwise - stage.
      */
     public static Stage getStageFor(Stage owner, String substageLocalName) {
         String ownerPath = getPathForStage(owner);
-        String substagePath = ownerPath + pathDelimiter + substageLocalName;
-        Stage substage = getStageForPath(substagePath);
-        return substage;
+        return getStageForPath(ownerPath + pathDelimiter + substageLocalName);
     }
     
     
@@ -180,12 +184,12 @@ public class StagesContainer {
 
     
     
-    public static void closeStageAndItsChildrenStages(Stage currStage){
-        closeStageWithChildren(currStage);
-        if (currStage.isShowing()){
-            currStage.close();
-        }
-    }
+//    public static void closeStageAndItsChildrenStages(Stage currStage){
+//        closeStageWithChildren(currStage);
+//        if (currStage.isShowing()){
+//            currStage.close();
+//        }
+//    }
 
     /**
      * The function closes children stages and after that it close the given stage.
