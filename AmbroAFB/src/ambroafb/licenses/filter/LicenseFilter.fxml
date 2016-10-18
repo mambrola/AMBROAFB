@@ -5,7 +5,49 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import ambroafb.clients.*?>
+<?import ambroafb.products.*?>
+<?import org.controlsfx.control.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1">
-    
-</AnchorPane>
+<ambroafb.general.DialogPanel stylesheets="/styles/css/licensefilter.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" >
+    <VBox   fx:id="formPane" >
+        <children>
+            <HBox styleClass="w1" >
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%clients" />
+                            <ClientComboBox fx:id="clients" /> 
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w3" >
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%products" />
+                            <ProductComboBox fx:id="products" /> 
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label text="%license_statuses" />
+                            <CheckComboBox fx:id="statuses" /> 
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label />
+                            <CheckBox fx:id="extraDays" text="%extra_days" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

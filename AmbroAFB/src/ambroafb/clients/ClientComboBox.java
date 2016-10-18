@@ -15,12 +15,11 @@ import javafx.util.StringConverter;
 public class ClientComboBox extends ComboBox<Client> {
     
     public ClientComboBox(){
-        setConverter(new StringConverter<Client>() {
+        this.setConverter(new StringConverter<Client>() {
             @Override
             public String toString(Client client) {
-                String result = client.getFirstName()
-                                .concat("\t").concat(client.getLastName())
-                                .concat("\t").concat(client.getEmail());
+                String result = client.getFirstName() + ",  " + client.getLastName() + ",  " + client.getEmail();
+//                System.out.println("client stringConverter result: " + result);
                 return result;
             }
 

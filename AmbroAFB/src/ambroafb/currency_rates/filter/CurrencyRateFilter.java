@@ -8,6 +8,7 @@ package ambroafb.currency_rates.filter;
 import ambro.ADatePicker;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.currencies.CurrencyComboBox;
+import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
@@ -119,5 +120,10 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
         currencies.changeValue(currency);
         
     }    
+
+    @Override
+    public FilterModel getFilterResult() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

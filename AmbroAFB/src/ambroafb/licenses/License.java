@@ -5,10 +5,21 @@
  */
 package ambroafb.licenses;
 
+import ambroafb.licenses.helper.LicenseStatus;
 import ambro.AView;
 import ambroafb.general.DateConverter;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.EditorPanelable;
+import authclient.AuthServerException;
+import authclient.db.ConditionBuilder;
+import authclient.db.DBClient;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -19,6 +30,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
+import org.json.JSONArray;
 
 /**
  *
@@ -36,6 +48,9 @@ public class License extends EditorPanelable {
     @AView.Column(title = "%license N")
     private final StringProperty licenseNumber;
     
+    
+    private static final String DB_STATUSES_TABLE_NAME = "license_status_descrips";
+    
     public License(){
         checked = new SimpleBooleanProperty();
         date = new SimpleStringProperty("");
@@ -44,7 +59,50 @@ public class License extends EditorPanelable {
     }
     
     // DB methods:
+    public static ArrayList<License> getAllFromDB(){
+        return new ArrayList<>();
+    }
     
+    public static ArrayList<LicenseStatus> getAllLicenseStatusFromDB(){
+        try {
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+//            dbClient.callProcedureAndGetAsJson("general_select", DB_STATUSES_TABLE_NAME, dbClient.getLang(), )
+            String data = dbClient.select(DB_STATUSES_TABLE_NAME, new ConditionBuilder().build()).toString();
+            System.out.println("license status data: " + data);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<LicenseStatus>>() {});
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(LicenseStatus.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
+    }
+    
+    public static LicenseStatus getLicenseStatusFromDB(int licenseStatusId){
+        try {
+            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("license_status_id", "=", licenseStatusId).condition();
+            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_STATUSES_TABLE_NAME, conditionBuilder.build());
+            System.out.println("one status data: " + data);
+            String statusData = data.opt(0).toString();
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(statusData, LicenseStatus.class);
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(LicenseStatus.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public static License getOneFromDB(int recId){
+        return null;
+    }
+    
+    public static License saveOneToDB(License license){
+        return null;
+    }
+    
+    public static boolean deleteFromDB(int recId){
+        System.out.println("delete from db...??");
+        return false;
+    }
     
     // Properties:
     public BooleanProperty checkedProperty(){

@@ -5,6 +5,7 @@
  */
 package ambroafb.general.interfaces;
 
+import ambroafb.general.FilterModel;
 import org.json.JSONObject;
 
 /**
@@ -13,5 +14,6 @@ import org.json.JSONObject;
  */
 public interface Filterable {
     public JSONObject getResult();
+    public FilterModel getFilterResult();
     public void setResult(boolean isOk);
 }

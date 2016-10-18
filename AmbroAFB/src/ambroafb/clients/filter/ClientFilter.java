@@ -10,6 +10,7 @@ import ambroafb.clients.Client;
 import ambroafb.clients.helper.Status;
 import ambroafb.countries.Country;
 import ambroafb.countries.CountryComboBox;
+import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
@@ -146,6 +147,8 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
         LocalDate less = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);
 
+        System.out.println("client statuses: " + status);
+        
         dateBigger.setValue(bigger);
         dateLess.setValue(less);
         juridical.setSelected(jurid == 1);
@@ -172,6 +175,11 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             }
         }
         
+    }
+
+    @Override
+    public FilterModel getFilterResult() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -5,7 +5,13 @@
  */
 package ambroafb.licenses;
 
+import ambroafb.general.SceneUtils;
+import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -16,7 +22,22 @@ public class Licenses extends Stage {
     private LicensesController licensesController;
     
     public  Licenses(Stage owner){
+        StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
         
+        Scene scene = SceneUtils.createScene("/ambroafb/licenses/Licenses.fxml", null);
+        licensesController = (LicensesController) scene.getProperties().get("controller");
+        this.setScene(scene);
+        this.initOwner(owner);
+        
+        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
+            licensesController.getEditorPanelController().getExitButton().getOnAction().handle(null);
+            if(event != null) event.consume();
+        });
+        
+        StageUtils.centerChildOf(owner, (Stage)this);
+        StageUtils.followChildTo(owner, (Stage)this);
+        StageUtils.stopStageWidthDecrease((Stage)this, () -> licensesController.getEditorPanelController().getPanelMinWidth());
+        StagesContainer.setSizeFor((Stage)this);
     }
     
     public LicensesController getLicensesController(){

@@ -21,7 +21,7 @@ public class ProductsSpecificsComboBox extends ComboBox<ProductSpecific> {
     public ProductsSpecificsComboBox(){
         this.setItems(items);
         
-        Product.getAllSpecifics().stream().forEach((specific) -> {
+        Product.getAllSpecificsFromDB().stream().forEach((specific) -> {
             items.add(specific);
         });
     }

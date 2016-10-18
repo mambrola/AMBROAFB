@@ -180,7 +180,7 @@ public class Client extends EditorPanelable{
     // DBService methods:
     public static List<Client> getAllFromDB() {
         try {
-            String data = GeneralConfig.getInstance().getDBClient().get(DB_VIEW_NAME).getDataAsString();
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().build()).toString();
             System.out.println("client data: " + data);
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {});

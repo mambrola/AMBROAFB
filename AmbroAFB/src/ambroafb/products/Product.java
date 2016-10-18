@@ -131,7 +131,7 @@ public class Product extends EditorPanelable {
     }
     
     
-    public static ArrayList<ProductSpecific> getAllSpecifics(){
+    public static ArrayList<ProductSpecific> getAllSpecificsFromDB(){
         try {
             String data = GeneralConfig.getInstance().getDBClient().select(DB_SPECIFIC_TABLE_NAME, new ConditionBuilder().build()).toString();
             System.out.println("products specific data: " + data);
@@ -346,6 +346,15 @@ public class Product extends EditorPanelable {
         return descrip.get();
     }
 
+    /**
+     * The method equals two products.
+     * Note: It is needed for ProductComboBox selectItem method.
+     * @param other Product which must compare to this.
+     * @return True if they are equals, false - otherwise.
+     */
+    public boolean equals(Product other){
+        return this.compares(other);
+    }
     
     /**
      * Method compares two products.

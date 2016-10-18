@@ -5,6 +5,7 @@
  */
 package ambroafb.invoices.filter;
 
+import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
@@ -55,6 +56,11 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
+    }
+
+    @Override
+    public FilterModel getFilterResult() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

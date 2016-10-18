@@ -13,6 +13,7 @@ import ambroafb.currencies.Currencies;
 import ambroafb.currency_rates.CurrencyRates;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCounts;
+import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
@@ -216,10 +217,14 @@ public class MainController implements Initializable {
             licenses.show();
             
             LicenseFilter filter = new LicenseFilter(licenses);
-            JSONObject json = filter.getResult();
-            licenses.getLicensesController().reAssignTable(json);
+//            JSONObject json = filter.getResult();
+//            licenses.getLicensesController().reAssignTable(json);
+            FilterModel filterModel = filter.getFilterResult();
+            licenses.getLicensesController().reAssignTable(filterModel);
 
-            if (json != null && json.length() == 0) 
+//            if (json != null && json.length() == 0) 
+//                licenses.close();
+            if (filterModel.isEmpty()) 
                 licenses.close();
         }
         else {
