@@ -10,7 +10,7 @@ import ambroafb.clients.filter.ClientFilter;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.general.StageUtils;
@@ -55,7 +55,7 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     public CurrencyRateFilter(Stage owner){
         StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
-        Scene scene = Utils.createScene("/ambroafb/currency_rates/filter/CurrencyRateFilter.fxml", (CurrencyRateFilter)this);
+        Scene scene = SceneUtils.createScene("/ambroafb/currency_rates/filter/CurrencyRateFilter.fxml", (CurrencyRateFilter)this);
         setStageFeatures(scene, owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {

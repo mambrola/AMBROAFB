@@ -5,7 +5,7 @@
  */
 package ambroafb.balance_accounts;
 
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import javafx.event.EventHandler;
@@ -24,7 +24,7 @@ public class BalanceAccounts extends Stage {
     public BalanceAccounts(Stage owner){
         StagesContainer.registerStageByOwner(owner, BalanceAccounts.class.getSimpleName(), (Stage)this);
         
-        Scene scene = Utils.createScene("/ambroafb/balance_accounts/BalanceAccounts.fxml", null);
+        Scene scene = SceneUtils.createScene("/ambroafb/balance_accounts/BalanceAccounts.fxml", null);
         balanceAccountsController = (BalanceAccountsController) scene.getProperties().get("controller");
         this.setScene(scene);
         this.initOwner(owner);

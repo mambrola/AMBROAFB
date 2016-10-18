@@ -9,7 +9,7 @@ import ambroafb.discounts_on_count.DiscountOnCount;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.*;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.StageUtils;
@@ -40,7 +40,7 @@ public class DiscountOnCountDialog extends Stage implements Dialogable {
         
         this.discountOnCountBackup = discountOnCount.cloneWithID();
         
-        Scene currentScene = Utils.createScene("/ambroafb/discounts_on_count/dialog/DiscountOnCountDialog.fxml", null);
+        Scene currentScene = SceneUtils.createScene("/ambroafb/discounts_on_count/dialog/DiscountOnCountDialog.fxml", null);
         dialogController = (DiscountOnCountDialogController) currentScene.getProperties().get("controller");
         dialogController.bindDiscountOnCount(this.discountOnCount); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
         dialogController.setNextVisibleAndActionParameters(buttonType);

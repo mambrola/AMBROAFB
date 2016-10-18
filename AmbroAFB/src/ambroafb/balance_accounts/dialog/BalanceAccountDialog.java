@@ -8,7 +8,7 @@ package ambroafb.balance_accounts.dialog;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.StageUtils;
@@ -41,7 +41,7 @@ public class BalanceAccountDialog extends Stage implements Dialogable {
         this.balAccount = balAccountObject;
         this.balAccountBackup = balAccountObject.cloneWithID();
         
-        Scene currentScene = Utils.createScene("/ambroafb/balance_accounts/dialog/BalanceAccountDialog.fxml", null);
+        Scene currentScene = SceneUtils.createScene("/ambroafb/balance_accounts/dialog/BalanceAccountDialog.fxml", null);
         dialogController = (BalanceAccountDialogController) currentScene.getProperties().get("controller");
         dialogController.bindBalAccount(this.balAccount);
         dialogController.setNextVisibleAndActionParameters(buttonType);

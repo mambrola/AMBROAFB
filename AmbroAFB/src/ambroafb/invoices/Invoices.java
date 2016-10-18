@@ -5,7 +5,7 @@
  */
 package ambroafb.invoices;
 
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import javafx.event.EventHandler;
@@ -24,7 +24,7 @@ public class Invoices extends Stage {
     public Invoices(Stage owner){
         StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
         
-        Scene scene = Utils.createScene("/ambroafb/invoices/Invoices.fxml", null);
+        Scene scene = SceneUtils.createScene("/ambroafb/invoices/Invoices.fxml", null);
         invoicesController = (InvoicesController) scene.getProperties().get("controller");
         this.setScene(scene);
         this.initOwner(owner);

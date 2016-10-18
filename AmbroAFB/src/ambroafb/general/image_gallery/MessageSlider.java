@@ -26,7 +26,7 @@ import javafx.util.StringConverter;
  *
  * @author dato
  * 
- * Does not use Utils.createScene("path/MessageSlider.fxml", (Object)this); 
+ * Does not use SceneUtils.createScene("path/MessageSlider.fxml", (Object)this); 
  * because this class must not extend VBox, but it is needed, 
  * that we can add MessageSlider as scene object.
  */

@@ -5,7 +5,7 @@
  */
 package ambroafb.products;
 
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import javafx.event.EventHandler;
@@ -24,7 +24,7 @@ public class Products extends Stage {
     public Products(Stage owner){
         StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
         
-        Scene scene = Utils.createScene("/ambroafb/products/Products.fxml", null);
+        Scene scene = SceneUtils.createScene("/ambroafb/products/Products.fxml", null);
         productsController = (ProductsController) scene.getProperties().get("controller");
         this.setScene(scene);
         this.initOwner(owner);

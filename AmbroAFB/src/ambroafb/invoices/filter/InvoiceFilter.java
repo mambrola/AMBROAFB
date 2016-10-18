@@ -7,7 +7,7 @@ package ambroafb.invoices.filter;
 
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
@@ -32,7 +32,7 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("invoices_filter"));
-        Scene scene = Utils.createScene("/ambroafb/invoices/filter/InvoiceFilter.fxml", (InvoiceFilter)this);
+        Scene scene = SceneUtils.createScene("/ambroafb/invoices/filter/InvoiceFilter.fxml", (InvoiceFilter)this);
         this.setScene(scene);
         this.initOwner(owner);
         this.setResizable(false);

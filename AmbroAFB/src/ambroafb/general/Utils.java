@@ -29,9 +29,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.mapeditor.MapEditorComboBox;
@@ -90,26 +88,26 @@ public class Utils {
      * @return
      * @throws IOException
      */
-    public static MultiSceneStage createMultiSceneStage(String name, String title, String logo, Stage owner) throws IOException {
-        MultiSceneStage controller = null;
-
-        if (stages.containsKey(name)) {
-            controller = (MultiSceneStage) stages.get(name);
-            controller.centerOnScreen();
-            controller.toFront();
-            return controller;
-        }
-
-        controller = new MultiSceneStage();
-        Scene scene = createScene(name, null);
-        controller.addScene(scene);
-        addsFeaturesToStage(controller, name, title, logo);
-        stages.put(name, controller);
-        if (controller.getOwner() == null) {
-            controller.initOwner(owner);
-        }
-        return controller;
-    }
+//    public static MultiSceneStage createMultiSceneStage(String name, String title, String logo, Stage owner) throws IOException {
+//        MultiSceneStage controller = null;
+//
+//        if (stages.containsKey(name)) {
+//            controller = (MultiSceneStage) stages.get(name);
+//            controller.centerOnScreen();
+//            controller.toFront();
+//            return controller;
+//        }
+//
+//        controller = new MultiSceneStage();
+//        Scene scene = createScene(name, null);
+//        controller.addScene(scene);
+//        addsFeaturesToStage(controller, name, title, logo);
+//        stages.put(name, controller);
+//        if (controller.getOwner() == null) {
+//            controller.initOwner(owner);
+//        }
+//        return controller;
+//    }
 
     /**
      * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით Murman:ჩავამატე
@@ -122,21 +120,21 @@ public class Utils {
      * @return
      * @throws IOException
      */
-    public static Stage createStage(String name, HashMap<String, Object> parameters, String title, String logo) throws IOException {
-        if (stages.containsKey(name)) {
-            Stage stage = stages.get(name);
-            stage.centerOnScreen();
-            stage.toFront();
-            return stage;
-        }
-        Stage stage = new Stage();
-        Scene scene = createScene(name, parameters);
-        stage.setScene(scene);
-        addsFeaturesToStage(stage, name, title, logo);
-        stages.put(name, stage);
-
-        return stage;
-    }
+//    public static Stage createStage(String name, HashMap<String, Object> parameters, String title, String logo) throws IOException {
+//        if (stages.containsKey(name)) {
+//            Stage stage = stages.get(name);
+//            stage.centerOnScreen();
+//            stage.toFront();
+//            return stage;
+//        }
+//        Stage stage = new Stage();
+//        Scene scene = createScene(name, parameters);
+//        stage.setScene(scene);
+//        addsFeaturesToStage(stage, name, title, logo);
+//        stages.put(name, stage);
+//
+//        return stage;
+//    }
 
     /**
      * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით
@@ -147,34 +145,34 @@ public class Utils {
      * @return
      * @throws IOException
      */
-    public static Stage createStage(String name, String title, String logo) throws IOException {
-        if (stages.containsKey(name)) {
-            Stage stage = stages.get(name);
-            stage.centerOnScreen();
-            stage.toFront();
-            return stage;
-        }
-        Stage stage = new Stage();
-        Scene scene = createScene(name, null);
-        stage.setScene(scene);
-        addsFeaturesToStage(stage, name, title, logo);
-        stages.put(name, stage);
+//    public static Stage createStage(String name, String title, String logo) throws IOException {
+//        if (stages.containsKey(name)) {
+//            Stage stage = stages.get(name);
+//            stage.centerOnScreen();
+//            stage.toFront();
+//            return stage;
+//        }
+//        Stage stage = new Stage();
+//        Scene scene = createScene(name, null);
+//        stage.setScene(scene);
+//        addsFeaturesToStage(stage, name, title, logo);
+//        stages.put(name, stage);
+//
+//        return stage;
+//    }
 
-        return stage;
-    }
-
-    private static void addsFeaturesToStage(Stage stage, String name, String title, String logo) throws IOException {
-        stage.setTitle(title);
-        if (logo != null) {
-            Image logoImage = new Image(Utils.class.getResourceAsStream(logo));
-            stage.getIcons().add(logoImage);
-        }
-
-        stage.setOnCloseRequest((WindowEvent event) -> {
-            stages.remove(name);
-            stage.close();
-        });
-    }
+//    private static void addsFeaturesToStage(Stage stage, String name, String title, String logo) throws IOException {
+//        stage.setTitle(title);
+//        if (logo != null) {
+//            Image logoImage = new Image(Utils.class.getResourceAsStream(logo));
+//            stage.getIcons().add(logoImage);
+//        }
+//
+//        stage.setOnCloseRequest((WindowEvent event) -> {
+//            stages.remove(name);
+//            stage.close();
+//        });
+//    }
 
     /**
      * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით Murman:ჩავამატე
@@ -188,13 +186,13 @@ public class Utils {
      * @return
      * @throws IOException
      */
-    public static Stage createStage(String name, HashMap<String, Object> parameters, String title, String logo, Stage ownerStage) throws IOException {
-        Stage stage = createStage(name, parameters, title, logo);
-        if (stage.getOwner() == null) {
-            stage.initOwner(ownerStage);
-        }
-        return stage;
-    }
+//    public static Stage createStage(String name, HashMap<String, Object> parameters, String title, String logo, Stage ownerStage) throws IOException {
+//        Stage stage = createStage(name, parameters, title, logo);
+//        if (stage.getOwner() == null) {
+//            stage.initOwner(ownerStage);
+//        }
+//        return stage;
+//    }
 
     /**
      * ქმნის stage-ს გადმოცემული პარამეტრების მიხედვით
@@ -206,13 +204,13 @@ public class Utils {
      * @return
      * @throws IOException
      */
-    public static Stage createStage(String name, String title, String logo, Stage ownerStage) throws IOException {
-        Stage stage = createStage(name, title, logo);
-        if (stage.getOwner() == null) {
-            stage.initOwner(ownerStage);
-        }
-        return stage;
-    }
+//    public static Stage createStage(String name, String title, String logo, Stage ownerStage) throws IOException {
+//        Stage stage = createStage(name, title, logo);
+//        if (stage.getOwner() == null) {
+//            stage.initOwner(ownerStage);
+//        }
+//        return stage;
+//    }
 
     /**
      * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით

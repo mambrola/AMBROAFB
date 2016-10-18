@@ -8,7 +8,7 @@ package ambroafb.products.dialog;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.StageUtils;
@@ -39,7 +39,7 @@ public class ProductDialog extends Stage implements Dialogable {
             this.product = (Product) object;
         this.productBackup = product.cloneWithID();
         
-        Scene currentScene = Utils.createScene("/ambroafb/products/dialog/ProductDialog.fxml", null);
+        Scene currentScene = SceneUtils.createScene("/ambroafb/products/dialog/ProductDialog.fxml", null);
         dialogController = (ProductDialogController) currentScene.getProperties().get("controller");
         dialogController.bindProduct(this.product);
         dialogController.setNextVisibleAndActionParameters(buttonType);

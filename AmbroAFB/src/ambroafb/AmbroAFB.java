@@ -7,6 +7,7 @@ package ambroafb;
 
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
@@ -40,7 +41,7 @@ public class AmbroAFB extends Application {
         mainStage = stage;
         UtilsDB.getInstance().createLocalUsageTables();
         StagesContainer.registerStageByOwner(null, getClass().getSimpleName(), mainStage);
-        Scene scene = Utils.createScene(Names.MAIN_FXML, null);
+        Scene scene = SceneUtils.createScene(Names.MAIN_FXML, null);
         stage.setScene(scene);
         stage.setTitle(GeneralConfig.getInstance().getTitleFor(Names.MAIN_TITLE));
         if (Names.MAIN_LOGO != null) {

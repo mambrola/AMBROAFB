@@ -8,7 +8,7 @@ package ambroafb.login;
 import ambroafb.AmbroAFB;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import authclient.AuthServerException;
 import java.io.IOException;
 import java.net.URL;
@@ -57,7 +57,7 @@ public class LoginController extends Stage implements Initializable {
         super();
 
         prefs = Preferences.userNodeForPackage(AmbroAFB.class);
-        Scene scene = Utils.createScene("/ambroafb/login/Login.fxml", (Object)this);
+        Scene scene = SceneUtils.createScene("/ambroafb/login/Login.fxml", (Object)this);
         this.setScene(scene);
         setResizable(false);
         login.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {

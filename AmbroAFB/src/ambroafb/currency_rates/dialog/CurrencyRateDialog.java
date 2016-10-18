@@ -8,7 +8,7 @@ package ambroafb.currency_rates.dialog;
 import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.StageUtils;
@@ -38,7 +38,7 @@ public class CurrencyRateDialog extends Stage implements Dialogable {
             currRate = (CurrencyRate) object;
         currRateBackup = currRate.cloneWithID();
         
-        Scene scene = Utils.createScene("/ambroafb/currency_rates/dialog/CurrencyRateDialog.fxml", null);
+        Scene scene = SceneUtils.createScene("/ambroafb/currency_rates/dialog/CurrencyRateDialog.fxml", null);
         dialogController = (CurrencyRateDialogController) scene.getProperties().get("controller");
         dialogController.bindCurrencyRate(this.currRate);
         dialogController.setNextVisibleAndActionParameters(buttonType);

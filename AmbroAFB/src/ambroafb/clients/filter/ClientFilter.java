@@ -12,7 +12,7 @@ import ambroafb.countries.Country;
 import ambroafb.countries.CountryComboBox;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.general.StageUtils;
@@ -68,7 +68,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));
-        Scene scene = Utils.createScene("/ambroafb/clients/filter/ClientFilter.fxml", (ClientFilter)this);
+        Scene scene = SceneUtils.createScene("/ambroafb/clients/filter/ClientFilter.fxml", (ClientFilter)this);
         this.setScene(scene);
         this.initOwner(owner);
         this.setResizable(false);

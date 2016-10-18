@@ -13,9 +13,7 @@ import ambroafb.currencies.Currencies;
 import ambroafb.currency_rates.CurrencyRates;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCounts;
-import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
@@ -24,13 +22,11 @@ import ambroafb.invoices.filter.InvoiceFilter;
 import ambroafb.licenses.Licenses;
 import ambroafb.licenses.filter.LicenseFilter;
 import ambroafb.products.Products;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.AnchorPane;
@@ -54,52 +50,52 @@ public class MainController implements Initializable {
     
     @FXML
     private void light(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage("/ambroafb/light/Light.fxml", config.getTitleFor("light"), "/images/innerLogo.png", AmbroAFB.mainStage);
-            stage.show();
-        } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION,  "Light");
-            alert.showAlert();
-        }
+//        try{
+//            Stage stage = Utils.createStage("/ambroafb/light/Light.fxml", config.getTitleFor("light"), "/images/innerLogo.png", AmbroAFB.mainStage);
+//            stage.show();
+//        } catch(IOException ex){
+//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION,  "Light");
+//            alert.showAlert();
+//        }
     }
     @FXML
     private void autoDealers(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage("/ambroafb/auto_dealers/AutoDealers.fxml", config.getTitleFor("auto_dealers"), "/images/innerLogo.png", AmbroAFB.mainStage);
-            stage.setResizable(false);
-            stage.show();
-        } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Auto Dealers");
-            alert.showAlert();
-        }
+//        try{
+//            Stage stage = Utils.createStage("/ambroafb/auto_dealers/AutoDealers.fxml", config.getTitleFor("auto_dealers"), "/images/innerLogo.png", AmbroAFB.mainStage);
+//            stage.setResizable(false);
+//            stage.show();
+//        } catch(IOException ex){
+//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Auto Dealers");
+//            alert.showAlert();
+//        }
     }
     
     @FXML //დროებით აღარ ვიყენებ, მენიუს პუნქტიდან ამოვიღეთ და ჩავსვამთ ანგარიშთა სიაში ერთ-ერთ პიქტოგრამად
     private void newAccount(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage("/ambroafb/new_account/NewAccount.fxml", config.getTitleFor("open_new_account"), "/images/innerLogo.png", AmbroAFB.mainStage);
-            stage.setResizable(false);
-            stage.show();
-        } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Account");
-            alert.showAlert();
-        }
+//        try{
+//            Stage stage = Utils.createStage("/ambroafb/new_account/NewAccount.fxml", config.getTitleFor("open_new_account"), "/images/innerLogo.png", AmbroAFB.mainStage);
+//            stage.setResizable(false);
+//            stage.show();
+//        } catch(IOException ex){
+//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Account");
+//            alert.showAlert();
+//        }
     }
     
     @FXML
     private void mainConfig(ActionEvent event) {
-        try{
-            Stage stage = Utils.createStage(
-                    Names.CONFIGURATION_FXML, 
-                    config.getTitleFor(Names.CONFIGURATION_TITLE), 
-                    Names.CONFIGURATION_LOGO,
-                    AmbroAFB.mainStage
-            );
-            stage.show();
-        } catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Configuration");
-            alert.showAlert();
-        }
+//        try{
+//            Stage stage = Utils.createStage(
+//                    Names.CONFIGURATION_FXML, 
+//                    config.getTitleFor(Names.CONFIGURATION_TITLE), 
+//                    Names.CONFIGURATION_LOGO,
+//                    AmbroAFB.mainStage
+//            );
+//            stage.show();
+//        } catch(IOException ex){
+//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Configuration");
+//            alert.showAlert();
+//        }
     }
     
     @FXML
@@ -112,18 +108,18 @@ public class MainController implements Initializable {
     
     @FXML
     private void programsCarFines(ActionEvent event) {
-        try{
-            Stage stage = Utils.createMultiSceneStage(
-                    Names.CAR_FINES_FXML, 
-                    config.getTitleFor(Names.CAR_FINES_TITLE), 
-                    Names.CAR_FINES_LOGO,
-                    AmbroAFB.mainStage
-            );
-            stage.show();
-        }catch(IOException ex){
-            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CAR_FINES_SCENE_START, "Car Fines");
-            alert.showAlert();
-        }
+//        try{
+//            Stage stage = Utils.createMultiSceneStage(
+//                    Names.CAR_FINES_FXML, 
+//                    config.getTitleFor(Names.CAR_FINES_TITLE), 
+//                    Names.CAR_FINES_LOGO,
+//                    AmbroAFB.mainStage
+//            );
+//            stage.show();
+//        }catch(IOException ex){
+//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CAR_FINES_SCENE_START, "Car Fines");
+//            alert.showAlert();
+//        }
     }
     
     @FXML

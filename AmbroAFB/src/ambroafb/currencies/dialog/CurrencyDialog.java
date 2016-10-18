@@ -9,7 +9,7 @@ import ambroafb.currencies.Currency;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Names.*;
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.StageUtils;
@@ -39,7 +39,7 @@ public class CurrencyDialog extends Stage implements Dialogable {
             this.currency = (Currency) object;
         this.currencyBackup = currency.cloneWithID();
         
-        Scene currentScene = Utils.createScene("/ambroafb/currencies/dialog/CurrencyDialog.fxml", null);
+        Scene currentScene = SceneUtils.createScene("/ambroafb/currencies/dialog/CurrencyDialog.fxml", null);
         dialogController = (CurrencyDialogController) currentScene.getProperties().get("controller");
         dialogController.bindCurrency(this.currency);
         dialogController.setNextVisibleAndActionParameters(buttonType);

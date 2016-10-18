@@ -7,7 +7,7 @@ package ambroafb.invoices.dialog;
 
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.StageUtils;
@@ -41,7 +41,7 @@ public class InvoiceDialog extends Stage implements Dialogable {
         this.invoice = invoiceObject;
         this.invoiceBackup = invoiceObject.cloneWithID();
         
-        Scene currentScene = Utils.createScene("/ambroafb/invoices/dialog/InvoiceDialog.fxml", null);
+        Scene currentScene = SceneUtils.createScene("/ambroafb/invoices/dialog/InvoiceDialog.fxml", null);
         dialogController = (InvoiceDialogController) currentScene.getProperties().get("controller");
         dialogController.bindInvoice(this.invoice);
         dialogController.setNextVisibleAndActionParameters(buttonType);
