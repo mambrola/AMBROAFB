@@ -252,11 +252,12 @@ public class Client extends EditorPanelable{
     public static Client getOneFromDB(int id) {
         try {
             String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().where().and("rec_id", "=", id).condition().build()).toString();
+            System.out.println("one client data: " + data);
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, Client.class);
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
+//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
         }
         return null;
     }
