@@ -20,11 +20,12 @@ import javafx.scene.Scene;
 public class SceneUtils {
 
     /**
-     * ქმნის სცენას გადმოცემული პარამეთრების მიხედვით
+     * The function creates scene instance with controller from given FXML file.
      *
-     * @param name - fxml დოკუმენტის მისამართი
-     * @param controller
-     * @return
+     * @param name FXML file path, which is view component of scene.
+     * @param controller This parameter must be null if FXML file already contains controller reference.
+     *                      Otherwise, it is an appropriate scene controller.
+     * @return Scene instance with controller.
      */
     public static Scene createScene(String name, Object controller) {
         Scene scene = null;

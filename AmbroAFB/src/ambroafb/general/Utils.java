@@ -25,10 +25,8 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.StringProperty;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -219,22 +217,22 @@ public class Utils {
      * @param controller
      * @return
      */
-    public static Scene createScene(String name, Object controller) {
-        Scene scene = null;
-        FXMLLoader loader = new FXMLLoader();
-        loader.setResources(GeneralConfig.getInstance().getBundle());
-        if (controller != null) {
-            loader.setController(controller);
-        }
-        try {
-            Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
-            scene = new Scene(root);
-            scene.getProperties().put("controller", loader.getController());
-        } catch (IOException ex) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return scene;
-    }
+//    public static Scene createScene(String name, Object controller) {
+//        Scene scene = null;
+//        FXMLLoader loader = new FXMLLoader();
+//        loader.setResources(GeneralConfig.getInstance().getBundle());
+//        if (controller != null) {
+//            loader.setController(controller);
+//        }
+//        try {
+//            Parent root = loader.load(AmbroAFB.class.getResource(name).openStream());
+//            scene = new Scene(root);
+//            scene.getProperties().put("controller", loader.getController());
+//        } catch (IOException ex) {
+//            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return scene;
+//    }
 
     /**
      * ინახავს მიმდინარე კონფიგურაციებს, თიშავს მიმდინარე აპლიკაციას და უშვებს
