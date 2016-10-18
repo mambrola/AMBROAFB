@@ -61,6 +61,8 @@ Accounting for Busines
 * (-) client-ში რეზიდენტობა
 * (-) ALL currencies-ში და country-ში
 * (-) Client-ის compare მეთოდში Phone.copmareList-ის მაგივრად Utils.compareList
+* (|) ტესტები
+* (-) Client-ის comboBox (+ALL, search.  წერია და კარგად მუშაობს TestExcelGeneral პროექტში)
 
 
 ბაზა: 
