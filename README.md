@@ -74,7 +74,10 @@ Accounting for Busines
 * (+) BallanceAccount-ებში actPas არის boolean. ადრე შეიძლებოდა რომ actPas ერთდროულად ყოფილიყო ანგარიში
 * (-) product_specific_descrips და product_specifics ცხრილები ?
 * (-) წაშლის პროცედურა
-* () approved Client_Status _descrips
+* (+) approved Client_Status-descrips
+* (-) Client-ის შენახვის დროს (saveOneToDB) ვარდება error: 
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[]' at line 1
+client-ის phones არის ცარიელი მასივი და შეიძლება ამის ბრალი იყოს?
 
 
 დასატესტია:
