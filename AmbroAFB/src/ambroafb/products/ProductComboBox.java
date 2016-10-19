@@ -14,11 +14,20 @@ import javafx.util.StringConverter;
  */
 public class ProductComboBox extends ComboBox<Product> {
     
+    public static final Product productALL = new Product();
+    
+    private static final String ALL = "ALL";
+    
     public ProductComboBox(){
         setConverter(new StringConverter<Product>() {
             @Override
             public String toString(Product product) {
-                return product.getAbbreviation() + ",  " + product.getFormer();
+                String result = null;
+                if (product != null){
+                    result = (product.equals(productALL))   ? product.getAbbreviation() 
+                                                            : product.getAbbreviation() + ",  " + product.getFormer();
+                }
+                return result;
             }
 
             @Override
@@ -27,7 +36,11 @@ public class ProductComboBox extends ComboBox<Product> {
             }
         });
 
+        productALL.setAbbreviation(ALL);
+        productALL.setRecId(0);
+        this.getItems().add(productALL);
         this.getItems().addAll(Product.getAllFromDB());
+        this.setValue(productALL);
     }
     
     public void selectItem(Product product){

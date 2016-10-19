@@ -11,6 +11,7 @@ import ambroafb.general.FilterModel;
 import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseStatus;
 import ambroafb.products.Product;
+import ambroafb.products.ProductComboBox;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -29,10 +30,6 @@ import javafx.collections.ObservableList;
  */
 public class LicenseFilterModel extends FilterModel {
 
-//    private Client client;
-//    private Product product;
-//    private ObservableList<LicenseStatus> statuses;
-//    private boolean extraDays;
     private final ObjectProperty<Client> clientProp;
 
     private static final String clientPrefKey = "licenses/filter/client_id";
@@ -64,7 +61,6 @@ public class LicenseFilterModel extends FilterModel {
         if (statuses != null) {
             ArrayList<Integer> statusIDs = (ArrayList<Integer>) statuses.stream().map((LicenseStatus status) -> status.getLicenseStatusId())
                     .collect(Collectors.toList());
-            System.out.println("checked status ids: " + statusIDs.toString());
             saveIntoPref(statusesPrefKey, statusIDs.toString());
         }
     }
@@ -88,7 +84,10 @@ public class LicenseFilterModel extends FilterModel {
     public Product getProduct() {
         Product product = null;
         int productId = getIntFromPref(productPrefKey);
-        if (productId != -1) {
+        if (productId == 0){
+            product = ProductComboBox.productALL;
+        }
+        else if (productId > 0) {
             product = Product.getOneFromDB(productId);
         }
         return product;
