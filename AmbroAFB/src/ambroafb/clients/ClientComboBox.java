@@ -5,8 +5,11 @@
  */
 package ambroafb.clients;
 
+import java.util.stream.Collectors;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
 
 /**
  *
@@ -14,12 +17,19 @@ import javafx.util.StringConverter;
  */
 public class ClientComboBox extends ComboBox<Client> {
     
+    public static final Client clientALL = new Client();
+    
+    private static final String ALL = "ALL";
+    
     public ClientComboBox(){
         this.setConverter(new StringConverter<Client>() {
             @Override
             public String toString(Client client) {
-                if (client == null) return null;
-                String result = client.getFirstName() + ",  " + client.getLastName() + ",  " + client.getEmail();
+                String result = null;
+                if (client != null){
+                    result = (client.equals(clientALL)) ? client.getFirstName() 
+                                                        : client.getFirstName() + ",  " + client.getLastName() + ",  " + client.getEmail();
+                }
                 return result;
             }
 
@@ -29,18 +39,24 @@ public class ClientComboBox extends ComboBox<Client> {
             }
         });
 
-//        TextFields.bindAutoCompletion(getEditor(), 
-//                                      (AutoCompletionBinding.ISuggestionRequest param) -> 
-//                                                                getItems().stream().filter((Client client) -> 
-//                                                                                    getConverter().toString(client).toLowerCase().contains(param.getUserText().toLowerCase()))
-//                                                                                .collect(Collectors.toList()), 
-//                                      this.getConverter());
-//        
-//        this.setEditable(true);
+        TextFields.bindAutoCompletion(getEditor(), 
+                                      (AutoCompletionBinding.ISuggestionRequest param) -> 
+                                                                getItems().stream().filter((Client client) -> 
+                                                                                                getConverter().toString(client).toLowerCase().contains(param.getUserText().toLowerCase()))
+                                                                                   .collect(Collectors.toList()), getConverter());
+        
+        this.setEditable(true);
+        
+        clientALL.setFirstName(ALL);
+        clientALL.setRecId(0);
+        
+        this.getItems().add(clientALL);
         this.getItems().addAll(Client.getAllFromDB());
+        this.setValue(clientALL);
     }
     
     public void selectItem(Client client){
         this.getSelectionModel().select(client);
     }
+    
 }

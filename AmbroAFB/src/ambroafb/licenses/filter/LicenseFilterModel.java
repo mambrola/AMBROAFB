@@ -6,6 +6,7 @@
 package ambroafb.licenses.filter;
 
 import ambroafb.clients.Client;
+import ambroafb.clients.ClientComboBox;
 import ambroafb.general.FilterModel;
 import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseStatus;
@@ -75,8 +76,10 @@ public class LicenseFilterModel extends FilterModel {
     public Client getClient() {
         Client client = null;
         int clientId = getIntFromPref(clientPrefKey);
-        if (clientId != -1) {
-            System.out.println("client id is: " + clientId);
+        if (clientId == 0) {
+            client = ClientComboBox.clientALL;
+        }
+        else if (clientId > 0) {
             client = Client.getOneFromDB(clientId);
         }
         return client;

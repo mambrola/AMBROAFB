@@ -7,15 +7,18 @@ package ambroafb.licenses;
 
 import ambroafb.licenses.helper.LicenseStatus;
 import ambro.AView;
+import ambroafb.clients.Client;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.invoices.Invoice;
 import ambroafb.licenses.filter.LicenseFilterModel;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -44,6 +47,33 @@ public class License extends EditorPanelable {
 
     public String createdDate;
     
+    @AView.Column(title = "%license N")
+    private final StringProperty licenseNumber;
+    
+    @AView.Column(title = "%client")
+    @JsonIgnore
+    private final StringProperty clientDescrip;
+    private final ObjectProperty<Client> client;
+    
+    @AView.Column(title = "%product")
+    private final StringProperty productDescrip;
+    
+    @AView.Column(title = "%last_invoice")
+    private final StringProperty lastInvoiceDescrip;
+    private final ObjectProperty<Invoice> invoice;
+    
+    @AView.Column(title = "%invoice_status")
+    private final StringProperty statusDescrip;
+    private final ObjectProperty<LicenseStatus> status;
+    
+    @AView.Column(title = "%begin_date", width = "100")
+    private final StringProperty beginDateDescrip;
+    private final ObjectProperty<LocalDate> beginDate;
+    
+    @AView.Column(title = "%end_date", width = "100")
+    private final StringProperty endDateDescrip;
+    private final ObjectProperty<LocalDate> endDate;
+    
     @AView.Column(width = "20", cellFactory = CheckedCellFactory.class)
     private final BooleanProperty checked;
     
@@ -51,17 +81,28 @@ public class License extends EditorPanelable {
     private final StringProperty date;
     private final ObjectProperty<LocalDate> dateObjProperty;
     
-    @AView.Column(title = "%license N")
-    private final StringProperty licenseNumber;
+    
     
     private static final String DB_VIEW_NAME = "licenses_whole";
     private static final String DB_STATUSES_TABLE_NAME = "license_status_descrips";
     
     public License(){
+        licenseNumber = new SimpleStringProperty("");
+        clientDescrip = new SimpleStringProperty("");
+        client = new SimpleObjectProperty<>();
+        productDescrip = new SimpleStringProperty("");
+        lastInvoiceDescrip = new SimpleStringProperty("");
+        invoice = new SimpleObjectProperty<>();
+        statusDescrip = new SimpleStringProperty("");
+        status = new SimpleObjectProperty<>();
+        beginDateDescrip = new SimpleStringProperty("");
+        beginDate = new SimpleObjectProperty<>();
+        endDateDescrip = new SimpleStringProperty("");
+        endDate = new SimpleObjectProperty<>();
+        
         checked = new SimpleBooleanProperty();
         date = new SimpleStringProperty("");
         dateObjProperty = new SimpleObjectProperty<>();
-        licenseNumber = new SimpleStringProperty("");
     }
     
     // DB methods:
