@@ -64,6 +64,7 @@ Accounting for Busines
 * (|) ტესტები
 * (-) Client-ის comboBox (+ALL, search.  წერია და კარგად მუშაობს TestExcelGeneral პროექტში)
 * (-) სადაც equals და compares-ს ვიყენებთ მარტო equals-ზე ხომ არ გადავიდეთ. compares-ს საჭიროება? equals-ს საჭიროება?
+* (-) clientComboBox-ში filtr-ის გამო უნდა დავსეტოთ არა უშაუალოდ მნიშვნელობა არამედ promptText როგროც TreeTableView-ს დროს balanceaccount-ებზე, თორე ეგრევე ფილტრავს როგორც კი გაიხსნება.
 
 
 ბაზა: 
