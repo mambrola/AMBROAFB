@@ -550,7 +550,7 @@ public class Client extends EditorPanelable{
                                         this.fax.get().equals(other.getFax()) &&
                                         this.www.get().equals(other.getWww()) &&
                                         this.clientStatus.get().equals(other.statusProperty().get()) &&
-                                        this.getRemark().equals(other.getRecId()) &&
+                                        this.getRemark().equals(other.getRemark()) &&
                                         this.createdDate.equals(other.createdDate);
         boolean equalsPhones = Phone.compareLists(phones, other.getPhones());
         return fieldsCompareResult && equalsPhones;

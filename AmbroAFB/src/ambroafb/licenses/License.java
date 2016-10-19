@@ -8,11 +8,14 @@ package ambroafb.licenses;
 import ambroafb.licenses.helper.LicenseStatus;
 import ambro.AView;
 import ambroafb.general.DateConverter;
+import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.licenses.filter.LicenseFilterModel;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
+import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -31,6 +34,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -38,6 +42,8 @@ import org.json.JSONArray;
  */
 public class License extends EditorPanelable {
 
+    public String createdDate;
+    
     @AView.Column(width = "20", cellFactory = CheckedCellFactory.class)
     private final BooleanProperty checked;
     
@@ -48,7 +54,7 @@ public class License extends EditorPanelable {
     @AView.Column(title = "%license N")
     private final StringProperty licenseNumber;
     
-    
+    private static final String DB_VIEW_NAME = "licenses_whole";
     private static final String DB_STATUSES_TABLE_NAME = "license_status_descrips";
     
     public License(){
@@ -62,6 +68,30 @@ public class License extends EditorPanelable {
     public static ArrayList<License> getAllFromDB(){
         return new ArrayList<>();
     }
+    
+    public static ArrayList<License> getFilteredFromDB(FilterModel model) {
+        WhereBuilder whereBuilder = new ConditionBuilder().where();
+        LicenseFilterModel licenseFilterModel = (LicenseFilterModel) model;
+//        if ()
+//        whereBuilder.and("client_id", "=", licenseFilterModel.getClient().getRecId())
+//                    .and("product_id", "=", licenseFilterModel.getProduct().getRecId())
+//                    .and("status", "=", licenseFilterModel.getStatuses());
+        
+        
+        try {
+            JSONObject params = whereBuilder.condition().build();
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
+            
+            System.out.println("license filtered data: " + data);
+            
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<License>>() {});
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
+    }
+
     
     public static ArrayList<LicenseStatus> getAllLicenseStatusFromDB(){
         try {

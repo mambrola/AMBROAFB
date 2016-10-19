@@ -13,7 +13,7 @@
                               xmlns:fx="http://javafx.com/fxml/1" >
     <VBox   fx:id="formPane" >
         <children>
-            <HBox styleClass="w1" >
+            <HBox styleClass="w2" >
                 <children>
                     <VBox >
                         <children>
@@ -21,16 +21,16 @@
                             <ClientComboBox fx:id="clients" /> 
                         </children>
                     </VBox>
-                </children>
-            </HBox>
-            <HBox styleClass="w3" >
-                <children>
                     <VBox >
                         <children>
                             <Label text="%products" />
                             <ProductComboBox fx:id="products" /> 
                         </children>
                     </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w2" >
+                <children>
                     <VBox >
                         <children>
                             <Label text="%license_statuses" />

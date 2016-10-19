@@ -11,6 +11,7 @@ import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -44,10 +45,28 @@ public class LicensesController implements Initializable {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(aview);
         editorPanelController.setTableDataList(aview, licenses);
+        editorPanelController.removeButtonsByFxIDs("#delete", "#edit", "#view", "#add", "#refresh");
     }    
     
     public void reAssignTable(FilterModel model){
-        
+        if (!model.isEmpty()) {
+            int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+            licenses.clear();
+            masker.setVisible(true);
+            Thread t = new Thread(() -> {
+                License.getFilteredFromDB(model).stream().forEach((license) -> {
+                    licenses.add(license);
+                });
+                
+                Platform.runLater(() -> {
+                    masker.setVisible(false);
+                    if (selectedIndex >= 0){
+                        aview.getSelectionModel().select(selectedIndex);
+                    }
+                });
+            });
+            t.start();
+        }
     }
     
     public EditorPanelController getEditorPanelController(){

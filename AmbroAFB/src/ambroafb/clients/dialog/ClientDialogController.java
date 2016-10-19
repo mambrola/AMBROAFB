@@ -128,7 +128,7 @@ public class ClientDialogController implements Initializable {
     public void bindClient(Client client) {
         this.client = client;
         if (client != null) {
-//            openDate.setValue(DateConverter.parseDateWithTimeWithoutMilisecond(client.createdDate));
+            openDate.setValue(DateConverter.getInstance().parseDate(client.createdDate));
             openDate.setValue(DateConverter.getInstance().parseDate(client.createdDate));
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
             rezident. selectedProperty().bindBidirectional(client.isRezProperty());
@@ -142,7 +142,7 @@ public class ClientDialogController implements Initializable {
             zipCode.      textProperty().bindBidirectional(client.zipCodeProperty());
             city.         textProperty().bindBidirectional(client.cityProperty());
             country.     valueProperty().bindBidirectional(client.countryProperty());
-//            statuses.      valueProperty().bindBidirectional(client.statusProperty());
+            statuses.      valueProperty().bindBidirectional(client.statusProperty());
         }
     }
     

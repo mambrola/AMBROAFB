@@ -13,7 +13,8 @@
 .w1 .combo-box {
   -fx-pref-width: 480;
 }
-.w2 .text-field {
+.w2 .text-field,
+.w2 .combo-box {
   -fx-pref-width: 225;
 }
 .w3 .text-field,
