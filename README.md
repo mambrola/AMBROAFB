@@ -63,6 +63,7 @@ Accounting for Busines
 * (-) Client-ის compare მეთოდში Phone.copmareList-ის მაგივრად Utils.compareList
 * (|) ტესტები
 * (-) Client-ის comboBox (+ALL, search.  წერია და კარგად მუშაობს TestExcelGeneral პროექტში)
+* (-) სადაც equals და compares-ს ვიყენებთ მარტო equals-ზე ხომ არ გადავიდეთ. compares-ს საჭიროება? equals-ს საჭიროება?
 
 
 ბაზა: 
