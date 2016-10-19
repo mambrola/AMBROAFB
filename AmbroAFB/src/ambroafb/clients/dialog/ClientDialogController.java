@@ -7,7 +7,7 @@ package ambroafb.clients.dialog;
 
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
-import ambroafb.clients.helper.Status;
+import ambroafb.clients.helper.ClientStatus;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
@@ -60,28 +60,24 @@ public class ClientDialogController implements Initializable {
     private Label first_name, last_name;
     
     // start required nodes:
-    @FXML  
-    @ContentNotEmpty
+    @FXML @ContentNotEmpty
     private TextField firstName, lastName, idNumber;
     
-    @FXML 
-    @ContentNotEmpty 
-    @ContentMail
+    @FXML @ContentNotEmpty @ContentMail
     private TextField email;
     
-    @FXML  
-    @ContentNotEmpty
+    @FXML  @ContentNotEmpty
     private TextField address; // this place must be because of required fields order.
+    
+    @FXML @ContentNotEmpty
+    private CountryComboBox country;
     // end required nodes.
     
     
     @FXML
     private TextField fax, zipCode, city, www;
-    
     @FXML
-    private CountryComboBox country;
-    @FXML
-    private ComboBox<Status> statuses;
+    private ComboBox<ClientStatus> statuses;
     @FXML
     private DialogOkayCancelController okayCancelController;
     @FXML
@@ -105,7 +101,7 @@ public class ClientDialogController implements Initializable {
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
         country.valueProperty().addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
-            if (oldValue != null && !newValue.equals(oldValue)){
+            if (newValue != null && oldValue != null && !newValue.equals(oldValue)){
                 rezident.setSelected(newValue.getDescrip().equals("Georgia"));
             }
         });
@@ -146,7 +142,7 @@ public class ClientDialogController implements Initializable {
             zipCode.      textProperty().bindBidirectional(client.zipCodeProperty());
             city.         textProperty().bindBidirectional(client.cityProperty());
             country.     valueProperty().bindBidirectional(client.countryProperty());
-            statuses.      valueProperty().bindBidirectional(client.statusProperty());
+//            statuses.      valueProperty().bindBidirectional(client.statusProperty());
         }
     }
     

@@ -7,7 +7,6 @@ package ambroafb.general;
     
 import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
-import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import java.io.File;
 import java.io.IOException;
@@ -302,8 +301,8 @@ public class Utils {
         ContentNotEmpty annotation = field.getAnnotation(ContentNotEmpty.class);
 
         Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
-        String value = (String) typeAndContent[1];
-        if (annotation.value() && (value == null || value.isEmpty())) {
+        Object value = typeAndContent[1];
+        if (annotation.value() && (value == null || value.toString().isEmpty())) {
             changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
             result = false;
         } else {
@@ -413,7 +412,9 @@ public class Utils {
         try {
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
-
+            
+            System.out.println("field.type: " + field.getType());
+            
             if (field.getType().equals(TextField.class)) {
                 TextField textField = (TextField) field.get(classObject);
                 results[0] = textField;
@@ -424,15 +425,17 @@ public class Utils {
                 results[0] = datePicker;
                 results[1] = datePicker.getEditor().getText();
             }
+            // ?? gaertiandeba qvedastan
             else if (field.getType().equals(MapEditorComboBox.class)){
                 MapEditorComboBox mapEditor = (MapEditorComboBox)field.get(classObject);
                 results[0] = mapEditor;
                 results[1] = mapEditor.getEditor().getText();
             }
-            else if (field.getType().equals(ComboBox.class) || field.getType().equals(CurrencyComboBox.class)){
+            // (field.getType().equals(ComboBox.class) || field.getType().equals(CurrencyComboBox.class))
+            else if (field.getType().toString().contains("ComboBox")) {
                 ComboBox comboBox = (ComboBox) field.get(classObject);
                 results[0] = comboBox;
-                results[1] = comboBox.getValue().toString();
+                results[1] = comboBox.getValue();
             }
             field.setAccessible(accessible);
         } catch (IllegalArgumentException | IllegalAccessException ex) {
@@ -445,6 +448,8 @@ public class Utils {
 
     private static void changeNodeTitleLabelVisual(Node node, String text) {
         Parent parent = node.getParent();
+        System.out.println("node: " + node);
+        System.out.println("parent: " + parent);
         Label nodeTitleLabel = (Label) parent.lookup(".validationMessage");
 
         if (text.isEmpty()) {

@@ -7,7 +7,6 @@ package ambroafb.countries;
 
 import ambro.AView;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.KFZClient;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
@@ -15,7 +14,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
@@ -51,6 +52,7 @@ public class Country extends EditorPanelable{
     public static List<Country> getAllFromDB() {
         try {
             String data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
+            System.out.println("country data: " + data);
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<Country>>() {});
         } catch (IOException | AuthServerException ex) {
@@ -59,11 +61,29 @@ public class Country extends EditorPanelable{
         return new ArrayList<>();
     }
     
-    public static Country getOneFromDB(int recId) throws IOException, KFZClient.KFZServerException {
+    public static Country getOneFromDB(int recId) {
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+        return getOneFromDBHelper(conditionBuilder);
+    }
+    
+    private static final Map<String, Country> countries = new HashMap<>();
+    
+    public static Country getOneFromDB(String countryCode) {
+        Country result;
+        if (countries.containsKey(countryCode)){
+            result = countries.get(countryCode).cloneWithID();
+        }
+        else {
+            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("code", "=", countryCode).condition();
+            result = getOneFromDBHelper(conditionBuilder);
+            countries.put(countryCode, result);
+        }
+        return result;
+    }
+    
+    private static Country getOneFromDBHelper(ConditionBuilder conditionBuilder){
         try {
-            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
             JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, conditionBuilder.build());
-            
             String countryData = data.opt(0).toString();
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(countryData, Country.class);

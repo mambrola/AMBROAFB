@@ -93,7 +93,7 @@
                     </HBox>        
                     <HBox   styleClass="oneThirds">
                         <VBox styleClass="couple">
-                            <Label text="%country" /> 
+                            <Label text="%country" styleClass="validationMessage" /> 
                             <CountryComboBox fx:id="country"/>
                         </VBox>
                         <VBox styleClass="couple">

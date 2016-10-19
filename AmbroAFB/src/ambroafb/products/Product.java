@@ -8,7 +8,6 @@ package ambroafb.products;
 import ambro.ANodeSlider;
 import ambro.AView;
 import ambroafb.currencies.Currency;
-import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -165,9 +164,9 @@ public class Product extends EditorPanelable {
             JSONObject newProduct = dbClient.callProcedureAndGetAsJson("general_insert_update", DB_TABLE_NAME, dbClient.getLang(), productJson).getJSONObject(0);
             return mapper.readValue(newProduct.toString(), Product.class);
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException | AuthServerException | JSONException ex) {
-            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

@@ -76,6 +76,7 @@ public class LicenseFilterModel extends FilterModel {
         Client client = null;
         int clientId = getIntFromPref(clientPrefKey);
         if (clientId != -1) {
+            System.out.println("client id is: " + clientId);
             client = Client.getOneFromDB(clientId);
         }
         return client;

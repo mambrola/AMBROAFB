@@ -7,7 +7,7 @@ package ambroafb.clients.filter;
 
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
-import ambroafb.clients.helper.Status;
+import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.Country;
 import ambroafb.countries.CountryComboBox;
 import ambroafb.general.FilterModel;
@@ -55,7 +55,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     @FXML
     private CountryComboBox countries;
     @FXML
-    private CheckComboBox<Status> statuses;
+    private CheckComboBox<ClientStatus> statuses;
     @FXML
     private FilterOkayCancelController okayCancelController;
     
@@ -103,7 +103,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             jSonResult.put( "juridical", (  juridical.indeterminateProperty().get() ? 2 : juridical.isSelected() ? 1 : 0 ));
             jSonResult.put(   "country",  countries.getValue());
             jSonResult.put(  "rezident", (  rezident.indeterminateProperty().get() ? 2 : rezident.isSelected() ? 1 : 0 ));
-            ObservableList<Status> statusList = statuses.getCheckModel().getCheckedItems();
+            ObservableList<ClientStatus> statusList = statuses.getCheckModel().getCheckedItems();
             jSonResult.putOpt("statuses", statusList);
             
             GeneralConfig.prefs.put("clients/filter/dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue().toString());

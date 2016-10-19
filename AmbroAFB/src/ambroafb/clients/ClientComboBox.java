@@ -18,8 +18,8 @@ public class ClientComboBox extends ComboBox<Client> {
         this.setConverter(new StringConverter<Client>() {
             @Override
             public String toString(Client client) {
+                if (client == null) return null;
                 String result = client.getFirstName() + ",  " + client.getLastName() + ",  " + client.getEmail();
-//                System.out.println("client stringConverter result: " + result);
                 return result;
             }
 
@@ -29,6 +29,14 @@ public class ClientComboBox extends ComboBox<Client> {
             }
         });
 
+//        TextFields.bindAutoCompletion(getEditor(), 
+//                                      (AutoCompletionBinding.ISuggestionRequest param) -> 
+//                                                                getItems().stream().filter((Client client) -> 
+//                                                                                    getConverter().toString(client).toLowerCase().contains(param.getUserText().toLowerCase()))
+//                                                                                .collect(Collectors.toList()), 
+//                                      this.getConverter());
+//        
+//        this.setEditable(true);
         this.getItems().addAll(Client.getAllFromDB());
     }
     

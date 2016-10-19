@@ -11,14 +11,14 @@ import javafx.beans.property.SimpleStringProperty;
  *
  * @author dato
  */
-public class Status {
+public class ClientStatus {
     
     private int recId;
     private int clientStatusId;
     private String language;
     private final SimpleStringProperty descrip;
     
-    public Status(){
+    public ClientStatus(){
         descrip = new SimpleStringProperty("");
     }
     
@@ -55,7 +55,7 @@ public class Status {
         this.descrip.set(statusDescrip);
     }
     
-    public boolean equals(Status other){
+    public boolean equals(ClientStatus other){
         return this.getClientStatusId() == other.getClientStatusId() && this.getDescrip().equals(other.getDescrip());
     }
     
