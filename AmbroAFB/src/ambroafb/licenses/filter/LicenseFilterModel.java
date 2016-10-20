@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -37,6 +38,8 @@ public class LicenseFilterModel extends FilterModel {
     private static final String statusesPrefKey = "licenses/filter/status_ids";
     private static final String extraDaysPrefKey = "licenses/filter/extraDays";
 
+    private ObservableList<LicenseStatus> checkedStatuses;
+    
     public LicenseFilterModel() {
         clientProp = new SimpleObjectProperty<>();
     }
@@ -57,10 +60,11 @@ public class LicenseFilterModel extends FilterModel {
         }
     }
 
-    public void setStatus(ObservableList<LicenseStatus> statuses) {
+    public void setStatuses(ObservableList<LicenseStatus> statuses) {
         if (statuses != null) {
-            ArrayList<Integer> statusIDs = (ArrayList<Integer>) statuses.stream().map((LicenseStatus status) -> status.getLicenseStatusId())
-                    .collect(Collectors.toList());
+            checkedStatuses = statuses;
+            List<Integer> statusIDs = statuses.stream().map((LicenseStatus status) -> status.getLicenseStatusId())
+                                                        .collect(Collectors.toList());
             saveIntoPref(statusesPrefKey, statusIDs.toString());
         }
     }
@@ -93,7 +97,11 @@ public class LicenseFilterModel extends FilterModel {
         return product;
     }
 
-    public ObservableList<LicenseStatus> getStatuses() {
+    public ObservableList<LicenseStatus> getStatuses(){
+        return checkedStatuses;
+    }
+    
+    public ObservableList<LicenseStatus> getStatusesIndexes() {
         ObservableList<LicenseStatus> statuses = FXCollections.observableArrayList();
         try {
             String statusIds = getStringFromPref(statusesPrefKey);
