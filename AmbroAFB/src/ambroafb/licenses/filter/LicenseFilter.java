@@ -98,7 +98,8 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         statuses.getItems().setAll(License.getAllLicenseStatusFromDB()); // calke klasad
         
-        clients.setValue(filterModel.getClient());
+//        clients.setValue(filterModel.getClient());
+        
 //        clients.getEditor().setPromptText(filterModel.getClient().toString());
         products.setValue(filterModel.getProduct());
         filterModel.getStatuses().stream().forEach((status) -> {
