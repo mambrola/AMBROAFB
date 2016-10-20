@@ -107,6 +107,16 @@ public class License extends EditorPanelable {
     
     // DB methods:
     public static ArrayList<License> getAllFromDB(){
+        try {
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().build()).toString();
+            
+            System.out.println("licenses data: " + data);
+            
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, new TypeReference<ArrayList<License>>() {});
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return new ArrayList<>();
     }
     
