@@ -96,11 +96,9 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        statuses.getItems().setAll(License.getAllLicenseStatusFromDB()); // calke klasad
+        statuses.getItems().setAll(License.getAllLicenseStatusFromDB());
         
-//        clients.setValue(filterModel.getClient());
-        
-//        clients.getEditor().setPromptText(filterModel.getClient().toString());
+        clients.setValue(filterModel.getClient());
         products.setValue(filterModel.getProduct());
         filterModel.getStatuses().stream().forEach((status) -> {
             statuses.getCheckModel().check(status.getLicenseStatusId()); // --
