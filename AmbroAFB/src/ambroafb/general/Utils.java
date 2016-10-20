@@ -29,6 +29,9 @@ import javafx.scene.Parent;
 import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.mapeditor.MapEditorComboBox;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import java.lang.reflect.Field;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
@@ -39,6 +42,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -124,7 +129,30 @@ public class Utils {
     private static void saveConfigChanges() {
         GeneralConfig.getInstance().dumpIntoPrefs();
     }
-
+    
+    
+    public static JSONObject getJSONFromClass(Object classObject){
+        JSONObject result = null;
+        try {
+            ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            result = new JSONObject(writer.writeValueAsString(classObject));
+        } catch (JSONException | JsonProcessingException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+    
+    public static <T> T getClassFromJSON(Class targetClass, JSONObject json){
+        try {
+            return (T) (new ObjectMapper().readValue(json.toString(), targetClass));
+        } catch (IOException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    
+    
     public static ArrayList<Node> getFocusTraversableBottomChildren(Parent root) {
         ArrayList<Node> arrayList = new ArrayList<>();
         root.getChildrenUnmodifiable().stream().forEach((n) -> {

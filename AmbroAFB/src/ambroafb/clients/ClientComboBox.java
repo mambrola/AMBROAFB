@@ -62,7 +62,7 @@ public class ClientComboBox extends ComboBox<Client> {
                     setItems(filteredItems);
                     hasFilterableData = true;
                 }
-            }            
+            }
         });
         
         predicate = (Predicate<Client>) (Client client) -> {
