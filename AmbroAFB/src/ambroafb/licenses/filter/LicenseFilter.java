@@ -84,6 +84,7 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
             filterModel.setClient(clients.getSelectionModel().getSelectedItem());
             filterModel.setProduct(products.getSelectionModel().getSelectedItem());
             filterModel.setStatuses(statuses.getCheckModel().getCheckedItems());
+            filterModel.setCheckedStatusIndexes(statuses.getCheckModel().getCheckedIndices());
             filterModel.setExtraDays(extraDays.isSelected());
         }
     }
@@ -100,8 +101,8 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
         
         clients.setValue(filterModel.getClient());
         products.setValue(filterModel.getProduct());
-        filterModel.getStatuses().stream().forEach((status) -> {
-            statuses.getCheckModel().check(status.getLicenseStatusId()); // --
+        filterModel.getCheckedStatusIndexes().stream().forEach((index) -> {
+            statuses.getCheckModel().check(index);
         });
         extraDays.setSelected(filterModel.areExtraDays());
         

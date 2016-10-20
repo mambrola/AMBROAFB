@@ -8,7 +8,6 @@ package ambroafb.licenses.filter;
 import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.general.FilterModel;
-import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseStatus;
 import ambroafb.products.Product;
 import ambroafb.products.ProductComboBox;
@@ -19,10 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -63,9 +60,12 @@ public class LicenseFilterModel extends FilterModel {
     public void setStatuses(ObservableList<LicenseStatus> statuses) {
         if (statuses != null) {
             checkedStatuses = statuses;
-            List<Integer> statusIDs = statuses.stream().map((LicenseStatus status) -> status.getLicenseStatusId())
-                                                        .collect(Collectors.toList());
-            saveIntoPref(statusesPrefKey, statusIDs.toString());
+        }
+    }
+    
+    public void setCheckedStatusIndexes(List<Integer> indexes){
+        if (indexes != null){
+            saveIntoPref(statusesPrefKey, indexes.toString());
         }
     }
 
@@ -101,21 +101,17 @@ public class LicenseFilterModel extends FilterModel {
         return checkedStatuses;
     }
     
-    public ObservableList<LicenseStatus> getStatusesIndexes() {
-        ObservableList<LicenseStatus> statuses = FXCollections.observableArrayList();
+    public List<Integer> getCheckedStatusIndexes() {
         try {
             String statusIds = getStringFromPref(statusesPrefKey);
             if (statusIds != null) {
                 ObjectMapper mapper = new ObjectMapper();
-                ArrayList<Integer> ids = mapper.readValue(statusIds, new TypeReference<ArrayList<Integer>>(){});
-                ids.stream().forEach((statusId) -> {
-                    statuses.add(License.getLicenseStatusFromDB(statusId));
-                });
+                return mapper.readValue(statusIds, new TypeReference<ArrayList<Integer>>(){});
             }
         } catch (IOException ex) {
             Logger.getLogger(LicenseFilterModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return statuses;
+        return new ArrayList<>();
     }
 
     public boolean areExtraDays() {
