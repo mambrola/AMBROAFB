@@ -24,6 +24,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
@@ -142,13 +144,21 @@ public class Product extends EditorPanelable {
         return new ArrayList<>();
     }
     
+    private static final Map<Integer, Product> products = new HashMap<>();
+    
     public static Product getOneFromDB (int productId){
+        if (products.containsKey(productId)){
+            return products.get(productId).cloneWithID();
+        }
+        
         try {
             ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", productId).condition();
             JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, conditionBuilder.build());
             String productData = data.opt(0).toString();
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(productData, Product.class);
+            Product product = mapper.readValue(productData, Product.class);
+            products.put(productId, product);
+            return product;
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
