@@ -40,7 +40,7 @@
                     <VBox >
                         <children>
                             <Label />
-                            <CheckBox fx:id="extraDays" text="%extra_days" />
+                            <CheckBox fx:id="extraDays" text="%extra_days" allowIndeterminate="true" />
                         </children>
                     </VBox>
                 </children>

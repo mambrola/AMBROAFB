@@ -81,11 +81,18 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
             filterModel.changeModelAsEmpty();
         }
         else {
-            filterModel.setClient(clients.getSelectionModel().getSelectedItem());
-            filterModel.setProduct(products.getSelectionModel().getSelectedItem());
-            filterModel.setStatuses(statuses.getCheckModel().getCheckedItems());
-            filterModel.setCheckedStatusIndexes(statuses.getCheckModel().getCheckedIndices());
-            filterModel.setExtraDays(extraDays.isSelected());
+            filterModel.setSelectedClient(clients.getSelectionModel().getSelectedItem());
+            filterModel.setSelectedProduct(products.getSelectionModel().getSelectedItem());
+            filterModel.setSelectedStatuses(statuses.getCheckModel().getCheckedItems());
+            filterModel.setSelectedStatusIndexes(statuses.getCheckModel().getCheckedIndices());
+//            int additionalDays = (extraDays.isIndeterminate()) ? 2 : (extraDays.isSelected()) ? 1 : 0;
+//            filterModel.setExtraDays(additionalDays);
+            if (extraDays.isIndeterminate()){
+                filterModel.withAndWithoutExtraDays(true);
+            }
+            else {
+                filterModel.onlyExtraDays(extraDays.isSelected());
+            }
         }
     }
 
@@ -99,12 +106,15 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         statuses.getItems().setAll(License.getAllLicenseStatusFromDB());
         
-        clients.setValue(filterModel.getClient());
-        products.setValue(filterModel.getProduct());
-        filterModel.getCheckedStatusIndexes().stream().forEach((index) -> {
+        clients.setValue(filterModel.getSelectedClient());
+        products.setValue(filterModel.getSelectedProduct());
+        filterModel.getSelectedStatusIndexes().stream().forEach((index) -> {
             statuses.getCheckModel().check(index);
         });
-        extraDays.setSelected(filterModel.areExtraDays());
+        
+        // The order of these bellow command are importent.
+        extraDays.setSelected(filterModel.onlyExtraDays());
+        extraDays.setIndeterminate(filterModel.withAndWithoutExtraDays());
         
     }
     

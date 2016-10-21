@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -28,52 +27,71 @@ import javafx.collections.ObservableList;
  */
 public class LicenseFilterModel extends FilterModel {
 
-    private final ObjectProperty<Client> clientProp;
-
     private static final String clientPrefKey = "licenses/filter/client_id";
     private static final String productPrefKey = "licenses/filter/product_id";
     private static final String statusesPrefKey = "licenses/filter/status_ids";
     private static final String extraDaysPrefKey = "licenses/filter/extraDays";
 
     private ObservableList<LicenseStatus> checkedStatuses;
+    private boolean onlyExtraDays, isIndeterminate;
+    
+    private final int indeterinate = 2;
+    private final int isSelectedExtraDays = 1;
+    private final int notSelectedExtraDays = 0;
     
     public LicenseFilterModel() {
-        clientProp = new SimpleObjectProperty<>();
+        checkedStatuses = FXCollections.observableArrayList();
     }
 
-    public ObjectProperty<Client> clientProperty() {
-        return clientProp;
-    }
 
-    public void setClient(Client client) {
+    public void setSelectedClient(Client client) {
         if (client != null) {
             saveIntoPref(clientPrefKey, client.getRecId());
         }
     }
 
-    public void setProduct(Product product) {
+    public void setSelectedProduct(Product product) {
         if (product != null) {
             saveIntoPref(productPrefKey, product.getRecId());
         }
     }
 
-    public void setStatuses(ObservableList<LicenseStatus> statuses) {
+    public void setSelectedStatuses(ObservableList<LicenseStatus> statuses) {
         if (statuses != null) {
             checkedStatuses = statuses;
         }
     }
     
-    public void setCheckedStatusIndexes(List<Integer> indexes){
+    public void setSelectedStatusIndexes(List<Integer> indexes){
         if (indexes != null){
             saveIntoPref(statusesPrefKey, indexes.toString());
         }
     }
 
-    public void setExtraDays(boolean extraDays) {
-        saveIntoPref(extraDaysPrefKey, extraDays);
+//    /**
+//     * IF user want to filter without extra days - parameter must be 0;
+//     * 1 - with extra days and 2 if both.
+//     * @param extraDays
+//     */
+//    public void setExtraDays(int extraDays) {
+//        saveIntoPref(extraDaysPrefKey, extraDays);
+//    }
+    
+    public void onlyExtraDays(boolean selected){
+        saveIntoPref(extraDaysPrefKey, (selected) ? isSelectedExtraDays : notSelectedExtraDays);
+    }
+    
+    public void withAndWithoutExtraDays(boolean isIndeterminate){
+        saveIntoPref(extraDaysPrefKey, indeterinate);
     }
 
-    public Client getClient() {
+    /**
+     * The method provides to get a client object which is selected from filter.
+     * @return  If client does not select from filter - null;
+     *          If selected is ALL - client object which DB id is 0 and name is "ALL";
+     *          If selected concrete client - an appropriate client object.
+     */
+    public Client getSelectedClient() {
         Client client = null;
         int clientId = getIntFromPref(clientPrefKey);
         if (clientId == 0) {
@@ -85,7 +103,13 @@ public class LicenseFilterModel extends FilterModel {
         return client;
     }
 
-    public Product getProduct() {
+    /**
+     * The method provides to get a product object which is selected from filter.
+     * @return  If product does not select from filter - null;
+     *          If selected is ALL - product object which DB id is 0 and name is "ALL";
+     *          If selected concrete product - an appropriate product object.
+     */
+    public Product getSelectedProduct() {
         Product product = null;
         int productId = getIntFromPref(productPrefKey);
         if (productId == 0){
@@ -97,11 +121,18 @@ public class LicenseFilterModel extends FilterModel {
         return product;
     }
 
-    public ObservableList<LicenseStatus> getStatuses(){
+    /**
+     * @return Selected status objects list from filter.
+     * Note: If no license status is selected from filter, then list will be empty.
+     */
+    public ObservableList<LicenseStatus> getSelectedStatuses(){
         return checkedStatuses;
     }
     
-    public List<Integer> getCheckedStatusIndexes() {
+    /**
+     * @return The selected status indexes from filter comboBox.
+     */
+    public List<Integer> getSelectedStatusIndexes() {
         try {
             String statusIds = getStringFromPref(statusesPrefKey);
             if (statusIds != null) {
@@ -114,7 +145,19 @@ public class LicenseFilterModel extends FilterModel {
         return new ArrayList<>();
     }
 
-    public boolean areExtraDays() {
-        return getBooleanFromPref(extraDaysPrefKey);
+//    /**
+//     * @return  If nothing selected - 0. If select extra days, then 1.
+//     *          If select both with and without extra days, then 2.
+//     */
+//    public int getExtraDays() {
+//        return getIntFromPref(extraDaysPrefKey);
+//    }
+    
+    public boolean onlyExtraDays(){
+        return getIntFromPref(extraDaysPrefKey) == isSelectedExtraDays;
+    }
+    
+    public boolean withAndWithoutExtraDays(){
+        return getIntFromPref(extraDaysPrefKey) == indeterinate;
     }
 }
