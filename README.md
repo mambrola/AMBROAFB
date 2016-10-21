@@ -66,6 +66,7 @@ Accounting for Busines
 * (-) სადაც equals და compares-ს ვიყენებთ მარტო equals-ზე ხომ არ გადავიდეთ. compares-ს საჭიროება? equals-ს საჭიროება?
 * (-) clientComboBox-ის ნაცვლა ერთი generic filterableComboBox-ი.
 * (-) whereBuilder-ის andGropu() ან orGroup() მეთოდების გამოყენების დროს closeGroup-ის გამოძახება.
+* (-) გასუფთავდეს statis hashMap-ები ??
 
 
 ბაზა: 
