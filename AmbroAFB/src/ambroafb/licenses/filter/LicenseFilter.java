@@ -85,8 +85,6 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
             filterModel.setSelectedProduct(products.getSelectionModel().getSelectedItem());
             filterModel.setSelectedStatuses(statuses.getCheckModel().getCheckedItems());
             filterModel.setSelectedStatusIndexes(statuses.getCheckModel().getCheckedIndices());
-//            int additionalDays = (extraDays.isIndeterminate()) ? 2 : (extraDays.isSelected()) ? 1 : 0;
-//            filterModel.setExtraDays(additionalDays);
             if (extraDays.isIndeterminate()){
                 filterModel.withAndWithoutExtraDays(true);
             }

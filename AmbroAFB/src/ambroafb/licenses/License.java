@@ -146,6 +146,7 @@ public class License extends EditorPanelable {
             if (newValue != null){
                 status = newValue.getLicenseStatusId();
                 statusDescrip.set(newValue.getDescrip());
+                System.out.println("change statusObj. newValue: " + newValue.getLicenseStatusId() + " " + newValue.getDescrip());
             }
         });
         
@@ -186,6 +187,7 @@ public class License extends EditorPanelable {
             for (LicenseStatus status : statuses){
                 whereBuilder = whereBuilder.or("status", "=", status.getLicenseStatusId());
             }
+            whereBuilder = whereBuilder.closeGroup();
         }
         if (licenseFilterModel.onlyExtraDays()){
             whereBuilder = whereBuilder.and("additional_days", ">", 0);
@@ -282,6 +284,7 @@ public class License extends EditorPanelable {
     }
     
     public String getStatusDescrip(){
+        System.out.println("getStatusDescrip... statusObj: " + statusObj);
         return (statusObj == null) ? null : statusObj.get().getDescrip();
     }
     

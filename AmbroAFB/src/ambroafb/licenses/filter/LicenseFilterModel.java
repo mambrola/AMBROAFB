@@ -33,9 +33,8 @@ public class LicenseFilterModel extends FilterModel {
     private static final String extraDaysPrefKey = "licenses/filter/extraDays";
 
     private ObservableList<LicenseStatus> checkedStatuses;
-    private boolean onlyExtraDays, isIndeterminate;
     
-    private final int indeterinate = 2;
+    private final int indeterminate = 2;
     private final int isSelectedExtraDays = 1;
     private final int notSelectedExtraDays = 0;
     
@@ -68,21 +67,14 @@ public class LicenseFilterModel extends FilterModel {
         }
     }
 
-//    /**
-//     * IF user want to filter without extra days - parameter must be 0;
-//     * 1 - with extra days and 2 if both.
-//     * @param extraDays
-//     */
-//    public void setExtraDays(int extraDays) {
-//        saveIntoPref(extraDaysPrefKey, extraDays);
-//    }
-    
     public void onlyExtraDays(boolean selected){
+        System.out.println("sheinaxeba pref-shi: " + ((selected) ? isSelectedExtraDays : notSelectedExtraDays));
         saveIntoPref(extraDaysPrefKey, (selected) ? isSelectedExtraDays : notSelectedExtraDays);
     }
     
     public void withAndWithoutExtraDays(boolean isIndeterminate){
-        saveIntoPref(extraDaysPrefKey, indeterinate);
+        System.out.println("sheinaxeba pref-shi: " + indeterminate);
+        saveIntoPref(extraDaysPrefKey, indeterminate);
     }
 
     /**
@@ -145,19 +137,11 @@ public class LicenseFilterModel extends FilterModel {
         return new ArrayList<>();
     }
 
-//    /**
-//     * @return  If nothing selected - 0. If select extra days, then 1.
-//     *          If select both with and without extra days, then 2.
-//     */
-//    public int getExtraDays() {
-//        return getIntFromPref(extraDaysPrefKey);
-//    }
-    
     public boolean onlyExtraDays(){
         return getIntFromPref(extraDaysPrefKey) == isSelectedExtraDays;
     }
     
     public boolean withAndWithoutExtraDays(){
-        return getIntFromPref(extraDaysPrefKey) == indeterinate;
+        return getIntFromPref(extraDaysPrefKey) == indeterminate;
     }
 }
