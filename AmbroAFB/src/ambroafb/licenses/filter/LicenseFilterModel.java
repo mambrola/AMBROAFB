@@ -5,12 +5,8 @@
  */
 package ambroafb.licenses.filter;
 
-import ambroafb.clients.Client;
-import ambroafb.clients.ClientComboBox;
 import ambroafb.general.FilterModel;
 import ambroafb.licenses.helper.LicenseStatus;
-import ambroafb.products.Product;
-import ambroafb.products.ProductComboBox;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -42,17 +38,24 @@ public class LicenseFilterModel extends FilterModel {
         checkedStatuses = FXCollections.observableArrayList();
     }
 
-
-    public void setSelectedClient(Client client) {
-        if (client != null) {
-            saveIntoPref(clientPrefKey, client.getRecId());
-        }
+//    public void setSelectedClient(Client client) {
+//        if (client != null) {
+//            saveIntoPref(clientPrefKey, client.getRecId());
+//        }
+//    }
+    
+    public void setSelectedClientId(int clientId) {
+        saveIntoPref(clientPrefKey, clientId);
     }
 
-    public void setSelectedProduct(Product product) {
-        if (product != null) {
-            saveIntoPref(productPrefKey, product.getRecId());
-        }
+//    public void setSelectedProduct(Product product) {
+//        if (product != null) {
+//            saveIntoPref(productPrefKey, product.getRecId());
+//        }
+//    }
+    
+    public void setSelectedProductId(int productId) {
+        saveIntoPref(productPrefKey, productId);
     }
 
     public void setSelectedStatuses(ObservableList<LicenseStatus> statuses) {
@@ -68,49 +71,55 @@ public class LicenseFilterModel extends FilterModel {
     }
 
     public void onlyExtraDays(boolean selected){
-        System.out.println("sheinaxeba pref-shi: " + ((selected) ? isSelectedExtraDays : notSelectedExtraDays));
         saveIntoPref(extraDaysPrefKey, (selected) ? isSelectedExtraDays : notSelectedExtraDays);
     }
     
     public void withAndWithoutExtraDays(boolean isIndeterminate){
-        System.out.println("sheinaxeba pref-shi: " + indeterminate);
         saveIntoPref(extraDaysPrefKey, indeterminate);
     }
 
-    /**
-     * The method provides to get a client object which is selected from filter.
-     * @return  If client does not select from filter - null;
-     *          If selected is ALL - client object which DB id is 0 and name is "ALL";
-     *          If selected concrete client - an appropriate client object.
-     */
-    public Client getSelectedClient() {
-        Client client = null;
-        int clientId = getIntFromPref(clientPrefKey);
-        if (clientId == 0) {
-            client = ClientComboBox.clientALL;
-        }
-        else if (clientId > 0) {
-            client = Client.getOneFromDB(clientId);
-        }
-        return client;
-    }
+//    /**
+//     * The method provides to get a client object which is selected from filter.
+//     * @return  If client does not select from filter - null;
+//     *          If selected is ALL - client object which DB id is 0 and name is "ALL";
+//     *          If selected concrete client - an appropriate client object.
+//     */
+//    public Client getSelectedClient() {
+//        Client client = null;
+//        int clientId = getIntFromPref(clientPrefKey);
+//        if (clientId == 0) {
+//            client = ClientComboBox.clientALL;
+//        }
+//        else if (clientId > 0) {
+//            client = Client.getOneFromDB(clientId);
+//        }
+//        return client;
+//    }
 
-    /**
-     * The method provides to get a product object which is selected from filter.
-     * @return  If product does not select from filter - null;
-     *          If selected is ALL - product object which DB id is 0 and name is "ALL";
-     *          If selected concrete product - an appropriate product object.
-     */
-    public Product getSelectedProduct() {
-        Product product = null;
-        int productId = getIntFromPref(productPrefKey);
-        if (productId == 0){
-            product = ProductComboBox.productALL;
-        }
-        else if (productId > 0) {
-            product = Product.getOneFromDB(productId);
-        }
-        return product;
+    public int getSelectedClientId() {
+        return getIntFromPref(clientPrefKey);
+    }
+    
+//    /**
+//     * The method provides to get a product object which is selected from filter.
+//     * @return  If product does not select from filter - null;
+//     *          If selected is ALL - product object which DB id is 0 and name is "ALL";
+//     *          If selected concrete product - an appropriate product object.
+//     */
+//    public Product getSelectedProduct() {
+//        Product product = null;
+//        int productId = getIntFromPref(productPrefKey);
+//        if (productId == 0){
+//            product = ProductComboBox.productALL;
+//        }
+//        else if (productId > 0) {
+//            product = Product.getOneFromDB(productId);
+//        }
+//        return product;
+//    }
+    
+    public int getSelectedProductId() {
+        return getIntFromPref(productPrefKey);
     }
 
     /**

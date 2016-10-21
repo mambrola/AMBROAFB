@@ -81,8 +81,8 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
             filterModel.changeModelAsEmpty();
         }
         else {
-            filterModel.setSelectedClient(clients.getSelectionModel().getSelectedItem());
-            filterModel.setSelectedProduct(products.getSelectionModel().getSelectedItem());
+            filterModel.setSelectedClientId(clients.getSelectionModel().getSelectedItem().getRecId());
+            filterModel.setSelectedProductId(products.getSelectionModel().getSelectedItem().getRecId());
             filterModel.setSelectedStatuses(statuses.getCheckModel().getCheckedItems());
             filterModel.setSelectedStatusIndexes(statuses.getCheckModel().getCheckedIndices());
             if (extraDays.isIndeterminate()){
@@ -104,8 +104,10 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         statuses.getItems().setAll(License.getAllLicenseStatusFromDB());
         
-        clients.setValue(filterModel.getSelectedClient());
-        products.setValue(filterModel.getSelectedProduct());
+        if (filterModel.getSelectedClientId() >= 0)
+            clients.getSelectionModel().select(filterModel.getSelectedClientId());
+        if (filterModel.getSelectedProductId() >= 0)
+            products.getSelectionModel().select(filterModel.getSelectedProductId());
         filterModel.getSelectedStatusIndexes().stream().forEach((index) -> {
             statuses.getCheckModel().check(index);
         });

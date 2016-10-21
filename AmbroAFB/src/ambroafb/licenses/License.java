@@ -173,18 +173,18 @@ public class License extends EditorPanelable {
         WhereBuilder whereBuilder = new ConditionBuilder().where();
         LicenseFilterModel licenseFilterModel = (LicenseFilterModel) model;
         
-        Client client = licenseFilterModel.getSelectedClient();
-        if (client.getRecId() > 0){
-            whereBuilder = whereBuilder.and("client_id", "=", client.getRecId());
+        int clientId = licenseFilterModel.getSelectedClientId();
+        if (clientId > 0){
+            whereBuilder = whereBuilder.and("client_id", "=", clientId);
         }
-        Product product = licenseFilterModel.getSelectedProduct();
-        if (product.getRecId() > 0){
-            whereBuilder = whereBuilder.and("product_id", "=", product.getRecId());
+        int productId = licenseFilterModel.getSelectedProductId();
+        if (productId > 0){
+            whereBuilder = whereBuilder.and("product_id", "=", productId);
         }
         ObservableList<LicenseStatus> statuses = licenseFilterModel.getSelectedStatuses();
         if (!statuses.isEmpty()){
             whereBuilder = whereBuilder.andGroup();
-            for (LicenseStatus status : statuses){
+            for (LicenseStatus status : statuses) {
                 whereBuilder = whereBuilder.or("status", "=", status.getLicenseStatusId());
             }
             whereBuilder = whereBuilder.closeGroup();

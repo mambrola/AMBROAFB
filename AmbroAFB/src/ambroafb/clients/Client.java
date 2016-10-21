@@ -27,9 +27,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -269,13 +267,7 @@ public class Client extends EditorPanelable{
         return new ArrayList<>();
     }
     
-    private static final Map<Integer, Client> clients = new HashMap<>();
-    
     public static Client getOneFromDB(int id) {
-        if (clients.containsKey(id)) {
-            return clients.get(id).cloneWithID();
-        }
-        
         try {
             JSONArray clientResult = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().where().and("rec_id", "=", id).condition().build());
             String data = clientResult.optJSONObject(0).toString();
@@ -284,7 +276,6 @@ public class Client extends EditorPanelable{
             
             ObjectMapper mapper = new ObjectMapper();
             Client client = mapper.readValue(data, Client.class);
-            clients.put(id, client);
             return client;
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
