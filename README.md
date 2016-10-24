@@ -67,6 +67,8 @@ Accounting for Busines
 * (-) clientComboBox-ის ნაცვლა ერთი generic filterableComboBox-ი.
 * (-) whereBuilder-ის andGropu() ან orGroup() მეთოდების გამოყენების დროს closeGroup-ის გამოძახება.
 * (-) გასუფთავდეს statis hashMap-ები ??
+* (-) whereBuilder-ი საჭიროებს:  whereBuilder = whereBuilder.andGroup(); ...     whereBuilder = whereBuilder.closeGroup()
+* (-) client-ებს მოაქვს rezident გერმანია, როცა არ უნდ აწამოიღოს. ფილტრში ეთითება:  ორივე date -> null,  juridical -> false, country -> ALL, სტტუსები: მხოლოდ პირველი, rezident -> true, 
 
 
 ბაზა: 
