@@ -33,7 +33,6 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import org.json.JSONObject;
 
 
 /**
@@ -213,11 +212,9 @@ public class EditorPanelController implements Initializable {
             
             System.out.println("<EditorPanelController> refresh method. filter: " + filter);
             
-//            JSONObject json = (filter != null) ? filter.getResult() : new JSONObject();
             FilterModel model = (filter != null) ? filter.getFilterResult() : null;
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
-//            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{JSONObject.class}, outerController, json);
-            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{JSONObject.class}, outerController, model);
+            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{FilterModel.class}, outerController, model);
         }
         else {
             filterStage.requestFocus();

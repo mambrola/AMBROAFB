@@ -136,11 +136,6 @@ public class MainController implements Initializable {
             if (model.isEmpty()){
                 clients.close();
             }
-//            JSONObject json = filter.getResult();
-//            clients.getClientsController().reAssignTable(json);
-//
-//            if (json != null && json.length() == 0) 
-//                clients.close();
         }
         else {
             clientsStage.requestFocus();
