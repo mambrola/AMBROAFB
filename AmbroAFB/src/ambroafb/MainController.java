@@ -32,7 +32,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.json.JSONObject;
 
 /**
  *
@@ -131,11 +130,17 @@ public class MainController implements Initializable {
             clients.show();
             
             ClientFilter filter = new ClientFilter(clients);
-            JSONObject json = filter.getResult();
-            clients.getClientsController().reAssignTable(json);
-
-            if (json != null && json.length() == 0) 
+            FilterModel model = filter.getFilterResult();
+            clients.getClientsController().reAssignTable(model);
+            
+            if (model.isEmpty()){
                 clients.close();
+            }
+//            JSONObject json = filter.getResult();
+//            clients.getClientsController().reAssignTable(json);
+//
+//            if (json != null && json.length() == 0) 
+//                clients.close();
         }
         else {
             clientsStage.requestFocus();

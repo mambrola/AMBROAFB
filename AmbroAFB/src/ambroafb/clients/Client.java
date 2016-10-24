@@ -6,9 +6,11 @@
 package ambroafb.clients;
 
 import ambro.AView;
+import ambroafb.clients.filter.ClientFilterModel;
 import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
+import ambroafb.general.FilterModel;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.GeneralConfig;
 import ambroafb.phones.Phone;
@@ -221,40 +223,33 @@ public class Client extends EditorPanelable{
         return new ArrayList<>();
     }
     
-    public static List<Client> getFilteredFromDB(JSONObject filter) {
-        String dateFrom = filter.optString("dateBigger");
-        String dateTo = filter.optString("dateLess");
-        ObservableList<ClientStatus> status = (ObservableList<ClientStatus>)filter.opt("statuses"); // ++++++++++++++++++++++++++++++++
-        int jurid = filter.optInt("juridical");
-        Country country = (Country)filter.opt("country");
-        int rez = filter.optInt("rezident");
-        
-        WhereBuilder whereBuilder = new ConditionBuilder().where().and("created_date", ">=", dateFrom).and("created_date", "<=", dateTo);
-        if (jurid == 2){
-            whereBuilder.andGroup().or("is_jur", "=", 0).or("is_jur", "=", 1).closeGroup();
+    public static List<Client> getFilteredFromDB(FilterModel model) { // JSONObject filter
+        ClientFilterModel clientFilterModel = (ClientFilterModel) model;
+        WhereBuilder whereBuilder = new ConditionBuilder().where()
+                                                .and("created_date", ">=", clientFilterModel.getFromDateForDB())
+                                                .and("created_date", "<=", clientFilterModel.getToDateForDB());
+        if (!clientFilterModel.isJuridicalIndeterminate()) {
+            whereBuilder.and("is_jur", "=", clientFilterModel.isJuridicalSelected() ? 1 : 0);
         }
-        else {
-            whereBuilder.and("is_jur", "=", jurid);
+        if (!clientFilterModel.isRezidentIndeterminate()) {
+            System.out.println("rezideeeeent: " + clientFilterModel.isRezidentSelected());
+            whereBuilder.and("is_rezident", "=", clientFilterModel.isRezidentSelected() ? 1 : 0);
         }
-        if (rez == 2){
-            whereBuilder.andGroup().or("is_rezident", "=", 0).or("is_rezident", "=", 1).closeGroup();
+        if (!clientFilterModel.isSelectedCountryALL()){
+            whereBuilder.and("country_code", "=", clientFilterModel.getSelectedCountry().getCode());
         }
-        else {
-            whereBuilder.and("is_rezident", "=", rez);
-        }
-        if (country != null && !country.getCode().equals(Country.ALL)){
-            whereBuilder.and("country_code", "=", country.getCode());
-        }
-        if (status != null){
-            whereBuilder.andGroup();
-            status.stream().forEach((clientStatus) -> {
+        if (clientFilterModel.hasSelectedStatuses()){
+            whereBuilder = whereBuilder.andGroup();
+            for (ClientStatus clientStatus : clientFilterModel.getSelectedStatuses()) {
                 whereBuilder.or("status", "=", clientStatus.getClientStatusId());
-            });
-            
+            }
+            whereBuilder = whereBuilder.closeGroup();
         }
         
         try {
             JSONObject params = whereBuilder.condition().build();
+            System.out.println("client filter sent params: " + params);
+            
             String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
             
             System.out.println("client filtered data: " + data);

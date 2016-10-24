@@ -6,6 +6,7 @@
 package ambroafb.clients;
 
 import ambro.AFilterableTableView;
+import ambroafb.general.FilterModel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -16,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.controlsfx.control.MaskerPane;
-import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -49,13 +49,14 @@ public class ClientsController implements Initializable {
         editorPanelController.setTableDataList(aview, clients);
     }
 
-    public void reAssignTable(JSONObject filterJson) {
-        if (filterJson != null && filterJson.length() > 0) {
+    public void reAssignTable(FilterModel model) {
+//        if (filterJson != null && filterJson.length() > 0) {
+        if (!model.isEmpty()) {
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             clients.clear();
             masker.setVisible(true);
             Thread t = new Thread(() -> {
-                Client.getFilteredFromDB(filterJson).stream().forEach((client) -> {
+                Client.getFilteredFromDB(model).stream().forEach((client) -> {
                     clients.add(client);
                 });
                 
