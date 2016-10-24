@@ -20,8 +20,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
@@ -54,8 +52,6 @@ public class Currency extends EditorPanelable {
     
     @AView.Column(width = "20")
     private final StringProperty symbol;
-    
-    private static final Map<String, Currency> currencies = new HashMap<>();
     
     public static final String ALL = "ALL";
     private static final String DB_TABLE_NAME = "currencies";
@@ -108,16 +104,8 @@ public class Currency extends EditorPanelable {
     
     
     public static Currency getOneFromDB (String iso){
-        Currency result;
-        if (currencies.containsKey(iso)){
-            result = currencies.get(iso).cloneWithID();
-        }
-        else {
-            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("iso", "=", iso).condition();
-            result = getOneFromDBHelper(conditionBuilder);
-            currencies.put(iso, result);
-        }
-        return result;
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("iso", "=", iso).condition();
+        return getOneFromDBHelper(conditionBuilder);
     }
     
     private static Currency getOneFromDBHelper(ConditionBuilder conditionBuilder){
@@ -245,9 +233,7 @@ public class Currency extends EditorPanelable {
     }
     
     public boolean equals(Currency currency){
-        return  getIso().equals(currency.getIso()) &&
-                getDescrip().equals(currency.getDescrip()) &&
-                getSymbol().equals(currency.getSymbol());
+        return  this.getIso().equals(currency.getIso());
     }
     
     /**
@@ -258,6 +244,8 @@ public class Currency extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup){
         Currency currencyBackup = (Currency) backup;
-        return this.equals(currencyBackup);
+        return  this.getIso().equals(currencyBackup.getIso()) &&
+                this.getDescrip().equals(currencyBackup.getDescrip()) &&
+                this.getSymbol().equals(currencyBackup.getSymbol());
     }
 }

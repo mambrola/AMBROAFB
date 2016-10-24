@@ -96,7 +96,7 @@ public class Product extends EditorPanelable {
         productSpecific = new SimpleObjectProperty<>();
         price = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
-        currency = new SimpleObjectProperty<>();
+        currency = new SimpleObjectProperty<>(new Currency());
         discounts = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
         
@@ -110,10 +110,16 @@ public class Product extends EditorPanelable {
         });
         
         currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
-            if (newValue != null) {
-                iso.set(newValue.getIso());
-            }
+            rebindIso();
         });
+        rebindIso();
+    }
+    
+    private void rebindIso(){
+        iso.unbind();
+        if (currency.get() != null){
+            iso.bind(currency.get().isoProperty());
+        }
     }
     
     // DBService methods:
@@ -246,7 +252,7 @@ public class Product extends EditorPanelable {
     }
     
     public String getIso(){
-        return iso.get();
+        return this.currency.get().getIso();
     }
     
     public ObservableList<ProductDiscount> getDiscounts() {
@@ -288,7 +294,7 @@ public class Product extends EditorPanelable {
     }
     
     public void setIso(String iso){
-        this.currency.setValue(Currency.getOneFromDB(iso));
+        this.currency.get().setIso(iso);
     }
     
     public void setDiscounts(Collection<ProductDiscount> discounts) {

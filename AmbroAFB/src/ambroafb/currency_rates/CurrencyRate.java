@@ -35,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import ambroafb.general.interfaces.TableColumnWidths;
 import authclient.db.DBClient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 /**
@@ -49,9 +50,11 @@ public class CurrencyRate extends EditorPanelable {
     private final StringProperty count;
     @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
     private final StringProperty iso;
+    @JsonIgnore
     private final ObjectProperty<Currency> currency;
     @AView.Column(title = "%rate", width = "80", styleClass = "textRight")
     private final StringProperty rate;
+    @JsonIgnore
     private final ObjectProperty<LocalDate> dateProperty;
     
     private static final String DB_TABLE_NAME = "rates";
@@ -62,7 +65,7 @@ public class CurrencyRate extends EditorPanelable {
         date = new SimpleStringProperty("");
         count = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
-        currency = new SimpleObjectProperty<>();
+        currency = new SimpleObjectProperty<>(new Currency());
         rate = new SimpleStringProperty("");
         
         dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
@@ -74,10 +77,16 @@ public class CurrencyRate extends EditorPanelable {
         });
         
         currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
-            if (newValue != null) {
-                iso.set(newValue.getIso());
-            }
+            rebindIso();
         });
+        rebindIso();
+    }
+    
+    private void rebindIso(){
+        iso.unbind();
+        if (currency.get() != null){
+            iso.bind(currency.get().isoProperty());
+        }
     }
     
     public static ArrayList<CurrencyRate> getFilteredFromDB(FilterModel model){
@@ -166,7 +175,7 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public String getIso(){
-        return iso.get();
+        return currency.get().getIso();
     }
             
     public double getRate(){
@@ -183,7 +192,7 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public void setIso(String iso) {
-        this.currency.setValue(Currency.getOneFromDB(iso));
+        this.currency.get().setIso(iso);
     }
     
     public void setRate(double rate){
