@@ -28,6 +28,8 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
 
     private final JSONObject json;
     
+    private final FilterModel invoiceModel = null;
+    
     public InvoiceFilter(Stage owner){
         StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
@@ -45,6 +47,7 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
     
     @Override
     public JSONObject getResult() {
+        showAndWait();
         return json;
     }
 
@@ -60,7 +63,8 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
 
     @Override
     public FilterModel getFilterResult() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        showAndWait();
+        return invoiceModel;
     }
     
 }
