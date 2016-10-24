@@ -94,6 +94,6 @@ public class CurrencyRateFilterModel extends FilterModel {
     }
 
     public boolean isSelectedCurrencyALL() {
-        return (selectedCurrency != null && selectedCurrency.getRecId() < 1);
+        return getIntFromPref(PREF_CURRENCY_ISO_KEY) == 0;
     }
 }

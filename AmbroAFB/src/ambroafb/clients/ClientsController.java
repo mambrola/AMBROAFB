@@ -50,7 +50,6 @@ public class ClientsController implements Initializable {
     }
 
     public void reAssignTable(FilterModel model) {
-//        if (filterJson != null && filterJson.length() > 0) {
         if (!model.isEmpty()) {
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             clients.clear();

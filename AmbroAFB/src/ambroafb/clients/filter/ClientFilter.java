@@ -85,13 +85,10 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
 
     @Override
     public void setResult(boolean isOk){
-//        jSonResult = new JSONObject();
         if(!isOk){
             clientFilterModel.changeModelAsEmpty();
         }
         else {
-            
-//        try {
             dateBigger.setEditingValue();
             dateLess.setEditingValue();
             
@@ -105,39 +102,6 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             clientFilterModel.setRezidentSelected(rezident.isSelected());
             clientFilterModel.setSelectedStatusesIndexes(statuses.getCheckModel().getCheckedIndices());
             clientFilterModel.setSelectedStatuses(statuses.getCheckModel().getCheckedItems());
-            
-//            jSonResult.put("dateBigger", (dateBigger.getValue() == null ? DATE_BIGGER : dateBigger.getValue()).toString());
-//            jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());
-//            jSonResult.put( "juridical", (  juridical.indeterminateProperty().get() ? 2 : juridical.isSelected() ? 1 : 0 ));
-//            jSonResult.put(   "country",  countries.getValue());
-//            jSonResult.put(  "rezident", (  rezident.indeterminateProperty().get() ? 2 : rezident.isSelected() ? 1 : 0 ));
-//            ObservableList<ClientStatus> statusList = statuses.getCheckModel().getCheckedItems();
-//            jSonResult.putOpt("statuses", statusList);
-//            
-//            GeneralConfig.prefs.put("clients/filter/dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue().toString());
-//            GeneralConfig.prefs.put(  "clients/filter/dateLess", (  dateLess.getValue() == null) ? "" :   dateLess.getValue().toString());
-//            GeneralConfig.prefs.putInt( "clients/filter/juridical", jSonResult.getInt("juridical"));
-//            Country country = countries.getValue();
-//            GeneralConfig.prefs.putInt(   "clients/filter/country/rec_id", (country == null) ? 0 : country.getRecId());
-//            GeneralConfig.prefs.put(   "clients/filter/country/code", (country == null) ? "" : country.getCode());
-//            GeneralConfig.prefs.put(   "clients/filter/country/descrip", (country == null) ? "" : country.getDescrip());
-//            GeneralConfig.prefs.putInt(   "clients/filter/rezident", jSonResult.getInt("rezident"));
-//            
-//            final ObjectMapper mapper = new ObjectMapper();
-//            final ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-//            final JSONArray statusesArray = new JSONArray();
-//            statusList.stream().forEach((clientStatus) -> {
-//                try {
-//                    JSONObject statusesJson = new JSONObject(writer.writeValueAsString(clientStatus));
-//                    statusesArray.put(statusesJson);
-//                } catch (JsonProcessingException | JSONException ex) {
-//                    Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            });
-//            GeneralConfig.prefs.put("clients/filter/statuses", statuses.getCheckModel().getCheckedIndices().toString()); // statusesArray.toString()
-//        }  catch (JSONException ex) { 
-//              Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); 
-//         }
         }
     }
     
@@ -157,47 +121,6 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         clientFilterModel.getSelectedStatusesIndexes().stream().forEach((index) -> {
             statuses.getCheckModel().check(index);
         });
-        
-//        String dateB = GeneralConfig.prefs.get("clients/filter/dateBigger", "");
-//        String dateL = GeneralConfig.prefs.get("clients/filter/dateLess", "");
-//        int jurid = GeneralConfig.prefs.getInt("clients/filter/juridical", 0);
-//        int countryId = GeneralConfig.prefs.getInt("clients/filter/country/rec_id", -1);
-//        String code = GeneralConfig.prefs.get("clients/filter/country/code", "");
-//        String countryDescrip = GeneralConfig.prefs.get("clients/filter/country/descrip", "");
-//        Country country = new Country(code, countryDescrip);
-//        country.setRecId(countryId);
-        
-//        String status = GeneralConfig.prefs.get("clients/filter/status", null);
-//        int rez = GeneralConfig.prefs.getInt("clients/filter/rezident", 0);
-//
-//        LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
-//        LocalDate less = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);
-//
-//        System.out.println("client statuses: " + status);
-//        
-//        dateBigger.setValue(bigger);
-//        dateLess.setValue(less);
-//        juridical.setSelected(jurid == 1);
-//        juridical.setIndeterminate(jurid == 2);
-//        if (countryId != -1)
-//            countries.setValue(country);
-//        rezident.setSelected(rez == 1);
-//        rezident.setIndeterminate(rez == 2);
-        
-        
-//        String statusesPref = GeneralConfig.prefs.get("clients/filter/statuses", "");
-//        if (!statusesPref.isEmpty()){
-//            ObjectMapper mapper = new ObjectMapper();
-//            try {
-//                ArrayList<Integer> checkedStatusList = mapper.readValue(statusesPref, new TypeReference<ArrayList<Integer>>(){});
-//                checkedStatusList.stream().forEach((checkedIndex) -> {
-//                    statuses.getCheckModel().check(checkedIndex);
-//                });
-//            } catch (IOException ex) {
-//                Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-        
     }
     
 }
