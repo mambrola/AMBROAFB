@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.json.JSONArray;
@@ -35,10 +38,18 @@ public class Country extends EditorPanelable{
     
     private static final String DB_TABLE_NAME = "countries";
     public static final String ALL = "ALL";
+    private static final String REZIDENT_COUNTRY_CODE = "GE";
+    
+    private BooleanProperty rezidentCountry;
     
     public Country() {
-        code = new SimpleStringProperty();
+        code = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
+        rezidentCountry = new SimpleBooleanProperty(false);
+        
+        rezidentCountry.bind(Bindings.createBooleanBinding(() -> {
+            return code.get().equals(REZIDENT_COUNTRY_CODE);
+        }, code));
     }
     
     public static List<Country> getAllFromDB() {
@@ -82,6 +93,10 @@ public class Country extends EditorPanelable{
 
     public StringProperty descripProperty() {
         return descrip;
+    }
+    
+    public BooleanProperty rezidentCountryProperty(){
+        return rezidentCountry;
     }
 
     

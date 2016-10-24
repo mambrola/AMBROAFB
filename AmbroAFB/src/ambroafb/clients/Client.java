@@ -119,9 +119,6 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private ImageGalleryController clientImageGallery;
     
-    private static final String rezidentCountryCode = "GE";
-    private static Country rezidentCountry;
-    
     private static final String DB_TABLE_NAME = "clients";
     private static final String DB_VIEW_NAME = "clients_whole";
     private static final String DB_STATUS_TABLE = "client_status_descrips";
@@ -141,8 +138,7 @@ public class Client extends EditorPanelable{
         zipCode =           new SimpleStringProperty("");
         city =              new SimpleStringProperty("");
         fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
-        country =           new SimpleObjectProperty<>();
-        country.set(new Country());
+        country =           new SimpleObjectProperty<>(new Country());
         countryCode =    new SimpleStringProperty("");
         IDNumber =          new SimpleStringProperty("");
         phones = FXCollections.observableArrayList();
@@ -164,11 +160,12 @@ public class Client extends EditorPanelable{
         });
         rebindCountry(); // country objectProperty already set country object. So this line is needed to change countryCode column when generate tableView Components.
         
-        rezidentCountry = Country.getOneFromDB(rezidentCountryCode);
     }
     
     private void resetRezident(){
-        isRezident.set(country.get() != null && country.get().equals(rezidentCountry));
+        if (country.get() != null){
+            isRezident.set(country.get().rezidentCountryProperty().get());
+        }
     }
     
     private void rebindPhoneNumbers() {
@@ -469,6 +466,7 @@ public class Client extends EditorPanelable{
     }
     
     public void setCountryCode(String countryCode){
+        System.out.println("code: " + countryCode);
         this.country.get().setCode(countryCode);
     }
     
@@ -543,7 +541,7 @@ public class Client extends EditorPanelable{
                                         this.address.get().equals(otherClient.getAddress()) &&
                                         this.zipCode.get().equals(otherClient.getZipCode()) &&
                                         this.city.get().equals(otherClient.getCity()) &&
-                                        this.country.get().compares(otherClient.countryProperty().get()) &&
+                                        this.country.get().equals(otherClient.countryProperty().get()) &&
                                         this.IDNumber.get().equals(otherClient.getIDNumber()) &&
                                         this.fax.get().equals(otherClient.getFax()) &&
                                         this.www.get().equals(otherClient.getWww()) &&
@@ -603,7 +601,6 @@ public class Client extends EditorPanelable{
         String otherFieldsText = firstName.concat(" " + lastName.get())
                                           .concat(" " + email.get()).concat(" " + address.get())
                                           .concat(" " + city.get())
-                                          .concat(" " + country.getName())
                                  .get();
         return (otherFieldsText + clientPhones);
     }

@@ -344,14 +344,14 @@ public class License extends EditorPanelable {
     }
     
     public void setClientId(int clienId){
-        clientObj.set(Client.getOneFromDB(clienId));
-        Client client = clientObj.get();
-        clientDescrip.set(client.getFirstName() + ", " + client.getLastName() + ", " + client.getEmail());
+//        clientObj.set(Client.getOneFromDB(clienId));
+//        Client client = clientObj.get();
+//        clientDescrip.set(client.getFirstName() + ", " + client.getLastName() + ", " + client.getEmail());
     }
     
     public void setProductId(int productId){
-        productObj.set(Product.getOneFromDB(productId));
-        productDescrip.set(productObj.get().getDescrip());
+//        productObj.set(Product.getOneFromDB(productId));
+//        productDescrip.set(productObj.get().getDescrip());
     }
     
     public void setStatusDescrip(String descrip){
