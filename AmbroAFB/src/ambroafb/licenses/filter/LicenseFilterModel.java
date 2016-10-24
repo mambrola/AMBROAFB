@@ -23,10 +23,10 @@ import javafx.collections.ObservableList;
  */
 public class LicenseFilterModel extends FilterModel {
 
-    private static final String clientPrefKey = "licenses/filter/client_id";
-    private static final String productPrefKey = "licenses/filter/product_id";
-    private static final String statusesPrefKey = "licenses/filter/status_ids";
-    private static final String extraDaysPrefKey = "licenses/filter/extraDays";
+    private static final String PREF_CLIENT_KEY = "licenses/filter/client_id";
+    private static final String PREF_PRODUCT_KEY = "licenses/filter/product_id";
+    private static final String PREF_STATUS_KEY = "licenses/filter/status_ids";
+    private static final String PREF_EXTRA_DAYS_KEY = "licenses/filter/extraDays";
 
     private ObservableList<LicenseStatus> checkedStatuses;
     
@@ -45,7 +45,7 @@ public class LicenseFilterModel extends FilterModel {
 //    }
     
     public void setSelectedClientId(int clientId) {
-        saveIntoPref(clientPrefKey, clientId);
+        saveIntoPref(PREF_CLIENT_KEY, clientId);
     }
 
 //    public void setSelectedProduct(Product product) {
@@ -55,7 +55,7 @@ public class LicenseFilterModel extends FilterModel {
 //    }
     
     public void setSelectedProductId(int productId) {
-        saveIntoPref(productPrefKey, productId);
+        saveIntoPref(PREF_PRODUCT_KEY, productId);
     }
 
     public void setSelectedStatuses(ObservableList<LicenseStatus> statuses) {
@@ -66,16 +66,16 @@ public class LicenseFilterModel extends FilterModel {
     
     public void setSelectedStatusIndexes(List<Integer> indexes){
         if (indexes != null){
-            saveIntoPref(statusesPrefKey, indexes.toString());
+            saveIntoPref(PREF_STATUS_KEY, indexes.toString());
         }
     }
 
     public void onlyExtraDays(boolean selected){
-        saveIntoPref(extraDaysPrefKey, (selected) ? isSelectedExtraDays : notSelectedExtraDays);
+        saveIntoPref(PREF_EXTRA_DAYS_KEY, (selected) ? isSelectedExtraDays : notSelectedExtraDays);
     }
     
     public void withAndWithoutExtraDays(boolean isIndeterminate){
-        saveIntoPref(extraDaysPrefKey, indeterminate);
+        saveIntoPref(PREF_EXTRA_DAYS_KEY, indeterminate);
     }
 
 //    /**
@@ -97,7 +97,7 @@ public class LicenseFilterModel extends FilterModel {
 //    }
 
     public int getSelectedClientId() {
-        return getIntFromPref(clientPrefKey);
+        return getIntFromPref(PREF_CLIENT_KEY);
     }
     
 //    /**
@@ -119,7 +119,7 @@ public class LicenseFilterModel extends FilterModel {
 //    }
     
     public int getSelectedProductId() {
-        return getIntFromPref(productPrefKey);
+        return getIntFromPref(PREF_PRODUCT_KEY);
     }
 
     /**
@@ -135,7 +135,7 @@ public class LicenseFilterModel extends FilterModel {
      */
     public List<Integer> getSelectedStatusIndexes() {
         try {
-            String statusIds = getStringFromPref(statusesPrefKey);
+            String statusIds = getStringFromPref(PREF_STATUS_KEY);
             if (statusIds != null) {
                 ObjectMapper mapper = new ObjectMapper();
                 return mapper.readValue(statusIds, new TypeReference<ArrayList<Integer>>(){});
@@ -147,10 +147,10 @@ public class LicenseFilterModel extends FilterModel {
     }
 
     public boolean onlyExtraDays(){
-        return getIntFromPref(extraDaysPrefKey) == isSelectedExtraDays;
+        return getIntFromPref(PREF_EXTRA_DAYS_KEY) == isSelectedExtraDays;
     }
     
     public boolean withAndWithoutExtraDays(){
-        return getIntFromPref(extraDaysPrefKey) == indeterminate;
+        return getIntFromPref(PREF_EXTRA_DAYS_KEY) == indeterminate;
     }
 }

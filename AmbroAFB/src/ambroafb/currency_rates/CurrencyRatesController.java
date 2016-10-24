@@ -6,6 +6,7 @@
 package ambroafb.currency_rates;
 
 import ambro.AFilterableTableView;
+import ambroafb.general.FilterModel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -16,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.controlsfx.control.MaskerPane;
-import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -49,14 +49,14 @@ public class CurrencyRatesController implements Initializable {
         editorPanelController.setTableDataList(aview, currencyRates);
     }
     
-    public void reAssignTable(JSONObject filterJson){
-        if (filterJson != null && filterJson.length() > 0){
+    public void reAssignTable(FilterModel model){
+        if (!model.isEmpty()){
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             currencyRates.clear();
             masker.setVisible(true);
             
             new Thread(() -> {
-                CurrencyRate.getFilteredFromDB(filterJson).stream().forEach((currRate) -> {
+                CurrencyRate.getFilteredFromDB(model).stream().forEach((currRate) -> {
                     currencyRates.add(currRate);
                 });
                 

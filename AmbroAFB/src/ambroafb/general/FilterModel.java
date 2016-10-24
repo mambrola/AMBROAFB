@@ -47,7 +47,7 @@ public abstract class FilterModel {
      * @return If preferences do not contains key then -1, otherwise - appropriate value from preferences.
      */
     public int getIntFromPref(String key){
-        return GeneralConfig.prefs.getInt(key, -1);
+        return GeneralConfig.prefs.getInt(key, 0);
     }
     
     /**

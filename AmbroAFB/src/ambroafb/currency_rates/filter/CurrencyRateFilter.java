@@ -6,7 +6,6 @@
 package ambroafb.currency_rates.filter;
 
 import ambro.ADatePicker;
-import ambroafb.clients.filter.ClientFilter;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
@@ -17,10 +16,7 @@ import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,7 +24,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -46,12 +41,8 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     private FilterOkayCancelController okayCancelController;
     
     private JSONObject jSonResult;
-    private static final String DATE_BIGGER = "1970-01-01";
-    private static final String DATE_LESS = "9999-01-01";
     
-    private static final String PREF_BIGGER_DATE = "currency_rate/filter/dateBigger";
-    private static final String PREF_LESS_DATE = "currency_rate/filter/dateLess";
-    private static final String PREF_CURRENCY = "currency_rate/filter/currency";
+    private final CurrencyRateFilterModel currencyRateFilterModel = new CurrencyRateFilterModel();
     
     public CurrencyRateFilter(Stage owner){
         StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
@@ -83,23 +74,29 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     }
 
     @Override
+    public FilterModel getFilterResult() {
+        showAndWait();
+        return currencyRateFilterModel;
+    }
+    
+
+    @Override
     public void setResult(boolean isOk){
-        jSonResult = new JSONObject();
-        if(!isOk)
-            return;
-        try {
+        if(!isOk){
+            currencyRateFilterModel.changeModelAsEmpty();
+        }
+        else {
             dateBigger.setEditingValue();
             dateLess.setEditingValue();
             
-            jSonResult.put("dateBigger", (dateBigger.getValue() == null ? DATE_BIGGER : dateBigger.getValue()).toString());
-            jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());
-            jSonResult.put(  "currency", (currencies.getValue() == null)? "" : currencies.getValue().getIso());
-            
-            GeneralConfig.prefs.put(PREF_BIGGER_DATE, (dateBigger.getValue() == null) ? "" : dateBigger.getValue().toString());
-            GeneralConfig.prefs.put(PREF_LESS_DATE, (  dateLess.getValue() == null) ? "" :   dateLess.getValue().toString());
-            GeneralConfig.prefs.put(PREF_CURRENCY, (currencies.getValue() == null)? "" : currencies.getValue().getIso());
-        } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
+            currencyRateFilterModel.setFromDate(dateBigger.getValue());
+            currencyRateFilterModel.setToDate(dateLess.getValue());
+            currencyRateFilterModel.setSelectedCurrencyIndex(currencies.getSelectionModel().getSelectedIndex());
+            currencyRateFilterModel.setSelectedCurrency(currencies.getValue());
+        }
     }
+    
+    
     
     /**
      * Initializes the controller class.
@@ -108,22 +105,9 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        String dateB = GeneralConfig.prefs.get(PREF_BIGGER_DATE, "");
-        String dateL = GeneralConfig.prefs.get(PREF_LESS_DATE, "");
-        String currency = GeneralConfig.prefs.get(PREF_CURRENCY, "");
-        
-        LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
-        LocalDate less   = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);
-
-        dateBigger.setValue(bigger);
-        dateLess.setValue(less);
-        currencies.changeValue(currency);
-        
+        dateBigger.setValue(currencyRateFilterModel.getFromDate());
+        dateLess.setValue(currencyRateFilterModel.getToDate());
+        currencies.getSelectionModel().select(currencyRateFilterModel.getSelectedCurrencyIndex());
     }    
-
-    @Override
-    public FilterModel getFilterResult() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }

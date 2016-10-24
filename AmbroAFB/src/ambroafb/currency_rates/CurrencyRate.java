@@ -7,7 +7,9 @@ package ambroafb.currency_rates;
 
 import ambro.AView;
 import ambroafb.currencies.Currency;
+import ambroafb.currency_rates.filter.CurrencyRateFilterModel;
 import ambroafb.general.DateConverter;
+import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -77,28 +79,27 @@ public class CurrencyRate extends EditorPanelable {
             }
         });
     }
-
-    public static ArrayList<CurrencyRate> getFilteredFromDB(JSONObject filterJson){
+    
+    public static ArrayList<CurrencyRate> getFilteredFromDB(FilterModel model){
         try {
-            String from = filterJson.optString("dateBigger");
-            String to = filterJson.optString("dateLess");
-            String currency = filterJson.optString("currency");
+            CurrencyRateFilterModel currencyRateFilterModel = (CurrencyRateFilterModel) model;
             WhereBuilder whereBuilder = new ConditionBuilder().where()
-                    .and("date", ">=", from).and("date", "<=", to);
-            if (!currency.equals(Currency.ALL)){
-                whereBuilder = whereBuilder.and("iso", "=", currency);
+                    .and("date", ">=", currencyRateFilterModel.getFromDateForDB())
+                    .and("date", "<=", currencyRateFilterModel.getToDateForDB());
+            if (!currencyRateFilterModel.isSelectedCurrencyALL()) {
+                whereBuilder.and("iso", "=", currencyRateFilterModel.getSelectedCurrency().getIso());
             }
             JSONObject params = whereBuilder.condition().build();
             String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
-            
+
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<CurrencyRate>>() {});
+            return mapper.readValue(data, new TypeReference<ArrayList<CurrencyRate>>(){});
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return new ArrayList<>();
+        return null;
     }
-    
+
     public static CurrencyRate getOneFromDB (int recId){
         try {
             ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();

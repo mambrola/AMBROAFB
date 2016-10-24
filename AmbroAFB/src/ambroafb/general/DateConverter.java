@@ -68,7 +68,12 @@ public class DateConverter {
     private static LocalDate getResult(String date, DateTimeFormatter pattern){
         LocalDate result = null;
         try {
-            result = LocalDate.parse(date, pattern);
+            if (date != null){
+                result = LocalDate.parse(date, pattern);
+            }
+            else {
+                System.out.println("DateConverter Note: The parsing date is null.");
+            }
         } catch (Exception ex){ }
         return result;
     }

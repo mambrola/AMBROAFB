@@ -258,11 +258,12 @@ public class MainController implements Initializable {
             currencyRates.show();
             
             CurrencyRateFilter filter = new CurrencyRateFilter(currencyRates);
-            JSONObject json = filter.getResult();
-            currencyRates.getCurrencyRatesController().reAssignTable(json);
+            FilterModel model = filter.getFilterResult();
+            currencyRates.getCurrencyRatesController().reAssignTable(model);
 
-            if (json != null && json.length() == 0) 
+            if (model.isEmpty()){
                 currencyRates.close();
+            }
         }
         else {
             currencyRatesStage.requestFocus();
