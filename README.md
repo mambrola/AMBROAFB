@@ -75,7 +75,8 @@ compare / equals ორივე საჭიროა, მაგალითა
 * (-) გასუფთავდეს statis hashMap-ები ??
 * (-) whereBuilder-ი საჭიროებს:  whereBuilder = whereBuilder.andGroup(); ...     whereBuilder = whereBuilder.closeGroup()
 * (-) client-ებს მოაქვს rezident გერმანია, როცა არ უნდ აწამოიღოს. ფილტრში ეთითება:  ორივე date -> null,  juridical -> false, country -> ALL, სტტუსები: მხოლოდ პირველი, rezident -> true
-* (-) Client-ის დიალოგის დროს თუ რეზიდენტობა გაინიშნა ალბათ ქვეყანა საქართველო შესაძლოა დარჩეს არჩეული comboBox-ში.
+* (+) Client-ის დიალოგის დროს თუ რეზიდენტობა გაინიშნა ალბათ ქვეყანა საქართველო შესაძლოა დარჩეს არჩეული comboBox-ში.
+	+ აღარაა საჭირო გადაბმა
 
 
 ბაზა: 
