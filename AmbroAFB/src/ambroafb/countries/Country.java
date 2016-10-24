@@ -135,8 +135,8 @@ public class Country extends EditorPanelable{
     }
     
     @Override
-    public boolean compares(EditorPanelable other){
-        Country country = (Country) other;
+    public boolean compares(EditorPanelable backup){
+        Country country = (Country) backup;
         return this.getCode().equals(country.getCode()) && this.getDescrip().equals(country.getDescrip());
     }
 

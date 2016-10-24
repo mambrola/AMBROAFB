@@ -250,7 +250,14 @@ public class Currency extends EditorPanelable {
                 getSymbol().equals(currency.getSymbol());
     }
     
-    public boolean compares(Currency currencyBackup){
+    /**
+     *
+     * @param backup
+     * @return
+     */
+    @Override
+    public boolean compares(EditorPanelable backup){
+        Currency currencyBackup = (Currency) backup;
         return this.equals(currencyBackup);
     }
 }

@@ -533,8 +533,8 @@ public class Client extends EditorPanelable{
     
     
     @Override
-    public boolean compares(EditorPanelable other){
-        Client otherClient = (Client) other;
+    public boolean compares(EditorPanelable backup){
+        Client otherClient = (Client) backup;
         boolean fieldsCompareResult =   this.isJur.get() == otherClient.getIsJur() &&
                                         this.isRezident.get() == otherClient.getIsRezident() && 
                                         this.firstName.get().equals(otherClient.getFirstName()) &&

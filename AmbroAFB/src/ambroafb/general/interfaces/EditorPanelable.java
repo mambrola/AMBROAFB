@@ -18,7 +18,7 @@ public abstract class EditorPanelable {
     public abstract EditorPanelable cloneWithoutID();
     public abstract EditorPanelable cloneWithID();
     public abstract void copyFrom(EditorPanelable other);
-    public abstract boolean compares(EditorPanelable other);
+    public abstract boolean compares(EditorPanelable backup);
     
     /** The method uses to search EditorPanelable elements in list (ex. tableView list)
      * @return String to convenient searching.

@@ -241,4 +241,10 @@ public class Invoice extends EditorPanelable {
         return getInvoiceNumber().concat(getCreatedDate()).concat(getBeginDate()).concat(getEndDate());
     }
 
+    @Override
+    public boolean compares(EditorPanelable backup) {
+        Invoice invoiceBackup = (Invoice) backup;
+        return true;
+    }
+
 }

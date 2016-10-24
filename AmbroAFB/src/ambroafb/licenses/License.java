@@ -444,7 +444,8 @@ public class License extends EditorPanelable {
         setEmail(otherLicense.getEmail());
     }
     
-    public boolean compare(){
+    @Override
+    public boolean compares(EditorPanelable backup){
         return true;
     }
 

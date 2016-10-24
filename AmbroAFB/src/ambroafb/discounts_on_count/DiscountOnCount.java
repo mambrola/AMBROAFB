@@ -149,7 +149,14 @@ public class DiscountOnCount extends EditorPanelable {
         return "";
     }
 
-    public boolean compares(DiscountOnCount discCountBackup) {
+    /**
+     *
+     * @param backup
+     * @return
+     */
+    @Override
+    public boolean compares(EditorPanelable backup) {
+        DiscountOnCount discCountBackup = (DiscountOnCount) backup;
         return  getLicenseCount() == discCountBackup.getLicenseCount() &&
                 getDiscountRate() == discCountBackup.getDiscountRate();
     }

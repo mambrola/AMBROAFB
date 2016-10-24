@@ -221,10 +221,11 @@ public class CurrencyRate extends EditorPanelable {
     
     /**
      * Method compares two CurrencyRates.
-     * @param currencyRateBackup Other currencyRate
+     * @param backup Other currencyRate
      * @return  - True, if all comparable fields are equals, false otherwise.
      */
-    public boolean compares(CurrencyRate currencyRateBackup) {
+    public boolean compares(EditorPanelable backup) {
+        CurrencyRate currencyRateBackup = (CurrencyRate) backup;
         return  this.getDate().equals(currencyRateBackup.getDate()) &&
                 this.getCount() == currencyRateBackup.getCount()    &&
                 this.getIso().equals(currencyRateBackup.getIso())   &&

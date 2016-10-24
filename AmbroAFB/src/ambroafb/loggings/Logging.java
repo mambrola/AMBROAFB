@@ -140,12 +140,15 @@ public class Logging extends EditorPanelable {
         return getMacAddress();
     }
     
-    public boolean compares(Logging other){
-        return  getLicenseNumber().equals(other.getLicenseNumber()) &&
-                getEmail().equals(other.getEmail()) &&
-                getLogginDate().equals(other.getLogginDate()) &&
-                getMacAddress().equals(other.getMacAddress()) &&
-                getResponse().equals(other.getResponse());
+    
+    @Override
+    public boolean compares(EditorPanelable backup){
+        Logging loggingBackup = (Logging) backup;
+        return  getLicenseNumber().equals(loggingBackup.getLicenseNumber()) &&
+                getEmail().equals(loggingBackup.getEmail()) &&
+                getLogginDate().equals(loggingBackup.getLogginDate()) &&
+                getMacAddress().equals(loggingBackup.getMacAddress()) &&
+                getResponse().equals(loggingBackup.getResponse());
                 
     }
 }

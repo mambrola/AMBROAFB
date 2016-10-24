@@ -267,7 +267,14 @@ public class BalanceAccount extends EditorPanelable {
         return descripExpression.get();
     }
 
-    public boolean compares(BalanceAccount balAccountBackup) {
+    /**
+     *
+     * @param backup
+     * @return
+     */
+    @Override
+    public boolean compares(EditorPanelable backup) {
+        BalanceAccount balAccountBackup = (BalanceAccount) backup;
         return  getBalAcc() == balAccountBackup.getBalAcc() && 
                 currDescripProperty().get().equals(balAccountBackup.currDescripProperty().get()) &&
                 getActPas() == balAccountBackup.getActPas();

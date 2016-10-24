@@ -358,10 +358,12 @@ public class Product extends EditorPanelable {
     
     /**
      * Method compares two products.
-     * @param productBackup - other product.
+     * @param backup - other product.
      * @return  - True, if all comparable fields are equals, false otherwise.
      */
-    public boolean compares(Product productBackup) {
+    @Override
+    public boolean compares(EditorPanelable backup) {
+        Product productBackup = (Product) backup;
         return  this.getAbbreviation().equals(productBackup.getAbbreviation()) &&
                 this.getFormer() == productBackup.getFormer() &&
                 this.getDescrip().equals(productBackup.getDescrip()) &&
