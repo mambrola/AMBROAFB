@@ -143,6 +143,7 @@ public class Client extends EditorPanelable{
         city =              new SimpleStringProperty("");
         fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
         country =           new SimpleObjectProperty<>();
+        country.set(new Country());
         countryDescrip =    new SimpleStringProperty("");
         IDNumber =          new SimpleStringProperty("");
         phones = FXCollections.observableArrayList();
@@ -547,7 +548,7 @@ public class Client extends EditorPanelable{
                                         this.www.get().equals(other.getWww()) &&
                                         this.clientStatus.get().equals(other.statusProperty().get()) &&
                                         this.getRemark().equals(other.getRemark()) &&
-                                        this.createdDate.equals(other.createdDate);
+                                        Utils.avoidNullAndReturnString(this.createdDate).equals(Utils.avoidNullAndReturnString(other.createdDate));
         boolean equalsPhones = Phone.compareLists(phones, other.getPhones());
         return fieldsCompareResult && equalsPhones;
     }
