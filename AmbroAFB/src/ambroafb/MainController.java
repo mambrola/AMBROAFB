@@ -177,7 +177,7 @@ public class MainController implements Initializable {
             invoices.show();
             
             InvoiceFilter filter = new InvoiceFilter(invoices);
-            invoices.getInvoicesController().reAssignTable(filter.getResult());
+            invoices.getInvoicesController().reAssignTable(filter.getFilterResult());
         }
         else {
             invoicesStage.requestFocus();
@@ -222,13 +222,9 @@ public class MainController implements Initializable {
             licenses.show();
             
             LicenseFilter filter = new LicenseFilter(licenses);
-//            JSONObject json = filter.getResult();
-//            licenses.getLicensesController().reAssignTable(json);
             FilterModel filterModel = filter.getFilterResult();
             licenses.getLicensesController().reAssignTable(filterModel);
 
-//            if (json != null && json.length() == 0) 
-//                licenses.close();
             if (filterModel.isEmpty()) 
                 licenses.close();
         }

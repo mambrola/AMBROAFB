@@ -6,6 +6,7 @@
 package ambroafb.invoices;
 
 import ambro.AFilterableTableView;
+import ambroafb.general.FilterModel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -16,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.controlsfx.control.MaskerPane;
-import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -50,8 +50,8 @@ public class InvoicesController implements Initializable {
         editorPanelController.setTableDataList(aview, invoices);
     }
     
-    public void reAssignTable(JSONObject jsonFilter) {
-        if (jsonFilter != null && jsonFilter.length() == 0){
+    public void reAssignTable(FilterModel model) {
+        if (!model.isEmpty()){
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             invoices.clear();
             masker.setVisible(true);

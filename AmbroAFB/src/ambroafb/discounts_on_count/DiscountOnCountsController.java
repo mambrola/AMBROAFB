@@ -6,6 +6,7 @@
 package ambroafb.discounts_on_count;
 
 import ambro.ATableView;
+import ambroafb.general.FilterModel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -16,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.controlsfx.control.MaskerPane;
-import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -51,7 +51,7 @@ public class DiscountOnCountsController implements Initializable {
         reAssignTable(null);
     }
     
-    public void reAssignTable(JSONObject filterJson) {
+    public void reAssignTable(FilterModel model) {
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         discounts.clear();
         masker.setVisible(true);

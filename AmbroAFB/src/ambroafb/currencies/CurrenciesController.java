@@ -6,6 +6,7 @@
 package ambroafb.currencies;
 
 import ambro.ATableView;
+import ambroafb.general.FilterModel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -16,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.controlsfx.control.MaskerPane;
-import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -51,10 +51,10 @@ public class CurrenciesController implements Initializable {
 
      /**
      * The method call firstly in initialize and secondly, when user clicks refresh button.
-     * @param jsonFilter The parameter is not need in it, 
+     * @param model The parameter is not need in it, 
      *                   but this is reAssignTable() method header agreement.
      */
-    public void reAssignTable(JSONObject jsonFilter){
+    public void reAssignTable(FilterModel model){
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         currencies.clear();
         masker.setVisible(true);

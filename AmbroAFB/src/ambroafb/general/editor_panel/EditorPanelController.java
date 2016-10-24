@@ -9,6 +9,7 @@ import ambro.AFilterableTableView;
 import ambro.ATableView;
 import ambro.AFilterableTreeTableView;
 import ambro.AView;
+import ambroafb.general.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -212,9 +213,11 @@ public class EditorPanelController implements Initializable {
             
             System.out.println("<EditorPanelController> refresh method. filter: " + filter);
             
-            JSONObject json = (filter != null) ? filter.getResult() : new JSONObject();
+//            JSONObject json = (filter != null) ? filter.getResult() : new JSONObject();
+            FilterModel model = (filter != null) ? filter.getFilterResult() : null;
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
-            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{JSONObject.class}, outerController, json);
+//            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{JSONObject.class}, outerController, json);
+            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{JSONObject.class}, outerController, model);
         }
         else {
             filterStage.requestFocus();

@@ -6,6 +6,7 @@
 package ambroafb.countries;
 
 import ambro.AFilterableTableView;
+import ambroafb.general.FilterModel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -16,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.controlsfx.control.MaskerPane;
-import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -51,7 +51,7 @@ public class CountriesController implements Initializable {
         reAssignTable(null);
     }
 
-    private void reAssignTable(JSONObject json) {
+    private void reAssignTable(FilterModel model) {
         final int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         countries.clear();
         masker.setVisible(true);
