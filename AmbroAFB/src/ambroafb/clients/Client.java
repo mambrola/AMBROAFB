@@ -85,12 +85,10 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private final StringExpression fullAddress;
 
+    @AView.Column(title = "%country", width = "50")
+    private final SimpleStringProperty countryCode;
     @JsonIgnore
     private final ObjectProperty<Country> country;
-
-    @AView.Column(title = "%country", width = "50")
-//    @JsonIgnore
-    private final SimpleStringProperty countryCode;
 
     @AView.Column(title = "%id_number", width = "100")
     @JsonProperty("passNumber")
@@ -131,6 +129,7 @@ public class Client extends EditorPanelable{
     private static final String IMAGE_OFFICE_URL = "/images/office.png";
     private static final String IMAGE_PERSON_URL = "/images/person.png";
     
+    // Every property object has default values because of avoide NullpointerException in compares or any other methods in any case.
     public Client() {
         isJur =             new SimpleBooleanProperty();
         isRezident =             new SimpleBooleanProperty();
@@ -163,6 +162,7 @@ public class Client extends EditorPanelable{
             rebindCountry();
             resetRezident();
         });
+        rebindCountry(); // country objectProperty already set country object. So this line is needed to change countryCode column when generate tableView Components.
         
         rezidentCountry = Country.getOneFromDB(rezidentCountryCode);
     }
