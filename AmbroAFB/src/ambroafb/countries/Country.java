@@ -14,9 +14,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
@@ -43,12 +41,6 @@ public class Country extends EditorPanelable{
         descrip = new SimpleStringProperty("");
     }
     
-    public Country(String code, String descrip){ // for Client class.
-        this();
-        this.code.set(code);
-        this.descrip.set(descrip);
-    }
-
     public static List<Country> getAllFromDB() {
         try {
             String data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
@@ -66,19 +58,9 @@ public class Country extends EditorPanelable{
         return getOneFromDBHelper(conditionBuilder);
     }
     
-    private static final Map<String, Country> countries = new HashMap<>();
-    
     public static Country getOneFromDB(String countryCode) {
-        Country result;
-        if (countries.containsKey(countryCode)){
-            result = countries.get(countryCode).cloneWithID();
-        }
-        else {
-            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("code", "=", countryCode).condition();
-            result = getOneFromDBHelper(conditionBuilder);
-            countries.put(countryCode, result);
-        }
-        return result;
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("code", "=", countryCode).condition();
+        return getOneFromDBHelper(conditionBuilder);
     }
     
     private static Country getOneFromDBHelper(ConditionBuilder conditionBuilder){
@@ -152,11 +134,13 @@ public class Country extends EditorPanelable{
         return getCode().concat("\t").concat(getDescrip());
     }
     
-    public boolean compares(Country country){
-        return this.equals(country);
+    @Override
+    public boolean compares(EditorPanelable other){
+        Country country = (Country) other;
+        return this.getCode().equals(country.getCode()) && this.getDescrip().equals(country.getDescrip());
     }
 
     public boolean equals(Country other){
-        return getRecId() == other.getRecId() && getCode().equals(other.getCode()) && getDescrip().equals(other.getDescrip());
+        return getCode().equals(other.getCode());
     }
 }

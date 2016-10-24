@@ -88,9 +88,9 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private final ObjectProperty<Country> country;
 
-    @AView.Column(title = "%country", width = "150")
-    @JsonIgnore
-    private final SimpleStringProperty countryDescrip;
+    @AView.Column(title = "%country", width = "50")
+//    @JsonIgnore
+    private final SimpleStringProperty countryCode;
 
     @AView.Column(title = "%id_number", width = "100")
     @JsonProperty("passNumber")
@@ -115,7 +115,7 @@ public class Client extends EditorPanelable{
     private final SimpleStringProperty remark;
     
     // for convert client to json
-    private String countryCode, statusDescrip;
+    private String statusDescrip;
     private int status;
 
     @JsonIgnore
@@ -144,13 +144,13 @@ public class Client extends EditorPanelable{
         fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
         country =           new SimpleObjectProperty<>();
         country.set(new Country());
-        countryDescrip =    new SimpleStringProperty("");
+        countryCode =    new SimpleStringProperty("");
         IDNumber =          new SimpleStringProperty("");
         phones = FXCollections.observableArrayList();
         phoneNumbers =      new SimpleStringProperty("");
         fax =               new SimpleStringProperty("");
         clientStatus = new SimpleObjectProperty();
-        clientStatus.set(new ClientStatus()); // Difference for country, becouse DB send only code in country case and (statusDescrip, statusClientId) piar in status case  
+        clientStatus.set(new ClientStatus());
         www = new SimpleStringProperty("");
         remark = new SimpleStringProperty("");
 
@@ -187,9 +187,9 @@ public class Client extends EditorPanelable{
     }
 
     private void rebindCountry() {
-        countryDescrip.unbind();
+        countryCode.unbind();
         if (country.get() != null) {
-            countryDescrip.bind(country.get().codeProperty().concat("   ").concat(country.get().descripProperty()));
+            countryCode.bind(country.get().codeProperty().concat("   ").concat(country.get().descripProperty()));
         }
     }
     
@@ -469,8 +469,7 @@ public class Client extends EditorPanelable{
     }
     
     public void setCountryCode(String countryCode){
-        Country countryForCode = Country.getOneFromDB(countryCode);
-        this.country.set(countryForCode);
+        this.country.get().setCode(countryCode);
     }
     
     public ImageGalleryController getClientImageGallery(){
@@ -533,23 +532,25 @@ public class Client extends EditorPanelable{
     }
     
     
-    public boolean compares(Client other){
-        boolean fieldsCompareResult =   this.isJur.get() == other.getIsJur() &&
-                                        this.isRezident.get() == other.getIsRezident() && 
-                                        this.firstName.get().equals(other.getFirstName()) &&
-                                        this.lastName.get().equals(other.getLastName()) &&
-                                        this.email.get().equals(other.getEmail())    &&
-                                        this.address.get().equals(other.getAddress()) &&
-                                        this.zipCode.get().equals(other.getZipCode()) &&
-                                        this.city.get().equals(other.getCity()) &&
-                                        this.country.get().compares(other.countryProperty().get()) &&
-                                        this.IDNumber.get().equals(other.getIDNumber()) &&
-                                        this.fax.get().equals(other.getFax()) &&
-                                        this.www.get().equals(other.getWww()) &&
-                                        this.clientStatus.get().equals(other.statusProperty().get()) &&
-                                        this.getRemark().equals(other.getRemark()) &&
-                                        Utils.avoidNullAndReturnString(this.createdDate).equals(Utils.avoidNullAndReturnString(other.createdDate));
-        boolean equalsPhones = Phone.compareLists(phones, other.getPhones());
+    @Override
+    public boolean compares(EditorPanelable other){
+        Client otherClient = (Client) other;
+        boolean fieldsCompareResult =   this.isJur.get() == otherClient.getIsJur() &&
+                                        this.isRezident.get() == otherClient.getIsRezident() && 
+                                        this.firstName.get().equals(otherClient.getFirstName()) &&
+                                        this.lastName.get().equals(otherClient.getLastName()) &&
+                                        this.email.get().equals(otherClient.getEmail())    &&
+                                        this.address.get().equals(otherClient.getAddress()) &&
+                                        this.zipCode.get().equals(otherClient.getZipCode()) &&
+                                        this.city.get().equals(otherClient.getCity()) &&
+                                        this.country.get().compares(otherClient.countryProperty().get()) &&
+                                        this.IDNumber.get().equals(otherClient.getIDNumber()) &&
+                                        this.fax.get().equals(otherClient.getFax()) &&
+                                        this.www.get().equals(otherClient.getWww()) &&
+                                        this.clientStatus.get().equals(otherClient.statusProperty().get()) &&
+                                        this.getRemark().equals(otherClient.getRemark()) &&
+                                        Utils.avoidNullAndReturnString(this.createdDate).equals(Utils.avoidNullAndReturnString(otherClient.createdDate));
+        boolean equalsPhones = Phone.compareLists(phones, otherClient.getPhones());
         return fieldsCompareResult && equalsPhones;
     }
 
