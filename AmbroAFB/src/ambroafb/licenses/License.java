@@ -580,7 +580,7 @@ public class License extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return getLicenseNumber() + " " + getEmail() + getInvoiceNumber();
+        return getLicenseNumber() + " " + getEmail() + " " + getInvoiceNumber();
     }
     
     private class DateListener implements ChangeListener<LocalDate> {

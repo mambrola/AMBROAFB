@@ -45,7 +45,7 @@ public class LicensesController implements Initializable {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(aview);
         editorPanelController.setTableDataList(aview, licenses);
-        editorPanelController.removeButtonsByFxIDs("#delete", "#edit", "#view", "#add", "#refresh");
+        editorPanelController.removeButtonsByFxIDs("#delete", "#edit", "#view", "#add");
     }    
     
     public void reAssignTable(FilterModel model){
