@@ -63,6 +63,7 @@ public class License extends EditorPanelable {
     private final ObjectProperty<Client> clientObj;
     private int clientId; // for object mapper (case: class to json)
     private String firstName, lastName;
+    private String email;
     
     @AView.Column(title = "%product", width = "70")
     @JsonIgnore
@@ -107,12 +108,6 @@ public class License extends EditorPanelable {
     @AView.Column(title = "extra_days", width = "30", styleClass = "textRight")
     private final IntegerProperty additionalDays;
     
-    private final StringProperty email;
-    
-    
-//    @AView.Column(width = "20", cellFactory = CheckedCellFactory.class)
-//    private final BooleanProperty checked;
-    
     private final StringProperty lastLoginTime;
     private final ObjectProperty<LocalDate> lastLoginDateObj;
     
@@ -141,7 +136,6 @@ public class License extends EditorPanelable {
         lastDateObj = new SimpleObjectProperty<>();
         licenseNumber = new SimpleIntegerProperty(0);
         invoiceNumber = new SimpleStringProperty("");
-        email = new SimpleStringProperty("");
         lastLoginTime = new SimpleStringProperty("");
         lastLoginDateObj = new SimpleObjectProperty<>();
         
@@ -284,7 +278,7 @@ public class License extends EditorPanelable {
     }
     
     public String getEmail(){
-        return email.get();
+        return clientObj.get().getEmail();
     }
     
     public int getProductId(){
@@ -292,7 +286,6 @@ public class License extends EditorPanelable {
     }
     
     public String getStatusDescrip(){
-        System.out.println("getStatusDescrip... statusObj: " + statusObj);
         return (statusObj == null) ? null : statusObj.get().getDescrip();
     }
     
@@ -368,7 +361,7 @@ public class License extends EditorPanelable {
     }
     
     public void setEmail(String email){
-        this.email.set(email);
+        clientObj.get().setEmail(email);
     }
     
     public void setProductId(int productId){
