@@ -10,6 +10,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -36,10 +37,14 @@ public class Country extends EditorPanelable{
     @AView.Column(title = "%descrip", width = "250")
     private final StringProperty descrip;
     
+    @JsonIgnore
     private static final String DB_TABLE_NAME = "countries";
+    @JsonIgnore
     public static final String ALL = "ALL";
+    @JsonIgnore
     private static final String REZIDENT_COUNTRY_CODE = "GE";
     
+    @JsonIgnore
     private BooleanProperty rezidentCountry;
     
     public Country() {

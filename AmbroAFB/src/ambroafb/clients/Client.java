@@ -123,11 +123,16 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private ImageGalleryController clientImageGallery;
     
+    @JsonIgnore
     private static final String DB_TABLE_NAME = "clients";
+    @JsonIgnore
     private static final String DB_VIEW_NAME = "clients_whole";
+    @JsonIgnore
     private static final String DB_STATUS_TABLE = "client_status_descrips";
     
+    @JsonIgnore
     private static final String IMAGE_OFFICE_URL = "/images/office.png";
+    @JsonIgnore
     private static final String IMAGE_PERSON_URL = "/images/person.png";
     
     // Every property object has default values because of avoide NullpointerException in compares or any other methods in any case.

@@ -17,6 +17,7 @@ import ambroafb.products.helpers.ProductSpecific;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,6 +67,7 @@ public class Product extends EditorPanelable {
     @AView.Column(title = "%product_specific", width = "200")
     private final SimpleStringProperty specificDescrip;
     private final IntegerProperty specific;
+    @JsonIgnore
     private final ObjectProperty<ProductSpecific> productSpecific;
     
     @AView.Column(width = "50")
@@ -73,6 +75,7 @@ public class Product extends EditorPanelable {
     
     @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
     private final SimpleStringProperty iso;
+    @JsonIgnore
     private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%discounts", width = "80", cellFactory = DiscountCellFactory.class)
@@ -81,8 +84,11 @@ public class Product extends EditorPanelable {
     @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)
     private final SimpleBooleanProperty isActive;
     
+    @JsonIgnore
     private static final String DB_VIEW_NAME = "products_whole";
+    @JsonIgnore
     private static final String DB_SPECIFIC_TABLE_NAME = "product_specific_descrips";
+    @JsonIgnore
     private static final String DB_TABLE_NAME = "products";
     
     

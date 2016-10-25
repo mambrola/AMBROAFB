@@ -13,6 +13,7 @@ import ambroafb.general.interfaces.EditorPanelable;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,7 +54,9 @@ public class Currency extends EditorPanelable {
     @AView.Column(width = "20")
     private final StringProperty symbol;
     
+    @JsonIgnore
     public static final String ALL = "ALL";
+    @JsonIgnore
     private static final String DB_TABLE_NAME = "currencies";
     
     public Currency(){

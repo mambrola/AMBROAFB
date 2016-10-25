@@ -12,6 +12,7 @@ import ambroafb.general.interfaces.EditorPanelable;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,6 +39,7 @@ public class DiscountOnCount extends EditorPanelable {
     @AView.Column(title = "%sales_percent", width = "100", styleClass = "textRight")
     private final StringProperty discountRate;
     
+    @JsonIgnore
     private static final String DB_TABLE_NAME = "discounts_on_licenses_count";
     
     public DiscountOnCount(){

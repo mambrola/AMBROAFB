@@ -109,9 +109,11 @@ public class License extends EditorPanelable {
     private final StringProperty lastLoginTime;
     private final ObjectProperty<LocalDate> lastLoginTimeObj;
     
-    
+    @JsonIgnore
     private static final String DB_VIEW_NAME = "licenses_whole";
+    @JsonIgnore
     private static final String DB_TABLE_NAME = "licenses";
+    @JsonIgnore
     private static final String DB_STATUSES_TABLE_NAME = "license_status_descrips";
     
     public License(){

@@ -68,6 +68,7 @@ public class BalanceAccount extends EditorPanelable {
     @JsonIgnore
     public final ObservableList<String> rowStyle = FXCollections.observableArrayList();
     
+    @JsonIgnore
     private static final String DB_TABLE_NAME = "bal_accounts";
     
     public BalanceAccount(){
