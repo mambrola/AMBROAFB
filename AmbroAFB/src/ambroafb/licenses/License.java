@@ -347,8 +347,12 @@ public class License extends EditorPanelable {
     
     
     // Getters:
-    public String getCreatedDate(){
+    public String getCreatedDateStr(){
         return createdDate.get();
+    }
+    
+    public LocalDate getCreatedDate(){
+        return DateConverter.getInstance().parseDate(createdDate.get());
     }
     
     public int getClientId(){
@@ -430,8 +434,8 @@ public class License extends EditorPanelable {
     // Setters:
     // This method must not show in other class to avoid createdDate changing.
     private void setCreatedDate(String createdDate){
-        LocalDate date = DateConverter.getInstance().parseDate(createdDate);
-        this.createdDate.set(DateConverter.getInstance().getDayMonthnameYearBySpace(date));
+        LocalDate localDate = DateConverter.getInstance().parseDate(createdDate);
+        this.createdDate.set(DateConverter.getInstance().getDayMonthnameYearBySpace(localDate));
     }
     
     public void setClientId(int clienId){
@@ -524,7 +528,7 @@ public class License extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         License otherLicense = (License) other;
-        setCreatedDate(otherLicense.getCreatedDate());
+        setCreatedDate(otherLicense.getCreatedDateStr());
         // clientObj.set(otherLicense.clientObj.get()) -> copy reference and they always be equals! So copy every field.
         setClientId(otherLicense.getClientId());
         setFirstName(otherLicense.getFirstName());
@@ -554,7 +558,7 @@ public class License extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup){
         License otherLicense = (License) backup;
-        return  getCreatedDate().equals(otherLicense.getCreatedDate())  &&
+        return  getCreatedDateStr().equals(otherLicense.getCreatedDateStr())  &&
                 getClientId() == otherLicense.getClientId() &&
                 clientDescripExpression().equals(otherLicense.clientDescripExpression()) &&
                 getProductId() == otherLicense.getProductId()           &&

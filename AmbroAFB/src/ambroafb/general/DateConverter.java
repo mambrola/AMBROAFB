@@ -46,7 +46,7 @@ public class DateConverter {
     }
     
     public String getDayMonthnameYearBySpace(LocalDate date){
-        return formatter.format(date);
+        return (date == null) ? "" : formatter.format(date);
     }
     
     public LocalDate parseDate(String date){

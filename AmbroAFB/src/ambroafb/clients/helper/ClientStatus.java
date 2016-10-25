@@ -5,7 +5,10 @@
  */
 package ambroafb.clients.helper;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
@@ -14,20 +17,30 @@ import javafx.beans.property.SimpleStringProperty;
 public class ClientStatus {
     
     private int recId;
-    private int clientStatusId;
+    private final IntegerProperty clientStatusId;
     private String language;
     private final SimpleStringProperty descrip;
     
     public ClientStatus(){
         descrip = new SimpleStringProperty("");
+        clientStatusId = new SimpleIntegerProperty(0);
     }
+    
+    public IntegerProperty clientStatusIdProperty(){
+        return clientStatusId;
+    }
+    
+    public StringProperty statusDescripProperty(){
+        return descrip;
+    }
+    
     
     public int getRecId(){
         return recId;
     }
     
     public int getClientStatusId(){
-        return clientStatusId;
+        return clientStatusId.get();
     }
     
     public String getLanguage(){
@@ -48,7 +61,7 @@ public class ClientStatus {
     }
     
     public void setClientStatusId(int status){
-        this.clientStatusId = status;
+        this.clientStatusId.set(status);
     }
     
     public void setDescrip(String statusDescrip){

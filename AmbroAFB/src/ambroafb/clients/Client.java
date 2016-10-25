@@ -10,6 +10,7 @@ import ambroafb.clients.filter.ClientFilterModel;
 import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
+import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.GeneralConfig;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,8 +37,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -64,7 +68,7 @@ public class Client extends EditorPanelable{
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
     
     
-    private String createdDate;
+    private final StringProperty createdDate;
     
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private final SimpleBooleanProperty isJur;
@@ -78,30 +82,35 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private final StringExpression descrip;
 
-    @AView.Column(title = "%email", width = "170")
-    private final SimpleStringProperty email;
-
-    private final SimpleStringProperty address, zipCode, city;
-
-    @AView.Column(title = "%full_address", width = "270")
-    @JsonIgnore
-    private final StringExpression fullAddress;
-
-    @AView.Column(title = "%country", width = "50")
-    private final SimpleStringProperty countryCode;
-    @JsonIgnore
-    private final ObjectProperty<Country> country;
-
     @AView.Column(title = "%id_number", width = "100")
     @JsonProperty("passNumber")
     private final SimpleStringProperty IDNumber;
 
-    @AView.Column(title = "%phones", width = "300")
+    @AView.Column(title = "%email", width = "170")
+    private final SimpleStringProperty email;
+
+    @AView.Column(title = "%phones", width = "200")
     @JsonIgnore
     private final SimpleStringProperty phoneNumbers;
 
-//    @JsonProperty("phoneNumbers")
     private final ObservableList<Phone> phones;
+    
+    @AView.Column(title = "%client_status", width = "100", styleClass = "textCenter")
+    private final StringProperty statusDescrip;
+    @JsonIgnore
+    private final ObjectProperty<ClientStatus> clientStatus;
+    private final IntegerProperty status;
+    
+    private final SimpleStringProperty address, zipCode, city;
+
+    @AView.Column(title = "%full_address", width = "250")
+    @JsonIgnore
+    private final StringExpression fullAddress;
+
+    @AView.Column(title = "%country", width = "50", styleClass = "textCenter")
+    private final SimpleStringProperty countryCode;
+    @JsonIgnore
+    private final ObjectProperty<Country> country;
 
     @AView.Column(title = "%fax", width = "80")
     private final SimpleStringProperty fax;
@@ -109,14 +118,7 @@ public class Client extends EditorPanelable{
     @AView.Column(title = "www address", width = "100")
     private final SimpleStringProperty www;
     
-    @JsonIgnore
-    private final ObjectProperty<ClientStatus> clientStatus;
-    
     private final SimpleStringProperty remark;
-    
-    // for convert client to json
-    private String statusDescrip;
-    private int status;
 
     @JsonIgnore
     private ImageGalleryController clientImageGallery;
@@ -130,6 +132,7 @@ public class Client extends EditorPanelable{
     
     // Every property object has default values because of avoide NullpointerException in compares or any other methods in any case.
     public Client() {
+        createdDate = new SimpleStringProperty("");
         isJur =             new SimpleBooleanProperty();
         isRezident =             new SimpleBooleanProperty();
         firstName =         new SimpleStringProperty("");
@@ -146,29 +149,34 @@ public class Client extends EditorPanelable{
         phones = FXCollections.observableArrayList();
         phoneNumbers =      new SimpleStringProperty("");
         fax =               new SimpleStringProperty("");
-        clientStatus = new SimpleObjectProperty();
-        clientStatus.set(new ClientStatus());
+        clientStatus = new SimpleObjectProperty(new ClientStatus());
+        status = new SimpleIntegerProperty(0);
+        statusDescrip = new SimpleStringProperty("");
         www = new SimpleStringProperty("");
         remark = new SimpleStringProperty("");
 
         phones.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
         });
-//        rebindPhoneNumbers();
+//        rebindPhoneNumbers(); // not needed. setPhones(..) methods and above list listener provides phonesNumbers changing.
 
         country.addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
             rebindCountry();
-            resetRezident();
+//            resetRezident();
         });
         rebindCountry(); // country objectProperty already set country object. So this line is needed to change countryCode column when generate tableView Components.
         
+        clientStatus.addListener((ObservableValue<? extends ClientStatus> observable, ClientStatus oldValue, ClientStatus newValue) -> {
+            rebindStatus();
+        });
+        rebindStatus();
     }
     
-    private void resetRezident(){
-        if (country.get() != null){
-            isRezident.set(country.get().rezidentCountryProperty().get());
-        }
-    }
+//    private void resetRezident(){
+//        if (country.get() != null){
+//            isRezident.set(country.get().rezidentCountryProperty().get());
+//        }
+//    }
     
     private void rebindPhoneNumbers() {
         phoneNumbers.unbind();
@@ -191,6 +199,16 @@ public class Client extends EditorPanelable{
             countryCode.bind(country.get().codeProperty().concat("   ").concat(country.get().descripProperty()));
         }
     }
+    
+    private void rebindStatus(){
+        status.unbind();
+        statusDescrip.unbind();
+        if (clientStatus.get() != null){
+            status.bind(clientStatus.get().clientStatusIdProperty());
+            statusDescrip.bind(clientStatus.get().statusDescripProperty());
+        }
+    }
+    
     
     // DBService methods:
     public static List<Client> getAllFromDB() {
@@ -310,8 +328,12 @@ public class Client extends EditorPanelable{
 
     
     //Properties getters:
-    public String getCreatedDate(){
-        return createdDate;
+    public String getCreatedDateStr(){
+        return createdDate.get();
+    }
+    
+    public LocalDate getCreatedDate(){
+        return DateConverter.getInstance().parseDate(createdDate.get());
     }
     
     public SimpleBooleanProperty isJurProperty() {
@@ -362,7 +384,7 @@ public class Client extends EditorPanelable{
         return IDNumber;
     }
 
-    public StringExpression phoneNumbersProperty() {
+    public StringProperty phoneNumbersProperty() {
         return phoneNumbers;
     }
 
@@ -472,7 +494,8 @@ public class Client extends EditorPanelable{
 
      // Setters:
     private void setCreatedDate(String date){
-        createdDate = date;
+        LocalDate localDate = DateConverter.getInstance().parseDate(date);
+        this.createdDate.set(DateConverter.getInstance().getDayMonthnameYearBySpace(localDate));
     }
     
     public final void setIsJur(boolean isJur) {
@@ -540,21 +563,21 @@ public class Client extends EditorPanelable{
     @Override
     public boolean compares(EditorPanelable backup){
         Client otherClient = (Client) backup;
-        boolean fieldsCompareResult =   this.isJur.get() == otherClient.getIsJur() &&
-                                        this.isRezident.get() == otherClient.getIsRezident() && 
-                                        this.firstName.get().equals(otherClient.getFirstName()) &&
-                                        this.lastName.get().equals(otherClient.getLastName()) &&
-                                        this.email.get().equals(otherClient.getEmail())    &&
-                                        this.address.get().equals(otherClient.getAddress()) &&
-                                        this.zipCode.get().equals(otherClient.getZipCode()) &&
-                                        this.city.get().equals(otherClient.getCity()) &&
-                                        this.country.get().equals(otherClient.countryProperty().get()) &&
-                                        this.IDNumber.get().equals(otherClient.getIDNumber()) &&
-                                        this.fax.get().equals(otherClient.getFax()) &&
-                                        this.www.get().equals(otherClient.getWww()) &&
-                                        this.clientStatus.get().equals(otherClient.statusProperty().get()) &&
-                                        this.getRemark().equals(otherClient.getRemark()) &&
-                                        Utils.avoidNullAndReturnString(this.createdDate).equals(Utils.avoidNullAndReturnString(otherClient.createdDate));
+        boolean fieldsCompareResult =   getIsJur() == otherClient.getIsJur() &&
+                                        getIsRezident() == otherClient.getIsRezident() && 
+                                        getFirstName().equals(otherClient.getFirstName()) &&
+                                        getLastName().equals(otherClient.getLastName()) &&
+                                        getEmail().equals(otherClient.getEmail())    &&
+                                        getAddress().equals(otherClient.getAddress()) &&
+                                        getZipCode().equals(otherClient.getZipCode()) &&
+                                        getCity().equals(otherClient.getCity()) &&
+                                        getCountryCode().equals(otherClient.getCountryCode()) &&
+                                        getIDNumber().equals(otherClient.getIDNumber()) &&
+                                        getFax().equals(otherClient.getFax()) &&
+                                        getWww().equals(otherClient.getWww()) &&
+                                        statusProperty().get().equals(otherClient.statusProperty().get()) &&
+                                        getRemark().equals(otherClient.getRemark()) &&
+                                        getCreatedDateStr().equals(otherClient.getCreatedDateStr());
         boolean equalsPhones = Phone.compareLists(phones, otherClient.getPhones());
         return fieldsCompareResult && equalsPhones;
     }
@@ -577,6 +600,7 @@ public class Client extends EditorPanelable{
     @Override
     public void copyFrom(EditorPanelable object) {
         Client other = (Client) object;
+        setCreatedDate(other.getCreatedDateStr());
         setIsJur(other.getIsJur());
         setIsRezident(other.getIsRezident());
         setFirstName(other.getFirstName());
@@ -585,18 +609,18 @@ public class Client extends EditorPanelable{
         setAddress(other.getAddress());
         setZipCode(other.getZipCode());
         setCity(other.getCity());
-        country.set(other.countryProperty().get());
+        setCountryCode(other.getCountryCode());
         setIDNumber(other.getIDNumber());
-        getPhones().setAll(other.getPhones()
+        getPhones().addAll(other.getPhones()
                 .stream()
                 .map((Phone t) -> new Phone(t.getRecId(), t.getNumber()))
                 .collect(Collectors.toList())
         );
         setFax(other.getFax());
         setWww(other.getWww());
-        clientStatus.set(other.statusProperty().get());
+        setStatus(other.getStatus());
+        setStatusDescrip(other.getStatusDescrip());
         setRemark(other.getRemark());
-        setCreatedDate(other.getCreatedDate());
     }
 
     @Override

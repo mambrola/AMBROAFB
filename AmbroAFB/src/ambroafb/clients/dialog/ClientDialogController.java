@@ -12,7 +12,6 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.countries.*;
-import ambroafb.general.DateConverter;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.phones.PhoneComboBox;
 import ambroafb.general.interfaces.Dialogable;
@@ -128,7 +127,7 @@ public class ClientDialogController implements Initializable {
     public void bindClient(Client client) {
         this.client = client;
         if (client != null) {
-            openDate.setValue(DateConverter.getInstance().parseDate(client.getCreatedDate()));
+            openDate.setValue(client.getCreatedDate());
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
             rezident. selectedProperty().bindBidirectional(client.isRezProperty());
             firstName.    textProperty().bindBidirectional(client.firstNameProperty());
