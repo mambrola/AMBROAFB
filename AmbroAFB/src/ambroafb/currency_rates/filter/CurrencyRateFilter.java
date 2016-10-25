@@ -68,13 +68,7 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     }
     
     @Override
-    public JSONObject getResult() {
-        showAndWait();
-        return jSonResult;
-    }
-
-    @Override
-    public FilterModel getFilterResult() {
+    public FilterModel getResult() {
         showAndWait();
         return currencyRateFilterModel;
     }

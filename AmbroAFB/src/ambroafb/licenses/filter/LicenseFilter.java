@@ -70,9 +70,9 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
     }
 
     @Override
-    public JSONObject getResult() {
+    public FilterModel getResult() {
         showAndWait();
-        return jsonResult;
+        return filterModel;
     }
 
     @Override
@@ -92,12 +92,6 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
                 filterModel.onlyExtraDays(extraDays.isSelected());
             }
         }
-    }
-
-    @Override
-    public FilterModel getFilterResult() {
-        showAndWait();
-        return filterModel;
     }
 
     @Override

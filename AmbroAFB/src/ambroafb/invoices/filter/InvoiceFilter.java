@@ -44,13 +44,13 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
         
         StageUtils.centerChildOf(owner, (Stage)this);
     }
-    
-    @Override
-    public JSONObject getResult() {
-        showAndWait();
-        return json;
-    }
 
+    @Override
+    public FilterModel getResult() {
+        showAndWait();
+        return invoiceModel;
+    }
+    
     @Override
     public void setResult(boolean isOk) {
         
@@ -59,12 +59,6 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
-    }
-
-    @Override
-    public FilterModel getFilterResult() {
-        showAndWait();
-        return invoiceModel;
     }
     
 }

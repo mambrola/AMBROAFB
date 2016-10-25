@@ -130,7 +130,7 @@ public class MainController implements Initializable {
             clients.show();
             
             ClientFilter filter = new ClientFilter(clients);
-            FilterModel model = filter.getFilterResult();
+            FilterModel model = filter.getResult();
             clients.getClientsController().reAssignTable(model);
             
             if (model.isEmpty()){
@@ -172,7 +172,7 @@ public class MainController implements Initializable {
             invoices.show();
             
             InvoiceFilter filter = new InvoiceFilter(invoices);
-            invoices.getInvoicesController().reAssignTable(filter.getFilterResult());
+            invoices.getInvoicesController().reAssignTable(filter.getResult());
         }
         else {
             invoicesStage.requestFocus();
@@ -217,7 +217,7 @@ public class MainController implements Initializable {
             licenses.show();
             
             LicenseFilter filter = new LicenseFilter(licenses);
-            FilterModel filterModel = filter.getFilterResult();
+            FilterModel filterModel = filter.getResult();
             licenses.getLicensesController().reAssignTable(filterModel);
 
             if (filterModel.isEmpty()) 
@@ -254,7 +254,7 @@ public class MainController implements Initializable {
             currencyRates.show();
             
             CurrencyRateFilter filter = new CurrencyRateFilter(currencyRates);
-            FilterModel model = filter.getFilterResult();
+            FilterModel model = filter.getResult();
             currencyRates.getCurrencyRatesController().reAssignTable(model);
 
             if (model.isEmpty()){

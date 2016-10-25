@@ -212,7 +212,7 @@ public class EditorPanelController implements Initializable {
             
             System.out.println("<EditorPanelController> refresh method. filter: " + filter);
             
-            FilterModel model = (filter != null) ? filter.getFilterResult() : null;
+            FilterModel model = (filter != null) ? filter.getResult() : null;
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
             Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{FilterModel.class}, outerController, model);
         }

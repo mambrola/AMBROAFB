@@ -72,13 +72,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     }
 
     @Override
-    public JSONObject getResult() {
-        showAndWait();
-        return jSonResult;
-    }
-
-    @Override
-    public FilterModel getFilterResult() {
+    public FilterModel getResult() {
         showAndWait();
         return clientFilterModel;
     }
