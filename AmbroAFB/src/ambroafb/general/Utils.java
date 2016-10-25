@@ -144,7 +144,9 @@ public class Utils {
     
     public static <T> T getClassFromJSON(Class targetClass, JSONObject json){
         try {
-            return (T) (new ObjectMapper().readValue(json.toString(), targetClass));
+            if (targetClass != null && json != null){
+                return (T) (new ObjectMapper().readValue(json.toString(), targetClass));
+            }
         } catch (IOException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -462,7 +462,6 @@ public class Client extends EditorPanelable{
     }
     
     public void setCountryCode(String countryCode){
-        System.out.println("code: " + countryCode);
         this.country.get().setCode(countryCode);
     }
     
