@@ -38,22 +38,10 @@ public class LicenseFilterModel extends FilterModel {
         checkedStatuses = FXCollections.observableArrayList();
     }
 
-//    public void setSelectedClient(Client client) {
-//        if (client != null) {
-//            saveIntoPref(clientPrefKey, client.getRecId());
-//        }
-//    }
-    
     public void setSelectedClientId(int clientId) {
         saveIntoPref(PREF_CLIENT_KEY, clientId);
     }
 
-//    public void setSelectedProduct(Product product) {
-//        if (product != null) {
-//            saveIntoPref(productPrefKey, product.getRecId());
-//        }
-//    }
-    
     public void setSelectedProductId(int productId) {
         saveIntoPref(PREF_PRODUCT_KEY, productId);
     }
@@ -78,45 +66,9 @@ public class LicenseFilterModel extends FilterModel {
         saveIntoPref(PREF_EXTRA_DAYS_KEY, indeterminate);
     }
 
-//    /**
-//     * The method provides to get a client object which is selected from filter.
-//     * @return  If client does not select from filter - null;
-//     *          If selected is ALL - client object which DB id is 0 and name is "ALL";
-//     *          If selected concrete client - an appropriate client object.
-//     */
-//    public Client getSelectedClient() {
-//        Client client = null;
-//        int clientId = getIntFromPref(clientPrefKey);
-//        if (clientId == 0) {
-//            client = ClientComboBox.clientALL;
-//        }
-//        else if (clientId > 0) {
-//            client = Client.getOneFromDB(clientId);
-//        }
-//        return client;
-//    }
-
     public int getSelectedClientId() {
         return getIntFromPref(PREF_CLIENT_KEY);
     }
-    
-//    /**
-//     * The method provides to get a product object which is selected from filter.
-//     * @return  If product does not select from filter - null;
-//     *          If selected is ALL - product object which DB id is 0 and name is "ALL";
-//     *          If selected concrete product - an appropriate product object.
-//     */
-//    public Product getSelectedProduct() {
-//        Product product = null;
-//        int productId = getIntFromPref(productPrefKey);
-//        if (productId == 0){
-//            product = ProductComboBox.productALL;
-//        }
-//        else if (productId > 0) {
-//            product = Product.getOneFromDB(productId);
-//        }
-//        return product;
-//    }
     
     public int getSelectedProductId() {
         return getIntFromPref(PREF_PRODUCT_KEY);
