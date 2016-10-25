@@ -266,7 +266,7 @@ public class License extends EditorPanelable {
     }
     
     public int getClientId(){
-        return (clientObj == null) ? -1 : clientObj.get().getRecId();
+        return clientObj.get().getRecId();
     }
     
     public String getFirstName(){
@@ -282,15 +282,15 @@ public class License extends EditorPanelable {
     }
     
     public int getProductId(){
-        return (productObj == null) ? -1 : productObj.get().getRecId();
+        return productObj.get().getRecId();
     }
     
     public String getStatusDescrip(){
-        return (statusObj == null) ? null : statusObj.get().getDescrip();
+        return statusObj.get().getDescrip();
     }
     
     public int getStatus(){
-        return (statusObj == null) ? -1 : statusObj.get().getLicenseStatusId();
+        return statusObj.get().getLicenseStatusId();
     }
     
     public String getRemark(){
@@ -298,11 +298,11 @@ public class License extends EditorPanelable {
     }
     
     public String getAbbreviation(){
-        return abbreviation.get();
+        return productObj.get().getAbbreviation();
     }
     
-    public String getFormer(){
-        return former.get();
+    public int getFormer(){
+        return productObj.get().getFormer();
     }
     
     public int getAdditionalDays(){
@@ -310,7 +310,7 @@ public class License extends EditorPanelable {
     }
     
     public String getFirstDate(){
-        // Beacouse firstDateDescrip contains user friendly view of date.
+        // Beacause firstDateDescrip contains user friendly view of date.
         return firstDateDescrip.get();
     }
     
@@ -319,7 +319,7 @@ public class License extends EditorPanelable {
     }
     
     public String getLastDate(){
-        // Beacouse lastDateDescrip contains user friendly view of date.
+        // Beacause lastDateDescrip contains user friendly view of date.
         return lastDateDescrip.get();
     }
     
@@ -381,11 +381,11 @@ public class License extends EditorPanelable {
     }
     
     public void setAbbreviation(String abbreviation){
-        this.abbreviation.set(abbreviation);
+        productObj.get().setAbbreviation(abbreviation);
     }
     
-    public void setFormer(String former){
-        this.former.set(former);
+    public void setFormer(int former){
+        productObj.get().setFormer(former);
     }
     
     public void setAdditionalDays(int extraDays){
@@ -413,13 +413,10 @@ public class License extends EditorPanelable {
         this.invoiceObj.get().setInvoiceNumber(invoiceNumber);
     }
     
-    public void setFirstLoginDate(String date){
-        // this.lastLoginDate.set(date);
-    }
-    
     public void setLastLoginTime(String date){
         LocalDate localDate = DateConverter.getInstance().parseDate(date);
         this.lastLoginTime.set(DateConverter.getInstance().getDayMonthnameYearBySpace(localDate));
+        this.lastLoginDateObj.set(localDate);
     }
     
     
