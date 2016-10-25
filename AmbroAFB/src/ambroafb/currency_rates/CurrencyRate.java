@@ -236,6 +236,7 @@ public class CurrencyRate extends EditorPanelable {
      * @param backup Other currencyRate
      * @return  - True, if all comparable fields are equals, false otherwise.
      */
+    @Override
     public boolean compares(EditorPanelable backup) {
         CurrencyRate currencyRateBackup = (CurrencyRate) backup;
         return  this.getDate().equals(currencyRateBackup.getDate()) &&
