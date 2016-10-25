@@ -72,8 +72,7 @@ public class LicenseStatus {
         System.out.println("this.getLicenseStatusId() == other.getLicenseStatusId(): " + (this.getLicenseStatusId() == other.getLicenseStatusId()));
         System.out.println("this.getDescrip().equals(other.getDescrip()): " + (this.getDescrip().equals(other.getDescrip())));
         
-        return  this.getRecId() == other.getRecId() &&
-                this.getLicenseStatusId() == other.getLicenseStatusId() &&
+        return  this.getLicenseStatusId() == other.getLicenseStatusId() &&
                 this.getDescrip().equals(other.getDescrip());
     }
     
