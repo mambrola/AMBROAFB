@@ -11,6 +11,7 @@ import ambroafb.clients.Client;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.invoices.Invoice;
@@ -28,6 +29,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -49,17 +51,18 @@ public class License extends EditorPanelable {
     public String password;
     
     @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
-    private String createdDate;
+    private final StringProperty createdDate;
     
     @AView.Column(title = "%license N", width = "100")
     private final IntegerProperty licenseNumber;
     
     @AView.Column(title = "%client", width = "100")
     @JsonIgnore
-    private final StringProperty clientDescrip;
+    private final StringExpression clientDescrip;
     @JsonIgnore
     private final ObjectProperty<Client> clientObj;
     private int clientId; // for object mapper (case: class to json)
+    private String firstName, lastName;
     
     @AView.Column(title = "%product", width = "70")
     @JsonIgnore
@@ -67,7 +70,8 @@ public class License extends EditorPanelable {
     @JsonIgnore
     private final ObjectProperty<Product> productObj;
     private int productId; // for object mapper (case: class to json)
-    
+    private final StringProperty abbreviation;
+    private final StringProperty former;
     
     @AView.Column(title = "%last_invoice", width = "100")
     private final StringProperty invoiceNumber;
@@ -75,6 +79,7 @@ public class License extends EditorPanelable {
     private final StringProperty lastInvoiceDescrip;
     @JsonIgnore
     private final ObjectProperty<Invoice> invoiceObj;
+    private int cfCurrentInvoiceId;
     
     @AView.Column(title = "%license_statuses", width = "100")
     @JsonIgnore
@@ -84,7 +89,6 @@ public class License extends EditorPanelable {
     private int status; // for object mapper (case: class to json)
     
     private final StringProperty remark;
-    private final StringProperty abbreviationFormer;
     
     @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     @JsonIgnore
@@ -109,9 +113,8 @@ public class License extends EditorPanelable {
 //    @AView.Column(width = "20", cellFactory = CheckedCellFactory.class)
 //    private final BooleanProperty checked;
     
-//    @AView.Column(title = "%date", width = "80")
-//    private final StringProperty date;
-//    private final ObjectProperty<LocalDate> dateObjProperty;
+    private final StringProperty lastLoginTime;
+    private final ObjectProperty<LocalDate> lastLoginDateObj;
     
     
     
@@ -119,16 +122,18 @@ public class License extends EditorPanelable {
     private static final String DB_STATUSES_TABLE_NAME = "license_status_descrips";
     
     public License(){
-        clientDescrip = new SimpleStringProperty("");
-        clientObj = new SimpleObjectProperty<>();
+        createdDate = new SimpleStringProperty("");
+        clientObj = new SimpleObjectProperty<>(new Client());
+        clientDescrip = Utils.avoidNull(clientObj.get().firstNameProperty()).concat(" ").concat(Utils.avoidNull(clientObj.get().lastNameProperty())).concat(" ").concat(Utils.avoidNull(clientObj.get().emailProperty()));
         productDescrip = new SimpleStringProperty("");
-        productObj = new SimpleObjectProperty<>();
+        productObj = new SimpleObjectProperty<>(new Product());
+        abbreviation = new SimpleStringProperty("");
+        former = new SimpleStringProperty("");
         lastInvoiceDescrip = new SimpleStringProperty("");
-        invoiceObj = new SimpleObjectProperty<>();
+        invoiceObj = new SimpleObjectProperty<>(new Invoice());
         statusDescrip = new SimpleStringProperty("");
         statusObj = new SimpleObjectProperty<>(new LicenseStatus());
         remark = new SimpleStringProperty("");
-        abbreviationFormer = new SimpleStringProperty("");
         additionalDays = new SimpleIntegerProperty(0);
         firstDateDescrip = new SimpleStringProperty("");
         firstDateObj = new SimpleObjectProperty<>();
@@ -137,10 +142,9 @@ public class License extends EditorPanelable {
         licenseNumber = new SimpleIntegerProperty(0);
         invoiceNumber = new SimpleStringProperty("");
         email = new SimpleStringProperty("");
+        lastLoginTime = new SimpleStringProperty("");
+        lastLoginDateObj = new SimpleObjectProperty<>();
         
-//        checked = new SimpleBooleanProperty();
-//        date = new SimpleStringProperty("");
-//        dateObjProperty = new SimpleObjectProperty<>();
         
         statusObj.addListener((ObservableValue<? extends LicenseStatus> observable, LicenseStatus oldValue, LicenseStatus newValue) -> {
             if (newValue != null){
@@ -257,14 +261,6 @@ public class License extends EditorPanelable {
         return false;
     }
     
-    // Properties:
-//    public BooleanProperty checkedProperty(){
-//        return checked;
-//    }
-//    
-//    public ObjectProperty<LocalDate> dateProperty(){
-//        return dateObjProperty;
-//    }
     
     
     
@@ -272,11 +268,23 @@ public class License extends EditorPanelable {
     
     // Getters:
     public String getCreatedDate(){
-        return createdDate;
+        return createdDate.get();
     }
     
     public int getClientId(){
         return (clientObj == null) ? -1 : clientObj.get().getRecId();
+    }
+    
+    public String getFirstName(){
+        return clientObj.get().getFirstName();
+    }
+    
+    public String getLastName(){
+        return clientObj.get().getLastName();
+    }
+    
+    public String getEmail(){
+        return email.get();
     }
     
     public int getProductId(){
@@ -296,14 +304,17 @@ public class License extends EditorPanelable {
         return remark.get();
     }
     
-    public String getAbbreviationFormer(){
-        return abbreviationFormer.get();
+    public String getAbbreviation(){
+        return abbreviation.get();
+    }
+    
+    public String getFormer(){
+        return former.get();
     }
     
     public int getAdditionalDays(){
         return additionalDays.get();
     }
-    
     
     public String getFirstDate(){
         // Beacouse firstDateDescrip contains user friendly view of date.
@@ -314,44 +325,54 @@ public class License extends EditorPanelable {
         return licenseNumber.get();
     }
     
-    public String getEmail(){
-        return email.get();
-    }
-    
     public String getLastDate(){
         // Beacouse lastDateDescrip contains user friendly view of date.
         return lastDateDescrip.get();
     }
     
-    public String getInvoiceNumber(){
-        return invoiceNumber.get();
+    public int getCfCurrentInvoiceId(){
+        return invoiceObj.get().getRecId();
     }
     
-//    public boolean getChecked(){
-//        return checked.get();
-//    }
-//    
-//    public String getDate(){
-//        return date.get();
-//    }
+    public String getInvoiceNumber(){
+        return invoiceObj.get().getInvoiceNumber();
+    }
+    
+    public String getLastLoginDate(){
+        return lastLoginTime.get();
+    }
+    
+    public String getLastLoginTime(){
+        return lastLoginTime.get();
+    }
+    
     
     
     // Setters:
     // This method must not show in other class to avoid createdDate changing.
     private void setCreatedDate(String createdDate){
         LocalDate date = DateConverter.getInstance().parseDate(createdDate);
-        this.createdDate = DateConverter.getInstance().getDayMonthnameYearBySpace(date);
+        this.createdDate.set(DateConverter.getInstance().getDayMonthnameYearBySpace(date));
     }
     
     public void setClientId(int clienId){
-//        clientObj.set(Client.getOneFromDB(clienId));
-//        Client client = clientObj.get();
-//        clientDescrip.set(client.getFirstName() + ", " + client.getLastName() + ", " + client.getEmail());
+        this.clientObj.get().setRecId(recId);
+    }
+    
+    public void setFirstName(String name){
+        this.clientObj.get().setFirstName(name);
+    }
+    
+    public void setLastName(String lastName){
+        this.clientObj.get().setLastName(lastName);
+    }
+    
+    public void setEmail(String email){
+        this.email.set(email);
     }
     
     public void setProductId(int productId){
-//        productObj.set(Product.getOneFromDB(productId));
-//        productDescrip.set(productObj.get().getDescrip());
+        this.productObj.get().setRecId(recId);
     }
     
     public void setStatusDescrip(String descrip){
@@ -366,8 +387,12 @@ public class License extends EditorPanelable {
         this.remark.set(remark);
     }
     
-    public void setAbbreviationFormer(String abbreviationFormer){
-        this.abbreviationFormer.set(abbreviationFormer);
+    public void setAbbreviation(String abbreviation){
+        this.abbreviation.set(abbreviation);
+    }
+    
+    public void setFormer(String former){
+        this.former.set(former);
     }
     
     public void setAdditionalDays(int extraDays){
@@ -375,41 +400,34 @@ public class License extends EditorPanelable {
     }
     
     public void setFirstDate(String date){
-        firstDateObj.set(DateConverter.getInstance().parseDate(date));
+        invoiceObj.get().setBeginDate(date);
+//        firstDateObj.set(DateConverter.getInstance().parseDate(date));
     }
     
     public void setLicenseNumber(int number){
         licenseNumber.set(number);
     }
     
-    public void setEmail(String email){
-        this.email.set(email);
-    }
-    
     public void setLastDate(String date){
         lastDateObj.set(DateConverter.getInstance().parseDate(date));
     }
     
-    public void setInvoiceNumber(String invoiceNumber){
-        this.invoiceNumber.set(invoiceNumber);
+    public void setCfCurrentInvoiceId(int recId){
+        this.invoiceObj.get().setRecId(recId);
     }
     
-//    public void setChecked(boolean newValue){
-//        this.checked.set(newValue);
-//    }
-//    
-//    public void setDate(String date){
-//        dateObjProperty.set(DateConverter.getInstance().parseDate(date));
-//        
-////        String localDateStr;
-////        try {
-////            dateObjProperty.set(DateConverter.parseDateWithTimeWithoutMilisecond(date));
-////            localDateStr = DateConverter.getDayMonthnameYearBySpace(dateObjProperty.get());
-////        } catch(Exception ex) {
-////            localDateStr = date;
-////        }
-////        this.date.set(localDateStr);
-//    }
+    public void setInvoiceNumber(String invoiceNumber){
+        this.invoiceObj.get().setInvoiceNumber(invoiceNumber);
+    }
+    
+    public void setFirstLoginDate(String date){
+        // this.lastLoginDate.set(date);
+    }
+    
+    public void setLastLoginTime(String date){
+        LocalDate localDate = DateConverter.getInstance().parseDate(date);
+        this.lastLoginTime.set(DateConverter.getInstance().getDayMonthnameYearBySpace(localDate));
+    }
     
     
     @Override
@@ -430,6 +448,7 @@ public class License extends EditorPanelable {
     public void copyFrom(EditorPanelable other) {
         License otherLicense = (License) other;
         setCreatedDate(otherLicense.getCreatedDate());
+        setCreatedDate(otherLicense.getCreatedDate());
         setLicenseNumber(otherLicense.getLicenseNumber());
         setClientId(otherLicense.getClientId());
         setProductId(otherLicense.getProductId());
@@ -437,7 +456,7 @@ public class License extends EditorPanelable {
         setStatus(otherLicense.getStatus());
         setStatusDescrip(otherLicense.getStatusDescrip());
         setRemark(otherLicense.getRemark());
-        setAbbreviationFormer(otherLicense.getAbbreviationFormer());
+        setAbbreviation(otherLicense.getAbbreviation());
         setFirstDate(otherLicense.getFirstDate());
         setLastDate(otherLicense.getLastDate());
         setAdditionalDays(otherLicense.getAdditionalDays());

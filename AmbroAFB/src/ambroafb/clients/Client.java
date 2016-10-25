@@ -62,7 +62,9 @@ import org.json.JSONObject;
 public class Client extends EditorPanelable{
 
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
-    public String createdDate;  // paypal
+    
+    
+    private String createdDate;
     
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
     private final SimpleBooleanProperty isJur;
@@ -309,6 +311,10 @@ public class Client extends EditorPanelable{
 
     
     //Properties getters:
+    public String getCreatedDate(){
+        return createdDate;
+    }
+    
     public SimpleBooleanProperty isJurProperty() {
         return isJur;
     }
@@ -422,15 +428,6 @@ public class Client extends EditorPanelable{
     public String getCountryCode(){
         return country.get().getCode();
     }
-    
-    
-    public void setStatus(int status) {
-        this.clientStatus.get().setClientStatusId(status);
-    }
-    
-    public void setStatusDescrip(String statusDescrip){
-        this.clientStatus.get().setDescrip(statusDescrip);
-    }
 
     public ObservableList<Phone> getPhones() {
         return phones;
@@ -476,6 +473,10 @@ public class Client extends EditorPanelable{
     
 
      // Setters:
+    private void setCreatedDate(String date){
+        createdDate = date;
+    }
+    
     public final void setIsJur(boolean isJur) {
         this.isJur.set(isJur);
     }
@@ -506,6 +507,14 @@ public class Client extends EditorPanelable{
 
     public final void setCity(String city) {
         this.city.set(city);
+    }
+    
+    public void setStatus(int status) {
+        this.clientStatus.get().setClientStatusId(status);
+    }
+    
+    public void setStatusDescrip(String statusDescrip){
+        this.clientStatus.get().setDescrip(statusDescrip);
     }
 
     @JsonProperty("passNumber")
@@ -589,7 +598,7 @@ public class Client extends EditorPanelable{
         setWww(other.getWww());
         clientStatus.set(other.statusProperty().get());
         setRemark(other.getRemark());
-        this.createdDate = other.createdDate;
+        setCreatedDate(other.getCreatedDate());
     }
 
     @Override
