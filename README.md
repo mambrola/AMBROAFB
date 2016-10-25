@@ -89,13 +89,14 @@ compare / equals ორივე საჭიროა, მაგალითა
 * (+) DBClient-ში select-ზე return new JSONArray(res.getDataAsString()); - ში ალბათ response უნდა გადაეცემოდეს ნაცვლად res.getDataAsString()-სა
 * (-) BallanceAccount-ებში მოდის ორი descrip-ი. 
 * (+) BallanceAccount-ებში actPas არის boolean. ადრე შეიძლებოდა რომ actPas ერთდროულად ყოფილიყო ანგარიში
-* (-) product_specific_descrips და product_specifics ცხრილები ?
+* (+) product_specific_descrips და product_specifics ცხრილები ?
 * (-) წაშლის პროცედურა
 * (+) approved Client_Status-descrips
-* (-) Client-ის შენახვის დროს (saveOneToDB) ვარდება error: 
+* (+) Client-ის შენახვის დროს (saveOneToDB) ვარდება error: 
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[]' at line 1
-client-ის phones არის ცარიელი მასივი და შეიძლება ამის ბრალი იყოს?
-
+client-ის phones არის ცარიელი მასივი და შეიძლება ამის ბრალი იყოს?  +  whereBuilder-ის ბრალი იყო, ყველაფრის წამორება გვინდა გადაეცემა ცარიელი json ანუ conditionBuilder.build(). თუ გვინდა ფილტრი მხოლოდ მაშინ ვიყენებთ whereBuilder-ს.
+* (-) general_select-ი  status_descrip-ების ცხრილებზე ენას ითვალისწინებს call general_select('client_status_descrips', 'en', '{}'); ???
+ ()
 
 დასატესტია:
 * (+) ჩაკეცვა / ამოკეცვის  ფუნქციონალი. (თუ გადიდებულია მშობელი ფანჯარა, ჩაკეცვა/ამოკეცვა ცუდად მუშაობს)
