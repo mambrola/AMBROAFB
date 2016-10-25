@@ -5,7 +5,10 @@
  */
 package ambroafb.licenses.helper;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
@@ -15,11 +18,20 @@ public class LicenseStatus {
     
     private final SimpleStringProperty descrip;
     private int recId;
-    private int licenseStatusId;
+    private final IntegerProperty licenseStatusId;
     private String language; // JsonIgnorable ??
     
     public LicenseStatus(){
         descrip = new SimpleStringProperty("");
+        licenseStatusId = new SimpleIntegerProperty(0);
+    }
+    
+    public StringProperty descripProperty(){
+        return descrip;
+    }
+    
+    public IntegerProperty statusIdProperty(){
+        return licenseStatusId;
     }
     
     public int getRecId(){
@@ -27,7 +39,7 @@ public class LicenseStatus {
     }
     
     public int getLicenseStatusId(){
-        return licenseStatusId;
+        return licenseStatusId.get();
     }
     
     public String getLanguage(){
@@ -44,7 +56,7 @@ public class LicenseStatus {
     }
     
     public void setLicenseStatusId(int licenseStatusId){
-        this.licenseStatusId = licenseStatusId;
+        this.licenseStatusId.set(licenseStatusId);
     }
     
     public void setLanguage(String language){

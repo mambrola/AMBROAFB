@@ -270,8 +270,7 @@ public class Client extends EditorPanelable{
             System.out.println("one client data: " + data);
             
             ObjectMapper mapper = new ObjectMapper();
-            Client client = mapper.readValue(data, Client.class);
-            return client;
+            return mapper.readValue(data, Client.class);
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }

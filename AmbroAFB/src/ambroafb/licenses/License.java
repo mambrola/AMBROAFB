@@ -22,8 +22,10 @@ import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -53,26 +56,24 @@ public class License extends EditorPanelable {
     @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty createdDate;
     
-    @AView.Column(title = "%license N", width = "100")
+    @AView.Column(title = "%license N", width = "100", styleClass = "textRight")
     private final IntegerProperty licenseNumber;
     
-    @AView.Column(title = "%client", width = "100")
+    @AView.Column(title = "%client", width = "150", styleClass = "textCenter")
     @JsonIgnore
     private final StringExpression clientDescrip;
     @JsonIgnore
     private final ObjectProperty<Client> clientObj;
     private int clientId; // for object mapper (case: class to json)
-    private String firstName, lastName;
-    private String email;
+    private String firstName, lastName, email;
     
-    @AView.Column(title = "%product", width = "70")
+    @AView.Column(title = "%product", width = "70", styleClass = "textCenter")
     @JsonIgnore
-    private final StringProperty productDescrip;
+    private final StringExpression productDescrip;
     @JsonIgnore
     private final ObjectProperty<Product> productObj;
     private int productId; // for object mapper (case: class to json)
-    private final StringProperty abbreviation;
-    private final StringProperty former;
+    private final StringProperty abbreviation, former;
     
     @AView.Column(title = "%last_invoice", width = "100")
     private final StringProperty invoiceNumber;
@@ -80,14 +81,14 @@ public class License extends EditorPanelable {
     private final StringProperty lastInvoiceDescrip;
     @JsonIgnore
     private final ObjectProperty<Invoice> invoiceObj;
-    private int cfCurrentInvoiceId;
+    private final IntegerProperty cfCurrentInvoiceId;
+    private final IntegerProperty cfFutureInvoiceId;
     
-    @AView.Column(title = "%license_statuses", width = "100")
-    @JsonIgnore
+    @AView.Column(title = "%license_statuses", width = "120")
     private final StringProperty statusDescrip;
     @JsonIgnore
     private final ObjectProperty<LicenseStatus> statusObj;
-    private int status; // for object mapper (case: class to json)
+    private final IntegerProperty status; // for object mapper (case: class to json)
     
     private final StringProperty remark;
     
@@ -112,20 +113,21 @@ public class License extends EditorPanelable {
     private final ObjectProperty<LocalDate> lastLoginDateObj;
     
     
-    
     private static final String DB_VIEW_NAME = "licenses_whole";
+    private static final String DB_TABLE_NAME = "licenses";
     private static final String DB_STATUSES_TABLE_NAME = "license_status_descrips";
     
     public License(){
         createdDate = new SimpleStringProperty("");
         clientObj = new SimpleObjectProperty<>(new Client());
         clientDescrip = Utils.avoidNull(clientObj.get().firstNameProperty()).concat(" ").concat(Utils.avoidNull(clientObj.get().lastNameProperty())).concat(" ").concat(Utils.avoidNull(clientObj.get().emailProperty()));
-        productDescrip = new SimpleStringProperty("");
         productObj = new SimpleObjectProperty<>(new Product());
+        productDescrip = Utils.avoidNull(productObj.get().abbreviationProperty()).concat(Utils.avoidNull(productObj.get().formerProperty()));
         abbreviation = new SimpleStringProperty("");
         former = new SimpleStringProperty("");
         lastInvoiceDescrip = new SimpleStringProperty("");
         invoiceObj = new SimpleObjectProperty<>(new Invoice());
+        status = new SimpleIntegerProperty(0);
         statusDescrip = new SimpleStringProperty("");
         statusObj = new SimpleObjectProperty<>(new LicenseStatus());
         remark = new SimpleStringProperty("");
@@ -138,24 +140,37 @@ public class License extends EditorPanelable {
         invoiceNumber = new SimpleStringProperty("");
         lastLoginTime = new SimpleStringProperty("");
         lastLoginDateObj = new SimpleObjectProperty<>();
-        
+        cfCurrentInvoiceId = new SimpleIntegerProperty(0);
+        cfFutureInvoiceId = new SimpleIntegerProperty(0);
         
         statusObj.addListener((ObservableValue<? extends LicenseStatus> observable, LicenseStatus oldValue, LicenseStatus newValue) -> {
-            if (newValue != null){
-                status = newValue.getLicenseStatusId();
-                statusDescrip.set(newValue.getDescrip());
-                System.out.println("change statusObj. newValue: " + newValue.getLicenseStatusId() + " " + newValue.getDescrip());
-            }
+//            if (newValue != null){
+//                status.set(newValue.getLicenseStatusId());
+//                statusDescrip.set(newValue.getDescrip());
+//            }
+           rebindStatus(); 
         });
+        rebindStatus();
         
         firstDateObj.addListener(new DateListener(firstDateDescrip));
         lastDateObj.addListener(new DateListener(lastDateDescrip));
+        lastLoginDateObj.addListener(new DateListener(lastLoginTime));
+    }
+    
+    private void rebindStatus(){
+        status.unbind();
+        statusDescrip.unbind();
+        if (statusObj.get() != null){
+            status.bind(statusObj.get().statusIdProperty());
+            statusDescrip.bind(statusObj.get().descripProperty());
+        }
     }
     
     // DB methods:
     public static ArrayList<License> getAllFromDB(){
         try {
-            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().build()).toString();
+            JSONObject params = new ConditionBuilder().build();
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
             
             System.out.println("licenses data: " + data);
             
@@ -217,7 +232,6 @@ public class License extends EditorPanelable {
     public static ArrayList<LicenseStatus> getAllLicenseStatusFromDB(){
         try {
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-//            dbClient.callProcedureAndGetAsJson("general_select", DB_STATUSES_TABLE_NAME, dbClient.getLang(), )
             String data = dbClient.select(DB_STATUSES_TABLE_NAME, new ConditionBuilder().build()).toString();
             System.out.println("license status data: " + data);
             ObjectMapper mapper = new ObjectMapper();
@@ -230,8 +244,8 @@ public class License extends EditorPanelable {
     
     public static LicenseStatus getLicenseStatusFromDB(int licenseStatusId){
         try {
-            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("license_status_id", "=", licenseStatusId).condition();
-            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_STATUSES_TABLE_NAME, conditionBuilder.build());
+            JSONObject params = new ConditionBuilder().where().and("license_status_id", "=", licenseStatusId).condition().build();
+            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_STATUSES_TABLE_NAME, params);
             System.out.println("one status data: " + data);
             String statusData = data.opt(0).toString();
             ObjectMapper mapper = new ObjectMapper();
@@ -243,10 +257,38 @@ public class License extends EditorPanelable {
     }
     
     public static License getOneFromDB(int recId){
+        try {
+            JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
+            JSONArray clientResult = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params);
+            String data = clientResult.optJSONObject(0).toString();
+            
+            System.out.println("one license data: " + data);
+            
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, License.class);    
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
     
     public static License saveOneToDB(License license){
+        if (license == null) return null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+            JSONObject clientJson = new JSONObject(writer.writeValueAsString(license));
+            DBClient dbLicense = GeneralConfig.getInstance().getDBClient();
+            JSONObject newLicense = dbLicense.callProcedureAndGetAsJson("general_insert_update", DB_TABLE_NAME, dbLicense.getLang(), clientJson).getJSONObject(0);
+            
+            System.out.println("save license data: " + newLicense.toString());
+            
+            return mapper.readValue(newLicense.toString(), License.class);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
     
@@ -256,7 +298,7 @@ public class License extends EditorPanelable {
     }
     
     
-    
+    // properties:
     
     
     
@@ -324,7 +366,11 @@ public class License extends EditorPanelable {
     }
     
     public int getCfCurrentInvoiceId(){
-        return invoiceObj.get().getRecId();
+        return cfCurrentInvoiceId.get();
+    }
+    
+    public int getCfFutureInvoiceId(){
+        return cfFutureInvoiceId.get();
     }
     
     public String getInvoiceNumber(){
@@ -368,8 +414,8 @@ public class License extends EditorPanelable {
         this.productObj.get().setRecId(recId);
     }
     
-    public void setStatusDescrip(String descrip){
-        this.statusObj.get().setDescrip(descrip);
+    public void setStatusDescrip(String statusDescrip){
+        this.statusObj.get().setDescrip(statusDescrip);
     }
     
     public void setStatus(int status){
@@ -392,21 +438,24 @@ public class License extends EditorPanelable {
         additionalDays.set(extraDays);
     }
     
-    public void setFirstDate(String date){
-        invoiceObj.get().setBeginDate(date);
-//        firstDateObj.set(DateConverter.getInstance().parseDate(date));
-    }
-    
     public void setLicenseNumber(int number){
         licenseNumber.set(number);
+    }
+    
+    public void setFirstDate(String date){
+        firstDateObj.set(DateConverter.getInstance().parseDate(date));
     }
     
     public void setLastDate(String date){
         lastDateObj.set(DateConverter.getInstance().parseDate(date));
     }
     
-    public void setCfCurrentInvoiceId(int recId){
-        this.invoiceObj.get().setRecId(recId);
+    public void setCfCurrentInvoiceId(int id){
+        this.cfCurrentInvoiceId.set(id);
+    }
+    
+    public void setCfFutureInvoiceId(int id){
+        this.cfFutureInvoiceId.set(id);
     }
     
     public void setInvoiceNumber(String invoiceNumber){
@@ -414,9 +463,7 @@ public class License extends EditorPanelable {
     }
     
     public void setLastLoginTime(String date){
-        LocalDate localDate = DateConverter.getInstance().parseDate(date);
-        this.lastLoginTime.set(DateConverter.getInstance().getDayMonthnameYearBySpace(localDate));
-        this.lastLoginDateObj.set(localDate);
+        lastLoginDateObj.set(DateConverter.getInstance().parseDate(date));
     }
     
     
