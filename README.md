@@ -81,6 +81,8 @@ compare / equals ორივე საჭიროა, მაგალითა
 * (+) Client-ის დიალოგის დროს თუ რეზიდენტობა გაინიშნა ალბათ ქვეყანა საქართველო შესაძლოა დარჩეს არჩეული comboBox-ში.
 	+ აღარაა საჭირო გადაბმა
 * (-) ქვეყნების comboBox-ი ძებნადი ??
+* (-) @JsonIgnore
+    public String language;  არ მოაქვს productSpecific_ის language, მაშინ როცა იგივე ჩანაწერი არ მუშაობს LicenseStatus კლასისთვის
 
 
 ბაზა: 
