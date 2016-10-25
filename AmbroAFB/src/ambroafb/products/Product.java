@@ -144,7 +144,9 @@ public class Product extends EditorPanelable {
     
     public static ArrayList<ProductSpecific> getAllSpecificsFromDB(){
         try {
-            String data = GeneralConfig.getInstance().getDBClient().select(DB_SPECIFIC_TABLE_NAME, new ConditionBuilder().build()).toString();
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            ConditionBuilder condition = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition();
+            String data = GeneralConfig.getInstance().getDBClient().select(DB_SPECIFIC_TABLE_NAME, condition.build()).toString();
             System.out.println("products specific data: " + data);
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(data, new TypeReference<ArrayList<ProductSpecific>>() {});

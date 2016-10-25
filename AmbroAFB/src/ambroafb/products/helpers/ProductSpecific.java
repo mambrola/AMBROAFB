@@ -5,6 +5,12 @@
  */
 package ambroafb.products.helpers;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  *
  * @author dato
@@ -12,10 +18,14 @@ package ambroafb.products.helpers;
 public class ProductSpecific {
 
     private int recId;
-    private int productSpecificId;
-    public String descrip;
+    private final IntegerProperty productSpecificId;
+    public final StringProperty descrip;
+    @JsonIgnore
+    public String language;
 
     public ProductSpecific() {
+        productSpecificId = new SimpleIntegerProperty(0);
+        descrip = new SimpleStringProperty("");
     }
 
     public int getRecId(){
@@ -23,11 +33,11 @@ public class ProductSpecific {
     }
     
     public int getProductSpecificId(){
-        return productSpecificId;
+        return productSpecificId.get();
     }
     
     public String getDescrip(){
-        return descrip;
+        return descrip.get();
     }
     
     
@@ -36,13 +46,17 @@ public class ProductSpecific {
     }
 
     public void setProductSpecificId(int productSpecificId){
-        this.productSpecificId = productSpecificId;
+        this.productSpecificId.set(productSpecificId);
     }
     
     public void setDescrip(String descrip){
-        this.descrip = descrip;
+        this.descrip.set(descrip);
     }
     
+    @Override
+    public String toString(){
+        return getDescrip();
+    }
     
     public boolean equals(ProductSpecific prodSpecific){
         return this.getRecId() == prodSpecific.getRecId() && this.getDescrip().equals(prodSpecific.getDescrip());
