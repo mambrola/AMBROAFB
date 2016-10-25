@@ -40,6 +40,7 @@ Accounting for Busines
     	1. კოდი ინარჩუნებს მოქნილობას. ამ მნიშვნელობებს dialog კლასებში ვაბაინდებთ ამიტომ შესაძლოა ხელით დაწერილმა set-მა runtime exception-ი მოგვცეს ან სადმე გამოგვრჩეს set-ის დაწერა.
     	2. ეს მეთოდები Listener-ის გარეთაც საჭიროა, თავად კონსტრუქტორში. ყველა property-ის თავდაპირველად აქვს default მნიშვნელობა, იმის გამო რომ რომელიმე dialog-ის ფანჯარამ (მაგ. new ან new for templ.) არ ამოაგდოს runtime NullPointerException-ი. ამიტომ ბაზიდან წამოღებული მნიშვნელობების შესაბამის setter-ებსა და getter-ებში ხდება ამ objectProperty-ების ობიექტების set-ი და get-ი. რადგან ამ ობიექტის შეცვლა ავტომატურად არ ნიშნავს იმას რომ შესაბამისი column-ის მნიშვნელობაც შეიცვლება tableView-ში, ამიტომ საჭიროა ამ column-ის მნიშვნელობა დაბაინდებული იყოს უკვე objectProperty-ი ობიექტის მნიშვნელობის შესაბამის property-ისთან.
 	შენიშვნა: გამონაკლისია შემთხვევები მაშინ როცა ცვლადები bidirectional კავშირში არიან სცენის ომპონენტებთან. მაშინ მათზე unbind-ი შეცომას მოგვცემს. ამ შემთხვევაში resetი უნდა მოხდეს მნიშვნელობის და არა unbind / bind-ი.
+	ზოგ შემთხვევაში ავსება ხდება objectProperty ობიქტის შიგთავსი ობიექტის ველები თავიდანვე არაა ცნობილი და setter-ში იცვლება, ამიტომ კონსტრუქტორში bind უნდა გვეწეროს და არა set რომ მნიშვნელობა შეიცვალოს შესაბამისმა property-მ.
 
 
 
@@ -49,14 +50,14 @@ Accounting for Busines
 * closeStageWithChildren-ის ლოგიკა
 * (+) StagesContainer კლასში შემოსატანია delimiter = "/"
 * (-) Utils კლასში არასაჭირო მეთოდების ამოშლა ან გატანა სხვა კლასებში (მაგ. SceneUtils-ში იყოს Scene-თან დაკავშირებული მეთოდები)
-* (-) MVS პატერნის გამოყენება Filter-ში
+* (+) MVS პატერნის გამოყენება Filter-ში
 * (|) ATableView-ს contextMenu-დან იყოს შესაძლებლობა რომელ სვეტზეც ვდგავართ იმის content-ის alignment-ი ვცვალოთ
 * (-) recId-ის ვერ ცნობს callProcedureAndGetAsJson, წამოღებისას ცნობს (getDBClient().select("discounts_on_licenses_count") და ჩაწერისას ვერა.
 * (-) DBUtils რომელიც პასუხისმგებელი იქნება DBService-ისთან ურთიერთობაზე
 * (-) currency-ის განმეორებადი კოდი ყველგან სადაც iso string მოდის ბაზიდან (მაგ. CurrencyRate). მოგვარება -> Product კლასში
 * (+) StagesContainer.getPathForStage შესაცვლელია getPathForStage(owner, stageName)
 * (-) ბაზის სტატიკურ მეთოდებში კოპირების გამო error ex-ში ან სადმე შესაძლოა იყოს ჩარჩენილი სხვადასხვა კლასის class ცვლადი...
-* (+) product-ებში ზოგს მოაქვს ველი descrip და ასევე specificesrcip და ზოგს მხოლოდ specificesrcip
+* (+) product-ებში ზოგს მოაქვს ველი descrip და ასევე specificesrcip და ზოგს მხოლოდ specificDesrcip
 * (+) product-ების width დაპატარავებისას editorPanel-ის region-ის ადგილი უჩვეულოდ დიდა რჩება
 * (-) fxml, css, less ფაილები   (formPane_ზე Min და Max width_ები  // sheidzleba tavdapirvel zomas vusetavdit, tumca arc esaa sachiro)
 * (|) UML დიაგრამები
@@ -67,14 +68,14 @@ Accounting for Busines
 * (-) ALL currencies-ში და country-ში
 * (-) Client-ის compare მეთოდში Phone.copmareList-ის მაგივრად Utils.compareList
 * (|) ტესტები
-* (-) Client-ის comboBox (+ALL, search.  წერია და კარგად მუშაობს TestExcelGeneral პროექტში)
+* (+) Client-ის comboBox (+ALL, search.  წერია და კარგად მუშაობს TestExcelGeneral პროექტში)
 * (+) სადაც equals და compares-ს ვიყენებთ მარტო equals-ზე ხომ არ გადავიდეთ. compares-ს საჭიროება? equals-ს საჭიროება?
 compare / equals ორივე საჭიროა, მაგალითად ქვეყნებისთვის country.equal(other) ადარებს country code-ის მიხედვით, ხოლო compare ადარებს ყველა კომპონენტის მიხედვით (რადგან თუ სცენაზე რამე შეიცვალა compare მეთოდი გაარკვევს და მოამზადებს პროგრამას ალერტის ამოსაგდებად)
 * (-) clientComboBox-ის ნაცვლა ერთი generic filterableComboBox-ი.
 * (-) whereBuilder-ის andGropu() ან orGroup() მეთოდების გამოყენების დროს closeGroup-ის გამოძახება.
-* (-) გასუფთავდეს statis hashMap-ები ??
+* (+) გასუფთავდეს statis hashMap-ები ??  საერთოდ აღარ ვიყენებთ static HashMap-ს...
 * (-) whereBuilder-ი საჭიროებს:  whereBuilder = whereBuilder.andGroup(); ...     whereBuilder = whereBuilder.closeGroup()
-* (-) client-ებს მოაქვს rezident გერმანია, როცა არ უნდ აწამოიღოს. ფილტრში ეთითება:  ორივე date -> null,  juridical -> false, country -> ALL, სტტუსები: მხოლოდ პირველი, rezident -> true
+* (+) client-ებს მოაქვს rezident გერმანია, როცა არ უნდ აწამოიღოს. ფილტრში ეთითება:  ორივე date -> null,  juridical -> false, country -> ALL, სტტუსები: მხოლოდ პირველი, rezident -> true
 * (+) Client-ის დიალოგის დროს თუ რეზიდენტობა გაინიშნა ალბათ ქვეყანა საქართველო შესაძლოა დარჩეს არჩეული comboBox-ში.
 	+ აღარაა საჭირო გადაბმა
 
