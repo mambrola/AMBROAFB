@@ -120,8 +120,6 @@ public class EditorPanelController implements Initializable {
                 selected.copyFrom(backup);
             } else {
                 Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
-//                dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
-//                Utils.callGallerySendMethod("" + result.getRecId(), dialogStage.getScene().getProperties().get("controller"));
             }
         }
         else {
@@ -163,12 +161,9 @@ public class EditorPanelController implements Initializable {
             EditorPanelable result = (EditorPanelable)dialog.getResult();
             if (result != null) {
                 Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
-                result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
-
-                if (result != null) {
-//                    dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
-//                    Utils.callGallerySendMethod("" + result.getRecId(), dialogStage.getScene().getProperties().get("controller"));
-                    tableData.add(result);
+                EditorPanelable newInstanceWithId = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
+                if (newInstanceWithId != null){
+                    tableData.add(newInstanceWithId);
                 }
             }
         }
@@ -188,12 +183,12 @@ public class EditorPanelController implements Initializable {
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
 
             EditorPanelable result = (EditorPanelable) dialog.getResult();
-            Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
-            result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
             if (result != null) {
-//                dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
-//                Utils.callGallerySendMethod("" + result.getRecId(), dialogStage.getScene().getProperties().get("controller"));
-                tableData.add(result);
+                Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+                EditorPanelable newInstanceWithId = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
+                if (newInstanceWithId != null){
+                    tableData.add(newInstanceWithId);
+                }
             }
         }
         else {

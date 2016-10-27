@@ -7,6 +7,7 @@ package ambroafb.balance_accounts;
 
 import ambro.AFilterableTreeTableView;
 import ambro.AView;
+import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -32,7 +33,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -69,8 +69,8 @@ public class BalanceAccount extends EditorPanelable {
     
     public BalanceAccount(){
         balAcc = new SimpleStringProperty("");
-        descrip = new SimpleStringProperty();
-        actPas = new SimpleIntegerProperty();
+        descrip = new SimpleStringProperty("");
+        actPas = new SimpleIntegerProperty(0);
         indeterminateProperty = new SimpleBooleanProperty();
         actPasProperty = new SimpleBooleanProperty();
         
@@ -100,20 +100,25 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     public static BalanceAccount getOneFromDB(int recId){
-        try {
-            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
-            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, conditionBuilder.build());
-            
-            String currencyData = data.opt(0).toString();
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(currencyData, BalanceAccount.class);
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+        JSONObject params = conditionBuilder.build();
+        return DBUtils.getObjectFromDB(BalanceAccount.class, DB_TABLE_NAME, params);
+        
+//        try {
+//            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+//            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, conditionBuilder.build());
+//            
+//            String currencyData = data.opt(0).toString();
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(currencyData, BalanceAccount.class);
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
     }
     
     public static BalanceAccount saveOneToDB(BalanceAccount balAccount){
+        if (balAccount == null) return null;
         try {
             ObjectMapper mapper = new ObjectMapper();
             ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
