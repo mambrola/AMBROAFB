@@ -24,9 +24,6 @@ import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -53,7 +50,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -259,27 +255,28 @@ public class Client extends EditorPanelable{
 
     public static Client saveOneToDB(Client client) {
         if (client == null) return null;
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-            JSONObject clientJson = new JSONObject(writer.writeValueAsString(client));
-            
-            System.out.println("one client data to DB: " + new JSONObject(writer.writeValueAsString(client)));
-            
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newClient = dbClient.insertUpdate("client", clientJson);
-            
-            System.out.println("client data from DB: " + newClient.toString());
-            
-            return mapper.readValue(newClient.toString(), Client.class);
-        } 
-        catch (JsonProcessingException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        catch (IOException | AuthServerException | JSONException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        return DBUtils.saveObjectToDBSimple(client, "client");
+//        try {
+//            ObjectMapper mapper = new ObjectMapper();
+//            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+//            JSONObject clientJson = new JSONObject(writer.writeValueAsString(client));
+//            
+//            System.out.println("one client data to DB: " + new JSONObject(writer.writeValueAsString(client)));
+//            
+//            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+//            JSONObject newClient = dbClient.insertUpdate("client", clientJson);
+//            
+//            System.out.println("client data from DB: " + newClient.toString());
+//            
+//            return mapper.readValue(newClient.toString(), Client.class);
+//        } 
+//        catch (JsonProcessingException ex) {
+//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//        } 
+//        catch (IOException | AuthServerException | JSONException ex) {
+//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
     }
 
     public static boolean deleteOneFromDB(int id) {

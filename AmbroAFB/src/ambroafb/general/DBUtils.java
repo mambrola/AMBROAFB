@@ -5,9 +5,11 @@
  */
 package ambroafb.general;
 
+import ambroafb.clients.Client;
 import ambroafb.licenses.License;
 import authclient.AuthServerException;
 import authclient.db.DBClient;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -84,7 +86,7 @@ public class DBUtils {
      */
     public static <T> T saveObjectToDB(Object source, String dbStoredProcName, String dbTableName){
         try {
-            JSONObject targetJson = Utils.getJSONFromClass(source.getClass());
+            JSONObject targetJson = Utils.getJSONFromClass(source);
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             JSONObject newSourceFromDB = dbClient.callProcedureAndGetAsJson(dbStoredProcName, dbTableName, dbClient.getLang(), targetJson).getJSONObject(0);
             
@@ -92,6 +94,28 @@ public class DBUtils {
             
             return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
         } catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    /**
+     * The static function saves element into DB.
+     * @param <T>
+     * @param source The element which must save to DB.
+     * @param dbTableNameSingularForm The DB table name in singular form (ex: client, product ...)
+     * @return 
+     */
+    public static <T> T saveObjectToDBSimple(Object source, String dbTableNameSingularForm){
+        try {
+            JSONObject targetJson = Utils.getJSONFromClass(source);
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONObject newSourceFromDB = dbClient.insertUpdate(dbTableNameSingularForm, targetJson);
+            return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
+        } 
+        catch (JsonProcessingException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
