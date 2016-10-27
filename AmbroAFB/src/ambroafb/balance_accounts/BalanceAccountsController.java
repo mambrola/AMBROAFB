@@ -184,6 +184,9 @@ public class BalanceAccountsController implements Initializable {
                 });
                 aview.expand(1);
                 masker.setVisible(false);
+                if (selectedIndex >= 0){
+                    aview.getSelectionModel().select(selectedIndex);
+                }
             });
         }
         
