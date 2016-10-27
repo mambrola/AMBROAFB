@@ -109,8 +109,14 @@ public class DBUtils {
     public static <T> T saveObjectToDBSimple(Object source, String dbTableNameSingularForm){
         try {
             JSONObject targetJson = Utils.getJSONFromClass(source);
+            
+            System.out.println("data for simple table to server: " + targetJson);
+            
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             JSONObject newSourceFromDB = dbClient.insertUpdate(dbTableNameSingularForm, targetJson);
+            
+            System.out.println("data for simple table from server: " + targetJson);
+            
             return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
         } 
         catch (JsonProcessingException ex) {
