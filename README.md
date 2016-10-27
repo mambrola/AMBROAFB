@@ -85,6 +85,7 @@ compare / equals ორივე საჭიროა, მაგალითა
     public String language;  არ მოაქვს productSpecific_ის language, მაშინ როცა იგივე ჩანაწერი არ მუშაობს LicenseStatus კლასისთვის
 * (-) TestExcelGeneral კომპონენტების საფუძვლიანი ტესტი
 * (-) კონფიგურაციის განყოფილების გადაყვანა ახალ სტილზე
+* (-) BallanceAccount- refresh აგდებს UnSupportedOperationException-ს როცა მოინიშნება TreeTableView column (საკუთრივ) და მერე დაეჭირება refresh
 
 
 ბაზა: 
