@@ -276,8 +276,7 @@ public class Client extends EditorPanelable{
         catch (JsonProcessingException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         } 
-        catch (IOException | AuthServerException | JSONException ex) { // 1
-//        catch (JSONException ex) { // 2
+        catch (IOException | AuthServerException | JSONException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
