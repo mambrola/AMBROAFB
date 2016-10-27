@@ -101,7 +101,7 @@ compare / equals ორივე საჭიროა, მაგალითა
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[]' at line 1
 client-ის phones არის ცარიელი მასივი და შეიძლება ამის ბრალი იყოს?  +  whereBuilder-ის ბრალი იყო, ყველაფრის წამორება გვინდა გადაეცემა ცარიელი json ანუ conditionBuilder.build(). თუ გვინდა ფილტრი მხოლოდ მაშინ ვიყენებთ whereBuilder-ს.
 * (-) general_select-ი  status_descrip-ების ცხრილებზე ენას ითვალისწინებს call general_select('client_status_descrips', 'en', '{}'); ???
- ()
+* (-) Client.saveOneToDB მეთოდი ჯავაში ვერ ამატებს კლიენტს და პასუხად უბრუნდება სულ recId = 1 კლიენტი.
 
 დასატესტია:
 * (+) ჩაკეცვა / ამოკეცვის  ფუნქციონალი. (თუ გადიდებულია მშობელი ფანჯარა, ჩაკეცვა/ამოკეცვა ცუდად მუშაობს)
