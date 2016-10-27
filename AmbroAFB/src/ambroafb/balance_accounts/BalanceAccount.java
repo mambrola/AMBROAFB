@@ -16,7 +16,6 @@ import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
@@ -84,19 +83,21 @@ public class BalanceAccount extends EditorPanelable {
     
     
     public static ArrayList<BalanceAccount> getAllFromDB(){
-        try {
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            String allClientsData = dbClient.select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
-            
-            System.out.println("ball acc all data: " + allClientsData);
-            
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(allClientsData, new TypeReference<ArrayList<BalanceAccount>>() {});
-        } 
-        catch (IOException | AuthServerException ex) {
-            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        JSONObject params = new ConditionBuilder().build();
+        return DBUtils.getObjectsListFromDB(BalanceAccount.class, DB_TABLE_NAME, params);
+//        try {
+//            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+//            String allClientsData = dbClient.select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
+//            
+//            System.out.println("ball acc all data: " + allClientsData);
+//            
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(allClientsData, new TypeReference<ArrayList<BalanceAccount>>() {});
+//        } 
+//        catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
     }
     
     public static BalanceAccount getOneFromDB(int recId){

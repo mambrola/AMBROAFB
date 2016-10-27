@@ -78,6 +78,7 @@ public class Phone implements Editable<String> {
         return number;
     }
     
+    @JsonIgnore
     public StringProperty getNumberProperty(){
         return number;
     }

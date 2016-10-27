@@ -443,8 +443,6 @@ public class Utils {
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
             
-            System.out.println("field.type: " + field.getType());
-            
             if (field.getType().equals(TextField.class)) {
                 TextField textField = (TextField) field.get(classObject);
                 results[0] = textField;
@@ -478,8 +476,6 @@ public class Utils {
 
     private static void changeNodeTitleLabelVisual(Node node, String text) {
         Parent parent = node.getParent();
-        System.out.println("node: " + node);
-        System.out.println("parent: " + parent);
         Label nodeTitleLabel = (Label) parent.lookup(".validationMessage");
 
         if (text.isEmpty()) {

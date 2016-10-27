@@ -10,6 +10,7 @@ import ambroafb.clients.filter.ClientFilterModel;
 import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.Country;
 import ambroafb.general.AlertMessage;
+import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -24,12 +25,10 @@ import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -54,7 +53,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -217,33 +215,14 @@ public class Client extends EditorPanelable{
     
     // DBService methods:
     public static List<Client> getAllFromDB() {
-        try {
-            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().build()).toString();
-            
-            System.out.println("client data: " + data);
-            
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
+        JSONObject params = new ConditionBuilder().build();
+        return DBUtils.getObjectsListFromDB(Client.class, DB_TABLE_NAME, params);
     }
     
     public static List<ClientStatus> getAllStatusFromDB(){
-        try {
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            ConditionBuilder condition = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition();
-            String data = dbClient.select(DB_STATUS_TABLE, condition.build()).toString();
-            
-            System.out.println("client status data: " + data);
-            
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<ClientStatus>>() {});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
+        return DBUtils.getObjectsListFromDB(ClientStatus.class, DB_STATUS_TABLE, params);
     }
     
     public static List<Client> getFilteredFromDB(FilterModel model) { // JSONObject filter
@@ -269,35 +248,13 @@ public class Client extends EditorPanelable{
             whereBuilder = whereBuilder.closeGroup();
         }
         
-        try {
-            JSONObject params = whereBuilder.condition().build();
-            System.out.println("client filter sent params: " + params);
-            
-            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
-            
-            System.out.println("client filtered data: " + data);
-            
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<Client>>() {});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
+        JSONObject params = whereBuilder.condition().build();
+        return DBUtils.getObjectsListFromDB(Client.class, DB_VIEW_NAME, params);
     }
     
     public static Client getOneFromDB(int id) {
-        try {
-            JSONArray clientResult = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().where().and("rec_id", "=", id).condition().build());
-            String data = clientResult.optJSONObject(0).toString();
-            
-            System.out.println("one client data: " + data);
-            
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, Client.class);
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
+        return DBUtils.getObjectFromDB(Client.class, DB_VIEW_NAME, params);
     }
 
     public static Client saveOneToDB(Client client) {
@@ -306,15 +263,21 @@ public class Client extends EditorPanelable{
             ObjectMapper mapper = new ObjectMapper();
             ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
             JSONObject clientJson = new JSONObject(writer.writeValueAsString(client));
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newClient = dbClient.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbClient.getLang(), clientJson).getJSONObject(0);
             
-            System.out.println("save client data: " + newClient.toString());
+            System.out.println("one client data to DB: " + new JSONObject(writer.writeValueAsString(client)));
+            
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONObject newClient = dbClient.insertUpdate("client", clientJson);
+            
+            System.out.println("client data from DB: " + newClient.toString());
             
             return mapper.readValue(newClient.toString(), Client.class);
-        } catch (JsonProcessingException ex) {
+        } 
+        catch (JsonProcessingException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | AuthServerException | JSONException ex) {
+        } 
+        catch (IOException | AuthServerException | JSONException ex) { // 1
+//        catch (JSONException ex) { // 2
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -333,11 +296,13 @@ public class Client extends EditorPanelable{
 
     
     //Properties getters:
-    public String getCreatedDateStr(){
-        return createdDate.get();
+    public String getCreatedDate(){
+        return createdDate.get(); // getCreatedDateAsObj().toString(); // for class to json
     }
     
-    public LocalDate getCreatedDate(){
+    @JsonIgnore
+    public LocalDate getCreatedDateAsObj(){
+        System.out.println("createdate for client: " + DateConverter.getInstance().parseDate(createdDate.get()));
         return DateConverter.getInstance().parseDate(createdDate.get());
     }
     
@@ -443,7 +408,7 @@ public class Client extends EditorPanelable{
         return clientStatus.get().getClientStatusId();
     }
     
-    public String getStatusDescrip(){
+    public String getDescrip(){
         return clientStatus.get().getDescrip();
     }
     
@@ -499,8 +464,9 @@ public class Client extends EditorPanelable{
 
      // Setters:
     private void setCreatedDate(String date){
-        LocalDate localDate = DateConverter.getInstance().parseDate(date);
-        this.createdDate.set(DateConverter.getInstance().getDayMonthnameYearBySpace(localDate));
+        this.createdDate.set(date);
+//        LocalDate localDate = DateConverter.getInstance().parseDate(date);
+//        this.createdDate.set(DateConverter.getInstance().getDayMonthnameYearBySpace(localDate));
     }
     
     public final void setIsJur(boolean isJur) {
@@ -582,7 +548,7 @@ public class Client extends EditorPanelable{
                                         getWww().equals(otherClient.getWww()) &&
                                         statusProperty().get().equals(otherClient.statusProperty().get()) &&
                                         getRemark().equals(otherClient.getRemark()) &&
-                                        getCreatedDateStr().equals(otherClient.getCreatedDateStr());
+                                        getCreatedDate().equals(otherClient.getCreatedDate());
         boolean equalsPhones = Phone.compareLists(phones, otherClient.getPhones());
         return fieldsCompareResult && equalsPhones;
     }
@@ -605,7 +571,7 @@ public class Client extends EditorPanelable{
     @Override
     public void copyFrom(EditorPanelable object) {
         Client other = (Client) object;
-        setCreatedDate(other.getCreatedDateStr());
+        setCreatedDate(other.getCreatedDate());
         setIsJur(other.getIsJur());
         setIsRezident(other.getIsRezident());
         setFirstName(other.getFirstName());
@@ -624,7 +590,7 @@ public class Client extends EditorPanelable{
         setFax(other.getFax());
         setWww(other.getWww());
         setStatus(other.getStatus());
-        setStatusDescrip(other.getStatusDescrip());
+        setStatusDescrip(other.getDescrip());
         setRemark(other.getRemark());
     }
 
