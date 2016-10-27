@@ -176,7 +176,7 @@ public class Product extends EditorPanelable {
             ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
             JSONObject productJson = new JSONObject(writer.writeValueAsString(product));
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newProduct = dbClient.callProcedureAndGetAsJson("general_insert_update", DB_TABLE_NAME, dbClient.getLang(), productJson).getJSONObject(0);
+            JSONObject newProduct = dbClient.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbClient.getLang(), productJson).getJSONObject(0);
             return mapper.readValue(newProduct.toString(), Product.class);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);

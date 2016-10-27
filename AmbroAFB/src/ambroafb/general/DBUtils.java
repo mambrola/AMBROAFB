@@ -60,7 +60,7 @@ public class DBUtils {
         try {
             JSONObject targetJson = Utils.getJSONFromClass(source.getClass());
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newSourceFromDB = dbClient.callProcedureAndGetAsJson("general_insert_update", dbTableName, dbClient.getLang(), targetJson).getJSONObject(0);
+            JSONObject newSourceFromDB = dbClient.callProcedureAndGetAsJson("general_insert_update_simpledate", dbTableName, dbClient.getLang(), targetJson).getJSONObject(0);
             
             System.out.println("save " + source.getClass() + " data: " + newSourceFromDB.toString());
             

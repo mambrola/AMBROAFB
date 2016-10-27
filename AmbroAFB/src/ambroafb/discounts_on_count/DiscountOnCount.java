@@ -80,7 +80,7 @@ public class DiscountOnCount extends EditorPanelable {
             
             JSONObject discOnCountJson = new JSONObject(writer.writeValueAsString(discOnCount));
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newDiscOnCount = dbClient.callProcedureAndGetAsJson("general_insert_update", DB_TABLE_NAME, dbClient.getLang(), discOnCountJson).getJSONObject(0);
+            JSONObject newDiscOnCount = dbClient.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbClient.getLang(), discOnCountJson).getJSONObject(0);
             return mapper.readValue(newDiscOnCount.toString(), DiscountOnCount.class);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);

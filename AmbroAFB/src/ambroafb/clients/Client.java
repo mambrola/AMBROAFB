@@ -307,7 +307,7 @@ public class Client extends EditorPanelable{
             ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
             JSONObject clientJson = new JSONObject(writer.writeValueAsString(client));
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newClient = dbClient.callProcedureAndGetAsJson("general_insert_update", DB_TABLE_NAME, dbClient.getLang(), clientJson).getJSONObject(0);
+            JSONObject newClient = dbClient.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbClient.getLang(), clientJson).getJSONObject(0);
             
             System.out.println("save client data: " + newClient.toString());
             

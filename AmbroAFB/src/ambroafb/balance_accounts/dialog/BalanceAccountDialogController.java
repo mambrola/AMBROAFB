@@ -69,7 +69,7 @@ public class BalanceAccountDialogController implements Initializable {
         this.balAccount = balAccount;
         if (balAccount != null){
             balAccountCode.textProperty().bindBidirectional(balAccount.balAccProperty());
-            balAccountName.textProperty().bindBidirectional(balAccount.currDescripProperty());
+            balAccountName.textProperty().bindBidirectional(balAccount.descripProperty());
             actPassChecker.selectedProperty().bindBidirectional(balAccount.actPasProperty());
             actPassChecker.indeterminateProperty().bindBidirectional(balAccount.indeterminateProperty());
         }

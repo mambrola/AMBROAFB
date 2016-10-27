@@ -271,7 +271,7 @@ public class License extends EditorPanelable {
             ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
             JSONObject clientJson = new JSONObject(writer.writeValueAsString(license));
             DBClient dbLicense = GeneralConfig.getInstance().getDBClient();
-            JSONObject newLicense = dbLicense.callProcedureAndGetAsJson("general_insert_update", DB_TABLE_NAME, dbLicense.getLang(), clientJson).getJSONObject(0);
+            JSONObject newLicense = dbLicense.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbLicense.getLang(), clientJson).getJSONObject(0);
             
             System.out.println("save license data: " + newLicense.toString());
             
