@@ -352,7 +352,7 @@ public class Product extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return getAbbreviation().concat(getDescrip());
+        return getAbbreviation() + " " + getDescrip();
     }
     
     @Override

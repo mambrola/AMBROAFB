@@ -630,14 +630,13 @@ public class Client extends EditorPanelable{
 
     @Override
     public String toStringForSearch(){
-        String clientPhones = this.phones.stream()
+        String clientPhones = getPhones().stream()
                                         .map((phoneNumber) -> phoneNumber.getNumber() + " ")
                                         .reduce("", String::concat);
 
-        String otherFieldsText = firstName.concat(" " + lastName.get())
-                                          .concat(" " + email.get()).concat(" " + address.get())
-                                          .concat(" " + city.get())
-                                 .get();
+        String otherFieldsText = getFirstName() + " " + getLastName() + " " + 
+                                 getEmail() + " " + getAddress() + " " + getCity();
+                
         return (otherFieldsText + clientPhones);
     }
     

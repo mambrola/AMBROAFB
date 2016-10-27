@@ -146,7 +146,7 @@ public class Country extends EditorPanelable{
 
     @Override
     public String toStringForSearch() {
-        return getCode().concat(getDescrip());
+        return getCode() + " " + getDescrip();
     }
     
     @Override
