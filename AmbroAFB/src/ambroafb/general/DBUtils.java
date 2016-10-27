@@ -115,7 +115,7 @@ public class DBUtils {
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             JSONObject newSourceFromDB = dbClient.insertUpdate(dbTableNameSingularForm, targetJson);
             
-            System.out.println("data for simple table from server: " + targetJson);
+            System.out.println("data for simple table from server: " + newSourceFromDB);
             
             return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
         } 
