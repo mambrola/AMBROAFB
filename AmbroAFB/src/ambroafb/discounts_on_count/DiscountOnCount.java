@@ -6,26 +6,15 @@
 package ambroafb.discounts_on_count;
 
 import ambro.AView;
-import ambroafb.general.GeneralConfig;
+import ambroafb.general.DBUtils;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
-import authclient.db.DBClient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+ import org.json.JSONObject;
 
 /**
  *
@@ -48,48 +37,22 @@ public class DiscountOnCount extends EditorPanelable {
     }
     
     // DB methods:
-    public static ArrayList<EditorPanelable> getAllFromDB(){
-        try {
-            String data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<DiscountOnCount>>() {});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
+    public static ArrayList<DiscountOnCount> getAllFromDB(){
+        JSONObject params = new ConditionBuilder().build();
+        return DBUtils.getObjectsListFromDB(DiscountOnCount.class, DB_TABLE_NAME, params);
     }
     
     public static DiscountOnCount getOneFromDB(int recId) {
-        try {
-            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
-            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, conditionBuilder.build());
-            
-            String currencyData = data.opt(0).toString();
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(currencyData, DiscountOnCount.class);
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+        JSONObject params = conditionBuilder.build();
+        return DBUtils.getObjectFromDB(DiscountOnCount.class, DB_TABLE_NAME, params);
     }
 
     public static DiscountOnCount saveOneToDB(DiscountOnCount discOnCount) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-            
-            JSONObject discOnCountJson = new JSONObject(writer.writeValueAsString(discOnCount));
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newDiscOnCount = dbClient.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbClient.getLang(), discOnCountJson).getJSONObject(0);
-            return mapper.readValue(newDiscOnCount.toString(), DiscountOnCount.class);
-        } catch (JsonProcessingException ex) {
-            Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | AuthServerException | JSONException ex) {
-            Logger.getLogger(DiscountOnCount.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        System.out.println("save one to DB???");
         return null;
     }
-
+    
     public static boolean deleteOneFromDB(int id) {
         System.out.println("delete from DB... ??");
         return false;

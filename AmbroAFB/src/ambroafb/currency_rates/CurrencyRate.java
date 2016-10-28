@@ -8,33 +8,22 @@ package ambroafb.currency_rates;
 import ambro.AView;
 import ambroafb.currencies.Currency;
 import ambroafb.currency_rates.filter.CurrencyRateFilterModel;
+import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.WhereBuilder;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
 import ambroafb.general.interfaces.TableColumnWidths;
-import authclient.db.DBClient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -45,7 +34,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class CurrencyRate extends EditorPanelable {
     
     @AView.Column(title = "%date", width = TableColumnWidths.DATE, styleClass = "textCenter")
-    private final StringProperty date;
+    private final StringProperty dateForColumn;
     @JsonIgnore
     private final ObjectProperty<LocalDate> dateProperty;
     
@@ -65,18 +54,19 @@ public class CurrencyRate extends EditorPanelable {
     
     public CurrencyRate(){
         dateProperty = new SimpleObjectProperty<>();
-        date = new SimpleStringProperty("");
+        dateForColumn = new SimpleStringProperty("");
         count = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>(new Currency());
         rate = new SimpleStringProperty("");
         
         dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+            System.out.println("in date listener");
             String dateStr = "";
             if (newValue != null){
                 dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(newValue);
             }
-            date.set(dateStr);
+            dateForColumn.set(dateStr);
         });
         
         currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
@@ -92,56 +82,54 @@ public class CurrencyRate extends EditorPanelable {
         }
     }
     
-    public static ArrayList<CurrencyRate> getFilteredFromDB(FilterModel model){
-        try {
-            CurrencyRateFilterModel currencyRateFilterModel = (CurrencyRateFilterModel) model;
-            WhereBuilder whereBuilder = new ConditionBuilder().where()
-                    .and("date", ">=", currencyRateFilterModel.getFromDateForDB())
-                    .and("date", "<=", currencyRateFilterModel.getToDateForDB());
-            if (!currencyRateFilterModel.isSelectedCurrencyALL()) {
-                whereBuilder.and("iso", "=", currencyRateFilterModel.getSelectedCurrency().getIso());
-            }
-            JSONObject params = whereBuilder.condition().build();
-            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
-
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<CurrencyRate>>(){});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
+    public static ArrayList<CurrencyRate> getFilteredFromDB(FilterModel model) {
+        CurrencyRateFilterModel currencyRateFilterModel = (CurrencyRateFilterModel) model;
+        WhereBuilder whereBuilder = new ConditionBuilder().where()
+                .and("date", ">=", currencyRateFilterModel.getFromDateForDB())
+                .and("date", "<=", currencyRateFilterModel.getToDateForDB());
+        if (!currencyRateFilterModel.isSelectedCurrencyALL()) {
+            whereBuilder.and("iso", "=", currencyRateFilterModel.getSelectedCurrency().getIso());
         }
-        return null;
+        JSONObject params = whereBuilder.condition().build();
+        return DBUtils.getObjectsListFromDB(CurrencyRate.class, DB_VIEW_NAME, params);
     }
 
     public static CurrencyRate getOneFromDB (int recId){
-        try {
-            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
-            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, conditionBuilder.build());
-            String currencyData = data.opt(0).toString();
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(currencyData, CurrencyRate.class);
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+        JSONObject params = conditionBuilder.build();
+        return DBUtils.getObjectFromDB(CurrencyRate.class, DB_VIEW_NAME, params);
+        
+//        try {
+//            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+//            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, conditionBuilder.build());
+//            String currencyData = data.opt(0).toString();
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(currencyData, CurrencyRate.class);
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
     }
     
     public static CurrencyRate saveOneToDB(CurrencyRate currencyRate){
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-            
-            System.out.println("currencyRate. saveOneToDB. writer.writeValueAsString(currencyRate): " + writer.writeValueAsString(currencyRate));
-            
-            JSONObject rateJson = new JSONObject(writer.writeValueAsString(currencyRate));
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newRate = dbClient.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbClient.getLang(), rateJson).getJSONObject(0);
-            return mapper.readValue(newRate.toString(), CurrencyRate.class);
-        } catch (JsonProcessingException ex) {
-            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | AuthServerException | JSONException ex) {
-            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        if (currencyRate == null) return null;
+        return DBUtils.saveObjectToDBSimple(currencyRate, DB_TABLE_NAME);
+//        try {
+//            ObjectMapper mapper = new ObjectMapper();
+//            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+//            
+//            System.out.println("currencyRate. saveOneToDB. writer.writeValueAsString(currencyRate): " + writer.writeValueAsString(currencyRate));
+//            
+//            JSONObject rateJson = new JSONObject(writer.writeValueAsString(currencyRate));
+//            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+//            JSONObject newRate = dbClient.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbClient.getLang(), rateJson).getJSONObject(0);
+//            return mapper.readValue(newRate.toString(), CurrencyRate.class);
+//        } catch (JsonProcessingException ex) {
+//            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException | AuthServerException | JSONException ex) {
+//            Logger.getLogger(CurrencyRate.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
     }
     
     public static boolean deleteOneFromDB(int recId){
@@ -169,8 +157,15 @@ public class CurrencyRate extends EditorPanelable {
     
     
     // Getters:
+    @JsonIgnore
+    public String getDateColumn(){
+        return dateForColumn.get();
+    }
+    
     public String getDate() {
-        return date.get();
+        System.out.println("dateProp: " + dateProperty);
+        System.out.println("dateProp.get(): " + dateProperty.get());
+        return (dateProperty.get() == null) ? "" : dateProperty.get().toString();
     }
     
     public int getCount(){
@@ -188,6 +183,8 @@ public class CurrencyRate extends EditorPanelable {
     // Setters:
     public void setDate(String date) {
         dateProperty.set(DateConverter.getInstance().parseDate(date));
+        System.out.println("ki mara date xo daeseta ?? date from json: " + date);
+        System.out.println("date axla: " + dateProperty.get());
     }
     
     public void setCount(int count){

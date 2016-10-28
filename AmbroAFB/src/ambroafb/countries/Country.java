@@ -6,24 +6,17 @@
 package ambroafb.countries;
 
 import ambro.AView;
-import ambroafb.general.GeneralConfig;
+import ambroafb.general.DBUtils;
 import ambroafb.general.interfaces.EditorPanelable;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -58,15 +51,8 @@ public class Country extends EditorPanelable{
     }
     
     public static List<Country> getAllFromDB() {
-        try {
-            String data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, new ConditionBuilder().build()).toString();
-            System.out.println("country data: " + data);
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<Country>>() {});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Country.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
+        JSONObject params =  new ConditionBuilder().build();
+        return DBUtils.getObjectsListFromDB(Country.class, DB_TABLE_NAME, params);
     }
     
     public static Country getOneFromDB(int recId) {
@@ -80,15 +66,7 @@ public class Country extends EditorPanelable{
     }
     
     private static Country getOneFromDBHelper(ConditionBuilder conditionBuilder){
-        try {
-            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_TABLE_NAME, conditionBuilder.build());
-            String countryData = data.opt(0).toString();
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(countryData, Country.class);
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Country.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        return DBUtils.getObjectFromDB(Country.class, DB_TABLE_NAME, conditionBuilder.build());
     }
 
     // Properties:

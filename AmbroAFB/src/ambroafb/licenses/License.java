@@ -8,28 +8,19 @@ package ambroafb.licenses;
 import ambroafb.licenses.helper.LicenseStatus;
 import ambro.AView;
 import ambroafb.clients.Client;
+import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.licenses.filter.LicenseFilterModel;
 import ambroafb.products.Product;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
-import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -40,8 +31,6 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -160,18 +149,20 @@ public class License extends EditorPanelable {
     
     // DB methods:
     public static ArrayList<License> getAllFromDB(){
-        try {
-            JSONObject params = new ConditionBuilder().build();
-            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
-            
-            System.out.println("licenses data: " + data);
-            
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<License>>() {});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
+        JSONObject params = new ConditionBuilder().build();
+        return DBUtils.getObjectsListFromDB(License.class, DB_VIEW_NAME, params);
+        
+//        try {
+//            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
+//            
+//            System.out.println("licenses data: " + data);
+//            
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(data, new TypeReference<ArrayList<License>>() {});
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return new ArrayList<>();
     }
     
     public static ArrayList<License> getFilteredFromDB(FilterModel model) {
@@ -204,84 +195,98 @@ public class License extends EditorPanelable {
             whereBuilder = whereBuilder.and("additional_days", "=", 0);
         }
         
-        try {
-            JSONObject params = whereBuilder.condition().build();
-            System.out.println("license filtered params: " + params);
-            
-            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
-            
-            System.out.println("license filtered data: " + data);
-            
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<License>>() {});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
+        JSONObject params = whereBuilder.condition().build();
+        return DBUtils.getObjectsListFromDB(License.class, DB_VIEW_NAME, params);
+        
+//        try {
+//            JSONObject params = whereBuilder.condition().build();
+//            System.out.println("license filtered params: " + params);
+//            
+//            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
+//            
+//            System.out.println("license filtered data: " + data);
+//            
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(data, new TypeReference<ArrayList<License>>() {});
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return new ArrayList<>();
     }
 
     
     public static ArrayList<LicenseStatus> getAllLicenseStatusFromDB(){
-        try {
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            String data = dbClient.select(DB_STATUSES_TABLE_NAME, new ConditionBuilder().build()).toString();
-            System.out.println("license status data: " + data);
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<LicenseStatus>>() {});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(LicenseStatus.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
+        JSONObject params = new ConditionBuilder().build();
+        return DBUtils.getObjectsListFromDB(LicenseStatus.class, DB_STATUSES_TABLE_NAME, params);
+        
+//        try {
+//            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+//            String data = dbClient.select(DB_STATUSES_TABLE_NAME, new ConditionBuilder().build()).toString();
+//            System.out.println("license status data: " + data);
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(data, new TypeReference<ArrayList<LicenseStatus>>() {});
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(LicenseStatus.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return new ArrayList<>();
     }
     
     public static LicenseStatus getLicenseStatusFromDB(int licenseStatusId){
-        try {
-            JSONObject params = new ConditionBuilder().where().and("license_status_id", "=", licenseStatusId).condition().build();
-            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_STATUSES_TABLE_NAME, params);
-            System.out.println("one status data: " + data);
-            String statusData = data.opt(0).toString();
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(statusData, LicenseStatus.class);
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(LicenseStatus.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("license_status_id", "=", licenseStatusId).condition();
+        JSONObject params = conditionBuilder.build();
+        return DBUtils.getObjectFromDB(LicenseStatus.class, DB_STATUSES_TABLE_NAME, params);
+        
+//        try {
+//            JSONObject params = new ConditionBuilder().where().and("license_status_id", "=", licenseStatusId).condition().build();
+//            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_STATUSES_TABLE_NAME, params);
+//            System.out.println("one status data: " + data);
+//            String statusData = data.opt(0).toString();
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(statusData, LicenseStatus.class);
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(LicenseStatus.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
     }
     
     public static License getOneFromDB(int recId){
-        try {
-            JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
-            JSONArray clientResult = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params);
-            String data = clientResult.optJSONObject(0).toString();
-            
-            System.out.println("one license data: " + data);
-            
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, License.class);    
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
+        return DBUtils.getObjectFromDB(License.class, DB_TABLE_NAME, params);
+
+//        try {
+//            JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
+//            JSONArray clientResult = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params);
+//            String data = clientResult.optJSONObject(0).toString();
+//            
+//            System.out.println("one license data: " + data);
+//            
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(data, License.class);    
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
     }
     
     public static License saveOneToDB(License license){
         if (license == null) return null;
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-            JSONObject clientJson = new JSONObject(writer.writeValueAsString(license));
-            DBClient dbLicense = GeneralConfig.getInstance().getDBClient();
-            JSONObject newLicense = dbLicense.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbLicense.getLang(), clientJson).getJSONObject(0);
-            
-            System.out.println("save license data: " + newLicense.toString());
-            
-            return mapper.readValue(newLicense.toString(), License.class);
-        } catch (JsonProcessingException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | AuthServerException | JSONException ex) {
-            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        return DBUtils.saveObjectToDB("license", DB_TABLE_NAME);
+//        try {
+//            ObjectMapper mapper = new ObjectMapper();
+//            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+//            JSONObject clientJson = new JSONObject(writer.writeValueAsString(license));
+//            DBClient dbLicense = GeneralConfig.getInstance().getDBClient();
+//            JSONObject newLicense = dbLicense.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbLicense.getLang(), clientJson).getJSONObject(0);
+//            
+//            System.out.println("save license data: " + newLicense.toString());
+//            
+//            return mapper.readValue(newLicense.toString(), License.class);
+//        } catch (JsonProcessingException ex) {
+//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException | AuthServerException | JSONException ex) {
+//            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
     }
     
     public static boolean deleteFromDB(int recId){

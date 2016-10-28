@@ -258,7 +258,7 @@ public class Client extends EditorPanelable{
 
     public static Client saveOneToDB(Client client) {
         if (client == null) return null;
-        return DBUtils.saveObjectToDBSimple(client, "client");
+        return DBUtils.saveObjectToDB(client, "client");
     }
 
     public static boolean deleteOneFromDB(int id) {

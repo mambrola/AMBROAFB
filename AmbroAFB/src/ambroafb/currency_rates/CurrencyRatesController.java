@@ -71,6 +71,7 @@ public class CurrencyRatesController implements Initializable {
     }
 
     public EditorPanelController getEditorPanelController() {
+        System.out.println("pirvelad");
         return editorPanelController;
     }
     

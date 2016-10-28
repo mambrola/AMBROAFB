@@ -59,6 +59,7 @@ public class ProductSpecific {
     }
     
     public boolean equals(ProductSpecific prodSpecific){
-        return this.getRecId() == prodSpecific.getRecId() && this.getDescrip().equals(prodSpecific.getDescrip());
+        return  this.getProductSpecificId() == prodSpecific.getProductSpecificId() &&
+                this.getDescrip().equals(prodSpecific.getDescrip());
     }
 }

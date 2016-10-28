@@ -64,7 +64,6 @@ public class CurrencyRateDialogController implements Initializable {
         Utils.validateTextFieldContentListener(count, "(^[1][0]*)?");
         Utils.validateTextFieldContentListener(rate, "(^0|[1-9][0-9]*)?([.]|[.][0-9]{1,4})?");
         currencies.setShowCategoryALL(false);
-//        currencies.removeCurrency("GEL");
         permissionToClose = true;
     }
 

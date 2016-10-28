@@ -75,19 +75,18 @@ public class DBUtils {
     
     /**
      * The static function saves one element to DB and gets appropriate entry from DB.
-     * Note: If this element is new for DB, then its DB id will be 0. 
+     * Note: If this element is new for DB, then it has not DB id. 
      * So after this function the element will has every old value and a DB id too.
      * @param <T>
      * @param source The element which must save to DB.
-     * @param dbStoredProcName The stored procedure name in DB.
-     * @param dbTableName The table or view name in DB.
+     * @param dbTableName The table name in DB.
      * @return 
      */
-    public static <T> T saveObjectToDB(Object source, String dbStoredProcName, String dbTableName){
+    public static <T> T saveObjectToDBSimple(Object source, String dbTableName){
         try {
             JSONObject targetJson = Utils.getJSONFromClass(source);
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newSourceFromDB = dbClient.callProcedureAndGetAsJson(dbStoredProcName, dbTableName, dbClient.getLang(), targetJson).getJSONObject(0);
+            JSONObject newSourceFromDB = dbClient.callProcedureAndGetAsJson("general_insert_update_simple", dbTableName, dbClient.getLang(), targetJson).getJSONObject(0);
             
             System.out.println("save " + source.getClass() + " data: " + newSourceFromDB.toString());
             
@@ -100,12 +99,14 @@ public class DBUtils {
     
     /**
      * The static function saves element into DB.
+     * Note: If this element is new for DB, then it has not DB id. 
+     * So after this function the element will has every old value and a DB id too.
      * @param <T>
      * @param source The element which must save to DB.
      * @param dbTableNameSingularForm The DB table name in singular form (ex: client, product ...)
      * @return 
      */
-    public static <T> T saveObjectToDBSimple(Object source, String dbTableNameSingularForm){
+    public static <T> T saveObjectToDB(Object source, String dbTableNameSingularForm){
         try {
             JSONObject targetJson = Utils.getJSONFromClass(source);
             
