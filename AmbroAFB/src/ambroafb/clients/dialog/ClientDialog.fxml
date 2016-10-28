@@ -103,7 +103,7 @@
                     </HBox> 
                     <HBox   styleClass="oneThirds">
                         <VBox styleClass="couple">
-                            <Label text="%client_status" /> 
+                            <Label text="%client_status" styleClass="validationMessage" /> 
                             <ComboBox fx:id="statuses" />
                         </VBox>
                     </HBox>

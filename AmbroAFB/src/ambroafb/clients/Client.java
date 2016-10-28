@@ -23,6 +23,7 @@ import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -90,6 +91,7 @@ public class Client extends EditorPanelable{
     private final ObservableList<Phone> phones;
     
     @AView.Column(title = "%client_status", width = "100", styleClass = "textCenter")
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private final StringProperty statusDescrip;
     @JsonIgnore
     private final ObjectProperty<ClientStatus> clientStatus;
@@ -102,6 +104,7 @@ public class Client extends EditorPanelable{
     private final StringExpression fullAddress;
 
     @AView.Column(title = "%country", width = "50", styleClass = "textCenter")
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private final SimpleStringProperty countryCode;
     @JsonIgnore
     private final ObjectProperty<Country> country;
@@ -256,27 +259,6 @@ public class Client extends EditorPanelable{
     public static Client saveOneToDB(Client client) {
         if (client == null) return null;
         return DBUtils.saveObjectToDBSimple(client, "client");
-//        try {
-//            ObjectMapper mapper = new ObjectMapper();
-//            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-//            JSONObject clientJson = new JSONObject(writer.writeValueAsString(client));
-//            
-//            System.out.println("one client data to DB: " + new JSONObject(writer.writeValueAsString(client)));
-//            
-//            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-//            JSONObject newClient = dbClient.insertUpdate("client", clientJson);
-//            
-//            System.out.println("client data from DB: " + newClient.toString());
-//            
-//            return mapper.readValue(newClient.toString(), Client.class);
-//        } 
-//        catch (JsonProcessingException ex) {
-//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-//        } 
-//        catch (IOException | AuthServerException | JSONException ex) {
-//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return null;
     }
 
     public static boolean deleteOneFromDB(int id) {
@@ -292,6 +274,7 @@ public class Client extends EditorPanelable{
 
     
     //Properties getters:
+    @JsonIgnore
     public String getCreatedDate(){
         return createdDate.get(); // getCreatedDateAsObj().toString(); // for class to json
     }
@@ -404,6 +387,9 @@ public class Client extends EditorPanelable{
         return clientStatus.get().getClientStatusId();
     }
     
+    // for sending: DB json need key name 'descrip' statusDescrip
+    // for receiving: json contains key name 'statusDescrip', so we need setStatusDescrip method.
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getDescrip(){
         return clientStatus.get().getDescrip();
     }

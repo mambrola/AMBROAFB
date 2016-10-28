@@ -70,13 +70,13 @@ public class ClientDialogController implements Initializable {
     
     @FXML @ContentNotEmpty
     private CountryComboBox country;
+    @FXML @ContentNotEmpty
+    private ComboBox<ClientStatus> statuses;
     // end required nodes.
     
     
     @FXML
     private TextField fax, zipCode, city, www;
-    @FXML
-    private ComboBox<ClientStatus> statuses;
     @FXML
     private DialogOkayCancelController okayCancelController;
     @FXML

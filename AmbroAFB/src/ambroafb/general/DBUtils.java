@@ -5,16 +5,15 @@
  */
 package ambroafb.general;
 
-import ambroafb.clients.Client;
 import ambroafb.licenses.License;
 import authclient.AuthServerException;
 import authclient.db.DBClient;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Alert;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -119,10 +118,9 @@ public class DBUtils {
             
             return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
         } 
-        catch (JsonProcessingException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | AuthServerException ex) {
+        catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAlert();
         }
         return null;
     }

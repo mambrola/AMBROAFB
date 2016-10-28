@@ -332,7 +332,9 @@ public class Utils {
 
         Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
         Object value = typeAndContent[1];
-        if (annotation.value() && (value == null || value.toString().isEmpty())) {
+        
+        // case of comboBoxes value may contains tab or spaces so we need to trim the value.
+        if (annotation.value() && (value == null || value.toString().trim().isEmpty())) {
             changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
             result = false;
         } else {
@@ -437,31 +439,30 @@ public class Utils {
         return result;
     }
 
-    private static Object[] getNodesTypeAndContent(Field field, Object classObject) {
+    private static Object[] getNodesTypeAndContent(Field field, Object ownerClassObject) {
         Object[] results = new Object[2];
         try {
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
-            
+
             if (field.getType().equals(TextField.class)) {
-                TextField textField = (TextField) field.get(classObject);
+                TextField textField = (TextField) field.get(ownerClassObject);
                 results[0] = textField;
                 results[1] = textField.getText();
             }
             else if (field.getType().equals(ADatePicker.class)){
-                ADatePicker datePicker = (ADatePicker) field.get(classObject);
+                ADatePicker datePicker = (ADatePicker) field.get(ownerClassObject);
                 results[0] = datePicker;
                 results[1] = datePicker.getEditor().getText();
             }
-            // ?? gaertiandeba qvedastan
             else if (field.getType().equals(MapEditorComboBox.class)){
-                MapEditorComboBox mapEditor = (MapEditorComboBox)field.get(classObject);
+                MapEditorComboBox mapEditor = (MapEditorComboBox)field.get(ownerClassObject);
                 results[0] = mapEditor;
                 results[1] = mapEditor.getEditor().getText();
             }
             // (field.getType().equals(ComboBox.class) || field.getType().equals(CurrencyComboBox.class))
             else if (field.getType().toString().contains("ComboBox")) {
-                ComboBox comboBox = (ComboBox) field.get(classObject);
+                ComboBox comboBox = (ComboBox) field.get(ownerClassObject);
                 results[0] = comboBox;
                 results[1] = comboBox.getValue();
             }
