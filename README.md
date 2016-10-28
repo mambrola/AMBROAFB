@@ -54,7 +54,7 @@ Accounting for Busines
 * (-) Utils კლასში არასაჭირო მეთოდების ამოშლა ან გატანა სხვა კლასებში (მაგ. SceneUtils-ში იყოს Scene-თან დაკავშირებული მეთოდები)
 * (+) MVS პატერნის გამოყენება Filter-ში
 * (|) ATableView-ს contextMenu-დან იყოს შესაძლებლობა რომელ სვეტზეც ვდგავართ იმის content-ის alignment-ი ვცვალოთ
-* (+) recId-ის ვერ ცნობს callProcedureAndGetAsJson, წამოღებისას ცნობს (getDBClient().select("discounts_on_licenses_count") და ჩაწერისას ვერა. (პასუხი: general-insert-update-simple უნდა გამოვიძახოთ მაშინ როცა გვინდა ჩავდოთ მარტივი ობიექტები და მათი descrip-ები (არა whole view-ს მოქნეები), რთულ შემთხვევაში კონკრეტულ ობიექტს აქვს თავის ცამატების პროცედურა)
+* (+) recId-ის ვერ ცნობს callProcedureAndGetAsJson, წამოღებისას ცნობს (getDBClient().select("discounts_on_licenses_count") და ჩაწერისას ვერა. (პასუხი: general-insert-update-simple უნდა გამოვიძახოთ მაშინ როცა გვინდა ჩავდოთ ობიექტები რომლებიც მხოლოდ ერთ ცხრილით შემოიფარგლებიან და სხვა ცხრილშიც არ აქვთ რაიმე ველი, რთულ შემთხვევაში კონკრეტულ ობიექტს აქვს თავის ჩამატების პროცედურა, თუმცა DBClient.insertUpdate უზუნველყოფს შესაბამისი procedur-ის გამოძახებას)
 * (+) DBUtils რომელიც პასუხისმგებელი იქნება DBService-ისთან ურთიერთობაზე
 * (+) currency-ის განმეორებადი კოდი ყველგან სადაც iso string მოდის ბაზიდან (მაგ. CurrencyRate). მოგვარება -> Product კლასში
 * (+) StagesContainer.getPathForStage შესაცვლელია getPathForStage(owner, stageName)
