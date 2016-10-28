@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.clients;
+package ambroafb.configuration;
 
+import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
@@ -15,32 +16,31 @@ import javafx.stage.WindowEvent;
 
 /**
  *
- * @author murman
+ * @author dato
  */
-public class Clients extends Stage {
+public class Configuration extends Stage {
     
-    private ClientsController clientsController;
+    private final ConfigurationController configController;
     
-    public Clients(Stage owner) {
+    public Configuration(Stage owner){
         StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
         
-        Scene scene = SceneUtils.createScene("/ambroafb/clients/Clients.fxml", null);
-        clientsController = (ClientsController) scene.getProperties().get("controller");
+        Scene scene = SceneUtils.createScene(Names.CONFIGURATION_FXML, null);
+        configController = (ConfigurationController) scene.getProperties().get("controller");
         this.setScene(scene);
-        this.initOwner(owner);  
+        this.initOwner(owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-            if(event != null) event.consume();
+            configController.getExitButton().getOnAction().handle(null);
+            if (event != null) event.consume();
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
         StageUtils.followChildTo(owner, (Stage)this);
-        StageUtils.stopStageWidthDecrease((Stage)this, () -> clientsController.getEditorPanelController().getPanelMinWidth());
         StagesContainer.setSizeFor((Stage)this);
     }
     
-    public ClientsController getClientsController(){
-        return clientsController;
+    public ConfigurationController getConfigurationController(){
+        return configController;
     }
 }

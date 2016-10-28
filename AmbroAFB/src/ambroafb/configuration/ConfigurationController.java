@@ -5,21 +5,15 @@
  */
 package ambroafb.configuration;
 
-import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
@@ -33,6 +27,9 @@ public class ConfigurationController implements Initializable {
 
     @FXML
     private Button restart;
+    
+    @FXML
+    private Button exit;
 
     @FXML
     private void restart() {
@@ -58,5 +55,9 @@ public class ConfigurationController implements Initializable {
                 restart.setText(conf.getTitleForLanguage("needs_restart", newValue));
             }
         });
+    }
+    
+    public Button getExitButton(){
+        return exit;
     }
 }

@@ -8,6 +8,7 @@ package ambroafb;
 import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Clients;
 import ambroafb.clients.filter.ClientFilter;
+import ambroafb.configuration.Configuration;
 import ambroafb.countries.Countries;
 import ambroafb.currencies.Currencies;
 import ambroafb.currency_rates.CurrencyRates;
@@ -84,18 +85,16 @@ public class MainController implements Initializable {
     
     @FXML
     private void mainConfig(ActionEvent event) {
-//        try{
-//            Stage stage = Utils.createStage(
-//                    Names.CONFIGURATION_FXML, 
-//                    config.getTitleFor(Names.CONFIGURATION_TITLE), 
-//                    Names.CONFIGURATION_LOGO,
-//                    AmbroAFB.mainStage
-//            );
-//            stage.show();
-//        } catch(IOException ex){
-//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Configuration");
-//            alert.showAlert();
-//        }
+        Stage configStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Configuration.class.getSimpleName());
+        
+        if (configStage == null  || !configStage.isShowing()){
+            Configuration configuration = new Configuration(AmbroAFB.mainStage);
+            configuration.show();
+        }
+        else {
+            configStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, configStage);
+        }
     }
     
     @FXML
