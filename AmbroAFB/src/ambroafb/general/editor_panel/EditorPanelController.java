@@ -233,7 +233,6 @@ public class EditorPanelController implements Initializable {
     }
     
     public Button getExitButton(){
-        System.out.println("meoed");
         return exit;
     }
     

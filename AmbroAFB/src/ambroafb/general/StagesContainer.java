@@ -197,7 +197,6 @@ public class StagesContainer {
      * @return True if current stage must close, false otherwise.
      */
     public static boolean closeStageWithChildren(Stage currStage) {
-        System.out.println("mesamed");
         boolean closePermission = true;
         String currStagePath = (String) bidmap.getKey(currStage);
         List<String> childrenPath = getFirstLevelChildrenFor(currStagePath);

@@ -30,7 +30,6 @@ public class ExitButtonController implements Initializable {
         StagesContainer.saveSizeFor(stage);
         StagesContainer.closeStageWithChildren(stage);
         StagesContainer.removeByStage(stage);
-        System.out.println("meotxed");
     }
 
     /**

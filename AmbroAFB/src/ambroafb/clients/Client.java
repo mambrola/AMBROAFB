@@ -233,7 +233,6 @@ public class Client extends EditorPanelable{
             whereBuilder.and("is_jur", "=", clientFilterModel.isJuridicalSelected() ? 1 : 0);
         }
         if (!clientFilterModel.isRezidentIndeterminate()) {
-            System.out.println("rezideeeeent: " + clientFilterModel.isRezidentSelected());
             whereBuilder.and("is_rezident", "=", clientFilterModel.isRezidentSelected() ? 1 : 0);
         }
         if (!clientFilterModel.isSelectedCountryALL()){
@@ -248,6 +247,7 @@ public class Client extends EditorPanelable{
         }
         
         JSONObject params = whereBuilder.condition().build();
+        System.out.println("filter params: " + params);
         return DBUtils.getObjectsListFromDB(Client.class, DB_VIEW_NAME, params);
     }
     

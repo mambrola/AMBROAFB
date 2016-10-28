@@ -8,25 +8,18 @@ package ambroafb.products;
 import ambro.ANodeSlider;
 import ambro.AView;
 import ambroafb.currencies.Currency;
+import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -42,8 +35,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -99,17 +90,16 @@ public class Product extends EditorPanelable {
         remark = new SimpleStringProperty("");
         specific = new SimpleIntegerProperty();
         specificDescrip = new SimpleStringProperty("");
-        productSpecific = new SimpleObjectProperty<>();
+        productSpecific = new SimpleObjectProperty<>(new ProductSpecific());
         price = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>(new Currency());
         discounts = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
         
-        ProductSpecific spec = new ProductSpecific();
-        productSpecific.set(spec);
         productSpecific.addListener((ObservableValue<? extends ProductSpecific> observable, ProductSpecific oldValue, ProductSpecific newValue) -> {
             if (newValue != null){
+                System.out.println("product specific listener");
                 specific.set(newValue.getRecId());
                 specificDescrip.set(newValue.getDescrip());
             }
@@ -130,60 +120,76 @@ public class Product extends EditorPanelable {
     
     // DBService methods:
     public static ArrayList<Product> getAllFromDB (){
-        try {
-            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().build()).toString();
-            System.out.println("products data: " + data);
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<Product>>() {});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
+        JSONObject params = new ConditionBuilder().build();
+        return DBUtils.getObjectsListFromDB(Product.class, DB_VIEW_NAME, params);
+        
+//        try {
+//            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, new ConditionBuilder().build()).toString();
+//            System.out.println("products data: " + data);
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(data, new TypeReference<ArrayList<Product>>() {});
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return new ArrayList<>();
     }
     
     
     public static ArrayList<ProductSpecific> getAllSpecificsFromDB(){
-        try {
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            ConditionBuilder condition = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition();
-            String data = GeneralConfig.getInstance().getDBClient().select(DB_SPECIFIC_TABLE_NAME, condition.build()).toString();
-            System.out.println("products specific data: " + data);
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<ProductSpecific>>() {});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        ConditionBuilder condition = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition();
+        JSONObject params = condition.build();
+        return DBUtils.getObjectsListFromDB(ProductSpecific.class, DB_SPECIFIC_TABLE_NAME, params);
+        
+//        try {
+//            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+//            ConditionBuilder condition = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition();
+//            String data = GeneralConfig.getInstance().getDBClient().select(DB_SPECIFIC_TABLE_NAME, condition.build()).toString();
+//            System.out.println("products specific data: " + data);
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(data, new TypeReference<ArrayList<ProductSpecific>>() {});
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return new ArrayList<>();
     }
     
     public static Product getOneFromDB (int productId){
-        try {
-            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", productId).condition();
-            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, conditionBuilder.build());
-            String productData = data.opt(0).toString();
-            ObjectMapper mapper = new ObjectMapper();
-            Product product = mapper.readValue(productData, Product.class);
-            return product;
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", productId).condition();
+        JSONObject params = conditionBuilder.build();
+        return DBUtils.getObjectFromDB(Product.class, DB_VIEW_NAME, params);
+        
+//        try {
+//            ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", productId).condition();
+//            JSONArray data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, conditionBuilder.build());
+//            String productData = data.opt(0).toString();
+//            ObjectMapper mapper = new ObjectMapper();
+//            Product product = mapper.readValue(productData, Product.class);
+//            return product;
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
     }
     
     public static Product saveOneToDB(Product product){
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-            JSONObject productJson = new JSONObject(writer.writeValueAsString(product));
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newProduct = dbClient.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbClient.getLang(), productJson).getJSONObject(0);
-            return mapper.readValue(newProduct.toString(), Product.class);
-        } catch (JsonProcessingException ex) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | AuthServerException | JSONException ex) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        if (product == null) return null;
+        return DBUtils.saveObjectToDB(product, "product");
+        
+        
+//        try {
+//            ObjectMapper mapper = new ObjectMapper();
+//            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+//            JSONObject productJson = new JSONObject(writer.writeValueAsString(product));
+//            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+//            JSONObject newProduct = dbClient.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbClient.getLang(), productJson).getJSONObject(0);
+//            return mapper.readValue(newProduct.toString(), Product.class);
+//        } catch (JsonProcessingException ex) {
+//            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException | AuthServerException | JSONException ex) {
+//            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
     }
     
     public static boolean deleteOneFromDB(int productId){
@@ -213,11 +219,11 @@ public class Product extends EditorPanelable {
         return price;
     }
     
-    public ObjectProperty currencyProperty(){
+    public ObjectProperty<Currency> currencyProperty(){
         return currency;
     }
     
-    public ObjectProperty specificProperty(){
+    public ObjectProperty<ProductSpecific> specificProperty(){
         return productSpecific;
     }
     
@@ -243,9 +249,9 @@ public class Product extends EditorPanelable {
         return descrip.get();
     }
     
-    public String getRemark() {
-        return remark.get();
-    }
+//    public String getRemark() {
+//        return remark.get();
+//    }
     
     public int getSpecific(){
         return productSpecific.get().getRecId();
@@ -282,12 +288,14 @@ public class Product extends EditorPanelable {
     }
 
     public void setDescrip(String descrip) {
+        
         this.descrip.set(descrip);
     }
     
-    public void setRemark(String remark) {
-        this.remark.set(remark);
-    }
+//    public void setRemark(String remark) {
+//        System.out.println("remark: " + remark);
+//        this.remark.set(remark);
+//    }
     
     public void setSpecific(int specific){
         this.productSpecific.get().setRecId(specific);
@@ -335,10 +343,10 @@ public class Product extends EditorPanelable {
         setAbbreviation(product.getAbbreviation());
         setFormer(product.getFormer());
         setDescrip(product.getDescrip());
-        setRemark(product.getRemark());
-        specificProperty().set(product.specificProperty().get());
-        //setSpecific(product.getSpecific());
-        //setSpecificDescip(product.getSpecificDescrip());
+//        setRemark(product.getRemark());
+//        specificProperty().set(product.specificProperty().get()); // mimtitebeli gaicvleba da copio ar iqneba
+        setSpecific(product.getSpecific());
+        setSpecificDescip(product.getSpecificDescrip());
         setPrice(product.getPrice());
         setIso(product.getIso());
         setIsActive(product.getIsActive());
@@ -378,10 +386,15 @@ public class Product extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Product productBackup = (Product) backup;
+        
+        System.out.println("this.specificProperty().get().equals(productBackup.specificProperty().get()) " + (this.specificProperty().get().equals(productBackup.specificProperty().get()) ));
+        System.out.println("this.specificProperty().get(): " + (this.specificProperty().get() ));
+        System.out.println("productBackup.specificProperty().get() " + (productBackup.specificProperty().get()) );
+        
         return  this.getAbbreviation().equals(productBackup.getAbbreviation()) &&
                 this.getFormer() == productBackup.getFormer() &&
                 this.getDescrip().equals(productBackup.getDescrip()) &&
-                this.getRemark().equals(productBackup.getRemark()) &&
+//                this.getRemark().equals(productBackup.getRemark()) &&
                 this.specificProperty().get().equals(productBackup.specificProperty().get()) &&
                 //this.getSpecificDescrip().equals(productBackup.getSpecificDescrip()) &&
                 this.getPrice() == productBackup.getPrice() &&
