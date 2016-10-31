@@ -14,20 +14,21 @@ import javafx.beans.property.StringProperty;
  *
  * @author dato
  */
-public class InvoiceReissuings {
+public class InvoiceStatus {
+    
     
     private int recId;
-    private final IntegerProperty invoiceReissuing_Id;
+    private final IntegerProperty invoiceStatusId;
     private String language;
     private final StringProperty descrip;
     
-    public InvoiceReissuings(){
-        invoiceReissuing_Id = new SimpleIntegerProperty(0);
+    public InvoiceStatus(){
+        invoiceStatusId = new SimpleIntegerProperty(0);
         descrip = new SimpleStringProperty("");
     }
     
-    public IntegerProperty invoiceReissuingIdProperty(){
-        return invoiceReissuing_Id;
+    public IntegerProperty invoiceStatusIdProperty(){
+        return invoiceStatusId;
     }
     
     public StringProperty descripProperty(){
@@ -39,8 +40,8 @@ public class InvoiceReissuings {
         return recId;
     }
     
-    public int getInvoiceReissuingId(){
-        return invoiceReissuing_Id.get();
+    public int getInvoiceStatusId(){
+        return invoiceStatusId.get();
     }
     
     public String getLanguage(){
@@ -56,8 +57,8 @@ public class InvoiceReissuings {
         this.recId = recId;
     }
     
-    public void setInvoiceReissuingId(int reissuingId){
-        this.invoiceReissuing_Id.set(reissuingId);
+    public void setInvoiceStatusId(int reissuingId){
+        this.invoiceStatusId.set(reissuingId);
     }
     
     public void setLanguage(String language){
@@ -73,8 +74,8 @@ public class InvoiceReissuings {
         return getDescrip();
     }
     
-    public boolean equals(InvoiceReissuings other){
-        return  this.getInvoiceReissuingId() == other.getInvoiceReissuingId() &&
+    public boolean equals(InvoiceStatus other){
+        return  this.getInvoiceStatusId() == other.getInvoiceStatusId() &&
                 this.getDescrip().equals(other.getDescrip());
     }
 }

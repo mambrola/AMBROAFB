@@ -9,7 +9,7 @@ import ambroafb.clients.Client;
 import ambroafb.clients.filter.ClientFilterModel;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
-import ambroafb.invoices.helper.InvoiceReissuings;
+import ambroafb.invoices.helper.InvoiceReissuing;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -26,7 +26,7 @@ import javafx.collections.ObservableList;
 public class InvoiceFilterModel extends FilterModel {
     
     private Client selectedClient;
-    private ObservableList<InvoiceReissuings> selectedReissuings;
+    private ObservableList<InvoiceReissuing> selectedReissuings;
     
     private static final String PREF_START_DATE_FROM_KEY = "invoices/filter/start_date_from";
     private static final String PREF_START_DATE_TO_KEY = "invoices/filter/start_date_to";
@@ -70,7 +70,7 @@ public class InvoiceFilterModel extends FilterModel {
         saveIntoPref(PREF_CHECKED_REISSUING_INDEXES_KEY, (checkedIndexes == null || checkedIndexes.isEmpty()) ? "[]" : checkedIndexes.toString());
     }
     
-    public void setCheckedReissuings(ObservableList<InvoiceReissuings> reissuings){
+    public void setCheckedReissuings(ObservableList<InvoiceReissuing> reissuings){
         selectedReissuings = reissuings;
     }
 
@@ -124,7 +124,15 @@ public class InvoiceFilterModel extends FilterModel {
         return new ArrayList<>();
     }
     
-    public ObservableList<InvoiceReissuings> getCheckedReissuings(){
+    public ObservableList<InvoiceReissuing> getCheckedReissuings(){
         return selectedReissuings;
+    }
+
+    public boolean isSelectedConcreteClient() {
+        return getIntFromPref(PREF_SELECTED_CLIENT_INDEX_KEY) > 0;
+    }
+    
+    public boolean hasSelectedReissuings(){
+        return (selectedReissuings != null && !selectedReissuings.isEmpty());
     }
 }

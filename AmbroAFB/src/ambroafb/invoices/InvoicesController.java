@@ -57,7 +57,9 @@ public class InvoicesController implements Initializable {
             masker.setVisible(true);
                 
             new Thread(() -> {
-                invoices.setAll(Invoice.getAllFromDB());
+                Invoice.getFilteredFromDB(model).stream().forEach((invoice) -> {
+                    invoices.add(invoice);
+                });
                 Platform.runLater(() -> {
                     masker.setVisible(false);
                     if (selectedIndex >= 0){

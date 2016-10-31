@@ -235,7 +235,7 @@ public class Client extends EditorPanelable{
         if (!clientFilterModel.isRezidentIndeterminate()) {
             whereBuilder.and("is_rezident", "=", clientFilterModel.isRezidentSelected() ? 1 : 0);
         }
-        if (!clientFilterModel.isSelectedCountryALL()){
+        if (clientFilterModel.isSelectedConcreteCountry()){
             whereBuilder.and("country_code", "=", clientFilterModel.getSelectedCountry().getCode());
         }
         if (clientFilterModel.hasSelectedStatuses()){
@@ -441,6 +441,18 @@ public class Client extends EditorPanelable{
     
     public ImageGalleryController getClientImageGallery(){
         return clientImageGallery;
+    }
+    
+    /**
+     * The method create short description of client by firstName, lastName and email.
+     * @param delimiter The sign between of data.
+     * @return The expression of client short information.
+     */
+    @JsonIgnore
+    public StringExpression getShortDescrip(String delimiter){
+        return  Utils.avoidNull(firstName).concat(delimiter)
+                    .concat(Utils.avoidNull(lastName)).concat(delimiter)
+                    .concat(Utils.avoidNull(email));
     }
     
 

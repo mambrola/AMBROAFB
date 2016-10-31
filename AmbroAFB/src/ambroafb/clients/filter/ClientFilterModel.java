@@ -152,8 +152,8 @@ public class ClientFilterModel extends FilterModel {
         return selectedStatuses;
     }
 
-    public boolean isSelectedCountryALL() {
-        return getIntFromPref(PREF_COUNTRY_KEY) == 0;
+    public boolean isSelectedConcreteCountry() {
+        return getIntFromPref(PREF_COUNTRY_KEY) > 0;
     }
     
     public boolean hasSelectedStatuses(){

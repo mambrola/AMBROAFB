@@ -16,7 +16,7 @@ import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.invoices.Invoice;
-import ambroafb.invoices.helper.InvoiceReissuings;
+import ambroafb.invoices.helper.InvoiceReissuing;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
@@ -40,7 +40,7 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
     @FXML
     private ClientComboBox clients;
     @FXML
-    private CheckComboBox<InvoiceReissuings> invoiceReissuings;
+    private CheckComboBox<InvoiceReissuing> invoiceReissuings;
     @FXML
     private FilterOkayCancelController okayCancelController;
     
