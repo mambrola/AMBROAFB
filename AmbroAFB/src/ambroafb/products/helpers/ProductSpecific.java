@@ -28,6 +28,14 @@ public class ProductSpecific {
         descrip = new SimpleStringProperty("");
     }
 
+    public IntegerProperty specificProperty(){
+        return productSpecificId;
+    }
+    
+    public StringProperty descripProperty(){
+        return descrip;
+    }
+    
     public int getRecId(){
         return recId;
     }

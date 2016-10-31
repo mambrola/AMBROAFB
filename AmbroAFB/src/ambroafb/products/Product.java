@@ -98,12 +98,14 @@ public class Product extends EditorPanelable {
         isActive = new SimpleBooleanProperty();
         
         productSpecific.addListener((ObservableValue<? extends ProductSpecific> observable, ProductSpecific oldValue, ProductSpecific newValue) -> {
-            if (newValue != null){
-                System.out.println("product specific listener");
-                specific.set(newValue.getRecId());
-                specificDescrip.set(newValue.getDescrip());
-            }
+//            if (newValue != null){
+//                System.out.println("product specific listener");
+//                specific.set(newValue.getRecId());
+//                specificDescrip.set(newValue.getDescrip());
+//            }
+            rebindSpecific();
         });
+        rebindSpecific();
         
         currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
             rebindIso();
@@ -115,6 +117,15 @@ public class Product extends EditorPanelable {
         iso.unbind();
         if (currency.get() != null){
             iso.bind(currency.get().isoProperty());
+        }
+    }
+    
+    private void rebindSpecific(){
+        specific.unbind();
+        specificDescrip.unbind();
+        if (productSpecific.get() != null){
+            specific.bind(productSpecific.get().specificProperty());
+            specificDescrip.bind(productSpecific.get().descripProperty());
         }
     }
     
