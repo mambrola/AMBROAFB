@@ -5,11 +5,65 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.*?>
+<?import ambro.*?>
+<?import ambroafb.clients.*?>
 
-<ambroafb.general.DialogPanel id="AnchorPane" 
-            xmlns:fx="http://javafx.com/fxml/1">
-    
-    <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
-        <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
-    </HBox>
+<ambroafb.general.DialogPanel   stylesheets="/styles/css/invoicefilter.css" 
+                                xmlns:fx="http://javafx.com/fxml/1">
+    <VBox fx:id="formPane" >
+        <children>
+            <HBox styleClass="w2">
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="startDateFrom" />
+                            <ADatePicker fx:id="startDateFrom" />
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label text="startDateTo" />
+                            <ADatePicker fx:id="startDateTo" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w2">
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="endDateFrom" />
+                            <ADatePicker fx:id="endDateFrom" />
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label text="endDateTo" />
+                            <ADatePicker fx:id="endDateTo" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w2" >
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%clients" />
+                            <ClientComboBox fx:id="clients" />
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label text="%invoice_reissuings" />
+                            <CheckComboBox fx:id="invoiceReissuings" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
 </ambroafb.general.DialogPanel>

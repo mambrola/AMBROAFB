@@ -5,6 +5,8 @@
  */
 package ambroafb.invoices.filter;
 
+import ambro.ADatePicker;
+import ambroafb.clients.ClientComboBox;
 import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -12,13 +14,19 @@ import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
+import ambroafb.general.okay_cancel.FilterOkayCancelController;
+import ambroafb.invoices.Invoice;
+import ambroafb.invoices.helper.InvoiceReissuings;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.json.JSONObject;
+import javafx.stage.WindowEvent;
+import org.controlsfx.control.CheckComboBox;
 
 /**
  *
@@ -26,9 +34,20 @@ import org.json.JSONObject;
  */
 public class InvoiceFilter extends Stage implements Filterable, Initializable {
 
-    private final JSONObject json;
     
-    private final FilterModel invoiceModel = null;
+    @FXML
+    private ADatePicker startDateFrom, startDateTo, endDateFrom, endDateTo;
+    @FXML
+    private ClientComboBox clients;
+    @FXML
+    private CheckComboBox<InvoiceReissuings> invoiceReissuings;
+    @FXML
+    private FilterOkayCancelController okayCancelController;
+    
+    private final InvoiceFilterModel invoiceFilterModel = new InvoiceFilterModel();
+    
+    public static final String DATE_BIGGER = "1970-01-01";
+    public static final String DATE_LESS = "9999-01-01";
     
     public InvoiceFilter(Stage owner){
         StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
@@ -40,25 +59,55 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
         this.initOwner(owner);
         this.setResizable(false);
         
-        json = new JSONObject();
+        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
+            okayCancelController.cancel(null);
+            if (event != null) event.consume();
+        });
         
         StageUtils.centerChildOf(owner, (Stage)this);
+        StageUtils.followChildTo(owner, (Stage)this);
     }
 
     @Override
     public FilterModel getResult() {
         showAndWait();
-        return invoiceModel;
+        return invoiceFilterModel;
     }
     
     @Override
     public void setResult(boolean isOk) {
-        
+        if (!isOk){
+            invoiceFilterModel.changeModelAsEmpty();
+        }
+        else {
+            startDateFrom.setEditingValue();
+            startDateTo.setEditingValue();
+            endDateFrom.setEditingValue();
+            endDateTo.setEditingValue();
+            
+            invoiceFilterModel.setStartDateFrom(startDateFrom.getValue());
+            invoiceFilterModel.setStartDateTo(startDateTo.getValue());
+            invoiceFilterModel.setEndDateFrom(endDateFrom.getValue());
+            invoiceFilterModel.setEndDateTo(endDateTo.getValue());
+            invoiceFilterModel.setSelectedClient(clients.getValue());
+            invoiceFilterModel.setSelectedClientIndex(clients.getSelectionModel().getSelectedIndex());
+            invoiceFilterModel.setCheckedReissuingsIndexes(invoiceReissuings.getCheckModel().getCheckedIndices());
+            invoiceFilterModel.setCheckedReissuings(invoiceReissuings.getCheckModel().getCheckedItems());
+        }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
         
+        startDateFrom.setValue(invoiceFilterModel.getStartDate(true));
+        startDateTo.setValue(invoiceFilterModel.getStartDate(false));
+        endDateFrom.setValue(invoiceFilterModel.getEndDate(true));
+        endDateTo.setValue(invoiceFilterModel.getEndDate(false));
+        clients.getSelectionModel().select(invoiceFilterModel.getSelectedClientIndex());
+        invoiceFilterModel.getCheckedReissuingsIndexes().stream().forEach((index) -> {
+            invoiceReissuings.getCheckModel().check(index);
+        });
     }
     
 }

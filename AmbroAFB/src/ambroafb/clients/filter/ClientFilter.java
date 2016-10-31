@@ -28,7 +28,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.controlsfx.control.CheckComboBox;
-import org.json.JSONObject;
 
 /**
  *
@@ -48,9 +47,8 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     
     private final ClientFilterModel clientFilterModel = new ClientFilterModel();
     
-    private JSONObject jSonResult;
-    public static final String DATE_BIGGER = "1970-01-01";
-    public static final String DATE_LESS = "9999-01-01";
+//    public static final String DATE_BIGGER = "1970-01-01";
+//    public static final String DATE_LESS = "9999-01-01";
     
     public ClientFilter(Stage owner) {
         StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);

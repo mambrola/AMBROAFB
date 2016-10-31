@@ -76,8 +76,8 @@ public class ClientFilterModel extends FilterModel {
         saveIntoPref(PREF_REZIDENT_INDETERMINATE_KEY, indeterminate);
     }
 
-    public void setSelectedStatusesIndexes(ObservableList<Integer> checkedIndices) {
-        saveIntoPref(PREF_SELECTED_STATUSES_KEY, (checkedIndices == null || checkedIndices.isEmpty()) ? "[]" : checkedIndices.toString());
+    public void setSelectedStatusesIndexes(ObservableList<Integer> checkedIndexes) {
+        saveIntoPref(PREF_SELECTED_STATUSES_KEY, (checkedIndexes == null || checkedIndexes.isEmpty()) ? "[]" : checkedIndexes.toString());
     }
     
     public void setSelectedStatuses(ObservableList<ClientStatus> checkedItems){
@@ -139,7 +139,7 @@ public class ClientFilterModel extends FilterModel {
         ObjectMapper mapper = new ObjectMapper();
         try {
             String indexes = getStringFromPref(PREF_SELECTED_STATUSES_KEY);
-            if (indexes != null){
+            if (indexes != null){  // for the first case, if pref not include appropriate key
                 return mapper.readValue(indexes, new TypeReference<ArrayList<Integer>>(){});
             }
         } catch (IOException ex) {

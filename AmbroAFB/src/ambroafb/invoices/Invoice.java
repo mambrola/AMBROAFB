@@ -7,14 +7,17 @@ package ambroafb.invoices;
 
 import ambro.AView;
 import ambroafb.general.AlertMessage;
+import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.invoices.helper.InvoiceReissuings;
 import authclient.AuthServerException;
+import authclient.db.ConditionBuilder;
+import authclient.db.DBClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +25,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
-import javafx.util.converter.LocalDateStringConverter;
+import org.json.JSONObject;
+
 
 /**
  *
@@ -65,10 +69,11 @@ public class Invoice extends EditorPanelable {
     @AView.Column(title = "%products", width = "200")
     private SimpleStringProperty products;
         
+    private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
     
-    private final DateTimeFormatter formater = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
-    private final DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
-    private final LocalDateStringConverter converter = new LocalDateStringConverter(formater, pattern);
+//    private final DateTimeFormatter formater = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+//    private final DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+//    private final LocalDateStringConverter converter = new LocalDateStringConverter(formater, pattern);
     
     public Invoice(){
         isPaid = new SimpleBooleanProperty();
@@ -109,6 +114,12 @@ public class Invoice extends EditorPanelable {
             Logger.getLogger(Invoice.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public static ArrayList<InvoiceReissuings> getAllIvoiceReissuingsesFromDB(){
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
+        return DBUtils.getObjectsListFromDB(InvoiceReissuings.class, DB_REISSUINGS_TABLE, params);
     }
     
     public static Invoice getOneFromDB (int invoiceId){
@@ -154,17 +165,17 @@ public class Invoice extends EditorPanelable {
         return licenses;
     }
     
-    public String getCreatedDate(){
-        return converter.toString(createdDate);
-    }
-
-    public String getBeginDate(){
-        return converter.toString(beginDate);
-    }
-    
-    public String getEndDate(){
-        return converter.toString(endDate);
-    }
+//    public String getCreatedDate(){
+//        return converter.toString(createdDate);
+//    }
+//
+//    public String getBeginDate(){
+//        return converter.toString(beginDate);
+//    }
+//    
+//    public String getEndDate(){
+//        return converter.toString(endDate);
+//    }
     
     public String getInvoiceNumber(){
         return invoiceNumber.get();
@@ -188,17 +199,17 @@ public class Invoice extends EditorPanelable {
         this.licenses = licenses;
     }
     
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = converter.fromString(createdDate);
-    }
-    
-    public void setBeginDate(String beginDate){
-        this.beginDate = converter.fromString(beginDate);
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = converter.fromString(endDate);
-    }
+//    public void setCreatedDate(String createdDate) {
+//        this.createdDate = converter.fromString(createdDate);
+//    }
+//    
+//    public void setBeginDate(String beginDate){
+//        this.beginDate = converter.fromString(beginDate);
+//    }
+//
+//    public void setEndDate(String endDate) {
+//        this.endDate = converter.fromString(endDate);
+//    }
     
     public void setInvoiceNumber(String invoiceNumber){
         this.invoiceNumber.set(invoiceNumber);
@@ -231,14 +242,15 @@ public class Invoice extends EditorPanelable {
         setLicenses(invoice.getLicenses());
         setStatus(invoice.getStatus());
         setInvoiceNumber(invoice.getInvoiceNumber());
-        setCreatedDate(invoice.getCreatedDate());
-        setBeginDate(invoice.getBeginDate());
-        setEndDate(invoice.getEndDate());
+//        setCreatedDate(invoice.getCreatedDate());
+//        setBeginDate(invoice.getBeginDate());
+//        setEndDate(invoice.getEndDate());
     }
 
     @Override
     public String toStringForSearch() {
-        return getInvoiceNumber().concat(getCreatedDate()).concat(getBeginDate()).concat(getEndDate());
+//        return getInvoiceNumber().concat(getCreatedDate()).concat(getBeginDate()).concat(getEndDate());
+        return "";
     }
 
     @Override

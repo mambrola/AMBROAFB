@@ -171,7 +171,12 @@ public class MainController implements Initializable {
             invoices.show();
             
             InvoiceFilter filter = new InvoiceFilter(invoices);
-            invoices.getInvoicesController().reAssignTable(filter.getResult());
+            FilterModel model = filter.getResult();
+            invoices.getInvoicesController().reAssignTable(model);
+            
+            if (model.isEmpty()){
+                invoices.close();
+            }
         }
         else {
             invoicesStage.requestFocus();
