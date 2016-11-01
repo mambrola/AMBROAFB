@@ -62,6 +62,7 @@ Accounting for Busines
 * (+) ბაზის სტატიკურ მეთოდებში კოპირების გამო error ex-ში ან სადმე შესაძლოა იყოს ჩარჩენილი სხვადასხვა კლასის class ცვლადი... (DBUtils მოაგვარებს ამ პრობლემას და ეს მეთოდები უფრო მოკლეები გახდებიან)
 * (+) product-ებში ზოგს მოაქვს ველი descrip და ასევე specificesrcip და ზოგს მხოლოდ specificDesrcip
 * (+) product-ების width დაპატარავებისას editorPanel-ის region-ის ადგილი უჩვეულოდ დიდა რჩება
+	+ less ფაილში ეწერა minWidth და maxWidth
 * (-) fxml, css, less ფაილები   (formPane_ზე Min და Max width_ები  // sheidzleba tavdapirvel zomas vusetavdit, tumca arc esaa sachiro)
 * (|) UML დიაგრამები
 * (-) Editorpanelable კლასების db მეთოდები ერთ სტილზე
