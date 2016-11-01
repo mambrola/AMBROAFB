@@ -1,0 +1,49 @@
+@import url("/styles/css/core.css");
+#formPane {
+  /*-fx-min-height: @formHeight;*/
+  /*-fx-max-height: @formHeight;*/
+  -fx-min-width: 830;
+  -fx-max-width: 830;
+  -fx-padding: 15;
+}
+.vContainer {
+  -fx-spacing: 15;
+}
+.label {
+  -fx-font-weight: bold;
+  -fx-font-size: 0.9em;
+  -fx-padding: 1 0 1 2;
+}
+.one > .couple {
+  -fx-pref-width: 800;
+}
+.oneHalf > .couple {
+  -fx-pref-width: 382.5;
+}
+.oneThirds > .couple {
+  -fx-pref-width: 243.33333333;
+}
+.couple > .combo-box {
+  -fx-max-width: 800;
+}
+.oneThirds {
+  -fx-pref-width: 521.66666667;
+}
+.oneHalf,
+.oneThirds {
+  -fx-spacing: 35;
+}
+/*.doubleHeight {
+    /*-fx-background-color: yellow;
+    /*-fx-pref-height: 4 * @formHeight / 9;
+}*/
+.button {
+  -fx-font-weight: bold;
+}
+*:disabled {
+  -fx-opacity: 0.9;
+}
+#imageGalleryPane {
+  -fx-min-height: 555;
+  -fx-max-height: 555;
+}

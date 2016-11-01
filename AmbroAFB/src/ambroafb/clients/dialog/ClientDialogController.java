@@ -205,7 +205,7 @@ public class ClientDialogController implements Initializable {
         @Override
         public void run() {
             try {
-                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getAuthClient().get(pathCities).getDataAsString());
+                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getDBClient().get(pathCities).getDataAsString());
                 List<String> citiesAsList = getListFromJSONArray(cities);
                 TextFields.bindAutoCompletion(  city,
                                                 (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter((cityName) ->

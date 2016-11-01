@@ -78,7 +78,7 @@ public class LoginController extends Stage implements Initializable {
         masker.setVisible(true);
         new Thread(() -> {
             try {
-                GeneralConfig.getInstance().getAuthClient(username.getText(), password.getText()).login();
+                GeneralConfig.getInstance().getDBClient(username.getText(), password.getText()).login();
                 loggedIn = true;
                 prefs.put(PREFS_USERNAME, username.getText());
                 Platform.runLater(() -> {

@@ -74,6 +74,16 @@ public class InvoiceStatus {
         return getDescrip();
     }
     
+    public void copyFrom(InvoiceStatus other) {
+        if (other != null) {
+            setInvoiceStatusId(other.getInvoiceStatusId());
+            setDescrip(other.getDescrip());
+
+            setRecId(other.getRecId());
+            setLanguage(other.getLanguage());
+        }
+    }
+    
     public boolean equals(InvoiceStatus other){
         return  this.getInvoiceStatusId() == other.getInvoiceStatusId() &&
                 this.getDescrip().equals(other.getDescrip());

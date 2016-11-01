@@ -7,38 +7,32 @@ package ambroafb.invoices;
 
 import ambro.AView;
 import ambroafb.clients.Client;
-import ambroafb.general.AlertMessage;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.invoices.filter.InvoiceFilterModel;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 import org.json.JSONObject;
 
 
@@ -59,10 +53,13 @@ public class Invoice extends EditorPanelable {
     @AView.Column(title = "%invoice_n", width = "100")
     private final SimpleStringProperty invoiceNumber;
     
-    
     @AView.Column(title = "%licenses", width = "100")
+    @JsonIgnore
+    private final StringProperty licensesDescript;
     private final ObservableList<LicenseShortData> licenses;
     
+    @AView.Column(title = "%clients", width = "100")
+    private final StringExpression clientDescrip;
     private final ObjectProperty<Client> clientObj;
     
     @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE)
@@ -78,23 +75,25 @@ public class Invoice extends EditorPanelable {
     private final ObjectProperty<LocalDate> revokedDateObj;
     
     @AView.Column(title = "%extra_discount", width = "30")
-    private final DoubleProperty additionalDiscount;
+    private final StringProperty additionalDiscountRate;
     
     @AView.Column(title = "%money_to_pay", width = "30")
-    private final DoubleProperty moneyToPay;
+    private final StringProperty moneyToPay;
+    
+    private final StringProperty moneyPaid;
     
     @AView.Column(title = "%vat", width = "30")
-    private final DoubleProperty vat;
+    private final StringProperty vat;
     
     @AView.Column(title = "%paid_part", width = "30")
-    private final DoubleProperty paidPart;
+    private final StringProperty paidPart;
     
     
     @AView.Column(title = "%invoice_reissuings", width = "50")
     private final ObjectProperty<InvoiceReissuing> reissuingObj;
     
     @AView.Column(title = "%invoice_status", width = "50")
-    private final ObjectProperty<InvoiceStatus> status;
+    private final ObjectProperty<InvoiceStatus> statusObj;
     
     
     private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
@@ -104,33 +103,48 @@ public class Invoice extends EditorPanelable {
     public Invoice(){
         invoiceNumber = new SimpleStringProperty("");
         createdDate = new SimpleStringProperty("");
+        licensesDescript = new SimpleStringProperty("");
         licenses = FXCollections.observableArrayList();
         clientObj = new SimpleObjectProperty<>(new Client());
+        clientDescrip = clientObj.get().getShortDescrip(", ");
         beginDateDescrip = new SimpleStringProperty("");
         beginDateObj = new SimpleObjectProperty<>();
         endDateDescrip = new SimpleStringProperty("");
         endDateObj = new SimpleObjectProperty();
         revokedDateDescrip = new SimpleStringProperty("");
         revokedDateObj = new SimpleObjectProperty<>();
-        additionalDiscount = new SimpleDoubleProperty(0);
-        moneyToPay = new SimpleDoubleProperty(0);
-        vat = new SimpleDoubleProperty(0);
-        paidPart = new SimpleDoubleProperty(0);
+        additionalDiscountRate = new SimpleStringProperty("0");
+        moneyToPay = new SimpleStringProperty("0");
+        moneyPaid = new SimpleStringProperty("0");
+        vat = new SimpleStringProperty("0");
+        paidPart = new SimpleStringProperty("0");
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
-        status = new SimpleObjectProperty<>(new InvoiceStatus());
+        statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
+        
+        licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
+            rebindLicenses();
+        });
+        
     }
     
+    private void rebindLicenses(){
+        licensesDescript.unbind();
+        licensesDescript.bind(licenses.stream()
+                                    .map(LicenseShortData::licenseNumberProperty)
+                                    .reduce(new SimpleStringProperty(""), (StringProperty total, StringProperty unary) -> {
+                                        StringProperty temp = new SimpleStringProperty("");
+                                        temp.bind(total.concat(Bindings.createStringBinding(() -> {
+                                            return (total.get().isEmpty()) ? "" : ", ";
+                                        }, total.isEmpty())).concat(unary));
+                                        return temp;
+                                    })
+                            );
+    }
     
     // DBService methods:
     public static ArrayList<Invoice> getAllFromDB (){
-        try {
-            String data = GeneralConfig.getInstance().getAuthClient().get("invoices").getDataAsString();
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, new TypeReference<ArrayList<Invoice>>() {});
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Invoice.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        JSONObject params = new ConditionBuilder().build();
+        return DBUtils.getObjectsListFromDB(Invoice.class, DB_INVOICES_VIEW, params);
     }
     
     public static ArrayList<Invoice> getFilteredFromDB(FilterModel model){
@@ -162,33 +176,71 @@ public class Invoice extends EditorPanelable {
     }
     
     public static Invoice getOneFromDB (int invoiceId){
-        try {
-            String data = GeneralConfig.getInstance().getAuthClient().get("invoices/" + invoiceId).getDataAsString();
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, Invoice.class);
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Invoice.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Invoice").showAlert();
-        }
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", invoiceId).condition().build();
+        return DBUtils.getObjectFromDB(Invoice.class, DB_INVOICES_VIEW, params);
+    }
+    
+    public static Invoice saveOneToDB(Client client) {
+        System.out.println("save one to DB ... ??");
         return null;
     }
 
+    public static boolean deleteOneFromDB(int id) {
+        System.out.println("delete one from DB ... ??");
+        return false;
+    }
+    
+
     // Properties getters:
+    public ObjectProperty<Client> clientProperty(){
+        return clientObj;
+    }
+    
     public SimpleStringProperty invoiceNumberProperty(){
         return invoiceNumber;
     }
     
+    public ObjectProperty<LocalDate> beginDateProperty(){
+        return beginDateObj;
+    }
     
+    public ObjectProperty<LocalDate> endDateProperty(){
+        return endDateObj;
+    }
+    
+    public ObjectProperty<LocalDate> revokedDateProperty(){
+        return revokedDateObj;
+    }
+    
+    public StringProperty additionaldiscountProperty(){
+        return additionalDiscountRate;
+    }
+
+    public StringProperty moneyPaid(){
+        return moneyToPay;
+    }
+    
+    public StringProperty vatProperty(){
+        return vat;
+    }
+
+    public StringProperty paidPartProperty(){
+        return paidPart;
+    }
+    
+    public ObjectProperty<InvoiceReissuing> reissuingProperty(){
+        return reissuingObj;
+    }
+    
+    public ObjectProperty<InvoiceStatus> statusProperty(){
+        return statusObj;
+    }
     
     
     // Getters:
-    public String getCreatedDate(){
-        return createdDate.get();
-    }
-    
     @JsonIgnore
     public LocalDate getLocalDateObj(){
-        return DateConverter.getInstance().parseDate(getCreatedDate());
+        return DateConverter.getInstance().parseDate(createdDate.get());
     }
     
     public String getInvoiceNumber(){
@@ -227,20 +279,24 @@ public class Invoice extends EditorPanelable {
         return (revokedDateObj.get() == null) ? "" : revokedDateObj.get().toString();
     }
             
-    public double getAdditionalDiscount(){
-        return additionalDiscount.get();
+    public double getAdditionalDiscountRate(){
+        return Utils.getDoubleValueFor(additionalDiscountRate.get());
     }
     
     public double getMoneyToPay(){
-        return moneyToPay.get();
+        return Utils.getDoubleValueFor(moneyToPay.get());
+    }
+    
+    public double getMoneyPaid(){
+        return Utils.getDoubleValueFor(moneyPaid.get());
     }
 
     public double getVat(){
-        return vat.get();
+        return Utils.getDoubleValueFor(vat.get());
     }
     
     public double getPaidPart(){
-        return paidPart.get();
+        return Utils.getDoubleValueFor(paidPart.get());
     }
 
     public String getReissuingDescrip(){
@@ -252,17 +308,19 @@ public class Invoice extends EditorPanelable {
     }
     
     public String getStatusDescrip(){
-        return status.get().getDescrip();
+        return statusObj.get().getDescrip();
     }
     
     public int getStatus(){
-        return status.get().getInvoiceStatusId();
+        return statusObj.get().getInvoiceStatusId();
     }
     
     
     // Setters:
-    public void setCreatedDate(String date){
-        createdDate.set(date);
+    private void setCreatedDate(String date){
+        LocalDate localDate = DateConverter.getInstance().parseDate(date);
+        String userFriendlyDateVisual = DateConverter.getInstance().getDayMonthnameYearBySpace(localDate);
+        createdDate.set(userFriendlyDateVisual);
     }
     
     public void setInvoiceNumber(String invoiceNumber){
@@ -285,6 +343,10 @@ public class Invoice extends EditorPanelable {
         clientObj.get().setLastName(lastName);
     }
     
+    public void setEmail(String email){
+        clientObj.get().setEmail(email);
+    }
+    
     public void setBeginDate(String date){
         beginDateObj.set(DateConverter.getInstance().parseDate(date));
         beginDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(beginDateObj.get()));
@@ -300,20 +362,24 @@ public class Invoice extends EditorPanelable {
         revokedDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(revokedDateObj.get()));
     }
     
-    public void setAdditionalDiscount(double additDisc){
-        additionalDiscount.set(additDisc);
+    public void setAdditionalDiscountRate(double additDisc){
+        additionalDiscountRate.set("" + additDisc);
     }
     
     public void setMoneyToPay(double money){
-        moneyToPay.set(money);
+        moneyToPay.set("" + money);
+    }
+    
+    public void setMoneyPaid(double money){
+        moneyPaid.set("" + money);
     }
     
     public void setVat(double vat){
-        this.vat.set(vat);
+        this.vat.set("" + vat);
     }
     
     public void setPaidPart(double paidPart){
-        this.paidPart.set(paidPart);
+        this.paidPart.set("" + paidPart);
     }
     
     public void setReissuingDescrip(String descrip){
@@ -326,11 +392,11 @@ public class Invoice extends EditorPanelable {
     
     
     public void setStatusDescrip(String status){
-        this.status.get().setDescrip(status);
+        this.statusObj.get().setDescrip(status);
     }
     
     public void setStatus(int status){
-        this.status.get().setInvoiceStatusId(status);
+        this.statusObj.get().setInvoiceStatusId(status);
     }
     
     
@@ -352,30 +418,73 @@ public class Invoice extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         Invoice invoice = (Invoice) other;
-        setLicenses(invoice.getLicenses());
-        setStatus(invoice.getStatus());
+        setFirstName(invoice.getFirstName());
+        setLastName(invoice.getLastName());
+        setEmail(invoice.getEmail());
         setInvoiceNumber(invoice.getInvoiceNumber());
-//        setCreatedDate(invoice.getCreatedDate());
-//        setBeginDate(invoice.getBeginDate());
-//        setEndDate(invoice.getEndDate());
+        licenses.addAll(invoice.getLicenses());
+        setBeginDate(invoice.getBeginDate());
+        setEndDate(invoice.getEndDate());
+        setRevokedDate(invoice.getRevokedDate());
+        setAdditionalDiscountRate(invoice.getAdditionalDiscountRate());
+        setMoneyToPay(invoice.getMoneyToPay());
+        setVat(invoice.getVat());
+        setPaidPart(invoice.getPaidPart());
+        reissuingObj.get().copyFrom(invoice.reissuingProperty().get());
+        statusObj.get().copyFrom(invoice.statusProperty().get());
     }
 
     @Override
     public String toStringForSearch() {
-//        return getInvoiceNumber().concat(getCreatedDate()).concat(getBeginDate()).concat(getEndDate());
-        return "";
+        String searchString = "";
+        if (clientObj.isNotNull().get() && licensesDescript.isNotNull().get()){
+            searchString = clientObj.get().getShortDescrip(" ").get() + " " + licensesDescript.get();
+        }
+        return searchString;
     }
 
     @Override
     public boolean compares(EditorPanelable backup) {
-        Invoice invoiceBackup = (Invoice) backup;
-        return true;
+        Invoice otherInvoice = (Invoice) backup;
+        return  getFirstName().equals(otherInvoice.getFirstName())  &&
+                getLastName().equals(otherInvoice.getLastName())    &&
+                getEmail().equals(otherInvoice.getEmail())          &&
+                getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())  &&
+                Utils.compareLists(licenses, otherInvoice.getLicenses())    &&
+                getBeginDate().equals(otherInvoice.getBeginDate())          &&
+                getEndDate().equals(otherInvoice.getEndDate())      &&
+                getRevokedDate().equals(otherInvoice.getRevokedDate()) &&
+                getAdditionalDiscountRate() == otherInvoice.getAdditionalDiscountRate() &&
+                getMoneyToPay() == otherInvoice.getMoneyToPay() &&
+                getVat() == otherInvoice.getVat() &&
+                getPaidPart() == otherInvoice.getPaidPart() &&
+                reissuingObj.isEqualTo(otherInvoice.reissuingProperty().get()).get() &&
+                statusObj.isEqualTo(otherInvoice.statusProperty().get()).get();
+                
     }
 
     
-    private class LicenseShortData {
+    public static class LicenseShortData {
+        
         public int recId;
         public int licenseId;
-        public int licenseNumber;
+        public StringProperty licenseNumber = new SimpleStringProperty("");
+        
+        public StringProperty licenseNumberProperty(){
+            return licenseNumber;
+        }
+        
+        public int getLicenseNumber(){
+            return Integer.parseInt(licenseNumber.get());
+        }
+        
+        public void setLicenseNumber(int number){
+            licenseNumber.set("" + number);
+        }
+        
+        @Override
+        public String toString(){
+            return licenseNumber.get();
+        }
     }
 }

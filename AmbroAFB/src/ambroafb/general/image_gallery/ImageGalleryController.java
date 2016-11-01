@@ -253,7 +253,7 @@ public class ImageGalleryController implements Initializable {
      */
     public void downloadData() {
         try {
-            String imagesNames = GeneralConfig.getInstance().getAuthClient().get(serviceURLPrefix + parameterDownload).getDataAsString();
+            String imagesNames = GeneralConfig.getInstance().getDBClient().get(serviceURLPrefix + parameterDownload).getDataAsString();
             JSONArray namesJson = new JSONArray(imagesNames);
             for (int i = 0; i < namesJson.length(); i++) {
                 String fullName = namesJson.getString(i);
@@ -383,14 +383,14 @@ public class ImageGalleryController implements Initializable {
                     byte[] data = viewer.getContent();
                     try {
                         if (viewer.deletedProperty().get()) {
-                            GeneralConfig.getInstance().getAuthClient().delete(serviceURLPrefix + key);
+                            GeneralConfig.getInstance().getDBClient().delete(serviceURLPrefix + key);
                         } else if (viewer.isNew()) {
-                            GeneralConfig.getInstance().getAuthClient().post(
+                            GeneralConfig.getInstance().getDBClient().post(
                                     serviceURLPrefix + urlParameter + "/" + key.substring(key.lastIndexOf(".") + 1),
                                     Base64.getEncoder().encodeToString(data)
                             );
                         } else if (viewer.isEdit()) {
-                            GeneralConfig.getInstance().getAuthClient().call(
+                            GeneralConfig.getInstance().getDBClient().call(
                                     serviceURLPrefix + key,
                                     "PUT",
                                     Base64.getEncoder().encodeToString(data)
@@ -467,7 +467,7 @@ public class ImageGalleryController implements Initializable {
             });
 
             try {
-                HttpURLConnection con = GeneralConfig.getInstance().getAuthClient().createConnection(serviceURLPrefix + fullName);
+                HttpURLConnection con = GeneralConfig.getInstance().getDBClient().createConnection(serviceURLPrefix + fullName);
                 Viewer newViewer = new Viewer(con.getInputStream(), fullName.endsWith(".pdf"));
 
                 Object lock = lockObjectsMap.get(index);

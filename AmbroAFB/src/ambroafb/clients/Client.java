@@ -263,7 +263,7 @@ public class Client extends EditorPanelable{
 
     public static boolean deleteOneFromDB(int id) {
         try {
-            GeneralConfig.getInstance().getAuthClient().delete("clients/" + id);
+            GeneralConfig.getInstance().getDBClient().delete("clients/" + id);
             return true;
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -547,6 +547,11 @@ public class Client extends EditorPanelable{
         return fieldsCompareResult && equalsPhones;
     }
 
+    public boolean equals(Client other){
+        return  getRecId() == other.getRecId() ||
+                getShortDescrip("").equals(other.getShortDescrip(""));
+    }
+    
     // Override methods:
     @Override
     public Client cloneWithoutID() {

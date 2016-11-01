@@ -73,6 +73,16 @@ public class InvoiceReissuing {
         return getDescrip();
     }
     
+    public void copyFrom(InvoiceReissuing other) {
+        if (other != null) {
+            setInvoiceReissuingId(other.getInvoiceReissuingId());
+            setDescrip(other.getDescrip());
+
+            setRecId(other.getRecId());
+            setLanguage(other.getLanguage());
+        }
+    }
+    
     public boolean equals(InvoiceReissuing other){
         return  this.getInvoiceReissuingId() == other.getInvoiceReissuingId() &&
                 this.getDescrip().equals(other.getDescrip());

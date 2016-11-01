@@ -20,7 +20,7 @@ public class DateConverter {
     private static final DateTimeFormatter parserWithTimeWithMilisec = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
     
     
-    public static DateConverter converterWithoutTime;
+    private static DateConverter converterWithoutTime;
     private DateConverter next;
     private DateTimeFormatter dateFormatter;
     
