@@ -462,9 +462,8 @@ public class Invoice extends EditorPanelable {
                 getMoneyToPay() == otherInvoice.getMoneyToPay() &&
                 getVat() == otherInvoice.getVat() &&
                 getMoneyPaid() == otherInvoice.getMoneyPaid() &&
-                reissuingObj.isEqualTo(otherInvoice.reissuingProperty().get()).get() &&
-                statusObj.isEqualTo(otherInvoice.statusProperty().get()).get();
-                
+                reissuingObj.get().equals(otherInvoice.reissuingProperty().get()) &&
+                statusObj.get().equals(otherInvoice.statusProperty().get());
     }
 
     
