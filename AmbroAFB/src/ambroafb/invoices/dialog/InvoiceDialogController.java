@@ -9,10 +9,13 @@ import ambro.ADatePicker;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
+import ambroafb.general.countcombobox.CountComboBox;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceReissuing;
+import ambroafb.invoices.helper.InvoiceStatus;
+import ambroafb.licenses.License;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -34,19 +37,21 @@ public class InvoiceDialogController implements Initializable {
     private VBox formPane;
     
     @FXML
-    private ADatePicker createdDate, beginDate;
+    private ADatePicker createdDate, beginDate, endDate;
     @FXML
     private CheckBox revoked;
     @FXML
-    private TextField invoiceNumber, additionalDiscount, paidPart, vat;
+    private TextField invoiceNumber, additionalDiscount, moneyToPay, moneyPaid, vat;
     @FXML
     private ClientComboBox clients;
-//    @FXML
-//    private ComboBox<License licenses;
     @FXML
-    private ComboBox<Integer> monthCount;
+    private CountComboBox<License> licenses;
+    @FXML
+    private ComboBox<String> monthCount;
     @FXML
     private ComboBox<InvoiceReissuing> invoiceReissuings;
+    @FXML
+    private ComboBox<InvoiceStatus> statuses;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -67,15 +72,18 @@ public class InvoiceDialogController implements Initializable {
         this.invoice = invoice;
         if (invoice != null){
             createdDate.setValue(invoice.getLocalDateObj());
-            System.out.println("invoice.inviceNumber: " + invoice.invoiceNumberProperty().get());
             invoiceNumber.textProperty().bindBidirectional(invoice.invoiceNumberProperty());
             clients.valueProperty().bindBidirectional(invoice.clientProperty());
             beginDate.valueProperty().bindBidirectional(invoice.beginDateProperty());
+            endDate.valueProperty().bindBidirectional(invoice.endDateProperty());
+            monthCount.valueProperty().bindBidirectional(invoice.monthsProperty());
 //            revoked.
             additionalDiscount.textProperty().bindBidirectional(invoice.additionaldiscountProperty());
-            paidPart.textProperty().bindBidirectional(invoice.paidPartProperty());
+            moneyToPay.textProperty().bindBidirectional(invoice.moneyToPayProperty());
+            moneyPaid.textProperty().bindBidirectional(invoice.moneyPaidProperty());
             vat.textProperty().bindBidirectional(invoice.vatProperty());
             invoiceReissuings.valueProperty().bindBidirectional(invoice.reissuingProperty());
+            statuses.valueProperty().bindBidirectional(invoice.statusProperty());
         }
     }
 
@@ -85,14 +93,6 @@ public class InvoiceDialogController implements Initializable {
             setDisableComponents();
             editable = false;
         }
-        if (!buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
-            specificDisabledComponents();
-        }
-//        Client client = invoice.clientProperty().get();
-//        if (client != null){
-//            Client appropClient = clients.getItems().filtered((Client currClient) -> currClient.getRecId() == client.getRecId()).get(0);
-//            clients.setValue(appropClient);
-//        }
         okayCancelController.setButtonsFeatures(buttonType);
     }
     
@@ -105,12 +105,6 @@ public class InvoiceDialogController implements Initializable {
         });
     }
     
-    public void specificDisabledComponents(){
-        invoiceNumber.setDisable(true);
-        paidPart.setDisable(true);
-        vat.setDisable(true);
-    }
-
     public void setBackupInvoice(Invoice invoiceBackup) {
         this.invoiceBackup = invoiceBackup;
     }

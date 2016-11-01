@@ -12,6 +12,7 @@
 <?import ambroafb.general.okay_cancel.* ?>
 <?import ambroafb.general.*?>
 <?import ambroafb.clients.*?>
+<?import ambroafb.general.countcombobox.*?>
 
 <ambroafb.general.DialogPanel   stylesheets="/styles/css/invoicedialog.css" 
                                 xmlns:fx="http://javafx.com/fxml/1" 
@@ -35,7 +36,7 @@
                 <children>
                     <VBox styleClass="couple">
                         <Label text="%invoice_n" />
-                        <TextField fx:id="invoiceNumber" />
+                        <TextField fx:id="invoiceNumber" disable="true" />
                     </VBox>
                     <VBox styleClass="couple">
                         <children>
@@ -46,7 +47,7 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%licenses" />
-                            <ComboBox fx:id="licenses" />
+                            <CountComboBox fx:id="licenses" />
                         </children>
                     </VBox>
                 </children> 
@@ -62,24 +63,40 @@
                         <ComboBox fx:id="monthCount" />
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="%extra_discount" />
-                        <TextField fx:id="additionalDiscount" />
+                        <Label text="%end_date" /> 
+                        <ADatePicker fx:id="endDate" disable="true" />
                     </VBox>
                 </children>
             </HBox>
             <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
-                        <Label text="%paid_part" /> 
-                        <TextField fx:id="paidPart" />
+                        <Label text="%extra_discount" />
+                        <TextField fx:id="additionalDiscount" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%money_to_pay" /> 
+                        <TextField fx:id="moneyToPay" disable="true" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="%vat" /> 
-                        <TextField fx:id="vat" />
+                        <TextField fx:id="vat" disable="true" />
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple">
+                        <Label text="%money_paid" /> 
+                        <TextField fx:id="moneyPaid" disable="true" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="%invoice_reissuings" />
                         <ComboBox fx:id="invoiceReissuings" />
+                    </VBox>                    
+                    <VBox styleClass="couple">
+                        <Label text="%invoice_status" /> 
+                        <ComboBox fx:id="statuses" disable="true" />
                     </VBox>
                 </children>
             </HBox>

@@ -80,13 +80,12 @@ public class Invoice extends EditorPanelable {
     @AView.Column(title = "%money_to_pay", width = "30")
     private final StringProperty moneyToPay;
     
-    private final StringProperty moneyPaid;
     
     @AView.Column(title = "%vat", width = "30")
     private final StringProperty vat;
     
-    @AView.Column(title = "%paid_part", width = "30")
-    private final StringProperty paidPart;
+    @AView.Column(title = "%money_paid", width = "30")
+    private final StringProperty moneyPaid;
     
     
     @AView.Column(title = "%invoice_reissuings", width = "50")
@@ -95,6 +94,7 @@ public class Invoice extends EditorPanelable {
     @AView.Column(title = "%invoice_status", width = "50")
     private final ObjectProperty<InvoiceStatus> statusObj;
     
+    private final StringProperty months;
     
     private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
     private static final String DB_INVOICES_VIEW = "invoices_whole";
@@ -117,9 +117,9 @@ public class Invoice extends EditorPanelable {
         moneyToPay = new SimpleStringProperty("0");
         moneyPaid = new SimpleStringProperty("0");
         vat = new SimpleStringProperty("0");
-        paidPart = new SimpleStringProperty("0");
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
+        months = new SimpleStringProperty("0");
         
         licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
             rebindLicenses();
@@ -216,7 +216,7 @@ public class Invoice extends EditorPanelable {
         return additionalDiscountRate;
     }
 
-    public StringProperty moneyPaid(){
+    public StringProperty moneyToPayProperty(){
         return moneyToPay;
     }
     
@@ -224,8 +224,8 @@ public class Invoice extends EditorPanelable {
         return vat;
     }
 
-    public StringProperty paidPartProperty(){
-        return paidPart;
+    public StringProperty moneyPaidProperty(){
+        return moneyPaid;
     }
     
     public ObjectProperty<InvoiceReissuing> reissuingProperty(){
@@ -234,6 +234,10 @@ public class Invoice extends EditorPanelable {
     
     public ObjectProperty<InvoiceStatus> statusProperty(){
         return statusObj;
+    }
+    
+    public StringProperty monthsProperty(){
+        return months;
     }
     
     
@@ -295,10 +299,6 @@ public class Invoice extends EditorPanelable {
         return Utils.getDoubleValueFor(vat.get());
     }
     
-    public double getPaidPart(){
-        return Utils.getDoubleValueFor(paidPart.get());
-    }
-
     public String getReissuingDescrip(){
         return reissuingObj.get().getDescrip();
     }
@@ -313,6 +313,10 @@ public class Invoice extends EditorPanelable {
     
     public int getStatus(){
         return statusObj.get().getInvoiceStatusId();
+    }
+    
+    public String getMonths(){
+        return months.get();
     }
     
     
@@ -378,10 +382,6 @@ public class Invoice extends EditorPanelable {
         this.vat.set("" + vat);
     }
     
-    public void setPaidPart(double paidPart){
-        this.paidPart.set("" + paidPart);
-    }
-    
     public void setReissuingDescrip(String descrip){
         reissuingObj.get().setDescrip(descrip);
     }
@@ -397,6 +397,10 @@ public class Invoice extends EditorPanelable {
     
     public void setStatus(int status){
         this.statusObj.get().setInvoiceStatusId(status);
+    }
+    
+    public void setMonths(String months){
+        this.months.set(months);
     }
     
     
@@ -429,7 +433,7 @@ public class Invoice extends EditorPanelable {
         setAdditionalDiscountRate(invoice.getAdditionalDiscountRate());
         setMoneyToPay(invoice.getMoneyToPay());
         setVat(invoice.getVat());
-        setPaidPart(invoice.getPaidPart());
+        setMoneyPaid(invoice.getMoneyPaid());
         reissuingObj.get().copyFrom(invoice.reissuingProperty().get());
         statusObj.get().copyFrom(invoice.statusProperty().get());
     }
@@ -457,7 +461,7 @@ public class Invoice extends EditorPanelable {
                 getAdditionalDiscountRate() == otherInvoice.getAdditionalDiscountRate() &&
                 getMoneyToPay() == otherInvoice.getMoneyToPay() &&
                 getVat() == otherInvoice.getVat() &&
-                getPaidPart() == otherInvoice.getPaidPart() &&
+                getMoneyPaid() == otherInvoice.getMoneyPaid() &&
                 reissuingObj.isEqualTo(otherInvoice.reissuingProperty().get()).get() &&
                 statusObj.isEqualTo(otherInvoice.statusProperty().get()).get();
                 

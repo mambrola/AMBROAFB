@@ -20,7 +20,8 @@
 .oneHalf > .couple {
   -fx-pref-width: 382.5;
 }
-.oneThirds > .couple {
+.oneThirds > .couple,
+.oneThirds > .couple > .date-picker {
   -fx-pref-width: 243.33333333;
 }
 .couple > .combo-box {
