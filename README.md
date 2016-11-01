@@ -86,6 +86,7 @@ compare / equals ორივე საჭიროა, მაგალითა
 * (-) TestExcelGeneral კომპონენტების საფუძვლიანი ტესტი
 * (+) კონფიგურაციის განყოფილების გადაყვანა ახალ სტილზე
 * (-) BallanceAccount- refresh აგდებს UnSupportedOperationException-ს როცა მოინიშნება TreeTableView column (საკუთრივ) და მერე დაეჭირება refresh
+* (-) invoice-სა და client განყოფილებების შედარება
 
 
 ბაზა: 
