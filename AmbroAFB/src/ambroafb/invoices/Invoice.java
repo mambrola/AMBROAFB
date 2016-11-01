@@ -48,7 +48,7 @@ public class Invoice extends EditorPanelable {
     
     
     @AView.Column(title = "%created_date", width = TableColumnWidths.DATE)
-    private StringProperty createdDate;
+    private final StringProperty createdDate;
     
     @AView.Column(title = "%invoice_n", width = "100")
     private final SimpleStringProperty invoiceNumber;
@@ -62,36 +62,36 @@ public class Invoice extends EditorPanelable {
     private final StringExpression clientDescrip;
     private final ObjectProperty<Client> clientObj;
     
-    @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE)
+    @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty beginDateDescrip;
     private final ObjectProperty<LocalDate> beginDateObj;
 
-    @AView.Column(title = "%end_date", width = TableColumnWidths.DATE)
+    @AView.Column(title = "%end_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty endDateDescrip;
     private final ObjectProperty<LocalDate> endDateObj;
     
-    @AView.Column(title = "%revoked_date", width = TableColumnWidths.DATE)
+    @AView.Column(title = "%revoked_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty revokedDateDescrip;
     private final ObjectProperty<LocalDate> revokedDateObj;
     
-    @AView.Column(title = "%extra_discount", width = "30")
+    @AView.Column(title = "%extra_discount", width = "70", styleClass = "textRight")
     private final StringProperty additionalDiscountRate;
     
-    @AView.Column(title = "%money_to_pay", width = "30")
+    @AView.Column(title = "%money_to_pay", width = "70", styleClass = "textRight" )
     private final StringProperty moneyToPay;
     
     
-    @AView.Column(title = "%vat", width = "30")
+    @AView.Column(title = "%vat", width = "70", styleClass = "textRight")
     private final StringProperty vat;
     
-    @AView.Column(title = "%money_paid", width = "30")
+    @AView.Column(title = "%money_paid", width = "70", styleClass = "textRight")
     private final StringProperty moneyPaid;
     
     
-    @AView.Column(title = "%invoice_reissuings", width = "50")
+    @AView.Column(title = "%invoice_reissuings", width = "100")
     private final ObjectProperty<InvoiceReissuing> reissuingObj;
     
-    @AView.Column(title = "%invoice_status", width = "50")
+    @AView.Column(title = "%invoice_status", width = "100")
     private final ObjectProperty<InvoiceStatus> statusObj;
     
     private final StringProperty months;
