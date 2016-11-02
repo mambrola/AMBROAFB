@@ -6,8 +6,10 @@
 package ambroafb.loggings;
 
 import ambroafb.general.DateConverter;
+import ambroafb.general.FilterModel;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,6 +20,7 @@ import javafx.beans.property.StringProperty;
  * @author dato
  */
 public class Logging extends EditorPanelable {
+
 
     private final StringProperty licenseNumber;
     private final StringProperty email;
@@ -33,6 +36,10 @@ public class Logging extends EditorPanelable {
         macAddress = new SimpleStringProperty("");
         response = new SimpleStringProperty("");
         logginDateObj = new SimpleObjectProperty<>();
+    }
+
+    public static ArrayList<Logging> getFilteredFromDB(FilterModel model) {
+        return new ArrayList<>();
     }
     
     // Properties:

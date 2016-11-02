@@ -37,6 +37,7 @@ public class BalanceAccount extends EditorPanelable {
     @AView.Column(title = "%bal_accounts", width = "500")
     private final StringProperty descrip;
     @AView.Column(width = "60")
+    @JsonIgnore
     private final StringExpression actPasExpression;
     
     @JsonIgnore

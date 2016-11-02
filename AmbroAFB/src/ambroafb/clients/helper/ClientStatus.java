@@ -76,4 +76,14 @@ public class ClientStatus {
     public String toString(){
         return getDescrip();
     }
+
+    public void copyFrom(ClientStatus other) {
+        if (other != null){
+            setClientStatusId(other.getClientStatusId());
+            setDescrip(other.getDescrip());
+            
+            setRecId(other.getRecId());
+            setLanguage(other.getLanguage());
+        }
+    }
 }

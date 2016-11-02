@@ -23,6 +23,8 @@ import ambroafb.invoices.Invoices;
 import ambroafb.invoices.filter.InvoiceFilter;
 import ambroafb.licenses.Licenses;
 import ambroafb.licenses.filter.LicenseFilter;
+import ambroafb.loggings.Loggings;
+import ambroafb.loggings.filter.LoggingFilter;
 import ambroafb.products.Products;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -144,23 +146,23 @@ public class MainController implements Initializable {
     
     @FXML
     private void loggings(ActionEvent event){
-//        String loggingsStagePath = StagesContainer.getPathForStage(AmbroAFB.mainStage) + "/" + Loggings.class.getSimpleName();
-//        
-//        Stage loggings = StagesContainer.getStageForPath(loggingsStagePath);
-//        if(loggings == null || !loggings.isShowing()){
-//            Loggings loggings = new Loggings(AmbroAFB.mainStage);
-//            loggings.show();
-//            
-//            LoggingFilter filter = new LoggingFilter(loggings);
-//            JSONObject json = filter.getResult();
-//            loggings.getLoggingsController().reAssignTable(json);
-//
-//            if (json != null && json.length() == 0) 
-//                loggings.close();
-//        }
-//        else {
-//            loggings.requestFocus();
-//        }
+        Stage loggingsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Loggings.class.getSimpleName());
+        
+        if(loggingsStage == null || !loggingsStage.isShowing()){
+            Loggings loggings = new Loggings(AmbroAFB.mainStage);
+            loggings.show();
+            
+            LoggingFilter filter = new LoggingFilter(loggings);
+            FilterModel model = filter.getResult();
+            loggings.getLoggingsController().reAssignTable(model);
+
+            if (model.isEmpty()) 
+                loggings.close();
+        }
+        else {
+            loggingsStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, loggingsStage);
+        }
     }
     
     @FXML 

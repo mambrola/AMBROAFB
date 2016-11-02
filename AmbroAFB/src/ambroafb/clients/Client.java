@@ -585,8 +585,9 @@ public class Client extends EditorPanelable{
         );
         setFax(other.getFax());
         setWww(other.getWww());
-        setStatus(other.getStatus());
-        setStatusDescrip(other.getDescrip());
+        clientStatus.get().copyFrom(other.statusProperty().get());
+//        setStatus(other.getStatus());
+//        setStatusDescrip(other.getDescrip());
         setRemark(other.getRemark());
     }
 
