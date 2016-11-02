@@ -26,7 +26,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -42,12 +44,7 @@ import org.json.JSONObject;
  */
 public class Invoice extends EditorPanelable { 
 
-// ვინაიდან ეს მხოლოდ ჩვენებაა და თვითო tableView-ს ველში არ ხდება ჩასწორება Property-ები არ გვჭირდება
-    
-//    public int invoiceId;
-    
-    
-    @AView.Column(title = "%created_date", width = TableColumnWidths.DATE)
+    @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty createdDate;
     
     @AView.Column(title = "%invoice_n", width = "100")
@@ -73,6 +70,7 @@ public class Invoice extends EditorPanelable {
     @AView.Column(title = "%revoked_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty revokedDateDescrip;
     private final ObjectProperty<LocalDate> revokedDateObj;
+    private final BooleanProperty isRevoked;
     
     @AView.Column(title = "%extra_discount", width = "70", styleClass = "textRight")
     private final StringProperty additionalDiscountRate;
@@ -113,6 +111,7 @@ public class Invoice extends EditorPanelable {
         endDateObj = new SimpleObjectProperty();
         revokedDateDescrip = new SimpleStringProperty("");
         revokedDateObj = new SimpleObjectProperty<>();
+        isRevoked = new SimpleBooleanProperty(false);
         additionalDiscountRate = new SimpleStringProperty("0");
         moneyToPay = new SimpleStringProperty("0");
         moneyPaid = new SimpleStringProperty("0");
@@ -210,6 +209,10 @@ public class Invoice extends EditorPanelable {
     
     public ObjectProperty<LocalDate> revokedDateProperty(){
         return revokedDateObj;
+    }
+    
+    public BooleanProperty revokedProperty(){
+        return isRevoked;
     }
     
     public StringProperty additionaldiscountProperty(){
@@ -361,9 +364,10 @@ public class Invoice extends EditorPanelable {
         endDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(endDateObj.get()));
     }
     
-    public void setRevokedDate(String date){
+    public void setRevokedDate(String date) {
         revokedDateObj.set(DateConverter.getInstance().parseDate(date));
         revokedDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(revokedDateObj.get()));
+        isRevoked.set(revokedDateObj.get() != null);
     }
     
     public void setAdditionalDiscountRate(double additDisc){
