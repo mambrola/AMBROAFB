@@ -353,19 +353,14 @@ public class Product extends EditorPanelable {
         setAbbreviation(product.getAbbreviation());
         setFormer(product.getFormer());
         setDescrip(product.getDescrip());
-//        setRemark(product.getRemark());
-//        specificProperty().set(product.specificProperty().get()); // mimtitebeli gaicvleba da copio ar iqneba
         setSpecific(product.getSpecific());
         setSpecificDescip(product.getSpecificDescrip());
         setPrice(product.getPrice());
         setIso(product.getIso());
         setIsActive(product.getIsActive());
-        
-        final ArrayList<ProductDiscount> productDiscounts = new ArrayList<>();
-        product.getDiscounts().stream().forEach((disc) -> {
-            productDiscounts.add(disc);
-        });
-        setDiscounts(productDiscounts);
+
+        discounts.clear();
+        discounts.addAll(product.getDiscounts());
     }
 
     @Override
