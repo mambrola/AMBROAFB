@@ -65,7 +65,7 @@ Accounting for Busines
 	+ less ფაილში ეწერა minWidth და maxWidth
 * (-) fxml, css, less ფაილები   (formPane_ზე Min და Max width_ები  // sheidzleba tavdapirvel zomas vusetavdit, tumca arc esaa sachiro)
 * (|) UML დიაგრამები
-* (-) Editorpanelable კლასების db მეთოდები ერთ სტილზე
+* (+) Editorpanelable კლასების db მეთოდები ერთ სტილზე
 * (+) product-ების დიალოგში ორჯერ ჩნდება ფასდაკლებები mapEditor-ში. (discounts.addAll() შეიცვალა discounts.setAll()-ით)
 * (-) შესამოწმებელია ყველა Editorpanelable კლასში compare/copyFrom მეთოდების სისწორე
 * (-) ALL currencies-ში და country-ში
