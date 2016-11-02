@@ -15,7 +15,7 @@ import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
-import ambroafb.licenses.License;
+import ambroafb.invoices.Invoice.LicenseShortData;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -45,7 +45,7 @@ public class InvoiceDialogController implements Initializable {
     @FXML
     private ClientComboBox clients;
     @FXML
-    private CountComboBox<License> licenses;
+    private CountComboBox<LicenseShortData> licenses;
     @FXML
     private ComboBox<String> monthCount;
     @FXML
@@ -94,6 +94,9 @@ public class InvoiceDialogController implements Initializable {
             editable = false;
         }
         okayCancelController.setButtonsFeatures(buttonType);
+        if (invoice != null){
+            licenses.getItems().addAll(invoice.getLicenses());
+        }
     }
     
     /**

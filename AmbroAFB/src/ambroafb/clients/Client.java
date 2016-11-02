@@ -581,6 +581,7 @@ public class Client extends EditorPanelable{
         setCity(other.getCity());
         setCountryCode(other.getCountryCode());
         setIDNumber(other.getIDNumber());
+        getPhones().clear(); // Avoid to add twise phones in tableView
         getPhones().addAll(other.getPhones()
                 .stream()
                 .map((Phone t) -> new Phone(t.getRecId(), t.getNumber()))

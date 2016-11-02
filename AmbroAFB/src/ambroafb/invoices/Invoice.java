@@ -430,6 +430,7 @@ public class Invoice extends EditorPanelable {
         setLastName(invoice.getLastName());
         setEmail(invoice.getEmail());
         setInvoiceNumber(invoice.getInvoiceNumber());
+        licenses.clear(); // Avoid to add twise licenses in tableView
         licenses.addAll(invoice.getLicenses());
         setBeginDate(invoice.getBeginDate());
         setEndDate(invoice.getEndDate());

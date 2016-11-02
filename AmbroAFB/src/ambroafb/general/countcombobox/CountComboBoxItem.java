@@ -39,7 +39,7 @@ public class CountComboBoxItem extends HBox {
     private int downDelimiter = 0;
     
     private StringProperty itemNameProperty = new SimpleStringProperty("");
-    private IntegerProperty numberProperty = new SimpleIntegerProperty(0);
+    private IntegerProperty numberProperty = new SimpleIntegerProperty(1);
     private final StringExpression nameExpression;
     
     public CountComboBoxItem(String stringForItemLabel){

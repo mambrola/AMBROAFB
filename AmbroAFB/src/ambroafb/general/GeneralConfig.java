@@ -7,7 +7,6 @@ package ambroafb.general;
 
 //import ambro.AConnectionToDB;
 import ambroafb.AmbroAFB;
-import authclient.AuthClient;
 import authclient.db.DBClient;
 import java.util.HashMap;
 import java.util.Locale;
@@ -53,9 +52,7 @@ public class GeneralConfig {
     public ResourceBundle bundle;
     public Locale locale;
     private KFZClient client;
-    private AuthClient authClient;
     private DBClient dbClient;
-    private String auth_username, auth_password;
     private String db_username, db_password;
 
     private HashMap<String, Object> attributes;
@@ -87,33 +84,12 @@ public class GeneralConfig {
         return ResourceBundle.getBundle(Names.BUNDLE_TITLES_NAME, locale);
     }
 
-    /**
-     * პარამეტრებში ალბათ უნდა იყოს არა ბაზის მისამართი, არამედ
-     * "KFZ-Server"-ისა, username და password-იც უნდა იყოს უნიკალური თითოეული
-     * მომხმარებლისთვის და აქ უნდა გამოიყენებოდეს
-     *
-     * @return
-     */
-//    public AuthClient getAuthClient() {
-//        return authClient;
-//    }
-
-//    public KFZClient getServerClient(String username, String password) throws IOException, KFZClient.KFZServerException {
-//        kfz_username = username;
-//        kfz_password = password;
-//        client = new KFZClient(kfz_username, kfz_password).setClientName("AmbroAFB");
-//        return client;
-//    }
     
     public DBClient getDBClient(String username, String password) {
-        auth_username = username;
-        auth_password = password;
-//        authClient = new AuthClient(auth_username, auth_password, authclient.Utils.getDefaultConfigWithClientName("AmbroAFB"));
-//        authClient = new AuthClient(auth_username, auth_password, authclient.Utils.getDefaultConfig("http://192.168.0.30:8080/DBService/api", "AmbroAFB"));
-        
-        dbClient = new DBClient(auth_username, auth_password, authclient.Utils.getDefaultConfig("http://kfz-soft.de/DBService/api", "AmbroAFB"));
-//        dbClient = new DBClient(auth_username, auth_password, authclient.Utils.getDefaultConfigWithClientName("AmbroAFB"));
-//        dbClient = new DBClient(auth_username, auth_password, authclient.Utils.getDefaultConfig("http://192.168.0.30:8080/DBService/api", "AmbroAFB"));
+        db_username = username;
+        db_password = password;
+        dbClient = new DBClient(db_username, db_password, authclient.Utils.getDefaultConfig("http://kfz-soft.de/DBService/api", "AmbroAFB"));
+//        dbClient = new DBClient(db_username, db_password, authclient.Utils.getDefaultConfig("http://192.168.0.30:8080/DBService/api", "AmbroAFB"));
         dbClient.withLang(GeneralConfig.getInstance().locale.getLanguage());
         return dbClient;
     }
@@ -121,13 +97,6 @@ public class GeneralConfig {
     public DBClient getDBClient() {
         return dbClient;
     }
-    
-//    public DBClient getDBClient(String username, String password) {
-//        db_username = username;
-//        db_password = password;
-//        dbClient = new DBClient(db_username, db_password, authclient.Utils.getDefaultConfigWithClientName("AmbroAFB"));
-//        return dbClient;
-//    }
     
 
     public void logoutServerClient() {
