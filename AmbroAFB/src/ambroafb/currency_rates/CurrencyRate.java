@@ -95,8 +95,7 @@ public class CurrencyRate extends EditorPanelable {
     }
 
     public static CurrencyRate getOneFromDB (int recId){
-        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
-        JSONObject params = conditionBuilder.build();
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
         return DBUtils.getObjectFromDB(CurrencyRate.class, DB_VIEW_NAME, params);
         
 //        try {

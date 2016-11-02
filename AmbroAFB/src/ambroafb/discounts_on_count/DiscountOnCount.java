@@ -43,8 +43,7 @@ public class DiscountOnCount extends EditorPanelable {
     }
     
     public static DiscountOnCount getOneFromDB(int recId) {
-        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
-        JSONObject params = conditionBuilder.build();
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
         return DBUtils.getObjectFromDB(DiscountOnCount.class, DB_TABLE_NAME, params);
     }
 

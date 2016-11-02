@@ -74,8 +74,7 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     public static BalanceAccount getOneFromDB(int recId){
-        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
-        JSONObject params = conditionBuilder.build();
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
         return DBUtils.getObjectFromDB(BalanceAccount.class, DB_TABLE_NAME, params);
     }
     

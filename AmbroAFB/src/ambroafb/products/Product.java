@@ -166,8 +166,7 @@ public class Product extends EditorPanelable {
     }
     
     public static Product getOneFromDB (int productId){
-        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", productId).condition();
-        JSONObject params = conditionBuilder.build();
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", productId).condition().build();
         return DBUtils.getObjectFromDB(Product.class, DB_VIEW_NAME, params);
         
 //        try {

@@ -9,7 +9,6 @@ import ambro.AView;
 import ambroafb.clients.filter.ClientFilterModel;
 import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.Country;
-import ambroafb.general.AlertMessage;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
@@ -18,19 +17,15 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
 import ambroafb.general.image_gallery.ImageGalleryController;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -45,7 +40,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
@@ -262,14 +256,16 @@ public class Client extends EditorPanelable{
     }
 
     public static boolean deleteOneFromDB(int id) {
-        try {
-            GeneralConfig.getInstance().getDBClient().delete("clients/" + id);
-            return true;
-        } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
-        }
-        return false;
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
+        return DBUtils.deleteObjectFromDB("client_delete", params);
+//        try {
+//            GeneralConfig.getInstance().getDBClient().delete("clients/" + id);
+//            return true;
+//        } catch (IOException | AuthServerException ex) {
+//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
+//        }
+//        return false;
     }
 
     

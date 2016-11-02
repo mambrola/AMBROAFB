@@ -125,4 +125,16 @@ public class DBUtils {
         }
         return null;
     }
+
+    public static boolean deleteObjectFromDB(String deleteProcName, JSONObject params) {
+        boolean result = false;
+        try {
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            dbClient.callProcedure(deleteProcName, params);
+            result = true;
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
 }

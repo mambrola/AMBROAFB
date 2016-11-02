@@ -56,20 +56,29 @@ public class Invoice extends EditorPanelable {
     private final ObservableList<LicenseShortData> licenses;
     
     @AView.Column(title = "%clients", width = "100")
+    @JsonIgnore
     private final StringExpression clientDescrip;
+    @JsonIgnore
     private final ObjectProperty<Client> clientObj;
     
     @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @JsonIgnore
     private final StringProperty beginDateDescrip;
+    @JsonIgnore
     private final ObjectProperty<LocalDate> beginDateObj;
 
     @AView.Column(title = "%end_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @JsonIgnore
     private final StringProperty endDateDescrip;
+    @JsonIgnore
     private final ObjectProperty<LocalDate> endDateObj;
     
     @AView.Column(title = "%revoked_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @JsonIgnore
     private final StringProperty revokedDateDescrip;
+    @JsonIgnore
     private final ObjectProperty<LocalDate> revokedDateObj;
+    @JsonIgnore
     private final BooleanProperty isRevoked;
     
     @AView.Column(title = "%extra_discount", width = "70", styleClass = "textRight")
@@ -87,14 +96,18 @@ public class Invoice extends EditorPanelable {
     
     
     @AView.Column(title = "%invoice_reissuings", width = "100")
+    @JsonIgnore
     private final ObjectProperty<InvoiceReissuing> reissuingObj;
     
     @AView.Column(title = "%invoice_status", width = "100")
+    @JsonIgnore
     private final ObjectProperty<InvoiceStatus> statusObj;
     
     private final StringProperty months;
     
+    @JsonIgnore
     private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
+    @JsonIgnore
     private static final String DB_INVOICES_VIEW = "invoices_whole";
     
     
@@ -179,14 +192,17 @@ public class Invoice extends EditorPanelable {
         return DBUtils.getObjectFromDB(Invoice.class, DB_INVOICES_VIEW, params);
     }
     
-    public static Invoice saveOneToDB(Client client) {
-        System.out.println("save one to DB ... ??");
+    public static Invoice saveOneToDB(Invoice incoice) {
+        if (incoice == null) return null;
+        JSONObject targetJson = Utils.getJSONFromClass(Invoice.class);
+        System.out.println("invoice target: " + targetJson);
         return null;
+//        return DBUtils.saveObjectToDB(incoice, "invoice");
     }
 
     public static boolean deleteOneFromDB(int id) {
-        System.out.println("delete one from DB ... ??");
-        return false;
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
+        return DBUtils.deleteObjectFromDB("invoice_delete", params);
     }
     
 
