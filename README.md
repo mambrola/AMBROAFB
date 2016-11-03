@@ -107,6 +107,7 @@ client-ის phones არის ცარიელი მასივი დ�
 * (+) general_select-ი  status_descrip-ების ცხრილებზე ენას ითვალისწინებს call general_select('client_status_descrips', 'en', '{}'); ???
 * (+) Client.saveOneToDB მეთოდი ჯავაში ვერ ამატებს კლიენტს და პასუხად უბრუნდება სულ recId = 1 კლიენტი.
        + rec_id საერთოდ არ უნდა ფიგურირებდეს ბაზის json-ში თუ ახალს ვამატებთ, java-დან კი მიდიოდა rec_id = 0. მოაგავარა @JsonInculde(JsonInculde.non_default)-მა
+* (-) login_by_license_whole-ში LicenseNumber-ის ველი
 
 დასატესტია:
 * (+) ჩაკეცვა / ამოკეცვის  ფუნქციონალი. (თუ გადიდებულია მშობელი ფანჯარა, ჩაკეცვა/ამოკეცვა ცუდად მუშაობს)
