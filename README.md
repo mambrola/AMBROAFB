@@ -52,7 +52,7 @@ Accounting for Busines
 * (+) callGallerySendMethod არ უნდა იყოს Utils-ში (აჯობებს Client-ს ქონდეს imageGalleryController-ის Instance-ი და saveOneToDB-ში იძახებდეს ამ instance-ის send მეთოდს)
 * closeStageWithChildren-ის ლოგიკა
 * (+) StagesContainer კლასში შემოსატანია delimiter = "/"
-* (-) Utils კლასში არასაჭირო მეთოდების ამოშლა ან გატანა სხვა კლასებში (მაგ. SceneUtils-ში იყოს Scene-თან დაკავშირებული მეთოდები)
+* (+) Utils კლასში არასაჭირო მეთოდების ამოშლა ან გატანა სხვა კლასებში (მაგ. SceneUtils-ში იყოს Scene-თან დაკავშირებული მეთოდები)
 * (+) MVS პატერნის გამოყენება Filter-ში
 * (|) ATableView-ს contextMenu-დან იყოს შესაძლებლობა რომელ სვეტზეც ვდგავართ იმის content-ის alignment-ი ვცვალოთ
 * (+) recId-ის ვერ ცნობს callProcedureAndGetAsJson, წამოღებისას ცნობს (getDBClient().select("discounts_on_licenses_count") და ჩაწერისას ვერა. (პასუხი: general-insert-update-simple უნდა გამოვიძახოთ მაშინ როცა გვინდა ჩავდოთ ობიექტები რომლებიც მხოლოდ ერთ ცხრილით შემოიფარგლებიან და სხვა ცხრილშიც არ აქვთ რაიმე ველი, რთულ შემთხვევაში კონკრეტულ ობიექტს აქვს თავის ჩამატების პროცედურა, თუმცა DBClient.insertUpdate უზუნველყოფს შესაბამისი procedur-ის გამოძახებას)
@@ -107,7 +107,7 @@ client-ის phones არის ცარიელი მასივი დ�
 * (+) general_select-ი  status_descrip-ების ცხრილებზე ენას ითვალისწინებს call general_select('client_status_descrips', 'en', '{}'); ???
 * (+) Client.saveOneToDB მეთოდი ჯავაში ვერ ამატებს კლიენტს და პასუხად უბრუნდება სულ recId = 1 კლიენტი.
        + rec_id საერთოდ არ უნდა ფიგურირებდეს ბაზის json-ში თუ ახალს ვამატებთ, java-დან კი მიდიოდა rec_id = 0. მოაგავარა @JsonInculde(JsonInculde.non_default)-მა
-* (-) login_by_license_whole-ში LicenseNumber-ის ველი
+* (-) login_by_license_whole-ში LicenseNumber-ის ველი. login_time-ის მიხედვით დალაგებული ხომ არ წამოვიდეს ??
 
 დასატესტია:
 * (+) ჩაკეცვა / ამოკეცვის  ფუნქციონალი. (თუ გადიდებულია მშობელი ფანჯარა, ჩაკეცვა/ამოკეცვა ცუდად მუშაობს)
