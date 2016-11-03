@@ -87,6 +87,8 @@ public class LoggingFilter extends Stage implements Initializable, Filterable {
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+        dateBigger.setValue(loggingFilterModel.getFromDate());
+        dateLess.setValue(loggingFilterModel.getToDate());
+        clients.getSelectionModel().select(loggingFilterModel.getSelectedClientIndex());
     }
 }
