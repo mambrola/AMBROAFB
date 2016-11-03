@@ -63,6 +63,7 @@ public class LoggingFilterModel extends FilterModel {
         if (fromDate == null){
             fromDate = DateConverter.getInstance().parseDate(DATE_BIGGER);
         }
+        System.out.println("from date: " + fromDate);
         return fromDate;
     }
     
@@ -83,18 +84,19 @@ public class LoggingFilterModel extends FilterModel {
         if (toDate == null){
             toDate = DateConverter.getInstance().parseDate(DATE_LESS);
         }
+        System.out.println("toDate: " + toDate);
         return toDate;
     }
     
-    public int getSelectedCurrencyIndex(){
+    public int getSelectedClientIndex(){
         return getIntFromPref(PREF_CLIENT_KEY);
     }
     
-    public Client getSelectedCurrency(){
+    public Client getSelectedClient(){
         return selectedClient;
     }
 
-    public boolean isSelectedCurrencyALL() {
+    public boolean isSelectedClientALL() {
         return getIntFromPref(PREF_CLIENT_KEY) == 0;
     }
 }

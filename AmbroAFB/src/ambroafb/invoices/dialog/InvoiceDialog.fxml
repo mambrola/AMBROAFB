@@ -35,7 +35,7 @@
             <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
-                        <Label text="%invoice_n" />
+                        <Label text="%invoice_N" />
                         <TextField fx:id="invoiceNumber" disable="true" />
                     </VBox>
                     <VBox styleClass="couple">

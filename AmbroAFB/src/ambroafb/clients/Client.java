@@ -441,12 +441,12 @@ public class Client extends EditorPanelable{
     
     /**
      * The method create short description of client by firstName, lastName and email.
-     * @param delimiter The sign between of data.
+     * @param delimiter The sign between of client full name and email.
      * @return The expression of client short information.
      */
     @JsonIgnore
     public StringExpression getShortDescrip(String delimiter){
-        return  Utils.avoidNull(firstName).concat(delimiter)
+        return  Utils.avoidNull(firstName).concat("  ")
                     .concat(Utils.avoidNull(lastName)).concat(delimiter)
                     .concat(Utils.avoidNull(email));
     }
@@ -543,6 +543,7 @@ public class Client extends EditorPanelable{
         return fieldsCompareResult && equalsPhones;
     }
 
+    // This is needed for comboBox set value...
     public boolean equals(Client other){
         return  getRecId() == other.getRecId() ||
                 getShortDescrip("").equals(other.getShortDescrip(""));

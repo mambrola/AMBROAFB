@@ -5,15 +5,27 @@
  */
 package ambroafb.loggings;
 
+import ambro.AView;
+import ambroafb.clients.Client;
+import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.loggings.filter.LoggingFilterModel;
+import authclient.db.ConditionBuilder;
+import authclient.db.WhereBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javafx.beans.binding.StringExpression;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.json.JSONObject;
 
 /**
  *
@@ -21,45 +33,82 @@ import javafx.beans.property.StringProperty;
  */
 public class Logging extends EditorPanelable {
 
-
+    @AView.Column(title = "%license_N", width = "100", styleClass = "textCenter")
     private final StringProperty licenseNumber;
-    private final StringProperty email;
-    private final StringProperty logginDateStr;
+
+    @AView.Column(title = "%clients", width = "150")
+    @JsonIgnore
+    private final StringExpression clientDescrip;
+    @JsonIgnore
+    private final ObjectProperty<Client> clientObj;
+    
+    @AView.Column(title = "%login_time", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @JsonIgnore
+    private final StringProperty loginDateDescrip;
+    @JsonIgnore
+    private final ObjectProperty<LocalDate> loginDateObj;
+    
+    @AView.Column(title = "%mac_address", width = "120", styleClass = "textCenter")
     private final StringProperty macAddress;
+    
+    @AView.Column(title = "%login_response", width = "100", styleClass = "textCenter")
     private final StringProperty response;
-    private final ObjectProperty<LocalDate> logginDateObj;
+    
+    private final IntegerProperty licenseId;
+    private final IntegerProperty invoiceId;
+    
+    @JsonIgnore
+    private static final String DB_LOGIN_VIEW = "logins_by_license_whole";
+    
     
     public Logging(){
         licenseNumber = new SimpleStringProperty("");
-        email = new SimpleStringProperty("");
-        logginDateStr = new SimpleStringProperty("");
+        clientObj = new SimpleObjectProperty<>(new Client());
+        clientDescrip = clientObj.get().getShortDescrip(", ");
+        loginDateObj = new SimpleObjectProperty<>();
+        loginDateDescrip = new SimpleStringProperty("");
         macAddress = new SimpleStringProperty("");
         response = new SimpleStringProperty("");
-        logginDateObj = new SimpleObjectProperty<>();
+        licenseId = new SimpleIntegerProperty(0);
+        invoiceId = new SimpleIntegerProperty(0);
     }
 
+    // DB functions:
     public static ArrayList<Logging> getFilteredFromDB(FilterModel model) {
-        return new ArrayList<>();
+        LoggingFilterModel logingFilterModel = (LoggingFilterModel) model;
+        WhereBuilder whereBuilder = new ConditionBuilder().where()
+                                        .and("login_time", ">=", logingFilterModel.getFromDateForDB())
+                                        .and("login_time", "<=", logingFilterModel.getToDateForDB());
+        if (!logingFilterModel.isSelectedClientALL()){
+            Client client = logingFilterModel.getSelectedClient();
+            whereBuilder.and("first_name", "=", client.getFirstName())
+                        .and("last_name", "=", client.getLastName())
+                        .and("email", "=", client.getEmail());
+        }
+        
+        JSONObject params = whereBuilder.condition().build();
+        return DBUtils.getObjectsListFromDB(Logging.class, DB_LOGIN_VIEW, params);
     }
+    
     
     // Properties:
     public StringProperty licenseNumberProperty(){
         return licenseNumber;
     }
     
-    public StringProperty emailProperty(){
-        return email;
-    }
-    
-    public ObjectProperty<LocalDate> logginDateProperty(){
-        return logginDateObj;
-    }
-    
     public StringProperty macAddressProperty(){
         return macAddress;
     }
     
-    public StringProperty responseProperty(){
+    public ObjectProperty<Client> clientProperty(){
+        return clientObj;
+    }
+    
+    public ObjectProperty<LocalDate> logginDateProperty(){
+        return loginDateObj;
+    }
+    
+    public StringProperty responseCodeProperty(){
         return response;
     }
     
@@ -70,21 +119,38 @@ public class Logging extends EditorPanelable {
         return licenseNumber.get();
     }
     
-    public String getEmail(){
-        return email.get();
+    public String getFirstName(){
+        return clientObj.get().getFirstName();
     }
     
-    public String getLogginDate(){
-        return logginDateStr.get();
+    public String getLastName(){
+        return clientObj.get().getLastName();
+    }
+    
+    public String getEmail(){
+        return clientObj.get().getEmail();
+    }
+    
+    public String getLoginTime(){
+        return loginDateDescrip.get();
     }
     
     public String getMacAddress(){
         return macAddress.get();
     }
     
-    public String getResponse(){
+    public String getResponseCode(){
         return response.get();
     }
+    
+    public int getLicenseId(){
+        return licenseId.get();
+    }
+    
+    public int getInvoiceId(){
+        return invoiceId.get();
+    }
+    
     
     
     // Setters:
@@ -92,32 +158,40 @@ public class Logging extends EditorPanelable {
         this.licenseNumber.set(licenseNumber);
     }
     
-    public void setEmail(String email){
-        this.email.set(email);
+    public void setFirstName(String name){
+        this.clientObj.get().setFirstName(name);
     }
     
-    public void setLogginDate(String logginDate){
-        logginDateObj.set(DateConverter.getInstance().parseDate(logginDate));
-        
-//        String logDate;
-//        try {
-//            logginDateObj.set(DateConverter.parseDateWithTimeAndMilisecond(logginDate));
-//            logDate = DateConverter.getDayMonthnameYearBySpace(logginDateObj.get());
-//        } catch (Exception ex){
-//            logDate = logginDate;
-//        }
-//        logginDateStr.set(logDate);
+    public void setLastName(String lastName){
+        this.clientObj.get().setLastName(lastName);
+    }
+    
+    public void setEmail(String email){
+        this.clientObj.get().setEmail(email);
     }
     
     public void setMacAddress(String macAddress){
         this.macAddress.set(macAddress);
     }
     
-    public void setResponse(String response){
+    public void setLoginTime(String logginTime){
+        loginDateObj.set(DateConverter.getInstance().parseDate(logginTime));
+        loginDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(loginDateObj.get()));
+    }
+    
+    public void setResponseCode(String response){
         this.response.set(response);
     }
-        
     
+    public void setLicenseId(int id){
+        licenseId.set(id);
+    }
+
+    public void setInvoiceId(int id){
+        invoiceId.set(id);
+    }
+
+
     @Override
     public Logging cloneWithoutID() {
         Logging clone = new Logging();
@@ -136,15 +210,17 @@ public class Logging extends EditorPanelable {
     public void copyFrom(EditorPanelable other) {
         Logging logging = (Logging)other;
         setLicenseNumber(logging.getLicenseNumber());
+        setFirstName(logging.getFirstName());
+        setLastName(logging.getLastName());
         setEmail(logging.getEmail());
-        setLogginDate(logging.getLogginDate());
+        setLoginTime(logging.getLoginTime());
         setMacAddress(logging.getMacAddress());
-        setResponse(logging.getResponse());
+        setResponseCode(logging.getResponseCode());
     }
 
     @Override
     public String toStringForSearch() {
-        return getMacAddress();
+        return getLicenseNumber() + " " + clientObj.get().getShortDescrip("") + " " + getMacAddress();
     }
     
     
@@ -152,10 +228,9 @@ public class Logging extends EditorPanelable {
     public boolean compares(EditorPanelable backup){
         Logging loggingBackup = (Logging) backup;
         return  getLicenseNumber().equals(loggingBackup.getLicenseNumber()) &&
-                getEmail().equals(loggingBackup.getEmail()) &&
-                getLogginDate().equals(loggingBackup.getLogginDate()) &&
+                clientObj.get().equals(loggingBackup.clientProperty().get()) &&
+                getLoginTime().equals(loggingBackup.getLoginTime()) &&
                 getMacAddress().equals(loggingBackup.getMacAddress()) &&
-                getResponse().equals(loggingBackup.getResponse());
-                
+                getResponseCode().equals(loggingBackup.getResponseCode());
     }
 }

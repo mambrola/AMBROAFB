@@ -64,7 +64,6 @@ public class MapEditorComboBox<T> extends ComboBox<T>{
                         selectedItem = getNewInstance(key, value);
                     }
                     else {
-                        System.out.println("chaemata axali mnishvneloba");
                         T newItem = getNewInstance(key, value);
                         comboBoxItemsList.add(newItem);
                         elements.put(key, value);

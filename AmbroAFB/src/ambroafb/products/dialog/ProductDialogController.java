@@ -79,7 +79,6 @@ public class ProductDialogController implements Initializable {
             former.textProperty().bindBidirectional(product.formerProperty());
             descrip.textProperty().bindBidirectional(product.descriptionProperty());
 //            remark.textProperty().bindBidirectional(product.remarkProperty());
-            System.out.println("prod spec: " + product.specificProperty().get());
             specifics.valueProperty().bindBidirectional(product.specificProperty());
             price.textProperty().bindBidirectional(product.priceProperty());
             currency.valueProperty().bindBidirectional(product.currencyProperty());

@@ -47,7 +47,7 @@ public class Invoice extends EditorPanelable {
     @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty createdDate;
     
-    @AView.Column(title = "%invoice_n", width = "100")
+    @AView.Column(title = "%invoice_N", width = "100")
     private final SimpleStringProperty invoiceNumber;
     
     @AView.Column(title = "%licenses", width = "100")

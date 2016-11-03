@@ -44,7 +44,7 @@ public class License extends EditorPanelable {
     @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty createdDate;
     
-    @AView.Column(title = "%license N", width = "100", styleClass = "textRight")
+    @AView.Column(title = "%license_N", width = "100", styleClass = "textRight")
     private final IntegerProperty licenseNumber;
     
     @AView.Column(title = "%client", width = "150", styleClass = "textCenter")
@@ -108,7 +108,7 @@ public class License extends EditorPanelable {
     public License(){
         createdDate = new SimpleStringProperty("");
         clientObj = new SimpleObjectProperty<>(new Client());
-        clientDescrip = Utils.avoidNull(clientObj.get().firstNameProperty()).concat(" ").concat(Utils.avoidNull(clientObj.get().lastNameProperty())).concat(" ").concat(Utils.avoidNull(clientObj.get().emailProperty()));
+        clientDescrip = clientObj.get().getShortDescrip(", ");
         productObj = new SimpleObjectProperty<>(new Product());
         productDescrip = Utils.avoidNull(productObj.get().abbreviationProperty()).concat(Utils.avoidNull(productObj.get().formerProperty()));
 //        invoiceObj = new SimpleObjectProperty<>(new Invoice());
