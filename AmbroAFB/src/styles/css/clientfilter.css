@@ -1,18 +1,18 @@
 @import url("/styles/css/core.css");
-#formPane {
-  -fx-pref-width: 480;
-  -fx-padding: 10;
-  -fx-spacing: 20;
-}
+@import url("/styles/css/filters.css");
 .label {
   -fx-font-weight: bold;
   -fx-font-size: 0.9em;
   -fx-padding: 1 0 1 2;
 }
-.w1 .text-field {
+.w1 .text-field,
+.w1 .combo-box,
+.w1 .date-picker {
   -fx-pref-width: 480;
 }
-.w2 .text-field {
+.w2 .text-field,
+.w2 .combo-box,
+.w2 .date-picker {
   -fx-pref-width: 225;
 }
 .w3 .text-field,
@@ -29,4 +29,9 @@
 }
 *:disabled {
   -fx-opacity: 0.9;
+}
+#formPane {
+  -fx-pref-width: 480;
+  -fx-padding: 10px;
+  -fx-spacing: 20px;
 }

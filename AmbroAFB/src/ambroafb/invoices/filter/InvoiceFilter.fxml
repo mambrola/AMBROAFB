@@ -61,7 +61,7 @@
                     </VBox>
                 </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" spacing="30" styleClass="doubleHeight">
+            <HBox alignment="CENTER_RIGHT" >
                 <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
             </HBox>
         </children>

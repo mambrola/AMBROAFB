@@ -1,41 +1,40 @@
 @import url("/styles/css/core.css");
-#formPane {
-  -fx-min-height: 150;
-  -fx-max-height: 150;
-  -fx-min-width: 480;
-  -fx-max-width: 480;
-  -fx-padding: 10;
-  -fx-spacing: 10;
-}
+@import url("/styles/css/filters.css");
 .label {
   -fx-font-weight: bold;
   -fx-font-size: 0.9em;
   -fx-padding: 1 0 1 2;
 }
-.w1 .text-field {
-  -fx-pref-width: 460;
+.w1 .text-field,
+.w1 .combo-box,
+.w1 .date-picker {
+  -fx-pref-width: 480;
 }
-.w2 .text-field {
-  -fx-pref-width: 215;
+.w2 .text-field,
+.w2 .combo-box,
+.w2 .date-picker {
+  -fx-pref-width: 225;
 }
 .w3 .text-field,
-.w3 .combo-box {
-  -fx-pref-width: 133.33333333;
-}
-.w3 .c2 {
-  -fx-pref-width: 296.66666667;
+.w3 .combo-box,
+.w3 .date-picker {
+  -fx-pref-width: 140;
 }
 .w2,
 .w3 {
   -fx-spacing: 30;
-}
-.doubleHeight {
-  /*-fx-background-color: yellow;*/
-  -fx-pref-height: 33.33333333;
 }
 .button {
   -fx-font-weight: bold;
 }
 *:disabled {
   -fx-opacity: 0.9;
+}
+#formPane {
+  -fx-pref-width: 480;
+  -fx-padding: 10px;
+  -fx-spacing: 20px;
+}
+.w3 .c2 {
+  -fx-pref-width: 310;
 }
