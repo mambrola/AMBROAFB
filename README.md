@@ -63,7 +63,7 @@ Accounting for Busines
 * (+) product-ებში ზოგს მოაქვს ველი descrip და ასევე specificesrcip და ზოგს მხოლოდ specificDesrcip
 * (+) product-ების width დაპატარავებისას editorPanel-ის region-ის ადგილი უჩვეულოდ დიდა რჩება
 	+ less ფაილში ეწერა minWidth და maxWidth
-* (-) fxml, css, less ფაილები   (formPane_ზე Min და Max width_ები  // sheidzleba tavdapirvel zomas vusetavdit, tumca arc esaa sachiro)
+* (+) fxml, css, less ფაილები   (formPane_ზე Min და Max width_ები  // sheidzleba tavdapirvel zomas vusetavdit, tumca arc esaa sachiro)
 * (|) UML დიაგრამები
 * (+) Editorpanelable კლასების db მეთოდები ერთ სტილზე
 * (+) product-ების დიალოგში ორჯერ ჩნდება ფასდაკლებები mapEditor-ში. (discounts.addAll() შეიცვალა discounts.setAll()-ით)
@@ -108,6 +108,7 @@ client-ის phones არის ცარიელი მასივი დ�
 * (+) Client.saveOneToDB მეთოდი ჯავაში ვერ ამატებს კლიენტს და პასუხად უბრუნდება სულ recId = 1 კლიენტი.
        + rec_id საერთოდ არ უნდა ფიგურირებდეს ბაზის json-ში თუ ახალს ვამატებთ, java-დან კი მიდიოდა rec_id = 0. მოაგავარა @JsonInculde(JsonInculde.non_default)-მა
 * (-) login_by_license_whole-ში LicenseNumber-ის ველი. login_time-ის მიხედვით დალაგებული ხომ არ წამოვიდეს ??
+* (-) ClientDialog-ის ფანჯარა imageGallery-ის გამო დიდია სიმაღლეში, შეიძლება არ დაეტიოს ლეპტოპების ეკრანზე. ხომ არ ჯობია runtime-ში გავიგოთ ეკრანის ზომები და იმის მიხედვით დავსეტოთ imageGallery-ის ზომები.
 
 დასატესტია:
 * (+) ჩაკეცვა / ამოკეცვის  ფუნქციონალი. (თუ გადიდებულია მშობელი ფანჯარა, ჩაკეცვა/ამოკეცვა ცუდად მუშაობს)
