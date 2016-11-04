@@ -36,10 +36,6 @@
 *:disabled {
   -fx-opacity: 0.9;
 }
-/*@formHeight         : 300;
-@gap                :  15;
-@spaceWidth         :  35;
-@rotateHboxSpacing  :  65;*/
 #formPane {
   -fx-min-width: 520px;
   -fx-max-width: 520px;
