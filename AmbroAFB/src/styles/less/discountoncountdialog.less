@@ -1,13 +1,17 @@
 @import url("/styles/css/core.css");
+@import url("/styles/css/dialogs.css");
+@import url("/dialogs.less");
 @import url("/variables.less");
 
 @formWidth          : 500;
-@formHeight         : 300;
+/*@formHeight         : 300;
 @gap                :  15;
 @spaceWidth         :  35;
-@rotateHboxSpacing  :  65;
+@rotateHboxSpacing  :  65;*/
 
-#formPane {
+.setFormPaneRules(@formWidth);
+
+/*#formPane {
     -fx-max-height: @formHeight;
     -fx-min-width: @formWidth + 2*@gap;
     -fx-max-width: @formWidth + 2*@gap;
@@ -22,9 +26,9 @@
     -fx-font-weight: bold;
     -fx-font-size: 0.9em;
     -fx-padding: 1 0 1 2;
-}
+}*/
 
-.one>.couple{
+/*.one>.couple{
     -fx-pref-width: @formWidth;
 }
 .oneHalf>.couple{
@@ -39,9 +43,9 @@
 }
 .oneThirds {
     -fx-pref-width: 2*(@formWidth - 2*@spaceWidth)/3 + @spaceWidth;
-}
+}*/
 
-
+/*
 .oneHalf, .oneThirds {
     -fx-spacing: @spaceWidth;
 }
@@ -55,4 +59,4 @@
 
 *:disabled {
     -fx-opacity: 0.9;
-}
+}*/

@@ -1,58 +1,8 @@
 @import url("/styles/css/core.css");
+@import url("/styles/css/dialogs.css");
+@import url("/dialogs.less");
 @import url("/variables.less");
 
 @formWidth          : 500;
-@formHeight         : 200;
-@gap                :  15;
-@spaceWidth         :  35;
-@rotateHboxSpacing  :  65;
 
-#formPane {
-    -fx-max-height: @formHeight;
-    -fx-min-width: @formWidth + 2*@gap;
-    -fx-max-width: @formWidth + 2*@gap;
-    -fx-padding: @gap;
-}
-
-.vContainer {
-    -fx-spacing: @gap;
-}
-
-.label {
-    -fx-font-weight: bold;
-    -fx-font-size: 0.9em;
-    -fx-padding: 1 0 1 2;
-}
-
-.one>.couple{
-    -fx-pref-width: @formWidth;
-}
-.oneHalf>.couple{
-    -fx-pref-width: (@formWidth - @spaceWidth)/2;
-}
-.oneThirds>.couple{
-    -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
-}
-
-.couple>.combo-box {
-    -fx-max-width: @formWidth;
-}
-.oneThirds {
-    -fx-pref-width: 2*(@formWidth - 2*@spaceWidth)/3 + @spaceWidth;
-}
-
-
-.oneHalf, .oneThirds {
-    -fx-spacing: @spaceWidth;
-}
-
-.doubleHeight {
-    -fx-pref-height: 4 * @formHeight / 9;
-}
-.button {
-    -fx-font-weight: bold;
-}
-
-*:disabled {
-    -fx-opacity: 0.9;
-}
+.setFormPaneRules(@formWidth);

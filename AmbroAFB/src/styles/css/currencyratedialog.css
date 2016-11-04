@@ -1,29 +1,24 @@
 @import url("/styles/css/core.css");
-#formPane {
-  -fx-max-height: 300;
-  -fx-min-width: 530;
-  -fx-max-width: 530;
-  -fx-padding: 15;
-}
+@import url("/styles/css/dialogs.css");
 .vContainer {
-  -fx-spacing: 15;
+  -fx-spacing: 10px;
 }
 .label {
   -fx-font-weight: bold;
   -fx-font-size: 0.9em;
   -fx-padding: 1 0 1 2;
 }
-.one > .couple {
+.one > .couple,
+.one > .couple > * {
   -fx-pref-width: 500;
 }
-.oneHalf > .couple {
+.oneHalf > .couple,
+.oneHalf > .couple > * {
   -fx-pref-width: 232.5;
 }
-.oneThirds > .couple {
+.oneThirds > .couple,
+.oneThirds > .couple > * {
   -fx-pref-width: 143.33333333;
-}
-.couple > .combo-box {
-  -fx-max-width: 500;
 }
 .oneThirds {
   -fx-pref-width: 321.66666667;
@@ -32,12 +27,17 @@
 .oneThirds {
   -fx-spacing: 35;
 }
-.doubleHeight {
-  -fx-pref-height: 133.33333333;
+.okayCancelPane {
+  -fx-padding: 40px 0 0 0;
 }
 .button {
   -fx-font-weight: bold;
 }
 *:disabled {
   -fx-opacity: 0.9;
+}
+#formPane {
+  -fx-min-width: 520px;
+  -fx-max-width: 520px;
+  -fx-padding: 10px;
 }

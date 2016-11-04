@@ -72,8 +72,8 @@ public class DiscountOnCount extends EditorPanelable {
         return Utils.getIntValueFor(licenseCount.get());
     }
     
-    public int getDiscountRate(){
-        return Utils.getIntValueFor(discountRate.get());
+    public String getDiscountRate(){
+        return discountRate.get();
     }
     
     
@@ -82,8 +82,8 @@ public class DiscountOnCount extends EditorPanelable {
         this.licenseCount.set("" + count);
     }
     
-    public void setDiscountRate(int rate){
-        this.discountRate.set("" + rate);
+    public void setDiscountRate(String rate){
+        this.discountRate.set(rate);
     }
     
     
@@ -122,7 +122,7 @@ public class DiscountOnCount extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         DiscountOnCount discCountBackup = (DiscountOnCount) backup;
         return  getLicenseCount() == discCountBackup.getLicenseCount() &&
-                getDiscountRate() == discCountBackup.getDiscountRate();
+                getDiscountRate().equals(discCountBackup.getDiscountRate());
     }
     
 }

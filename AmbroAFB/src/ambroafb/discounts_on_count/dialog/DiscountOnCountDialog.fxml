@@ -24,7 +24,7 @@
                     </VBox>
                 </children> 
             </HBox>
-            <HBox fx:id="okCancelHbox" styleClass="doubleHeight" alignment="CENTER_RIGHT" spacing="30" >
+            <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
                 <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
             </HBox>
         </children>

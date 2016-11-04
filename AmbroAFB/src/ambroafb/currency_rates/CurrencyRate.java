@@ -61,7 +61,6 @@ public class CurrencyRate extends EditorPanelable {
         rate = new SimpleStringProperty("");
         
         dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            System.out.println("in date listener");
             String dateStr = "";
             if (newValue != null){
                 dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(newValue);
@@ -162,8 +161,6 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public String getDate() {
-        System.out.println("dateProp: " + dateProperty);
-        System.out.println("dateProp.get(): " + dateProperty.get());
         return (dateProperty.get() == null) ? "" : dateProperty.get().toString();
     }
     
@@ -182,8 +179,6 @@ public class CurrencyRate extends EditorPanelable {
     // Setters:
     public void setDate(String date) {
         dateProperty.set(DateConverter.getInstance().parseDate(date));
-        System.out.println("ki mara date xo daeseta ?? date from json: " + date);
-        System.out.println("date axla: " + dateProperty.get());
     }
     
     public void setCount(int count){
