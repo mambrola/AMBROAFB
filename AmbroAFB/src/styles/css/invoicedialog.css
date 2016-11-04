@@ -13,7 +13,7 @@
   -fx-pref-width: 800;
 }
 .oneHalf > .couple,
-.oneThirds > .couple > * {
+.oneHalf > .couple > * {
   -fx-pref-width: 382.5;
 }
 .oneThirds > .couple,
