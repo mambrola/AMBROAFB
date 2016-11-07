@@ -6,17 +6,22 @@
 package ambroafb.general.mapeditor;
 
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -27,8 +32,9 @@ public class MapEditor extends ComboBox<MapEditorElement> {
     
     private Map<String, MapEditorElement> itemsMap;
     private String delimiter;
-    private Consumer<MapEditorElement> removeElement;
-    private String keyPattern, valuePattern;
+    private Consumer<MapEditorElement> removeElement, editElement;
+    private String keyPattern, valuePattern, initializeClass;
+    private Class<?> initialize;
     
     public MapEditor(){
         this.setEditable(true);
@@ -48,6 +54,13 @@ public class MapEditor extends ComboBox<MapEditorElement> {
                 }
                 getItems().remove(elem);
             }
+        };
+        
+        editElement = (MapEditorElement elem) -> {
+            getSelectionModel().select(-1);
+            getEditor().setText(elem.getKey() + delimiter + elem.getValue());
+            itemsMap.remove(elem.getKey());
+            getItems().remove(elem);
         };
         
         // Never hide comboBox items listView:
@@ -81,21 +94,65 @@ public class MapEditor extends ComboBox<MapEditorElement> {
             }
         });
         
-        setSelectionModel(new SingleSelectionModel<MapEditorElement>() {
+        this.setConverter(new StringConverter<MapEditorElement>() {
             @Override
-            protected MapEditorElement getModelItem(int index) {
-                if (index >= 0 && index < getItems().size()){
-                    MapEditorElement item = getItems().get(index);
-                    return item;
+            public String toString(MapEditorElement object) {
+                if (object == null){
+                    return delimiter;
                 }
-                return null;
+                return object.getKey() + delimiter + object.getValue();
             }
 
             @Override
-            protected int getItemCount() {
-                return getItems().size();
+            public MapEditorElement fromString(String input) {
+                MapEditorElement result = null;
+                if (input != null && input.contains(delimiter)){
+                    result = getNewInstance();
+                    if (result == null) return null;
+                    String keyInput = StringUtils.substringBefore(input, delimiter).trim();
+                    String valueInput = StringUtils.substringAfter(input, delimiter).trim();
+                    if (!keyInput.isEmpty()){
+                        result.setKey(keyInput);
+                    }
+                    if (!valueInput.isEmpty()){
+                        result.setValue(valueInput);
+                    }
+                    if (!keyInput.isEmpty() && !valueInput.isEmpty() && !itemsMap.containsKey(keyInput)){
+                        itemsMap.put(keyInput, result);
+                        getItems().add(result);
+                        return null;
+                    }
+                }
+                return result;
             }
         });
+        
+        // Control caret position in textField.
+        editor.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            int caretOldPos = editor.getCaretPosition();
+            int delimiterIndex = editor.getText().indexOf(delimiter);
+            if (event.getCode().equals(KeyCode.RIGHT)) {
+                if (caretOldPos + 1 > delimiterIndex && caretOldPos + 1 <= delimiterIndex + delimiter.length()) {
+                    editor.positionCaret(delimiterIndex + delimiter.length());
+                    event.consume();
+                }
+            } else if (event.getCode().equals(KeyCode.LEFT)) {
+                if (caretOldPos - 1 >= delimiterIndex && caretOldPos - 1 < delimiterIndex + delimiter.length()) {
+                    editor.positionCaret(delimiterIndex);
+                    event.consume();
+                }
+            }
+        });
+    }
+    
+    private MapEditorElement getNewInstance() {
+        MapEditorElement result = null;
+        try {
+            result = (MapEditorElement) initialize.getConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+            Logger.getLogger(MapEditor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
     }
     
     private class CustomCell extends ListCell<MapEditorElement> {
@@ -111,7 +168,7 @@ public class MapEditor extends ComboBox<MapEditorElement> {
                 setGraphic(null);
             }
             else {
-                MapEditorItem mapEditorItem = new MapEditorItem(item, delimiter, removeElement);
+                MapEditorItem mapEditorItem = new MapEditorItem(item, delimiter, removeElement, editElement);
                 itemsMap.put(item.getKey(), item);
                 setGraphic(mapEditorItem);
             }
@@ -147,5 +204,19 @@ public class MapEditor extends ComboBox<MapEditorElement> {
     @FXML
     public String getDelimiter(){
         return delimiter;
+    }
+    
+    @FXML
+    public void setInitialize(String classStr){
+        initializeClass = classStr;
+        try {
+            initialize = Class.forName(classStr);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MapEditor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public String getInitialize(){
+        return initializeClass;
     }
 }

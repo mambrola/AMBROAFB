@@ -13,6 +13,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.mapeditor.MapEditorElement;
 import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
 import authclient.db.ConditionBuilder;
@@ -20,6 +21,7 @@ import authclient.db.DBClient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -30,6 +32,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -71,6 +74,7 @@ public class Product extends EditorPanelable {
     
     @AView.Column(title = "%discounts", width = "80", cellFactory = DiscountCellFactory.class)
     private final ObservableList<ProductDiscount> discounts;
+    private final ObservableList<MapEditorElement> discountsForMapEditor;
     
     @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)
     private final SimpleBooleanProperty isActive;
@@ -95,17 +99,35 @@ public class Product extends EditorPanelable {
         iso = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>(new Currency());
         discounts = FXCollections.observableArrayList();
+        discountsForMapEditor = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
         
         productSpecific.addListener((ObservableValue<? extends ProductSpecific> observable, ProductSpecific oldValue, ProductSpecific newValue) -> {
-//            if (newValue != null){
-//                System.out.println("product specific listener");
-//                specific.set(newValue.getRecId());
-//                specificDescrip.set(newValue.getDescrip());
-//            }
             rebindSpecific();
         });
         rebindSpecific();
+        
+        discountsForMapEditor.addListener((ListChangeListener.Change<? extends Object> c) -> {
+            c.next();
+            if (c.wasAdded() ){
+                List<? extends Object> adds = c.getAddedSubList();
+                adds.stream().forEach((elem) -> {
+                    ProductDiscount disc = (ProductDiscount) elem;
+                    if (disc != null && !discounts.contains(disc)){
+                        discounts.add(disc);
+                    }
+                });
+            }
+            else if (c.wasRemoved()){
+                List<? extends Object> removes = c.getRemoved();
+                removes.stream().forEach((elem) -> {
+                    ProductDiscount disc = (ProductDiscount) elem;
+                    if (disc != null && discounts.contains(disc)){
+                        discounts.remove(disc);
+                    }
+                });
+            }
+        });
         
         currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
             rebindIso();
@@ -283,6 +305,11 @@ public class Product extends EditorPanelable {
         return discounts;
     }
     
+    @JsonIgnore
+    public ObservableList<MapEditorElement> getDiscountsForMapEditor(){
+        return discountsForMapEditor;
+    }
+    
     public boolean getIsActive() {
         return isActive.get();
     }
@@ -324,7 +351,12 @@ public class Product extends EditorPanelable {
     }
     
     public void setDiscounts(Collection<ProductDiscount> discounts) {
-        this.discounts.setAll(discounts);
+//        this.discounts.setAll(discounts);
+        discounts.stream().forEach((discount) -> {
+            discountsForMapEditor.setAll(discounts);
+        });
+        
+        System.out.println("axal discounts: " + this.discounts);
     }
 
     public void setIsActive(boolean isActive) {
@@ -360,7 +392,9 @@ public class Product extends EditorPanelable {
         setIsActive(product.getIsActive());
 
         discounts.clear();
-        discounts.addAll(product.getDiscounts());
+        discountsForMapEditor.clear();
+        discountsForMapEditor.addAll(product.getDiscountsForMapEditor());
+//        discounts.addAll(product.getDiscounts());
     }
 
     @Override
@@ -392,9 +426,9 @@ public class Product extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         Product productBackup = (Product) backup;
         
-        System.out.println("this.specificProperty().get().equals(productBackup.specificProperty().get()) " + (this.specificProperty().get().equals(productBackup.specificProperty().get()) ));
-        System.out.println("this.specificProperty().get(): " + (this.specificProperty().get() ));
-        System.out.println("productBackup.specificProperty().get() " + (productBackup.specificProperty().get()) );
+        System.out.println("Utils.compareLists(getDiscounts(), productBackup.getDiscounts()): " + (Utils.compareLists(getDiscounts(), productBackup.getDiscounts()) ));
+        System.out.println("getDiscounts(): " + getDiscounts());
+        System.out.println("productBackup.getDiscounts(): " + productBackup.getDiscounts());
         
         return  this.getAbbreviation().equals(productBackup.getAbbreviation()) &&
                 this.getFormer() == productBackup.getFormer() &&

@@ -9,17 +9,27 @@
 
 <fx:root    type="javafx.scene.layout.HBox"
             fx:id="rootPane"
+            stylesheets="/styles/css/mapeditor.css"
             xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <HBox fx:id="itemPane" HBox.hgrow="ALWAYS" >
             <children>
-                <Label fx:id="itemDescrip" text="" />
+                <Label fx:id="itemDescrip" />
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="delete" style="-fx-background-color: transparent;" >
+                <Button fx:id="delete" >
                     <graphic>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="/images/delete2.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="edit" >
+                    <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="/images/edit2.png" />
                             </image>
                         </ImageView>
                     </graphic>

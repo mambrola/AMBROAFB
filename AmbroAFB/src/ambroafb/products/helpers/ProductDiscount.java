@@ -8,6 +8,8 @@ package ambroafb.products.helpers;
 import ambroafb.general.Utils;
 import ambroafb.general.mapeditor.MapEditorElement;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
@@ -15,12 +17,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class ProductDiscount implements MapEditorElement {
 
-    private String days;
-    private String discountRate;
+    private final StringProperty days;
+    private final StringProperty discountRate;
     private String delimiter = " : ";
     private int recId = 0;
 
     public ProductDiscount() {
+        days = new SimpleStringProperty("");
+        discountRate = new SimpleStringProperty("");
     }
 
 //    // It is needed for MapEditor.
@@ -30,11 +34,11 @@ public class ProductDiscount implements MapEditorElement {
 //    }
     
     public int getDays(){
-        return Utils.getIntValueFor(days);
+        return Utils.getIntValueFor(days.get());
     }
     
     public double getDiscountRate(){
-        return Utils.getDoubleValueFor(discountRate);
+        return Utils.getDoubleValueFor(discountRate.get());
     }
 
     @JsonIgnore
@@ -47,11 +51,11 @@ public class ProductDiscount implements MapEditorElement {
     }
     
     public void setDays(int months){
-        this.days = "" + months;
+        this.days.set("" + months);
     }
     
     public void setDiscountRate(double discount){
-        this.discountRate = "" + discount;
+        this.discountRate.set("" + discount);
     }
 
     @JsonIgnore
@@ -63,38 +67,42 @@ public class ProductDiscount implements MapEditorElement {
         this.recId = recId;
     }
     
-    public boolean equals(ProductDiscount other) {
-        return getDays() == other.getDays() && getDiscountRate() == other.getDiscountRate();
+    
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) return false; // ???? other ragac momentshi null xdeba
+        ProductDiscount otherDisc = (ProductDiscount) other;
+        return getDays() == otherDisc.getDays() && getDiscountRate() == otherDisc.getDiscountRate();
     }
     
 
     @Override
     public String toString() {
-        return days + delimiter + discountRate;
+        return days.get() + delimiter + discountRate.get();
     }
 
     @Override @JsonIgnore
     public String getKey() {
-        return days;
+        return days.get();
     }
 
     @Override @JsonIgnore
     public String getValue() {
-        return discountRate;
+        return discountRate.get();
     }
 
     @Override @JsonIgnore
     public void setKey(String key) {
-        days = key;
+        days.set(key);
     }
 
     @Override @JsonIgnore
     public void setValue(String value) {
-        discountRate = value;
+        discountRate.set(value);
     }
 
     @Override
     public int compare(MapEditorElement other) {
-        return days.compareTo(other.getKey());
+        return days.get().compareTo(other.getKey());
     }
 }
