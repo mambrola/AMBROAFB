@@ -44,7 +44,10 @@ Accounting for Busines
 
 * (-) Date-ების გამოჩენა სიაში და DatePicker-ში
 * (-) setAll-ის გამოყენება ხომ არ აჯობებს reAssignTable-ებში სტატიკური მეთოდების result-ის forEach-ით გადაყოლას ?
-
+* (+) mapEditor-ის გამოყენება productDiscount-ებში. 
+	+ MapEditor-ი იმისათვის რომ მასთან მანიპულაცია მოხერხებული იყოს იყენებს Element ნტერფეისს (afb-ს შემთხვევაში MapEditorElement-ს). თუ MapEditor-ში გვინდა ელემენტი ჩავდოთ ეს ობიექტი უნდა implement-ირებდეს MapEditorelement ინტერფეისს (get.set Key/get.set Value/compare). თუმცა ამან გამოიწვია ის რომ საჭირო გახდა product-ების discount-ების დაბრუნების ახალი მეთოდი, რომელიც დააბრუნებს ObservableList<MapEditorElement>-ს. ეს სია უნდა დაესეტოს mapEditorComboBox-ს და ჩამატება წაშლა უნდა მოხდეს ამ სიაში. თუმცა ბაზიდან productDiscount-ების ასავსებად და გამოსაჩენად product-ებს აქვთ ObservableList<ProductDiscount> სია. რომლეიც თანხვედრაში უნდა მოვიდეს ზემოთ ნახსენებ სიასთან. ამიტომ setDiscount(Collection<ProductDiscount> discounts) მეთოდში, რომელიც ბაზიდან წამოღებულ მნიშვნელობებს უსეტავს product კლასს, საჭირო გახდა პირველი სიის შეცვლა. ხოლო ამ სიის შეცვლა უნდა იწვევდეს ObservableList<ProductDiscount> სიის ცვლილებას, ამიტომ დაუყენდა Listener-ი. copyFrom-შიც ხდება ObservableList<MapEditorElement> სიის გადაკოპირება.
+	mapEditor-ის ძველ, generic ვერსიაში, განსხვავება იყო stringConverter-ის რეალიზებაში. ახალი stringConverter-ი გაცილებით დახვეწილია და მხოლოდ ახალი item-ის ჩამატების ფუნქციონალს მოიცავს. delete და edit გამოიყო stringConverter-ისგან და გატანილია MapEditorItem კლასში.
+ძველი რეალიზება გულისხმობდა რომ mapeditor-ის Items უნდა ქონოდა konstruqtori key-სა და value-სთვის.
 
 
 დასახვეწია:
@@ -91,7 +94,7 @@ compare / equals ორივე საჭიროა, მაგალითა
 * (+) სპეც. ComboBox-ების მოწესრიგება (პატერნებით)
 	+ სცენაზე უნდა დაიხატოს ამიტომ ერთი კონსტრუქტორი ჭირდება უპარამეტრო, შეიძლება გართულდეს და ჯობდეს extends ComboBox<T>
 * (-) localDB-ის შექმნა და derby-ის გამოყენება კიდევ საჭიროა ??
-* (-) რატომღაც AFB-ს არ აქვს ის პრობლემა რომ თუ lib დირექტორიის გარეშ გაეშვა აღარ გაითიშოს და გაშვებული დარჩეს განსხვავებით testMain-სგან (შესაძლოა ამის მიზეზი იყოს ის რომ AFB ორჯერ არ ეშვება).
+* (+) რატომღაც AFB-ს არ აქვს ის პრობლემა რომ თუ lib დირექტორიის გარეშ გაეშვა აღარ გაითიშოს და გაშვებული დარჩეს განსხვავებით testMain-სგან (შესაძლოა ამის მიზეზი იყოს ის რომ AFB ორჯერ არ ეშვება - ეს არ იყო მიზეზი, არამედ ის რომ main კლასში არ ეწერა ისეთი import-ი რომლიც lib დირექტორიას საჭიროებდა).
 
 
 ბაზა: 
