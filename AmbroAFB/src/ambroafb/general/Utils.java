@@ -27,7 +27,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.mapeditor.MapEditorComboBox;
+import ambroafb.general.mapeditor.MapEditor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -418,7 +418,7 @@ public class Utils {
         boolean result = true;
         ContentMapEditor annotation = field.getAnnotation(ContentMapEditor.class);
         Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
-        MapEditorComboBox mapEditorComboBox = (MapEditorComboBox) typeAndContent[0];
+        MapEditor mapEditorComboBox = (MapEditor) typeAndContent[0];
         String editorContent = (String) typeAndContent[1];
         String keyPart = StringUtils.substringBefore(editorContent, mapEditorComboBox.getDelimiter()).trim();
         String valuePart = StringUtils.substringAfter(editorContent, mapEditorComboBox.getDelimiter()).trim();
@@ -457,8 +457,8 @@ public class Utils {
                 results[0] = datePicker;
                 results[1] = datePicker.getEditor().getText();
             }
-            else if (field.getType().equals(MapEditorComboBox.class)){
-                MapEditorComboBox mapEditor = (MapEditorComboBox)field.get(ownerClassObject);
+            else if (field.getType().equals(MapEditor.class)){
+                MapEditor mapEditor = (MapEditor)field.get(ownerClassObject);
                 results[0] = mapEditor;
                 results[1] = mapEditor.getEditor().getText();
             }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<fx:root    type="javafx.scene.layout.HBox"
+            fx:id="rootPane"
+            xmlns:fx="http://javafx.com/fxml/1" >
+    <children>
+        <HBox fx:id="itemPane" HBox.hgrow="ALWAYS" >
+            <children>
+                <Label fx:id="itemDescrip" text="" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="delete" style="-fx-background-color: transparent;" >
+                    <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="/images/delete2.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+</fx:root>

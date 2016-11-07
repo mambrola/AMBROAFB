@@ -76,7 +76,7 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%discounts" styleClass="validationMessage" />
-                            <MapEditorComboBox fx:id="discounts" initializer="ambroafb.products.helpers.ProductDiscount" delimiter=" : "  keyPattern="(1[0-2]|[1-9])?" valuePattern="((0|[1-9]{1,2})(\.[0-9]*)?)?" />
+                            <MapEditor fx:id="discounts" delimiter=" : "  keyPattern="(1[0-2]|[1-9])?" valuePattern="((0|[1-9]{1,2})(\.[0-9]*)?)?" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple" alignment="CENTER_LEFT" >
