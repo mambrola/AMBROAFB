@@ -11,7 +11,6 @@ import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
-import ambroafb.general.UtilsDB;
 import ambroafb.login.LoginController;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -39,7 +38,7 @@ public class AmbroAFB extends Application {
     @Override
     public void start(Stage stage) {
         mainStage = stage;
-        UtilsDB.getInstance().createLocalUsageTables();
+        //UtilsDB.getInstance().createLocalUsageTables();
         StagesContainer.registerStageByOwner(null, getClass().getSimpleName(), mainStage);
         Scene scene = SceneUtils.createScene(Names.MAIN_FXML, null);
         stage.setScene(scene);
