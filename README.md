@@ -146,3 +146,6 @@ Country-ის equals მეთპდზე, comboBox_ის დროს.
 
 * (-) Currencies:
 	1) (-) currencyDialog-ში  ვალუტის  iso  კოდის  comboBox-ი  ალბათ  editable უნდა იყოს
+	
+* (-) CurrencyRates:
+	1) (-) date-ის ცვლილების შესასძლებლობა უნდა იყოს დიალოგში ?
