@@ -17,7 +17,7 @@ import javafx.util.StringConverter;
 public class CountryComboBox extends ComboBox<Country> {
     
     private final ObservableList<Country> items = FXCollections.observableArrayList();
-    public final Country all = new Country();
+    private final Country all = new Country();
     
     public CountryComboBox(){
         this.setItems(items);

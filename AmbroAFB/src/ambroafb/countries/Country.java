@@ -22,6 +22,7 @@ import org.json.JSONObject;
  *
  * @author mambroladze
  */
+@SuppressWarnings("EqualsAndHashcode")
 public class Country extends EditorPanelable{
 
     @AView.Column(width = "30")
@@ -135,10 +136,16 @@ public class Country extends EditorPanelable{
     @Override
     public boolean compares(EditorPanelable backup){
         Country country = (Country) backup;
-        return this.getCode().equals(country.getCode()) && this.getDescrip().equals(country.getDescrip());
+        return  this.getCode().equals(country.getCode()) && 
+                this.getDescrip().equals(country.getDescrip());
     }
 
-    public boolean equals(Country other){
-        return getCode().equals(other.getCode());
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object other){
+        if (other == null) return false;
+        Country countryOther = (Country) other;
+        return getCode().equals(countryOther.getCode());
     }
+
 }
