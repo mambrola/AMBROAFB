@@ -24,7 +24,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -39,8 +38,6 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     private CurrencyComboBox currencies;
     @FXML
     private FilterOkayCancelController okayCancelController;
-    
-    private JSONObject jSonResult;
     
     private final CurrencyRateFilterModel currencyRateFilterModel = new CurrencyRateFilterModel();
     

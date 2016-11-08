@@ -48,9 +48,8 @@ public class CurrencyRate extends EditorPanelable {
     private final StringProperty rate;
     
     @JsonIgnore
-    private static final String DB_TABLE_NAME = "rates";
-    @JsonIgnore
-    private static final String DB_VIEW_NAME = "rates_whole";
+    private static final String DB_TABLE_NAME = "rates", DB_VIEW_NAME = "rates_whole";
+    
     
     public CurrencyRate(){
         dateProperty = new SimpleObjectProperty<>();
@@ -211,10 +210,10 @@ public class CurrencyRate extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         CurrencyRate source = (CurrencyRate) other;
-        this.setDate(source.getDate());
-        this.setCount(source.getCount());
-        this.setIso(source.getIso());
-        this.setRate(source.getRate());
+        setDate(source.getDate());
+        setCount(source.getCount());
+        setIso(source.getIso());
+        setRate(source.getRate());
     }
 
     @Override
@@ -230,10 +229,10 @@ public class CurrencyRate extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         CurrencyRate currencyRateBackup = (CurrencyRate) backup;
-        return  this.getDate().equals(currencyRateBackup.getDate()) &&
-                this.getCount() == currencyRateBackup.getCount()    &&
-                this.getIso().equals(currencyRateBackup.getIso())   &&
-                this.getRate() == currencyRateBackup.getRate();
+        return  getDate().equals(currencyRateBackup.getDate()) &&
+                getCount() == currencyRateBackup.getCount()    &&
+                getIso().equals(currencyRateBackup.getIso())   &&
+                getRate() == currencyRateBackup.getRate();
     }
     
 }
