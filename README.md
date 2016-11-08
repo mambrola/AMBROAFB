@@ -149,3 +149,4 @@ Country-ის equals მეთპდზე, comboBox_ის დროს.
 	
 * (-) CurrencyRates:
 	1) (-) date-ის ცვლილების შესასძლებლობა უნდა იყოს დიალოგში ?
+	2) (-) dialog-იდან new-ს და new by simple-ს შესაძლებლობა უნდა იყოს ?
