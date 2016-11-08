@@ -9,6 +9,7 @@ import ambro.AView;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TableColumnWidths;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
@@ -24,17 +25,19 @@ import org.json.JSONObject;
  *
  * @author dato
  */
+@SuppressWarnings("EqualsAndHashcode")
 public class Currency extends EditorPanelable {
 
     
-    @AView.Column(title = "%date", width = "100")
+    @AView.Column(title = "%date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty createdDate;
-    
+    @JsonIgnore
     private final ObjectProperty<LocalDate> dateProperty;
     
-    @AView.Column(title = "%iso", width = "50")
+    @AView.Column(title = "%currency_name", width = TableColumnWidths.ISO, styleClass = "textCenter")
     private final StringProperty iso;
-    private final ObjectProperty<Currency> currency;
+//    @JsonIgnore
+//    private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%descrip", width = "150")
     private final StringProperty descrip;
@@ -51,7 +54,7 @@ public class Currency extends EditorPanelable {
         createdDate = new SimpleStringProperty("");
         dateProperty = new SimpleObjectProperty<>();
         iso = new SimpleStringProperty("");
-        currency = new SimpleObjectProperty<>(this);
+//        currency = new SimpleObjectProperty<>(this);
         descrip = new SimpleStringProperty("");
         symbol = new SimpleStringProperty("");
         
@@ -63,14 +66,14 @@ public class Currency extends EditorPanelable {
             createdDate.set(dateStr);
         });
         
-        // Bind components does not work for this case. Because DB methods calls setters ("bind" and also settter is conflicted couple). So listener also call setters to change currency values:
-        currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
-            if (newValue != null){
-                setIso(newValue.getIso());
-                setDescrip(newValue.getDescrip());
-                setSymbol(newValue.getSymbol());
-            }
-        });
+//        // Bind components does not work for this case. Because DB methods calls setters ("bind" and also settter is conflicted couple). So listener also call setters to change currency values:
+//        currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
+//            if (newValue != null){
+//                setIso(newValue.getIso());
+//                setDescrip(newValue.getDescrip());
+//                setSymbol(newValue.getSymbol());
+//            }
+//        });
         
     }
     
@@ -117,9 +120,9 @@ public class Currency extends EditorPanelable {
         return iso;
     }
     
-    public ObjectProperty<Currency> currencyProperty(){
-        return currency;
-    }
+//    public ObjectProperty<Currency> currencyProperty(){
+//        return currency;
+//    }
     
     public StringProperty descripProperty(){
         return descrip;
@@ -131,9 +134,9 @@ public class Currency extends EditorPanelable {
     
     
     // Getters:
-    public String getCreatedDate(){
-        return createdDate.get();
-    }
+//    public String getCreatedDate(){
+//        return createdDate.get();
+//    }
     
     public String getIso(){
         return iso.get();
@@ -149,7 +152,7 @@ public class Currency extends EditorPanelable {
     
     
     // Setters:
-    public void setCreatedDate(String date) {
+    private void setCreatedDate(String date) {
         this.dateProperty.set(DateConverter.getInstance().parseDate(date));
     }
     
@@ -198,8 +201,13 @@ public class Currency extends EditorPanelable {
         return getIso();
     }
     
-    public boolean equals(Currency currency){
-        return  this.getIso().equals(currency.getIso());
+    
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object other){
+        if (other == null) return false;
+        Currency otherCurrency = (Currency) other;
+        return  this.getIso().equals(otherCurrency.getIso());
     }
     
     /**

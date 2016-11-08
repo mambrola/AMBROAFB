@@ -19,12 +19,12 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%date" styleClass="validationMessage" />
-                            <ADatePicker fx:id="date" />
+                            <ADatePicker fx:id="openDate" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="%currency_name" styleClass="validationMessage" />
+                            <Label text="%iso_code" styleClass="validationMessage" />
                             <CurrencyComboBox fx:id="currencies" />
                         </children>
                     </VBox>

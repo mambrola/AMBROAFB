@@ -144,8 +144,8 @@ public class Country extends EditorPanelable{
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object other){
         if (other == null) return false;
-        Country countryOther = (Country) other;
-        return getCode().equals(countryOther.getCode());
+        Country otherCountry = (Country) other;
+        return getCode().equals(otherCountry.getCode());
     }
 
 }

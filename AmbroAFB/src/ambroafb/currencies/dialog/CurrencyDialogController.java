@@ -32,12 +32,12 @@ public class CurrencyDialogController implements Initializable {
     @FXML
     private VBox formPane;
     @FXML @ContentNotEmpty
-    private ADatePicker date;
+    private ADatePicker openDate;
     @FXML @ContentNotEmpty
     private CurrencyComboBox currencies;
     @FXML @ContentNotEmpty
     private TextField descrip;
-    @FXML @ContentNotEmpty @ContentPattern(value = "\\p{Sc}", explain = "Only one symbol of current.")
+    @FXML @ContentNotEmpty @ContentPattern(value = "\\p{Sc}", explain = "Only one symbol of currency.")
     private TextField symbol;
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -63,8 +63,8 @@ public class CurrencyDialogController implements Initializable {
     public void bindCurrency(Currency currency) {
         this.currency = currency;
         if (currency != null){
-            date.valueProperty().bindBidirectional(currency.dateProperty());
-            currencies.valueProperty().bindBidirectional(currency.currencyProperty());
+            openDate.valueProperty().bindBidirectional(currency.dateProperty());
+//            currencies.valueProperty().bindBidirectional(currency.currencyProperty());
             descrip.textProperty().bindBidirectional(currency.descripProperty());
             symbol.textProperty().bindBidirectional(currency.symbolProperty());
         }
@@ -75,6 +75,7 @@ public class CurrencyDialogController implements Initializable {
     }
 
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
+        openDate.setDisable(true);
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
