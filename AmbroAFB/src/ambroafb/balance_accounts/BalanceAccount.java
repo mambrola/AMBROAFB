@@ -9,6 +9,7 @@ import ambro.AFilterableTreeTableView;
 import ambro.AView;
 import ambroafb.general.DBUtils;
 import ambroafb.general.Utils;
+import ambroafb.general.Names;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,6 +22,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.JSONObject;
@@ -36,6 +38,7 @@ public class BalanceAccount extends EditorPanelable {
     
     @AView.Column(title = "%bal_accounts", width = "500")
     private final StringProperty descrip;
+    
     @AView.Column(width = "60")
     @JsonIgnore
     private final StringExpression actPasExpression;
@@ -43,7 +46,7 @@ public class BalanceAccount extends EditorPanelable {
     @JsonIgnore
     private final BooleanProperty indeterminateProperty;
     @JsonIgnore
-    private final BooleanProperty actPasProperty;
+    private final BooleanProperty activeProperty;
     
     
     @AFilterableTreeTableView.Children
@@ -57,20 +60,35 @@ public class BalanceAccount extends EditorPanelable {
     @JsonIgnore
     private static final String DB_TABLE_NAME = "bal_accounts";
     
+    @JsonIgnore 
+    private static final int ACT = 1, PAS = 2, INDETERMINATE = 3;
+    
     public BalanceAccount(){
         balAcc = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
         actPas = new SimpleIntegerProperty(0);
         indeterminateProperty = new SimpleBooleanProperty();
-        actPasProperty = new SimpleBooleanProperty();
+        activeProperty = new SimpleBooleanProperty();
         
-        actPasExpression = Bindings.when(indeterminateProperty).then("Act_Pas").
-                            otherwise(Bindings.when(actPasProperty).then("Act").otherwise("Pas"));
+        actPasExpression = Bindings.when(indeterminateProperty).then(Names.BAL_ACCOUNT_ACT_PAS).
+                            otherwise(Bindings.when(activeProperty).then(Names.BAL_ACCOUNT_ACT)
+                                                                    .otherwise(Names.BAL_ACCOUNT_PAS));
+    
+        indeterminateProperty.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue){
+                actPas.set(INDETERMINATE);
+            }
+        });
+        
+        activeProperty.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            actPas.set((newValue) ? ACT : PAS);
+        });
     }
     
     
     public static ArrayList<BalanceAccount> getAllFromDB(){
         JSONObject params = new ConditionBuilder().build();
+        System.out.println("params: " + params);
         return DBUtils.getObjectsListFromDB(BalanceAccount.class, DB_TABLE_NAME, params);
     }
     
@@ -119,7 +137,7 @@ public class BalanceAccount extends EditorPanelable {
     }
 
     public BooleanProperty actPasProperty() {
-        return actPasProperty;
+        return activeProperty;
     }
     
 
@@ -139,7 +157,13 @@ public class BalanceAccount extends EditorPanelable {
     
     // Setters:
     public void setActPas(int act_pas) {
-        this.actPas.set(act_pas);
+//        this.actPas.set(act_pas);
+        if (act_pas == INDETERMINATE){
+            indeterminateProperty.set(true);
+        }
+        else {
+            activeProperty.set(act_pas == ACT);
+        }
     }
 
     public void setBalAcc(int code){

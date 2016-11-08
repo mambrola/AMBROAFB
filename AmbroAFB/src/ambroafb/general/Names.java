@@ -61,6 +61,11 @@ public class Names {
     
     public static final String LEVEL_FOR_PATH = "DialogOrFilter";
     
+    
+    public static final String BAL_ACCOUNT_ACT_PAS = "Act_Pas";
+    public static final String BAL_ACCOUNT_ACT = "Act";
+    public static final String BAL_ACCOUNT_PAS = "Pas";
+    
     public static enum EDITOR_BUTTON_TYPE {
         DELETE, EDIT, VIEW, ADD
     } 
