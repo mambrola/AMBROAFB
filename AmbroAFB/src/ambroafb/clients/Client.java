@@ -115,22 +115,17 @@ public class Client extends EditorPanelable{
     private ImageGalleryController clientImageGallery;
     
     @JsonIgnore
-    private static final String DB_TABLE_NAME = "clients";
-    @JsonIgnore
-    private static final String DB_VIEW_NAME = "clients_whole";
-    @JsonIgnore
-    private static final String DB_STATUS_TABLE = "client_status_descrips";
+    private static final String DB_TABLE_NAME = "clients", DB_VIEW_NAME = "clients_whole", DB_STATUS_TABLE = "client_status_descrips";;
     
     @JsonIgnore
-    private static final String IMAGE_OFFICE_URL = "/images/office.png";
-    @JsonIgnore
-    private static final String IMAGE_PERSON_URL = "/images/person.png";
+    private static final String IMAGE_OFFICE_URL = "/images/office.png", IMAGE_PERSON_URL = "/images/person.png";
+    
     
     // Every property object has default values because of avoide NullpointerException in compares or any other methods in any case.
     public Client() {
         createdDate = new SimpleStringProperty("");
         isJur =             new SimpleBooleanProperty();
-        isRezident =             new SimpleBooleanProperty();
+        isRezident =        new SimpleBooleanProperty();
         firstName =         new SimpleStringProperty("");
         lastName =          new SimpleStringProperty("");
         descrip = Utils.avoidNull(firstName).concat(" ").concat(Utils.avoidNull(lastName));
@@ -157,10 +152,10 @@ public class Client extends EditorPanelable{
 //        rebindPhoneNumbers(); // not needed. setPhones(..) methods and above list listener provides phonesNumbers changing.
 
         country.addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
-            rebindCountry();
+            rebindCountryCode();
 //            resetRezident();
         });
-        rebindCountry(); // country objectProperty already set country object. So this line is needed to change countryCode column when generate tableView Components.
+        rebindCountryCode(); // country objectProperty already set country object. So this line is needed to change countryCode column when generate tableView Components.
         
         clientStatus.addListener((ObservableValue<? extends ClientStatus> observable, ClientStatus oldValue, ClientStatus newValue) -> {
             rebindStatus();
@@ -189,10 +184,10 @@ public class Client extends EditorPanelable{
                 }));
     }
 
-    private void rebindCountry() {
+    private void rebindCountryCode() {
         countryCode.unbind();
         if (country.get() != null) {
-            countryCode.bind(country.get().codeProperty().concat("   ").concat(country.get().descripProperty()));
+            countryCode.bind(country.get().codeProperty());
         }
     }
     
@@ -270,17 +265,6 @@ public class Client extends EditorPanelable{
 
     
     //Properties getters:
-    @JsonIgnore
-    public String getCreatedDate(){
-        return createdDate.get(); // getCreatedDateAsObj().toString(); // for class to json
-    }
-    
-    @JsonIgnore
-    public LocalDate getCreatedDateAsObj(){
-        System.out.println("createdate for client: " + DateConverter.getInstance().parseDate(createdDate.get()));
-        return DateConverter.getInstance().parseDate(createdDate.get());
-    }
-    
     public SimpleBooleanProperty isJurProperty() {
         return isJur;
     }
@@ -351,6 +335,16 @@ public class Client extends EditorPanelable{
     
     
     // Getters:
+//    @JsonIgnore
+//    public String getCreatedDate(){
+//        return createdDate.get();
+//    }
+    
+    @JsonIgnore
+    public LocalDate getCreatedDateAsObj(){
+        return DateConverter.getInstance().parseDate(createdDate.get());
+    }
+    
     public boolean getIsJur() {
         return isJur.get();
     }
@@ -435,6 +429,7 @@ public class Client extends EditorPanelable{
         this.country.get().setCode(countryCode);
     }
     
+    @JsonIgnore
     public ImageGalleryController getClientImageGallery(){
         return clientImageGallery;
     }
@@ -455,8 +450,6 @@ public class Client extends EditorPanelable{
      // Setters:
     private void setCreatedDate(String date){
         this.createdDate.set(date);
-//        LocalDate localDate = DateConverter.getInstance().parseDate(date);
-//        this.createdDate.set(DateConverter.getInstance().getDayMonthnameYearBySpace(localDate));
     }
     
     public final void setIsJur(boolean isJur) {
@@ -537,9 +530,9 @@ public class Client extends EditorPanelable{
                                         getFax().equals(otherClient.getFax()) &&
                                         getWww().equals(otherClient.getWww()) &&
                                         statusProperty().get().equals(otherClient.statusProperty().get()) &&
-                                        getRemark().equals(otherClient.getRemark()) &&
-                                        getCreatedDate().equals(otherClient.getCreatedDate());
-        boolean equalsPhones = Phone.compareLists(phones, otherClient.getPhones());
+                                        getRemark().equals(otherClient.getRemark());
+//                                        getCreatedDate().equals(otherClient.getCreatedDate());
+        boolean equalsPhones = Utils.compareLists(phones, otherClient.getPhones());
         return fieldsCompareResult && equalsPhones;
     }
 
@@ -567,7 +560,7 @@ public class Client extends EditorPanelable{
     @Override
     public void copyFrom(EditorPanelable object) {
         Client other = (Client) object;
-        setCreatedDate(other.getCreatedDate());
+//        setCreatedDate(other.getCreatedDate());
         setIsJur(other.getIsJur());
         setIsRezident(other.getIsRezident());
         setFirstName(other.getFirstName());
@@ -587,8 +580,6 @@ public class Client extends EditorPanelable{
         setFax(other.getFax());
         setWww(other.getWww());
         clientStatus.get().copyFrom(other.statusProperty().get());
-//        setStatus(other.getStatus());
-//        setStatusDescrip(other.getDescrip());
         setRemark(other.getRemark());
     }
 
@@ -601,7 +592,7 @@ public class Client extends EditorPanelable{
         String otherFieldsText = getFirstName() + " " + getLastName() + " " + 
                                  getEmail() + " " + getAddress() + " " + getCity();
                 
-        return (otherFieldsText + clientPhones);
+        return (otherFieldsText + " " + clientPhones);
     }
     
 

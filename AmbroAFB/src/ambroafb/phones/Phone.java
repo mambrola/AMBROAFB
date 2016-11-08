@@ -88,9 +88,11 @@ public class Phone implements Editable<String> {
         return "PhoneNumber{" + "id=" + recId + ", number=" + number + '}';
     }
 
-    public boolean equals(Phone other){
+    @Override
+    public boolean equals(Object other){
+        Phone phoneOther = (Phone) other;
         String thisNumber = getOnlyDigitsFrom(number.get());
-        String otherNumber = getOnlyDigitsFrom(other.getNumber());
+        String otherNumber = getOnlyDigitsFrom(phoneOther.getNumber());
         return thisNumber.equals(otherNumber);
     }
     
