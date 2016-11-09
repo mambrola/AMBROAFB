@@ -52,6 +52,7 @@ public class ClientsController implements Initializable {
     public void reAssignTable(FilterModel model) {
         if (!model.isEmpty()) {
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+            System.out.println("client index: " + selectedIndex);
             clients.clear();
             masker.setVisible(true);
             Thread t = new Thread(() -> {

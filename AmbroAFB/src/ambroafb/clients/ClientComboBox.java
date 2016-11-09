@@ -6,15 +6,12 @@
 package ambroafb.clients;
 
 import static ambroafb.clients.ClientComboBox.clientALL;
+import ambroafb.general.filterablecombobox.FilterableWithALLComboBox;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,21 +24,16 @@ import org.apache.commons.lang3.StringUtils;
  * If user want to see a filter effect, he/she must show comboBox elements.
  * @author dato
  */
-public class ClientComboBox extends ComboBox<Client> {
+public class ClientComboBox extends FilterableWithALLComboBox<Client> {
     
     public static final Client clientALL = new Client();
-    private static final String ALL = "ALL";
     private static final String separator = ",  ";
     
-    private ClientComboBox comboBoxInstance;
-    
-    private boolean hasFilterableData = false;
     private ObservableList<Client> items = FXCollections.observableArrayList();
-    private FilteredList<Client> filteredItems;
-    private final Predicate predicate;
     
     public ClientComboBox(){
-        comboBoxInstance = (ClientComboBox) this;
+        super();
+        
         clientALL.setFirstName(ALL);
         clientALL.setRecId(0);
         items.add(clientALL);
@@ -49,43 +41,13 @@ public class ClientComboBox extends ComboBox<Client> {
         
         this.setConverter(new CustomConverter());
 
-        valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
-            if (hasFilterableData){
-                setItems(items);
-                hasFilterableData = false;
-            }
-        });
-        
-        getEditor().textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (newValue != null && !newValue.isEmpty()) {
-                if (!hasFilterableData && getValue() == null) {
-                    setItems(filteredItems);
-                    hasFilterableData = true;
-                }
-            }
-        });
-        
-        predicate = (Predicate<Client>) (Client client) -> {
+        Predicate predicate = (Predicate<Client>) (Client client) -> {
                 String searchText = client.getFirstName() + client.getLastName() + client.getEmail();
                 return searchText.toLowerCase().contains(getEditor().getText().toLowerCase());
         };
+        setDataForFilterable(items, predicate);
         
-        filteredItems = getFilterableData(items);
-        this.setEditable(true);
-        this.setItems(items);
         this.setValue(clientALL);
-    }
-    
-    private FilteredList<Client> getFilterableData(ObservableList<Client> list){
-        FilteredList filteredList = new FilteredList(list);
-        this.setItems(filteredList);
-        filteredList.predicateProperty().bind(Bindings.createObjectBinding(() -> {
-            if (getEditor() == null || getEditor().getText().isEmpty()){
-                return null;
-            }
-            return predicate;
-        }, getEditor().textProperty()));
-        return filteredList;
     }
     
     public void selectItem(Client client){
