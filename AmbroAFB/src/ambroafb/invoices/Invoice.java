@@ -488,6 +488,7 @@ public class Invoice extends EditorPanelable {
     }
 
     
+    @SuppressWarnings("EqualsAndHashcode")
     public static class LicenseShortData {
         
         public int recId;
@@ -509,6 +510,15 @@ public class Invoice extends EditorPanelable {
         @Override
         public String toString(){
             return licenseNumber.get();
+        }
+        
+        @Override
+        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+        public boolean equals(Object other){
+            if (other == null) return false;
+            LicenseShortData otherLicense = (LicenseShortData) other;
+            return  licenseId == otherLicense.licenseId &&
+                    licenseNumber.get().equals(otherLicense.licenseNumber.get());
         }
     }
 }

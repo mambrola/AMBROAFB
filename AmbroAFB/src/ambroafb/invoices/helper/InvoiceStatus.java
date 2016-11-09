@@ -14,6 +14,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author dato
  */
+@SuppressWarnings("EqualsAndHashcode")
 public class InvoiceStatus {
     
     
@@ -84,8 +85,12 @@ public class InvoiceStatus {
         }
     }
     
-    public boolean equals(InvoiceStatus other){
-        return  this.getInvoiceStatusId() == other.getInvoiceStatusId() &&
-                this.getDescrip().equals(other.getDescrip());
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object other){
+        if (other == null) return false;
+        InvoiceStatus otherStatus = (InvoiceStatus) other;
+        return  this.getInvoiceStatusId() == otherStatus.getInvoiceStatusId() &&
+                this.getDescrip().equals(otherStatus.getDescrip());
     }
 }
