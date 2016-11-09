@@ -67,7 +67,6 @@ public class CountComboBox<T> extends ComboBox<T> {
                 String title = "";
                 SortedSet<String> sortedKeys = new TreeSet<>(itemsMap.keySet());
                 for (String key : sortedKeys) {
-                    System.out.println("key: " + key);
                     CountComboBoxItem boxItem = itemsMap.get(key);
                     title = title.concat(boxItem.itemNameExpression().getValueSafe());
                     if (!boxItem.itemNameExpression().getValueSafe().isEmpty()){

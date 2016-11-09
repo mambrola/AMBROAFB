@@ -404,7 +404,7 @@ public class Product extends EditorPanelable {
     
     @Override
     public String toString() {
-        return descrip.get();
+        return getAbbreviation() + getFormer();
     }
 
     /**

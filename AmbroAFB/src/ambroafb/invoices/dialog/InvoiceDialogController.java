@@ -7,6 +7,7 @@ package ambroafb.invoices.dialog;
 
 import ambro.ADatePicker;
 import ambroafb.clients.ClientComboBox;
+import ambroafb.general.MonthCounterComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBox;
@@ -14,8 +15,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceReissuing;
-import ambroafb.invoices.helper.InvoiceStatus;
-import ambroafb.invoices.Invoice.LicenseShortData;
+import ambroafb.products.Product;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -41,18 +41,19 @@ public class InvoiceDialogController implements Initializable {
     @FXML
     private CheckBox revoked;
     @FXML
-    private TextField invoiceNumber, additionalDiscount, moneyToPay, moneyPaid, vat;
+    private TextField invoiceNumber, additionalDiscount, moneyToPay, moneyPaid, vat, status;
     @FXML
     private ClientComboBox clients;
+//    @FXML
+//    private CountComboBox<Invoice.LicenseShortData> licenses;
     @FXML
-    private CountComboBox<LicenseShortData> licenses;
+    private CountComboBox<Product> licenses;
+    
     @FXML
-    private ComboBox<String> monthCount;
+    private MonthCounterComboBox monthCounter;
     @FXML
     private ComboBox<InvoiceReissuing> invoiceReissuings;
-    @FXML
-    private ComboBox<InvoiceStatus> statuses;
-    
+
     @FXML
     private DialogOkayCancelController okayCancelController;
     
@@ -66,6 +67,7 @@ public class InvoiceDialogController implements Initializable {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
         clients.getItems().remove(0);
+        licenses.getItems().addAll(Product.getAllFromDB());
         permissionToClose = true;
     }
 
@@ -75,16 +77,18 @@ public class InvoiceDialogController implements Initializable {
             createdDate.setValue(invoice.getLocalDateObj());
             invoiceNumber.textProperty().bindBidirectional(invoice.invoiceNumberProperty());
             clients.valueProperty().bindBidirectional(invoice.clientProperty());
+            //
             beginDate.valueProperty().bindBidirectional(invoice.beginDateProperty());
-            endDate.valueProperty().bindBidirectional(invoice.endDateProperty());
-            monthCount.valueProperty().bindBidirectional(invoice.monthsProperty());
+            monthCounter.valueProperty().bindBidirectional(invoice.monthsProperty());
+             // The field is disable, so bidirectional is not needed.
+            endDate.valueProperty().bind(invoice.endDateProperty());
             revoked.selectedProperty().bindBidirectional(invoice.revokedProperty());
             additionalDiscount.textProperty().bindBidirectional(invoice.additionaldiscountProperty());
             moneyToPay.textProperty().bindBidirectional(invoice.moneyToPayProperty());
             moneyPaid.textProperty().bindBidirectional(invoice.moneyPaidProperty());
             vat.textProperty().bindBidirectional(invoice.vatProperty());
             invoiceReissuings.valueProperty().bindBidirectional(invoice.reissuingProperty());
-            statuses.valueProperty().bindBidirectional(invoice.statusProperty());
+            status.textProperty().bindBidirectional(invoice.statusProperty().get().descripProperty());
         }
     }
 
@@ -95,9 +99,9 @@ public class InvoiceDialogController implements Initializable {
             editable = false;
         }
         okayCancelController.setButtonsFeatures(buttonType);
-        if (invoice != null){
-            licenses.getItems().addAll(invoice.getLicenses());
-        }
+//        if (invoice != null){
+//            licenses.getItems().addAll(invoice.getLicenses());
+//        }
     }
     
     /**

@@ -21,6 +21,7 @@ import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +33,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -126,17 +128,30 @@ public class Invoice extends EditorPanelable {
         revokedDateObj = new SimpleObjectProperty<>();
         isRevoked = new SimpleBooleanProperty(false);
         additionalDiscountRate = new SimpleStringProperty("0");
-        moneyToPay = new SimpleStringProperty("0");
-        moneyPaid = new SimpleStringProperty("0");
-        vat = new SimpleStringProperty("0");
+        moneyToPay = new SimpleStringProperty("");
+        moneyPaid = new SimpleStringProperty("");
+        vat = new SimpleStringProperty("");
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
-        months = new SimpleStringProperty("0");
+        months = new SimpleStringProperty("");
         
         licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
             rebindLicenses();
         });
         
+        beginDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+            if (months.isNotEmpty().get()){
+                rebindEndDate();
+            }
+        });
+        
+        months.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            System.out.println("change month");
+            if (beginDateObj.get() != null){
+                System.out.println("change month. after if");
+                rebindEndDate();
+            }
+        });
     }
     
     private void rebindLicenses(){
@@ -151,6 +166,17 @@ public class Invoice extends EditorPanelable {
                                         return temp;
                                     })
                             );
+    }
+    
+    private void rebindEndDate(){
+        
+        int newMonth = beginDateObj.get().getMonthValue() + (int)Utils.getDoubleValueFor(months.get());
+        int divValue = newMonth / 13;
+        int modValue = (newMonth % 12 == 0) ? 12 : newMonth % 12;
+        int newYear = beginDateObj.get().getYear() + divValue;
+        newMonth = modValue;
+        int newDay = beginDateObj.get().getDayOfMonth();
+        endDateObj.set(LocalDate.of(newYear, newMonth, newDay));
     }
     
     // DBService methods:
@@ -266,6 +292,7 @@ public class Invoice extends EditorPanelable {
         return DateConverter.getInstance().parseDate(createdDate.get());
     }
     
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getInvoiceNumber(){
         return invoiceNumber.get();
     }
@@ -306,14 +333,17 @@ public class Invoice extends EditorPanelable {
         return Utils.getDoubleValueFor(additionalDiscountRate.get());
     }
     
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public double getMoneyToPay(){
         return Utils.getDoubleValueFor(moneyToPay.get());
     }
     
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public double getMoneyPaid(){
         return Utils.getDoubleValueFor(moneyPaid.get());
     }
 
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public double getVat(){
         return Utils.getDoubleValueFor(vat.get());
     }

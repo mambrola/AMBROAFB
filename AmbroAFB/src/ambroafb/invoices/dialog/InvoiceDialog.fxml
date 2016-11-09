@@ -56,11 +56,11 @@
                 <children>
                     <VBox styleClass="couple">
                         <Label text="%begin_date" /> 
-                        <ADatePicker fx:id="beginDate" />
+                        <ADatePicker fx:id="beginDate" styleClass="validationMessage" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="%month_count" /> 
-                        <ComboBox fx:id="monthCount" />
+                        <MonthCounterComboBox fx:id="monthCounter"  styleClass="validationMessage"/>
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="%end_date" /> 
@@ -96,7 +96,7 @@
                     </VBox>                    
                     <VBox styleClass="couple">
                         <Label text="%invoice_status" /> 
-                        <ComboBox fx:id="statuses" disable="true" />
+                        <TextField fx:id="status" disable="true" />
                     </VBox>
                 </children>
             </HBox>
