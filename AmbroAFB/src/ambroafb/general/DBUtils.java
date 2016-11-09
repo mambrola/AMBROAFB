@@ -137,4 +137,16 @@ public class DBUtils {
         }
         return result;
     }
+    
+    public static boolean deleteObjectFromDB(String deleteProcName, int id){
+        boolean result = false;
+        try {
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            dbClient.callProcedure(deleteProcName, id);
+            result = true;
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
 }

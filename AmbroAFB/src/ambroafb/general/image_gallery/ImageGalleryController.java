@@ -16,7 +16,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
@@ -328,6 +327,7 @@ public class ImageGalleryController implements Initializable {
     private void proccessViewer(Viewer viewer, String fileName) {
         Long currTime = new Date().getTime();
         String fileFullName = "_" + currTime + fileName.substring(fileName.lastIndexOf("."));
+        System.out.println("file fullname: " + fileFullName);
         viewers.put(fileFullName, viewer);
         datesSliderElems.add(fileFullName);
         msgSlider.setValueOn(datesSliderElems.size() - 1);
@@ -387,13 +387,14 @@ public class ImageGalleryController implements Initializable {
                         } else if (viewer.isNew()) {
                             GeneralConfig.getInstance().getDBClient().post(
                                     serviceURLPrefix + urlParameter + "/" + key.substring(key.lastIndexOf(".") + 1),
-                                    Base64.getEncoder().encodeToString(data)
+                                    data
                             );
+                            System.out.println("new image. send url: " + (serviceURLPrefix + urlParameter + "/" + key.substring(key.lastIndexOf(".") + 1)));
                         } else if (viewer.isEdit()) {
                             GeneralConfig.getInstance().getDBClient().call(
                                     serviceURLPrefix + key,
                                     "PUT",
-                                    Base64.getEncoder().encodeToString(data)
+                                    data
                             );
                         }
                     } catch (IOException | AuthServerException ex) {

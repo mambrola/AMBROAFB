@@ -247,20 +247,14 @@ public class Client extends EditorPanelable{
 
     public static Client saveOneToDB(Client client) {
         if (client == null) return null;
-        return DBUtils.saveObjectToDB(client, "client");
+        Client clientFromDB = DBUtils.saveObjectToDB(client, "client");
+        System.out.println("client: " + clientFromDB.getRecId());
+        client.getClientImageGallery().sendDataToServer("" + clientFromDB.getRecId());
+        return clientFromDB;
     }
 
     public static boolean deleteOneFromDB(int id) {
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-        return DBUtils.deleteObjectFromDB("client_delete", params);
-//        try {
-//            GeneralConfig.getInstance().getDBClient().delete("clients/" + id);
-//            return true;
-//        } catch (IOException | AuthServerException ex) {
-//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-//            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "Client").showAlert();
-//        }
-//        return false;
+        return DBUtils.deleteObjectFromDB("client_delete", id);
     }
 
     
@@ -509,7 +503,7 @@ public class Client extends EditorPanelable{
         this.www.set(www);
     }
     
-    public void setClientImageGalelry(ImageGalleryController imageGallery){
+    public void setClientImageGallery(ImageGalleryController imageGallery){
         this.clientImageGallery = imageGallery;
     }
     

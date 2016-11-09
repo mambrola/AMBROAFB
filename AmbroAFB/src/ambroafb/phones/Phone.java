@@ -17,6 +17,7 @@ import javafx.beans.value.ObservableValue;
  *
  * @author tabramishvili
  */
+@SuppressWarnings("EqualsAndHashcode")
 public class Phone implements Editable<String> {
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
@@ -89,7 +90,9 @@ public class Phone implements Editable<String> {
     }
 
     @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object other){
+        if (other == null) return false;
         Phone phoneOther = (Phone) other;
         String thisNumber = getOnlyDigitsFrom(number.get());
         String otherNumber = getOnlyDigitsFrom(phoneOther.getNumber());
