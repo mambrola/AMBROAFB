@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -27,14 +30,16 @@ public class CountComboBox<T> extends ComboBox<T> {
     
     private final Map<String, CountComboBoxItem> itemsMap;
     private final Tooltip tooltip;
+    private final ObjectProperty<Map<T, Integer>> comboBoxResult;
     
     public CountComboBox(){
         itemsMap = new HashMap<>();
         tooltip = new Tooltip();
+        comboBoxResult = new SimpleObjectProperty<>(new HashMap<T, Integer>());
         
         this.setPrefWidth(500);
-        this.setButtonCell(new ComboBoxCustomButtonCell<>());
-        this.setCellFactory((ListView<T> param) -> new ComboBoxCustomCell<>(this));
+        this.setButtonCell(new ComboBoxCustomButtonCell());
+        this.setCellFactory((ListView<T> param) -> new ComboBoxCustomCell(this));
         this.setTooltip(tooltip);
         
         // Never hide comboBox items listView:
@@ -52,7 +57,11 @@ public class CountComboBox<T> extends ComboBox<T> {
         }
     }
     
-    private class ComboBoxCustomButtonCell<T> extends ListCell<T> {
+    public ObjectProperty<Map<T, Integer>> resultProperty(){
+        return comboBoxResult;
+    }
+    
+    private class ComboBoxCustomButtonCell extends ListCell<T> {
 
         private final String delimiter = ", ";
         
@@ -72,6 +81,10 @@ public class CountComboBox<T> extends ComboBox<T> {
                     if (!boxItem.itemNameExpression().getValueSafe().isEmpty()){
                         title = title.concat(delimiter);
                     }
+                    
+//                    if (boxItem.itemNumberProperty().get() > 0){
+//                        comboBoxResult.get().put(item, boxItem.itemNumberProperty().get());
+//                    }
                 }
                 setText(StringUtils.substringBeforeLast(title, delimiter));
             }
@@ -79,7 +92,7 @@ public class CountComboBox<T> extends ComboBox<T> {
         
     }
     
-    private class ComboBoxCustomCell<T> extends ListCell<T> {
+    private class ComboBoxCustomCell extends ListCell<T> {
 
         private final ComboBox box;
 
@@ -101,6 +114,18 @@ public class CountComboBox<T> extends ComboBox<T> {
                 int index = box.getItems().indexOf(item);
                 int size = box.getItems().size();
                 box.getSelectionModel().select((index + 1) % size);
+                
+                boxItem.itemNumberProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+                    Map<T, Integer> elems = comboBoxResult.get();
+                    if (newValue.intValue() > 0){
+                        elems.put(item, boxItem.itemNumberProperty().get());
+                    }
+                    else {
+                        if (elems.containsKey(item)){
+                            elems.remove(item);
+                        }
+                    }
+                });
                 
                 // ComboBox item could not select twise, so make this kind of action:
                 boxItem.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {

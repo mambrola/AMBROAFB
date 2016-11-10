@@ -17,6 +17,8 @@ import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.invoices.filter.InvoiceFilterModel;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
+import ambroafb.licenses.License;
+import ambroafb.products.Product;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
@@ -25,6 +27,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
@@ -38,6 +46,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 
 /**
@@ -50,12 +60,15 @@ public class Invoice extends EditorPanelable {
     private final StringProperty createdDate;
     
     @AView.Column(title = "%invoice_N", width = "100")
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private final SimpleStringProperty invoiceNumber;
     
     @AView.Column(title = "%licenses", width = "100")
     @JsonIgnore
     private final StringProperty licensesDescript;
     private final ObservableList<LicenseShortData> licenses;
+    @JsonIgnore
+    public ObservableList<License> licensesOnProducts;
     
     @AView.Column(title = "%clients", width = "100")
     @JsonIgnore
@@ -108,6 +121,9 @@ public class Invoice extends EditorPanelable {
     private final StringProperty months;
     
     @JsonIgnore
+    private final ObjectProperty<Map<Product, Integer>> licensesResult;
+    
+    @JsonIgnore
     private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
     @JsonIgnore
     private static final String DB_INVOICES_VIEW = "invoices_whole";
@@ -118,6 +134,7 @@ public class Invoice extends EditorPanelable {
         createdDate = new SimpleStringProperty("");
         licensesDescript = new SimpleStringProperty("");
         licenses = FXCollections.observableArrayList();
+        licensesOnProducts = FXCollections.observableArrayList();
         clientObj = new SimpleObjectProperty<>(new Client());
         clientDescrip = clientObj.get().getShortDescrip(", ");
         beginDateDescrip = new SimpleStringProperty("");
@@ -134,6 +151,7 @@ public class Invoice extends EditorPanelable {
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
         months = new SimpleStringProperty("");
+        licensesResult = new SimpleObjectProperty<>(new HashMap<>());
         
         licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
             rebindLicenses();
@@ -148,6 +166,12 @@ public class Invoice extends EditorPanelable {
         months.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (beginDateObj.get() != null){
                 rebindEndDate();
+            }
+        });
+        
+        licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
+            if (c.wasAdded()){
+                
             }
         });
     }
@@ -213,14 +237,45 @@ public class Invoice extends EditorPanelable {
         return DBUtils.getObjectFromDB(Invoice.class, DB_INVOICES_VIEW, params);
     }
     
-    public static Invoice saveOneToDB(Invoice incoice) {
-        if (incoice == null) return null;
-        JSONObject targetJson = Utils.getJSONFromClass(Invoice.class);
-        System.out.println("invoice target: " + targetJson);
-        return null;
-//        return DBUtils.saveObjectToDB(incoice, "invoice");
+    public static Invoice saveOneToDB(Invoice invoice) {
+        if (invoice == null) return null;
+        Map<Product, Integer> productsMap = invoice.licensesResultProperty().get();        
+        JSONArray productsArray = new JSONArray();
+        productsMap.keySet().stream().forEach((product) -> {
+            JSONObject json = getJsonFrom(null, "product_id", product.getRecId());
+            productsArray.put(getJsonFrom(json, "count", productsMap.get(product)));
+        });
+
+//        System.out.println("productsArray: " + productsArray);
+        
+        JSONArray licensesIds = new JSONArray();
+        invoice.getLicenses().stream().forEach((licenseShortData) -> {
+            licensesIds.put(getJsonFrom(null, "license_id", licenseShortData.licenseId));
+        });
+        ArrayList<License> licenses = DBUtils.getInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, invoice.getAdditionalDiscountRate(), licensesIds);
+        List<LicenseShortData> wholeLicenses = licenses.stream().map((License license) -> {
+                                                                        LicenseShortData shortData = new LicenseShortData();
+                                                                        shortData.licenseId = license.getRecId();
+                                                                        shortData.setLicenseNumber(license.getLicenseNumber());
+                                                                        return shortData;
+                                                                }).collect(Collectors.toList());
+        System.out.println("invoice whole license: " + wholeLicenses);
+        
+        invoice.setLicenses(wholeLicenses);
+        return DBUtils.saveObjectToDB(invoice, "invoice");
     }
 
+    /** Returns JSON object for given key and value */
+    private static JSONObject getJsonFrom(JSONObject jsonObj, String key, Object value){
+        JSONObject json = (jsonObj == null) ? new JSONObject() : jsonObj;
+        try {
+            json.put(key, value);
+        } catch (JSONException ex) {
+            Logger.getLogger(Invoice.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return json;
+    }
+    
     public static boolean deleteOneFromDB(int id) {
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
         return DBUtils.deleteObjectFromDB("invoice_delete", params);
@@ -280,18 +335,23 @@ public class Invoice extends EditorPanelable {
         return months;
     }
     
-    
-    // Getters:
-    @JsonIgnore
-    public LocalDate getLocalDateObj(){
-        return DateConverter.getInstance().parseDate(createdDate.get());
+    public ObjectProperty<Map<Product, Integer>> licensesResultProperty(){
+        return licensesResult;
     }
     
+    
+    // Getters:
+//    @JsonIgnore
+//    public LocalDate getLocalDateObj(){
+//        return DateConverter.getInstance().parseDate(createdDate.get());
+//    }
+//    
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getInvoiceNumber(){
         return invoiceNumber.get();
     }
     
+
     public ObservableList<LicenseShortData> getLicenses(){
         return licenses;
     }
@@ -300,14 +360,17 @@ public class Invoice extends EditorPanelable {
         return clientObj.get().getRecId();
     }
     
+    @JsonIgnore
     public String getFirstName(){
         return clientObj.get().getFirstName();
     }
     
+    @JsonIgnore
     public String getLastName(){
         return clientObj.get().getLastName();
     }
     
+    @JsonIgnore
     public String getEmail(){
         return clientObj.get().getEmail();
     }
@@ -328,12 +391,12 @@ public class Invoice extends EditorPanelable {
         return Utils.getDoubleValueFor(additionalDiscountRate.get());
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public double getMoneyToPay(){
         return Utils.getDoubleValueFor(moneyToPay.get());
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public double getMoneyPaid(){
         return Utils.getDoubleValueFor(moneyPaid.get());
     }
@@ -377,6 +440,14 @@ public class Invoice extends EditorPanelable {
     
     public void setLicenses(Collection<LicenseShortData> licenses){
         this.licenses.setAll(licenses);
+
+        licensesOnProducts.clear();
+        licenses.stream().forEach((shortData) -> {
+            License license = new License();
+            license.setRecId(shortData.licenseId);
+            license.setLicenseNumber(shortData.getLicenseNumber());
+            licensesOnProducts.add(license);
+        });
     }
     
     public void setClientId(int recId){

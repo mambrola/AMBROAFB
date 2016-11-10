@@ -44,6 +44,7 @@ import org.json.JSONObject;
  *
  * @author mambroladze
  */
+@SuppressWarnings("EqualsAndHashcode")
 public class Product extends EditorPanelable {
     
     @AView.Column(width = "30")
@@ -413,8 +414,13 @@ public class Product extends EditorPanelable {
      * @param other Product which must compare to this.
      * @return True if they are equals, false - otherwise.
      */
-    public boolean equals(Product other){
-        return this.compares(other);
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object other){
+        if (other == null) return false;
+        Product otherProduct = (Product) other;
+        return  getAbbreviation().equals(otherProduct.getAbbreviation()) &&
+                getFormer() == otherProduct.getFormer();
     }
     
     /**

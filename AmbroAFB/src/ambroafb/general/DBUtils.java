@@ -8,8 +8,10 @@ package ambroafb.general;
 import ambroafb.licenses.License;
 import authclient.AuthServerException;
 import authclient.db.DBClient;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,5 +150,23 @@ public class DBUtils {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
+    }
+    
+    
+    public static ArrayList<License> getInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, Double additionalDiscount, JSONArray licensesIds){
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        try {
+            JSONArray licensesArray = dbClient.callProcedureAndGetAsJson("invoice_get_suited_licenses",
+                                                                            dbClient.getLang(),
+                                                                            invoiceId, clientId,
+                                                                            beginDate, endDate,
+                                                                            products, additionalDiscount, licensesIds);
+            System.out.println("licenses array from DB: " + licensesArray);
+            return new ObjectMapper().readValue(licensesArray.toString(), new TypeReference<ArrayList<License>>(){});
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return new ArrayList<>();
     }
 }
