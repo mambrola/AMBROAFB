@@ -146,9 +146,7 @@ public class Invoice extends EditorPanelable {
         });
         
         months.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            System.out.println("change month");
             if (beginDateObj.get() != null){
-                System.out.println("change month. after if");
                 rebindEndDate();
             }
         });
@@ -169,14 +167,11 @@ public class Invoice extends EditorPanelable {
     }
     
     private void rebindEndDate(){
-        
-        int newMonth = beginDateObj.get().getMonthValue() + (int)Utils.getDoubleValueFor(months.get());
-        int divValue = newMonth / 13;
-        int modValue = (newMonth % 12 == 0) ? 12 : newMonth % 12;
-        int newYear = beginDateObj.get().getYear() + divValue;
-        newMonth = modValue;
-        int newDay = beginDateObj.get().getDayOfMonth();
-        endDateObj.set(LocalDate.of(newYear, newMonth, newDay));
+        Double monthCount = Utils.getDoubleValueFor(months.get());
+        long monthValue = monthCount.longValue();
+        long dayValue = (long)((monthCount - monthValue) * 30);
+        System.out.println("dayValue: " + dayValue);
+        endDateObj.set(beginDateObj.get().plusMonths(monthValue).plusDays(dayValue));
     }
     
     // DBService methods:

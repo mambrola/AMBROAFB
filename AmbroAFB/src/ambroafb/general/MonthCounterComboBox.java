@@ -16,6 +16,9 @@ public class MonthCounterComboBox extends ComboBox<String> {
     private int start = 1, end = 12;
     
     public MonthCounterComboBox(){
+        getItems().add("0.25");
+        getItems().add("0.5");
+        
         for (int i = start; i <= end; i++){
             String count = "" + i + ".00";
             getItems().add(count);
