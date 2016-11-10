@@ -531,7 +531,6 @@ public class Client extends EditorPanelable{
         return fieldsCompareResult && equalsPhones;
     }
 
-    // This is needed for comboBox set value...
     @Override
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object other){
