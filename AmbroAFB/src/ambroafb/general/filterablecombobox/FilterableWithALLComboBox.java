@@ -24,7 +24,7 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
 
     public final String ALL = "ALL";
     
-    private boolean hasFilterableData = false;
+    private boolean hasFilterableData = true;
     private ObservableList<T> items = FXCollections.observableArrayList();
     private FilteredList<T> filteredItems;
     SingleSelectionModel selectionModelForReal, selectionModelForFilterable;
@@ -35,22 +35,22 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
         
         valueProperty().addListener((ObservableValue<? extends T> observable, T oldValue, T newValue) -> {
             System.out.println("value change. hasFilterableData: " + hasFilterableData);
-            if (hasFilterableData){
-                hasFilterableData = false;
-                setSelectionModel(selectionModelForReal);
-                setItems(items);
-            }
+//            if (hasFilterableData){
+//                hasFilterableData = false;
+//                setSelectionModel(selectionModelForReal);
+//                setItems(items);
+//            }
         });
         
         getEditor().textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue != null && !newValue.isEmpty()) {
                 System.out.println("text Change. !hasFilterableData: " + (!hasFilterableData) + " getValue: " + getValue());
-                if (!hasFilterableData && getValue() == null) {
-                    hasFilterableData = true;
-                    System.out.println("text change. daeseteba mnishvnelobebi...");
-                    setItems(filteredItems);
-                    setSelectionModel(selectionModelForFilterable);
-                }
+//                if (!hasFilterableData && getValue() == null) {
+//                    hasFilterableData = true;
+//                    System.out.println("text change. daeseteba mnishvnelobebi...");
+//                    setItems(filteredItems);
+//                    setSelectionModel(selectionModelForFilterable);
+//                }
             }
         });
         
@@ -86,15 +86,16 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
         items = data;
         filteredItems = new FilteredList(data);
         filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() -> {
-            if (getEditor() == null || getEditor().getText().isEmpty()){
+            if (getEditor().getText() == null || getEditor().getText().isEmpty()){
                 return null;
             }
             return predicate;
         }, getEditor().textProperty()));
         
-        this.setItems(items);
+        this.setItems(filteredItems);
         selectionModelForReal = new CustomSelection(items);
         selectionModelForFilterable = new CustomSelection(filteredItems);
+        setSelectionModel(selectionModelForFilterable);
     }
     
     public void showCategoryAll(boolean show, T all){ // ?? filtered list tua getItems ???
@@ -122,7 +123,7 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
         @Override
         protected T getModelItem(int index) {
             System.out.println("index: " + index);
-            if (data == null || data.isEmpty()) return null;
+            if (data == null || data.isEmpty() || index < 0) return null;
             return data.get(index);
         }
 

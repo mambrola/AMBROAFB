@@ -42,7 +42,7 @@ public class ClientComboBox extends FilterableWithALLComboBox<Client> {
         this.setConverter(new CustomConverter());
 
         Predicate predicate = (Predicate<Client>) (Client client) -> {
-                String searchText = client.getFirstName() + client.getLastName() + client.getEmail();
+                String searchText = client.getFirstName() + separator + client.getLastName() + separator + client.getEmail();
                 return searchText.toLowerCase().contains(getEditor().getText().toLowerCase());
         };
         setDataForFilterable(items, predicate);
@@ -69,7 +69,7 @@ public class ClientComboBox extends FilterableWithALLComboBox<Client> {
 
             @Override
             public Client fromString(String data) {
-                List<Client> clients = getItems().stream().filter((Client client) -> {
+                List<Client> clients = items.stream().filter((Client client) -> {
                                             String enteredFirstName = StringUtils.substringBefore(data, separator);
                                             String enteredLastName = StringUtils.substringBefore(StringUtils.substringAfter(data, separator), separator);
                                             String enteredEmail = StringUtils.substringAfterLast(data, separator);

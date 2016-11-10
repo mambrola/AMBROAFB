@@ -189,7 +189,6 @@ public class Invoice extends EditorPanelable {
         Double monthCount = Utils.getDoubleValueFor(months.get());
         long monthValue = monthCount.longValue();
         long dayValue = (long)((monthCount - monthValue) * 30);
-        System.out.println("dayValue: " + dayValue);
         endDateObj.set(beginDateObj.get().plusMonths(monthValue).plusDays(dayValue));
     }
     
