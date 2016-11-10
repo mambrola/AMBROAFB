@@ -169,11 +169,6 @@ public class Invoice extends EditorPanelable {
             }
         });
         
-        licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
-            if (c.wasAdded()){
-                
-            }
-        });
     }
     
     private void rebindLicenses(){
