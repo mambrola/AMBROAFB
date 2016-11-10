@@ -14,6 +14,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author dato
  */
+@SuppressWarnings("EqualsAndHashcode")
 public class LicenseStatus {
     
     private final SimpleStringProperty descrip;
@@ -67,13 +68,14 @@ public class LicenseStatus {
         this.descrip.set(descrip);
     }
     
-    public boolean equals(LicenseStatus other){
-        System.out.println("this.getRecId() == other.getRecId(): " + (this.getRecId() == other.getRecId()));
-        System.out.println("this.getLicenseStatusId() == other.getLicenseStatusId(): " + (this.getLicenseStatusId() == other.getLicenseStatusId()));
-        System.out.println("this.getDescrip().equals(other.getDescrip()): " + (this.getDescrip().equals(other.getDescrip())));
-        
-        return  this.getLicenseStatusId() == other.getLicenseStatusId() &&
-                this.getDescrip().equals(other.getDescrip());
+    
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object other){
+        if (other == null) return false;
+        LicenseStatus otherStatus = (LicenseStatus) other;
+        return  getLicenseStatusId() == otherStatus.getLicenseStatusId() &&
+                getDescrip().equals(otherStatus.getDescrip());
     }
     
     @Override

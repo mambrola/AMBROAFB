@@ -15,6 +15,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author dato
  */
+@SuppressWarnings("EqualsAndHashcode")
 public class ProductSpecific {
 
     private int recId;
@@ -66,8 +67,12 @@ public class ProductSpecific {
         return getDescrip();
     }
     
-    public boolean equals(ProductSpecific prodSpecific){
-        return  this.getProductSpecificId() == prodSpecific.getProductSpecificId() &&
-                this.getDescrip().equals(prodSpecific.getDescrip());
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object prodSpecific){
+        if (prodSpecific == null) return false;
+        ProductSpecific otherSpecific = (ProductSpecific) prodSpecific;
+        return  getProductSpecificId() == otherSpecific.getProductSpecificId() &&
+                getDescrip().equals(otherSpecific.getDescrip());
     }
 }

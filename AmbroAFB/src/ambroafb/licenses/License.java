@@ -535,7 +535,7 @@ public class License extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         License otherLicense = (License) other;
-        setCreatedDate(otherLicense.getCreatedDateStr());
+//        setCreatedDate(otherLicense.getCreatedDateStr());
         // clientObj.set(otherLicense.clientObj.get()) -> copy reference and they always be equals! So copy every field.
         setClientId(otherLicense.getClientId());
         setFirstName(otherLicense.getFirstName());
@@ -565,8 +565,8 @@ public class License extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup){
         License otherLicense = (License) backup;
-        return  getCreatedDateStr().equals(otherLicense.getCreatedDateStr())  &&
-                getClientId() == otherLicense.getClientId() &&
+//        getCreatedDateStr().equals(otherLicense.getCreatedDateStr())  &&
+        return  getClientId() == otherLicense.getClientId() &&
                 clientDescripExpression().equals(otherLicense.clientDescripExpression()) &&
                 getProductId() == otherLicense.getProductId()           &&
                 productDescripExpression().equals(otherLicense.productDescripExpression()) &&
@@ -577,6 +577,8 @@ public class License extends EditorPanelable {
                 getRemark().equals(otherLicense.getRemark()) &&
                 getAdditionalDays() == otherLicense.getAdditionalDays() &&
                 getLicenseNumber() == otherLicense.getLicenseNumber()   &&
+                
+                // The dialog buttons does not allow for licenses, so they don't be null:
                 firstDateProperty().get().equals(otherLicense.firstDateProperty().get()) &&
                 lastDateProperty().get().equals(otherLicense.lastDateProperty().get()) &&
                 lastLoginTimeProperty().get().equals(lastLoginTimeProperty().get());

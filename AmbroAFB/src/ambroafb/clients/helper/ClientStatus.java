@@ -14,6 +14,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author dato
  */
+@SuppressWarnings("EqualsAndHashcode")
 public class ClientStatus {
     
     private int recId;
@@ -68,8 +69,12 @@ public class ClientStatus {
         this.descrip.set(statusDescrip);
     }
     
-    public boolean equals(ClientStatus other){
-        return this.getClientStatusId() == other.getClientStatusId() && this.getDescrip().equals(other.getDescrip());
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object other){
+        if (other == null) return false;
+        ClientStatus otherStatus = (ClientStatus) other;
+        return getClientStatusId() == otherStatus.getClientStatusId() && getDescrip().equals(otherStatus.getDescrip());
     }
     
     @Override

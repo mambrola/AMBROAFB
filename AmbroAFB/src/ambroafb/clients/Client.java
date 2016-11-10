@@ -52,6 +52,7 @@ import org.json.JSONObject;
  * @author mambroladze
  */
 
+@SuppressWarnings("EqualsAndHashcode")
 public class Client extends EditorPanelable{
 
     // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
@@ -531,9 +532,13 @@ public class Client extends EditorPanelable{
     }
 
     // This is needed for comboBox set value...
-    public boolean equals(Client other){
-        return  getRecId() == other.getRecId() ||
-                getShortDescrip("").equals(other.getShortDescrip(""));
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object other){
+        if (other == null) return false;
+        Client otherClient = (Client) other;
+        return  getRecId() == otherClient.getRecId() ||
+                getShortDescrip("").equals(otherClient.getShortDescrip(""));
     }
     
     // Override methods:
