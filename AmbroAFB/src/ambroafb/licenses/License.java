@@ -175,10 +175,12 @@ public class License extends EditorPanelable {
         LicenseFilterModel licenseFilterModel = (LicenseFilterModel) model;
         
         int clientId = licenseFilterModel.getSelectedClient().getRecId();
+        System.out.println("clientId: " + clientId);
         if (clientId > 0){
             whereBuilder = whereBuilder.and("client_id", "=", clientId);
         }
         int productId = licenseFilterModel.getSelectedProduct().getRecId();
+        System.out.println("productId: " + productId);
         if (productId > 0){
             whereBuilder = whereBuilder.and("product_id", "=", productId);
         }
