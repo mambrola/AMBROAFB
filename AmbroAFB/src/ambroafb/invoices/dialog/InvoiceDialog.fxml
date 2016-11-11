@@ -40,13 +40,13 @@
                     </VBox>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="%clients" />
+                            <Label text="%clients" styleClass="validationMessage" />
                             <ClientComboBox fx:id="clients" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="%licenses" />
+                            <Label text="%licenses" styleClass="validationMessage" />
                             <CountComboBox fx:id="licenses" />
                         </children>
                     </VBox>
@@ -55,12 +55,12 @@
             <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
-                        <Label text="%begin_date" /> 
-                        <ADatePicker fx:id="beginDate" styleClass="validationMessage" />
+                        <Label text="%begin_date" styleClass="validationMessage" /> 
+                        <ADatePicker fx:id="beginDate" />
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="%month_count" /> 
-                        <MonthCounterComboBox fx:id="monthCounter"  styleClass="validationMessage"/>
+                        <Label text="%month_count" styleClass="validationMessage" /> 
+                        <MonthCounterComboBox fx:id="monthCounter" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="%end_date" /> 
@@ -91,7 +91,7 @@
                         <TextField fx:id="moneyPaid" disable="true" />
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="%invoice_reissuings" />
+                        <Label text="%invoice_reissuings" styleClass="validationMessage" />
                         <ComboBox fx:id="invoiceReissuings" />
                     </VBox>                    
                     <VBox styleClass="couple">

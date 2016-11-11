@@ -61,6 +61,10 @@ public class CountComboBox<T> extends ComboBox<T> {
         return comboBoxResult;
     }
     
+    public boolean nothingIsSelected(){
+        return comboBoxResult.get().isEmpty();
+    }
+    
     private class ComboBoxCustomButtonCell extends ListCell<T> {
 
         private final String delimiter = ", ";
@@ -81,10 +85,6 @@ public class CountComboBox<T> extends ComboBox<T> {
                     if (!boxItem.itemNameExpression().getValueSafe().isEmpty()){
                         title = title.concat(delimiter);
                     }
-                    
-//                    if (boxItem.itemNumberProperty().get() > 0){
-//                        comboBoxResult.get().put(item, boxItem.itemNumberProperty().get());
-//                    }
                 }
                 setText(StringUtils.substringBeforeLast(title, delimiter));
             }

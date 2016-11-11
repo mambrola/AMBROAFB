@@ -27,7 +27,8 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
     private boolean hasFilterableData = true;
     private ObservableList<T> items = FXCollections.observableArrayList();
     private FilteredList<T> filteredItems;
-    SingleSelectionModel selectionModelForReal, selectionModelForFilterable;
+    private SingleSelectionModel selectionModelForReal, selectionModelForFilterable;
+    private T itemCategoryALL;
 //    private Predicate predicate;
     
     
@@ -84,6 +85,7 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
      */
     protected final void setDataForFilterable(ObservableList<T> data, Predicate<T> predicate){
         items = data;
+        itemCategoryALL = data.get(0);
         filteredItems = new FilteredList(data);
         filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() -> {
             if (getEditor().getText() == null || getEditor().getText().isEmpty()){
@@ -98,15 +100,22 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
         setSelectionModel(selectionModelForFilterable);
     }
     
-    public void showCategoryAll(boolean show, T all){ // ?? filtered list tua getItems ???
-        if (!show){
-            if (getItems().contains(all)){
-                getItems().remove(0);
+    /**
+     * If 'show' is true -  category 'ALL' will show in comboBox and also selected.
+     * If 'show' is false - category 'ALL' will not show in comboBox and comboBox value will be null.
+     * @param show The parameter provides show or hide category 'ALL' in comboBox.
+     */
+    public void showCategoryALL(boolean show){
+        if (show){
+            if (!getItems().contains(itemCategoryALL)){
+                items.add(0, itemCategoryALL);
+                setValue(itemCategoryALL);
             }
         }
         else {
-            if (!getItems().contains(all)){
-                getItems().add(0, all);
+            if (getItems().contains(itemCategoryALL)){
+                items.remove(0);
+                setValue(null);
             }
         }
     }

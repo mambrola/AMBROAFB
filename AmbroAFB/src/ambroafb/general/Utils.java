@@ -8,6 +8,7 @@ package ambroafb.general;
 import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.countcombobox.CountComboBox;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -53,6 +54,7 @@ public class Utils {
 
     private static Logger logger;
     private static Tooltip toolTip = new Tooltip();
+    private static ObjectMapper mapper = new ObjectMapper();
 
     /**
      * აკეთებს exception-ის ლოგირებას კონსოლში და ფაილში სახელად 'error.log'
@@ -134,7 +136,7 @@ public class Utils {
     public static JSONObject getJSONFromClass(Object classObject){
         JSONObject result = null;
         try {
-            ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
             result = new JSONObject(writer.writeValueAsString(classObject));
         } catch (JSONException | JsonProcessingException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
@@ -147,7 +149,7 @@ public class Utils {
     public static <T> T getClassFromJSON(Class targetClass, JSONObject json){
         try {
             if (targetClass != null && json != null){
-                return (T) (new ObjectMapper().readValue(json.toString(), targetClass));
+                return (T) (mapper.readValue(json.toString(), targetClass));
             }
         } catch (IOException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
@@ -462,11 +464,18 @@ public class Utils {
                 results[0] = mapEditor;
                 results[1] = mapEditor.getEditor().getText();
             }
+            else if (field.getType().equals(CountComboBox.class)){
+                CountComboBox countComboBox = (CountComboBox) field.get(ownerClassObject);
+                results[0] = countComboBox;
+                results[1] = (countComboBox.nothingIsSelected()) ? null : countComboBox.getValue();
+            }
             // (field.getType().equals(ComboBox.class) || field.getType().equals(CurrencyComboBox.class))
             else if (field.getType().toString().contains("ComboBox")) {
                 ComboBox comboBox = (ComboBox) field.get(ownerClassObject);
                 results[0] = comboBox;
-                results[1] = comboBox.getValue();
+                // Note: comboBox.getValue() may be null but some class may provides to make some action that avoid nullable and return empty string for example. So we check selection index.
+                int selectedIndex = comboBox.getSelectionModel().getSelectedIndex(); 
+                results[1] = (comboBox.getValue() == null || selectedIndex < 0) ? null : comboBox.getValue();
             }
             field.setAccessible(accessible);
         } catch (IllegalArgumentException | IllegalAccessException ex) {

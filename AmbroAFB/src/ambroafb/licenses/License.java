@@ -22,8 +22,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javafx.beans.binding.StringExpression;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -98,6 +100,8 @@ public class License extends EditorPanelable {
     private final StringProperty lastLoginTime;
     private final ObjectProperty<LocalDate> lastLoginTimeObj;
     
+    private final BooleanProperty isNew;
+    
     @JsonIgnore
     private static final String DB_VIEW_NAME = "licenses_whole";
     @JsonIgnore
@@ -127,6 +131,7 @@ public class License extends EditorPanelable {
         lastDateObj = new SimpleObjectProperty<>();
         lastLoginTime = new SimpleStringProperty("");
         lastLoginTimeObj = new SimpleObjectProperty<>();
+        isNew = new SimpleBooleanProperty(false);
         
         statusObj.addListener((ObservableValue<? extends LicenseStatus> observable, LicenseStatus oldValue, LicenseStatus newValue) -> {
             rebindStatus(); 
@@ -515,6 +520,12 @@ public class License extends EditorPanelable {
     
     public void setLastLoginTime(String date){
         lastLoginTimeObj.set(DateConverter.getInstance().parseDate(date));
+    }
+    
+    // The method is need for license that will create when invoice select some products and 
+    // ask DB the new license info, licenses finances and invoice finances.
+    public void setIsNew(int isNew){
+        this.isNew.set(isNew == 1);
     }
     
     

@@ -152,8 +152,11 @@ public class DBUtils {
         return result;
     }
     
+    private static JSONArray licenses;
+    private static JSONArray licensesFinaces;
+    private static JSONArray invoicesFinaces;
     
-    public static ArrayList<License> getInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, Double additionalDiscount, JSONArray licensesIds){
+    public static void callInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, Double additionalDiscount, JSONArray licensesIds){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         try {
             JSONArray licensesArray = dbClient.callProcedureAndGetAsJson("invoice_get_suited_licenses",
@@ -162,11 +165,38 @@ public class DBUtils {
                                                                             beginDate, endDate,
                                                                             products, additionalDiscount, licensesIds);
             System.out.println("licenses array from DB: " + licensesArray);
-            return new ObjectMapper().readValue(licensesArray.toString(), new TypeReference<ArrayList<License>>(){});
-        } catch (IOException | AuthServerException ex) {
+            licenses = licensesArray.getJSONArray(0);
+            licensesFinaces = licensesArray.getJSONArray(1);
+            invoicesFinaces = licensesArray.getJSONArray(2);
+        } catch (IOException | AuthServerException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+    }
+    
+    public static ArrayList<License> getLicenses(){
+        try {
+            return new ObjectMapper().readValue(licenses.toString(), new TypeReference<ArrayList<License>>(){});
+        } catch (IOException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return new ArrayList<>();
     }
+    
+//    private static ArrayList<License> getLicensesFinaces(){
+//        try {
+//            return new ObjectMapper().readValue(licenses.toString(), new TypeReference<ArrayList<License>>(){});
+//        } catch (IOException ex) {
+//            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return new ArrayList<>();
+//    }
+//    
+//    private static ArrayList<License> getInvoiceFinances(){
+//        try {
+//            return new ObjectMapper().readValue(licenses.toString(), new TypeReference<ArrayList<License>>(){});
+//        } catch (IOException ex) {
+//            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return new ArrayList<>();
+//    }
 }

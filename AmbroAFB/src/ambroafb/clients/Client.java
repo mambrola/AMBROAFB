@@ -556,7 +556,7 @@ public class Client extends EditorPanelable{
     }
 
     @Override
-    public void copyFrom(EditorPanelable object) {
+    public void copyFrom(EditorPanelable object) { 
         Client other = (Client) object;
 //        setCreatedDate(other.getCreatedDate());
         setIsJur(other.getIsJur());

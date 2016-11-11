@@ -26,6 +26,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import ambroafb.general.interfaces.Annotations.*;
 
 /**
  *
@@ -33,29 +34,32 @@ import javafx.scene.layout.VBox;
  */
 public class InvoiceDialogController implements Initializable {
 
-    @FXML
-    private VBox formPane;
+    // The order is needed for required components show ordering on scene:
+    // start order:
+    @FXML @ContentNotEmpty
+    private ClientComboBox clients;
+    @FXML @ContentNotEmpty
+    private CountComboBox<Product> licenses;
+    @FXML @ContentNotEmpty
+    private ADatePicker beginDate;
+    @FXML @ContentNotEmpty
+    private MonthCounterComboBox monthCounter;
+    @FXML @ContentNotEmpty
+    private ComboBox<InvoiceReissuing> invoiceReissuings;
+    // end order
+    
     
     @FXML
-    private ADatePicker createdDate, beginDate, endDate;
+    private VBox formPane;
+    @FXML
+    private ADatePicker createdDate, endDate;
     @FXML
     private CheckBox revoked;
     @FXML
     private TextField invoiceNumber, additionalDiscount, moneyToPay, moneyPaid, vat, status;
     @FXML
-    private ClientComboBox clients;
-//    @FXML
-//    private CountComboBox<Invoice.LicenseShortData> licenses;
-    @FXML
-    private CountComboBox<Product> licenses;
-    
-    @FXML
-    private MonthCounterComboBox monthCounter;
-    @FXML
-    private ComboBox<InvoiceReissuing> invoiceReissuings;
-
-    @FXML
     private DialogOkayCancelController okayCancelController;
+    
     
     private ArrayList<Node> focusTraversableNodes;
     private Invoice invoice;
@@ -66,7 +70,7 @@ public class InvoiceDialogController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
-        clients.getItems().remove(0);
+        clients.showCategoryALL(false);
         licenses.getItems().addAll(Product.getAllFromDB());
         permissionToClose = true;
     }
@@ -101,7 +105,7 @@ public class InvoiceDialogController implements Initializable {
         }
         okayCancelController.setButtonsFeatures(buttonType);
 //        if (invoice != null){
-//            licenses.getItems().addAll(invoice.getLicenses());
+//            licenses.getItems().addAll(invoice.getLicensesShortData());
 //        }
     }
     

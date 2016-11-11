@@ -243,10 +243,11 @@ public class Invoice extends EditorPanelable {
 //        System.out.println("productsArray: " + productsArray);
         
         JSONArray licensesIds = new JSONArray();
-        invoice.getLicenses().stream().forEach((licenseShortData) -> {
+        invoice.getLicensesShortData().stream().forEach((licenseShortData) -> {
             licensesIds.put(getJsonFrom(null, "license_id", licenseShortData.licenseId));
         });
-        ArrayList<License> licenses = DBUtils.getInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, invoice.getAdditionalDiscountRate(), licensesIds);
+        DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, invoice.getAdditionalDiscountRate(), licensesIds);
+        ArrayList<License> licenses = DBUtils.getLicenses();
         List<LicenseShortData> wholeLicenses = licenses.stream().map((License license) -> {
                                                                         LicenseShortData shortData = new LicenseShortData();
                                                                         shortData.licenseId = license.getRecId();
@@ -341,46 +342,58 @@ public class Invoice extends EditorPanelable {
 //    }
 //    
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public String getInvoiceNumber(){
         return invoiceNumber.get();
     }
     
 
-    public ObservableList<LicenseShortData> getLicenses(){
+    @JsonIgnore
+    public ObservableList<LicenseShortData> getLicensesShortData(){
         return licenses;
     }
     
+    public ObservableList<Integer> getLicenses(){
+        ObservableList<Integer> licenseIds = FXCollections.observableArrayList();
+        licenses.stream().forEach((shortData) -> {
+            licenseIds.add(shortData.getLicenseId());
+        });
+        return licenseIds;
+    }
+    
     public int getClientId(){
-        return clientObj.get().getRecId();
+        return (clientObj.isNull().get()) ? -1 : clientObj.get().getRecId();
     }
     
     @JsonIgnore
     public String getFirstName(){
-        return clientObj.get().getFirstName();
+        return (clientObj.isNull().get()) ? "" : clientObj.get().getFirstName();
     }
     
     @JsonIgnore
     public String getLastName(){
-        return clientObj.get().getLastName();
+        return (clientObj.isNull().get()) ? "" : clientObj.get().getLastName();
     }
     
     @JsonIgnore
     public String getEmail(){
-        return clientObj.get().getEmail();
+        return (clientObj.isNull().get()) ? "" : clientObj.get().getEmail();
     }
     
     public String getBeginDate(){
-        return (beginDateObj.get() == null) ? "" : beginDateObj.get().toString();
+        return (beginDateObj.isNull().get()) ? "" : beginDateObj.get().toString();
     }
     
     public String getEndDate(){
-        return (endDateObj.get() == null) ? "" : beginDateObj.get().toString();
+        return (endDateObj.isNull().get()) ? "" : beginDateObj.get().toString();
     }
     
+    @JsonIgnore
     public String getRevokedDate(){
-        return (revokedDateObj.get() == null) ? "" : revokedDateObj.get().toString();
+        return (revokedDateObj.isNull().get()) ? "" : revokedDateObj.get().toString();
     }
-            
+    
+    @JsonIgnore
     public double getAdditionalDiscountRate(){
         return Utils.getDoubleValueFor(additionalDiscountRate.get());
     }
@@ -396,26 +409,32 @@ public class Invoice extends EditorPanelable {
     }
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public double getVat(){
         return Utils.getDoubleValueFor(vat.get());
     }
     
+    @JsonIgnore
     public String getReissuingDescrip(){
-        return reissuingObj.get().getDescrip();
+        return (reissuingObj.isNull().get()) ? "" : reissuingObj.get().getDescrip();
     }
     
+    @JsonIgnore
     public int getReissuing(){
-        return reissuingObj.get().getInvoiceReissuingId();
+        return (reissuingObj.isNull().get()) ? -1 : reissuingObj.get().getInvoiceReissuingId();
     }
     
+    @JsonIgnore
     public String getStatusDescrip(){
-        return statusObj.get().getDescrip();
+        return (statusObj.isNull().get()) ? "" : statusObj.get().getDescrip();
     }
     
+    @JsonIgnore
     public int getStatus(){
-        return statusObj.get().getInvoiceStatusId();
+        return (statusObj.isNull().get()) ? -1 : statusObj.get().getInvoiceStatusId();
     }
     
+    @JsonIgnore
     public String getMonths(){
         return months.get();
     }
@@ -537,7 +556,7 @@ public class Invoice extends EditorPanelable {
         setEmail(invoice.getEmail());
         setInvoiceNumber(invoice.getInvoiceNumber());
         licenses.clear(); // Avoid to add twise licenses in tableView
-        licenses.addAll(invoice.getLicenses());
+        licenses.addAll(invoice.getLicensesShortData());
         setBeginDate(invoice.getBeginDate());
         setEndDate(invoice.getEndDate());
         setRevokedDate(invoice.getRevokedDate());
@@ -565,7 +584,7 @@ public class Invoice extends EditorPanelable {
                 getLastName().equals(otherInvoice.getLastName())    &&
                 getEmail().equals(otherInvoice.getEmail())          &&
                 getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())  &&
-                Utils.compareLists(licenses, otherInvoice.getLicenses())    &&
+                Utils.compareLists(licenses, otherInvoice.getLicensesShortData())    &&
                 getBeginDate().equals(otherInvoice.getBeginDate())          &&
                 getEndDate().equals(otherInvoice.getEndDate())      &&
                 getRevokedDate().equals(otherInvoice.getRevokedDate()) &&
@@ -581,16 +600,32 @@ public class Invoice extends EditorPanelable {
     @SuppressWarnings("EqualsAndHashcode")
     public static class LicenseShortData {
         
-        public int recId;
-        public int licenseId;
+        private int recId;
+        private int licenseId;
         public StringProperty licenseNumber = new SimpleStringProperty("");
         
         public StringProperty licenseNumberProperty(){
             return licenseNumber;
         }
         
+        public int getRecId(){
+            return recId;
+        }
+        
+        public int getLicenseId(){
+            return licenseId;
+        }
+        
         public int getLicenseNumber(){
             return Integer.parseInt(licenseNumber.get());
+        }
+        
+        public void setRecId(int recId){
+            this.recId = recId;
+        }
+        
+        public void setLicenseId(int licenseId){
+            this.licenseId = licenseId;
         }
         
         public void setLicenseNumber(int number){
