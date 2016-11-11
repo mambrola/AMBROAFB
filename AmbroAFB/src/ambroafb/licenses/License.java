@@ -174,11 +174,11 @@ public class License extends EditorPanelable {
         WhereBuilder whereBuilder = new ConditionBuilder().where();
         LicenseFilterModel licenseFilterModel = (LicenseFilterModel) model;
         
-        int clientId = licenseFilterModel.getSelectedClientId();
+        int clientId = licenseFilterModel.getSelectedClient().getRecId();
         if (clientId > 0){
             whereBuilder = whereBuilder.and("client_id", "=", clientId);
         }
-        int productId = licenseFilterModel.getSelectedProductId();
+        int productId = licenseFilterModel.getSelectedProduct().getRecId();
         if (productId > 0){
             whereBuilder = whereBuilder.and("product_id", "=", productId);
         }

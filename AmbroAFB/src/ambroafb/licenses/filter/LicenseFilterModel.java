@@ -5,8 +5,10 @@
  */
 package ambroafb.licenses.filter;
 
+import ambroafb.clients.Client;
 import ambroafb.general.FilterModel;
 import ambroafb.licenses.helper.LicenseStatus;
+import ambroafb.products.Product;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -23,12 +25,14 @@ import javafx.collections.ObservableList;
  */
 public class LicenseFilterModel extends FilterModel {
 
-    private static final String PREF_CLIENT_KEY = "licenses/filter/client_id";
-    private static final String PREF_PRODUCT_KEY = "licenses/filter/product_id";
+    private static final String PREF_CLIENT_KEY = "licenses/filter/selected_client_index";
+    private static final String PREF_PRODUCT_KEY = "licenses/filter/selected_product_index";
     private static final String PREF_STATUS_KEY = "licenses/filter/status_ids";
     private static final String PREF_EXTRA_DAYS_KEY = "licenses/filter/extraDays";
 
     private ObservableList<LicenseStatus> checkedStatuses;
+    private Client client;
+    private Product product;
     
     private final int indeterminate = 2;
     private final int isSelectedExtraDays = 1;
@@ -38,12 +42,20 @@ public class LicenseFilterModel extends FilterModel {
         checkedStatuses = FXCollections.observableArrayList();
     }
 
-    public void setSelectedClientId(int clientId) {
-        saveIntoPref(PREF_CLIENT_KEY, clientId);
+    public void setSelectedClientIndex(int clientIndex) {
+        saveIntoPref(PREF_CLIENT_KEY, clientIndex);
     }
 
-    public void setSelectedProductId(int productId) {
-        saveIntoPref(PREF_PRODUCT_KEY, productId);
+    public void setSelectedClient(Client selectedItem) {
+        client = selectedItem;
+    }
+
+    public void setSelectedProductIndex(int productIndex) {
+        saveIntoPref(PREF_PRODUCT_KEY, productIndex);
+    }
+    
+    public void setSelectedProduct(Product selectedItem){
+        product = selectedItem;
     }
 
     public void setSelectedStatuses(ObservableList<LicenseStatus> statuses) {
@@ -66,12 +78,20 @@ public class LicenseFilterModel extends FilterModel {
         saveIntoPref(PREF_EXTRA_DAYS_KEY, indeterminate);
     }
 
-    public int getSelectedClientId() {
+    public int getSelectedClientIndex() {
         return getIntFromPref(PREF_CLIENT_KEY);
     }
     
-    public int getSelectedProductId() {
+    public Client getSelectedClient(){
+        return client;
+    }
+    
+    public int getSelectedProductIndex() {
         return getIntFromPref(PREF_PRODUCT_KEY);
+    }
+    
+    public Product getSelectedProduct(){
+        return product;
     }
 
     /**

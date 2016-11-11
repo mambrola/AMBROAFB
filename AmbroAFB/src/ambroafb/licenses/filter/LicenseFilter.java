@@ -81,8 +81,9 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
             filterModel.changeModelAsEmpty();
         }
         else {
-            filterModel.setSelectedClientId(clients.getSelectionModel().getSelectedItem().getRecId());
-            filterModel.setSelectedProductId(products.getSelectionModel().getSelectedItem().getRecId());
+            filterModel.setSelectedClientIndex(clients.getSelectionModel().getSelectedIndex());
+            filterModel.setSelectedClient(clients.getValue());
+            filterModel.setSelectedProductIndex(products.getSelectionModel().getSelectedItem().getRecId());
             filterModel.setSelectedStatuses(statuses.getCheckModel().getCheckedItems());
             filterModel.setSelectedStatusIndexes(statuses.getCheckModel().getCheckedIndices());
             if (extraDays.isIndeterminate()){
@@ -98,10 +99,10 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         statuses.getItems().setAll(License.getAllLicenseStatusFromDB());
         
-        if (filterModel.getSelectedClientId() >= 0)
-            clients.getSelectionModel().select(filterModel.getSelectedClientId());
-        if (filterModel.getSelectedProductId() >= 0)
-            products.getSelectionModel().select(filterModel.getSelectedProductId());
+//        if (filterModel.getSelectedClientIndex() >= 0)
+            clients.getSelectionModel().select(filterModel.getSelectedClientIndex());
+//        if (filterModel.getSelectedProductIndex() >= 0)
+            products.getSelectionModel().select(filterModel.getSelectedProductIndex());
         filterModel.getSelectedStatusIndexes().stream().forEach((index) -> {
             statuses.getCheckModel().check(index);
         });
