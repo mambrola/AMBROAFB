@@ -13,7 +13,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.SingleSelectionModel;
-import javafx.util.StringConverter;
 
 /**
  *
@@ -33,9 +32,15 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
     
     
     public FilterableWithALLComboBox() {
+//        getEditor().setStyle("-fx-prompt-text-fill: black; -fx-background-radius: 2 0 0 2, 2 0 0 2;");
         
+
         valueProperty().addListener((ObservableValue<? extends T> observable, T oldValue, T newValue) -> {
-            System.out.println("value change. hasFilterableData: " + hasFilterableData);
+            if (oldValue != null){
+                
+            }
+            
+            //System.out.println("value change. hasFilterableData: " + hasFilterableData);
 //            if (hasFilterableData){
 //                hasFilterableData = false;
 //                setSelectionModel(selectionModelForReal);
@@ -43,17 +48,17 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
 //            }
         });
         
-        getEditor().textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (newValue != null && !newValue.isEmpty()) {
-                System.out.println("text Change. !hasFilterableData: " + (!hasFilterableData) + " getValue: " + getValue());
-//                if (!hasFilterableData && getValue() == null) {
-//                    hasFilterableData = true;
-//                    System.out.println("text change. daeseteba mnishvnelobebi...");
-//                    setItems(filteredItems);
-//                    setSelectionModel(selectionModelForFilterable);
-//                }
-            }
-        });
+//        getEditor().textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+//            if (newValue != null && !newValue.isEmpty()) {
+//                System.out.println("text Change. !hasFilterableData: " + (!hasFilterableData) + " getValue: " + getValue());
+////                if (!hasFilterableData && getValue() == null) {
+////                    hasFilterableData = true;
+////                    System.out.println("text change. daeseteba mnishvnelobebi...");
+////                    setItems(filteredItems);
+////                    setSelectionModel(selectionModelForFilterable);
+////                }
+//            }
+//        });
         
 //        getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
 //            System.out.println("index selection listener: new Value: " + newValue);
@@ -95,7 +100,7 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
         }, getEditor().textProperty()));
         
         this.setItems(filteredItems);
-        selectionModelForReal = new CustomSelection(items);
+//        selectionModelForReal = new CustomSelection(items);
         selectionModelForFilterable = new CustomSelection(filteredItems);
         setSelectionModel(selectionModelForFilterable);
     }
@@ -142,20 +147,6 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
             if (data == null || data.isEmpty()) return 0;
             return data.size();
         }
-    }
-    
-    private class DefaultConverter<T> extends StringConverter<T> {
-
-        @Override
-        public String toString(T objectInput) {
-            return (objectInput == null) ? null : objectInput.toString();
-        }
-
-        @Override
-        public T fromString(String string) {
-            return null;
-        }
-
     }
     
 }
