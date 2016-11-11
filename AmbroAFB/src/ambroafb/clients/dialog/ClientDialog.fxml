@@ -71,7 +71,7 @@
                 <VBox  styleClass="couple, vContainer">
                     <HBox styleClass="one">
                         <VBox styleClass="couple">
-                            <Label text="www address" /> 
+                            <Label text="%www_address" /> 
                             <TextField  fx:id="www" />
                         </VBox >
                     </HBox>

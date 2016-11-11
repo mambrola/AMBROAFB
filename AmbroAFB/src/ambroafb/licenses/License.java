@@ -72,7 +72,7 @@ public class License extends EditorPanelable {
     private final IntegerProperty cfCurrentInvoiceId;
     private final IntegerProperty cfFutureInvoiceId;
     
-    @AView.Column(title = "%license_statuses", width = "120")
+    @AView.Column(title = "%license_statuses", width = "128")
     private final StringProperty statusDescrip;
     @JsonIgnore
     private final ObjectProperty<LicenseStatus> statusObj;
@@ -94,7 +94,7 @@ public class License extends EditorPanelable {
     private final ObjectProperty<LocalDate> lastDateObj;
     private String lastDate; // for object mapper (case: class to json)
     
-    @AView.Column(title = "extra_days", width = "30", styleClass = "textRight")
+    @AView.Column(title = "%extra_days", width = "64", styleClass = "textRight")
     private final IntegerProperty additionalDays;
     
     private final StringProperty lastLoginTime;

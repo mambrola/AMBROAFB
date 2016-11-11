@@ -72,14 +72,14 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private final StringExpression descrip;
 
-    @AView.Column(title = "%id_number", width = "100")
+    @AView.Column(title = "%id_number", width = "120")
     @JsonProperty("passNumber")
     private final SimpleStringProperty IDNumber;
 
     @AView.Column(title = "%email", width = "170")
     private final SimpleStringProperty email;
 
-    @AView.Column(title = "%phones", width = "200")
+    @AView.Column(title = "%phones", width = "128")
     @JsonIgnore
     private final SimpleStringProperty phoneNumbers;
 
@@ -107,7 +107,7 @@ public class Client extends EditorPanelable{
     @AView.Column(title = "%fax", width = "80")
     private final SimpleStringProperty fax;
     
-    @AView.Column(title = "www address", width = "100")
+    @AView.Column(title = "%www_address", width = "128")
     private final SimpleStringProperty www;
     
     private final SimpleStringProperty remark;
