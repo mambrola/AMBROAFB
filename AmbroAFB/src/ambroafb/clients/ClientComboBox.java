@@ -48,7 +48,6 @@ public class ClientComboBox extends FilterableWithALLComboBox<Client> {
         setDataForFilterable(items, predicate);
         
         showCategoryALL(true);
-//        this.setValue(clientALL);
     }
     
     public void selectItem(Client client){
