@@ -12,7 +12,7 @@ package ambroafb.general;
 public class Names {
     public static final String MAIN_FXML = "/ambroafb/Main.fxml"; // "/ambroafb/clients/Clients.fxml"; //"ambroafb/clients/filter/ClientFilter.fxml"; //
     public static final String MAIN_TITLE = "title_main";
-    public static final String MAIN_LOGO = "/images/logo.png";
+    public static final String MAIN_LOGO = "/images/mainabfor2a.png";
     
     public static final String CONFIGURATION_FXML = "/ambroafb/configuration/Configuration.fxml";
     public static final String CONFIGURATION_TITLE = "title_configuration";
