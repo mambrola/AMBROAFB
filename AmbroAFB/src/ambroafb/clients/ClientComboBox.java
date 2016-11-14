@@ -7,12 +7,15 @@ package ambroafb.clients;
 
 import static ambroafb.clients.ClientComboBox.clientALL;
 import ambroafb.general.filterablecombobox.FilterableWithALLComboBox;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Class provides to change behaviour whether its items must be filterable.
@@ -28,34 +31,65 @@ public class ClientComboBox extends FilterableWithALLComboBox<Client> {
     public static final Client clientALL = new Client();
     private static final String separator = ",  ";
     
-    private ObservableList<Client> items = FXCollections.observableArrayList();
+    private final ObservableList<Client> items = FXCollections.observableArrayList();
     
     public ClientComboBox(){
         super();
+        super.initializerClass(Client.class);
         
         clientALL.setFirstName(ALL);
         clientALL.setRecId(0);
         items.add(clientALL);
         items.addAll(Client.getAllFromDB());
+        super.registerCategoryALL(clientALL);
         
-        this.setConverter(new CustomConverter());
-
-        Predicate predicate = (Predicate<Client>) (Client client) -> {
-               if (getEditor() == null || getEditor().getText() == null || getEditor().getText().isEmpty()){
-                   return true;
-                }
-//                String searchText = client.getFirstName() + separator + client.getLastName() + separator + client.getEmail();
-//                return searchText.toLowerCase().contains(getEditor().getText().toLowerCase());
-                return client.getEmail().toLowerCase().equals(getEditor().getText().toLowerCase());
-        };
-        setDataForFilterable(items, predicate);
-        
+        setDataItems(items, (Client c) -> c.getShortDescrip("").get());
         showCategoryALL(true);
     }
     
-    public void selectItem(Client client){
-        this.getSelectionModel().select(client);
+    private JSONObject getColumnsJSON(){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("0", 0);
+            json.put("1", 0);
+//            json.put("2", 50);
+            json.put("3", 0);
+//            json.put("4", 50);
+            json.put("5", 0);
+            json.put("6", 0);
+            json.put("7", 0);
+            json.put("8", 0);
+            json.put("9", 0);
+            json.put("10", 0);
+            
+        } catch (JSONException ex) {
+            Logger.getLogger(ClientComboBox.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return json;
     }
+    
+    public Client getValue(){
+        return super.selectedItemPrpoerty().get();
+    }
+    
+    public ObjectProperty<Client> valueProperty(){
+        return super.selectedItemPrpoerty();
+    }
+    
+    /**
+     * 
+     * @param rb 
+     */
+    public void registerBundle(ResourceBundle rb){
+        super.initializerClass(Client.class);
+        super.setBundle(rb);
+        JSONObject columnsJSON = getColumnsJSON();
+        setColunWidthes(columnsJSON);
+    }
+    
+//    public void selectItem(Client client){
+//        this.getSelectionModel().select(client);
+//    }
     
     
     private class CustomConverter extends StringConverter<Client> {
@@ -78,12 +112,15 @@ public class ClientComboBox extends FilterableWithALLComboBox<Client> {
                 if (data == null || data.isEmpty()){
                     return null;
                 }
-                if (data.equals(clientALL.getFirstName())){
-                    return clientALL;
-                }
-                List<Client> clients = getItems().stream().filter((Client client) -> client.getEmail().equals(data))
-                              .collect(Collectors.toList());
-                return (clients.isEmpty()) ? null : clients.get(0);
+                Client c = new Client();
+                c.setEmail(data);
+                return c;
+//                if (data.equals(clientALL.getFirstName())){
+//                    return clientALL;
+//                }
+//                List<Client> clients = getItems().stream().filter((Client client) -> client.getEmail().equals(data))
+//                              .collect(Collectors.toList());
+//                return (clients.isEmpty()) ? null : clients.get(0);
             }
 
 //            @Override

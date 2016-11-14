@@ -98,6 +98,7 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        clients.registerBundle(resources);
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
         
         startDateFrom.setValue(invoiceFilterModel.getStartDate(true));

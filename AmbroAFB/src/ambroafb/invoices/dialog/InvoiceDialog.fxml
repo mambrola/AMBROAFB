@@ -41,7 +41,7 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%clients" styleClass="validationMessage" />
-                            <ClientComboBox fx:id="clients" />
+                            <ClientComboBox fx:id="clients" styleClass="unicode" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple">

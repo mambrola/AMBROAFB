@@ -98,6 +98,7 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        clients.registerBundle(resources);
         statuses.getItems().setAll(License.getAllLicenseStatusFromDB());
         
 //        if (filterModel.getSelectedClientIndex() >= 0)
