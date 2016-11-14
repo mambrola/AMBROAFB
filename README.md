@@ -134,20 +134,20 @@ client-ის phones არის ცარიელი მასივი დ�
 
 კომპონენტები და მოსაგვარებელი საკითხები:
 * bal_accounts: 
-	1) (-) comboBox-ის რომელიც საჭიროებს clientComboBox-ის მსგავსს ფუნქციონალს ფილტრის თვალსაზრისით.
+	1) (+) comboBox-ის რომელიც საჭიროებს clientComboBox-ის მსგავსს ფუნქციონალს ფილტრის თვალსაზრისით.
 
 
 * Clients: 
 	1) (+) compare-ში Phone.compareList-ის მაგივრად Utils.compareLis-ის შემოტანა. Utils.compareList ადარებს object-ების სიებს, ამიტომ მათ გადატვირთული უნდა ქონდეთ equals მეთოდი. აუცილებელია რომ equals მეთოდის header-ი იყოს: public boolean equals(Object someName); თუ პარამეტრი არ იქნა Object ტიპის მაშინ არ ითვლება გადატვირთულად equals მეთოდი და შესაბამისად იძახება Object კლასის equals-ი, რომელიც მიმთითებლებს ადარებს.
-	2) (-) clientComboBox-არჩევისას error-ი ხდება
+	2) (+) clientComboBox-არჩევისას error-ი ხდება. გადავედით FilterableTableView_ის გამოჩენიაზე comboBox-ში.
 	
 	
-* (-) productsDiscount: 
+* productsDiscount: 
 	1) (+) productsDiscount-ებში equals-ის დროს ზოგ შემმთხვევაში other არის null. ალბათ comboBox-ის გამოყენების დროს რადგან იგივე პრობლემაა. (comboBox_ის თავისებურებიდან გამომდინარე, setValue(null)-ის დროს შესაძლოა items-ს გადაყვება)
 Country-ის equals მეთპდზე, comboBox_ის დროს.
 
 * (-) licenses:
-	1) (-) licenses filter model-ში  ჯობია იყოს  setSelectedClient, setSelectedProduct, setSelectedClientIndex, setSelectedProductIndex
+	1) (+) licenses filter model-ში  ჯობია იყოს  setSelectedClient, setSelectedProduct, setSelectedClientIndex, setSelectedProductIndex
 
 * (-) Currencies:
 	1) (-) currencyDialog-ში  ვალუტის  iso  კოდის  comboBox-ი  ალბათ  editable უნდა იყოს
