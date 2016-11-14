@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Class provides to change behaviour whether its items must be filterable.
@@ -42,8 +41,12 @@ public class ClientComboBox extends FilterableWithALLComboBox<Client> {
         this.setConverter(new CustomConverter());
 
         Predicate predicate = (Predicate<Client>) (Client client) -> {
-                String searchText = client.getFirstName() + separator + client.getLastName() + separator + client.getEmail();
-                return searchText.toLowerCase().contains(getEditor().getText().toLowerCase());
+               if (getEditor() == null || getEditor().getText() == null || getEditor().getText().isEmpty()){
+                   return true;
+                }
+//                String searchText = client.getFirstName() + separator + client.getLastName() + separator + client.getEmail();
+//                return searchText.toLowerCase().contains(getEditor().getText().toLowerCase());
+                return client.getEmail().toLowerCase().equals(getEditor().getText().toLowerCase());
         };
         setDataForFilterable(items, predicate);
         
@@ -59,27 +62,43 @@ public class ClientComboBox extends FilterableWithALLComboBox<Client> {
 
         @Override
             public String toString(Client client) {
-                String result = null;
+                System.out.println("input client: " + client);
+                String result = "";
                 if (client != null){
                     result = (client.equals(clientALL)) ? client.getFirstName() 
-                                                        : client.getFirstName() + separator + client.getLastName() + separator + client.getEmail();
+                                                        //: client.getFirstName() + separator + client.getLastName() + separator + client.getEmail();
+                                                        : client.getEmail();
                 }
                 return result;
             }
-
+            
             @Override
             public Client fromString(String data) {
-                List<Client> clients = items.stream().filter((Client client) -> {
-                                            String enteredFirstName = StringUtils.substringBefore(data, separator);
-                                            String enteredLastName = StringUtils.substringBefore(StringUtils.substringAfter(data, separator), separator);
-                                            String enteredEmail = StringUtils.substringAfterLast(data, separator);
-
-                                            return  client.getFirstName().equals(enteredFirstName) &&
-                                                    client.getLastName().equals(enteredLastName) &&
-                                                    client.getEmail().equals(enteredEmail);
-                }).collect(Collectors.toList());
+                System.out.println("input data: " + data);
+                if (data == null || data.isEmpty()){
+                    return null;
+                }
+                if (data.equals(clientALL.getFirstName())){
+                    return clientALL;
+                }
+                List<Client> clients = getItems().stream().filter((Client client) -> client.getEmail().equals(data))
+                              .collect(Collectors.toList());
                 return (clients.isEmpty()) ? null : clients.get(0);
             }
+
+//            @Override
+//            public Client fromString(String data) {
+//                List<Client> clients = items.stream().filter((Client client) -> {
+//                                            String enteredFirstName = StringUtils.substringBefore(data, separator);
+//                                            String enteredLastName = StringUtils.substringBefore(StringUtils.substringAfter(data, separator), separator);
+//                                            String enteredEmail = StringUtils.substringAfterLast(data, separator);
+//
+//                                            return  client.getFirstName().equals(enteredFirstName) &&
+//                                                    client.getLastName().equals(enteredLastName) &&
+//                                                    client.getEmail().equals(enteredEmail);
+//                }).collect(Collectors.toList());
+//                return (clients.isEmpty()) ? null : clients.get(0);
+//            }
         
     }
 }

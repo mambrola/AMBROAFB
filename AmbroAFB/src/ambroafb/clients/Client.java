@@ -593,6 +593,12 @@ public class Client extends EditorPanelable{
         return (otherFieldsText + " " + clientPhones);
     }
     
+    
+    @Override
+    public String toString(){
+        return getShortDescrip("").get();
+    }
+    
 
     public static class FirmPersonCellFactory implements Callback<TableColumn<Client, Boolean>, TableCell<Client, Boolean>> {
 

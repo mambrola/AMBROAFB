@@ -93,16 +93,16 @@ public class FilterableWithALLComboBox<T> extends ComboBox<T> {
         itemCategoryALL = data.get(0);
         filteredItems = new FilteredList(data);
         filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() -> {
-            if (getEditor().getText() == null || getEditor().getText().isEmpty()){
-                return null;
-            }
+//            if (getEditor().getText() == null || getEditor().getText().isEmpty()){
+//                return null;
+//            }
             return predicate;
         }, getEditor().textProperty()));
         
         this.setItems(filteredItems);
 //        selectionModelForReal = new CustomSelection(items);
         selectionModelForFilterable = new CustomSelection(filteredItems);
-        setSelectionModel(selectionModelForFilterable);
+//        setSelectionModel(selectionModelForFilterable);
     }
     
     /**
