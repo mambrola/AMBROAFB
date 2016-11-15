@@ -33,6 +33,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.List;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
@@ -157,6 +158,13 @@ public class Utils {
         return null;
     }
     
+    
+    public static boolean dateEquals(LocalDate date1, LocalDate date2){
+        if (date1 == null && date2 == null) return true;
+        else if (date1 == null && date2 != null) return false;
+        else if (date1 != null && date2 == null) return false;
+        return date2.equals(date1);
+    }
     
     
     public static ArrayList<Node> getFocusTraversableBottomChildren(Parent root) {
