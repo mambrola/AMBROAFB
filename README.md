@@ -90,6 +90,7 @@ compare / equals ორივე საჭიროა, მაგალითა
 * (+) TestExcelGeneral კომპონენტების საფუძვლიანი ტესტი
 * (+) კონფიგურაციის განყოფილების გადაყვანა ახალ სტილზე
 * (-) BallanceAccount- refresh აგდებს UnSupportedOperationException-ს როცა მოინიშნება TreeTableView column (საკუთრივ) და მერე დაეჭირება refresh
+	+ treeTableView-ს შემთხვევაში არ გვაქვს განსაზღვრული რას ნიშნავდეს column-ის მიხედვით სორტირება. column-ზე კლიკი კი ავტომატურად ამ ფუქნციონალს ამოქმედებს. ეს იყო პრობლემა და არა refresh-ი. გადაწყვეტა: BallanceAccountController-ში TreeTableView-ს ყველა column-ს ვუთხარით რომ არ იყოს sortable.
 * (-) invoice-სა და client განყოფილებების შედარება
 * (+) სპეც. ComboBox-ების მოწესრიგება (პატერნებით)
 	+ სცენაზე უნდა დაიხატოს ამიტომ ერთი კონსტრუქტორი ჭირდება უპარამეტრო, შეიძლება გართულდეს და ჯობდეს extends ComboBox<T>
