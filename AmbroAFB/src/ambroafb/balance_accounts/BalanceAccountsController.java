@@ -52,6 +52,9 @@ public class BalanceAccountsController implements Initializable {
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(aview);
         editorPanelController.setTreeTable(aview);
+        aview.getColumns().stream().forEach((column) -> {
+            column.setSortable(false);
+        });
         reAssignTable(null);
     }
 
