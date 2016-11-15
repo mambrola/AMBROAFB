@@ -77,9 +77,9 @@ Accounting for Busines
 * (+) Client-ის comboBox (+ALL, search.  წერია და კარგად მუშაობს TestExcelGeneral პროექტში)
 * (+) სადაც equals და compares-ს ვიყენებთ მარტო equals-ზე ხომ არ გადავიდეთ. compares-ს საჭიროება? equals-ს საჭიროება?
 compare / equals ორივე საჭიროა, მაგალითად ქვეყნებისთვის country.equal(other) ადარებს country code-ის მიხედვით, ხოლო compare ადარებს ყველა კომპონენტის მიხედვით (რადგან თუ სცენაზე რამე შეიცვალა compare მეთოდი გაარკვევს და მოამზადებს პროგრამას ალერტის ამოსაგდებად)
-* (-) clientComboBox-ის ნაცვლად ერთი generic filterableComboBox-ი.
-* (-) whereBuilder-ის andGropu() ან orGroup() მეთოდების გამოყენების დროს closeGroup-ის გამოძახება.
-* (+) გასუფთავდეს statis hashMap-ები ??  საერთოდ აღარ ვიყენებთ static HashMap-ს...
+* (+) clientComboBox-ის ნაცვლად ერთი generic filterableComboBox-ი.
+* (-) whereBuilder-ის andGroup() ან orGroup() მეთოდების გამოყენების დროს closeGroup-ის გამოძახება.
+* (+) გასუფთავდეს statis hashMap-ები ??  + საერთოდ აღარ ვიყენებთ static HashMap-ს...
 * (-) whereBuilder-ი საჭიროებს:  whereBuilder = whereBuilder.andGroup(); ...     whereBuilder = whereBuilder.closeGroup()
 * (+) client-ებს მოაქვს rezident გერმანია, როცა არ უნდ აწამოიღოს. ფილტრში ეთითება:  ორივე date -> null,  juridical -> false, country -> ALL, სტტუსები: მხოლოდ პირველი, rezident -> true
 * (+) Client-ის დიალოგის დროს თუ რეზიდენტობა გაინიშნა ალბათ ქვეყანა საქართველო შესაძლოა დარჩეს არჩეული comboBox-ში.
@@ -87,28 +87,30 @@ compare / equals ორივე საჭიროა, მაგალითა
 * (-) ქვეყნების comboBox-ი ძებნადი ??
 * (-) @JsonIgnore
     public String language;  არ მოაქვს productSpecific_ის language, მაშინ როცა იგივე ჩანაწერი არ მუშაობს LicenseStatus კლასისთვის
-* (-) TestExcelGeneral კომპონენტების საფუძვლიანი ტესტი
+* (+) TestExcelGeneral კომპონენტების საფუძვლიანი ტესტი
 * (+) კონფიგურაციის განყოფილების გადაყვანა ახალ სტილზე
 * (-) BallanceAccount- refresh აგდებს UnSupportedOperationException-ს როცა მოინიშნება TreeTableView column (საკუთრივ) და მერე დაეჭირება refresh
 * (-) invoice-სა და client განყოფილებების შედარება
 * (+) სპეც. ComboBox-ების მოწესრიგება (პატერნებით)
 	+ სცენაზე უნდა დაიხატოს ამიტომ ერთი კონსტრუქტორი ჭირდება უპარამეტრო, შეიძლება გართულდეს და ჯობდეს extends ComboBox<T>
-* (-) localDB-ის შექმნა და derby-ის გამოყენება კიდევ საჭიროა ??
+* (+) localDB-ის შექმნა და derby-ის გამოყენება კიდევ საჭიროა ?? class UtilsDB მაინც დარჩეს, იქნებ საჭირო გახდეს, თუმცა კოდში არ ვიყენებთ.
 * (+) რატომღაც AFB-ს არ აქვს ის პრობლემა რომ თუ lib დირექტორიის გარეშ გაეშვა აღარ გაითიშოს და გაშვებული დარჩეს განსხვავებით testMain-სგან (შესაძლოა ამის მიზეზი იყოს ის რომ AFB ორჯერ არ ეშვება - ეს არ იყო მიზეზი, არამედ ის რომ main კლასში არ ეწერა ისეთი import-ი რომელიც lib დირექტორიას საჭიროებდა).
 * (-) ტელეფონების გადაყვანა ახალ mapEditor-ზე თუ არ გართულდება პროგრამა
-* (-) bal_account-ების comboBox. ალბათ დაჭირდება valueProperty, და promptText-ის დასეტვა აღარ გახდება საჭირო თუ იგივე მიდგომას გამოვიყენებთ რასაც clientComboBox-ის შემთხვევაში
-* (-) რამე ველი ხომ არ იყოს სადაც გამოჩნდება ამჟამად სიაში რამდენი ელემტია და ზოგადად რამდენია (შეიძლება გაფილტრულია სიის მონაცემები).
-* (-) supperWarnnigs  equals და hashCode მეთოდებზე
+* (+) bal_account-ების comboBox. ალბათ დაჭირდება valueProperty, და promptText-ის დასეტვა აღარ გახდება საჭირო თუ იგივე მიდგომას გამოვიყენებთ რასაც clientComboBox-ის შემთხვევაში. + აქვს valueProperty-ის მსგავსი (selectedItemProperty) და გამოყენებულია AFilterableTableViewComboBox-ი.
+* (|) რამე ველი ხომ არ იყოს სადაც გამოჩნდება ამჟამად სიაში რამდენი ელემტია და ზოგადად რამდენია (შეიძლება გაფილტრულია სიის მონაცემები).
+toolTip დაყენდა თითოეულ სტრიქონზე თუმცა დავამატოთ Filter-ი გამოყენებულია თუ არა.
+* (+) supperWarnnigs  equals და hashCode მეთოდებზე
 * (-) compare მეთოდებში ჯობია objectProperty-ების შედარებისას object-ები შევადაროთ და დავაზღვიოთ Null-ობაზე. შეიძლება რთული ჩანაწერი გამოვიდეს მაგრამ არ გამოგვრჩება შემთხვევა. მაგ: როცა comboBox-ში უნდა ჩაჯდეს კლასი იმის შესაბამისი ცვლადები ავსებულია default მნიშვნელობებით. binBidirectional კავშირის დროს კი პრიორიტეტია მარცხნივ ანუ ფრჩხილებში ჩასმული objectProperty და რადგან ეს მნიშვნელობაც default პარამეტრიანია, იმის მნიშვნელობა უყენდება comboBox-სს.  როცა comboBox-ს გავააქტიურებთ comboBox value ხდება null. ანუ ვიწყებთ აკრებას, გაქრა editor-ში მონიშნული ტექსტი (default მნიშვნეობა ისედაც "" იქნებოდა იმ კლასის რომელიც დაუყენდა, ამიტომ ვიზუალურად არ გამოჩნდება ეს პროცესი).  და არც ლურჯად მოინიშნა რომელიმე ელემენტი იმიტომ რომ არცერთთან არ მოხდა ძველად მონიშნული ელემენტის ტოლობა. ამიტომ setValue გახდა Null. ახლა უკვე null დაესეტა bindbidirection-ით comboBox-ის valueProperty-ის შესაბამის Property-ის.
 * (-) Decimal-ების გამოჩენა ერთნაირი სიგრძით
 * (-) column-ების სახელები
 * (-) განახლებული excel_ის ფაილი (email-ზეცაა კონკრეტული ცვლილებების შესახებ)
 
+
 ბაზა: 
 * (+) products_whole ?
 * (+) general_select-ს როგორ მიეთითოს appLanguage
 * (+) DBClient-ში select-ზე return new JSONArray(res.getDataAsString()); - ში ალბათ response უნდა გადაეცემოდეს ნაცვლად res.getDataAsString()-სა
-* (-) BallanceAccount-ებში მოდის ორი descrip-ი. 
+* (+) BallanceAccount-ებში მოდის ორი descrip-ი. 
 * (+) BallanceAccount-ებში actPas არის boolean. ადრე შეიძლებოდა რომ actPas ერთდროულად ყოფილიყო ანგარიში
 * (+) product_specific_descrips და product_specifics ცხრილები ?
 * (-) წაშლის პროცედურა
@@ -119,8 +121,9 @@ client-ის phones არის ცარიელი მასივი დ�
 * (+) general_select-ი  status_descrip-ების ცხრილებზე ენას ითვალისწინებს call general_select('client_status_descrips', 'en', '{}'); ???
 * (+) Client.saveOneToDB მეთოდი ჯავაში ვერ ამატებს კლიენტს და პასუხად უბრუნდება სულ recId = 1 კლიენტი.
        + rec_id საერთოდ არ უნდა ფიგურირებდეს ბაზის json-ში თუ ახალს ვამატებთ, java-დან კი მიდიოდა rec_id = 0. მოაგავარა @JsonInculde(JsonInculde.non_default)-მა
-* (-) login_by_license_whole-ში LicenseNumber-ის ველი. login_time-ის მიხედვით დალაგებული ხომ არ წამოვიდეს ??
+* (+) login_by_license_whole-ში LicenseNumber-ის ველი. login_time-ის მიხედვით დალაგებული ხომ არ წამოვიდეს ??
 * (-) ClientDialog-ის ფანჯარა imageGallery-ის გამო დიდია სიმაღლეში, შეიძლება არ დაეტიოს ლეპტოპების ეკრანზე. ხომ არ ჯობია runtime-ში გავიგოთ ეკრანის ზომები და იმის მიხედვით დავსეტოთ imageGallery-ის ზომები.
+
 
 დასატესტია:
 * (+) ჩაკეცვა / ამოკეცვის  ფუნქციონალი. (თუ გადიდებულია მშობელი ფანჯარა, ჩაკეცვა/ამოკეცვა ცუდად მუშაობს)
