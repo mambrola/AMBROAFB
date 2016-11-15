@@ -5,7 +5,6 @@
  */
 package ambroafb.invoices;
 
-import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
@@ -31,13 +30,7 @@ public class Invoices extends Stage {
         this.initOwner(owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            Stage invoiceFilter = StagesContainer.getStageFor(this, Names.LEVEL_FOR_PATH);
-            if (invoiceFilter != null && invoiceFilter.isShowing()){
-                invoiceFilter.getOnCloseRequest().handle(null);
-            }
-            else {
-                invoicesController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-            }
+            invoicesController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
         

@@ -5,7 +5,6 @@
  */
 package ambroafb.licenses;
 
-import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
@@ -31,13 +30,7 @@ public class Licenses extends Stage {
         this.initOwner(owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            Stage licenseFilter = StagesContainer.getStageFor(this, Names.LEVEL_FOR_PATH);
-            if (licenseFilter != null && licenseFilter.isShowing()){
-                licenseFilter.getOnCloseRequest().handle(null);
-            }
-            else {
-                licensesController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-            }
+            licensesController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if(event != null) event.consume();
         });
         

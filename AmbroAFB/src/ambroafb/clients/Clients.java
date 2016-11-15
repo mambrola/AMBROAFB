@@ -5,7 +5,6 @@
  */
 package ambroafb.clients;
 
-import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
@@ -31,13 +30,7 @@ public class Clients extends Stage {
         this.initOwner(owner);  
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            Stage clientFilter = StagesContainer.getStageFor(this, Names.LEVEL_FOR_PATH);
-            if (clientFilter != null && clientFilter.isShowing()){
-                clientFilter.getOnCloseRequest().handle(null);
-            }
-            else {
-                clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-            }
+            clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if(event != null) event.consume();
         });
         

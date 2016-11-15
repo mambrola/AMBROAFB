@@ -5,7 +5,6 @@
  */
 package ambroafb.currency_rates;
 
-import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
@@ -32,13 +31,7 @@ public class CurrencyRates extends Stage {
         this.initOwner(owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            Stage currencyRateFilter = StagesContainer.getStageFor(this, Names.LEVEL_FOR_PATH);
-            if (currencyRateFilter != null && currencyRateFilter.isShowing()){
-                currencyRateFilter.getOnCloseRequest().handle(null);
-            }
-            else {
-                currencyRatesController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-            }
+            currencyRatesController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if(event != null) event.consume();
         });
 

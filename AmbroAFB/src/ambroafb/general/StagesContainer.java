@@ -7,6 +7,7 @@ package ambroafb.general;
 
 import static ambroafb.general.Utils.getInvokedClassMethod;
 import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.Filterable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -202,15 +203,14 @@ public class StagesContainer {
         List<String> childrenPath = getFirstLevelChildrenFor(currStagePath);
         if (childrenPath.isEmpty()) {
             if (currStage instanceof Dialogable) {
-                if (currStage.getOnCloseRequest() == null) {
-                    currStage.close();
-                } else {
-                    currStage.getOnCloseRequest().handle(null);
-                }
+                callStageCloseRequest(currStage);
                 Object controller = currStage.getScene().getProperties().get("controller");
                 closePermission = (Boolean) getInvokedClassMethod(controller.getClass(), "getPermissionToClose", null, controller);
-            } else {
-                currStage.close();
+            } 
+            else if (currStage instanceof Filterable){
+                callStageCloseRequest(currStage);
+            }else {
+                currStage.close(); // this is needed, without this, program can cyclic. It may close table view list stage
             }
         }
         else {
@@ -222,6 +222,14 @@ public class StagesContainer {
             }
         }
         return closePermission;
+    }
+    
+    private static void callStageCloseRequest(Stage currStage){
+        if (currStage.getOnCloseRequest() == null) {
+            currStage.close();
+        } else {
+            currStage.getOnCloseRequest().handle(null);
+        }
     }
     
     private static List<String> getFirstLevelChildrenFor(String ownerPath){
