@@ -107,6 +107,7 @@ toolTip დაყენდა თითოეულ სტრიქონზე 
 * (-) column-ების სახელები
 * (-) განახლებული excel_ის ფაილი (email-ზეცაა კონკრეტული ცვლილებების შესახებ)
 * (-) AFilterableTableViewComboBox-ისა და AFilterableTreeTableViewComboBox-ის ვიზუალის მოწესრიგება.
+* (-) Utils.getIntValue და Utils.getDoubleValue ხომ არ აჯობებს რომ null-ს აბრუნებდნენ თუ ვერ გადაიყვანეს??
 
 
 ბაზა: 
