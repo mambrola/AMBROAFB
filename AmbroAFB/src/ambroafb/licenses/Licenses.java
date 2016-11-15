@@ -32,7 +32,7 @@ public class Licenses extends Stage {
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             Stage licenseFilter = StagesContainer.getStageFor(this, Names.LEVEL_FOR_PATH);
-            if (licenseFilter.isShowing()){
+            if (licenseFilter != null && licenseFilter.isShowing()){
                 licenseFilter.getOnCloseRequest().handle(null);
             }
             else {

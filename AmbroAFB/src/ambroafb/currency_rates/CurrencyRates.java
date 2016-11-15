@@ -33,7 +33,7 @@ public class CurrencyRates extends Stage {
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             Stage currencyRateFilter = StagesContainer.getStageFor(this, Names.LEVEL_FOR_PATH);
-            if (currencyRateFilter.isShowing()){
+            if (currencyRateFilter != null && currencyRateFilter.isShowing()){
                 currencyRateFilter.getOnCloseRequest().handle(null);
             }
             else {

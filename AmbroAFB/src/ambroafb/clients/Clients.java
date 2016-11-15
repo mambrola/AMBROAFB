@@ -32,7 +32,7 @@ public class Clients extends Stage {
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             Stage clientFilter = StagesContainer.getStageFor(this, Names.LEVEL_FOR_PATH);
-            if (clientFilter.isShowing()){
+            if (clientFilter != null && clientFilter.isShowing()){
                 clientFilter.getOnCloseRequest().handle(null);
             }
             else {

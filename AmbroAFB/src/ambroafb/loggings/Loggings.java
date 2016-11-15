@@ -32,7 +32,7 @@ public class Loggings extends Stage {
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             Stage loggingsFilter = StagesContainer.getStageFor(this, Names.LEVEL_FOR_PATH);
-            if (loggingsFilter.isShowing()){
+            if (loggingsFilter != null && loggingsFilter.isShowing()){
                 loggingsFilter.getOnCloseRequest().handle(null);
             }
             else {
