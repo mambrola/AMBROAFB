@@ -107,7 +107,8 @@ toolTip დაყენდა თითოეულ სტრიქონზე 
 * (-) column-ების სახელები
 * (-) განახლებული excel_ის ფაილი (email-ზეცაა კონკრეტული ცვლილებების შესახებ)
 * (-) AFilterableTableViewComboBox-ისა და AFilterableTreeTableViewComboBox-ის ვიზუალის მოწესრიგება.
-* (-) Utils.getIntValue და Utils.getDoubleValue ხომ არ აჯობებს რომ null-ს აბრუნებდნენ თუ ვერ გადაიყვანეს??
+* (+) Utils.getIntValue და Utils.getDoubleValue ხომ არ აჯობებს რომ null-ს აბრუნებდნენ თუ ვერ გადაიყვანეს?? 
+	+ არ აჯობებს, რადგან textField ებში null ისეტება და შემდეგ compare-ს გონია რომ რაიმე შეიცვალა, მაშინ გვიწევს ორი რამე მოვაგვაროთ: 1. null არ უნდა გამოჩნდეს textFiled-ებში, 2. null უნდა ვითვალისწინოთ ყველგან compare-ში.
 
 
 ბაზა: 
