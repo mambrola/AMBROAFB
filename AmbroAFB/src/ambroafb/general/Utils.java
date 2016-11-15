@@ -209,7 +209,8 @@ public class Utils {
     public static int getIntValueFor(String str){
         int result = -1;
         try {
-            result = Integer.parseInt(str);
+            if (str.isEmpty()) result = 0;
+            else result = Integer.parseInt(str);
         } catch (Exception ex){ }
         return result;
     }
@@ -222,6 +223,7 @@ public class Utils {
     public static double getDoubleValueFor(String str){
         double result = -1;
         try {
+            if (str.isEmpty()) result = 0;
             result = Double.parseDouble(str);
         } catch(Exception ex){ }
         return result;
