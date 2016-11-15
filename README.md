@@ -106,6 +106,7 @@ toolTip დაყენდა თითოეულ სტრიქონზე 
 * (-) Decimal-ების გამოჩენა ერთნაირი სიგრძით
 * (-) column-ების სახელები
 * (-) განახლებული excel_ის ფაილი (email-ზეცაა კონკრეტული ცვლილებების შესახებ)
+* (-) AFilterableTableViewComboBox-ისა და AFilterableTreeTableViewComboBox-ის ვიზუალის მოწესრიგება.
 
 
 ბაზა: 
