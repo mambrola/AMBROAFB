@@ -7,27 +7,28 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
 
-<fx:root    type="javafx.scene.layout.HBox"
-            fx:id="rootPane"
-            stylesheets="/styles/css/mapeditor.css"
-            xmlns:fx="http://javafx.com/fxml/1" >
+<fx:root    fx:id="rootPane" 
+            alignment="CENTER_LEFT" 
+            stylesheets="/styles/css/mapeditor.css" 
+            type="javafx.scene.layout.HBox" 
+            xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
     <children>
-        <HBox fx:id="itemPane" HBox.hgrow="ALWAYS" >
+        <HBox fx:id="itemPane" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
             <children>
                 <Label fx:id="itemDescrip" />
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="delete" >
+                <Button fx:id="delete">
                     <graphic>
-                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="14.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="/images/delete2.png" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="edit" >
+                <Button fx:id="edit">
                     <graphic>
-                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="14.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="/images/edit2.png" />
                             </image>
