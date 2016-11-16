@@ -40,8 +40,7 @@ public class MapEditorItem extends HBox {
     public MapEditorItem(MapEditorElement elem, String delimiter, Consumer<MapEditorElement> removable, Consumer<MapEditorElement> editable){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ambroafb/general/mapeditor/MapEditorItem.fxml"));
         assignLoader(loader);
-        alert.getDialogPane().getStylesheets().add(
-            getClass().getResource("/styles/css/core.css").toExternalForm());
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/styles/css/core.css").toExternalForm());
         
         itemDescrip.setText(elem.getKey() + delimiter + elem.getValue());
         delete.setOnAction((ActionEvent event) -> {
