@@ -35,14 +35,16 @@ public class MapEditorItem extends HBox {
     
     private static final String deleteAlertText = GeneralConfig.getInstance().getTitleFor("map_editor_delete_alert_text");
     private static final String editAlertText = GeneralConfig.getInstance().getTitleFor("map_editor_edit_alert_text");
+    private Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
     
     public MapEditorItem(MapEditorElement elem, String delimiter, Consumer<MapEditorElement> removable, Consumer<MapEditorElement> editable){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ambroafb/general/mapeditor/MapEditorItem.fxml"));
         assignLoader(loader);
+        alert.getDialogPane().getStylesheets().add(
+            getClass().getResource("/styles/css/core.css").toExternalForm());
         
         itemDescrip.setText(elem.getKey() + delimiter + elem.getValue());
         delete.setOnAction((ActionEvent event) -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setContentText(deleteAlertText.replace("#", elem.getKey()));
             Optional<ButtonType> buttonType = alert.showAndWait();
             ButtonType type = buttonType.get();
@@ -51,7 +53,6 @@ public class MapEditorItem extends HBox {
             }
         });
         edit.setOnAction((ActionEvent event) -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setContentText(editAlertText.replace("#", elem.getKey()));
             Optional<ButtonType> buttonType = alert.showAndWait();
             ButtonType type = buttonType.get();
