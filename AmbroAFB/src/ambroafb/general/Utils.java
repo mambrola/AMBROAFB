@@ -117,7 +117,7 @@ public class Utils {
      * თიშავს აპლიკაციას კონფიგურაციების შენახვის გარეშე
      */
     public static void exitApplication() {
-        GeneralConfig.getInstance().logoutServerClient();
+        GeneralConfig.getInstance().logoutDBClient();
         try {
             if (AmbroAFB.socket != null) {
                 AmbroAFB.socket.close();

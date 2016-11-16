@@ -109,6 +109,11 @@
                         </Menu>
                     </items>
                 </Menu>
+                <Menu text="%site" >
+                    <items>
+                        <MenuItem onAction="#goToMonitoring" text="%monitoring" />
+                    </items>
+                </Menu>
             </menus>    
         </MenuBar>
     </children>

@@ -26,8 +26,11 @@ import ambroafb.licenses.filter.LicenseFilter;
 import ambroafb.loggings.Loggings;
 import ambroafb.loggings.filter.LoggingFilter;
 import ambroafb.products.Products;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -300,6 +303,21 @@ public class MainController implements Initializable {
     @FXML private void balances(ActionEvent event) {}
     @FXML private void account_statments(ActionEvent event) {}
     @FXML private void other(ActionEvent event) {}
+    
+    
+    @FXML private void goToMonitoring(ActionEvent event){
+        String email = GeneralConfig.getInstance().getUserName();
+        String password = GeneralConfig.getInstance().getPassword();
+        String url = "http://kfz-soft.de/Monitoring/#/";
+        
+        ProcessBuilder openBr = new ProcessBuilder("cmd.exe", "/c", "start " + url);
+        openBr.redirectErrorStream(true);
+        try {
+            openBr.start();
+        } catch (IOException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
 //    @FXML
 //    private void programsInOut(ActionEvent event) {

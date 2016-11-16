@@ -235,6 +235,7 @@ public class Client extends EditorPanelable{
             }
             whereBuilder = whereBuilder.closeGroup();
         }
+        whereBuilder.and("email", "is not ", "null"); //  only clients, not partners
         
         JSONObject params = whereBuilder.condition().build();
         System.out.println("filter params: " + params);

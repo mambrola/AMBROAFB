@@ -99,10 +99,18 @@ public class GeneralConfig {
     }
     
 
-    public void logoutServerClient() {
-        if (client != null) {
-            client.logout();
+    public void logoutDBClient() {
+        if (dbClient != null){
+            dbClient.logout();
         }
+    }
+    
+    public String getUserName(){
+        return db_username;
+    }
+    
+    public String getPassword(){
+        return db_password;
     }
 
     /**
