@@ -36,7 +36,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 /**
@@ -50,7 +50,7 @@ public class MainController implements Initializable {
     @FXML
     private MenuBar menuBar;
     @FXML
-    private AnchorPane formPane;
+    private HBox formPane;
     @FXML
     private Button back;
     

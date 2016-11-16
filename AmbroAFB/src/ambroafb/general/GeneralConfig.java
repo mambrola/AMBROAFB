@@ -99,9 +99,9 @@ public class GeneralConfig {
     }
     
 
-    public void logoutDBClient() {
-        if (dbClient != null){
-            dbClient.logout();
+    public void logoutServerClient() {
+        if (client != null){
+            client.logout();
         }
     }
     

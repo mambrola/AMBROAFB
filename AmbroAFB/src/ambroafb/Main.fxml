@@ -8,12 +8,13 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="formPane" 
-            stylesheets="/styles/css/main.css" 
-            xmlns="http://javafx.com/javafx/8" 
-            fx:controller="ambroafb.MainController">
+<HBox   fx:id="formPane"
+        stylesheets="/styles/css/main.css" 
+        xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/8" 
+        fx:controller="ambroafb.MainController">
     <children>
-        <MenuBar fx:id="menuBar">
+        <MenuBar fx:id="menuBar" >
             <menus>
                 <Menu text="%home">
                     <items>
@@ -117,4 +118,4 @@
             </menus>    
         </MenuBar>
     </children>
-</AnchorPane>
+</HBox>
