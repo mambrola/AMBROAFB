@@ -51,6 +51,8 @@ public class Annotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface ContentMapEditor {
+        String key() default "\\d"; // [0-9] {1}  for default
+        String value() default "\\d";
         String explainKey() default "";
         String explainValue() default "";
         String explainEmpty() default "Left or right value of delimiter must not be empty.";

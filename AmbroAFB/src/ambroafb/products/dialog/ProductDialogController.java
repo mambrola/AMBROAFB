@@ -45,7 +45,7 @@ public class ProductDialogController implements Initializable {
     private TextField price;
     @FXML @ContentNotEmpty
     private CurrencyComboBox currency;
-    @FXML @ContentMapEditor(explainKey = "Left number must be months counter.", explainValue = "Right number must be discount percent. Exp: 4.25")
+    @FXML @ContentMapEditor(explainKey = "Left number must be days counter.", explainValue = "Right number must be discount percent. Exp: 4.25")
     private MapEditor discounts;
     @FXML
     private CheckBox isAlive;

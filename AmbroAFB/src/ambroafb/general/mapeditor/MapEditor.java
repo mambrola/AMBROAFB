@@ -13,6 +13,8 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -33,15 +35,18 @@ public class MapEditor extends ComboBox<MapEditorElement> {
     private Map<String, MapEditorElement> itemsMap;
     private String delimiter;
     private Consumer<MapEditorElement> removeElement, editElement;
-    private String keyPattern, valuePattern, initializeClass;
+    private String keyPattern, valuePattern, initializeClass, keySpecChars, valueSpecChars;
     private Class<?> initialize;
+    private BooleanProperty incorrectElem = new SimpleBooleanProperty(false);
     
     public MapEditor(){
         this.setEditable(true);
         itemsMap = new HashMap<>();
-        delimiter = " : ";
+        delimiter = " : "; // default value of delimiter
         keyPattern = ""; // (?<![\\d-])\\d+
         valuePattern = ""; // [0-9]{1,13}(\\.[0-9]*)?
+        keySpecChars = "";
+        valueSpecChars = "";
         
         
         this.setCellFactory((ListView<MapEditorElement> param) -> new CustomCell());
@@ -117,7 +122,10 @@ public class MapEditor extends ComboBox<MapEditorElement> {
                     if (!valueInput.isEmpty()){
                         result.setValue(valueInput);
                     }
-                    if (!keyInput.isEmpty() && !valueInput.isEmpty() && !itemsMap.containsKey(keyInput)){
+                    boolean keyOutOfSpec = keySpecChars.isEmpty() || !StringUtils.containsOnly(result.getKey(), keySpecChars);
+                    boolean valueOutOfSpec = valueSpecChars.isEmpty() || !StringUtils.containsOnly(result.getValue(), valueSpecChars);
+                    if (!keyInput.isEmpty() && !valueInput.isEmpty() && !itemsMap.containsKey(keyInput) &&
+                        (keyOutOfSpec && valueOutOfSpec)){
                         itemsMap.put(keyInput, result);
                         getItems().add(result);
                         return null;
@@ -175,6 +183,10 @@ public class MapEditor extends ComboBox<MapEditorElement> {
         }
     }
     
+    public BooleanProperty incorrectElemProperty(){
+        return incorrectElem;
+    }
+    
     @FXML
     public void setKeyPattern(String regex){
         keyPattern = regex;
@@ -186,6 +198,16 @@ public class MapEditor extends ComboBox<MapEditorElement> {
     }
     
     @FXML
+    public void setKeySpecChars(String keySpec){
+        keySpecChars = keySpec;
+    }
+    
+    @FXML
+    public String getKeySpecChars(){
+        return keySpecChars;
+    }
+    
+    @FXML
     public void setValuePattern(String regex){
         valuePattern = regex;
     }
@@ -194,6 +216,17 @@ public class MapEditor extends ComboBox<MapEditorElement> {
     public String getValuePattern(){
         return valuePattern;
     }
+    
+    @FXML
+    public void setValueSpecChars(String valueSpec){
+        valueSpecChars = valueSpec;
+    }
+    
+    @FXML
+    public String getValueSpecChars(){
+        return valueSpecChars;
+    }
+    
     
     @FXML
     public void setDelimiter(String delimiter){
@@ -216,6 +249,7 @@ public class MapEditor extends ComboBox<MapEditorElement> {
         }
     }
     
+    @FXML
     public String getInitialize(){
         return initializeClass;
     }
