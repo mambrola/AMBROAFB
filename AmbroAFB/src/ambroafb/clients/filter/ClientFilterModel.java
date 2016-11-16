@@ -29,12 +29,14 @@ public class ClientFilterModel extends FilterModel {
     
     private static final String PREF_FROM_DATE_KEY = "clients/filter/from_date";
     private static final String PREF_TO_DATE_KEY = "clients/filter/to_date";
+    private static final String PREF_COUNTRY_KEY = "clients/filter/country/index";
+    private static final String PREF_SELECTED_STATUSES_KEY = "clients/filter/statuses_indexes";
     private static final String PREF_JURIDICAL_KEY = "clients/filter/juridical";
     private static final String PREF_JURIDICAL_INDETERMINATE_KEY = "clients/filter/juridical_indeterminate";
-    private static final String PREF_COUNTRY_KEY = "clients/filter/country/index";
     private static final String PREF_REZIDENT_KEY = "clients/filter/rezident";
     private static final String PREF_REZIDENT_INDETERMINATE_KEY = "clients/filter/rezident_indeterminate";
-    private static final String PREF_SELECTED_STATUSES_KEY = "clients/filter/statuses_indexes";
+    private static final String PREF_TYPE_INDETERMINATE_KEY = "clients/filter/type_indeterminate";
+    private static final String PREF_TYPE_KEY = "clients/filter/type";
     
     
     private Country selectedCountry;
@@ -74,6 +76,14 @@ public class ClientFilterModel extends FilterModel {
 
     public void setRezidentIndeterminate(boolean indeterminate) {
         saveIntoPref(PREF_REZIDENT_INDETERMINATE_KEY, indeterminate);
+    }
+
+    public void setTypeIndeterminate(boolean indeterminate) {
+        saveIntoPref(PREF_TYPE_INDETERMINATE_KEY, indeterminate);
+    }
+
+    public void setTypeSelected(boolean selected) {
+        saveIntoPref(PREF_TYPE_KEY, selected);
     }
 
     public void setSelectedStatusesIndexes(ObservableList<Integer> checkedIndexes) {
@@ -125,6 +135,14 @@ public class ClientFilterModel extends FilterModel {
     
     public boolean isRezidentSelected(){
         return getBooleanFromPref(PREF_REZIDENT_KEY);
+    }
+
+    public boolean isTypeIndeterminate() {
+        return getBooleanFromPref(PREF_TYPE_INDETERMINATE_KEY);
+    }
+
+    public boolean isTypeSelected() {
+        return getBooleanFromPref(PREF_TYPE_KEY);
     }
     
     public int getSelectedCountryIndex(){

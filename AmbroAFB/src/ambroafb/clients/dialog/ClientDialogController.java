@@ -155,6 +155,9 @@ public class ClientDialogController implements Initializable {
             PhoneComboBox phonesCombobox = new PhoneComboBox(client.getPhones(), editable);
             phonesContainer.getChildren().add(phonesCombobox);
         }
+        if (!buttonType.equals(EDITOR_BUTTON_TYPE.ADD) && (client.getEmail() == null || client.getEmail().isEmpty())){
+            email.setDisable(true);
+        }
         okayCancelController.setButtonsFeatures(buttonType);
         imageGalleryController.setURLData(serviceURLPrefix, client.getRecId() + "/", client.getRecId() + "/all");
         imageGalleryController.downloadData();

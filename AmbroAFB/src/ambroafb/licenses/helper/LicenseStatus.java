@@ -69,17 +69,25 @@ public class LicenseStatus {
     }
     
     
-    @Override
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-    public boolean equals(Object other){
-        if (other == null) return false;
-        LicenseStatus otherStatus = (LicenseStatus) other;
-        return  getLicenseStatusId() == otherStatus.getLicenseStatusId() &&
-                getDescrip().equals(otherStatus.getDescrip());
-    }
+//    @Override
+//    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+//    public boolean equals(Object other){
+//        if (other == null) return false;
+//        LicenseStatus otherStatus = (LicenseStatus) other;
+//        return  getLicenseStatusId() == otherStatus.getLicenseStatusId() &&
+//                getDescrip().equals(otherStatus.getDescrip());
+//    }
+    
+    
     
     @Override
     public String toString(){
         return getDescrip();
+    }
+
+    public boolean compares(LicenseStatus other) {
+        if (other == null) return false;
+        return  getLicenseStatusId() == other.getLicenseStatusId() &&
+                getDescrip().equals(other.getDescrip());
     }
 }

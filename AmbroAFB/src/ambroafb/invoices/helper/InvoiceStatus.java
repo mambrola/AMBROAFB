@@ -85,12 +85,17 @@ public class InvoiceStatus {
         }
     }
     
-    @Override
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-    public boolean equals(Object other){
-        if (other == null) return false;
-        InvoiceStatus otherStatus = (InvoiceStatus) other;
-        return  this.getInvoiceStatusId() == otherStatus.getInvoiceStatusId() &&
-                this.getDescrip().equals(otherStatus.getDescrip());
+//    @Override
+//    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+//    public boolean equals(Object other){
+//        if (other == null) return false;
+//        InvoiceStatus otherStatus = (InvoiceStatus) other;
+//        return  this.getInvoiceStatusId() == otherStatus.getInvoiceStatusId() &&
+//                this.getDescrip().equals(otherStatus.getDescrip());
+//    }
+
+    public boolean compares(InvoiceStatus other){
+        return  this.getInvoiceStatusId() == other.getInvoiceStatusId() &&
+                this.getDescrip().equals(other.getDescrip());
     }
 }

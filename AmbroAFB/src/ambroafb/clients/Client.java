@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -215,7 +216,7 @@ public class Client extends EditorPanelable{
     }
     
     public static List<Client> getFilteredFromDB(FilterModel model) { // JSONObject filter
-        ClientFilterModel clientFilterModel = (ClientFilterModel) model;
+        final ClientFilterModel clientFilterModel = (ClientFilterModel) model;
         WhereBuilder whereBuilder = new ConditionBuilder().where()
                                                 .and("created_date", ">=", clientFilterModel.getFromDateForDB())
                                                 .and("created_date", "<=", clientFilterModel.getToDateForDB());
@@ -235,11 +236,19 @@ public class Client extends EditorPanelable{
             }
             whereBuilder = whereBuilder.closeGroup();
         }
-        whereBuilder.and("email", "is not ", "null"); //  only clients, not partners
+//        whereBuilder.and("email", "is not ", "null"); //  only clients, not partners
         
         JSONObject params = whereBuilder.condition().build();
         System.out.println("filter params: " + params);
-        return DBUtils.getObjectsListFromDB(Client.class, DB_VIEW_NAME, params);
+        ArrayList<Client> clientsFromDB = DBUtils.getObjectsListFromDB(Client.class, DB_VIEW_NAME, params);
+        if (clientFilterModel.isTypeIndeterminate()){
+            return clientsFromDB;
+        }
+        // else filter only clients or only partners:
+        return clientsFromDB.stream().filter((Client c) -> {
+            boolean partner = c.getEmail() == null || c.getEmail().isEmpty();
+            return (clientFilterModel.isTypeSelected()) ? !partner : partner;
+        }).collect(Collectors.toList());
     }
     
     public static Client getOneFromDB(int id) {
@@ -525,7 +534,7 @@ public class Client extends EditorPanelable{
                                         getIDNumber().equals(otherClient.getIDNumber()) &&
                                         getFax().equals(otherClient.getFax()) &&
                                         getWww().equals(otherClient.getWww()) &&
-                                        statusProperty().get().equals(otherClient.statusProperty().get()) &&
+                                        statusProperty().get().compares(otherClient.statusProperty().get()) &&
                                         getRemark().equals(otherClient.getRemark());
 //                                        getCreatedDate().equals(otherClient.getCreatedDate());
         boolean equalsPhones = Utils.compareLists(phones, otherClient.getPhones());

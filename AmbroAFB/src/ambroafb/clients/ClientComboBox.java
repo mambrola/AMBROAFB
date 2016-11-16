@@ -36,6 +36,7 @@ public class ClientComboBox extends FilterableWithALLComboBox<Client> {
     public ClientComboBox(){
         super();
         super.initializerClass(Client.class);
+        getStyleClass().add("combo-box");
         
         clientALL.setFirstName(ALL);
         clientALL.setRecId(0);

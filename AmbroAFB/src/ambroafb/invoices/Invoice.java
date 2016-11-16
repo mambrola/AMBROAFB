@@ -55,6 +55,8 @@ import org.json.JSONException;
  * @author mambroladze
  */
 public class Invoice extends EditorPanelable { 
+    
+    public int isLogined;
 
     @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty createdDate;
@@ -592,8 +594,8 @@ public class Invoice extends EditorPanelable {
                 getMoneyToPay() == otherInvoice.getMoneyToPay() &&
                 getVat() == otherInvoice.getVat() &&
                 getMoneyPaid() == otherInvoice.getMoneyPaid() &&
-                reissuingObj.get().equals(otherInvoice.reissuingProperty().get()) &&
-                statusObj.get().equals(otherInvoice.statusProperty().get());
+                reissuingObj.get().compares(otherInvoice.reissuingProperty().get()) &&
+                statusObj.get().compares(otherInvoice.statusProperty().get());
     }
 
     

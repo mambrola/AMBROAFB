@@ -84,12 +84,18 @@ public class InvoiceReissuing {
         }
     }
     
-    @Override
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-    public boolean equals(Object other){
-        if (other == null) return false;
-        InvoiceReissuing otherReissuing = (InvoiceReissuing) other;
-        return  this.getInvoiceReissuingId() == otherReissuing.getInvoiceReissuingId() &&
-                this.getDescrip().equals(otherReissuing.getDescrip());
+//    @Override
+//    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+//    public boolean equals(Object other){
+//        if (other == null) return false;
+//        InvoiceReissuing otherReissuing = (InvoiceReissuing) other;
+//        return  this.getInvoiceReissuingId() == otherReissuing.getInvoiceReissuingId() &&
+//                this.getDescrip().equals(otherReissuing.getDescrip());
+//    }
+
+    public boolean compares(InvoiceReissuing other){
+        return  this.getInvoiceReissuingId() == other.getInvoiceReissuingId() &&
+                this.getDescrip().equals(other.getDescrip());
     }
+
 }

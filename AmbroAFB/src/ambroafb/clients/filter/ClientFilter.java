@@ -37,7 +37,7 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     @FXML
     private ADatePicker dateBigger, dateLess;
     @FXML
-    private CheckBox juridical, rezident;
+    private CheckBox juridical, rezident, type;
     @FXML
     private CountryComboBox countries;
     @FXML
@@ -83,14 +83,16 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             
             clientFilterModel.setFromDate(dateBigger.getValue());
             clientFilterModel.setToDate(dateLess.getValue());
-            clientFilterModel.setJuridicalIndeterminate(juridical.isIndeterminate());
-            clientFilterModel.setJuridicalSelected(juridical.isSelected());
             clientFilterModel.setSelectedCountryIndex(countries.getSelectionModel().getSelectedIndex());
             clientFilterModel.setSelectedCountry(countries.getValue());
-            clientFilterModel.setRezidentIndeterminate(rezident.isIndeterminate());
-            clientFilterModel.setRezidentSelected(rezident.isSelected());
             clientFilterModel.setSelectedStatusesIndexes(statuses.getCheckModel().getCheckedIndices());
             clientFilterModel.setSelectedStatuses(statuses.getCheckModel().getCheckedItems());
+            clientFilterModel.setJuridicalIndeterminate(juridical.isIndeterminate());
+            clientFilterModel.setJuridicalSelected(juridical.isSelected());
+            clientFilterModel.setRezidentIndeterminate(rezident.isIndeterminate());
+            clientFilterModel.setRezidentSelected(rezident.isSelected());
+            clientFilterModel.setTypeIndeterminate(type.isIndeterminate());
+            clientFilterModel.setTypeSelected(type.isSelected());
         }
     }
     
@@ -102,11 +104,13 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         
         dateBigger.setValue(clientFilterModel.getFromDate());
         dateLess.setValue(clientFilterModel.getToDate());
+        countries.getSelectionModel().select(clientFilterModel.getSelectedCountryIndex());
         juridical.setSelected(clientFilterModel.isJuridicalSelected());
         juridical.setIndeterminate(clientFilterModel.isJuridicalIndeterminate());
-        countries.getSelectionModel().select(clientFilterModel.getSelectedCountryIndex());
         rezident.setSelected(clientFilterModel.isRezidentSelected());
         rezident.setIndeterminate(clientFilterModel.isRezidentIndeterminate());
+        type.setSelected(clientFilterModel.isTypeSelected());
+        type.setIndeterminate(clientFilterModel.isTypeIndeterminate());
         clientFilterModel.getSelectedStatusesIndexes().stream().forEach((index) -> {
             statuses.getCheckModel().check(index);
         });

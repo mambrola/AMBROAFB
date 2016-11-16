@@ -13,7 +13,7 @@
 <ambroafb.general.DialogPanel stylesheets="/styles/css/clientfilter.css" 
                               xmlns:fx="http://javafx.com/fxml/1" >
     <VBox   fx:id="formPane" >
-        <HBox styleClass="w3" >
+        <HBox styleClass="w2" >
             <children>
                 <VBox >
                     <children>
@@ -27,15 +27,9 @@
                         <ADatePicker fx:id="dateLess" />
                     </children>
                 </VBox >
-                <VBox >
-                    <children>
-                        <Label />
-                        <CheckBox fx:id="juridical" text="%juridical" allowIndeterminate="true" />
-                    </children>
-                </VBox >
             </children>
         </HBox>
-        <HBox styleClass="w3" >
+        <HBox styleClass="w2" >
             <children>
                 <VBox >
                     <children>
@@ -49,10 +43,28 @@
                         <CheckComboBox fx:id="statuses" />
                     </children>
                 </VBox >
+            </children>
+        </HBox>
+        <HBox styleClass="w3" >
+            <children>
+                <VBox >
+                    <children>
+                        <Label />
+                        <CheckBox fx:id="juridical" text="%juridical" allowIndeterminate="true" />
+                    </children>
+                </VBox >
+                <Region HBox.hgrow="ALWAYS" />
                 <VBox >
                     <children>
                         <Label />
                         <CheckBox fx:id="rezident" text="%rezident" allowIndeterminate="true" />
+                    </children>
+                </VBox >
+                <Region HBox.hgrow="ALWAYS" />
+                <VBox >
+                    <children>
+                        <Label />
+                        <CheckBox fx:id="type" text="%clients_or_partners" allowIndeterminate="true" />
                     </children>
                 </VBox >
             </children>

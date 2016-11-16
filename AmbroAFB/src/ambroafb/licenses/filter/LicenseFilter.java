@@ -101,10 +101,8 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
         clients.registerBundle(resources);
         statuses.getItems().setAll(License.getAllLicenseStatusFromDB());
         
-//        if (filterModel.getSelectedClientIndex() >= 0)
-            clients.getSelectionModel().select(filterModel.getSelectedClientIndex());
-//        if (filterModel.getSelectedProductIndex() >= 0)
-            products.getSelectionModel().select(filterModel.getSelectedProductIndex());
+        clients.getSelectionModel().select(filterModel.getSelectedClientIndex());
+        products.getSelectionModel().select(filterModel.getSelectedProductIndex());
         filterModel.getSelectedStatusIndexes().stream().forEach((index) -> {
             statuses.getCheckModel().check(index);
         });

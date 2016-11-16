@@ -75,6 +75,9 @@ public class ProductDiscount implements MapEditorElement {
         return getDays() == otherDisc.getDays() && getDiscountRate() == otherDisc.getDiscountRate();
     }
     
+    public boolean compares(ProductDiscount other){
+        return getDays() == other.getDays() && getDiscountRate() == other.getDiscountRate();
+    }
 
     @Override
     public String toString() {

@@ -586,7 +586,7 @@ public class License extends EditorPanelable {
                 getInvoiceNumber().equals(otherLicense.getInvoiceNumber()) &&
                 getCfCurrentInvoiceId() == otherLicense.getCfCurrentInvoiceId() &&
                 getCfFutureInvoiceId() == otherLicense.getCfFutureInvoiceId() &&
-                statusProperty().get().equals(otherLicense.statusProperty().get()) &&
+                statusProperty().get().compares(otherLicense.statusProperty().get()) &&
                 getRemark().equals(otherLicense.getRemark()) &&
                 getAdditionalDays() == otherLicense.getAdditionalDays() &&
                 getLicenseNumber() == otherLicense.getLicenseNumber()   &&
