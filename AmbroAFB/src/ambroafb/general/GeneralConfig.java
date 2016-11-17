@@ -88,7 +88,7 @@ public class GeneralConfig {
     public DBClient getDBClient(String username, String password) {
         db_username = username;
         db_password = password;
-        dbClient = new DBClient(db_username, db_password, authclient.Utils.getDefaultConfig("http://kfz-soft.de/DBService/api", "AmbroAFB"));
+        dbClient = new DBClient(db_username, db_password, authclient.Utils.getDefaultConfig(Names.DB_SERVICE_URL_ON_SERVER, Names.APP_NAME));
 //        dbClient = new DBClient(db_username, db_password, authclient.Utils.getDefaultConfig("http://192.168.0.30:8080/DBService/api", "AmbroAFB"));
         dbClient.withLang(GeneralConfig.getInstance().locale.getLanguage());
         return dbClient;

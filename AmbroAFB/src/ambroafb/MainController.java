@@ -14,8 +14,10 @@ import ambroafb.currencies.Currencies;
 import ambroafb.currency_rates.CurrencyRates;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCounts;
+import ambroafb.general.AlertMessage;
 import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
@@ -26,6 +28,8 @@ import ambroafb.licenses.filter.LicenseFilter;
 import ambroafb.loggings.Loggings;
 import ambroafb.loggings.filter.LoggingFilter;
 import ambroafb.products.Products;
+import authclient.AuthServerException;
+import authclient.monitoring.MonitoringClient;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,6 +38,7 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.HBox;
@@ -308,14 +313,24 @@ public class MainController implements Initializable {
     @FXML private void goToMonitoring(ActionEvent event){
         String email = GeneralConfig.getInstance().getUserName();
         String password = GeneralConfig.getInstance().getPassword();
-        String url = "http://kfz-soft.de/Monitoring/#/";
-        
-        ProcessBuilder openBr = new ProcessBuilder("cmd.exe", "/c", "start " + url);
-        openBr.redirectErrorStream(true);
+//        String url = "http://kfz-soft.de/Monitoring/#/";
+//        
+//        ProcessBuilder openBr = new ProcessBuilder("cmd.exe", "/c", "start " + url);
+//        openBr.redirectErrorStream(true);
+//        try {
+//            openBr.start();
+//        } catch (IOException ex) {
+//            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
+        MonitoringClient monitoring = new MonitoringClient(email, password, authclient.Utils.getDefaultConfig(Names.DB_SERVICE_URL_ON_SERVER, Names.APP_NAME));
         try {
-            openBr.start();
+            monitoring.loginAndOpenBrowser(email, password);
         } catch (IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AuthServerException ex) {
+            String msg = GeneralConfig.getInstance().getTitleFor("failed_monitoring_login");
+            new AlertMessage(Alert.AlertType.INFORMATION, ex, msg, "").show();
         }
     }
     
