@@ -10,6 +10,7 @@ import ambroafb.general.filterablecombobox.FilterableWithALLComboBox;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,7 +42,8 @@ public class ClientComboBox extends FilterableWithALLComboBox<Client> {
         clientALL.setFirstName(ALL);
         clientALL.setRecId(0);
         items.add(clientALL);
-        items.addAll(Client.getAllFromDB());
+        items.addAll(Client.getAllFromDB().stream().filter((Client c) -> c.getEmail() != null && !c.getEmail().isEmpty())
+                                                    .collect(Collectors.toList()));
         super.registerCategoryALL(clientALL);
         
         setDataItems(items, (Client c) -> c.getShortDescrip("").get());
