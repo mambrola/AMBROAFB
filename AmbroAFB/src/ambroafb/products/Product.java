@@ -65,7 +65,7 @@ public class Product extends EditorPanelable {
     @JsonIgnore
     private final ObjectProperty<ProductSpecific> productSpecific;
     
-    @AView.Column(width = "50")
+    @AView.Column(width = "50", styleClass = "textRight")
     private final SimpleStringProperty price;
     
     @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")

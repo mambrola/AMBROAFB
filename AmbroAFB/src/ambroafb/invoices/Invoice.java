@@ -56,7 +56,7 @@ import org.json.JSONException;
  */
 public class Invoice extends EditorPanelable { 
     
-    public int isLogined;
+    public int isLogined, isPaid;
 
     @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty createdDate;
