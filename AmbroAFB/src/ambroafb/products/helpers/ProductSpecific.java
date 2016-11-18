@@ -67,12 +67,27 @@ public class ProductSpecific {
         return getDescrip();
     }
     
-    @Override
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-    public boolean equals(Object prodSpecific){
-        if (prodSpecific == null) return false;
-        ProductSpecific otherSpecific = (ProductSpecific) prodSpecific;
-        return  getProductSpecificId() == otherSpecific.getProductSpecificId() &&
-                getDescrip().equals(otherSpecific.getDescrip());
+    public void copyFrom(ProductSpecific other){
+        if (other != null){
+            setProductSpecificId(other.getProductSpecificId());
+            setDescrip(other.getDescrip());
+            
+            setRecId(other.getRecId());
+        }
     }
+    
+    public boolean compares(ProductSpecific other){
+        return  getProductSpecificId() == other.getProductSpecificId() &&
+                getDescrip().equals(other.getDescrip());
+    }
+    
+//    @Override
+//    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+//    public boolean equals(Object prodSpecific){
+//        if (prodSpecific == null) return false;
+//        System.out.println("productSpec equaaaaaals");
+//        ProductSpecific otherSpecific = (ProductSpecific) prodSpecific;
+//        return  getProductSpecificId() == otherSpecific.getProductSpecificId() &&
+//                getDescrip().equals(otherSpecific.getDescrip());
+//    }
 }

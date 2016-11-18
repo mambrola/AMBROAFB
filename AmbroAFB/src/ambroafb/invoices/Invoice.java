@@ -56,8 +56,6 @@ import org.json.JSONException;
  */
 public class Invoice extends EditorPanelable { 
     
-    public int isLogined, isPaid;
-
     @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty createdDate;
     
@@ -121,6 +119,7 @@ public class Invoice extends EditorPanelable {
     private final ObjectProperty<InvoiceStatus> statusObj;
     
     private final StringProperty months;
+    private final BooleanProperty isLogined, isPaid;
     
     @JsonIgnore
     private final ObjectProperty<Map<Product, Integer>> licensesResult;
@@ -154,6 +153,8 @@ public class Invoice extends EditorPanelable {
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
         months = new SimpleStringProperty("");
         licensesResult = new SimpleObjectProperty<>(new HashMap<>());
+        isLogined = new SimpleBooleanProperty(false);
+        isPaid = new SimpleBooleanProperty(false);
         
         licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
             rebindLicenses();
@@ -335,6 +336,15 @@ public class Invoice extends EditorPanelable {
     public ObjectProperty<Map<Product, Integer>> licensesResultProperty(){
         return licensesResult;
     }
+    
+    public BooleanProperty isLoginedProperty(){
+        return isLogined;
+    }
+    
+    public BooleanProperty isPaidProperty(){
+        return isPaid;
+    }
+    
     
     
     // Getters:
@@ -534,6 +544,14 @@ public class Invoice extends EditorPanelable {
         this.months.set(months);
     }
     
+    public void setIsLogined(int logined){
+        isLogined.set(logined == 1);
+    }
+    
+    public void setIsPaid(int paid){
+        isPaid.set(paid == 1);
+    }
+    
     
     // Methods override:
     @Override
@@ -586,7 +604,7 @@ public class Invoice extends EditorPanelable {
                 getLastName().equals(otherInvoice.getLastName())    &&
                 getEmail().equals(otherInvoice.getEmail())          &&
                 getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())  &&
-                Utils.compareLists(licenses, otherInvoice.getLicensesShortData())    &&
+                Utils.compareListsByElemOrder(licenses, otherInvoice.getLicensesShortData())    &&
                 getBeginDate().equals(otherInvoice.getBeginDate())          &&
                 getEndDate().equals(otherInvoice.getEndDate())      &&
                 getRevokedDate().equals(otherInvoice.getRevokedDate()) &&

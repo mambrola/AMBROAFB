@@ -14,7 +14,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author dato
  */
-@SuppressWarnings("EqualsAndHashcode")
+//@SuppressWarnings("EqualsAndHashcode")
 public class ClientStatus {
     
     private int recId;

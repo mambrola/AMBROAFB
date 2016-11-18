@@ -15,6 +15,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author dato
  */
+@SuppressWarnings("EqualsAndHashcode")
 public class ProductDiscount implements MapEditorElement {
 
     private final StringProperty days;
@@ -67,10 +68,18 @@ public class ProductDiscount implements MapEditorElement {
         this.recId = recId;
     }
     
+    public void copyFrom(ProductDiscount other){
+        if (other != null){
+            setDays(other.getDays());
+            setDelimiter(other.getDelimiter());
+            setDiscountRate(other.getDiscountRate());
+        }
+    }
     
     @Override
-    public boolean equals(Object other) {
-        if (other == null) return false; // ???? other ragac momentshi null xdeba
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object other) { // it is need for utils.compareListByOrder
+        if (other == null) return false;
         ProductDiscount otherDisc = (ProductDiscount) other;
         return getDays() == otherDisc.getDays() && getDiscountRate() == otherDisc.getDiscountRate();
     }

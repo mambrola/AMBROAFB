@@ -237,7 +237,7 @@ public class Utils {
      * @return If they have another sizes or i-th element from first does not equal 
      *          i-th element from second, then method return false. True - otherwise.
      */
-    public static boolean compareLists(List<?> first, List<?> second) {
+    public static boolean compareListsByElemOrder(List<?> first, List<?> second) {
         if (first.size() != second.size()) return false;
         for (int i = 0; i < first.size(); i++) {
             if (!first.get(i).equals(second.get(i))) return false;

@@ -356,8 +356,6 @@ public class Product extends EditorPanelable {
         discounts.stream().forEach((discount) -> {
             discountsForMapEditor.setAll(discounts);
         });
-        
-        System.out.println("axal discounts: " + this.discounts);
     }
 
     public void setIsActive(boolean isActive) {
@@ -386,6 +384,7 @@ public class Product extends EditorPanelable {
         setAbbreviation(product.getAbbreviation());
         setFormer(product.getFormer());
         setDescrip(product.getDescrip());
+//        productSpecific.get().copyFrom(product.specificProperty().get());
         setSpecific(product.getSpecific());
         setSpecificDescip(product.getSpecificDescrip());
         setPrice(product.getPrice());
@@ -431,21 +430,15 @@ public class Product extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Product productBackup = (Product) backup;
-        
-        System.out.println("Utils.compareLists(getDiscounts(), productBackup.getDiscounts()): " + (Utils.compareLists(getDiscounts(), productBackup.getDiscounts()) ));
-        System.out.println("getDiscounts(): " + getDiscounts());
-        System.out.println("productBackup.getDiscounts(): " + productBackup.getDiscounts());
-        
         return  this.getAbbreviation().equals(productBackup.getAbbreviation()) &&
                 this.getFormer() == productBackup.getFormer() &&
                 this.getDescrip().equals(productBackup.getDescrip()) &&
 //                this.getRemark().equals(productBackup.getRemark()) &&
-                this.specificProperty().get().equals(productBackup.specificProperty().get()) &&
-                //this.getSpecificDescrip().equals(productBackup.getSpecificDescrip()) &&
+                this.specificProperty().get().compares(productBackup.specificProperty().get()) &&
                 this.getPrice() == productBackup.getPrice() &&
                 this.getIso().equals(productBackup.getIso()) &&
                 this.getIsActive() == productBackup.getIsActive() &&
-                Utils.compareLists(getDiscounts(), productBackup.getDiscounts());
+                Utils.compareListsByElemOrder(getDiscounts(), productBackup.getDiscounts());
     }
     
     public static class DiscountCellFactory implements Callback<TableColumn<Product, ObservableList<ProductDiscount>>, TableCell<Product, ObservableList<ProductDiscount>>> {

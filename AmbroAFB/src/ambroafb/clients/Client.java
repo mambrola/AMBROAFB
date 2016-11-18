@@ -537,7 +537,7 @@ public class Client extends EditorPanelable{
                                         statusProperty().get().compares(otherClient.statusProperty().get()) &&
                                         getRemark().equals(otherClient.getRemark());
 //                                        getCreatedDate().equals(otherClient.getCreatedDate());
-        boolean equalsPhones = Utils.compareLists(phones, otherClient.getPhones());
+        boolean equalsPhones = Utils.compareListsByElemOrder(phones, otherClient.getPhones());
         return fieldsCompareResult && equalsPhones;
     }
 

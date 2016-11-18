@@ -5,6 +5,7 @@
  */
 package ambroafb.licenses.helper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,13 +15,13 @@ import javafx.beans.property.StringProperty;
  *
  * @author dato
  */
-@SuppressWarnings("EqualsAndHashcode")
 public class LicenseStatus {
     
     private final SimpleStringProperty descrip;
     private int recId;
     private final IntegerProperty licenseStatusId;
-    private String language; // JsonIgnorable ??
+    @JsonIgnore
+    public String language;
     
     public LicenseStatus(){
         descrip = new SimpleStringProperty("");
@@ -43,9 +44,9 @@ public class LicenseStatus {
         return licenseStatusId.get();
     }
     
-    public String getLanguage(){
-        return language;
-    }
+//    public String getLanguage(){
+//        return language;
+//    }
     
     public String getDescrip(){
         return descrip.get();
@@ -60,24 +61,22 @@ public class LicenseStatus {
         this.licenseStatusId.set(licenseStatusId);
     }
     
-    public void setLanguage(String language){
-        this.language = language;
-    }
+//    public void setLanguage(String language){
+//        this.language = language;
+//    }
     
     public void setDescrip(String descrip){
         this.descrip.set(descrip);
     }
     
     
-//    @Override
-//    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-//    public boolean equals(Object other){
-//        if (other == null) return false;
-//        LicenseStatus otherStatus = (LicenseStatus) other;
-//        return  getLicenseStatusId() == otherStatus.getLicenseStatusId() &&
-//                getDescrip().equals(otherStatus.getDescrip());
-//    }
-    
+    public void copyFrom(LicenseStatus other){
+        if (other != null){
+            setLicenseStatusId(other.getLicenseStatusId());
+            setDescrip(other.getDescrip());
+            setRecId(other.getRecId());
+        }
+    }
     
     
     @Override
