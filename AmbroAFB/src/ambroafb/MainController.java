@@ -311,7 +311,7 @@ public class MainController implements Initializable {
     @FXML private void goToMonitoring(ActionEvent event){
         String email = GeneralConfig.getInstance().getUserName();
         String password = GeneralConfig.getInstance().getPassword();
-        MonitoringClient monitoring = new MonitoringClient(email, password, authclient.Utils.getDefaultConfig(Names.MONITORING_URL_FOR_TEST, Names.APP_NAME));
+        MonitoringClient monitoring = new MonitoringClient(email, password, authclient.Utils.getDefaultConfig(Names.MONITORING_URL_ON_SERVER, Names.APP_NAME));
         try {
             monitoring.loginAndOpenBrowser(email, password);
         } catch (IOException ex) {
