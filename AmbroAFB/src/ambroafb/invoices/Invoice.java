@@ -605,9 +605,12 @@ public class Invoice extends EditorPanelable {
                 getEmail().equals(otherInvoice.getEmail())          &&
                 getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())  &&
                 Utils.compareListsByElemOrder(licenses, otherInvoice.getLicensesShortData())    &&
-                getBeginDate().equals(otherInvoice.getBeginDate())          &&
-                getEndDate().equals(otherInvoice.getEndDate())      &&
-                getRevokedDate().equals(otherInvoice.getRevokedDate()) &&
+                Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()) &&
+                Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()) &&
+                Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()) &&
+//                getBeginDate().equals(otherInvoice.getBeginDate())          &&
+//                getEndDate().equals(otherInvoice.getEndDate())      &&
+//                getRevokedDate().equals(otherInvoice.getRevokedDate()) &&
                 getAdditionalDiscountRate() == otherInvoice.getAdditionalDiscountRate() &&
                 getMoneyToPay() == otherInvoice.getMoneyToPay() &&
                 getVat() == otherInvoice.getVat() &&

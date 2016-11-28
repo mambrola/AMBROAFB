@@ -10,6 +10,7 @@ import ambroafb.clients.Client;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.loggings.filter.LoggingFilterModel;
@@ -104,7 +105,7 @@ public class Logging extends EditorPanelable {
         return clientObj;
     }
     
-    public ObjectProperty<LocalDate> logginDateProperty(){
+    public ObjectProperty<LocalDate> loginDateProperty(){
         return loginDateObj;
     }
     
@@ -226,11 +227,12 @@ public class Logging extends EditorPanelable {
     
     @Override
     public boolean compares(EditorPanelable backup){
-        Logging loggingBackup = (Logging) backup;
-        return  getLicenseNumber().equals(loggingBackup.getLicenseNumber()) &&
-                clientObj.get().equals(loggingBackup.clientProperty().get()) &&
-                getLoginTime().equals(loggingBackup.getLoginTime()) &&
-                getMacAddress().equals(loggingBackup.getMacAddress()) &&
-                getResponseCode().equals(loggingBackup.getResponseCode());
+        Logging logingBackup = (Logging) backup;
+        return  getLicenseNumber().equals(logingBackup.getLicenseNumber()) &&
+                clientObj.get().equals(logingBackup.clientProperty().get()) &&
+                Utils.dateEquals(loginDateProperty().get(), logingBackup.loginDateProperty().get()) &&
+//                getLoginTime().equals(loggingBackup.getLoginTime()) &&
+                getMacAddress().equals(logingBackup.getMacAddress()) &&
+                getResponseCode().equals(logingBackup.getResponseCode());
     }
 }
