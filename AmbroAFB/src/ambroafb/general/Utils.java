@@ -230,6 +230,15 @@ public class Utils {
     }
     
     /**
+     * The function return appropriate integer from boolean.
+     * @param value True or False
+     * @return 1 if value is True, 0 if value is False.
+     */
+    public static int getIntFromBoolean(boolean value){
+        return value ? 1 : 0;
+    }
+    
+    /**
      * The method compares two lists.
      * Note: If they are equal, then they must have same order of elements.
      * @param first The first list

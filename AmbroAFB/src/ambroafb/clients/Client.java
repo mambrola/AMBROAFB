@@ -62,10 +62,12 @@ public class Client extends EditorPanelable{
     private final StringProperty createdDate;
     
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
-    private final SimpleBooleanProperty isJur;
+//    private final SimpleIntegerProperty isJur;
+    private final SimpleBooleanProperty isJurBool;
 
     @AView.Column(width = "24", cellFactory = RezCellFactory.class)
-    private final SimpleBooleanProperty isRezident;
+//    private final SimpleIntegerProperty isRezident;
+    private final SimpleBooleanProperty isRezidentBool;
 
     private final SimpleStringProperty firstName, lastName;
 
@@ -126,8 +128,10 @@ public class Client extends EditorPanelable{
     // Every property object has default values because of avoide NullpointerException in compares or any other methods in any case.
     public Client() {
         createdDate = new SimpleStringProperty("");
-        isJur =             new SimpleBooleanProperty();
-        isRezident =        new SimpleBooleanProperty();
+//        isJur =             new SimpleIntegerProperty();
+        isJurBool = new SimpleBooleanProperty();
+//        isRezident =        new SimpleIntegerProperty();
+        isRezidentBool = new SimpleBooleanProperty();
         firstName =         new SimpleStringProperty("");
         lastName =          new SimpleStringProperty("");
         descrip = Utils.avoidNull(firstName).concat(" ").concat(Utils.avoidNull(lastName));
@@ -271,11 +275,11 @@ public class Client extends EditorPanelable{
     
     //Properties getters:
     public SimpleBooleanProperty isJurProperty() {
-        return isJur;
+        return isJurBool;
     }
 
     public SimpleBooleanProperty isRezProperty() {
-        return isRezident;
+        return isRezidentBool;
     }
 
     public SimpleStringProperty firstNameProperty() {
@@ -351,11 +355,11 @@ public class Client extends EditorPanelable{
     }
     
     public boolean getIsJur() {
-        return isJur.get();
+        return isJurBool.get();
     }
 
     public boolean getIsRezident() {
-        return isRezident.get();
+        return isRezidentBool.get();
     }
 
     public String getFirstName() {
@@ -457,12 +461,12 @@ public class Client extends EditorPanelable{
         this.createdDate.set(date);
     }
     
-    public final void setIsJur(boolean isJur) {
-        this.isJur.set(isJur);
+    public final void setIsJur(int isJur) {
+        this.isJurBool.set(isJur == 1);
     }
 
-    public final void setIsRezident(boolean isRez) {
-        this.isRezident.set(isRez);
+    public final void setIsRezident(int isRez) {
+        this.isRezidentBool.set(isRez == 1);
     }
 
     public final void setFirstName(String firstName) {
@@ -569,8 +573,8 @@ public class Client extends EditorPanelable{
     public void copyFrom(EditorPanelable object) { 
         Client other = (Client) object;
 //        setCreatedDate(other.getCreatedDate());
-        setIsJur(other.getIsJur());
-        setIsRezident(other.getIsRezident());
+        setIsJur(Utils.getIntFromBoolean(other.getIsJur()));
+        setIsRezident(Utils.getIntFromBoolean(other.getIsRezident()));
         setFirstName(other.getFirstName());
         setLastName(other.getLastName());
         setEmail(other.getEmail());
