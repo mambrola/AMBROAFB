@@ -7,8 +7,10 @@ package ambroafb.general;
     
 import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
+import ambroafb.clients.ClientComboBox;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.countcombobox.CountComboBox;
+import ambroafb.general.image_gallery.ImageGalleryController;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -496,12 +498,22 @@ public class Utils {
                 results[0] = mapEditor;
                 results[1] = mapEditor.getEditor().getText();
             }
+            else if (field.getType().equals(ImageGalleryController.class)){
+                ImageGalleryController gallery = (ImageGalleryController) field.get(ownerClassObject);
+                results[0] = gallery.getRoot();
+                results[1] = (gallery.isEmpty()) ? null : "not empty";
+            }
             else if (field.getType().equals(CountComboBox.class)){
                 CountComboBox countComboBox = (CountComboBox) field.get(ownerClassObject);
                 results[0] = countComboBox;
                 results[1] = (countComboBox.nothingIsSelected()) ? null : countComboBox.getValue();
             }
-            // (field.getType().equals(ComboBox.class) || field.getType().equals(CurrencyComboBox.class))
+            // Note: ClientComboBox is not ComboBox extened, so this case specific case:
+            else if (field.getType().equals(ClientComboBox.class)){
+                ClientComboBox clientComboBox = (ClientComboBox) field.get(ownerClassObject);
+                results[0] = clientComboBox;
+                results[1] = (clientComboBox.getValue() == null) ? null : clientComboBox.getValue();
+            }
             else if (field.getType().toString().contains("ComboBox")) {
                 ComboBox comboBox = (ComboBox) field.get(ownerClassObject);
                 results[0] = comboBox;

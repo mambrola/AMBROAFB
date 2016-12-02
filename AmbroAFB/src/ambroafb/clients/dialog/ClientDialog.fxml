@@ -66,6 +66,7 @@
             </HBox>
             <HBox styleClass="oneHalf" >
                 <VBox fx:id="imageGalleryPane" styleClass="couple, vContainer" >
+                    <Label fx:id="image" text="%image" styleClass="validationMessage" />
                     <fx:include fx:id="imageGallery" source="/ambroafb/general/image_gallery/ImageGallery.fxml"/>
                 </VBox>
                 <VBox  styleClass="couple, vContainer">

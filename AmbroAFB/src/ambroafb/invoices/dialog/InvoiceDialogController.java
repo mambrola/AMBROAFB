@@ -104,6 +104,9 @@ public class InvoiceDialogController implements Initializable {
             setDisableComponents();
             editable = false;
         }
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
+            revoked.setDisable(true);
+        }
         okayCancelController.setButtonsFeatures(buttonType);
 //        if (invoice != null){
 //            licenses.getItems().addAll(invoice.getLicensesShortData());

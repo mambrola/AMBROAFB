@@ -7,6 +7,7 @@ package ambroafb.general.image_gallery;
 
 import ambroafb.general.GeneralConfig;
 import authclient.AuthServerException;
+import authclient.Response;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,6 +27,7 @@ import java.util.ResourceBundle;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -291,7 +293,7 @@ public class ImageGalleryController implements Initializable {
             return;
         }
 
-        defaultFileChooserPath = files.get(files.size() - 1).getParentFile().getPath();
+        defaultFileChooserPath = files.get(0).getParentFile().getPath();
         GeneralConfig.prefs.put(UPLOAD_DIRECTORY_PATH, defaultFileChooserPath);
 
         new Thread(() -> {
@@ -316,7 +318,7 @@ public class ImageGalleryController implements Initializable {
             });
         }).start();
     }
-
+    
     /**
      * The method count date and set index of images slider. The method sets
      * msgSlider value, so this action cause to show new uploading file.
@@ -370,11 +372,12 @@ public class ImageGalleryController implements Initializable {
      * @param urlParameter It is needed for upload new file on server.
      *                     It will be concatenate on URL prefix, 
      *                      which is already known from "setURLData" method.
+     * @param callBack
      */
     /* Note: HashMap keySet() method does not order elements. So the method use SortedSet collection
      *       for sort data of keySet() and send them by ordering.
      */
-    public void sendDataToServer(String urlParameter) {
+    public void sendDataToServer(String urlParameter, BiConsumer<String, Boolean> callBack) {
         new Thread(() -> {
             SortedSet<String> sortedSet = new TreeSet(viewers.keySet());
             sortedSet.stream().forEach((key) -> {
@@ -384,11 +387,14 @@ public class ImageGalleryController implements Initializable {
                     try {
                         if (viewer.deletedProperty().get()) {
                             GeneralConfig.getInstance().getDBClient().delete(serviceURLPrefix + key);
+                            callBack.accept(key, true);
                         } else if (viewer.isNew()) {
-                            GeneralConfig.getInstance().getDBClient().post(
+                            Response response = GeneralConfig.getInstance().getDBClient().post(
                                     serviceURLPrefix + urlParameter + "/" + key.substring(key.lastIndexOf(".") + 1),
                                     data
                             );
+                            String imageName = response.getDataAsString();
+                            callBack.accept(imageName, false);
                             System.out.println("new image. send url: " + (serviceURLPrefix + urlParameter + "/" + key.substring(key.lastIndexOf(".") + 1)));
                         } else if (viewer.isEdit()) {
                             GeneralConfig.getInstance().getDBClient().call(
@@ -402,6 +408,7 @@ public class ImageGalleryController implements Initializable {
                     }
                 }
             });
+            
         }).start();
     }
     
@@ -420,6 +427,14 @@ public class ImageGalleryController implements Initializable {
             }
         }
         return result;
+    }
+    
+    public boolean isEmpty(){
+        return viewers.isEmpty();
+    }
+    
+    public VBox getRoot(){
+        return imagesGalleryRoot;
     }
     
     /**

@@ -65,6 +65,9 @@ public class ClientDialogController implements Initializable {
     @FXML @ContentNotEmpty @ContentMail
     private TextField email;
     
+    @FXML @ContentNotEmpty
+    private ImageGalleryController imageGalleryController;
+    
     @FXML  @ContentNotEmpty
     private TextField address; // this place must be because of required fields order.
     
@@ -79,8 +82,6 @@ public class ClientDialogController implements Initializable {
     private TextField fax, zipCode, city, www;
     @FXML
     private DialogOkayCancelController okayCancelController;
-    @FXML
-    private ImageGalleryController imageGalleryController;
     
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();

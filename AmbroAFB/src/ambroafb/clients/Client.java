@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -265,7 +266,26 @@ public class Client extends EditorPanelable{
         if (client == null) return null;
         Client clientFromDB = DBUtils.saveObjectToDB(client, "client");
         System.out.println("client: " + clientFromDB.getRecId());
-        client.getClientImageGallery().sendDataToServer("" + clientFromDB.getRecId());
+        client.getClientImageGallery().sendDataToServer("" + clientFromDB.getRecId(), new BiConsumer<String, Boolean>() {
+            @Override
+            public void accept(String path, Boolean isDeleted) {
+                if (isDeleted){
+                    for (int i = 0; i < clientFromDB.getDocuments().size(); i++) {
+                        Document doc = clientFromDB.getDocuments().get(i);
+                        if (doc.path.equals(path)){
+                            clientFromDB.getDocuments().remove(i);
+                            break;
+                        }
+                    }
+                }
+                else {
+                    Document doc = new Document();
+                    doc.path = path;
+                    clientFromDB.getDocuments().add(doc);
+                }
+            }
+        });
+        
         return clientFromDB;
     }
 
@@ -456,7 +476,7 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     public StringExpression getShortDescrip(String delimiter){
         return  Utils.avoidNull(firstName).concat("  ")
-                    .concat(Utils.avoidNull(lastName)).concat(delimiter)
+                    .concat(Utils.avoidNull(lastName)).concat(Utils.getDelimiterAfter(lastName, delimiter))
                     .concat(Utils.avoidNull(email));
     }
     
@@ -623,7 +643,8 @@ public class Client extends EditorPanelable{
     }
     
     public static class Document {
-        public String path;
+        public String path = "";
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public int recId;
     }
     
