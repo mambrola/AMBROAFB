@@ -123,15 +123,11 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private static final String IMAGE_OFFICE_URL = "/images/office.png", IMAGE_PERSON_URL = "/images/person.png";
     
-//    @JsonIgnore
-//    private static final String serviceURLPrefix = "/clients/passport/";
     
     // Every property object has default values because of avoide NullpointerException in compares or any other methods in any case.
     public Client() {
         createdDate = new SimpleStringProperty("");
-//        isJur =             new SimpleIntegerProperty();
         isJurBool = new SimpleBooleanProperty();
-//        isRezident =        new SimpleIntegerProperty();
         isRezidentBool = new SimpleBooleanProperty();
         firstName =         new SimpleStringProperty("");
         lastName =          new SimpleStringProperty("");
@@ -547,7 +543,6 @@ public class Client extends EditorPanelable{
     
     public void setDocuments(Collection<Document> documents){
         this.documents.setAll(documents);
-//        clientImageGallery.setURLData(serviceURLPrefix, getRecId() + "/", getRecId() + "/all");
     }
     
     public void setClientImageGallery(ImageGalleryController imageGallery){
