@@ -123,6 +123,8 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private static final String IMAGE_OFFICE_URL = "/images/office.png", IMAGE_PERSON_URL = "/images/person.png";
     
+//    @JsonIgnore
+//    private static final String serviceURLPrefix = "/clients/passport/";
     
     // Every property object has default values because of avoide NullpointerException in compares or any other methods in any case.
     public Client() {
@@ -284,11 +286,11 @@ public class Client extends EditorPanelable{
                     clientFromDB.getDocuments().add(doc);
                 }
             }
-        });
+        }, new GalleryDBUpdater(clientFromDB));
         
         return clientFromDB;
     }
-
+    
     public static boolean deleteOneFromDB(int id) {
         return DBUtils.deleteObjectFromDB("client_delete", id);
     }
@@ -545,6 +547,7 @@ public class Client extends EditorPanelable{
     
     public void setDocuments(Collection<Document> documents){
         this.documents.setAll(documents);
+//        clientImageGallery.setURLData(serviceURLPrefix, getRecId() + "/", getRecId() + "/all");
     }
     
     public void setClientImageGallery(ImageGalleryController imageGallery){
@@ -622,6 +625,8 @@ public class Client extends EditorPanelable{
         setWww(other.getWww());
         clientStatus.get().copyFrom(other.statusProperty().get());
         setRemark(other.getRemark());
+        getDocuments().clear();
+        getDocuments().addAll(other.getDocuments());
     }
 
     @Override
@@ -646,6 +651,21 @@ public class Client extends EditorPanelable{
         public String path = "";
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public int recId;
+    }
+    
+    private static class GalleryDBUpdater implements Runnable {
+        
+        private final Client client;
+        
+        public GalleryDBUpdater(Client client){
+            this.client = client;
+        }
+        
+        @Override
+        public void run() {
+            DBUtils.saveObjectToDB(client, "client");
+        }
+        
     }
     
 

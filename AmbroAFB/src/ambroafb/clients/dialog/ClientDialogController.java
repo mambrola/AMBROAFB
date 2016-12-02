@@ -142,6 +142,7 @@ public class ClientDialogController implements Initializable {
             city.         textProperty().bindBidirectional(client.cityProperty());
             country.     valueProperty().bindBidirectional(client.countryProperty());
             statuses.      valueProperty().bindBidirectional(client.statusProperty());
+//            imageGalleryController = client.getClientImageGallery();
         }
     }
     
@@ -161,7 +162,8 @@ public class ClientDialogController implements Initializable {
         }
         okayCancelController.setButtonsFeatures(buttonType);
         imageGalleryController.setURLData(serviceURLPrefix, client.getRecId() + "/", client.getRecId() + "/all");
-        imageGalleryController.downloadData();
+        List<String> imageNames = client.getDocuments().stream().map((Client.Document doc) -> doc.path).collect(Collectors.toList());
+        imageGalleryController.downloadData(imageNames);
         
         this.client.setClientImageGallery(imageGalleryController);
     }

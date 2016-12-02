@@ -51,8 +51,6 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.controlsfx.control.MaskerPane;
-import org.json.JSONArray;
-import org.json.JSONException;
 
 /**
  * FXML Controller class
@@ -251,13 +249,16 @@ public class ImageGalleryController implements Initializable {
      * The method provides to download data from service and show the newest
      * image on scene. Before this method call, it must be called the
      * "setURLData" method.
+     * @param documentsNames The names list of documents.
      */
-    public void downloadData() {
-        try {
-            String imagesNames = GeneralConfig.getInstance().getDBClient().get(serviceURLPrefix + parameterDownload).getDataAsString();
-            JSONArray namesJson = new JSONArray(imagesNames);
-            for (int i = 0; i < namesJson.length(); i++) {
-                String fullName = namesJson.getString(i);
+    public void downloadData(List<String> documentsNames) {
+        if (documentsNames.isEmpty()){
+            System.out.println("User has not images.");
+            magnifier.showProperty().set(false);
+        }
+        else {
+            for (int i = 0; i < documentsNames.size(); i++) {
+                String fullName = documentsNames.get(i);
                 datesSliderElems.add(fullName);
             }
             if (datesSliderElems != null && !datesSliderElems.isEmpty()) {
@@ -265,12 +266,7 @@ public class ImageGalleryController implements Initializable {
                 FXCollections.copy(datesSliderElems, sorted);
                 msgSlider.setValueOn(datesSliderElems.size() - 1);
             }
-        } catch (AuthServerException ex) {
-            System.out.println("ex code: " + ex.getStatusCode() + "  User has not images.");
-            magnifier.showProperty().set(false);
-        } catch (JSONException | IOException ex) {
-            Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
     }
 
     @FXML
@@ -372,12 +368,13 @@ public class ImageGalleryController implements Initializable {
      * @param urlParameter It is needed for upload new file on server.
      *                     It will be concatenate on URL prefix, 
      *                      which is already known from "setURLData" method.
-     * @param callBack
+     * @param callBack It will call when image name is known and provides to process appropriate action.
+     * @param updater It will run when every image name sending to server is over.
      */
     /* Note: HashMap keySet() method does not order elements. So the method use SortedSet collection
      *       for sort data of keySet() and send them by ordering.
      */
-    public void sendDataToServer(String urlParameter, BiConsumer<String, Boolean> callBack) {
+    public void sendDataToServer(String urlParameter, BiConsumer<String, Boolean> callBack, Runnable updater) {
         new Thread(() -> {
             SortedSet<String> sortedSet = new TreeSet(viewers.keySet());
             sortedSet.stream().forEach((key) -> {
@@ -408,7 +405,7 @@ public class ImageGalleryController implements Initializable {
                     }
                 }
             });
-            
+            updater.run();
         }).start();
     }
     
