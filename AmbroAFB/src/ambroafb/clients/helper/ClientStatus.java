@@ -14,7 +14,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author dato
  */
-//@SuppressWarnings("EqualsAndHashcode")
+@SuppressWarnings("EqualsAndHashcode")
 public class ClientStatus {
     
     private int recId;
@@ -69,13 +69,13 @@ public class ClientStatus {
         this.descrip.set(statusDescrip);
     }
     
-//    @Override
-//    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-//    public boolean equals(Object other){
-//        if (other == null) return false;
-//        ClientStatus otherStatus = (ClientStatus) other;
-//        return getClientStatusId() == otherStatus.getClientStatusId() && getDescrip().equals(otherStatus.getDescrip());
-//    }
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object other){
+        if (other == null) return false;
+        ClientStatus otherStatus = (ClientStatus) other;
+        return getClientStatusId() == otherStatus.getClientStatusId() && getDescrip().equals(otherStatus.getDescrip());
+    }
     
     public boolean compares(ClientStatus other){
         return getClientStatusId() == other.getClientStatusId() && getDescrip().equals(other.getDescrip());
