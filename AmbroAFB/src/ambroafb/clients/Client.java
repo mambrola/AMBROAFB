@@ -88,7 +88,7 @@ public class Client extends EditorPanelable{
 
     private final ObservableList<Phone> phones;
     
-    @AView.Column(title = "%client_status", width = "100", styleClass = "textCenter")
+    @AView.Column(title = "%client_status", width = "110", styleClass = "textCenter")
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private final StringProperty statusDescrip;
     @JsonIgnore
@@ -115,6 +115,7 @@ public class Client extends EditorPanelable{
     
     private final SimpleStringProperty remark;
 
+    private final ObservableList<Document> documents;
     @JsonIgnore
     private ImageGalleryController clientImageGallery;
     
@@ -151,6 +152,7 @@ public class Client extends EditorPanelable{
         statusDescrip = new SimpleStringProperty("");
         www = new SimpleStringProperty("");
         remark = new SimpleStringProperty("");
+        documents = FXCollections.observableArrayList();
 
         phones.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
@@ -438,6 +440,10 @@ public class Client extends EditorPanelable{
         this.country.get().setCode(countryCode);
     }
     
+    public ObservableList<Document> getDocuments(){
+        return documents;
+    }
+    
     @JsonIgnore
     public ImageGalleryController getClientImageGallery(){
         return clientImageGallery;
@@ -516,6 +522,10 @@ public class Client extends EditorPanelable{
     
     public void setWww(String www){
         this.www.set(www);
+    }
+    
+    public void setDocuments(Collection<Document> documents){
+        this.documents.setAll(documents);
     }
     
     public void setClientImageGallery(ImageGalleryController imageGallery){
@@ -611,6 +621,11 @@ public class Client extends EditorPanelable{
     @Override
     public String toString(){
         return getShortDescrip("").get();
+    }
+    
+    public static class Document {
+        public String path;
+        public int recId;
     }
     
 
