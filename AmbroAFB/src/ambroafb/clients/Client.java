@@ -56,9 +56,6 @@ import org.json.JSONObject;
 @SuppressWarnings("EqualsAndHashcode")
 public class Client extends EditorPanelable{
 
-    // ამ ველებს ჯერჯერობით არსად არ ვიყენებთ მაგრამ json-ში მოდის და ერორი რო არ ამოაგდოს მაგიტო საჭიროა რომ არსებობდნენ
-    
-    
     private final StringProperty createdDate;
     
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
@@ -140,7 +137,9 @@ public class Client extends EditorPanelable{
         address =           new SimpleStringProperty("");
         zipCode =           new SimpleStringProperty("");
         city =              new SimpleStringProperty("");
-        fullAddress = Utils.avoidNull(address).concat(", ").concat(Utils.avoidNull(zipCode)).concat(", ").concat(Utils.avoidNull(city));
+        fullAddress = Utils.avoidNull(address).concat(Utils.getDelimiterAfter(address, ", ")).
+                            concat(Utils.avoidNull(zipCode)).concat(Utils.getDelimiterAfter(zipCode, ", ")).
+                            concat(Utils.avoidNull(city));
         country =           new SimpleObjectProperty<>(new Country());
         countryCode =    new SimpleStringProperty("");
         IDNumber =          new SimpleStringProperty("");

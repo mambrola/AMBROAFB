@@ -184,6 +184,19 @@ public class Utils {
         });
         return arrayList;
     }
+    
+    public static String getDelimiterAfter(StringProperty strProp, String delimiter){
+        return Bindings.when(strProp.isNull().or(strProp.isEmpty())).then("").otherwise(delimiter).get();
+    }
+    
+    public static String getDelimiterBetween(StringProperty strPropLeft, StringProperty strPropRight, String delimiter){
+        return Bindings.when(strPropLeft.isNull().or(strPropLeft.isEmpty())).
+                        then("").
+                        otherwise(Bindings.when(strPropRight.isNull().or(strPropRight.isEmpty())).
+                                            then(".").
+                                            otherwise(delimiter)).
+                        get();
+    }
 
     public static String avoidNullAndReturnString(Object object) {
         return object == null ? "" : (String) object;
