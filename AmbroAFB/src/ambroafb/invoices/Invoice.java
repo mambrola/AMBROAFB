@@ -260,6 +260,7 @@ public class Invoice extends EditorPanelable {
         
         invoice.setLicenses(wholeLicenses);
         return DBUtils.saveObjectToDB(invoice, "invoice");
+//        return DBUtils.saveObjectToDB(invoice, "invoice_insert_update_from_afb", invoice.getAdditionalDiscountRate());
     }
 
     /** Returns JSON object for given key and value */

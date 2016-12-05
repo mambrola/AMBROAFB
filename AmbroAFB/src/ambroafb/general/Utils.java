@@ -551,5 +551,15 @@ public class Utils {
             nodeTitleLabel.setTextFill(Color.RED);
         }
     }
+
+    public static void changeContentNotEmptyAnnotationValue(Object ownerClassObj, boolean newValue) {
+        Field[] fields = ownerClassObj.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(ContentNotEmpty.class)) {
+                ContentNotEmpty annot = field.getDeclaredAnnotation(ContentNotEmpty.class);
+//                annot.
+            }
+        }
+    }
     
 }

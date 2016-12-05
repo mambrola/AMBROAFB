@@ -105,23 +105,31 @@ public class DBUtils {
      * So after this function the element will has every old value and a DB id too.
      * @param <T>
      * @param source The element which must save to DB.
-     * @param dbTableNameSingularForm The DB table name in singular form (ex: client, product ...)
+     * @param tableNameOrStoreProcedure The DB table name in singular form (ex: client, product ...)
+     *                                  Or procedure name for AFB.
+     * @param optionals
      * @return 
      */
-    public static <T> T saveObjectToDB(Object source, String dbTableNameSingularForm){
+    public static <T> T saveObjectToDB(Object source, String tableNameOrStoreProcedure, Object... optionals){
         try {
             JSONObject targetJson = Utils.getJSONFromClass(source);
             
             System.out.println("data for simple table to server: " + targetJson);
             
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newSourceFromDB = dbClient.insertUpdate(dbTableNameSingularForm, targetJson);
+            JSONObject newSourceFromDB;
+//            if (tableNameOrStoreProcedure.contains("afb")){
+//                newSourceFromDB = dbClient.callProcedureAndGetAsJson(tableNameOrStoreProcedure, dbClient.getLang(), targetJson, optionals[0]).getJSONObject(0);
+//            }
+//            else {
+                newSourceFromDB = dbClient.insertUpdate(tableNameOrStoreProcedure, targetJson);
+//            }
             
             System.out.println("data for simple table from server: " + newSourceFromDB);
             
             return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
         } 
-        catch (IOException | AuthServerException ex) {
+        catch (IOException | AuthServerException ex) { // | JSONException
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
             new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAlert();
         }

@@ -19,27 +19,27 @@ import org.json.JSONObject;
  *
  * @author murman
  */
-public class UtilsDB {
+public class UtilsDerby {
     
-    private static UtilsDB instance;
+    private static UtilsDerby instance;
     private static final String DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
     private static final String URL = "jdbc:derby:localDB; create=true; user=afb; password=afb";
     private Connection connection;
     private static final String DP_TABLE_NAME = "defaultParameters";
     
-    public static UtilsDB getInstance(){
+    public static UtilsDerby getInstance(){
         if (instance == null){
-            instance = new UtilsDB();
+            instance = new UtilsDerby();
         }
         return instance;
     }
     
-    private UtilsDB(){
+    private UtilsDerby(){
         try {
             Class.forName(DRIVER_NAME);
             connection = DriverManager.getConnection(URL);
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UtilsDerby.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -71,7 +71,7 @@ public class UtilsDB {
                 result = new JSONObject(jsonString);
             }
         } catch (SQLException | JSONException ex) {
-            Logger.getLogger(UtilsDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UtilsDerby.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }

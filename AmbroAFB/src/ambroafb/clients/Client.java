@@ -122,6 +122,9 @@ public class Client extends EditorPanelable{
     
     @JsonIgnore
     private static final String IMAGE_OFFICE_URL = "/images/office.png", IMAGE_PERSON_URL = "/images/person.png";
+
+    @JsonIgnore
+    public static int SPECIFIC_STATUS = 1;
     
     
     // Every property object has default values because of avoide NullpointerException in compares or any other methods in any case.
