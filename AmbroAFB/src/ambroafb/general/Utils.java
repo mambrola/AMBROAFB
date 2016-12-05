@@ -39,6 +39,7 @@ import java.time.LocalDate;
 import java.util.List;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -187,17 +188,18 @@ public class Utils {
         return arrayList;
     }
     
-    public static String getDelimiterAfter(StringProperty strProp, String delimiter){
-        return Bindings.when(strProp.isNull().or(strProp.isEmpty())).then("").otherwise(delimiter).get();
+    public static StringExpression getDelimiterAfter(StringProperty strProp, String delimiter){
+        return Bindings.when(strProp.isNull().or(strProp.isEmpty())).
+                        then("").
+                        otherwise(delimiter);
     }
     
-    public static String getDelimiterBetween(StringProperty strPropLeft, StringProperty strPropRight, String delimiter){
+    public static StringExpression getDelimiterBetween(StringProperty strPropLeft, StringProperty strPropRight, String delimiter){
         return Bindings.when(strPropLeft.isNull().or(strPropLeft.isEmpty())).
                         then("").
                         otherwise(Bindings.when(strPropRight.isNull().or(strPropRight.isEmpty())).
                                             then(".").
-                                            otherwise(delimiter)).
-                        get();
+                                            otherwise(delimiter));
     }
 
     public static String avoidNullAndReturnString(Object object) {

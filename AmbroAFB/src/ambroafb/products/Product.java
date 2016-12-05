@@ -319,9 +319,6 @@ public class Product extends EditorPanelable {
         setAbbreviation(product.getAbbreviation());
         setFormer(product.getFormer());
         setDescrip(product.getDescrip());
-        
-        System.out.println("product copyFrom. other spec id: " + product.getSpecific());
-        
         productSpecific.get().copyFrom(product.specificProperty().get());
         setPrice(product.getPrice());
         setIso(product.getIso());

@@ -85,7 +85,6 @@ public class ProductSpecific {
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object prodSpecific){
         if (prodSpecific == null) return false;
-        System.out.println("productSpec equaaaaaals");
         ProductSpecific otherSpecific = (ProductSpecific) prodSpecific;
         return  getProductSpecificId() == otherSpecific.getProductSpecificId() &&
                 getDescrip().equals(otherSpecific.getDescrip());
