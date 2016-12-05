@@ -109,7 +109,7 @@ public class InvoiceDialogController implements Initializable {
         }
         okayCancelController.setButtonsFeatures(buttonType);
 //        if (invoice != null){
-//            licenses.getItems().addAll(invoice.getLicensesShortData());
+//            licenses.getItems().addAll(invoice.getLicenses());
 //        }
     }
     

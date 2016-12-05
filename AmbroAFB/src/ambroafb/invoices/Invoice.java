@@ -25,6 +25,7 @@ import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -192,13 +193,6 @@ public class Invoice extends EditorPanelable {
     private void rebindEndDate(){
         long monthValue = months.get().getMonthCount();
         long dayValue = months.get().getDayCount();
-        
-        System.out.println("monthValue: " + monthValue);
-        System.out.println("dayValue: " + dayValue);
-        
-//        Double monthCount = Utils.getDoubleValueFor(months.get());
-//        long monthValue = monthCount.longValue();
-//        long dayValue = (long)((monthCount - monthValue) * 30);
         endDateObj.set(beginDateObj.get().plusMonths(monthValue).plusDays(dayValue));
     }
     
@@ -250,10 +244,8 @@ public class Invoice extends EditorPanelable {
             productsArray.put(getJsonFrom(json, "count", productsMap.get(product)));
         });
 
-//        System.out.println("productsArray: " + productsArray);
-        
         JSONArray licensesIds = new JSONArray();
-        invoice.getLicensesShortData().stream().forEach((licenseShortData) -> {
+        invoice.getLicenses().stream().forEach((licenseShortData) -> {
             licensesIds.put(getJsonFrom(null, "license_id", licenseShortData.licenseId));
         });
         DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, invoice.getAdditionalDiscountRate(), licensesIds);
@@ -360,37 +352,40 @@ public class Invoice extends EditorPanelable {
 //        return DateConverter.getInstance().parseDate(createdDate.get());
 //    }
 //    
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    
+    @JsonIgnore
     public String getInvoiceNumber(){
         return invoiceNumber.get();
     }
     
 
-    @JsonIgnore
-    public ObservableList<LicenseShortData> getLicensesShortData(){
+    public ObservableList<LicenseShortData> getLicenses(){
         return licenses;
     }
     
-    public ObservableList<Integer> getLicenses(){
-        ObservableList<Integer> licenseIds = FXCollections.observableArrayList();
-        licenses.stream().forEach((shortData) -> {
-            licenseIds.add(shortData.getLicenseId());
-        });
-        return licenseIds;
-    }
+//    public ObservableList<Integer> getLicenses(){
+//        ObservableList<Integer> licenseIds = FXCollections.observableArrayList();
+//        licenses.stream().forEach((shortData) -> {
+//            licenseIds.add(shortData.getLicenseId());
+//        });
+//        return licenseIds;
+//    }
     
     public int getClientId(){
         return (clientObj.isNull().get()) ? -1 : clientObj.get().getRecId();
     }
     
+    @JsonIgnore
     public String getFirstName(){
         return (clientObj.isNull().get()) ? "" : clientObj.get().getFirstName();
     }
     
+    @JsonIgnore
     public String getLastName(){
         return (clientObj.isNull().get()) ? "" : clientObj.get().getLastName();
     }
     
+    @JsonIgnore
     public String getEmail(){
         return (clientObj.isNull().get()) ? "" : clientObj.get().getEmail();
     }
@@ -403,12 +398,12 @@ public class Invoice extends EditorPanelable {
         return (endDateObj.isNull().get()) ? "" : beginDateObj.get().toString();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public String getRevokedDate(){
         return (revokedDateObj.isNull().get()) ? "" : revokedDateObj.get().toString();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public String getAdditionalDiscountRate(){
         return additionalDiscountRate.get();
     }
@@ -428,7 +423,7 @@ public class Invoice extends EditorPanelable {
         return vat.get();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public String getReissuingDescrip(){
         return (reissuingObj.isNull().get()) ? "" : reissuingObj.get().getDescrip();
     }
@@ -438,7 +433,7 @@ public class Invoice extends EditorPanelable {
         return (reissuingObj.isNull().get()) ? -1 : reissuingObj.get().getInvoiceReissuingId();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public String getStatusDescrip(){
         return (statusObj.isNull().get()) ? "" : statusObj.get().getDescrip();
     }
@@ -448,7 +443,7 @@ public class Invoice extends EditorPanelable {
         return (statusObj.isNull().get()) ? -1 : statusObj.get().getInvoiceStatusId();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public String getMonths(){
         return "" + months.get().getMonthCount();
     }
@@ -461,6 +456,7 @@ public class Invoice extends EditorPanelable {
         createdDate.set(userFriendlyDateVisual);
     }
     
+    @JsonProperty
     public void setInvoiceNumber(String invoiceNumber){
         this.invoiceNumber.set(invoiceNumber);
     }
@@ -481,14 +477,17 @@ public class Invoice extends EditorPanelable {
         clientObj.get().setRecId(recId);
     }
 
+    @JsonProperty
     public void setFirstName(String firstName){
         clientObj.get().setFirstName(firstName);
     }
     
+    @JsonProperty
     public void setLastName(String lastName){
         clientObj.get().setLastName(lastName);
     }
     
+    @JsonProperty
     public void setEmail(String email){
         clientObj.get().setEmail(email);
     }
@@ -503,28 +502,34 @@ public class Invoice extends EditorPanelable {
         endDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(endDateObj.get()));
     }
     
+    @JsonProperty
     public void setRevokedDate(String date) {
         revokedDateObj.set(DateConverter.getInstance().parseDate(date));
         revokedDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(revokedDateObj.get()));
         isRevoked.set(revokedDateObj.get() != null);
     }
     
+    @JsonProperty
     public void setAdditionalDiscountRate(String additDisc){
         additionalDiscountRate.set(additDisc);
     }
     
+    @JsonProperty // Setter must be available from DB but getter not available to DB
     public void setMoneyToPay(String money){ // the String value give from DB
         moneyToPay.set(money);
     }
     
+    @JsonProperty
     public void setMoneyPaid(String money){ // the String value give from DB
         moneyPaid.set(money);
     }
     
+    @JsonProperty
     public void setVat(String vat){
         this.vat.set(vat);
     }
     
+    @JsonProperty
     public void setReissuingDescrip(String descrip){
         reissuingObj.get().setDescrip(descrip);
     }
@@ -533,7 +538,7 @@ public class Invoice extends EditorPanelable {
         reissuingObj.get().setInvoiceReissuingId(reissuingId);
     }
     
-    
+    @JsonProperty
     public void setStatusDescrip(String status){
         this.statusObj.get().setDescrip(status);
     }
@@ -542,6 +547,7 @@ public class Invoice extends EditorPanelable {
         this.statusObj.get().setInvoiceStatusId(status);
     }
     
+    @JsonProperty
     public void setMonths(String months){
         this.months.get().setMonth(months);
     }
@@ -578,7 +584,7 @@ public class Invoice extends EditorPanelable {
         setEmail(invoice.getEmail());
         setInvoiceNumber(invoice.getInvoiceNumber());
         licenses.clear(); // Avoid to add twise licenses in tableView
-        licenses.addAll(invoice.getLicensesShortData());
+        licenses.addAll(invoice.getLicenses());
         setBeginDate(invoice.getBeginDate());
         setEndDate(invoice.getEndDate());
         setRevokedDate(invoice.getRevokedDate());
@@ -607,7 +613,7 @@ public class Invoice extends EditorPanelable {
                 getLastName().equals(otherInvoice.getLastName())    &&
                 getEmail().equals(otherInvoice.getEmail())          &&
                 getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())  &&
-                Utils.compareListsByElemOrder(licenses, otherInvoice.getLicensesShortData())    &&
+                Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())    &&
                 Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()) &&
                 Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()) &&
                 Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()) &&
@@ -627,14 +633,17 @@ public class Invoice extends EditorPanelable {
     @SuppressWarnings("EqualsAndHashcode")
     public static class LicenseShortData {
         
+//        @JsonIgnore
         private int recId;
         private int licenseId;
-        public StringProperty licenseNumber = new SimpleStringProperty("");
+//        @JsonIgnore
+        private StringProperty licenseNumber = new SimpleStringProperty("");
         
         public StringProperty licenseNumberProperty(){
             return licenseNumber;
         }
         
+        @JsonIgnore
         public int getRecId(){
             return recId;
         }
@@ -643,10 +652,13 @@ public class Invoice extends EditorPanelable {
             return licenseId;
         }
         
+        @JsonIgnore
         public int getLicenseNumber(){
             return Integer.parseInt(licenseNumber.get());
         }
         
+        
+        @JsonProperty
         public void setRecId(int recId){
             this.recId = recId;
         }
@@ -655,6 +667,7 @@ public class Invoice extends EditorPanelable {
             this.licenseId = licenseId;
         }
         
+        @JsonProperty
         public void setLicenseNumber(int number){
             licenseNumber.set("" + number);
         }
