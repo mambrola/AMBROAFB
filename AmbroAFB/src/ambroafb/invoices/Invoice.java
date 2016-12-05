@@ -633,10 +633,8 @@ public class Invoice extends EditorPanelable {
     @SuppressWarnings("EqualsAndHashcode")
     public static class LicenseShortData {
         
-//        @JsonIgnore
         private int recId;
         private int licenseId;
-//        @JsonIgnore
         private StringProperty licenseNumber = new SimpleStringProperty("");
         
         public StringProperty licenseNumberProperty(){
