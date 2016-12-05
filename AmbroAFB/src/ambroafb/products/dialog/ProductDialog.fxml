@@ -74,16 +74,6 @@
                     </VBox>
                 </children> 
             </HBox>
-            <HBox styleClass="one" >
-                <children>
-                    <VBox styleClass="couple">
-                        <children>
-                            <Label text="%remark" styleClass="validationMessage" />
-                            <TextField fx:id="remark" />
-                        </children>
-                    </VBox>
-                </children>
-            </HBox>
             <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
                 <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
             </HBox>

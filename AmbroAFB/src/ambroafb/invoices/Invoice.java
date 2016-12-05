@@ -68,7 +68,7 @@ public class Invoice extends EditorPanelable {
     private final StringProperty licensesDescript;
     private final ObservableList<LicenseShortData> licenses;
     @JsonIgnore
-    public ObservableList<License> licensesOnProducts;
+    public ObservableList<License> licensesOnProducts; // ????
     
     @AView.Column(title = "%clients", width = "100")
     @JsonIgnore

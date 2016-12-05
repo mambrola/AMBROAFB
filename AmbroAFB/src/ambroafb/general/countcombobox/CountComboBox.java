@@ -105,7 +105,7 @@ public class CountComboBox<T> extends ComboBox<T> {
         public void updateItem(T item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
-                String name = item.toString();
+                String name = (box.getConverter() == null) ? item.toString() : box.getConverter().toString(item);
                 CountComboBoxItem boxItem = new CountComboBoxItem(name);
                 itemsMap.put(name, boxItem);
                 

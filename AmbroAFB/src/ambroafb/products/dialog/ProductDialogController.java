@@ -38,7 +38,7 @@ public class ProductDialogController implements Initializable {
     @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]{2}", explain = "The content length must be 2.")
     private TextField former;
     @FXML @ContentNotEmpty
-    private TextField descrip; //, remark;
+    private TextField descrip;
     @FXML @ContentNotEmpty
     private ProductsSpecificsComboBox specifics;
     @FXML @ContentNotEmpty @ContentPattern(value = "(^0|[1-9][0-9]*)([.][0-9]{1,2})?", explain = "The price content is incorect. Exp: 1.25")
@@ -78,7 +78,6 @@ public class ProductDialogController implements Initializable {
             abbreviation.textProperty().bindBidirectional(product.abbreviationProperty());
             former.textProperty().bindBidirectional(product.formerProperty());
             descrip.textProperty().bindBidirectional(product.descriptionProperty());
-//            remark.textProperty().bindBidirectional(product.remarkProperty());
             specifics.valueProperty().bindBidirectional(product.specificProperty());
             price.textProperty().bindBidirectional(product.priceProperty());
             currency.valueProperty().bindBidirectional(product.currencyProperty());

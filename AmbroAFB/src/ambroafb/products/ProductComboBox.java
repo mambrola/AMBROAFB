@@ -24,8 +24,7 @@ public class ProductComboBox extends ComboBox<Product> {
             public String toString(Product product) {
                 String result = null;
                 if (product != null){
-                    result = (product.equals(productALL))   ? product.getAbbreviation() 
-                                                            : product.getAbbreviation() + ",  " + product.getFormer();
+                    result = product.getDescrip();
                 }
                 return result;
             }
@@ -36,7 +35,7 @@ public class ProductComboBox extends ComboBox<Product> {
             }
         });
 
-        productALL.setAbbreviation(ALL);
+        productALL.setDescrip(ALL);
         productALL.setRecId(0);
         this.getItems().add(productALL);
         this.getItems().addAll(Product.getAllFromDB());

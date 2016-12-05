@@ -20,7 +20,7 @@ public class ProductSpecific {
 
     private int recId;
     private final IntegerProperty productSpecificId;
-    public final StringProperty descrip;
+    private final StringProperty descrip;
     @JsonIgnore
     public String language;
 
@@ -81,13 +81,13 @@ public class ProductSpecific {
                 getDescrip().equals(other.getDescrip());
     }
     
-//    @Override
-//    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-//    public boolean equals(Object prodSpecific){
-//        if (prodSpecific == null) return false;
-//        System.out.println("productSpec equaaaaaals");
-//        ProductSpecific otherSpecific = (ProductSpecific) prodSpecific;
-//        return  getProductSpecificId() == otherSpecific.getProductSpecificId() &&
-//                getDescrip().equals(otherSpecific.getDescrip());
-//    }
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object prodSpecific){
+        if (prodSpecific == null) return false;
+        System.out.println("productSpec equaaaaaals");
+        ProductSpecific otherSpecific = (ProductSpecific) prodSpecific;
+        return  getProductSpecificId() == otherSpecific.getProductSpecificId() &&
+                getDescrip().equals(otherSpecific.getDescrip());
+    }
 }
