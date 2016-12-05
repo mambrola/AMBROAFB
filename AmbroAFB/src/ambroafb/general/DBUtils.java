@@ -156,7 +156,7 @@ public class DBUtils {
     private static JSONArray licensesFinaces;
     private static JSONArray invoicesFinaces;
     
-    public static void callInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, Double additionalDiscount, JSONArray licensesIds){
+    public static void callInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, String additionalDiscount, JSONArray licensesIds){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         try {
             JSONArray licensesArray = dbClient.callProcedureAndGetAsJson("invoice_get_suited_licenses",

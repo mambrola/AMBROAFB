@@ -70,7 +70,7 @@ public class Invoice extends EditorPanelable {
     @JsonIgnore
     public ObservableList<License> licensesOnProducts; // ????
     
-    @AView.Column(title = "%clients", width = "100")
+    @AView.Column(title = "%clients", width = "250")
     @JsonIgnore
     private final StringExpression clientDescrip;
     @JsonIgnore
@@ -96,7 +96,7 @@ public class Invoice extends EditorPanelable {
     @JsonIgnore
     private final BooleanProperty isRevoked;
     
-    @AView.Column(title = "%extra_discount", width = "70", styleClass = "textRight")
+    @AView.Column(title = "%extra_discount", width = "100", styleClass = "textRight")
     private final StringProperty additionalDiscountRate;
     
     @AView.Column(title = "%money_to_pay", width = "70", styleClass = "textRight" )
@@ -214,7 +214,7 @@ public class Invoice extends EditorPanelable {
         if (invoiseFilterModel.hasSelectedReissuings()){
             whereBuilder = whereBuilder.andGroup();
             for(InvoiceReissuing invReissuing : invoiseFilterModel.getCheckedReissuings()){
-                whereBuilder.or("reissuing", "=", invReissuing.getInvoiceReissuingId());
+                whereBuilder = whereBuilder.or("reissuing", "=", invReissuing.getInvoiceReissuingId());
             }
             whereBuilder = whereBuilder.closeGroup();
         }
@@ -354,7 +354,6 @@ public class Invoice extends EditorPanelable {
 //    }
 //    
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    @JsonIgnore
     public String getInvoiceNumber(){
         return invoiceNumber.get();
     }
@@ -377,17 +376,14 @@ public class Invoice extends EditorPanelable {
         return (clientObj.isNull().get()) ? -1 : clientObj.get().getRecId();
     }
     
-    @JsonIgnore
     public String getFirstName(){
         return (clientObj.isNull().get()) ? "" : clientObj.get().getFirstName();
     }
     
-    @JsonIgnore
     public String getLastName(){
         return (clientObj.isNull().get()) ? "" : clientObj.get().getLastName();
     }
     
-    @JsonIgnore
     public String getEmail(){
         return (clientObj.isNull().get()) ? "" : clientObj.get().getEmail();
     }
@@ -400,53 +396,52 @@ public class Invoice extends EditorPanelable {
         return (endDateObj.isNull().get()) ? "" : beginDateObj.get().toString();
     }
     
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getRevokedDate(){
         return (revokedDateObj.isNull().get()) ? "" : revokedDateObj.get().toString();
     }
     
-    @JsonIgnore
-    public double getAdditionalDiscountRate(){
-        return Utils.getDoubleValueFor(additionalDiscountRate.get());
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public String getAdditionalDiscountRate(){
+        return additionalDiscountRate.get();
     }
     
-    @JsonIgnore
-    public double getMoneyToPay(){
-        return Utils.getDoubleValueFor(moneyToPay.get());
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public String getMoneyToPay(){
+        return moneyToPay.get();
     }
     
-    @JsonIgnore
-    public double getMoneyPaid(){
-        return Utils.getDoubleValueFor(moneyPaid.get());
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public String getMoneyPaid(){
+        return moneyPaid.get();
     }
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    @JsonIgnore
-    public double getVat(){
-        return Utils.getDoubleValueFor(vat.get());
+    public String getVat(){
+        return vat.get();
     }
     
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getReissuingDescrip(){
         return (reissuingObj.isNull().get()) ? "" : reissuingObj.get().getDescrip();
     }
     
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public int getReissuing(){
         return (reissuingObj.isNull().get()) ? -1 : reissuingObj.get().getInvoiceReissuingId();
     }
     
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getStatusDescrip(){
         return (statusObj.isNull().get()) ? "" : statusObj.get().getDescrip();
     }
     
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public int getStatus(){
         return (statusObj.isNull().get()) ? -1 : statusObj.get().getInvoiceStatusId();
     }
     
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getMonths(){
         return months.get();
     }
@@ -476,6 +471,7 @@ public class Invoice extends EditorPanelable {
     }
     
     public void setClientId(int recId){
+        System.out.println("invoice.  client id: " + recId);
         clientObj.get().setRecId(recId);
     }
 
@@ -507,20 +503,20 @@ public class Invoice extends EditorPanelable {
         isRevoked.set(revokedDateObj.get() != null);
     }
     
-    public void setAdditionalDiscountRate(double additDisc){
-        additionalDiscountRate.set("" + additDisc);
+    public void setAdditionalDiscountRate(String additDisc){
+        additionalDiscountRate.set(additDisc);
     }
     
-    public void setMoneyToPay(double money){
-        moneyToPay.set("" + money);
+    public void setMoneyToPay(String money){ // the String value give from DB
+        moneyToPay.set(money);
     }
     
-    public void setMoneyPaid(double money){
-        moneyPaid.set("" + money);
+    public void setMoneyPaid(String money){ // the String value give from DB
+        moneyPaid.set(money);
     }
     
-    public void setVat(double vat){
-        this.vat.set("" + vat);
+    public void setVat(String vat){
+        this.vat.set(vat);
     }
     
     public void setReissuingDescrip(String descrip){
@@ -528,6 +524,7 @@ public class Invoice extends EditorPanelable {
     }
     
     public void setReissuing(int reissuingId){
+        System.out.println("invoice. setReissuing: " + reissuingId);
         reissuingObj.get().setInvoiceReissuingId(reissuingId);
     }
     
