@@ -7,7 +7,7 @@ package ambroafb.invoices.dialog;
 
 import ambro.ADatePicker;
 import ambroafb.clients.ClientComboBox;
-import ambroafb.general.MonthCounterComboBox;
+import ambroafb.general.monthcountercombobox.MonthCounterComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBox;

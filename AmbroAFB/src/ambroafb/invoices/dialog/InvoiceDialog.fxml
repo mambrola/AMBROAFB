@@ -11,6 +11,7 @@
 <?import ambro.* ?>
 <?import ambroafb.general.okay_cancel.* ?>
 <?import ambroafb.general.*?>
+<?import ambroafb.general.monthcountercombobox.*?>
 <?import ambroafb.clients.*?>
 <?import ambroafb.general.countcombobox.*?>
 

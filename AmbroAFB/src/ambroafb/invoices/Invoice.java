@@ -14,6 +14,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.invoices.filter.InvoiceFilterModel;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
@@ -118,7 +119,7 @@ public class Invoice extends EditorPanelable {
     @JsonIgnore
     private final ObjectProperty<InvoiceStatus> statusObj;
     
-    private final StringProperty months;
+    private final ObjectProperty<MonthCounterItem> months;
     private final BooleanProperty isLogined, isPaid;
     
     @JsonIgnore
@@ -151,7 +152,7 @@ public class Invoice extends EditorPanelable {
         vat = new SimpleStringProperty("");
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
-        months = new SimpleStringProperty("");
+        months = new SimpleObjectProperty<>(new MonthCounterItem(""));
         licensesResult = new SimpleObjectProperty<>(new HashMap<>());
         isLogined = new SimpleBooleanProperty(false);
         isPaid = new SimpleBooleanProperty(false);
@@ -161,12 +162,12 @@ public class Invoice extends EditorPanelable {
         });
         
         beginDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            if (months.isNotEmpty().get()){
+            if (months.get() != null && months.get().getMonthCount() != -1){
                 rebindEndDate();
             }
         });
         
-        months.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+        months.addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
             if (beginDateObj.get() != null){
                 rebindEndDate();
             }
@@ -189,9 +190,15 @@ public class Invoice extends EditorPanelable {
     }
     
     private void rebindEndDate(){
-        Double monthCount = Utils.getDoubleValueFor(months.get());
-        long monthValue = monthCount.longValue();
-        long dayValue = (long)((monthCount - monthValue) * 30);
+        long monthValue = months.get().getMonthCount();
+        long dayValue = months.get().getDayCount();
+        
+        System.out.println("monthValue: " + monthValue);
+        System.out.println("dayValue: " + dayValue);
+        
+//        Double monthCount = Utils.getDoubleValueFor(months.get());
+//        long monthValue = monthCount.longValue();
+//        long dayValue = (long)((monthCount - monthValue) * 30);
         endDateObj.set(beginDateObj.get().plusMonths(monthValue).plusDays(dayValue));
     }
     
@@ -329,7 +336,7 @@ public class Invoice extends EditorPanelable {
         return statusObj;
     }
     
-    public StringProperty monthsProperty(){
+    public ObjectProperty<MonthCounterItem> monthsProperty(){
         return months;
     }
     
@@ -443,7 +450,7 @@ public class Invoice extends EditorPanelable {
     
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getMonths(){
-        return months.get();
+        return "" + months.get().getMonthCount();
     }
     
     
@@ -471,7 +478,6 @@ public class Invoice extends EditorPanelable {
     }
     
     public void setClientId(int recId){
-        System.out.println("invoice.  client id: " + recId);
         clientObj.get().setRecId(recId);
     }
 
@@ -524,7 +530,6 @@ public class Invoice extends EditorPanelable {
     }
     
     public void setReissuing(int reissuingId){
-        System.out.println("invoice. setReissuing: " + reissuingId);
         reissuingObj.get().setInvoiceReissuingId(reissuingId);
     }
     
@@ -538,7 +543,7 @@ public class Invoice extends EditorPanelable {
     }
     
     public void setMonths(String months){
-        this.months.set(months);
+        this.months.get().setMonth(months);
     }
     
     public void setIsLogined(int logined){
@@ -583,6 +588,7 @@ public class Invoice extends EditorPanelable {
         setMoneyPaid(invoice.getMoneyPaid());
         reissuingObj.get().copyFrom(invoice.reissuingProperty().get());
         statusObj.get().copyFrom(invoice.statusProperty().get());
+        setMonths(invoice.getMonths());
     }
 
     @Override
@@ -608,12 +614,13 @@ public class Invoice extends EditorPanelable {
 //                getBeginDate().equals(otherInvoice.getBeginDate())          &&
 //                getEndDate().equals(otherInvoice.getEndDate())      &&
 //                getRevokedDate().equals(otherInvoice.getRevokedDate()) &&
-                getAdditionalDiscountRate() == otherInvoice.getAdditionalDiscountRate() &&
-                getMoneyToPay() == otherInvoice.getMoneyToPay() &&
-                getVat() == otherInvoice.getVat() &&
-                getMoneyPaid() == otherInvoice.getMoneyPaid() &&
+                getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate()) &&
+                getMoneyToPay().equals(otherInvoice.getMoneyToPay()) &&
+                getVat().equals(otherInvoice.getVat()) &&
+                getMoneyPaid().equals(otherInvoice.getMoneyPaid()) &&
                 reissuingObj.get().compares(otherInvoice.reissuingProperty().get()) &&
-                statusObj.get().compares(otherInvoice.statusProperty().get());
+                statusObj.get().compares(otherInvoice.statusProperty().get()) &&
+                getMonths().equals(otherInvoice.getMonths());
     }
 
     
