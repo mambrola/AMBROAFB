@@ -344,12 +344,10 @@ public class Invoice extends EditorPanelable {
         return DateConverter.getInstance().parseDate(createdDate.get());
     }
     
-    
     @JsonIgnore
     public String getInvoiceNumber(){
         return invoiceNumber.get();
     }
-    
 
     public SeperateSaving getSetsForSeparateSaving(){
         return new SeperateSaving(licenses);
@@ -359,14 +357,6 @@ public class Invoice extends EditorPanelable {
     public ObservableList<LicenseShortData> getLicenses(){
         return licenses;
     }
-    
-//    public ObservableList<Integer> getLicenses(){
-//        ObservableList<Integer> licenseIds = FXCollections.observableArrayList();
-//        licenses.stream().forEach((shortData) -> {
-//            licenseIds.add(shortData.getLicense_id());
-//        });
-//        return licenseIds;
-//    }
     
     public int getClientId(){
         return (clientObj.isNull().get()) ? -1 : clientObj.get().getRecId();
