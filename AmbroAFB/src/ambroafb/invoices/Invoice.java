@@ -26,14 +26,13 @@ import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -49,7 +48,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.json.JSONObject;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 
 /**
@@ -240,13 +238,13 @@ public class Invoice extends EditorPanelable {
         Map<Product, Integer> productsMap = invoice.licensesResultProperty().get();        
         JSONArray productsArray = new JSONArray();
         productsMap.keySet().stream().forEach((product) -> {
-            JSONObject json = getJsonFrom(null, "product_id", product.getRecId());
-            productsArray.put(getJsonFrom(json, "count", productsMap.get(product)));
+            JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
+            productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
         });
 
         JSONArray licensesIds = new JSONArray();
         invoice.getLicenses().stream().forEach((licenseShortData) -> {
-            licensesIds.put(getJsonFrom(null, "license_id", licenseShortData.licenseId));
+            licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.licenseId));
         });
         DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, invoice.getAdditionalDiscountRate(), licensesIds);
         ArrayList<License> licenses = DBUtils.getLicenses();
@@ -259,20 +257,11 @@ public class Invoice extends EditorPanelable {
         System.out.println("invoice whole license: " + wholeLicenses);
         
         invoice.setLicenses(wholeLicenses);
-        return DBUtils.saveObjectToDB(invoice, "invoice");
-//        return DBUtils.saveObjectToDB(invoice, "invoice_insert_update_from_afb", invoice.getAdditionalDiscountRate());
+        BigDecimal additoinalDiscount = Utils.getBigDecimalFor(invoice.getAdditionalDiscountRate());
+        System.out.println("addintinal disc: " + additoinalDiscount);
+        return DBUtils.saveObjectToDBWith("invoice_insert_update_from_afb", invoice, additoinalDiscount);
     }
 
-    /** Returns JSON object for given key and value */
-    private static JSONObject getJsonFrom(JSONObject jsonObj, String key, Object value){
-        JSONObject json = (jsonObj == null) ? new JSONObject() : jsonObj;
-        try {
-            json.put(key, value);
-        } catch (JSONException ex) {
-            Logger.getLogger(Invoice.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return json;
-    }
     
     public static boolean deleteOneFromDB(int id) {
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
@@ -360,6 +349,11 @@ public class Invoice extends EditorPanelable {
     }
     
 
+    public SeperateSaving getSetsForSeparateSaving(){
+        return new SeperateSaving(licenses);
+    }
+    
+    @JsonIgnore // we need "sets_for_separate_saving" for DB json before licenses, so use above method for licenses.
     public ObservableList<LicenseShortData> getLicenses(){
         return licenses;
     }
@@ -367,7 +361,7 @@ public class Invoice extends EditorPanelable {
 //    public ObservableList<Integer> getLicenses(){
 //        ObservableList<Integer> licenseIds = FXCollections.observableArrayList();
 //        licenses.stream().forEach((shortData) -> {
-//            licenseIds.add(shortData.getLicenseId());
+//            licenseIds.add(shortData.getLicense_id());
 //        });
 //        return licenseIds;
 //    }
@@ -462,6 +456,7 @@ public class Invoice extends EditorPanelable {
         this.invoiceNumber.set(invoiceNumber);
     }
     
+    @JsonProperty
     public void setLicenses(Collection<LicenseShortData> licenses){
         this.licenses.setAll(licenses);
 
@@ -636,7 +631,7 @@ public class Invoice extends EditorPanelable {
         
         private int recId;
         private int licenseId;
-        private StringProperty licenseNumber = new SimpleStringProperty("");
+        private final StringProperty licenseNumber = new SimpleStringProperty("");
         
         public StringProperty licenseNumberProperty(){
             return licenseNumber;
@@ -647,7 +642,7 @@ public class Invoice extends EditorPanelable {
             return recId;
         }
         
-        public int getLicenseId(){
+        public int getLicense_id(){
             return licenseId;
         }
         
@@ -683,6 +678,19 @@ public class Invoice extends EditorPanelable {
             LicenseShortData otherLicense = (LicenseShortData) other;
             return  licenseId == otherLicense.licenseId &&
                     licenseNumber.get().equals(otherLicense.licenseNumber.get());
+        }
+    }
+    
+    public static class SeperateSaving {
+        
+        private ObservableList<LicenseShortData> licenses;
+        
+        public SeperateSaving(ObservableList<LicenseShortData> licenses){
+            this.licenses = licenses;
+        }
+        
+        public ObservableList<LicenseShortData> getLicenses(){
+            return licenses;
         }
     }
 }

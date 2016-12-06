@@ -20,8 +20,10 @@ public class Annotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface ContentNotEmpty {
-        boolean value() default true;
         String explain() default "This is required.";
+        Class predicate() default DEFAULT.class;
+        public static class DEFAULT {
+        }
     }
     
     @Retention(RetentionPolicy.RUNTIME)
@@ -33,6 +35,10 @@ public class Annotations {
         String valueForAlphabet() default 
                 "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         String explainForAlphabet() default "Only Latin alphabet in text place.";
+        
+        Class predicate() default DEFAULT.class;
+        public static class DEFAULT {
+        }
     }
     
     @Retention(RetentionPolicy.RUNTIME)
@@ -63,5 +69,8 @@ public class Annotations {
     public @interface ContentPattern {
         String value() default "";
         String explain() default "";
+        Class predicate() default DEFAULT.class;
+        public static class DEFAULT {
+        }
     }
 }

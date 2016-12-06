@@ -31,12 +31,19 @@ import javafx.scene.Parent;
 import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.mapeditor.MapEditor;
+import ambroafb.invoices.Invoice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.Predicate;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
 import javafx.beans.binding.StringExpression;
@@ -218,6 +225,24 @@ public class Utils {
         return Bindings.when(prop.isNull()).then("").otherwise(prop);
     }
     
+    /** Returns JSON object for given key and value. 
+     * If jsonIbject parameter is null creates new object and returns it, otherwise uses old itself
+     * for put new pair (key -> value).
+     * @param jsonObj
+     * @param key
+     * @param value
+     * @return  
+     */
+    public static JSONObject getJsonFrom(JSONObject jsonObj, String key, Object value){
+        JSONObject json = (jsonObj == null) ? new JSONObject() : jsonObj;
+        try {
+            json.put(key, value);
+        } catch (JSONException ex) {
+            Logger.getLogger(Invoice.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return json;
+    }
+    
     /**
      * The method converts string to Integer. If String is incorrect, it returns  -1 (minus 1).
      * @param str String which must be converted to Integer.
@@ -242,7 +267,19 @@ public class Utils {
         try {
             if (str.isEmpty()) result = 0;
             result = Double.parseDouble(str);
-        } catch(Exception ex){ }
+        } catch(Exception ex){ } // This exception is need for it. NOT change to NumberFormatException !
+        return result;
+    }
+    
+    public static BigDecimal getBigDecimalFor(String money){
+        BigDecimal result = null;
+        try {
+            NumberFormat localeFormatter = NumberFormat.getNumberInstance(Locale.GERMANY);
+            ((DecimalFormat) localeFormatter).setParseBigDecimal(true);
+            result = (BigDecimal)localeFormatter.parse(money);
+        } catch (ParseException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return result;
     }
     
@@ -373,8 +410,10 @@ public class Utils {
         Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
         Object value = typeAndContent[1];
         
+        boolean predicateValue = getPredicateValue(annotation.predicate(), field.getName());
+        
         // case of comboBoxes value may contains tab or spaces so we need to trim the value.
-        if (annotation.value() && (value == null || value.toString().trim().isEmpty())) {
+        if (predicateValue && (value == null || value.toString().trim().isEmpty())) {
             changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
             result = false;
         } else {
@@ -382,7 +421,7 @@ public class Utils {
         }
         return result;
     }
-
+    
     private static boolean checkValidationForContentMailAnnotation(Field field, Object currSceneController) {
         boolean result = true;
         ContentMail annotation = field.getAnnotation(ContentMail.class);
@@ -391,10 +430,11 @@ public class Utils {
 
         boolean validSyntax = Pattern.matches(annotation.valueForSyntax(), (String) typeAndContent[1]);
         boolean validAlphabet = Pattern.matches(annotation.valueForAlphabet(), (String) typeAndContent[1]);
-        if (!validSyntax) {
+        boolean predicateValue = getPredicateValue(annotation.predicate(), field.getName());
+        if (predicateValue && !validSyntax) { // otherwise email check label may stay a red color
             changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explainForSyntax());
             result = false;
-        } else if (!validAlphabet) {
+        } else if (predicateValue && !validAlphabet) { // otherwise email check label may stay a red color
             changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explainForAlphabet());
             result = false;
         } else {
@@ -403,6 +443,18 @@ public class Utils {
         return result;
     }
     
+    private static boolean getPredicateValue(Class predicateClass, String fieldName){
+        try {
+            if (predicateClass != ContentNotEmpty.DEFAULT.class){
+                Predicate<String> p = (Predicate<String>) predicateClass.getConstructor().newInstance();
+                return p.test(fieldName);
+            }
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+    }
+
     private static boolean checkValidationForContentTreeItemAnnotation(Field field, Object currSceneController, EDITOR_BUTTON_TYPE  type){
         boolean result = true;
         ContentTreeItem annotation = field.getAnnotation(ContentTreeItem.class);

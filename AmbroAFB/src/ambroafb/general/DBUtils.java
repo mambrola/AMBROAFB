@@ -110,7 +110,7 @@ public class DBUtils {
      * @param optionals
      * @return 
      */
-    public static <T> T saveObjectToDB(Object source, String tableNameOrStoreProcedure, Object... optionals){
+    public static <T> T saveObjectToDB(Object source, String tableNameOrStoreProcedure){
         try {
             JSONObject targetJson = Utils.getJSONFromClass(source);
             
@@ -118,23 +118,41 @@ public class DBUtils {
             
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             JSONObject newSourceFromDB;
-//            if (tableNameOrStoreProcedure.contains("afb")){
-//                newSourceFromDB = dbClient.callProcedureAndGetAsJson(tableNameOrStoreProcedure, dbClient.getLang(), targetJson, optionals[0]).getJSONObject(0);
-//            }
-//            else {
-                newSourceFromDB = dbClient.insertUpdate(tableNameOrStoreProcedure, targetJson);
-//            }
+            newSourceFromDB = dbClient.insertUpdate(tableNameOrStoreProcedure, targetJson);
             
             System.out.println("data for simple table from server: " + newSourceFromDB);
             
             return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
         } 
-        catch (IOException | AuthServerException ex) { // | JSONException
+        catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
             new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAlert();
         }
         return null;
     }
+    
+    public static <T> T saveObjectToDBWith(String procedureName, Object source, Object... params) {
+        try {
+            JSONObject targetJson = Utils.getJSONFromClass(source);
+            
+            System.out.println("data for procedure to server: " + targetJson);
+            
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONObject newSourceFromDB;
+            newSourceFromDB = dbClient.callProcedureAndGetAsJson(procedureName, dbClient.getLang(), targetJson, params).getJSONObject(0);
+            
+            System.out.println("data for procedure from server: " + newSourceFromDB);
+            
+            return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
+        }
+        catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAlert();
+        }
+        return null;
+    }
+    
+    
     
     public static boolean deleteObjectFromDB(String deleteProcName, JSONObject params) {
         boolean result = false;

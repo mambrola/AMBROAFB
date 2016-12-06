@@ -31,9 +31,12 @@ import ambroafb.general.interfaces.Annotations.*;
 import authclient.AuthServerException;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
@@ -59,21 +62,23 @@ public class ClientDialogController implements Initializable {
     private Label first_name, last_name;
     
     // start required nodes:
-    @FXML @ContentNotEmpty
+    @FXML @ContentNotEmpty(predicate = CustomPredicate.class)
     private TextField firstName, lastName, idNumber;
     
-    @FXML @ContentNotEmpty @ContentMail
+    @FXML
+    @ContentNotEmpty(predicate = CustomPredicate.class)
+    @ContentMail(predicate = CustomPredicate.class)
     private TextField email;
     
-    @FXML @ContentNotEmpty
+    @FXML @ContentNotEmpty(predicate = CustomPredicate.class)
     private ImageGalleryController imageGalleryController;
     
-    @FXML  @ContentNotEmpty
+    @FXML  @ContentNotEmpty(predicate = CustomPredicate.class)
     private TextField address; // this place must be because of required fields order.
     
-    @FXML @ContentNotEmpty
+    @FXML @ContentNotEmpty(predicate = CustomPredicate.class)
     private CountryComboBox country;
-    @FXML @ContentNotEmpty
+    @FXML @ContentNotEmpty(predicate = CustomPredicate.class)
     private ComboBox<ClientStatus> statuses;
     // end required nodes.
     
@@ -88,6 +93,8 @@ public class ClientDialogController implements Initializable {
     private Client client;
     private Client clientBackup;
     private boolean permissionToClose;
+    
+    private static final ObjectProperty<ClientStatus> statusProperty = new SimpleObjectProperty<>();
     
     /**
      * Initializes the controller class.
@@ -169,6 +176,7 @@ public class ClientDialogController implements Initializable {
         imageGalleryController.downloadData(imageNames);
         
         this.client.setClientImageGallery(imageGalleryController);
+        statusProperty.bind(client.statusProperty());
     }
     
     /**
@@ -252,5 +260,32 @@ public class ClientDialogController implements Initializable {
                 }
             };
         }
+    }
+    
+    
+    public static class CustomPredicate implements Predicate<String> {
+
+        public CustomPredicate(){}
+        
+        @Override
+        public boolean test(String fieldName) {
+            return statusProperty.get() != null && statusProperty.get().getClientStatusId() != 1;
+        }
+
+        @Override
+        public Predicate<String> and(Predicate<? super String> other) {
+            return Predicate.super.and(other); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public Predicate<String> negate() {
+            return Predicate.super.negate(); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public Predicate<String> or(Predicate<? super String> other) {
+            return Predicate.super.or(other); //To change body of generated methods, choose Tools | Templates.
+        }
+        
     }
 }
