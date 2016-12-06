@@ -79,7 +79,7 @@ public class InvoiceDialogController implements Initializable {
     public void bindInvoice(Invoice invoice) {
         this.invoice = invoice;
         if (invoice != null){
-//            createdDate.setValue(invoice.getLocalDateObj());
+            createdDate.setValue(invoice.getCreatedDateObj());
             invoiceNumber.textProperty().bindBidirectional(invoice.invoiceNumberProperty());
             clients.valueProperty().bindBidirectional(invoice.clientProperty());
             //

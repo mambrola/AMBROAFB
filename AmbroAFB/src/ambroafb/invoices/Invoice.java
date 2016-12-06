@@ -339,11 +339,11 @@ public class Invoice extends EditorPanelable {
     
     
     // Getters:
-//    @JsonIgnore
-//    public LocalDate getLocalDateObj(){
-//        return DateConverter.getInstance().parseDate(createdDate.get());
-//    }
-//    
+    @JsonIgnore
+    public LocalDate getCreatedDateObj(){
+        return DateConverter.getInstance().parseDate(createdDate.get());
+    }
+    
     
     @JsonIgnore
     public String getInvoiceNumber(){
@@ -400,7 +400,6 @@ public class Invoice extends EditorPanelable {
         return (revokedDateObj.isNull().get()) ? "" : revokedDateObj.get().toString();
     }
     
-//    @JsonIgnore
     public String getAdditionalDiscountRate(){
         return additionalDiscountRate.get();
     }

@@ -372,7 +372,7 @@ public class Client extends EditorPanelable{
 //    }
     
     @JsonIgnore
-    public LocalDate getCreatedDateAsObj(){
+    public LocalDate getCreatedDateObj(){
         return DateConverter.getInstance().parseDate(createdDate.get());
     }
     
