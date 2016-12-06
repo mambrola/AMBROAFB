@@ -44,6 +44,8 @@ public class InvoiceDialogController implements Initializable {
     private ADatePicker beginDate;
     @FXML @ContentNotEmpty
     private MonthCounterComboBox monthCounter;
+    @FXML @ContentPattern(value = "(([1-9]\\d*)?\\d)(\\.\\d\\d)?$", explain = "The discount syntax is incorrect. like: 0.35, 3.25 ...")
+    private TextField additionalDiscount;
     @FXML @ContentNotEmpty
     private ComboBox<InvoiceReissuing> invoiceReissuings;
     // end order
@@ -56,7 +58,7 @@ public class InvoiceDialogController implements Initializable {
     @FXML
     private CheckBox revoked;
     @FXML
-    private TextField invoiceNumber, additionalDiscount, moneyToPay, moneyPaid, vat, status;
+    private TextField invoiceNumber, moneyToPay, moneyPaid, vat, status;
     @FXML
     private DialogOkayCancelController okayCancelController;
     

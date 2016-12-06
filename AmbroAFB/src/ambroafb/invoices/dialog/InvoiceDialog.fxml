@@ -72,7 +72,7 @@
             <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
-                        <Label text="%extra_discount" />
+                        <Label text="%extra_discount" styleClass="validationMessage" />
                         <TextField fx:id="additionalDiscount" />
                     </VBox>
                     <VBox styleClass="couple">
