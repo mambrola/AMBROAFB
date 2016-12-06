@@ -5,8 +5,10 @@
  */
 package ambroafb.general;
 
+import ambroafb.invoices.Invoice;
 import ambroafb.licenses.License;
 import authclient.AuthServerException;
+import authclient.Response;
 import authclient.db.DBClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -131,6 +133,18 @@ public class DBUtils {
         return null;
     }
     
+    public static Invoice saveInvoice(Object invoice){
+        try {
+            JSONObject targetJson = Utils.getJSONFromClass(invoice);
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            Response r = dbClient.post("invoices/fromAfb?lang=" + dbClient.getLang(), targetJson.toString());
+            return Utils.getClassFromJSON(invoice.getClass(), new JSONObject(r.getDataAsString()));
+        } catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public static <T> T saveObjectToDBWith(String procedureName, Object source, Object... params) {
         try {
             JSONObject targetJson = Utils.getJSONFromClass(source);
@@ -179,8 +193,8 @@ public class DBUtils {
     }
     
     private static JSONArray licenses;
-    private static JSONArray licensesFinaces;
-    private static JSONArray invoicesFinaces;
+//    private static JSONArray licensesFinaces;
+//    private static JSONArray invoicesFinaces;
     
     public static void callInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, String additionalDiscount, JSONArray licensesIds){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
@@ -192,8 +206,8 @@ public class DBUtils {
                                                                             products, additionalDiscount, licensesIds);
             System.out.println("licenses array from DB: " + licensesArray);
             licenses = licensesArray.getJSONArray(0);
-            licensesFinaces = licensesArray.getJSONArray(1);
-            invoicesFinaces = licensesArray.getJSONArray(2);
+//            licensesFinaces = licensesArray.getJSONArray(1);
+//            invoicesFinaces = licensesArray.getJSONArray(2);
         } catch (IOException | AuthServerException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -201,7 +215,9 @@ public class DBUtils {
     
     public static ArrayList<License> getLicenses(){
         try {
-            return new ObjectMapper().readValue(licenses.toString(), new TypeReference<ArrayList<License>>(){});
+            String licensesAsString = licenses.toString();
+            licenses = null; // free static variable
+            return new ObjectMapper().readValue(licensesAsString, new TypeReference<ArrayList<License>>(){});
         } catch (IOException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }

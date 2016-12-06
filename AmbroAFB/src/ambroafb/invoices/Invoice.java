@@ -259,7 +259,9 @@ public class Invoice extends EditorPanelable {
         invoice.setLicenses(wholeLicenses);
         BigDecimal additoinalDiscount = Utils.getBigDecimalFor(invoice.getAdditionalDiscountRate());
         System.out.println("addintinal disc: " + additoinalDiscount);
-        return DBUtils.saveObjectToDBWith("invoice_insert_update_from_afb", invoice, additoinalDiscount);
+        
+//        return DBUtils.saveObjectToDBWith("invoice_insert_update_from_afb", invoice, additoinalDiscount);
+        return DBUtils.saveInvoice(invoice);
     }
 
     
@@ -390,7 +392,7 @@ public class Invoice extends EditorPanelable {
     }
     
     public String getEndDate(){
-        return (endDateObj.isNull().get()) ? "" : beginDateObj.get().toString();
+        return (endDateObj.isNull().get()) ? "" : endDateObj.get().toString();
     }
     
     @JsonIgnore
@@ -398,7 +400,7 @@ public class Invoice extends EditorPanelable {
         return (revokedDateObj.isNull().get()) ? "" : revokedDateObj.get().toString();
     }
     
-    @JsonIgnore
+//    @JsonIgnore
     public String getAdditionalDiscountRate(){
         return additionalDiscountRate.get();
     }

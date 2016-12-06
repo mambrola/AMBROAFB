@@ -85,8 +85,7 @@ public class InvoiceDialogController implements Initializable {
             //
             beginDate.valueProperty().bindBidirectional(invoice.beginDateProperty());
             monthCounter.valueProperty().bindBidirectional(invoice.monthsProperty());
-             // The field is disable, so bidirectional is not needed.
-            endDate.valueProperty().bind(invoice.endDateProperty());
+            endDate.valueProperty().bindBidirectional(invoice.endDateProperty());
             revoked.selectedProperty().bindBidirectional(invoice.revokedProperty());
             additionalDiscount.textProperty().bindBidirectional(invoice.additionaldiscountProperty());
             moneyToPay.textProperty().bindBidirectional(invoice.moneyToPayProperty());
