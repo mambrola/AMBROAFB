@@ -63,16 +63,7 @@ public class CountComboBox<T> extends ComboBox<T> {
             System.out.println("key: " + key.toString());
             
             int value = items.get(key);
-            String name = (getConverter() == null) ? key.toString() : getConverter().toString(key);
-            CountComboBoxItem boxItem = itemsMap.get(name);
-            
-            if (boxItem == null){
-                boxItem = new CountComboBoxItem(name);
-                itemsMap.put(name, boxItem);
-            }
-            else {
-                boxItem.itemNumberProperty().set(value);
-            }
+            comboBoxResult.get().put(key, value);
         });
     }
     
@@ -127,6 +118,13 @@ public class CountComboBox<T> extends ComboBox<T> {
                 String name = (box.getConverter() == null) ? item.toString() : box.getConverter().toString(item);
                 CountComboBoxItem boxItem = new CountComboBoxItem(name);
                 itemsMap.put(name, boxItem);
+                
+                comboBoxResult.get().keySet().forEach((key) -> {
+                    String saveItemName = (box.getConverter() == null) ? key.toString() : box.getConverter().toString(key);;
+                    if (saveItemName.equals(name)){
+                        boxItem.itemNumberProperty().set(comboBoxResult.get().get(key));
+                    }
+                });
                 
                 // ComboBox button cell text will show after any item select in comboBox. 
                 //So we select every item. The last selected item will be zero indexed (only for visually effect).
