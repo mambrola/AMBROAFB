@@ -92,8 +92,8 @@
             <HBox styleClass="oneThirds" >
                 <children>
                     <VBox styleClass="couple" >
-                        <Label fx:id="sumText" styleClass="infoLabel" text="sum" />
-                        <Label fx:id="discountText" styleClass="infoLabel" text="discount #%" />
+                        <Label fx:id="sumText" styleClass="infoLabel" text="%sum" />
+                        <Label fx:id="discountText" styleClass="infoLabel" text="%discount_percent" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label fx:id="sumNumber" styleClass="infoLabel" text="___________" />
@@ -108,7 +108,7 @@
             <HBox styleClass="oneThirds" >
                 <children>
                     <VBox styleClass="couple">
-                        <Label fx:id="netoText" styleClass="infoLabel" text="neto" />
+                        <Label fx:id="netoText" styleClass="infoLabel" text="%neto" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label fx:id="netoNumber" styleClass="infoLabel" text="___________" />
@@ -118,7 +118,7 @@
             <HBox styleClass="oneThirds" >
                 <children>
                     <VBox styleClass="couple">
-                        <Label fx:id="vatText" styleClass="infoLabel" text="vat #%" />
+                        <Label fx:id="vatText" styleClass="infoLabel" text="%vat_percent" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label fx:id="vatNumber" styleClass="infoLabel" text="___________" />
@@ -128,7 +128,7 @@
             <HBox styleClass="oneThirds" >
                 <children>
                     <VBox styleClass="couple">
-                        <Label fx:id="payText" styleClass="infoLabel" text="paid" />
+                        <Label fx:id="payText" styleClass="infoLabel" text="%money_paid" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label fx:id="payNumber" styleClass="infoLabel" text="___________" />
