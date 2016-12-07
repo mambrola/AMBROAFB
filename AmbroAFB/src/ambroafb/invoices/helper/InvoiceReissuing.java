@@ -22,6 +22,8 @@ public class InvoiceReissuing {
     private String language;
     private final StringProperty descrip;
     
+    
+    
     public InvoiceReissuing(){
         invoiceReissuingId = new SimpleIntegerProperty(0);
         descrip = new SimpleStringProperty("");

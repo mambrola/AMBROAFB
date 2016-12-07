@@ -28,17 +28,21 @@
                         <ADatePicker fx:id="createdDate" disable="true" />
                     </VBox>
                     <VBox styleClass="couple">
+                        <Label text="%invoice_N" />
+                        <TextField fx:id="invoiceNumber" disable="true" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%invoice_status" /> 
+                        <TextField fx:id="status" disable="true" />
+                    </VBox>
+<!--                    <VBox styleClass="couple">
                         <Label />
                         <CheckBox fx:id="revoked" text="%revoked" />
-                    </VBox>
+                    </VBox>-->
                 </children> 
             </HBox>
             <HBox styleClass="oneThirds">
                 <children>
-                    <VBox styleClass="couple">
-                        <Label text="%invoice_N" />
-                        <TextField fx:id="invoiceNumber" disable="true" />
-                    </VBox>
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%clients" styleClass="validationMessage" />
@@ -47,9 +51,13 @@
                     </VBox>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="%licenses" styleClass="validationMessage" />
-                            <CountComboBox fx:id="licenses" />
+                            <Label text="%products" styleClass="validationMessage" />
+                            <CountComboBox fx:id="products" />
                         </children>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%invoice_reissuings" styleClass="validationMessage" />
+                        <ComboBox fx:id="invoiceReissuings" />
                     </VBox>
                 </children> 
             </HBox>
@@ -69,11 +77,71 @@
                     </VBox>
                 </children>
             </HBox>
-            <HBox styleClass="oneThirds">
+            <HBox styleClass="twoThirds">
                 <children>
-                    <VBox styleClass="couple">
+                    <VBox styleClass="coupleOneThird">
                         <Label text="%extra_discount" styleClass="validationMessage" />
                         <TextField fx:id="additionalDiscount" />
+                    </VBox>
+                    <VBox styleClass="coupleTwoThird">
+                        <Label text="%licenses" />
+                        <TextField fx:id="licenses" />
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneThirds" >
+                <children>
+                    <VBox styleClass="couple" >
+                        <Label fx:id="sumText" styleClass="infoLabel" text="sum" />
+                        <Label fx:id="discountText" styleClass="infoLabel" text="discount #%" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label fx:id="sumNumber" styleClass="infoLabel" text="___________" />
+                        <Label fx:id="discountNumber" styleClass="infoLabel" text="___________" />
+                    </VBox>
+                    <VBox styleClass="couple" >
+                        <Label text="revokedDate" />
+                        <ADatePicker fx:id="revokedDate" />
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneThirds" >
+                <children>
+                    <VBox styleClass="couple">
+                        <Label fx:id="netoText" styleClass="infoLabel" text="neto" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label fx:id="netoNumber" styleClass="infoLabel" text="___________" />
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneThirds" >
+                <children>
+                    <VBox styleClass="couple">
+                        <Label fx:id="vatText" styleClass="infoLabel" text="vat #%" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label fx:id="vatNumber" styleClass="infoLabel" text="___________" />
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneThirds" >
+                <children>
+                    <VBox styleClass="couple">
+                        <Label fx:id="payText" styleClass="infoLabel" text="paid" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label fx:id="payNumber" styleClass="infoLabel" text="___________" />
+                    </VBox>
+                </children>
+            </HBox>
+            
+            
+<!--            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple">
+                        <Label text="%money_paid" /> 
+                        <TextField fx:id="moneyPaid" disable="true" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="%money_to_pay" /> 
@@ -82,25 +150,9 @@
                     <VBox styleClass="couple">
                         <Label text="%vat" /> 
                         <TextField fx:id="vat" disable="true" />
-                    </VBox>
+                    </VBox>       
                 </children>
-            </HBox>
-            <HBox styleClass="oneThirds">
-                <children>
-                    <VBox styleClass="couple">
-                        <Label text="%money_paid" /> 
-                        <TextField fx:id="moneyPaid" disable="true" />
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <Label text="%invoice_reissuings" styleClass="validationMessage" />
-                        <ComboBox fx:id="invoiceReissuings" />
-                    </VBox>                    
-                    <VBox styleClass="couple">
-                        <Label text="%invoice_status" /> 
-                        <TextField fx:id="status" disable="true" />
-                    </VBox>
-                </children>
-            </HBox>
+            </HBox>-->
             <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
                 <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
             </HBox>

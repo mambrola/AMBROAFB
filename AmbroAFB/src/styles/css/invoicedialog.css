@@ -20,11 +20,20 @@
 .oneThirds > .couple > * {
   -fx-pref-width: 243.33333333;
 }
+.twoThirds > .coupleOneThird,
+.twoThirds > .coupleOneThird > * {
+  -fx-pref-width: 243.33333333;
+}
+.twoThirds > .coupleTwoThird,
+.twoThirds > .coupleTwoThird > * {
+  -fx-pref-width: 521.66666667;
+}
 .oneThirds {
   -fx-pref-width: 521.66666667;
 }
 .oneHalf,
-.oneThirds {
+.oneThirds,
+.twoThirds {
   -fx-spacing: 35;
 }
 .okayCancelPane {
@@ -40,4 +49,9 @@
   -fx-min-width: 820px;
   -fx-max-width: 820px;
   -fx-padding: 10px;
+}
+.infoLabel {
+  -fx-font-weight: bold;
+  -fx-font-size: 1.2em;
+  -fx-padding: 1 0 1 2;
 }

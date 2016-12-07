@@ -22,11 +22,11 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ambroafb.general.interfaces.Annotations.*;
+import javafx.scene.control.Label;
 
 /**
  *
@@ -39,28 +39,33 @@ public class InvoiceDialogController implements Initializable {
     @FXML @ContentNotEmpty
     private ClientComboBox clients;
     @FXML @ContentNotEmpty
-    private CountComboBox<Product> licenses;
+    private CountComboBox<Product> products;
+    @FXML @ContentNotEmpty
+    private ComboBox<InvoiceReissuing> invoiceReissuings;
     @FXML @ContentNotEmpty
     private ADatePicker beginDate;
     @FXML @ContentNotEmpty
     private MonthCounterComboBox monthCounter;
     @FXML @ContentPattern(value = "(([1-9]\\d*)?\\d)(\\.\\d\\d)?$", explain = "The discount syntax is incorrect. like: 0.35, 3.25 ...")
     private TextField additionalDiscount;
-    @FXML @ContentNotEmpty
-    private ComboBox<InvoiceReissuing> invoiceReissuings;
     // end order
     
     
     @FXML
     private VBox formPane;
     @FXML
-    private ADatePicker createdDate, endDate;
+    private ADatePicker createdDate, endDate, revokedDate;
+//    @FXML
+//    private CheckBox revoked;
     @FXML
-    private CheckBox revoked;
-    @FXML
-    private TextField invoiceNumber, moneyToPay, moneyPaid, vat, status;
+    private TextField invoiceNumber, status, licenses;
+//    @FXML
+//    private TextField moneyToPay, moneyPaid, vat;
     @FXML
     private DialogOkayCancelController okayCancelController;
+    @FXML
+    private Label sumText, sumNumber, discountText, discountNumber, netoText, netoNumber, 
+                    vatText, vatNumber, payText, payNumber;
     
     
     private ArrayList<Node> focusTraversableNodes;
@@ -72,9 +77,10 @@ public class InvoiceDialogController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
+//        invoiceReissuings.setValue(invoiceReissuings.getItems());
         clients.registerBundle(resources);
         clients.showCategoryALL(false);
-        licenses.getItems().addAll(Product.getAllFromDB());
+        products.getItems().addAll(Product.getAllFromDB());
         permissionToClose = true;
     }
 
@@ -88,14 +94,14 @@ public class InvoiceDialogController implements Initializable {
             beginDate.valueProperty().bindBidirectional(invoice.beginDateProperty());
             monthCounter.valueProperty().bindBidirectional(invoice.monthsProperty());
             endDate.valueProperty().bindBidirectional(invoice.endDateProperty());
-            revoked.selectedProperty().bindBidirectional(invoice.revokedProperty());
+//            revoked.selectedProperty().bindBidirectional(invoice.revokedProperty());
             additionalDiscount.textProperty().bindBidirectional(invoice.additionaldiscountProperty());
-            moneyToPay.textProperty().bindBidirectional(invoice.moneyToPayProperty());
-            moneyPaid.textProperty().bindBidirectional(invoice.moneyPaidProperty());
-            vat.textProperty().bindBidirectional(invoice.vatProperty());
+//            moneyToPay.textProperty().bindBidirectional(invoice.moneyToPayProperty());
+//            moneyPaid.textProperty().bindBidirectional(invoice.moneyPaidProperty());
+//            vat.textProperty().bindBidirectional(invoice.vatProperty());
             invoiceReissuings.valueProperty().bindBidirectional(invoice.reissuingProperty());
             status.textProperty().bindBidirectional(invoice.statusProperty().get().descripProperty());
-            licenses.resultProperty().bindBidirectional(invoice.licensesResultProperty());
+            products.resultProperty().bindBidirectional(invoice.licensesResultProperty());
         }
     }
 
@@ -105,9 +111,9 @@ public class InvoiceDialogController implements Initializable {
             setDisableComponents();
             editable = false;
         }
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
-            revoked.setDisable(true);
-        }
+//        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
+//            revoked.setDisable(true);
+//        }
         okayCancelController.setButtonsFeatures(buttonType);
 //        if (invoice != null){
 //            licenses.getItems().addAll(invoice.getLicenses());

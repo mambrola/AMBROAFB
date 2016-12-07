@@ -20,11 +20,20 @@
 .oneThirds > .couple > * {
   -fx-pref-width: 76.66666667;
 }
+.twoThirds > .coupleOneThird,
+.twoThirds > .coupleOneThird > * {
+  -fx-pref-width: 76.66666667;
+}
+.twoThirds > .coupleTwoThird,
+.twoThirds > .coupleTwoThird > * {
+  -fx-pref-width: 188.33333333;
+}
 .oneThirds {
   -fx-pref-width: 188.33333333;
 }
 .oneHalf,
-.oneThirds {
+.oneThirds,
+.twoThirds {
   -fx-spacing: 35;
 }
 .okayCancelPane {
