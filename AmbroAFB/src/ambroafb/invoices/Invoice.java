@@ -483,9 +483,7 @@ public class Invoice extends EditorPanelable {
     
     public void setLicenseFinances(ArrayList<LicensesFinaces> licensesFinaceses){
         this.licenseFinaceses = licensesFinaceses;
-        System.out.println("setLicenseFinances........................");
         licensesFinaceses.forEach((finance) -> {
-            System.out.println("finance: " + finance);
             Product p = new Product();
             p.setRecId(finance.productId);
             p.setDescrip(finance.productDescrip);
