@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -31,6 +32,7 @@ public class CountComboBox<T> extends ComboBox<T> {
     private final Map<String, CountComboBoxItem> itemsMap;
     private final Tooltip tooltip;
     private final ObjectProperty<Map<T, Integer>> comboBoxResult;
+    private Consumer<T> consumer;
     
     public CountComboBox(){
         itemsMap = new HashMap<>();
@@ -55,6 +57,10 @@ public class CountComboBox<T> extends ComboBox<T> {
         if (converter != null){
             this.setConverter(converter);
         }
+    }
+    
+    public void setConsumer(Consumer<T> consumer){
+        this.consumer = consumer;
     }
     
     public void setData(Map<T, Integer> items){
@@ -141,6 +147,10 @@ public class CountComboBox<T> extends ComboBox<T> {
                         if (elems.containsKey(item)){
                             elems.remove(item);
                         }
+                    }
+                    
+                    if (consumer != null){
+                        consumer.accept(item);
                     }
                 });
                 

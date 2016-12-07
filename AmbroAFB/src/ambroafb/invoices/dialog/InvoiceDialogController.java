@@ -102,7 +102,7 @@ public class InvoiceDialogController implements Initializable {
     }
     
     private void rebindFinanceData(){
-        System.out.println("rebindFinanceData method...");
+        
     }
 
     public void bindInvoice(Invoice invoice) {
@@ -111,7 +111,6 @@ public class InvoiceDialogController implements Initializable {
             createdDate.setValue(invoice.getCreatedDateObj());
             invoiceNumber.textProperty().bindBidirectional(invoice.invoiceNumberProperty());
             clients.valueProperty().bindBidirectional(invoice.clientProperty());
-            //
             beginDate.valueProperty().bindBidirectional(invoice.beginDateProperty());
             monthCounter.valueProperty().bindBidirectional(invoice.monthsProperty());
             endDate.valueProperty().bindBidirectional(invoice.endDateProperty());
@@ -133,9 +132,6 @@ public class InvoiceDialogController implements Initializable {
             setDisableComponents();
             editable = false;
         }
-//        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
-//            revoked.setDisable(true);
-//        }
         okayCancelController.setButtonsFeatures(buttonType);
 //        if (invoice != null){
 //            licenses.getItems().addAll(invoice.getLicenses());
