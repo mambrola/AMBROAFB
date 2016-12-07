@@ -35,7 +35,7 @@ public class CountComboBox<T> extends ComboBox<T> {
     public CountComboBox(){
         itemsMap = new HashMap<>();
         tooltip = new Tooltip();
-        comboBoxResult = new SimpleObjectProperty<>(new HashMap<T, Integer>());
+        comboBoxResult = new SimpleObjectProperty<>(new HashMap<>());
         
         this.setPrefWidth(500);
         this.setButtonCell(new ComboBoxCustomButtonCell());
@@ -57,9 +57,28 @@ public class CountComboBox<T> extends ComboBox<T> {
         }
     }
     
-    public ObjectProperty<Map<T, Integer>> resultProperty(){
-        return comboBoxResult;
+    public void setData(Map<T, Integer> items){
+        System.out.println("setData. tems.size(): " + items.size());
+        items.keySet().stream().forEach((key) -> {
+            System.out.println("key: " + key.toString());
+            
+            int value = items.get(key);
+            String name = (getConverter() == null) ? key.toString() : getConverter().toString(key);
+            CountComboBoxItem boxItem = itemsMap.get(name);
+            
+            if (boxItem == null){
+                boxItem = new CountComboBoxItem(name);
+                itemsMap.put(name, boxItem);
+            }
+            else {
+                boxItem.itemNumberProperty().set(value);
+            }
+        });
     }
+    
+//    public ObjectProperty<Map<T, Integer>> resultProperty(){
+//        return comboBoxResult;
+//    }
     
     public boolean nothingIsSelected(){
         return comboBoxResult.get().isEmpty();

@@ -167,9 +167,10 @@ public class ClientDialogController implements Initializable {
         if (!buttonType.equals(EDITOR_BUTTON_TYPE.ADD) && (client.getEmail() == null || client.getEmail().isEmpty())){
             email.setDisable(true);
         }
-        if (client.getStatus() == Client.SPECIFIC_STATUS){
-            Utils.changeContentNotEmptyAnnotationValue(this, false);
-        }
+//        if (client.getStatus() == Client.SPECIFIC_STATUS){
+//            Utils.changeContentNotEmptyAnnotationValue(this, false);
+//        }
+
         okayCancelController.setButtonsFeatures(buttonType);
         imageGalleryController.setURLData(serviceURLPrefix, client.getRecId() + "/", client.getRecId() + "/all");
         List<String> imageNames = client.getDocuments().stream().map((Client.Document doc) -> doc.path).collect(Collectors.toList());

@@ -35,10 +35,6 @@
                         <Label text="%invoice_status" /> 
                         <TextField fx:id="status" disable="true" />
                     </VBox>
-<!--                    <VBox styleClass="couple">
-                        <Label />
-                        <CheckBox fx:id="revoked" text="%revoked" />
-                    </VBox>-->
                 </children> 
             </HBox>
             <HBox styleClass="oneThirds">
@@ -94,10 +90,16 @@
                     <VBox styleClass="couple" >
                         <Label fx:id="sumText" styleClass="infoLabel" text="%sum" />
                         <Label fx:id="discountText" styleClass="infoLabel" text="%discount_percent" />
+                        <Label fx:id="netoText" styleClass="infoLabel" text="%neto" />
+                        <Label fx:id="vatText" styleClass="infoLabel" text="%vat_percent" />
+                        <Label fx:id="payText" styleClass="infoLabel" text="%money_paid" />
                     </VBox>
-                    <VBox styleClass="couple">
+                    <VBox styleClass="couple" >
                         <Label fx:id="sumNumber" styleClass="infoLabel" text="___________" />
                         <Label fx:id="discountNumber" styleClass="infoLabel" text="___________" />
+                        <Label fx:id="netoNumber" styleClass="infoLabel" text="___________" />
+                        <Label fx:id="vatNumber" styleClass="infoLabel" text="___________" />
+                        <Label fx:id="payNumber" styleClass="infoLabel" text="___________" />
                     </VBox>
                     <VBox styleClass="couple" >
                         <Label text="revokedDate" />
@@ -105,54 +107,6 @@
                     </VBox>
                 </children>
             </HBox>
-            <HBox styleClass="oneThirds" >
-                <children>
-                    <VBox styleClass="couple">
-                        <Label fx:id="netoText" styleClass="infoLabel" text="%neto" />
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <Label fx:id="netoNumber" styleClass="infoLabel" text="___________" />
-                    </VBox>
-                </children>
-            </HBox>
-            <HBox styleClass="oneThirds" >
-                <children>
-                    <VBox styleClass="couple">
-                        <Label fx:id="vatText" styleClass="infoLabel" text="%vat_percent" />
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <Label fx:id="vatNumber" styleClass="infoLabel" text="___________" />
-                    </VBox>
-                </children>
-            </HBox>
-            <HBox styleClass="oneThirds" >
-                <children>
-                    <VBox styleClass="couple">
-                        <Label fx:id="payText" styleClass="infoLabel" text="%money_paid" />
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <Label fx:id="payNumber" styleClass="infoLabel" text="___________" />
-                    </VBox>
-                </children>
-            </HBox>
-            
-            
-<!--            <HBox styleClass="oneThirds">
-                <children>
-                    <VBox styleClass="couple">
-                        <Label text="%money_paid" /> 
-                        <TextField fx:id="moneyPaid" disable="true" />
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <Label text="%money_to_pay" /> 
-                        <TextField fx:id="moneyToPay" disable="true" />
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <Label text="%vat" /> 
-                        <TextField fx:id="vat" disable="true" />
-                    </VBox>       
-                </children>
-            </HBox>-->
             <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
                 <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
             </HBox>

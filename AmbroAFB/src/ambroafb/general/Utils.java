@@ -604,14 +604,14 @@ public class Utils {
         }
     }
 
-    public static void changeContentNotEmptyAnnotationValue(Object ownerClassObj, boolean newValue) {
-        Field[] fields = ownerClassObj.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(ContentNotEmpty.class)) {
-                ContentNotEmpty annot = field.getDeclaredAnnotation(ContentNotEmpty.class);
-//                annot.
-            }
-        }
-    }
+//    public static void changeContentNotEmptyAnnotationValue(Object ownerClassObj, boolean newValue) {
+//        Field[] fields = ownerClassObj.getClass().getDeclaredFields();
+//        for (Field field : fields) {
+//            if (field.isAnnotationPresent(ContentNotEmpty.class)) {
+//                ContentNotEmpty annot = field.getDeclaredAnnotation(ContentNotEmpty.class);
+////                annot.
+//            }
+//        }
+//    }
     
 }

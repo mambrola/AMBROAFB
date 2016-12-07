@@ -6,6 +6,7 @@
 package ambroafb.invoices.dialog;
 
 import ambro.ADatePicker;
+import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.general.monthcountercombobox.MonthCounterComboBox;
 import ambroafb.general.Names;
@@ -26,6 +27,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ambroafb.general.interfaces.Annotations.*;
+import ambroafb.general.monthcountercombobox.MonthCounterItem;
+import java.time.LocalDate;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
 
 /**
@@ -82,6 +86,23 @@ public class InvoiceDialogController implements Initializable {
         clients.showCategoryALL(false);
         products.getItems().addAll(Product.getAllFromDB());
         permissionToClose = true;
+        
+        clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
+            rebindFinanceData();
+        });
+        products.valueProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
+            rebindFinanceData();
+        });
+        beginDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+            rebindFinanceData();
+        });
+        monthCounter.valueProperty().addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
+            rebindFinanceData();
+        });
+    }
+    
+    private void rebindFinanceData(){
+        System.out.println("rebindFinanceData method...");
     }
 
     public void bindInvoice(Invoice invoice) {
@@ -101,10 +122,11 @@ public class InvoiceDialogController implements Initializable {
 //            vat.textProperty().bindBidirectional(invoice.vatProperty());
             invoiceReissuings.valueProperty().bindBidirectional(invoice.reissuingProperty());
             status.textProperty().bindBidirectional(invoice.statusProperty().get().descripProperty());
-            products.resultProperty().bindBidirectional(invoice.licensesResultProperty());
+            
+            products.setData(invoice.getProductsWithCounts());
         }
     }
-
+    
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
         boolean editable = true;
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){

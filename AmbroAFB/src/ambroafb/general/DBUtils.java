@@ -6,7 +6,9 @@
 package ambroafb.general;
 
 import ambroafb.invoices.Invoice;
+import ambroafb.invoices.helper.InvoicesFinaces;
 import ambroafb.licenses.License;
+import ambroafb.licenses.helper.LicensesFinaces;
 import authclient.AuthServerException;
 import authclient.Response;
 import authclient.db.DBClient;
@@ -193,8 +195,8 @@ public class DBUtils {
     }
     
     private static JSONArray licenses;
-//    private static JSONArray licensesFinaces;
-//    private static JSONArray invoicesFinaces;
+    private static JSONArray licensesFinaces;
+    private static JSONArray invoicesFinaces;
     
     public static void callInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, String additionalDiscount, JSONArray licensesIds){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
@@ -206,8 +208,22 @@ public class DBUtils {
                                                                             products, additionalDiscount, licensesIds);
             System.out.println("licenses array from DB: " + licensesArray);
             licenses = licensesArray.getJSONArray(0);
-//            licensesFinaces = licensesArray.getJSONArray(1);
-//            invoicesFinaces = licensesArray.getJSONArray(2);
+            licensesFinaces = licensesArray.getJSONArray(1);
+            invoicesFinaces = licensesArray.getJSONArray(2);
+        } catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static void callInvoiceExistedLicenses(int invoiceId){
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        try {
+            JSONArray financesData = dbClient.callProcedureAndGetAsJson("invoice_get_existed_licenses", invoiceId, dbClient.getLang());
+            System.out.println("invoice finances: " + financesData);
+            
+            licenses = financesData.getJSONArray(0);
+            licensesFinaces = financesData.getJSONArray(1);
+            invoicesFinaces = financesData.getJSONArray(2);
         } catch (IOException | AuthServerException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -224,21 +240,25 @@ public class DBUtils {
         return new ArrayList<>();
     }
     
-//    private static ArrayList<License> getLicensesFinaces(){
-//        try {
-//            return new ObjectMapper().readValue(licenses.toString(), new TypeReference<ArrayList<License>>(){});
-//        } catch (IOException ex) {
-//            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return new ArrayList<>();
-//    }
-//    
-//    private static ArrayList<License> getInvoiceFinances(){
-//        try {
-//            return new ObjectMapper().readValue(licenses.toString(), new TypeReference<ArrayList<License>>(){});
-//        } catch (IOException ex) {
-//            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return new ArrayList<>();
-//    }
+    public static ArrayList<LicensesFinaces> getLicensesFinaces(){
+        try {
+            String licensesFinacesAsString = licensesFinaces.toString();
+            licensesFinaces = null; // free static variable
+            return new ObjectMapper().readValue(licensesFinacesAsString, new TypeReference<ArrayList<LicensesFinaces>>(){});
+        } catch (IOException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
+    }
+    
+    public static ArrayList<InvoicesFinaces> getInvoicesFinaces(){
+        try {
+            String invoicesFinacesAsString = invoicesFinaces.toString();
+            invoicesFinaces = null; // free static variable
+            return new ObjectMapper().readValue(invoicesFinacesAsString, new TypeReference<ArrayList<InvoicesFinaces>>(){});
+        } catch (IOException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
+    }
 }

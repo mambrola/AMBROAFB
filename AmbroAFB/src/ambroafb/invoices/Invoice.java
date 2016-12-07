@@ -18,7 +18,9 @@ import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.invoices.filter.InvoiceFilterModel;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
+import ambroafb.invoices.helper.InvoicesFinaces;
 import ambroafb.licenses.License;
+import ambroafb.licenses.helper.LicensesFinaces;
 import ambroafb.products.Product;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
@@ -67,8 +69,8 @@ public class Invoice extends EditorPanelable {
     @JsonIgnore
     private final StringProperty licensesDescript;
     private final ObservableList<LicenseShortData> licenses;
-    @JsonIgnore
-    public ObservableList<License> licensesOnProducts; // ????
+//    @JsonIgnore
+//    public ObservableList<License> licensesOnProducts; // ????
     
     @AView.Column(title = "%clients", width = "250")
     @JsonIgnore
@@ -122,20 +124,28 @@ public class Invoice extends EditorPanelable {
     private final BooleanProperty isLogined, isPaid;
     
     @JsonIgnore
-    private final ObjectProperty<Map<Product, Integer>> licensesResult;
+    private final ObjectProperty<Map<Product, Integer>> productsResult;
     
     @JsonIgnore
     private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
     @JsonIgnore
     private static final String DB_INVOICES_VIEW = "invoices_whole";
     
+    @JsonIgnore
+    public ArrayList<LicensesFinaces> licenseFinaceses = new ArrayList<>();
+    @JsonIgnore
+    public ArrayList<InvoicesFinaces> invoiceFinaceses = new ArrayList<>();
+    
+    @JsonIgnore
+    private final Map<Product, Integer> productsCounter = new HashMap<>();
     
     public Invoice(){
         invoiceNumber = new SimpleStringProperty("");
         createdDate = new SimpleStringProperty("");
         licensesDescript = new SimpleStringProperty("");
         licenses = FXCollections.observableArrayList();
-        licensesOnProducts = FXCollections.observableArrayList();
+//        products = FXCollections.observableArrayList();
+//        licensesOnProducts = FXCollections.observableArrayList();
         clientObj = new SimpleObjectProperty<>(new Client());
         clientDescrip = clientObj.get().getShortDescrip(", ");
         beginDateDescrip = new SimpleStringProperty("");
@@ -152,24 +162,23 @@ public class Invoice extends EditorPanelable {
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
         months = new SimpleObjectProperty<>(new MonthCounterItem(""));
-        licensesResult = new SimpleObjectProperty<>(new HashMap<>());
+        productsResult = new SimpleObjectProperty<>(new HashMap<>());
         isLogined = new SimpleBooleanProperty(false);
         isPaid = new SimpleBooleanProperty(false);
-        
-        licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
-            rebindLicenses();
-        });
         
         beginDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
             if (months.get() != null && months.get().getMonthCount() != -1){
                 rebindEndDate();
             }
         });
-        
         months.addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
             if (beginDateObj.get() != null){
                 rebindEndDate();
             }
+        });
+        
+        licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
+            rebindLicenses();
         });
         
     }
@@ -230,8 +239,18 @@ public class Invoice extends EditorPanelable {
     
     public static Invoice getOneFromDB (int invoiceId){
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", invoiceId).condition().build();
-        return DBUtils.getObjectFromDB(Invoice.class, DB_INVOICES_VIEW, params);
+        DBUtils.callInvoiceExistedLicenses(invoiceId);
+        ArrayList<LicensesFinaces> licenseFinances = DBUtils.getLicensesFinaces();
+        ArrayList<InvoicesFinaces> invoicesFinaceses = DBUtils.getInvoicesFinaces();
+        Invoice invoiceFromDB = DBUtils.getObjectFromDB(Invoice.class, DB_INVOICES_VIEW, params);
+        
+//        invoiceFromDB.licenseFinaceses = licenseFinances;
+        invoiceFromDB.invoiceFinaceses = invoicesFinaceses;
+        invoiceFromDB.setLicenseFinances(licenseFinances);
+        
+        return invoiceFromDB;
     }
+    
     
     public static Invoice saveOneToDB(Invoice invoice) {
         if (invoice == null) return null;
@@ -325,7 +344,7 @@ public class Invoice extends EditorPanelable {
     }
     
     public ObjectProperty<Map<Product, Integer>> licensesResultProperty(){
-        return licensesResult;
+        return productsResult;
     }
     
     public BooleanProperty isLoginedProperty(){
@@ -349,13 +368,23 @@ public class Invoice extends EditorPanelable {
         return invoiceNumber.get();
     }
 
-    public SeperateSaving getSetsForSeparateSaving(){
-        return new SeperateSaving(licenses);
-    }
+//    public SeperateSaving getSetsForSeparateSaving(){
+//        return new SeperateSaving(licenses);
+//    }
     
-    @JsonIgnore // we need "sets_for_separate_saving" for DB json before licenses, so use above method for licenses.
+    @JsonIgnore
     public ObservableList<LicenseShortData> getLicenses(){
         return licenses;
+    }
+    
+    @JsonIgnore
+    public Map<Product, Integer> getProductsWithCounts(){
+        return productsCounter;
+    }
+    
+    @JsonIgnore
+    public ArrayList<LicensesFinaces> getLicenseFinances(){
+        return licenseFinaceses;
     }
     
     public int getClientId(){
@@ -450,13 +479,17 @@ public class Invoice extends EditorPanelable {
     @JsonProperty
     public void setLicenses(Collection<LicenseShortData> licenses){
         this.licenses.setAll(licenses);
-
-        licensesOnProducts.clear();
-        licenses.stream().forEach((shortData) -> {
-            License license = new License();
-            license.setRecId(shortData.licenseId);
-            license.setLicenseNumber(shortData.getLicenseNumber());
-            licensesOnProducts.add(license);
+    }
+    
+    public void setLicenseFinances(ArrayList<LicensesFinaces> licensesFinaceses){
+        this.licenseFinaceses = licensesFinaceses;
+        System.out.println("setLicenseFinances........................");
+        licensesFinaceses.forEach((finance) -> {
+            System.out.println("finance: " + finance);
+            Product p = new Product();
+            p.setRecId(finance.productId);
+            p.setDescrip(finance.productDescrip);
+            productsCounter.put(p, finance.count);
         });
     }
     
@@ -572,6 +605,15 @@ public class Invoice extends EditorPanelable {
         setInvoiceNumber(invoice.getInvoiceNumber());
         licenses.clear(); // Avoid to add twise licenses in tableView
         licenses.addAll(invoice.getLicenses());
+        licenseFinaceses.clear();
+//        licenseFinaceses.addAll(invoice.getLicenseFinances());
+        setLicenseFinances(invoice.getLicenseFinances());
+        
+//        System.out.println("copyFrom");
+//        licenseFinaceses.stream().forEach((lic) -> {
+//            System.out.println("lic: " + lic);
+//        });
+        
         setBeginDate(invoice.getBeginDate());
         setEndDate(invoice.getEndDate());
         setRevokedDate(invoice.getRevokedDate());
@@ -604,9 +646,6 @@ public class Invoice extends EditorPanelable {
                 Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()) &&
                 Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()) &&
                 Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()) &&
-//                getBeginDate().equals(otherInvoice.getBeginDate())          &&
-//                getEndDate().equals(otherInvoice.getEndDate())      &&
-//                getRevokedDate().equals(otherInvoice.getRevokedDate()) &&
                 getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate()) &&
                 getMoneyToPay().equals(otherInvoice.getMoneyToPay()) &&
                 getVat().equals(otherInvoice.getVat()) &&
