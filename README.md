@@ -175,5 +175,8 @@ client-ის phones არის ცარიელი მასივი დ�
 * (-) CurrencyRates:
 	1) (-) date-ის ცვლილების შესასლებლობა უნდა იყოს დიალოგში ?
 	2) (-) dialog-იდან new-ს და new by simple-ს შესაძლებლობა უნდა იყოს ?
-* (-) invoice
+* (-) invoice:
 	1) (+) დიალოგის ველები
+	
+*(-) product:
+	1) (-) setDiscounts(Collection<ProductDiscount> discounts) მეთოდი 
