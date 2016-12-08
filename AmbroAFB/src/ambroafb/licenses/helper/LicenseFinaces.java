@@ -9,7 +9,7 @@ package ambroafb.licenses.helper;
  *
  * @author dato
  */
-public class LicensesFinaces {
+public class LicenseFinaces {
     
     public int productId;
     public String articul;

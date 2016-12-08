@@ -6,9 +6,9 @@
 package ambroafb.general;
 
 import ambroafb.invoices.Invoice;
-import ambroafb.invoices.helper.InvoicesFinaces;
+import ambroafb.invoices.helper.InvoiceFinaces;
 import ambroafb.licenses.License;
-import ambroafb.licenses.helper.LicensesFinaces;
+import ambroafb.licenses.helper.LicenseFinaces;
 import authclient.AuthServerException;
 import authclient.Response;
 import authclient.db.DBClient;
@@ -240,22 +240,22 @@ public class DBUtils {
         return new ArrayList<>();
     }
     
-    public static ArrayList<LicensesFinaces> getLicensesFinaces(){
+    public static ArrayList<LicenseFinaces> getLicensesFinaces(){
         try {
             String licensesFinacesAsString = licensesFinaces.toString();
             licensesFinaces = null; // free static variable
-            return new ObjectMapper().readValue(licensesFinacesAsString, new TypeReference<ArrayList<LicensesFinaces>>(){});
+            return new ObjectMapper().readValue(licensesFinacesAsString, new TypeReference<ArrayList<LicenseFinaces>>(){});
         } catch (IOException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new ArrayList<>();
     }
     
-    public static ArrayList<InvoicesFinaces> getInvoicesFinaces(){
+    public static ArrayList<InvoiceFinaces> getInvoicesFinaces(){
         try {
             String invoicesFinacesAsString = invoicesFinaces.toString();
             invoicesFinaces = null; // free static variable
-            return new ObjectMapper().readValue(invoicesFinacesAsString, new TypeReference<ArrayList<InvoicesFinaces>>(){});
+            return new ObjectMapper().readValue(invoicesFinacesAsString, new TypeReference<ArrayList<InvoiceFinaces>>(){});
         } catch (IOException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }

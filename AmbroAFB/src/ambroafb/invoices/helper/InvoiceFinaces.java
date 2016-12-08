@@ -9,7 +9,7 @@ package ambroafb.invoices.helper;
  *
  * @author dato
  */
-public class InvoicesFinaces {
+public class InvoiceFinaces {
     
     public String sum, additionalDiscountRate, additionalDiscountSum, nettoSum, vatRate, vat, paySum, isoTotal, symbolTotal;
     

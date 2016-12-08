@@ -7,6 +7,7 @@ package ambroafb.invoices;
 
 import ambro.AView;
 import ambroafb.clients.Client;
+import ambroafb.currencies.Currency;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
@@ -18,10 +19,11 @@ import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.invoices.filter.InvoiceFilterModel;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
-import ambroafb.invoices.helper.InvoicesFinaces;
+import ambroafb.invoices.helper.InvoiceFinaces;
 import ambroafb.licenses.License;
-import ambroafb.licenses.helper.LicensesFinaces;
+import ambroafb.licenses.helper.LicenseFinaces;
 import ambroafb.products.Product;
+import ambroafb.products.helpers.ProductDiscount;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
@@ -132,9 +134,9 @@ public class Invoice extends EditorPanelable {
     private static final String DB_INVOICES_VIEW = "invoices_whole";
     
     @JsonIgnore
-    public ArrayList<LicensesFinaces> licenseFinaceses = new ArrayList<>();
+    public ArrayList<LicenseFinaces> licenseFinaceses = new ArrayList<>();
     @JsonIgnore
-    public ArrayList<InvoicesFinaces> invoiceFinaceses = new ArrayList<>();
+    public ArrayList<InvoiceFinaces> invoiceFinaceses = new ArrayList<>();
     
     @JsonIgnore
     private final Map<Product, Integer> productsCounter = new HashMap<>();
@@ -240,13 +242,12 @@ public class Invoice extends EditorPanelable {
     public static Invoice getOneFromDB (int invoiceId){
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", invoiceId).condition().build();
         DBUtils.callInvoiceExistedLicenses(invoiceId);
-        ArrayList<LicensesFinaces> licenseFinances = DBUtils.getLicensesFinaces();
-        ArrayList<InvoicesFinaces> invoicesFinaceses = DBUtils.getInvoicesFinaces();
+        ArrayList<LicenseFinaces> licenseFinances = DBUtils.getLicensesFinaces();
+        ArrayList<InvoiceFinaces> invoicesFinaceses = DBUtils.getInvoicesFinaces();
         Invoice invoiceFromDB = DBUtils.getObjectFromDB(Invoice.class, DB_INVOICES_VIEW, params);
         
-//        invoiceFromDB.licenseFinaceses = licenseFinances;
-        invoiceFromDB.invoiceFinaceses = invoicesFinaceses;
         invoiceFromDB.setLicenseFinances(licenseFinances);
+        invoiceFromDB.setInvoiceFinances(invoicesFinaceses);
         
         return invoiceFromDB;
     }
@@ -383,8 +384,13 @@ public class Invoice extends EditorPanelable {
     }
     
     @JsonIgnore
-    public ArrayList<LicensesFinaces> getLicenseFinances(){
+    public ArrayList<LicenseFinaces> getLicenseFinances(){
         return licenseFinaceses;
+    }
+    
+    @JsonIgnore
+    public ArrayList<InvoiceFinaces> getInvoiceFinances(){
+        return invoiceFinaceses;
     }
     
     public int getClientId(){
@@ -481,14 +487,34 @@ public class Invoice extends EditorPanelable {
         this.licenses.setAll(licenses);
     }
     
-    public void setLicenseFinances(ArrayList<LicensesFinaces> licensesFinaceses){
+    public void setLicenseFinances(ArrayList<LicenseFinaces> licensesFinaceses){
         this.licenseFinaceses = licensesFinaceses;
-        licensesFinaceses.forEach((finance) -> {
-            Product p = new Product();
-            p.setRecId(finance.productId);
-            p.setDescrip(finance.productDescrip);
-            productsCounter.put(p, finance.count);
-        });
+        licensesFinaceses.forEach((finance) -> makeAndSaveProductFrom(finance));
+    }
+    
+    private void makeAndSaveProductFrom(LicenseFinaces finance){
+        Product p = new Product();
+        p.setRecId(finance.productId);
+        p.setAbbreviation(finance.articul.substring(0, Product.ABREVIATION_LENGTH));
+        p.setFormer(Utils.getIntValueFor(finance.articul.substring(Product.FORMER_LENGTH)));
+        p.setDescrip(finance.productDescrip);
+        p.setPrice(Utils.getIntValueFor(finance.price));
+        Currency currency = new Currency();
+        currency.setIso(finance.isoOrigin);
+        currency.setSymbol(finance.symbolOrigin);
+        p.currencyProperty().set(currency);
+        ProductDiscount discount = new ProductDiscount();
+        discount.setDays(finance.months);
+        discount.setDiscountRate(Utils.getDoubleValueFor(finance.discountRate));
+        List<ProductDiscount> discounts = new ArrayList<>();
+        discounts.add(discount);
+        p.setDiscounts(discounts);
+        
+        productsCounter.put(p, finance.count);
+    }
+    
+    public void setInvoiceFinances(ArrayList<InvoiceFinaces> invoiceFinances){
+        this.invoiceFinaceses = invoiceFinances;
     }
     
     public void setClientId(int recId){
@@ -601,16 +627,14 @@ public class Invoice extends EditorPanelable {
         setLastName(invoice.getLastName());
         setEmail(invoice.getEmail());
         setInvoiceNumber(invoice.getInvoiceNumber());
-        licenses.clear(); // Avoid to add twise licenses in tableView
-        licenses.addAll(invoice.getLicenses());
-        licenseFinaceses.clear();
+//        licenses.clear(); // Avoid to add twise licenses in tableView
+//        licenses.addAll(invoice.getLicenses());
+        setLicenses(invoice.getLicenses());
+        
+//        licenseFinaceses.clear();
 //        licenseFinaceses.addAll(invoice.getLicenseFinances());
         setLicenseFinances(invoice.getLicenseFinances());
-        
-//        System.out.println("copyFrom");
-//        licenseFinaceses.stream().forEach((lic) -> {
-//            System.out.println("lic: " + lic);
-//        });
+        setInvoiceFinances(invoice.getInvoiceFinances());
         
         setBeginDate(invoice.getBeginDate());
         setEndDate(invoice.getEndDate());

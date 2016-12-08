@@ -84,6 +84,8 @@ public class Product extends EditorPanelable {
     @JsonIgnore
     private static final String DB_TABLE_NAME = "products";
     
+    public static final int ABREVIATION_LENGTH = 2;
+    public static final int FORMER_LENGTH = 2;
     
     public Product(){
         abbreviation = new SimpleStringProperty("");
@@ -288,9 +290,9 @@ public class Product extends EditorPanelable {
     
     public void setDiscounts(Collection<ProductDiscount> discounts) {
 //        this.discounts.setAll(discounts);
-        discounts.stream().forEach((discount) -> {
-            discountsForMapEditor.setAll(discounts);
-        });
+//        discounts.stream().forEach((discount) -> {
+        discountsForMapEditor.setAll(discounts);
+//        });
     }
 
     public void setIsActive(boolean isActive) {

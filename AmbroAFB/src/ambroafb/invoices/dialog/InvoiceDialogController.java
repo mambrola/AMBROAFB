@@ -30,6 +30,8 @@ import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import java.time.LocalDate;
 import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 
 /**
@@ -81,7 +83,7 @@ public class InvoiceDialogController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
-//        invoiceReissuings.setValue(invoiceReissuings.getItems());
+//        invoiceReissuings.setValue(invoiceReissuings.getItems()); // default recid = 1  selected
         clients.registerBundle(resources);
         clients.showCategoryALL(false);
         products.getItems().addAll(Product.getAllFromDB());
@@ -90,9 +92,11 @@ public class InvoiceDialogController implements Initializable {
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
             rebindFinanceData();
         });
-        products.valueProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
+        products.onHiddenProperty().addListener((ObservableValue<? extends EventHandler<Event>> observable, EventHandler<Event> oldValue, EventHandler<Event> newValue) -> {
+            System.out.println("combobox hidden");
             rebindFinanceData();
         });
+        
         beginDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
             rebindFinanceData();
         });
