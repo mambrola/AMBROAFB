@@ -13,6 +13,18 @@ public class InvoiceFinaces {
     
     public String sum, additionalDiscountRate, additionalDiscountSum, nettoSum, vatRate, vat, paySum, isoTotal, symbolTotal;
     
+    public void copyFrom(InvoiceFinaces other){
+        sum = other.sum;
+        additionalDiscountRate = other.additionalDiscountRate;
+        additionalDiscountSum = other.additionalDiscountSum;
+        nettoSum = other.nettoSum;
+        vatRate = other.vatRate;
+        vat = other.vat;
+        paySum = other.paySum;
+        isoTotal = other.isoTotal;
+        symbolTotal = other.symbolTotal;
+    }
+    
     @Override
     public String toString(){
         return  "sum: " + sum + "\n" +

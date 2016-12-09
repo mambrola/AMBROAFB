@@ -41,6 +41,7 @@ public class CountComboBoxItem extends HBox {
     private StringProperty itemNameProperty = new SimpleStringProperty("");
     private IntegerProperty numberProperty = new SimpleIntegerProperty(0);
     private final StringExpression nameExpression;
+    private Object item;
     
     public CountComboBoxItem(String stringForItemLabel){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ambroafb/general/countcombobox/CountComboBoxItem.fxml"));

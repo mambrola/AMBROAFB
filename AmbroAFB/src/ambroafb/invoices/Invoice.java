@@ -125,8 +125,8 @@ public class Invoice extends EditorPanelable {
     private final ObjectProperty<MonthCounterItem> months;
     private final BooleanProperty isLogined, isPaid;
     
-    @JsonIgnore
-    private final ObjectProperty<Map<Product, Integer>> productsResult;
+//    @JsonIgnore
+//    private final ObjectProperty<Map<Product, Integer>> productsResult;
     
     @JsonIgnore
     private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
@@ -164,7 +164,7 @@ public class Invoice extends EditorPanelable {
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
         months = new SimpleObjectProperty<>(new MonthCounterItem(""));
-        productsResult = new SimpleObjectProperty<>(new HashMap<>());
+//        productsResult = new SimpleObjectProperty<>(new HashMap<>());
         isLogined = new SimpleBooleanProperty(false);
         isPaid = new SimpleBooleanProperty(false);
         
@@ -469,6 +469,13 @@ public class Invoice extends EditorPanelable {
         return "" + months.get().getMonthCount();
     }
     
+    @JsonIgnore
+    public String getLicensesWithDelimiter(String delimiter){
+        String result = "";
+        result = licenses.stream().map((shortData) -> shortData.getLicenseNumber() + delimiter).reduce(result, String::concat);
+        return (result.isEmpty()) ? result : result.substring(0, result.length() - 1);
+    }
+    
     
     // Setters:
     private void setCreatedDate(String date){
@@ -628,9 +635,27 @@ public class Invoice extends EditorPanelable {
         setEmail(invoice.getEmail());
         setInvoiceNumber(invoice.getInvoiceNumber());
         
-        setLicenses(invoice.getLicenses());
-        setLicenseFinances(invoice.getLicenseFinances());
-        setInvoiceFinances(invoice.getInvoiceFinances());
+        licenses.clear();
+        invoice.getLicenses().stream().forEach((licenseShortData) -> {
+            LicenseShortData license = new LicenseShortData();
+            license.copyFrom(licenseShortData);
+            licenses.add(license);
+        });
+        
+//        setLicenses(invoice.getLicenses());
+        licenseFinaceses.clear();
+        invoice.getLicenseFinances().stream().forEach((otherFinanceOfLicense) -> {
+            LicenseFinaces finance = new LicenseFinaces();
+            finance.copyFrom(otherFinanceOfLicense);
+            licenseFinaceses.add(finance);
+        });
+        
+        invoiceFinaceses.clear();
+        invoice.getInvoiceFinances().stream().forEach((otherFinanceOfInvoice) -> {
+            InvoiceFinaces finance = new InvoiceFinaces();
+            finance.copyFrom(otherFinanceOfInvoice);
+            invoiceFinaceses.add(finance);
+        });
         
         setBeginDate(invoice.getBeginDate());
         setEndDate(invoice.getEndDate());
@@ -643,12 +668,14 @@ public class Invoice extends EditorPanelable {
         statusObj.get().copyFrom(invoice.statusProperty().get());
         setMonths(invoice.getMonths());
         
+        productsCounter.clear();
         invoice.getProductsWithCounts().keySet().stream().forEach((otherInvoiceProduct) -> {
             Product newProduct = new Product();
             newProduct.copyFrom(otherInvoiceProduct);
             int count = invoice.getProductsWithCounts().get(otherInvoiceProduct);
             productsCounter.put(newProduct, count);
         });
+        
     }
 
     @Override
@@ -764,6 +791,11 @@ public class Invoice extends EditorPanelable {
             LicenseShortData otherLicense = (LicenseShortData) other;
             return  licenseId == otherLicense.licenseId &&
                     licenseNumber.get().equals(otherLicense.licenseNumber.get());
+        }
+        
+        public void copyFrom(LicenseShortData other){
+            setLicenseId(other.getLicense_id());
+            setLicenseNumber(other.getLicenseNumber());
         }
     }
     

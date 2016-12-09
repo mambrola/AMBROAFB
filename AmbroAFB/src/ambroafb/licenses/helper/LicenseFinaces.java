@@ -25,6 +25,22 @@ public class LicenseFinaces {
     public String discountRate;
     public String totalPrice;
     
+    public void copyFrom(LicenseFinaces other){
+        productId = other.productId;
+        articul = other.articul;
+        productDescrip = other.productDescrip;
+        count = other.count;
+        licenseNumbers = other.licenseNumbers;
+        price = other.price;
+        isoOrigin = other.isoOrigin;
+        symbolOrigin = other.symbolOrigin;
+        currencyRate = other.currencyRate;
+        months = other.months;
+        fullPrice = other.fullPrice;
+        discountRate = other.discountRate;
+        totalPrice = other.totalPrice;
+    }
+    
     @Override
     public String toString(){
         return  "productId: " + productId + "\n" + 

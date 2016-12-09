@@ -77,7 +77,7 @@
                     </VBox>
                     <VBox styleClass="coupleTwoThird">
                         <Label text="%licenses" />
-                        <TextField fx:id="licenses" />
+                        <TextField fx:id="licenses" disable="true" />
                     </VBox>
                 </children>
             </HBox>

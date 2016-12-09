@@ -10,9 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.function.Consumer;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -31,13 +28,12 @@ public class CountComboBox<T> extends ComboBox<T> {
     
     private final Map<String, CountComboBoxItem> itemsMap;
     private final Tooltip tooltip;
-    private final ObjectProperty<Map<T, Integer>> comboBoxResult;
-    private Consumer<T> consumer;
+    private Map<T, Integer> comboBoxResult;
     
     public CountComboBox(){
         itemsMap = new HashMap<>();
         tooltip = new Tooltip();
-        comboBoxResult = new SimpleObjectProperty<>(new HashMap<>());
+        comboBoxResult = new HashMap<>();
         
         this.setPrefWidth(500);
         this.setButtonCell(new ComboBoxCustomButtonCell());
@@ -59,27 +55,16 @@ public class CountComboBox<T> extends ComboBox<T> {
         }
     }
     
-    public void setConsumer(Consumer<T> consumer){
-        this.consumer = consumer;
-    }
-    
     public void setData(Map<T, Integer> items){
-        System.out.println("setData. tems.size(): " + items.size());
-        comboBoxResult.set(items);
-//        items.keySet().stream().forEach((key) -> {
-//            System.out.println("key: " + key.toString());
-//            
-//            int value = items.get(key);
-//            comboBoxResult.get().put(key, value);
-//        });
+        comboBoxResult = items;
     }
     
-//    public ObjectProperty<Map<T, Integer>> resultProperty(){
-//        return comboBoxResult;
-//    }
+    public Map<T, Integer> getData(){
+        return comboBoxResult;
+    }
     
     public boolean nothingIsSelected(){
-        return comboBoxResult.get().isEmpty();
+        return comboBoxResult.isEmpty();
     }
     
     private class ComboBoxCustomButtonCell extends ListCell<T> {
@@ -126,10 +111,10 @@ public class CountComboBox<T> extends ComboBox<T> {
                 CountComboBoxItem boxItem = new CountComboBoxItem(name);
                 itemsMap.put(name, boxItem);
                 
-                comboBoxResult.get().keySet().forEach((key) -> {
+                comboBoxResult.keySet().forEach((key) -> {
                     String saveItemName = (box.getConverter() == null) ? key.toString() : box.getConverter().toString(key);;
                     if (saveItemName.equals(name)){
-                        boxItem.itemNumberProperty().set(comboBoxResult.get().get(key));
+                        boxItem.itemNumberProperty().set(comboBoxResult.get(key));
                     }
                 });
                 
@@ -140,19 +125,21 @@ public class CountComboBox<T> extends ComboBox<T> {
                 box.getSelectionModel().select((index + 1) % size);
                 
                 boxItem.itemNumberProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-                    Map<T, Integer> elems = comboBoxResult.get();
+                    T itemForName = getItemFromData(name);
+                    if (itemForName == null){ // If now select item that is not in firstly map, then program put it into map.
+                        itemForName = item;
+                    }
+                    
                     if (newValue.intValue() > 0){
-                        elems.put(item, boxItem.itemNumberProperty().get());
+                        comboBoxResult.put(itemForName, boxItem.itemNumberProperty().get());
                     }
                     else {
-                        if (elems.containsKey(item)){
-                            elems.remove(item);
+                        if (comboBoxResult.containsKey(itemForName)){
+                            comboBoxResult.remove(itemForName);
+                            System.out.println("combBoxResult size: " + comboBoxResult.size());
                         }
                     }
                     
-                    if (consumer != null){
-                        consumer.accept(item);
-                    }
                 });
                 
                 // ComboBox item could not select twise, so make this kind of action:
@@ -168,6 +155,17 @@ public class CountComboBox<T> extends ComboBox<T> {
                 });
                 setGraphic(boxItem);
             }
+        }
+        
+        // Returns item if it is comboBoxResult map.
+        private T getItemFromData(String name){
+            for (T key : comboBoxResult.keySet()){
+                String saveItemName = (box.getConverter() == null) ? key.toString() : box.getConverter().toString(key);;
+                if (saveItemName.equals(name)){
+                    return key;
+                }
+            }
+            return null;
         }
     }
 }

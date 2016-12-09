@@ -102,6 +102,8 @@ public class InvoiceDialogController implements Initializable {
         });
         products.showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (oldValue != null && !newValue) {
+                System.out.println("------------------------------");
+                printMap(products.getData());
                 rebindFinanceData();
             }
         });
@@ -185,17 +187,30 @@ public class InvoiceDialogController implements Initializable {
         if (invoice != null){
             createdDate.setValue(invoice.getCreatedDateObj());
             invoiceNumber.textProperty().bindBidirectional(invoice.invoiceNumberProperty());
+            status.textProperty().bindBidirectional(invoice.statusProperty().get().descripProperty());
+            
             clients.valueProperty().bindBidirectional(invoice.clientProperty());
+            products.setData(invoice.getProductsWithCounts());
+            
             beginDate.valueProperty().bindBidirectional(invoice.beginDateProperty());
             monthCounter.valueProperty().bindBidirectional(invoice.monthsProperty());
             endDate.valueProperty().bindBidirectional(invoice.endDateProperty());
-            additionalDiscount.textProperty().bindBidirectional(invoice.additionaldiscountProperty());
-            invoiceReissuings.valueProperty().bindBidirectional(invoice.reissuingProperty());
-            status.textProperty().bindBidirectional(invoice.statusProperty().get().descripProperty());
             
-            products.setData(invoice.getProductsWithCounts());
+            additionalDiscount.textProperty().bindBidirectional(invoice.additionaldiscountProperty());
+            licenses.setText(invoice.getLicensesWithDelimiter(", "));
+            
+            invoiceReissuings.valueProperty().bindBidirectional(invoice.reissuingProperty());
+            revokedDate.valueProperty().bindBidirectional(invoice.revokedDateProperty());
+            
             processFinanceData(invoice.getInvoiceFinances());
         }
+    }
+    
+    // for test
+    private void printMap(Map<Product, Integer> items){
+        items.keySet().stream().forEach((p) -> {
+            System.out.println("product: " + p.getDescrip() + " count: " + items.get(p));
+        });
     }
     
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
