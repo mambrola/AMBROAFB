@@ -7,6 +7,7 @@ package ambroafb.general;
 
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceFinaces;
+import ambroafb.invoices.helper.PartOfLicense;
 import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseFinaces;
 import authclient.AuthServerException;
@@ -229,11 +230,11 @@ public class DBUtils {
         }
     }
     
-    public static ArrayList<License> getLicenses(){
+    public static ArrayList<PartOfLicense> getLicenses(){
         try {
             String licensesAsString = licenses.toString();
             licenses = null; // free static variable
-            return new ObjectMapper().readValue(licensesAsString, new TypeReference<ArrayList<License>>(){});
+            return new ObjectMapper().readValue(licensesAsString, new TypeReference<ArrayList<PartOfLicense>>(){});
         } catch (IOException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -8,6 +8,7 @@ package ambroafb.invoices.dialog;
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
+import ambroafb.general.DBUtils;
 import ambroafb.general.monthcountercombobox.MonthCounterComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
@@ -28,12 +29,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
+import ambroafb.invoices.helper.InvoiceFinaces;
+import ambroafb.invoices.helper.PartOfLicense;
+import ambroafb.licenses.helper.LicenseFinaces;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.Label;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -62,17 +68,13 @@ public class InvoiceDialogController implements Initializable {
     private VBox formPane;
     @FXML
     private ADatePicker createdDate, endDate, revokedDate;
-//    @FXML
-//    private CheckBox revoked;
     @FXML
     private TextField invoiceNumber, status, licenses;
-//    @FXML
-//    private TextField moneyToPay, moneyPaid, vat;
     @FXML
     private DialogOkayCancelController okayCancelController;
     @FXML
-    private Label sumText, sumNumber, discountText, discountNumber, netoText, netoNumber, 
-                    vatText, vatNumber, payText, payNumber;
+    private Label   sumText, sumNumber, discountText, discountNumber, 
+                    netoText, netoNumber, vatText, vatNumber, payText, payNumber;
     
     
     private ArrayList<Node> focusTraversableNodes;
@@ -83,32 +85,99 @@ public class InvoiceDialogController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+        
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
         InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
         invoiceReissuings.setValue(defaultReissuing);
+        
         clients.registerBundle(resources);
         clients.showCategoryALL(false);
         products.getItems().addAll(Product.getAllFromDB());
         permissionToClose = true;
         
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
-            rebindFinanceData();
+            if (oldValue != null){
+                rebindFinanceData();
+            }
         });
-        products.onHiddenProperty().addListener((ObservableValue<? extends EventHandler<Event>> observable, EventHandler<Event> oldValue, EventHandler<Event> newValue) -> {
-            System.out.println("combobox hidden");
-            rebindFinanceData();
+        products.showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (oldValue != null && !newValue) {
+                rebindFinanceData();
+            }
         });
-        
         beginDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            rebindFinanceData();
+            if (oldValue != null){
+                rebindFinanceData();
+            }
         });
         monthCounter.valueProperty().addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
-            rebindFinanceData();
+            if (oldValue != null){
+                rebindFinanceData();
+            }
         });
     }
     
     private void rebindFinanceData(){
-        
+        if (isEveryNessesaryFieldValid()){
+            Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
+            JSONArray productsArray = new JSONArray();
+            productsMap.keySet().stream().forEach((product) -> {
+                JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
+                productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
+            });
+            System.out.println("rebindFinanceData -> productsArray: " + productsArray);
+            
+            JSONArray licensesIds = new JSONArray();
+            invoice.getLicenses().stream().forEach((licenseShortData) -> {
+                licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
+            });
+            
+//            System.out.println("licensesIds: " + licensesIds);
+            
+            String discount = invoice.getAdditionalDiscountRate();
+            if (discount.isEmpty()){
+                discount = null;
+            }
+            DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
+            ArrayList<PartOfLicense> invoiceLicenses = DBUtils.getLicenses();
+            ArrayList<LicenseFinaces> licenseFinaces = DBUtils.getLicensesFinaces();
+            ArrayList<InvoiceFinaces> invoiceFinances = DBUtils.getInvoicesFinaces();
+            
+            invoice.setLicenseFinances(licenseFinaces);
+            invoice.setInvoiceFinances(invoiceFinances);
+            List<Invoice.LicenseShortData> wholeLicenses = invoiceLicenses.stream().map((license) -> {
+                                                                        Invoice.LicenseShortData shortData = new Invoice.LicenseShortData();
+                                                                        shortData.setLicenseId(license.invoiceLicenseId);
+                                                                        shortData.setLicenseNumber(license.licenseNumber);
+                                                                        return shortData;
+                                                                }).collect(Collectors.toList());
+//            System.out.println("invoice whole license: " + wholeLicenses);
+            invoice.setLicenses(wholeLicenses);
+            processFinanceData(invoiceFinances);
+        }
+    }
+    
+    private void processFinanceData(ArrayList<InvoiceFinaces> invoiceFinances){
+        InvoiceFinaces financeOfInvoce = invoiceFinances.get(0);
+        sumNumber.setText(financeOfInvoce.sum);
+        discountText.setText(processString(discountText.getText(), financeOfInvoce.additionalDiscountRate));
+        discountNumber.setText(financeOfInvoce.additionalDiscountSum);
+        netoNumber.setText(financeOfInvoce.nettoSum);
+        vatText.setText(processString(vatText.getText(), financeOfInvoce.vatRate));
+        vatNumber.setText(financeOfInvoce.vat);
+        payNumber.setText(financeOfInvoce.paySum);
+    }
+    
+    private String processString(String currState, String newNumberValue){
+        String startingPart = currState.substring(0, currState.indexOf(" ") + 1);
+        return startingPart + newNumberValue + "%";
+    }
+    
+    private boolean isEveryNessesaryFieldValid(){
+        return  clients.valueProperty().get() != null && 
+                !products.nothingIsSelected() && 
+                beginDate.getValue() != null && 
+                monthCounter.getValue() != null;
     }
 
     public void bindInvoice(Invoice invoice) {
@@ -120,28 +189,20 @@ public class InvoiceDialogController implements Initializable {
             beginDate.valueProperty().bindBidirectional(invoice.beginDateProperty());
             monthCounter.valueProperty().bindBidirectional(invoice.monthsProperty());
             endDate.valueProperty().bindBidirectional(invoice.endDateProperty());
-//            revoked.selectedProperty().bindBidirectional(invoice.revokedProperty());
             additionalDiscount.textProperty().bindBidirectional(invoice.additionaldiscountProperty());
-//            moneyToPay.textProperty().bindBidirectional(invoice.moneyToPayProperty());
-//            moneyPaid.textProperty().bindBidirectional(invoice.moneyPaidProperty());
-//            vat.textProperty().bindBidirectional(invoice.vatProperty());
             invoiceReissuings.valueProperty().bindBidirectional(invoice.reissuingProperty());
             status.textProperty().bindBidirectional(invoice.statusProperty().get().descripProperty());
             
             products.setData(invoice.getProductsWithCounts());
+            processFinanceData(invoice.getInvoiceFinances());
         }
     }
     
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
-        boolean editable = true;
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
-            editable = false;
         }
         okayCancelController.setButtonsFeatures(buttonType);
-//        if (invoice != null){
-//            licenses.getItems().addAll(invoice.getLicenses());
-//        }
     }
     
     /**

@@ -20,7 +20,7 @@ import ambroafb.invoices.filter.InvoiceFilterModel;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
 import ambroafb.invoices.helper.InvoiceFinaces;
-import ambroafb.licenses.License;
+import ambroafb.invoices.helper.PartOfLicense;
 import ambroafb.licenses.helper.LicenseFinaces;
 import ambroafb.products.Product;
 import ambroafb.products.helpers.ProductDiscount;
@@ -255,7 +255,7 @@ public class Invoice extends EditorPanelable {
     
     public static Invoice saveOneToDB(Invoice invoice) {
         if (invoice == null) return null;
-        Map<Product, Integer> productsMap = invoice.licensesResultProperty().get();        
+        Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
         JSONArray productsArray = new JSONArray();
         productsMap.keySet().stream().forEach((product) -> {
             JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
@@ -267,11 +267,11 @@ public class Invoice extends EditorPanelable {
             licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.licenseId));
         });
         DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, invoice.getAdditionalDiscountRate(), licensesIds);
-        ArrayList<License> licenses = DBUtils.getLicenses();
-        List<LicenseShortData> wholeLicenses = licenses.stream().map((License license) -> {
+        ArrayList<PartOfLicense> licenses = DBUtils.getLicenses();
+        List<LicenseShortData> wholeLicenses = licenses.stream().map((license) -> {
                                                                         LicenseShortData shortData = new LicenseShortData();
-                                                                        shortData.licenseId = license.getRecId();
-                                                                        shortData.setLicenseNumber(license.getLicenseNumber());
+                                                                        shortData.licenseId = license.invoiceLicenseId;
+                                                                        shortData.setLicenseNumber(license.licenseNumber);
                                                                         return shortData;
                                                                 }).collect(Collectors.toList());
         System.out.println("invoice whole license: " + wholeLicenses);
@@ -344,9 +344,9 @@ public class Invoice extends EditorPanelable {
         return months;
     }
     
-    public ObjectProperty<Map<Product, Integer>> licensesResultProperty(){
-        return productsResult;
-    }
+//    public ObjectProperty<Map<Product, Integer>> productsResultProperty(){
+//        return productsResult;
+//    }
     
     public BooleanProperty isLoginedProperty(){
         return isLogined;
@@ -426,7 +426,7 @@ public class Invoice extends EditorPanelable {
     }
     
     public String getAdditionalDiscountRate(){
-        return additionalDiscountRate.get();
+        return (Utils.getDoubleValueFor(additionalDiscountRate.get()) == 0) ? "" : additionalDiscountRate.get();
     }
     
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
@@ -627,12 +627,8 @@ public class Invoice extends EditorPanelable {
         setLastName(invoice.getLastName());
         setEmail(invoice.getEmail());
         setInvoiceNumber(invoice.getInvoiceNumber());
-//        licenses.clear(); // Avoid to add twise licenses in tableView
-//        licenses.addAll(invoice.getLicenses());
-        setLicenses(invoice.getLicenses());
         
-//        licenseFinaceses.clear();
-//        licenseFinaceses.addAll(invoice.getLicenseFinances());
+        setLicenses(invoice.getLicenses());
         setLicenseFinances(invoice.getLicenseFinances());
         setInvoiceFinances(invoice.getInvoiceFinances());
         
@@ -646,6 +642,13 @@ public class Invoice extends EditorPanelable {
         reissuingObj.get().copyFrom(invoice.reissuingProperty().get());
         statusObj.get().copyFrom(invoice.statusProperty().get());
         setMonths(invoice.getMonths());
+        
+        invoice.getProductsWithCounts().keySet().stream().forEach((otherInvoiceProduct) -> {
+            Product newProduct = new Product();
+            newProduct.copyFrom(otherInvoiceProduct);
+            int count = invoice.getProductsWithCounts().get(otherInvoiceProduct);
+            productsCounter.put(newProduct, count);
+        });
     }
 
     @Override
@@ -660,6 +663,13 @@ public class Invoice extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Invoice otherInvoice = (Invoice) backup;
+        
+        System.out.println("Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses()): " + (Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())));
+        System.out.println("getMoneyToPay().equals(otherInvoice.getMoneyToPay()): " + (getMoneyToPay().equals(otherInvoice.getMoneyToPay())));
+        System.out.println("getVat().equals(otherInvoice.getVat()): " + (getVat().equals(otherInvoice.getVat())));
+        System.out.println("getMoneyPaid().equals(otherInvoice.getMoneyPaid()): " + (getMoneyPaid().equals(otherInvoice.getMoneyPaid())));
+        System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
+        
         return  getFirstName().equals(otherInvoice.getFirstName())  &&
                 getLastName().equals(otherInvoice.getLastName())    &&
                 getEmail().equals(otherInvoice.getEmail())          &&
@@ -669,12 +679,36 @@ public class Invoice extends EditorPanelable {
                 Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()) &&
                 Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()) &&
                 getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate()) &&
+                
                 getMoneyToPay().equals(otherInvoice.getMoneyToPay()) &&
                 getVat().equals(otherInvoice.getVat()) &&
                 getMoneyPaid().equals(otherInvoice.getMoneyPaid()) &&
+                
                 reissuingObj.get().compares(otherInvoice.reissuingProperty().get()) &&
                 statusObj.get().compares(otherInvoice.statusProperty().get()) &&
-                getMonths().equals(otherInvoice.getMonths());
+                getMonths().equals(otherInvoice.getMonths()) &&
+                compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts());
+    }
+    
+    private boolean compareProductsCounter(Map<Product, Integer> first, Map<Product, Integer> second){
+        boolean result = true;
+        if (first.keySet().size() != second.keySet().size()) {
+            System.out.println("first.keySet().size(): " + first.keySet().size());
+            System.out.println("second.keySet().size(): " + second.keySet().size());
+            result = false;
+        }
+        else {
+            for(Product p : first.keySet()){
+                if (!second.containsKey(p) || first.get(p).intValue() != second.get(p).intValue()){
+                    System.out.println("!second.containsKey(p): " + !second.containsKey(p));
+                    System.out.println("first.get(p).intValue(): " + first.get(p));
+                    System.out.println("second.get(p).intValue(): " + second.get(p));
+                    result = false;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     

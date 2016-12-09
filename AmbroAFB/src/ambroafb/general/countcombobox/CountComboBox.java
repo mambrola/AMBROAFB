@@ -65,12 +65,13 @@ public class CountComboBox<T> extends ComboBox<T> {
     
     public void setData(Map<T, Integer> items){
         System.out.println("setData. tems.size(): " + items.size());
-        items.keySet().stream().forEach((key) -> {
-            System.out.println("key: " + key.toString());
-            
-            int value = items.get(key);
-            comboBoxResult.get().put(key, value);
-        });
+        comboBoxResult.set(items);
+//        items.keySet().stream().forEach((key) -> {
+//            System.out.println("key: " + key.toString());
+//            
+//            int value = items.get(key);
+//            comboBoxResult.get().put(key, value);
+//        });
     }
     
 //    public ObjectProperty<Map<T, Integer>> resultProperty(){
