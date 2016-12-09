@@ -161,18 +161,18 @@ public class InvoiceDialogController implements Initializable {
     
     private void processFinanceData(ArrayList<InvoiceFinaces> invoiceFinances){
         InvoiceFinaces financeOfInvoce = invoiceFinances.get(0);
-        sumNumber.setText(financeOfInvoce.sum);
+        sumNumber.setText(financeOfInvoce.sum + financeOfInvoce.symbolTotal);
         discountText.setText(processString(discountText.getText(), financeOfInvoce.additionalDiscountRate));
         discountNumber.setText(financeOfInvoce.additionalDiscountSum);
-        netoNumber.setText(financeOfInvoce.nettoSum);
+        netoNumber.setText(financeOfInvoce.nettoSum + financeOfInvoce.symbolTotal);
         vatText.setText(processString(vatText.getText(), financeOfInvoce.vatRate));
-        vatNumber.setText(financeOfInvoce.vat);
-        payNumber.setText(financeOfInvoce.paySum);
+        vatNumber.setText(financeOfInvoce.vat + financeOfInvoce.symbolTotal);
+        payNumber.setText(financeOfInvoce.paySum + financeOfInvoce.symbolTotal);
     }
     
     private String processString(String currState, String newNumberValue){
         String startingPart = currState.substring(0, currState.indexOf(" ") + 1);
-        return startingPart + newNumberValue + "%";
+        return startingPart + newNumberValue + "%:";
     }
     
     private boolean isEveryNessesaryFieldValid(){
