@@ -29,6 +29,7 @@ import javafx.scene.layout.VBox;
 import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -83,7 +84,8 @@ public class InvoiceDialogController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
-//        invoiceReissuings.setValue(invoiceReissuings.getItems()); // default recid = 1  selected
+        InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
+        invoiceReissuings.setValue(defaultReissuing);
         clients.registerBundle(resources);
         clients.showCategoryALL(false);
         products.getItems().addAll(Product.getAllFromDB());

@@ -22,7 +22,7 @@ public class InvoiceReissuing {
     private String language;
     private final StringProperty descrip;
     
-    
+    public static final int DEFAULT_REISSUING_ID = 2;
     
     public InvoiceReissuing(){
         invoiceReissuingId = new SimpleIntegerProperty(0);

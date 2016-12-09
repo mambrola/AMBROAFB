@@ -17,7 +17,8 @@
   -fx-pref-width: 232.5;
 }
 .oneThirds > .couple,
-.oneThirds > .couple > * {
+.oneThirds > .couple > *,
+.oneThirds > .couple > .innerCouple > * {
   -fx-pref-width: 143.33333333;
 }
 .twoThirds > .coupleOneThird,
