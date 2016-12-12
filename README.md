@@ -73,7 +73,7 @@ Accounting for Busines
 * (|) UML დიაგრამები
 * (+) Editorpanelable კლასების db მეთოდები ერთ სტილზე
 * (+) product-ების დიალოგში ორჯერ ჩნდება ფასდაკლებები mapEditor-ში. (discounts.addAll() შეიცვალა discounts.setAll()-ით)
-* (-) შესამოწმებელია ყველა Editorpanelable კლასში compare/copyFrom მეთოდების სისწორე
+* (-) შესამოწმებელია ყველა Editorpanelable კლასში compare/copyFrom მეთოდების სისწორე, გააჩნია კლასს რა სიის ველები აქვს. შეიძლება გადაკოპირდეს deepCopy-ით შესაძლოა ნაწილობრივ გადაკოპირდეს (Map-ის მაგალითი invoice-ში product -> counter).
 * (-) ALL currencies-ში და country-ში
 * (+) Client-ის compare მეთოდში Phone.copmareList-ის მაგივრად Utils.compareList
 * (|) ტესტები
