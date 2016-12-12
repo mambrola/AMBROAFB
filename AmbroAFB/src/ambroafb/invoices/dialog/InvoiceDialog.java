@@ -44,8 +44,8 @@ public class InvoiceDialog extends Stage implements Dialogable {
         Scene currentScene = SceneUtils.createScene("/ambroafb/invoices/dialog/InvoiceDialog.fxml", null);
         dialogController = (InvoiceDialogController) currentScene.getProperties().get("controller");
         dialogController.bindInvoice(this.invoice);
-        dialogController.setNextVisibleAndActionParameters(buttonType);
         dialogController.setBackupInvoice(this.invoiceBackup);
+        dialogController.setNextVisibleAndActionParameters(buttonType);
         this.setScene(currentScene);
         this.setResizable(false);
         this.initOwner(owner);

@@ -231,10 +231,16 @@ public class InvoiceDialogController implements Initializable {
             setDisableComponents();
         }
         
-         // This is Dialog "new" and not add by simple, which EDITOR_BUTTON_TYPE is also NEW.
+        // This is Dialog "new" and not add by simple, which EDITOR_BUTTON_TYPE is also NEW.
         if (invoice != null && invoice.getInvoiceFinances().isEmpty()){
             setShowFinanceData(true, false);
         }
+        
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
+            beginDate.setValue(LocalDate.now());
+            invoiceBackup.beginDateProperty().set(LocalDate.now());
+        }
+        
         okayCancelController.setButtonsFeatures(buttonType);
     }
     

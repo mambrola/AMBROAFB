@@ -20,7 +20,6 @@ import ambroafb.invoices.filter.InvoiceFilterModel;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
 import ambroafb.invoices.helper.InvoiceFinaces;
-import ambroafb.invoices.helper.PartOfLicense;
 import ambroafb.licenses.helper.LicenseFinaces;
 import ambroafb.products.Product;
 import ambroafb.products.helpers.ProductDiscount;
@@ -30,14 +29,12 @@ import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
@@ -51,7 +48,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 
 /**
@@ -152,7 +148,7 @@ public class Invoice extends EditorPanelable {
         revokedDateDescrip = new SimpleStringProperty("");
         revokedDateObj = new SimpleObjectProperty<>();
         isRevoked = new SimpleBooleanProperty(false);
-        additionalDiscountRate = new SimpleStringProperty("0");
+        additionalDiscountRate = new SimpleStringProperty("");
         moneyToPay = new SimpleStringProperty("");
         moneyPaid = new SimpleStringProperty("");
         vat = new SimpleStringProperty("");
@@ -249,29 +245,29 @@ public class Invoice extends EditorPanelable {
     
     public static Invoice saveOneToDB(Invoice invoice) {
         if (invoice == null) return null;
-        Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
-        JSONArray productsArray = new JSONArray();
-        productsMap.keySet().stream().forEach((product) -> {
-            JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
-            productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
-        });
-
-        JSONArray licensesIds = new JSONArray();
-        invoice.getLicenses().stream().forEach((licenseShortData) -> {
-            licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.licenseId));
-        });
-        DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, invoice.getAdditionalDiscountRate(), licensesIds);
-        ArrayList<PartOfLicense> licenses = DBUtils.getLicenses();
-        List<LicenseShortData> wholeLicenses = licenses.stream().map((license) -> {
-                                                                        LicenseShortData shortData = new LicenseShortData();
-                                                                        shortData.licenseId = license.invoiceLicenseId;
-                                                                        shortData.setLicenseNumber(license.licenseNumber);
-                                                                        return shortData;
-                                                                }).collect(Collectors.toList());
+//        Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
+//        JSONArray productsArray = new JSONArray();
+//        productsMap.keySet().stream().forEach((product) -> {
+//            JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
+//            productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
+//        });
+//
+//        JSONArray licensesIds = new JSONArray();
+//        invoice.getLicenses().stream().forEach((licenseShortData) -> {
+//            licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.licenseId));
+//        });
+//        DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, invoice.getAdditionalDiscountRate(), licensesIds);
+//        ArrayList<PartOfLicense> licenses = DBUtils.getLicenses();
+//        List<LicenseShortData> wholeLicenses = licenses.stream().map((license) -> {
+//                                                                        LicenseShortData shortData = new LicenseShortData();
+//                                                                        shortData.licenseId = license.invoiceLicenseId;
+//                                                                        shortData.setLicenseNumber(license.licenseNumber);
+//                                                                        return shortData;
+//                                                                }).collect(Collectors.toList());
 //        System.out.println("invoice whole license: " + wholeLicenses);
         
-        invoice.setLicenses(wholeLicenses);
-        BigDecimal additoinalDiscount = Utils.getBigDecimalFor(invoice.getAdditionalDiscountRate());
+//        invoice.setLicenses(wholeLicenses);
+//        BigDecimal additoinalDiscount = Utils.getBigDecimalFor(invoice.getAdditionalDiscountRate());
 //        System.out.println("addintinal disc: " + additoinalDiscount);
         
 //        return DBUtils.saveObjectToDBWith("invoice_insert_update_from_afb", invoice, additoinalDiscount);
@@ -338,10 +334,6 @@ public class Invoice extends EditorPanelable {
         return months;
     }
     
-//    public ObjectProperty<Map<Product, Integer>> productsResultProperty(){
-//        return productsResult;
-//    }
-    
     public BooleanProperty isLoginedProperty(){
         return isLogined;
     }
@@ -363,10 +355,6 @@ public class Invoice extends EditorPanelable {
         return invoiceNumber.get();
     }
 
-//    public SeperateSaving getSetsForSeparateSaving(){
-//        return new SeperateSaving(licenses);
-//    }
-    
     @JsonIgnore
     public ObservableList<LicenseShortData> getLicenses(){
         return licenses;
