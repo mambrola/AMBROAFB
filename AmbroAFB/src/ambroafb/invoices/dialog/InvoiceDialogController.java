@@ -318,9 +318,7 @@ public class InvoiceDialogController implements Initializable {
         
         private void calculateFinaceData() {
             System.out.println("into rebindFinanceData method...");
-            if (!financesLabelTextContainer.isVisible()) {
-                setShowFinanceData(true, true);
-            }
+            setShowFinanceData(true, true);
             Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
             JSONArray productsArray = new JSONArray();
             productsMap.keySet().stream().forEach((product) -> {
@@ -341,6 +339,11 @@ public class InvoiceDialogController implements Initializable {
             }
             DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
             ArrayList<PartOfLicense> invoiceLicenses = DBUtils.getLicenses();
+            
+            for (PartOfLicense invoiceLicense : invoiceLicenses) {
+                System.out.println("invoice license: " + invoiceLicense.licenseNumber);
+            }
+            
             ArrayList<LicenseFinaces> licenseFinaces = DBUtils.getLicensesFinaces();
             ArrayList<InvoiceFinaces> invoiceFinances = DBUtils.getInvoicesFinaces();
 

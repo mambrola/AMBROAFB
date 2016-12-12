@@ -127,7 +127,7 @@ public class Invoice extends EditorPanelable {
     private static final String DB_INVOICES_VIEW = "invoices_whole";
     
     @JsonIgnore
-    public ArrayList<LicenseFinaces> licenseFinaceses = new ArrayList<>();
+    public ArrayList<LicenseFinaces> licenseFinanceses = new ArrayList<>();
     @JsonIgnore
     public ArrayList<InvoiceFinaces> invoiceFinaceses = new ArrayList<>();
     
@@ -367,7 +367,7 @@ public class Invoice extends EditorPanelable {
     
     @JsonIgnore
     public ArrayList<LicenseFinaces> getLicenseFinances(){
-        return licenseFinaceses;
+        return licenseFinanceses;
     }
     
     @JsonIgnore
@@ -476,10 +476,10 @@ public class Invoice extends EditorPanelable {
         this.licenses.setAll(licenses);
     }
     
-    public void setLicenseFinances(ArrayList<LicenseFinaces> licensesFinaceses){
-        this.licenseFinaceses = licensesFinaceses;
+    public void setLicenseFinances(ArrayList<LicenseFinaces> licensesFinanceses){
+        this.licenseFinanceses = licensesFinanceses;
         productsCounter.clear();
-        licensesFinaceses.forEach((finance) -> makeAndSaveProductFrom(finance));
+        licensesFinanceses.forEach((finance) -> makeAndSaveProductFrom(finance));
     }
     
     private void makeAndSaveProductFrom(LicenseFinaces finance){
@@ -625,12 +625,11 @@ public class Invoice extends EditorPanelable {
             licenses.add(license);
         });
         
-//        setLicenses(invoice.getLicenses());
-        licenseFinaceses.clear();
+        licenseFinanceses.clear();
         invoice.getLicenseFinances().stream().forEach((otherFinanceOfLicense) -> {
             LicenseFinaces finance = new LicenseFinaces();
             finance.copyFrom(otherFinanceOfLicense);
-            licenseFinaceses.add(finance);
+            licenseFinanceses.add(finance);
         });
         
         invoiceFinaceses.clear();

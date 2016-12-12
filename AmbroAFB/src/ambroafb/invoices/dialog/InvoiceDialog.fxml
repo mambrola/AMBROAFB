@@ -110,7 +110,7 @@
                                 <ComboBox fx:id="invoiceReissuings" />
                             </VBox>
                             <VBox styleClass="innerCouple">
-                                <Label text="revokedDate" />
+                                <Label text="%revoked_date" />
                                 <ADatePicker fx:id="revokedDate" />
                             </VBox>
                         </children>
