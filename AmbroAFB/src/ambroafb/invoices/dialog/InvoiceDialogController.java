@@ -123,7 +123,12 @@ public class InvoiceDialogController implements Initializable {
                 rebindFinanceData();
             }
         });
-//        additionalDiscount // enterproperty
+        additionalDiscount.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            double discount = Utils.getDoubleValueFor(additionalDiscount.getText());
+            if (discount > 0 && !newValue){
+                rebindFinanceData();
+            }
+        });
         
         setFinanceDataToDefaultText();
     }
@@ -298,46 +303,44 @@ public class InvoiceDialogController implements Initializable {
             }
         }
         
-        private void calculateFinaceData(){
-//            if (isEveryNessesaryFieldValid()){
-                System.out.println("into rebindFinanceData method...");
-                if (!financesLabelTextContainer.isVisible()){
-                    setShowFinanceData(true);
-                }
-                Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
-                JSONArray productsArray = new JSONArray();
-                productsMap.keySet().stream().forEach((product) -> {
-                    JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
-                    productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
-                });
-                System.out.println("rebindFinanceData -> productsArray: " + productsArray);
+        private void calculateFinaceData() {
+            System.out.println("into rebindFinanceData method...");
+            if (!financesLabelTextContainer.isVisible()) {
+                setShowFinanceData(true);
+            }
+            Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
+            JSONArray productsArray = new JSONArray();
+            productsMap.keySet().stream().forEach((product) -> {
+                JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
+                productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
+            });
+            System.out.println("rebindFinanceData -> productsArray: " + productsArray);
 
-                JSONArray licensesIds = new JSONArray();
-                invoice.getLicenses().stream().forEach((licenseShortData) -> {
-                    licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
-                });
-                System.out.println("licensesIds: " + licensesIds);
+            JSONArray licensesIds = new JSONArray();
+            invoice.getLicenses().stream().forEach((licenseShortData) -> {
+                licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
+            });
+            System.out.println("licensesIds: " + licensesIds);
 
-                String discount = invoice.getAdditionalDiscountRate();
-                if (discount.isEmpty()){
-                    discount = null;
-                }
-                DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
-                ArrayList<PartOfLicense> invoiceLicenses = DBUtils.getLicenses();
-                ArrayList<LicenseFinaces> licenseFinaces = DBUtils.getLicensesFinaces();
-                ArrayList<InvoiceFinaces> invoiceFinances = DBUtils.getInvoicesFinaces();
+            String discount = invoice.getAdditionalDiscountRate();
+            if (discount.isEmpty()) {
+                discount = null;
+            }
+            DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
+            ArrayList<PartOfLicense> invoiceLicenses = DBUtils.getLicenses();
+            ArrayList<LicenseFinaces> licenseFinaces = DBUtils.getLicensesFinaces();
+            ArrayList<InvoiceFinaces> invoiceFinances = DBUtils.getInvoicesFinaces();
 
-                invoice.setLicenseFinances(licenseFinaces);
-                invoice.setInvoiceFinances(invoiceFinances);
-                List<Invoice.LicenseShortData> wholeLicenses = invoiceLicenses.stream().map((license) -> {
-                                                                            Invoice.LicenseShortData shortData = new Invoice.LicenseShortData();
-                                                                            shortData.setLicenseId(license.invoiceLicenseId);
-                                                                            shortData.setLicenseNumber(license.licenseNumber);
-                                                                            return shortData;
-                                                                    }).collect(Collectors.toList());
-    //            System.out.println("invoice whole license: " + wholeLicenses);
-                invoice.setLicenses(wholeLicenses);
-//            }
+            invoice.setLicenseFinances(licenseFinaces);
+            invoice.setInvoiceFinances(invoiceFinances);
+            List<Invoice.LicenseShortData> wholeLicenses = invoiceLicenses.stream().map((license) -> {
+                Invoice.LicenseShortData shortData = new Invoice.LicenseShortData();
+                shortData.setLicenseId(license.invoiceLicenseId);
+                shortData.setLicenseNumber(license.licenseNumber);
+                return shortData;
+            }).collect(Collectors.toList());
+            //            System.out.println("invoice whole license: " + wholeLicenses);
+            invoice.setLicenses(wholeLicenses);
         }
     }
 }

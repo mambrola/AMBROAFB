@@ -125,9 +125,6 @@ public class Invoice extends EditorPanelable {
     private final ObjectProperty<MonthCounterItem> months;
     private final BooleanProperty isLogined, isPaid;
     
-//    @JsonIgnore
-//    private final ObjectProperty<Map<Product, Integer>> productsResult;
-    
     @JsonIgnore
     private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
     @JsonIgnore
@@ -146,8 +143,6 @@ public class Invoice extends EditorPanelable {
         createdDate = new SimpleStringProperty("");
         licensesDescript = new SimpleStringProperty("");
         licenses = FXCollections.observableArrayList();
-//        products = FXCollections.observableArrayList();
-//        licensesOnProducts = FXCollections.observableArrayList();
         clientObj = new SimpleObjectProperty<>(new Client());
         clientDescrip = clientObj.get().getShortDescrip(", ");
         beginDateDescrip = new SimpleStringProperty("");
@@ -164,7 +159,6 @@ public class Invoice extends EditorPanelable {
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
         months = new SimpleObjectProperty<>(new MonthCounterItem(""));
-//        productsResult = new SimpleObjectProperty<>(new HashMap<>());
         isLogined = new SimpleBooleanProperty(false);
         isPaid = new SimpleBooleanProperty(false);
         
@@ -426,7 +420,7 @@ public class Invoice extends EditorPanelable {
     }
     
     public String getAdditionalDiscountRate(){
-        return (Utils.getDoubleValueFor(additionalDiscountRate.get()) == 0) ? "" : additionalDiscountRate.get();
+        return (Utils.getDoubleValueFor(additionalDiscountRate.get()) <= 0) ? "" : additionalDiscountRate.get();
     }
     
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)

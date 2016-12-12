@@ -28,12 +28,6 @@ public class ProductDiscount implements MapEditorElement {
         discountRate = new SimpleStringProperty("");
     }
 
-//    // It is needed for MapEditor.
-//    public ProductDiscount(String days, String discount) {
-//        this.days = days;
-//        this.discountRate = discount;
-//    }
-    
     public int getDays(){
         return Utils.getIntValueFor(days.get());
     }
