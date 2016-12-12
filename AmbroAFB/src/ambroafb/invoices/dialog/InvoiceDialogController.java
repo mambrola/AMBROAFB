@@ -146,13 +146,11 @@ public class InvoiceDialogController implements Initializable {
         netoText.setText(config.getTitleFor("neto") + colonDelimiter);
         vatText.setText(config.getTitleFor("vat_percent") + percentDelimiter + colonDelimiter);
         payText.setText(config.getTitleFor("money_paid") + colonDelimiter);
-        
-        setShowFinanceData(false);
     }
     
-    private void setShowFinanceData(boolean isShow){
-        financesLabelTextContainer.setVisible(isShow);
-        financesLabelNumberContainer.setVisible(isShow);
+    private void setShowFinanceData(boolean showTextLabel, boolean showNumberLabel){
+        financesLabelTextContainer.setVisible(showTextLabel);
+        financesLabelNumberContainer.setVisible(showNumberLabel);
     }
     
     /**
@@ -167,6 +165,7 @@ public class InvoiceDialogController implements Initializable {
         }
         else {
             setFinanceDataToDefaultText();
+            setShowFinanceData(true, false);
         }
     }
     
@@ -234,7 +233,7 @@ public class InvoiceDialogController implements Initializable {
         
          // This is Dialog "new" and not add by simple, which EDITOR_BUTTON_TYPE is also NEW.
         if (invoice != null && invoice.getInvoiceFinances().isEmpty()){
-            setShowFinanceData(false);
+            setShowFinanceData(true, false);
         }
         okayCancelController.setButtonsFeatures(buttonType);
     }
@@ -306,7 +305,7 @@ public class InvoiceDialogController implements Initializable {
         private void calculateFinaceData() {
             System.out.println("into rebindFinanceData method...");
             if (!financesLabelTextContainer.isVisible()) {
-                setShowFinanceData(true);
+                setShowFinanceData(true, true);
             }
             Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
             JSONArray productsArray = new JSONArray();
