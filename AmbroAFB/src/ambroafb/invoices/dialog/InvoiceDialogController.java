@@ -239,6 +239,14 @@ public class InvoiceDialogController implements Initializable {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
             beginDate.setValue(LocalDate.now());
             invoiceBackup.beginDateProperty().set(LocalDate.now());
+            
+            if (clients.getValue() != null){ // add by simple
+                invoiceNumber.setText("");
+                status.setText("");
+                additionalDiscount.setText("");
+                vatNumber.setText("");
+                
+            }
         }
         
         okayCancelController.setButtonsFeatures(buttonType);
