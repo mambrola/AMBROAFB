@@ -111,6 +111,7 @@ public class CountComboBox<T> extends ComboBox<T> {
                 CountComboBoxItem boxItem = new CountComboBoxItem(name);
                 itemsMap.put(name, boxItem);
                 
+                // item is from getItems() and key is from setData collection. They address is not same, so we need find appropriate item:
                 comboBoxResult.keySet().forEach((key) -> {
                     String saveItemName = (box.getConverter() == null) ? key.toString() : box.getConverter().toString(key);;
                     if (saveItemName.equals(name)){
@@ -136,7 +137,6 @@ public class CountComboBox<T> extends ComboBox<T> {
                     else {
                         if (comboBoxResult.containsKey(itemForName)){
                             comboBoxResult.remove(itemForName);
-                            System.out.println("combBoxResult size: " + comboBoxResult.size());
                         }
                     }
                     

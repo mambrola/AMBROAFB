@@ -274,11 +274,11 @@ public class Invoice extends EditorPanelable {
                                                                         shortData.setLicenseNumber(license.licenseNumber);
                                                                         return shortData;
                                                                 }).collect(Collectors.toList());
-        System.out.println("invoice whole license: " + wholeLicenses);
+//        System.out.println("invoice whole license: " + wholeLicenses);
         
         invoice.setLicenses(wholeLicenses);
         BigDecimal additoinalDiscount = Utils.getBigDecimalFor(invoice.getAdditionalDiscountRate());
-        System.out.println("addintinal disc: " + additoinalDiscount);
+//        System.out.println("addintinal disc: " + additoinalDiscount);
         
 //        return DBUtils.saveObjectToDBWith("invoice_insert_update_from_afb", invoice, additoinalDiscount);
         return DBUtils.saveInvoice(invoice);
@@ -496,6 +496,7 @@ public class Invoice extends EditorPanelable {
     
     public void setLicenseFinances(ArrayList<LicenseFinaces> licensesFinaceses){
         this.licenseFinaceses = licensesFinaceses;
+        productsCounter.clear();
         licensesFinaceses.forEach((finance) -> makeAndSaveProductFrom(finance));
     }
     
@@ -718,16 +719,11 @@ public class Invoice extends EditorPanelable {
     private boolean compareProductsCounter(Map<Product, Integer> first, Map<Product, Integer> second){
         boolean result = true;
         if (first.keySet().size() != second.keySet().size()) {
-            System.out.println("first.keySet().size(): " + first.keySet().size());
-            System.out.println("second.keySet().size(): " + second.keySet().size());
             result = false;
         }
         else {
             for(Product p : first.keySet()){
                 if (!second.containsKey(p) || first.get(p).intValue() != second.get(p).intValue()){
-                    System.out.println("!second.containsKey(p): " + !second.containsKey(p));
-                    System.out.println("first.get(p).intValue(): " + first.get(p));
-                    System.out.println("second.get(p).intValue(): " + second.get(p));
                     result = false;
                     break;
                 }
