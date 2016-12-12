@@ -670,10 +670,8 @@ public class Invoice extends EditorPanelable {
         
         productsCounter.clear();
         invoice.getProductsWithCounts().keySet().stream().forEach((otherInvoiceProduct) -> {
-            Product newProduct = new Product();
-            newProduct.copyFrom(otherInvoiceProduct);
             int count = invoice.getProductsWithCounts().get(otherInvoiceProduct);
-            productsCounter.put(newProduct, count);
+            productsCounter.put(otherInvoiceProduct, count);
         });
         
     }
@@ -691,11 +689,11 @@ public class Invoice extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         Invoice otherInvoice = (Invoice) backup;
         
-        System.out.println("Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses()): " + (Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())));
-        System.out.println("getMoneyToPay().equals(otherInvoice.getMoneyToPay()): " + (getMoneyToPay().equals(otherInvoice.getMoneyToPay())));
-        System.out.println("getVat().equals(otherInvoice.getVat()): " + (getVat().equals(otherInvoice.getVat())));
-        System.out.println("getMoneyPaid().equals(otherInvoice.getMoneyPaid()): " + (getMoneyPaid().equals(otherInvoice.getMoneyPaid())));
-        System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
+//        System.out.println("Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses()): " + (Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())));
+//        System.out.println("getMoneyToPay().equals(otherInvoice.getMoneyToPay()): " + (getMoneyToPay().equals(otherInvoice.getMoneyToPay())));
+//        System.out.println("getVat().equals(otherInvoice.getVat()): " + (getVat().equals(otherInvoice.getVat())));
+//        System.out.println("getMoneyPaid().equals(otherInvoice.getMoneyPaid()): " + (getMoneyPaid().equals(otherInvoice.getMoneyPaid())));
+//        System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
         
         return  getFirstName().equals(otherInvoice.getFirstName())  &&
                 getLastName().equals(otherInvoice.getLastName())    &&

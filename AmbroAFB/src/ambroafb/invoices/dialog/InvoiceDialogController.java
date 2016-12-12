@@ -54,8 +54,6 @@ public class InvoiceDialogController implements Initializable {
     @FXML @ContentNotEmpty
     private CountComboBox<Product> products;
     @FXML @ContentNotEmpty
-    private ComboBox<InvoiceReissuing> invoiceReissuings;
-    @FXML @ContentNotEmpty
     private ADatePicker beginDate;
     @FXML @ContentNotEmpty
     private MonthCounterComboBox monthCounter;
@@ -65,7 +63,9 @@ public class InvoiceDialogController implements Initializable {
     
     
     @FXML
-    private VBox formPane;
+    private VBox formPane, financesLabelTextContainer, financesLabelNumberContainer;
+    @FXML
+    private ComboBox<InvoiceReissuing> invoiceReissuings;
     @FXML
     private ADatePicker createdDate, endDate, revokedDate;
     @FXML
@@ -81,14 +81,14 @@ public class InvoiceDialogController implements Initializable {
     private Invoice invoice;
     private Invoice invoiceBackup;
     private boolean permissionToClose;
+    private String colonDelimiter = ":";
+    private String percentDelimiter = "%";
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         
-        invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
-        InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
-        invoiceReissuings.setValue(defaultReissuing);
+        processInvoiceReissuingComboBox();
         
         clients.registerBundle(resources);
         clients.showCategoryALL(false);
@@ -102,8 +102,6 @@ public class InvoiceDialogController implements Initializable {
         });
         products.showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (oldValue != null && !newValue) {
-                System.out.println("------------------------------");
-                printMap(products.getData());
                 rebindFinanceData();
             }
         });
@@ -117,10 +115,45 @@ public class InvoiceDialogController implements Initializable {
                 rebindFinanceData();
             }
         });
+        
+        setFinanceInfosDefaultText();
+    }
+    
+    private void processInvoiceReissuingComboBox(){
+        invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
+        InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
+        for (int i = 0; i < invoiceReissuings.getItems().size(); i++) {
+            InvoiceReissuing reissuing = invoiceReissuings.getItems().get(i);
+            if (reissuing.getRecId() == defaultReissuing.getRecId()){
+                invoiceReissuings.setValue(reissuing);
+                break;
+            }
+            
+        }
+                
+            
+        invoiceReissuings.setValue(defaultReissuing);
+    }
+    
+    private void setFinanceInfosDefaultText(){
+        sumText.setText(sumText.getText() + colonDelimiter);
+        discountText.setText(discountText.getText() + percentDelimiter + colonDelimiter);
+        netoText.setText(netoText.getText() + colonDelimiter);
+        vatText.setText(vatText.getText() + percentDelimiter + colonDelimiter);
+        payText.setText(payText.getText() + colonDelimiter);
+    }
+    
+    private void setShowFinanceData(boolean isShow){
+        financesLabelTextContainer.setVisible(isShow);
+        financesLabelNumberContainer.setVisible(isShow);
     }
     
     private void rebindFinanceData(){
         if (isEveryNessesaryFieldValid()){
+            System.out.println("into rebindFinanceData method...");
+            if (!financesLabelTextContainer.isVisible()){
+                setShowFinanceData(true);
+            }
             Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
             JSONArray productsArray = new JSONArray();
             productsMap.keySet().stream().forEach((product) -> {
@@ -133,8 +166,7 @@ public class InvoiceDialogController implements Initializable {
             invoice.getLicenses().stream().forEach((licenseShortData) -> {
                 licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
             });
-            
-//            System.out.println("licensesIds: " + licensesIds);
+            System.out.println("licensesIds: " + licensesIds);
             
             String discount = invoice.getAdditionalDiscountRate();
             if (discount.isEmpty()){
@@ -157,9 +189,13 @@ public class InvoiceDialogController implements Initializable {
             invoice.setLicenses(wholeLicenses);
             processFinanceData(invoiceFinances);
         }
+        else {
+            System.out.println("default value for labels ...");
+        }
     }
     
     private void processFinanceData(ArrayList<InvoiceFinaces> invoiceFinances){
+        if (invoiceFinances.isEmpty()) return;
         InvoiceFinaces financeOfInvoce = invoiceFinances.get(0);
         sumNumber.setText(financeOfInvoce.sum + financeOfInvoce.symbolTotal);
         discountText.setText(processString(discountText.getText(), financeOfInvoce.additionalDiscountRate));
@@ -216,6 +252,11 @@ public class InvoiceDialogController implements Initializable {
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
+        }
+        
+         // This is Dialog "new" and not add by simple, which EDITOR_BUTTON_TYPE is also NEW.
+        if (invoice != null && invoice.getInvoiceFinances().isEmpty()){
+            setShowFinanceData(false);
         }
         okayCancelController.setButtonsFeatures(buttonType);
     }

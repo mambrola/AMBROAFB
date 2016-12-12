@@ -83,19 +83,19 @@
             </HBox>
             <HBox styleClass="oneThirds" >
                 <children>
-                    <VBox styleClass="couple" >
-                        <Label fx:id="sumText" styleClass="infoLabel" text="%sum" />
-                        <Label fx:id="discountText" styleClass="infoLabel" text="%discount_percent" />
-                        <Label fx:id="netoText" styleClass="infoLabel" text="%neto" />
-                        <Label fx:id="vatText" styleClass="infoLabel" text="%vat_percent" />
-                        <Label fx:id="payText" styleClass="infoLabel" text="%money_paid" />
+                    <VBox fx:id="financesLabelTextContainer" styleClass="couple" >
+                        <Label fx:id="sumText" styleClass="infoLabel" text="%sum" alignment="CENTER_RIGHT" />
+                        <Label fx:id="discountText" styleClass="infoLabel" text="%discount_percent" alignment="CENTER_RIGHT" />
+                        <Label fx:id="netoText" styleClass="infoLabel" text="%neto" alignment="CENTER_RIGHT" />
+                        <Label fx:id="vatText" styleClass="infoLabel" text="%vat_percent" alignment="CENTER_RIGHT" />
+                        <Label fx:id="payText" styleClass="infoLabel" text="%money_paid" alignment="CENTER_RIGHT" />
                     </VBox>
-                    <VBox styleClass="couple" >
-                        <Label fx:id="sumNumber" styleClass="infoLabel" text="___________" />
-                        <Label fx:id="discountNumber" styleClass="infoLabel" text="___________" />
-                        <Label fx:id="netoNumber" styleClass="infoLabel" text="___________" />
-                        <Label fx:id="vatNumber" styleClass="infoLabel" text="___________" />
-                        <Label fx:id="payNumber" styleClass="infoLabel" text="___________" />
+                    <VBox fx:id="financesLabelNumberContainer" styleClass="couple" >
+                        <Label fx:id="sumNumber" styleClass="infoLabel" />
+                        <Label fx:id="discountNumber" styleClass="infoLabel" />
+                        <Label fx:id="netoNumber" styleClass="infoLabel" />
+                        <Label fx:id="vatNumber" styleClass="infoLabel" />
+                        <Label fx:id="payNumber" styleClass="infoLabel" />
                     </VBox>
                     <VBox styleClass="couple, vContainer">
                         <children>

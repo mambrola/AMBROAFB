@@ -119,7 +119,7 @@ public class CountComboBox<T> extends ComboBox<T> {
                 });
                 
                 // ComboBox button cell text will show after any item select in comboBox. 
-                //So we select every item. The last selected item will be zero indexed (only for visually effect).
+                // So we select every item. The last selected item will be zero indexed (only for visually effect).
                 int index = box.getItems().indexOf(item);
                 int size = box.getItems().size();
                 box.getSelectionModel().select((index + 1) % size);
