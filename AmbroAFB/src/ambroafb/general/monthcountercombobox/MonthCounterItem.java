@@ -59,6 +59,13 @@ public class MonthCounterItem {
             monthCount = counter;
         }
     }
+    
+    @Override
+    public boolean equals(Object other){
+        if (other == null) return false;
+        MonthCounterItem otherMonthCounter = (MonthCounterItem) other;
+        return this.getMonthCount() == otherMonthCounter.getMonthCount() && this.getDayCount() == otherMonthCounter.getDayCount();
+    }
         
     @Override
     public String toString(){

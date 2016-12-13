@@ -453,7 +453,7 @@ public class Invoice extends EditorPanelable {
         return (statusObj.isNull().get()) ? "" : statusObj.get().getDescrip();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public int getStatus(){
         return (statusObj.isNull().get()) ? -1 : statusObj.get().getInvoiceStatusId();
     }
@@ -463,6 +463,7 @@ public class Invoice extends EditorPanelable {
         return "" + months.get().getMonthCount();
     }
     
+    @JsonIgnore
     public int getStatusClarify(){
         return statusClarify.get();
     }
@@ -596,6 +597,7 @@ public class Invoice extends EditorPanelable {
         this.months.get().setMonth(months);
     }
     
+    @JsonProperty
     public void setIsLogined(int logined){
         isLogined.set(logined == 1);
     }
@@ -735,6 +737,7 @@ public class Invoice extends EditorPanelable {
         private int recId;
         private int licenseId;
         private final StringProperty licenseNumber = new SimpleStringProperty("");
+        private int invoiceLicenseId;
         
         public StringProperty licenseNumberProperty(){
             return licenseNumber;
@@ -754,6 +757,11 @@ public class Invoice extends EditorPanelable {
             return Integer.parseInt(licenseNumber.get());
         }
         
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+        public int getRec_id(){
+            return invoiceLicenseId;
+        }
+        
         
         @JsonProperty
         public void setRecId(int recId){
@@ -767,6 +775,11 @@ public class Invoice extends EditorPanelable {
         @JsonProperty
         public void setLicenseNumber(int number){
             licenseNumber.set("" + number);
+        }
+        
+        @JsonProperty
+        public void setInvoiceLicense(int invoiceLicenseId){
+            this.invoiceLicenseId = invoiceLicenseId;
         }
         
         @Override

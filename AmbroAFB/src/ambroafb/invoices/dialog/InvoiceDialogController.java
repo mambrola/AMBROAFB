@@ -63,7 +63,7 @@ public class InvoiceDialogController implements Initializable {
     private ADatePicker beginDate;
     @FXML @ContentNotEmpty
     private MonthCounterComboBox monthCounter;
-    @FXML @ContentPattern(value = "(([1-9]\\d*)?\\d)(\\.\\d\\d)?$", explain = "The discount syntax is incorrect. like: 0.35, 3.25 ...")
+    @FXML @ContentPattern(value = "^$|(([1-9]\\d*)?\\d)(\\.\\d\\d)?$", explain = "The discount syntax is incorrect. like: 0.35, 3.25 ...")
     private TextField additionalDiscount;
     // end order
     
@@ -314,58 +314,60 @@ public class InvoiceDialogController implements Initializable {
         }
         
         private void calculateFinaceData() {
-            System.out.println("into rebindFinanceData method...");
             setShowFinanceData(true, true);
-//            Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
             Map<Product, Integer> productsMap = products.getData();
-            Map<Product, Integer> backupProductsMap = invoiceBackup.getProductsWithCounts();
             JSONArray productsArray = new JSONArray();
             productsMap.keySet().stream().forEach((product) -> {
-//                System.out.println("prod id: " + product.getRecId() + "  backupProductsMap.containsKey(product): " + backupProductsMap.containsKey(product) +
-//                                    " count old: " + backupProductsMap.get(product) + " count new: " + productsMap.get(product));
-                Integer newCount = productsMap.get(product);
-                Integer oldCount = (backupProductsMap.containsKey(product)) ? backupProductsMap.get(product) : 0;
-                if ( !backupProductsMap.containsKey(product) || oldCount.intValue() != newCount.intValue() ){
-                    JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
-                    productsArray.put(Utils.getJsonFrom(json, "count", newCount - oldCount));
-                }
+                JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
+                productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
             });
-            System.out.println("rebindFinanceData -> productsArray: " + productsArray);
+//            System.out.println("rebindFinanceData -> productsArray: " + productsArray);
 
             JSONArray licensesIds = new JSONArray();
             invoice.getLicenses().stream().forEach((licenseShortData) -> {
                 licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
             });
-            System.out.println("licensesIds: " + licensesIds);
+//            System.out.println("licensesIds: " + licensesIds);
 
+            Integer invoiceId = null;
+            if (invoice.getRecId() != 0){
+                invoiceId = invoice.getRecId();
+            }
             String discount = invoice.getAdditionalDiscountRate();
-            if (discount.isEmpty()) {
+            if (discount == null || discount.isEmpty()) {
                 discount = null;
             }
-            DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
+            DBUtils.callInvoiceSuitedLicenses(invoiceId, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
             ArrayList<PartOfLicense> invoiceLicenses = DBUtils.getLicenses();
             
-            for (PartOfLicense invoiceLicense : invoiceLicenses) {
-                System.out.println("invoice license: " + invoiceLicense.licenseNumber);
-            }
+//            for (PartOfLicense invoiceLicense : invoiceLicenses) {
+//                System.out.println("invoice license from suited. license number: " + invoiceLicense.licenseNumber +
+//                                                                 " license rec id: " + invoiceLicense.recId +
+//                                                                 " invoice license id: " + invoiceLicense.invoiceLicenseId);
+//            } 
             
-            ArrayList<LicenseFinaces> licenseFinaces = DBUtils.getLicensesFinaces();
+            ArrayList<LicenseFinaces> licenseFinances = DBUtils.getLicensesFinaces();
             ArrayList<InvoiceFinaces> invoiceFinances = DBUtils.getInvoicesFinaces();
 
-            invoice.setLicenseFinances(licenseFinaces);
+            invoice.setLicenseFinances(licenseFinances);
             invoice.setInvoiceFinances(invoiceFinances);
             List<Invoice.LicenseShortData> wholeLicenses = invoiceLicenses.stream().map((license) -> {
                 Invoice.LicenseShortData shortData = new Invoice.LicenseShortData();
-                shortData.setLicenseId(license.invoiceLicenseId);
-                System.out.println("license.invoiceLicenseId: " + license.invoiceLicenseId);
+                shortData.setLicenseId(license.recId);
                 shortData.setLicenseNumber(license.licenseNumber);
+                if (license.invoiceLicenseId != 0){
+                    shortData.setInvoiceLicense(license.invoiceLicenseId);
+                }
                 return shortData;
             }).collect(Collectors.toList());
-            //            System.out.println("invoice whole license: " + wholeLicenses);
-//            invoice.setLicenses(wholeLicenses);
-            invoice.setLicenses(invoiceBackup.getLicenses());
-            invoice.getLicenses().addAll(wholeLicenses);
-            System.out.println("licenses size: " + invoice.getLicenses().size());
+            
+//            for (Invoice.LicenseShortData wholeLicense : wholeLicenses) {
+//                System.out.println( " >>> license number: " + wholeLicense.getLicenseNumber() +
+//                                    " license rec id: " + wholeLicense.getRecId() +
+//                                    " invoice license id: " + wholeLicense.getRec_id());
+//            } 
+            
+            invoice.setLicenses(wholeLicenses);
         }
     }
 }

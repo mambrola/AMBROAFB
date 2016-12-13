@@ -572,7 +572,9 @@ public class Utils {
                 ComboBox comboBox = (ComboBox) field.get(ownerClassObject);
                 results[0] = comboBox;
                 // Note: comboBox.getValue() may be null but some class may provides to make some action that avoid nullable and return empty string for example. So we check selection index.
-                int selectedIndex = comboBox.getSelectionModel().getSelectedIndex(); 
+                int selectedIndex = comboBox.getSelectionModel().getSelectedIndex();
+                System.out.println("selectedIndex: " + selectedIndex);
+                System.out.println("getValue: " + comboBox.getValue());
                 results[1] = (comboBox.getValue() == null || selectedIndex < 0) ? null : comboBox.getValue();
             }
             field.setAccessible(accessible);
