@@ -38,8 +38,10 @@ import java.util.Map;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -117,6 +119,7 @@ public class Invoice extends EditorPanelable {
     @AView.Column(title = "%invoice_status", width = "100")
     @JsonIgnore
     private final ObjectProperty<InvoiceStatus> statusObj;
+    private final IntegerProperty statusClarify;
     
     private final ObjectProperty<MonthCounterItem> months;
     private final BooleanProperty isLogined, isPaid;
@@ -154,6 +157,7 @@ public class Invoice extends EditorPanelable {
         vat = new SimpleStringProperty("");
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
+        statusClarify = new SimpleIntegerProperty();
         months = new SimpleObjectProperty<>(new MonthCounterItem(""));
         isLogined = new SimpleBooleanProperty(false);
         isPaid = new SimpleBooleanProperty(false);
@@ -309,6 +313,10 @@ public class Invoice extends EditorPanelable {
     public StringProperty additionaldiscountProperty(){
         return additionalDiscountRate;
     }
+    
+    public StringProperty licensesNumbersProperty(){
+        return licensesDescript;
+    }
 
     public StringProperty moneyToPayProperty(){
         return moneyToPay;
@@ -340,6 +348,10 @@ public class Invoice extends EditorPanelable {
     
     public BooleanProperty isPaidProperty(){
         return isPaid;
+    }
+    
+    public IntegerProperty statusClarifyProperty(){
+        return statusClarify;
     }
     
     
@@ -451,12 +463,10 @@ public class Invoice extends EditorPanelable {
         return "" + months.get().getMonthCount();
     }
     
-    @JsonIgnore
-    public String getLicensesWithDelimiter(String delimiter){
-        String result = "";
-        result = licenses.stream().map((shortData) -> shortData.getLicenseNumber() + delimiter).reduce(result, String::concat);
-        return (result.isEmpty()) ? result : result.substring(0, result.length() - 1);
+    public int getStatusClarify(){
+        return statusClarify.get();
     }
+    
     
     
     // Setters:
@@ -593,6 +603,11 @@ public class Invoice extends EditorPanelable {
     public void setIsPaid(int paid){
         isPaid.set(paid == 1);
     }
+    
+    public void setStatusClarify(int clarify){
+        statusClarify.set(clarify);
+    }
+    
     
     
     // Methods override:

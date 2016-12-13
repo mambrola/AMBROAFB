@@ -208,7 +208,7 @@ public class InvoiceDialogController implements Initializable {
             endDate.valueProperty().bindBidirectional(invoice.endDateProperty());
             
             additionalDiscount.textProperty().bindBidirectional(invoice.additionaldiscountProperty());
-            licenses.setText(invoice.getLicensesWithDelimiter(", "));
+            licenses.textProperty().bind(invoice.licensesNumbersProperty());
             
             if (invoice.reissuingProperty().get() != null){
                 invoiceReissuings.valueProperty().bindBidirectional(invoice.reissuingProperty());
@@ -243,9 +243,6 @@ public class InvoiceDialogController implements Initializable {
             if (clients.getValue() != null){ // add by simple
                 invoiceNumber.setText("");
                 status.setText("");
-                additionalDiscount.setText("");
-                vatNumber.setText("");
-                
             }
         }
         
@@ -319,11 +316,19 @@ public class InvoiceDialogController implements Initializable {
         private void calculateFinaceData() {
             System.out.println("into rebindFinanceData method...");
             setShowFinanceData(true, true);
-            Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
+//            Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
+            Map<Product, Integer> productsMap = products.getData();
+            Map<Product, Integer> backupProductsMap = invoiceBackup.getProductsWithCounts();
             JSONArray productsArray = new JSONArray();
             productsMap.keySet().stream().forEach((product) -> {
-                JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
-                productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
+//                System.out.println("prod id: " + product.getRecId() + "  backupProductsMap.containsKey(product): " + backupProductsMap.containsKey(product) +
+//                                    " count old: " + backupProductsMap.get(product) + " count new: " + productsMap.get(product));
+                Integer newCount = productsMap.get(product);
+                Integer oldCount = (backupProductsMap.containsKey(product)) ? backupProductsMap.get(product) : 0;
+                if ( !backupProductsMap.containsKey(product) || oldCount.intValue() != newCount.intValue() ){
+                    JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
+                    productsArray.put(Utils.getJsonFrom(json, "count", newCount - oldCount));
+                }
             });
             System.out.println("rebindFinanceData -> productsArray: " + productsArray);
 
@@ -352,11 +357,15 @@ public class InvoiceDialogController implements Initializable {
             List<Invoice.LicenseShortData> wholeLicenses = invoiceLicenses.stream().map((license) -> {
                 Invoice.LicenseShortData shortData = new Invoice.LicenseShortData();
                 shortData.setLicenseId(license.invoiceLicenseId);
+                System.out.println("license.invoiceLicenseId: " + license.invoiceLicenseId);
                 shortData.setLicenseNumber(license.licenseNumber);
                 return shortData;
             }).collect(Collectors.toList());
             //            System.out.println("invoice whole license: " + wholeLicenses);
-            invoice.setLicenses(wholeLicenses);
+//            invoice.setLicenses(wholeLicenses);
+            invoice.setLicenses(invoiceBackup.getLicenses());
+            invoice.getLicenses().addAll(wholeLicenses);
+            System.out.println("licenses size: " + invoice.getLicenses().size());
         }
     }
 }
