@@ -219,6 +219,10 @@ public class InvoiceDialogController implements Initializable {
         }
     }
     
+    public ComboBox<Product> getProductsComboBox(){
+        return products;
+    }
+    
     // for test
     private void printMap(Map<Product, Integer> items){
         items.keySet().stream().forEach((p) -> {
