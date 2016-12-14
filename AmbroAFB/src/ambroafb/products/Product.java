@@ -77,6 +77,8 @@ public class Product extends EditorPanelable {
     @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)
     private final SimpleBooleanProperty isActive;
     
+    private final IntegerProperty notJurMaxCount;
+    
     @JsonIgnore
     private static final String DB_VIEW_NAME = "products_whole";
     @JsonIgnore
@@ -100,6 +102,7 @@ public class Product extends EditorPanelable {
         discounts = FXCollections.observableArrayList();
         discountsForMapEditor = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
+        notJurMaxCount = new SimpleIntegerProperty();
         
         productSpecific.addListener((ObservableValue<? extends ProductSpecific> observable, ProductSpecific oldValue, ProductSpecific newValue) -> {
             rebindSpecific();
@@ -215,6 +218,11 @@ public class Product extends EditorPanelable {
         return isActive;
     }
     
+    public IntegerProperty notJurMaxCountProperty(){
+        return notJurMaxCount;
+    }
+    
+    
     
     // Getters:
     public String getAbbreviation(){
@@ -257,6 +265,11 @@ public class Product extends EditorPanelable {
     public boolean getIsActive() {
         return isActive.get();
     }
+    
+    public int getNotJurMaxCount(){
+        return notJurMaxCount.get();
+    }
+    
 
     
     // Setters:
@@ -289,14 +302,15 @@ public class Product extends EditorPanelable {
     }
     
     public void setDiscounts(Collection<ProductDiscount> discounts) {
-//        this.discounts.setAll(discounts);
-//        discounts.stream().forEach((discount) -> {
         discountsForMapEditor.setAll(discounts);
-//        });
     }
 
     public void setIsActive(boolean isActive) {
         this.isActive.set(isActive);
+    }
+    
+    public void setNotJurMaxCount(int notJurMaxCount){
+        this.notJurMaxCount.set(notJurMaxCount);
     }
 
     
