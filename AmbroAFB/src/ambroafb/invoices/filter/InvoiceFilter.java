@@ -90,7 +90,6 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
             invoiceFilterModel.setEndDateFrom(endDateFrom.getValue());
             invoiceFilterModel.setEndDateTo(endDateTo.getValue());
             invoiceFilterModel.setSelectedClient(clients.getValue());
-            invoiceFilterModel.setSelectedClientIndex(clients.getSelectionModel().getSelectedIndex());
             invoiceFilterModel.setCheckedReissuingsIndexes(invoiceReissuings.getCheckModel().getCheckedIndices());
             invoiceFilterModel.setCheckedReissuings(invoiceReissuings.getCheckModel().getCheckedItems());
         }
@@ -105,7 +104,7 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
         startDateTo.setValue(invoiceFilterModel.getStartDate(false));
         endDateFrom.setValue(invoiceFilterModel.getEndDate(true));
         endDateTo.setValue(invoiceFilterModel.getEndDate(false));
-        clients.getSelectionModel().select(invoiceFilterModel.getSelectedClientIndex());
+//        clients.getSelectionModel().select(invoiceFilterModel.getSelectedClientIndex());
         invoiceFilterModel.getCheckedReissuingsIndexes().stream().forEach((index) -> {
             invoiceReissuings.getCheckModel().check(index);
         });

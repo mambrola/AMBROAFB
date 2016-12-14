@@ -32,7 +32,6 @@ public class InvoiceFilterModel extends FilterModel {
     private static final String PREF_START_DATE_TO_KEY = "invoices/filter/start_date_to";
     private static final String PREF_END_DATE_FROM_KEY = "invoices/filter/end_date_from";
     private static final String PREF_END_DATE_TO_KEY = "invoices/filter/end_date_to";
-    private static final String PREF_SELECTED_CLIENT_INDEX_KEY = "invoices/filter/selected_client_index";
     private static final String PREF_CHECKED_REISSUING_INDEXES_KEY = "invoices/filter/checked_invoice_reissuing_indexes";
     
     public static final String DATE_BIGGER = "1970-01-01";
@@ -62,12 +61,8 @@ public class InvoiceFilterModel extends FilterModel {
         selectedClient = client;
     }
     
-    public void setSelectedClientIndex(int index){
-        saveIntoPref(PREF_SELECTED_CLIENT_INDEX_KEY, index);
-    }
-    
     public void setCheckedReissuingsIndexes(ObservableList<Integer> checkedIndexes){
-        saveIntoPref(PREF_CHECKED_REISSUING_INDEXES_KEY, (checkedIndexes == null || checkedIndexes.isEmpty()) ? "[]" : checkedIndexes.toString());
+        saveIntoPref(PREF_CHECKED_REISSUING_INDEXES_KEY, checkedIndexes.toString());
     }
     
     public void setCheckedReissuings(ObservableList<InvoiceReissuing> reissuings){
@@ -103,10 +98,6 @@ public class InvoiceFilterModel extends FilterModel {
         return date;
     }
     
-    public int getSelectedClientIndex(){
-        return getIntFromPref(PREF_SELECTED_CLIENT_INDEX_KEY);
-    }
-    
     public Client getSelectedClient(){
         return selectedClient;
     }
@@ -129,7 +120,7 @@ public class InvoiceFilterModel extends FilterModel {
     }
 
     public boolean isSelectedConcreteClient() {
-        return getIntFromPref(PREF_SELECTED_CLIENT_INDEX_KEY) > 0;
+        return selectedClient != null && selectedClient.getRecId() > 0;
     }
     
     public boolean hasSelectedReissuings(){

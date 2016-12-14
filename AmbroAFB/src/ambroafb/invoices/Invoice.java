@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
@@ -230,6 +231,11 @@ public class Invoice extends EditorPanelable {
     public static ArrayList<InvoiceReissuing> getAllIvoiceReissuingsesFromDB(){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
+
+        // for test reissuing json order:
+        ArrayList<InvoiceReissuing> re = DBUtils.getObjectsListFromDB(InvoiceReissuing.class, DB_REISSUINGS_TABLE, params);
+        System.out.println("reissuing: " + re.stream().map((reissuing) -> reissuing.getRecId()).collect(Collectors.toList()).toString());
+        
         return DBUtils.getObjectsListFromDB(InvoiceReissuing.class, DB_REISSUINGS_TABLE, params);
     }
     

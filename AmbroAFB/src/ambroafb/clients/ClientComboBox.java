@@ -47,7 +47,8 @@ public class ClientComboBox extends FilterableWithALLComboBox<Client> {
         super.registerCategoryALL(clientALL);
         
         setDataItems(items, (Client c) -> c.getShortDescrip("").get());
-        showCategoryALL(true);
+        super.showCategoryALL(true);
+        super.selectedItemPrpoerty().set(clientALL);
     }
     
     private JSONObject getColumnsJSON(){
