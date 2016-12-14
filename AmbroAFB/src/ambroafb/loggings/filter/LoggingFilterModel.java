@@ -96,7 +96,7 @@ public class LoggingFilterModel extends FilterModel {
         return selectedClient;
     }
 
-    public boolean isSelectedClientALL() {
-        return getIntFromPref(PREF_CLIENT_KEY) == 0;
+    public boolean isSelectedConcreteClient() {
+        return selectedClient != null && selectedClient.getRecId() > 0;
     }
 }

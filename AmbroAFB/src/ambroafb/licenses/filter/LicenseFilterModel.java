@@ -25,14 +25,12 @@ import javafx.collections.ObservableList;
  */
 public class LicenseFilterModel extends FilterModel {
 
-    private static final String PREF_CLIENT_KEY = "licenses/filter/selected_client_index";
-    private static final String PREF_PRODUCT_KEY = "licenses/filter/selected_product_index";
     private static final String PREF_STATUS_KEY = "licenses/filter/status_ids";
     private static final String PREF_EXTRA_DAYS_KEY = "licenses/filter/extraDays";
 
     private ObservableList<LicenseStatus> checkedStatuses;
-    private Client client;
-    private Product product;
+    private Client selectedClient;
+    private Product selectedProduct;
     
     private final int indeterminate = 2;
     private final int isSelectedExtraDays = 1;
@@ -42,20 +40,12 @@ public class LicenseFilterModel extends FilterModel {
         checkedStatuses = FXCollections.observableArrayList();
     }
 
-    public void setSelectedClientIndex(int clientIndex) {
-        saveIntoPref(PREF_CLIENT_KEY, clientIndex);
-    }
-
     public void setSelectedClient(Client selectedItem) {
-        client = selectedItem;
+        selectedClient = selectedItem;
     }
 
-    public void setSelectedProductIndex(int productIndex) {
-        saveIntoPref(PREF_PRODUCT_KEY, productIndex);
-    }
-    
     public void setSelectedProduct(Product selectedItem){
-        product = selectedItem;
+        selectedProduct = selectedItem;
     }
 
     public void setSelectedStatuses(ObservableList<LicenseStatus> statuses) {
@@ -78,20 +68,12 @@ public class LicenseFilterModel extends FilterModel {
         saveIntoPref(PREF_EXTRA_DAYS_KEY, indeterminate);
     }
 
-    public int getSelectedClientIndex() {
-        return getIntFromPref(PREF_CLIENT_KEY);
-    }
-    
     public Client getSelectedClient(){
-        return client;
-    }
-    
-    public int getSelectedProductIndex() {
-        return getIntFromPref(PREF_PRODUCT_KEY);
+        return selectedClient;
     }
     
     public Product getSelectedProduct(){
-        return product;
+        return selectedProduct;
     }
 
     /**
@@ -124,5 +106,13 @@ public class LicenseFilterModel extends FilterModel {
     
     public boolean withAndWithoutExtraDays(){
         return getIntFromPref(PREF_EXTRA_DAYS_KEY) == indeterminate;
+    }
+    
+    public boolean isSelectedConcreteClient(){
+        return selectedClient != null && selectedClient.getRecId() > 0;
+    }
+    
+    public boolean isSelectedConcreteProduct(){
+        return selectedProduct != null && selectedProduct.getRecId() > 0;
     }
 }

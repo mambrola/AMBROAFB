@@ -80,7 +80,7 @@ public class Logging extends EditorPanelable {
         WhereBuilder whereBuilder = new ConditionBuilder().where()
                                         .and("login_time", ">=", logingFilterModel.getFromDateForDB())
                                         .and("login_time", "<=", logingFilterModel.getToDateForDB());
-        if (!logingFilterModel.isSelectedClientALL()){
+        if (!logingFilterModel.isSelectedConcreteClient()){
             Client client = logingFilterModel.getSelectedClient();
             whereBuilder.and("first_name", "=", client.getFirstName())
                         .and("last_name", "=", client.getLastName())

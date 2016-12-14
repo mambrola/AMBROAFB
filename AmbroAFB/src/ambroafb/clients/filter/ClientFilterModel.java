@@ -29,7 +29,6 @@ public class ClientFilterModel extends FilterModel {
     
     private static final String PREF_FROM_DATE_KEY = "clients/filter/from_date";
     private static final String PREF_TO_DATE_KEY = "clients/filter/to_date";
-    private static final String PREF_COUNTRY_KEY = "clients/filter/country/index";
     private static final String PREF_SELECTED_STATUSES_KEY = "clients/filter/statuses_indexes";
     private static final String PREF_JURIDICAL_KEY = "clients/filter/juridical";
     private static final String PREF_JURIDICAL_INDETERMINATE_KEY = "clients/filter/juridical_indeterminate";
@@ -60,10 +59,6 @@ public class ClientFilterModel extends FilterModel {
 
     public void setJuridicalSelected(boolean selected) {
         saveIntoPref(PREF_JURIDICAL_KEY, selected);
-    }
-
-    public void setSelectedCountryIndex(int selectedIndex) {
-        saveIntoPref(PREF_COUNTRY_KEY, selectedIndex);
     }
 
     public void setSelectedCountry(Country value) {
@@ -145,10 +140,6 @@ public class ClientFilterModel extends FilterModel {
         return getBooleanFromPref(PREF_TYPE_KEY);
     }
     
-    public int getSelectedCountryIndex(){
-        return getIntFromPref(PREF_COUNTRY_KEY);
-    }
-    
     public Country getSelectedCountry(){
         return selectedCountry;
     }
@@ -171,7 +162,7 @@ public class ClientFilterModel extends FilterModel {
     }
 
     public boolean isSelectedConcreteCountry() {
-        return getIntFromPref(PREF_COUNTRY_KEY) > 0;
+        return selectedCountry != null && selectedCountry.getRecId() > 0;
     }
     
     public boolean hasSelectedStatuses(){

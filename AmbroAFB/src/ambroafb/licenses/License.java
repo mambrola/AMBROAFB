@@ -156,33 +156,17 @@ public class License extends EditorPanelable {
     public static ArrayList<License> getAllFromDB(){
         JSONObject params = new ConditionBuilder().build();
         return DBUtils.getObjectsListFromDB(License.class, DB_VIEW_NAME, params);
-        
-//        try {
-//            String data = GeneralConfig.getInstance().getDBClient().select(DB_VIEW_NAME, params).toString();
-//            
-//            System.out.println("licenses data: " + data);
-//            
-//            ObjectMapper mapper = new ObjectMapper();
-//            return mapper.readValue(data, new TypeReference<ArrayList<License>>() {});
-//        } catch (IOException | AuthServerException ex) {
-//            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return new ArrayList<>();
     }
     
     public static ArrayList<License> getFilteredFromDB(FilterModel model) {
         WhereBuilder whereBuilder = new ConditionBuilder().where();
         LicenseFilterModel licenseFilterModel = (LicenseFilterModel) model;
         
-        int clientId = licenseFilterModel.getSelectedClientIndex();
-        System.out.println("clientId: " + clientId);
-        if (clientId > 0){
-            whereBuilder = whereBuilder.and("client_id", "=", clientId);
+        if (licenseFilterModel.isSelectedConcreteClient()){
+            whereBuilder = whereBuilder.and("client_id", "=", licenseFilterModel.getSelectedClient().getRecId());
         }
-        int productId = licenseFilterModel.getSelectedProductIndex();
-        System.out.println("productId: " + productId);
-        if (productId > 0){
-            whereBuilder = whereBuilder.and("product_id", "=", productId);
+        if (licenseFilterModel.isSelectedConcreteProduct()){
+            whereBuilder = whereBuilder.and("product_id", "=", licenseFilterModel.getSelectedProduct().getRecId());
         }
         ObservableList<LicenseStatus> statuses = licenseFilterModel.getSelectedStatuses();
         if (!statuses.isEmpty()){

@@ -21,7 +21,6 @@ public class CurrencyRateFilterModel extends FilterModel {
     
     private static final String PREF_BIGGER_DATE_KEY = "currency_rate/filter/dateBigger";
     private static final String PREF_LESS_DATE_KEY = "currency_rate/filter/dateLess";
-    private static final String PREF_CURRENCY_ISO_KEY = "currency_rate/filter/currencyIso";
     
     private Currency selectedCurrency;
             
@@ -37,10 +36,6 @@ public class CurrencyRateFilterModel extends FilterModel {
         saveIntoPref(PREF_LESS_DATE_KEY, (date == null) ? "" : date.toString());
     }
     
-    public void setSelectedCurrencyIndex(int index){
-        saveIntoPref(PREF_CURRENCY_ISO_KEY, index);
-    }
-
     public void setSelectedCurrency(Currency currency) {
         selectedCurrency = currency;
     }
@@ -85,15 +80,11 @@ public class CurrencyRateFilterModel extends FilterModel {
         return toDate;
     }
     
-    public int getSelectedCurrencyIndex(){
-        return getIntFromPref(PREF_CURRENCY_ISO_KEY);
-    }
-    
     public Currency getSelectedCurrency(){
         return selectedCurrency;
     }
 
-    public boolean isSelectedCurrencyALL() {
-        return getIntFromPref(PREF_CURRENCY_ISO_KEY) == 0;
+    public boolean isSelectedConcreteCurrency() {
+        return selectedCurrency != null && selectedCurrency.getRecId() > 0;
     }
 }

@@ -83,7 +83,6 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
             
             clientFilterModel.setFromDate(dateBigger.getValue());
             clientFilterModel.setToDate(dateLess.getValue());
-            clientFilterModel.setSelectedCountryIndex(countries.getSelectionModel().getSelectedIndex());
             clientFilterModel.setSelectedCountry(countries.getValue());
             clientFilterModel.setSelectedStatusesIndexes(statuses.getCheckModel().getCheckedIndices());
             clientFilterModel.setSelectedStatuses(statuses.getCheckModel().getCheckedItems());
@@ -104,7 +103,6 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
         
         dateBigger.setValue(clientFilterModel.getFromDate());
         dateLess.setValue(clientFilterModel.getToDate());
-        countries.getSelectionModel().select(clientFilterModel.getSelectedCountryIndex());
         juridical.setSelected(clientFilterModel.isJuridicalSelected());
         juridical.setIndeterminate(clientFilterModel.isJuridicalIndeterminate());
         rezident.setSelected(clientFilterModel.isRezidentSelected());
