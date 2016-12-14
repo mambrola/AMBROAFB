@@ -698,7 +698,7 @@ public class Invoice extends EditorPanelable {
 //        System.out.println("getMoneyToPay().equals(otherInvoice.getMoneyToPay()): " + (getMoneyToPay().equals(otherInvoice.getMoneyToPay())));
 //        System.out.println("getVat().equals(otherInvoice.getVat()): " + (getVat().equals(otherInvoice.getVat())));
 //        System.out.println("getMoneyPaid().equals(otherInvoice.getMoneyPaid()): " + (getMoneyPaid().equals(otherInvoice.getMoneyPaid())));
-//        System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
+        System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
         
         return  getFirstName().equals(otherInvoice.getFirstName())  &&
                 getLastName().equals(otherInvoice.getLastName())    &&
@@ -727,6 +727,11 @@ public class Invoice extends EditorPanelable {
         }
         else {
             for(Product p : first.keySet()){
+                
+                System.out.println("!second.containsKey(p): " + (!second.containsKey(p)));
+                System.out.println("first.get(p).intValue(): " + first.get(p));
+                System.out.println("second.get(p).intValue(): " + second.get(p));
+                
                 if (!second.containsKey(p) || first.get(p).intValue() != second.get(p).intValue()){
                     result = false;
                     break;

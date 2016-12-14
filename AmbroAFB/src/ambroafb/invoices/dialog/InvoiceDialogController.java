@@ -325,7 +325,7 @@ public class InvoiceDialogController implements Initializable {
                 JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
                 productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
             });
-//            System.out.println("rebindFinanceData -> productsArray: " + productsArray);
+            System.out.println("rebindFinanceData -> productsArray: " + productsArray);
 
             JSONArray licensesIds = new JSONArray();
             invoice.getLicenses().stream().forEach((licenseShortData) -> {
@@ -351,6 +351,9 @@ public class InvoiceDialogController implements Initializable {
 //            } 
             
             ArrayList<LicenseFinaces> licenseFinances = DBUtils.getLicensesFinaces();
+            
+            System.out.println("licenseFinances: " + licenseFinances.toString());
+            
             ArrayList<InvoiceFinaces> invoiceFinances = DBUtils.getInvoicesFinaces();
 
             invoice.setLicenseFinances(licenseFinances);

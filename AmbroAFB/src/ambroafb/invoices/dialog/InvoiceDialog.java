@@ -13,7 +13,6 @@ import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.invoices.Invoice;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -55,13 +54,6 @@ public class InvoiceDialog extends Stage implements Dialogable {
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
-        });
-        
-        showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (newValue){
-                dialogController.getProductsComboBox().show();
-                dialogController.getProductsComboBox().hide();
-            }
         });
         
         StageUtils.centerChildOf(owner, (Stage)this);
