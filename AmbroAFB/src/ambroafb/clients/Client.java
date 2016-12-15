@@ -265,7 +265,8 @@ public class Client extends EditorPanelable{
 
     public static Client saveOneToDB(Client client) {
         if (client == null) return null;
-        Client clientFromDB = DBUtils.saveObjectToDB(client, "client");
+//        Client clientFromDB = DBUtils.saveObjectToDB(client, "client");
+        Client clientFromDB = DBUtils.saveClient(client);
         if (clientFromDB == null) return null;
         System.out.println("client: " + clientFromDB.getRecId());
         client.getClientImageGallery().sendDataToServer("" + clientFromDB.getRecId(), new BiConsumer<String, Boolean>() {

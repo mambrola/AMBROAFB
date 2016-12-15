@@ -175,8 +175,10 @@ public class DBUtils {
         try {
             JSONObject targetJson = Utils.getJSONFromClass(client);
             
+            System.out.println("client json: " + targetJson);
+            
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject jsonFromDB = dbClient.insertUpdate("client?lang=" + dbClient.getLang(), targetJson);
+            JSONObject jsonFromDB = dbClient.insertUpdateFromAfb("client", targetJson);
             return Utils.getClassFromJSON(Client.class, jsonFromDB);
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
