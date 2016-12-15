@@ -250,6 +250,13 @@ public class InvoiceDialogController implements Initializable {
         }
         
         okayCancelController.setButtonsFeatures(buttonType);
+        
+        
+        System.out.println("-----------real invoice---------------");
+        printMap(invoice.getProductsWithCounts());
+        System.out.println("-----------backup invoice---------------");
+        printMap(invoiceBackup.getProductsWithCounts());
+        System.out.println("-------------------------------------");
     }
     
     /**

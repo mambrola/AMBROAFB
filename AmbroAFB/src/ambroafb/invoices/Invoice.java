@@ -700,11 +700,21 @@ public class Invoice extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         Invoice otherInvoice = (Invoice) backup;
         
+//        System.out.println("getFirstName().equals(otherInvoice.getFirstName()): " + (getFirstName().equals(otherInvoice.getFirstName())));
+//        System.out.println("getLastName().equals(otherInvoice.getLastName()): " + (getLastName().equals(otherInvoice.getLastName())));
+//        System.out.println("getEmail().equals(otherInvoice.getEmail()): " + (getEmail().equals(otherInvoice.getEmail())));
+//        System.out.println("getInvoiceNumber().equals(otherInvoice.getInvoiceNumber()): " + (getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())));
+//        System.out.println("Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()): " + (Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get())));
+//        System.out.println("Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()): " + (Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get())));
+//        System.out.println("Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()): " + (Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get())));
+//        System.out.println("getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate()): " + (getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate())));
+//        System.out.println("reissuingObj.get().compares(otherInvoice.reissuingProperty().get()): " + (reissuingObj.get().compares(otherInvoice.reissuingProperty().get())));
+//        System.out.println("statusObj.get().compares(otherInvoice.statusProperty().get()): " + (statusObj.get().compares(otherInvoice.statusProperty().get())));
+//        System.out.println("getMonths().equals(otherInvoice.getMonths()): " + (getMonths().equals(otherInvoice.getMonths())));
 //        System.out.println("Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses()): " + (Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())));
-//        System.out.println("getMoneyToPay().equals(otherInvoice.getMoneyToPay()): " + (getMoneyToPay().equals(otherInvoice.getMoneyToPay())));
-//        System.out.println("getVat().equals(otherInvoice.getVat()): " + (getVat().equals(otherInvoice.getVat())));
-//        System.out.println("getMoneyPaid().equals(otherInvoice.getMoneyPaid()): " + (getMoneyPaid().equals(otherInvoice.getMoneyPaid())));
         System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
+        
+        
         
         return  getFirstName().equals(otherInvoice.getFirstName())  &&
                 getLastName().equals(otherInvoice.getLastName())    &&

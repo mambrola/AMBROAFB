@@ -471,12 +471,12 @@ public class Client extends EditorPanelable{
     
     /**
      * The method create short description of client by firstName, lastName and email.
-     * @param delimiter The sign between of client full name and email.
+     * @param delimiter The sign between of client name, last name and email.
      * @return The expression of client short information.
      */
     @JsonIgnore
     public StringExpression getShortDescrip(String delimiter){
-        return  Utils.avoidNull(firstName).concat("  ")
+        return  Utils.avoidNull(firstName).concat(Utils.getDelimiterBetween(firstName, lastName, new SimpleBooleanProperty(false), delimiter))
                     .concat(Utils.avoidNull(lastName)).concat(Utils.getDelimiterAfter(lastName, delimiter))
                     .concat(Utils.avoidNull(email));
     }

@@ -155,8 +155,17 @@ public class ClientComboBox extends AnchorPane {
         }
 
         @Override
-        public Client fromString(String str) {
-            return null;
+        public Client fromString(String input) {
+            if (input.isEmpty()){
+                return null;
+            }
+            int firstSeparatorIndex = input.indexOf(separator);
+            String name = input.substring(0, firstSeparatorIndex);
+            int secondSeparatorIndex = input.indexOf(separator, firstSeparatorIndex);
+            String lastName = input.substring(firstSeparatorIndex + separator.length(), secondSeparatorIndex);
+            int emailStartIndex = secondSeparatorIndex + separator.length();
+            String email = input.substring(emailStartIndex);
+            return items.stream().filter((Client c) -> c.getFirstName().equals(name) && c.getLastName().equals(lastName) && c.getEmail().equals(email)).collect(Collectors.toList()).get(0);
         }
         
     }

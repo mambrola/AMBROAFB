@@ -47,6 +47,7 @@ import java.util.function.Predicate;
 import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
 import javafx.beans.binding.StringExpression;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -202,12 +203,19 @@ public class Utils {
                         otherwise(delimiter);
     }
     
-    public static StringExpression getDelimiterBetween(StringProperty strPropLeft, StringProperty strPropRight, String delimiter){
+    public static StringExpression getDelimiterBetween(StringProperty strPropLeft, StringProperty strPropRight, BooleanProperty rightIsLastElem, String delimiter){
         return Bindings.when(strPropLeft.isNull().or(strPropLeft.isEmpty())).
                         then("").
-                        otherwise(Bindings.when(strPropRight.isNull().or(strPropRight.isEmpty())).
-                                            then(".").
-                                            otherwise(delimiter));
+                        otherwise(Bindings.when(rightIsLastElem).
+                                            then(Bindings.when(strPropRight.isNull().or(strPropRight.isEmpty())).
+                                                          then(".").
+                                                          otherwise(delimiter)).
+                                            otherwise(Bindings.when(strPropRight.isNull().or(strPropRight.isEmpty())).then("").otherwise(delimiter))
+                                           
+                        );
+//        Bindings.when(strPropRight.isNull().or(strPropRight.isEmpty())).
+//                                            then(".").
+//                                            otherwise(delimiter)
     }
 
     public static String avoidNullAndReturnString(Object object) {
