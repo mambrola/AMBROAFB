@@ -93,14 +93,8 @@ public class ClientComboBox extends AnchorPane {
         search.setPromptText("Search"); 
         
         comboBoxEditor.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            System.out.println("aq??");
             search.setMinWidth(newValue.doubleValue());
             search.setMaxWidth(newValue.doubleValue());
-            
-            System.out.println("search width: " + search.getWidth());
-            System.out.println("search min width: " + search.getMinWidth());
-            System.out.println("search max width: " + search.getMaxWidth());
-            System.out.println("search pref width: " + search.getPrefWidth());
         });
         
         comboBoxEditor.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
@@ -109,6 +103,8 @@ public class ClientComboBox extends AnchorPane {
         });
         
         clients.setConverter(new CustomConverter());
+        
+        getStyleClass().add("blockAccessToChildrenFocus");
     }
     
     private void addIntoChildren(){

@@ -182,6 +182,7 @@ public class Utils {
         root.getChildrenUnmodifiable().stream().forEach((n) -> {
             boolean allow = !n.getStyleClass().contains("alwaysEnable") &&
                             !n.getClass().toString().contains("ImageView");
+//            boolean accessToChildren = !n.getStyleClass().contains("blockAccessToChildrenFocus");
             if (allow){
                 if (((Parent) n).getChildrenUnmodifiable().isEmpty()) {
                     if (n.isFocusTraversable()) {
