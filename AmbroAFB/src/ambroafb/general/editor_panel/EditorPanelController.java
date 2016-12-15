@@ -18,6 +18,7 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.Filterable;
+import ambroafb.invoices.Invoice;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
@@ -178,7 +179,18 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
-            EditorPanelable selected = ((EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem()).cloneWithoutID();
+            EditorPanelable fromAView = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            
+            
+            
+            
+            EditorPanelable selected = fromAView.cloneWithoutID();
+            Invoice t = (Invoice)selected;
+            System.out.println("------------------p------------------------" + t.getProductsWithCounts().size());
+            t.getProductsWithCounts().keySet().stream().forEach((p) -> {
+                System.out.println("p: " + p);
+            });
+            
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
 

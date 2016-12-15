@@ -627,6 +627,8 @@ public class Invoice extends EditorPanelable {
     // Methods override:
     @Override
     public Invoice cloneWithoutID() {
+        System.out.println("-----------cloneWithoutID-------------");
+        
         Invoice clone = new Invoice();
         clone.copyFrom(this);
         return clone;
@@ -678,6 +680,12 @@ public class Invoice extends EditorPanelable {
         reissuingObj.get().copyFrom(invoice.reissuingProperty().get());
         statusObj.get().copyFrom(invoice.statusProperty().get());
         setMonths(invoice.getMonths());
+        
+        System.out.println("-----------copyFrom-------------");
+        System.out.println("-----------other map size-------------" + invoice.getProductsWithCounts());
+        invoice.getProductsWithCounts().keySet().stream().forEach((op) -> {System.out.println("other p: " + op);});
+        System.out.println("-------this anu clone map size: " + productsCounter.size());
+        productsCounter.keySet().stream().forEach((thp) -> {System.out.println("this p: " + thp);});
         
         productsCounter.clear();
         invoice.getProductsWithCounts().keySet().stream().forEach((otherInvoiceProduct) -> {

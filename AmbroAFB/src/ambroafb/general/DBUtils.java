@@ -5,6 +5,7 @@
  */
 package ambroafb.general;
 
+import ambroafb.clients.Client;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceFinaces;
 import ambroafb.invoices.helper.PartOfLicense;
@@ -110,12 +111,12 @@ public class DBUtils {
      * So after this function the element will has every old value and a DB id too.
      * @param <T>
      * @param source The element which must save to DB.
-     * @param tableNameOrStoreProcedure The DB table name in singular form (ex: client, product ...)
-     *                                  Or procedure name for AFB.
+     * @param tableName The DB table name in singular form (ex: client, product ...)
+     *                                  
      * @param optionals
      * @return 
      */
-    public static <T> T saveObjectToDB(Object source, String tableNameOrStoreProcedure){
+    public static <T> T saveObjectToDB(Object source, String tableName){
         try {
             JSONObject targetJson = Utils.getJSONFromClass(source);
             
@@ -123,7 +124,7 @@ public class DBUtils {
             
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             JSONObject newSourceFromDB;
-            newSourceFromDB = dbClient.insertUpdate(tableNameOrStoreProcedure, targetJson);
+            newSourceFromDB = dbClient.insertUpdate(tableName, targetJson);
             
             System.out.println("data for simple table from server: " + newSourceFromDB);
             
@@ -165,6 +166,20 @@ public class DBUtils {
         catch (IOException | AuthServerException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
             new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAlert();
+        }
+        return null;
+    }
+    
+    // ...
+    public static Client saveClient(Client client){
+        try {
+            JSONObject targetJson = Utils.getJSONFromClass(client);
+            
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONObject jsonFromDB = dbClient.insertUpdate("client?lang=" + dbClient.getLang(), targetJson);
+            return Utils.getClassFromJSON(Client.class, jsonFromDB);
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

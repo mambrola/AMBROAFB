@@ -11,7 +11,7 @@
             stylesheets="/styles/css/countcomboboxitem.css"
             xmlns:fx="http://javafx.com/fxml/1" >
     <children>
-        <HBox fx:id="numberPane" style="-fx-background-color: red;" >
+        <HBox fx:id="numberPane" >
             <children>
                 <Region HBox.hgrow="ALWAYS" /> 
                 <VBox fx:id="numberVBox" alignment="CENTER" >
@@ -27,7 +27,7 @@
                 <Region HBox.hgrow="ALWAYS" /> 
             </children>
         </HBox>
-        <HBox fx:id="namePane" alignment="CENTER_LEFT" style="-fx-background-color: green;" >
+        <HBox fx:id="namePane" alignment="CENTER_LEFT" >
             <Label fx:id="itemName" textAlignment="CENTER" text="" />
         </HBox>
     </children>

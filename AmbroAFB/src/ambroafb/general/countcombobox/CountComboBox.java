@@ -64,6 +64,8 @@ public class CountComboBox<T> extends ComboBox<T> {
             CountComboBoxItem boxItem = new CountComboBoxItem(name);
             boxItem.itemNumberProperty().set(count);
             itemsMap.put(name, boxItem);
+            
+            System.out.println("boxItem size: " + boxItem.getWidth());
         });
         
         
@@ -104,7 +106,9 @@ public class CountComboBox<T> extends ComboBox<T> {
                         title = title.concat(delimiter);
                     }
                 }
-                setText(StringUtils.substringBeforeLast(title, delimiter));
+                String titleStr = StringUtils.substringBeforeLast(title, delimiter);
+                setText(titleStr);
+                tooltip.setText(titleStr);
             }
         }
         
@@ -129,6 +133,9 @@ public class CountComboBox<T> extends ComboBox<T> {
                     boxItem = new CountComboBoxItem(name);
                     itemsMap.put(name, boxItem);
                 }
+                
+//                CountComboBoxItem boxItem = new CountComboBoxItem(name);
+//                itemsMap.put(name, boxItem);
                 
                 boxItem.itemNumberProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
                     T itemForName = getItemFromData(name);
