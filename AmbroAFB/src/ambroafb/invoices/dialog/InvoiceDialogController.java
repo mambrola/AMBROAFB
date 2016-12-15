@@ -97,7 +97,6 @@ public class InvoiceDialogController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         processInvoiceReissuingComboBox();
-        clients.registerBundle(resources);
         clients.showCategoryALL(false);
         products.getItems().addAll(Product.getAllFromDB());
         permissionToClose = true;

@@ -5,141 +5,158 @@
  */
 package ambroafb.clients;
 
-import static ambroafb.clients.ClientComboBox.clientALL;
-import ambroafb.general.filterablecombobox.FilterableWithALLComboBox;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
- * Class provides to change behaviour whether its items must be filterable.
- * When user set any value, comboBox will not filterable.
- * When user want to make comboBox a filterable, he/she must remove value from it.
- * Note: 
- * To remove value means - textEditor must contain empty string and press 'enter'.
- * If user want to see a filter effect, he/she must show comboBox elements.
  * @author dato
  */
-public class ClientComboBox extends FilterableWithALLComboBox<Client> {
+public class ClientComboBox extends AnchorPane {
     
     public static final Client clientALL = new Client();
-    private static final String separator = ",  ";
+    private static final String separator = ", ";
     
-    private final ObservableList<Client> items = FXCollections.observableArrayList();
+    private final ComboBox<Client> clients = new ComboBox<>();
+    private final TextField comboBoxEditor = clients.getEditor();
+    private TextField search = new TextField();
+    
+    private ObservableList<Client> items = FXCollections.observableArrayList();
+    private FilteredList<Client> filteredList;
     
     public ClientComboBox(){
-        super();
-        super.initializerClass(Client.class);
-        getStyleClass().add("combo-box");
+        setFeatures();
         
-        clientALL.setFirstName(ALL);
+        comboBoxEditor.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            // 1. Remove selected item text from editor (Note: item stay selected in list):
+            // 2. Set value null:
+            if (newValue == null || newValue.isEmpty()){
+                if (!search.isFocused()){ // If searchField has not front and focused yet.
+                    search.toFront();
+                    search.requestFocus();
+                }
+            }
+            else { // set new value that is not null and empty:
+                search.toBack();
+                search.setText(""); // clear search conntext
+                clients.requestFocus(); // If ClientComboBox is first element of scene and value is ALL, then search field is focused. So this is needed.
+            }
+        });
+        
+        // Show clients items list when typed into search field:
+        search.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue != null && !newValue.isEmpty()){
+                if (!clients.isShowing()){
+                    clients.show();
+                }
+            }
+        });
+        
+        addIntoChildren();
+        
+        clientALL.setFirstName("ALL");
         clientALL.setRecId(0);
         items.add(clientALL);
         items.addAll(Client.getAllFromDB().stream().filter((Client c) -> c.getEmail() != null && !c.getEmail().isEmpty())
                                                     .collect(Collectors.toList()));
-        super.registerCategoryALL(clientALL);
-        
-        setDataItems(items, (Client c) -> c.getShortDescrip("").get());
-        super.showCategoryALL(true);
-        super.selectedItemPrpoerty().set(clientALL);
+        setItems(items, (Client c) -> c.getShortDescrip(separator).get());
+        clients.setValue(clientALL);
     }
     
-    private JSONObject getColumnsJSON(){
-        JSONObject json = new JSONObject();
-        try {
-            json.put("0", 0);
-            json.put("1", 0);
-//            json.put("2", 50);
-            json.put("3", 0);
-//            json.put("4", 50);
-            json.put("5", 0);
-            json.put("6", 0);
-            json.put("7", 0);
-            json.put("8", 0);
-            json.put("9", 0);
-            json.put("10", 0);
-            
-        } catch (JSONException ex) {
-            Logger.getLogger(ClientComboBox.class.getName()).log(Level.SEVERE, null, ex);
+    public void showCategoryALL(boolean show){
+        if (!show && (!getItems().isEmpty() && getItems().get(0).getRecId() == 0)){
+            getItems().remove(0);
         }
-        return json;
+        
+        if (show && (getItems().isEmpty() || getItems().get(0).getRecId() != 0)){
+            getItems().add(0, clientALL);
+        }
     }
     
-    public Client getValue(){
-        return super.selectedItemPrpoerty().get();
+    
+    private void setFeatures(){
+        clients.setEditable(true);
+        search.setPromptText("Search"); 
+        
+        comboBoxEditor.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            System.out.println("aq??");
+            search.setMinWidth(newValue.doubleValue());
+            search.setMaxWidth(newValue.doubleValue());
+            
+            System.out.println("search width: " + search.getWidth());
+            System.out.println("search min width: " + search.getMinWidth());
+            System.out.println("search max width: " + search.getMaxWidth());
+            System.out.println("search pref width: " + search.getPrefWidth());
+        });
+        
+        comboBoxEditor.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            search.setMinHeight(newValue.doubleValue());
+            search.setMaxHeight(newValue.doubleValue());
+        });
+        
+        clients.setConverter(new CustomConverter());
+    }
+    
+    private void addIntoChildren(){
+        getChildren().add(clients);
+        getChildren().add(search);
+    }
+    
+    // Final keyword is needed for call in constructor. It must not be allowed to override.
+    public final void setItems(ObservableList<Client> clientsList, Function<Client, String> clientFilterDataFn){
+        filteredList = new FilteredList(clientsList);
+        items = clientsList;
+        clients.setItems(filteredList);
+        
+        // Every search text changed, the filteredList must give new predicate for filter:
+        search.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            filteredList.setPredicate((Client c) -> {
+                String searchText = search.getText();
+                if (searchText == null || searchText.isEmpty()) {
+                    return true;
+                }
+                return clientFilterDataFn.apply(c).toLowerCase().contains(searchText.toLowerCase());
+            });
+        });
+        
+    }
+    
+    public final ObservableList<Client> getItems(){
+        return items;
     }
     
     public ObjectProperty<Client> valueProperty(){
-        return super.selectedItemPrpoerty();
+        return clients.valueProperty();
     }
     
-    /**
-     * 
-     * @param rb 
-     */
-    public void registerBundle(ResourceBundle rb){
-        super.initializerClass(Client.class);
-        super.setBundle(rb);
-        JSONObject columnsJSON = getColumnsJSON();
-        setColunWidthes(columnsJSON);
+    public Client getValue(){
+        return clients.getValue();
     }
     
-//    public void selectItem(Client client){
-//        this.getSelectionModel().select(client);
-//    }
-    
+    public SingleSelectionModel<Client> getSelectionModel(){
+        return clients.getSelectionModel();
+    }
     
     private class CustomConverter extends StringConverter<Client> {
 
         @Override
-            public String toString(Client client) {
-                System.out.println("input client: " + client);
-                String result = "";
-                if (client != null){
-                    result = (client.equals(clientALL)) ? client.getFirstName() 
-                                                        //: client.getFirstName() + separator + client.getLastName() + separator + client.getEmail();
-                                                        : client.getEmail();
-                }
-                return result;
-            }
-            
-            @Override
-            public Client fromString(String data) {
-                System.out.println("input data: " + data);
-                if (data == null || data.isEmpty()){
-                    return null;
-                }
-                Client c = new Client();
-                c.setEmail(data);
-                return c;
-//                if (data.equals(clientALL.getFirstName())){
-//                    return clientALL;
-//                }
-//                List<Client> clients = getItems().stream().filter((Client client) -> client.getEmail().equals(data))
-//                              .collect(Collectors.toList());
-//                return (clients.isEmpty()) ? null : clients.get(0);
-            }
+        public String toString(Client c) {
+            return (c == null) ? "" : c.getShortDescrip(separator).get();
+        }
 
-//            @Override
-//            public Client fromString(String data) {
-//                List<Client> clients = items.stream().filter((Client client) -> {
-//                                            String enteredFirstName = StringUtils.substringBefore(data, separator);
-//                                            String enteredLastName = StringUtils.substringBefore(StringUtils.substringAfter(data, separator), separator);
-//                                            String enteredEmail = StringUtils.substringAfterLast(data, separator);
-//
-//                                            return  client.getFirstName().equals(enteredFirstName) &&
-//                                                    client.getLastName().equals(enteredLastName) &&
-//                                                    client.getEmail().equals(enteredEmail);
-//                }).collect(Collectors.toList());
-//                return (clients.isEmpty()) ? null : clients.get(0);
-//            }
+        @Override
+        public Client fromString(String str) {
+            return null;
+        }
         
     }
 }

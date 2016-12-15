@@ -530,17 +530,23 @@ public class Invoice extends EditorPanelable {
 
     @JsonProperty
     public void setFirstName(String firstName){
-        clientObj.get().setFirstName(firstName);
+        if (clientObj.get() != null){
+            clientObj.get().setFirstName(firstName);
+        }
     }
     
     @JsonProperty
     public void setLastName(String lastName){
-        clientObj.get().setLastName(lastName);
+        if (clientObj.get() != null){
+            clientObj.get().setLastName(lastName);
+        }
     }
     
     @JsonProperty
     public void setEmail(String email){
-        clientObj.get().setEmail(email);
+        if (clientObj.get() != null){
+            clientObj.get().setEmail(email);
+        }
     }
     
     public void setBeginDate(String date){
