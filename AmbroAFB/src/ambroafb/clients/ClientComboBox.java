@@ -48,7 +48,6 @@ public class ClientComboBox extends AnchorPane {
             else { // set new value that is not null and empty:
                 search.toBack();
                 search.setText(""); // clear search conntext
-                clients.requestFocus(); // If ClientComboBox is first element of scene and value is ALL, then search field is focused. So this is needed.
             }
         });
         
@@ -58,6 +57,12 @@ public class ClientComboBox extends AnchorPane {
                 if (!clients.isShowing()){
                     clients.show();
                 }
+            }
+        });
+        
+        search.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue && clients.getValue() != null){
+                clients.requestFocus(); // If ClientComboBox is first element of scene and value is ALL, then search field is focused. So this is needed.
             }
         });
         
