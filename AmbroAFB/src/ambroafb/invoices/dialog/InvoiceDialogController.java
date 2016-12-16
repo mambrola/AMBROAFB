@@ -262,6 +262,7 @@ public class InvoiceDialogController implements Initializable {
                     invoiceBackup.copyFrom(invoice1);
                 };
                 if (isEveryNessesaryFieldValid()){
+                    // we need new license numbers:
                     new Thread(new RecalcFinancesInBackground(updateInvoiceBackup)).start();
                 }
             }
