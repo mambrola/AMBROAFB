@@ -20,6 +20,7 @@ import ambroafb.invoices.filter.InvoiceFilterModel;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
 import ambroafb.invoices.helper.InvoiceFinaces;
+import ambroafb.invoices.helper.InvoiceStatusClarify;
 import ambroafb.licenses.helper.LicenseFinaces;
 import ambroafb.products.Product;
 import ambroafb.products.helpers.ProductDiscount;
@@ -119,15 +120,18 @@ public class Invoice extends EditorPanelable {
     
     @AView.Column(title = "%invoice_status", width = "100")
     @JsonIgnore
-    private final StringProperty statusDescrip;
     private final ObjectProperty<InvoiceStatus> statusObj;
     private final IntegerProperty statusClarify;
     
     private final ObjectProperty<MonthCounterItem> months;
     private final BooleanProperty isLogined, isPaid;
     
+    private final ObjectProperty<InvoiceStatusClarify> clarifyObj;
+    
     @JsonIgnore
     private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
+    @JsonIgnore
+    private static final String DB_CLARIFIES_TABLE = "invoice_status_clarify_descrips";
     @JsonIgnore
     private static final String DB_INVOICES_VIEW = "invoices_whole";
     
@@ -158,7 +162,7 @@ public class Invoice extends EditorPanelable {
         moneyPaid = new SimpleStringProperty("");
         vat = new SimpleStringProperty("");
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
-        statusDescrip = new SimpleStringProperty("");
+        clarifyObj = new SimpleObjectProperty<>(new InvoiceStatusClarify());
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
         statusClarify = new SimpleIntegerProperty();
         months = new SimpleObjectProperty<>(new MonthCounterItem(""));
@@ -218,6 +222,13 @@ public class Invoice extends EditorPanelable {
         if (invoiseFilterModel.isSelectedConcreteClient()){
             whereBuilder.and("client_id", "=", invoiseFilterModel.getSelectedClient().getRecId());
         }
+        if (invoiseFilterModel.hasSelectedClarifies()){
+            whereBuilder = whereBuilder.andGroup();
+            for(InvoiceStatusClarify invClarify : invoiseFilterModel.getCheckedClarifies()){
+                whereBuilder = whereBuilder.or("status_clarify", "=", invClarify.getInvoiceStatusClarifyId());
+            }
+            whereBuilder = whereBuilder.closeGroup();
+        }
         if (invoiseFilterModel.hasSelectedReissuings()){
             whereBuilder = whereBuilder.andGroup();
             for(InvoiceReissuing invReissuing : invoiseFilterModel.getCheckedReissuings()){
@@ -236,9 +247,20 @@ public class Invoice extends EditorPanelable {
 
         // for test reissuing json order:
         ArrayList<InvoiceReissuing> re = DBUtils.getObjectsListFromDB(InvoiceReissuing.class, DB_REISSUINGS_TABLE, params);
-        System.out.println("reissuing: " + re.stream().map((reissuing) -> reissuing.getRecId()).collect(Collectors.toList()).toString());
+        System.out.println("reissuing: " + re.stream().map((reissuing) -> reissuing.getInvoiceReissuingId()).collect(Collectors.toList()).toString());
         
         return DBUtils.getObjectsListFromDB(InvoiceReissuing.class, DB_REISSUINGS_TABLE, params);
+    }
+    
+    public static ArrayList<InvoiceStatusClarify> getAllIvoiceClarifiesFromDB(){
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
+
+        // for test clarifies json order:
+        ArrayList<InvoiceStatusClarify> clarifies = DBUtils.getObjectsListFromDB(InvoiceStatusClarify.class, DB_CLARIFIES_TABLE, params);
+        System.out.println("clarifies: " + clarifies.stream().map((reissuing) -> reissuing.getInvoiceStatusClarifyId()).collect(Collectors.toList()).toString());
+        
+        return DBUtils.getObjectsListFromDB(InvoiceStatusClarify.class, DB_CLARIFIES_TABLE, params);
     }
     
     public static Invoice getOneFromDB (int invoiceId){
@@ -340,6 +362,10 @@ public class Invoice extends EditorPanelable {
     
     public ObjectProperty<InvoiceReissuing> reissuingProperty(){
         return reissuingObj;
+    }
+    
+    public ObjectProperty<InvoiceStatusClarify> clarifyProperty(){
+        return clarifyObj;
     }
     
     public ObjectProperty<MonthCounterItem> monthsProperty(){
@@ -455,6 +481,16 @@ public class Invoice extends EditorPanelable {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public int getReissuing(){
         return (reissuingObj.isNull().get()) ? -1 : reissuingObj.get().getInvoiceReissuingId();
+    }
+    
+    @JsonIgnore
+    public String getStatusClarifyDescrip(){
+        return (clarifyObj.isNull().get()) ? "" : clarifyObj.get().getDescrip();
+    }
+    
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public int getStatusClarifyId(){
+        return (clarifyObj.isNull().get()) ? -1 : clarifyObj.get().getInvoiceStatusClarifyId();
     }
     
     @JsonIgnore
@@ -630,8 +666,6 @@ public class Invoice extends EditorPanelable {
     // Methods override:
     @Override
     public Invoice cloneWithoutID() {
-        System.out.println("-----------cloneWithoutID-------------");
-        
         Invoice clone = new Invoice();
         clone.copyFrom(this);
         return clone;
@@ -681,6 +715,7 @@ public class Invoice extends EditorPanelable {
         setVat(invoice.getVat());
         setMoneyPaid(invoice.getMoneyPaid());
         reissuingObj.get().copyFrom(invoice.reissuingProperty().get());
+        clarifyObj.get().copyFrom(invoice.clarifyProperty().get());
         statusObj.get().copyFrom(invoice.getInvoiceStatus());
         setMonths(invoice.getMonths());
         
@@ -743,6 +778,7 @@ public class Invoice extends EditorPanelable {
                 getMoneyPaid().equals(otherInvoice.getMoneyPaid()) &&
                 
                 reissuingObj.get().compares(otherInvoice.reissuingProperty().get()) &&
+                clarifyObj.get().compares(otherInvoice.clarifyProperty().get()) &&
                 statusObj.get().compares(otherInvoice.getInvoiceStatus()) &&
                 getMonths().equals(otherInvoice.getMonths()) &&
                 Utils.compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts());

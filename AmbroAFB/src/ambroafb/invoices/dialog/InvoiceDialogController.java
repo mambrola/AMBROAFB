@@ -377,12 +377,11 @@ public class InvoiceDialogController implements Initializable {
                 discount = null;
             }
             
-            JSONArray licensesIds = null;
+            JSONArray licensesIds = new JSONArray();
             if (invoiceId != null){ // If invoice is new and have licenses (Add-By-Sample), their licensesIds don't sent to DB.
-                licensesIds = new JSONArray();
-                for (Invoice.LicenseShortData licenseShortData : invoice.getLicenses()) {
+                invoice.getLicenses().forEach((licenseShortData) -> {
                     licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
-                }
+                });
             }
 //            System.out.println("licensesIds: " + licensesIds);
             

@@ -13,7 +13,7 @@
                                 xmlns:fx="http://javafx.com/fxml/1">
     <VBox fx:id="formPane" >
         <children>
-            <HBox styleClass="w2">
+            <HBox styleClass="w3">
                 <children>
                     <VBox >
                         <children>
@@ -25,6 +25,12 @@
                         <children>
                             <Label text="startDateTo" />
                             <ADatePicker fx:id="startDateTo" />
+                        </children>
+                    </VBox>
+                    <VBox>
+                        <children>
+                            <Label text="%invoice_status_clarify" />
+                            <CheckComboBox fx:id="clarifyType" />
                         </children>
                     </VBox>
                 </children>

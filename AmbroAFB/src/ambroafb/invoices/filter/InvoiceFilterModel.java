@@ -10,6 +10,7 @@ import ambroafb.clients.filter.ClientFilterModel;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
 import ambroafb.invoices.helper.InvoiceReissuing;
+import ambroafb.invoices.helper.InvoiceStatusClarify;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -27,12 +28,14 @@ public class InvoiceFilterModel extends FilterModel {
     
     private Client selectedClient;
     private ObservableList<InvoiceReissuing> selectedReissuings;
+    private ObservableList<InvoiceStatusClarify> selectedClarifies;
     
     private static final String PREF_START_DATE_FROM_KEY = "invoices/filter/start_date_from";
     private static final String PREF_START_DATE_TO_KEY = "invoices/filter/start_date_to";
     private static final String PREF_END_DATE_FROM_KEY = "invoices/filter/end_date_from";
     private static final String PREF_END_DATE_TO_KEY = "invoices/filter/end_date_to";
     private static final String PREF_CHECKED_REISSUING_INDEXES_KEY = "invoices/filter/checked_invoice_reissuing_indexes";
+    private static final String PREF_CHECKED_CLARIFY_INDEXES_KEY = "invoices/filter/checked_invoice_clarifies_indexes";
     
     public static final String DATE_BIGGER = "1970-01-01";
     public static final String DATE_LESS = "9999-01-01";
@@ -67,6 +70,14 @@ public class InvoiceFilterModel extends FilterModel {
     
     public void setCheckedReissuings(ObservableList<InvoiceReissuing> reissuings){
         selectedReissuings = reissuings;
+    }
+    
+    public void setCheckedClarifiesIndexes(ObservableList<Integer> checkedIndexes){
+        saveIntoPref(PREF_CHECKED_CLARIFY_INDEXES_KEY, checkedIndexes.toString());
+    }
+
+    public void setCheckedClarifies(ObservableList<InvoiceStatusClarify> clarifies) {
+        this.selectedClarifies = clarifies;
     }
 
     
@@ -103,9 +114,22 @@ public class InvoiceFilterModel extends FilterModel {
     }
     
     public ArrayList<Integer> getCheckedReissuingsIndexes(){
+        String indexes = getStringFromPref(PREF_CHECKED_REISSUING_INDEXES_KEY);
+        return getListFor(indexes);
+    }
+    
+    public ObservableList<InvoiceReissuing> getCheckedReissuings(){
+        return selectedReissuings;
+    }
+    
+    public ArrayList<Integer> getCheckedClarifiesIndexes(){
+        String indexes = getStringFromPref(PREF_CHECKED_CLARIFY_INDEXES_KEY);
+        return getListFor(indexes);
+    }
+    
+    private ArrayList<Integer> getListFor(String indexes){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            String indexes = getStringFromPref(PREF_CHECKED_REISSUING_INDEXES_KEY);
             if (indexes != null){ // for the first case, if pref not include appropriate key
                 return mapper.readValue(indexes, new TypeReference<ArrayList<Integer>>(){});
             }
@@ -115,8 +139,8 @@ public class InvoiceFilterModel extends FilterModel {
         return new ArrayList<>();
     }
     
-    public ObservableList<InvoiceReissuing> getCheckedReissuings(){
-        return selectedReissuings;
+    public ObservableList<InvoiceStatusClarify> getCheckedClarifies(){
+        return selectedClarifies;
     }
 
     public boolean isSelectedConcreteClient() {
@@ -125,5 +149,9 @@ public class InvoiceFilterModel extends FilterModel {
     
     public boolean hasSelectedReissuings(){
         return (selectedReissuings != null && !selectedReissuings.isEmpty());
+    }
+    
+    public boolean hasSelectedClarifies(){
+        return (selectedClarifies != null && !selectedClarifies.isEmpty());
     }
 }

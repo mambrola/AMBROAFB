@@ -17,6 +17,7 @@ import ambroafb.general.StagesContainer;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceReissuing;
+import ambroafb.invoices.helper.InvoiceStatusClarify;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
@@ -43,6 +44,8 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
     private CheckComboBox<InvoiceReissuing> invoiceReissuings;
     @FXML
     private FilterOkayCancelController okayCancelController;
+    @FXML
+    private CheckComboBox<InvoiceStatusClarify> clarifyType;
     
     private final InvoiceFilterModel invoiceFilterModel = new InvoiceFilterModel();
     
@@ -92,19 +95,23 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
             invoiceFilterModel.setSelectedClient(clients.getValue());
             invoiceFilterModel.setCheckedReissuingsIndexes(invoiceReissuings.getCheckModel().getCheckedIndices());
             invoiceFilterModel.setCheckedReissuings(invoiceReissuings.getCheckModel().getCheckedItems());
+            invoiceFilterModel.setCheckedClarifiesIndexes(clarifyType.getCheckModel().getCheckedIndices());
+            invoiceFilterModel.setCheckedClarifies(clarifyType.getCheckModel().getCheckedItems());
         }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        clients.registerBundle(resources);
+        clarifyType.getItems().setAll(Invoice.getAllIvoiceClarifiesFromDB());
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
         
         startDateFrom.setValue(invoiceFilterModel.getStartDate(true));
         startDateTo.setValue(invoiceFilterModel.getStartDate(false));
         endDateFrom.setValue(invoiceFilterModel.getEndDate(true));
         endDateTo.setValue(invoiceFilterModel.getEndDate(false));
-//        clients.getSelectionModel().select(invoiceFilterModel.getSelectedClientIndex());
+        invoiceFilterModel.getCheckedClarifiesIndexes().stream().forEach((index) -> {
+            clarifyType.getCheckModel().check(index);
+        });
         invoiceFilterModel.getCheckedReissuingsIndexes().stream().forEach((index) -> {
             invoiceReissuings.getCheckModel().check(index);
         });
