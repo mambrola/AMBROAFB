@@ -30,6 +30,7 @@ public class MonthCounterComboBox extends ComboBox<MonthCounterItem> {
         MonthCounterItem item4 = new MonthCounterItem("12");
         
         getItems().addAll(item1, item2, item3, item4);
+        getSelectionModel().select(0);
     }
     
 }

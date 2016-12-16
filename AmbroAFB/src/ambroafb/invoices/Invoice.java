@@ -165,7 +165,7 @@ public class Invoice extends EditorPanelable {
         clarifyObj = new SimpleObjectProperty<>(new InvoiceStatusClarify());
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
         statusClarify = new SimpleIntegerProperty();
-        months = new SimpleObjectProperty<>(new MonthCounterItem(""));
+        months = new SimpleObjectProperty<>(new MonthCounterItem("1"));
         isLogined = new SimpleBooleanProperty(false);
         isPaid = new SimpleBooleanProperty(false);
         
