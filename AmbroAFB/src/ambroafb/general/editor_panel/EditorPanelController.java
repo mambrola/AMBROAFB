@@ -18,7 +18,6 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.Filterable;
-import ambroafb.invoices.Invoice;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
@@ -189,11 +188,6 @@ public class EditorPanelController implements Initializable {
             else {
                 cloneOfSelected = selected.cloneWithoutID();
             }
-            
-            System.out.println("<<<<<<<<<<<< fromAView's map >>>>>>>>>>>>>>>");
-            Invoice inv = (Invoice)cloneOfSelected;
-            System.out.println("size: " + inv.getProductsWithCounts().size());
-            System.out.println("map is: " + inv.getProductsWithCounts());
             
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, cloneOfSelected, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());

@@ -256,27 +256,18 @@ public class InvoiceDialogController implements Initializable {
             
             if (clients.getValue() != null){ // add by simple
                 invoice.setInvoiceNumber("");
-//                invoiceBackup.setInvoiceNumber("");
-                
                 invoice.getInvoiceStatus().setDescrip(""); // set empty status
-//                invoiceBackup.getInvoiceStatus().setDescrip(""); // set empty status
                 
-                System.out.println("<<<<<<< start recalc licenses >>>>>>>>>>>>>");
                 Consumer<Invoice> updateInvoiceBackup = (Invoice invoice1) -> {
                     invoiceBackup.copyFrom(invoice1);
                 };
-                new Thread(new RecalcFinancesInBackground(updateInvoiceBackup)).start();
+                if (isEveryNessesaryFieldValid()){
+                    new Thread(new RecalcFinancesInBackground(updateInvoiceBackup)).start();
+                }
             }
         }
         
         okayCancelController.setButtonsFeatures(buttonType);
-        
-        
-        System.out.println("-----------real invoice---------------");
-        printMap(invoice.getProductsWithCounts());
-        System.out.println("-----------backup invoice---------------");
-        printMap(invoiceBackup.getProductsWithCounts());
-        System.out.println("-------------------------------------");
     }
     
     /**
