@@ -326,15 +326,27 @@ public class Utils {
         }
         else {
             for(Product p : first.keySet()){
+                Product pFromSecondMap = getAppropriateProductFrom(second, p.getRecId());
                 
-                System.out.println("!second.containsKey(p): " + (!second.containsKey(p)));
+                System.out.println("pFromSecondMap: " + pFromSecondMap);
                 System.out.println("first.get(p).intValue(): " + first.get(p));
-                System.out.println("second.get(p).intValue(): " + second.get(p));
+                System.out.println("second.get(pFromSecondMap).intValue(): " + second.get(pFromSecondMap));
                 
-                if (!second.containsKey(p) || first.get(p).intValue() != second.get(p).intValue()){
+                if (pFromSecondMap == null || first.get(p).intValue() != second.get(pFromSecondMap).intValue()){
                     result = false;
                     break;
                 }
+            }
+        }
+        return result;
+    }
+    
+    private static Product getAppropriateProductFrom(Map<Product, Integer> map, int id){
+        Product result = null;
+        for (Product p : map.keySet()){
+            if (p.getRecId() == id){
+                result = p;
+                break;
             }
         }
         return result;

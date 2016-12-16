@@ -105,32 +105,33 @@ public class InvoiceDialogController implements Initializable {
         financesFromSuitedLicense = new RecalcFinancesInBackground(true);
         financesFromGetFinacne = new RecalcFinancesInBackground(false);
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
-            if (oldValue != null){
+            if (oldValue != null && newValue != null){
+                System.out.println("rebind from clients");
                 rebindFinanceData();
             }
         });
         products.showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (oldValue != null && !newValue && !Utils.compareProductsCounter(invoice.getProductsWithCounts(), invoiceBackup.getProductsWithCounts())) {
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> products show prop: ");
-                System.out.println("invoice backup map: size: " + invoiceBackup.getProductsWithCounts().size());
-                printMap(invoiceBackup.getProductsWithCounts());
-                
+                System.out.println("rebind from products");
                 rebindFinanceData();
             }
         });
         beginDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            if (oldValue != null){
+            if (oldValue != null && newValue != null){
+                System.out.println("rebind from beginDate");
                 rebindFinanceData();
             }
         });
         monthCounter.valueProperty().addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
-            if (oldValue != null){
+            if (oldValue != null && newValue != null){
+                System.out.println("rebind from monthCounter");
                 rebindFinanceData();
             }
         });
         additionalDiscount.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             double discount = Utils.getDoubleValueFor(additionalDiscount.getText());
             if (discount > 0 && !newValue){
+                System.out.println("rebind from additionalDiscount");
                 rebindFinanceData();
             }
         });
@@ -203,7 +204,7 @@ public class InvoiceDialogController implements Initializable {
         if (invoice != null){
             createdDate.setValue(invoice.getCreatedDateObj());
             invoiceNumber.textProperty().bindBidirectional(invoice.invoiceNumberProperty());
-            status.textProperty().bindBidirectional(invoice.statusProperty().get().descripProperty());
+            status.textProperty().bindBidirectional(invoice.getInvoiceStatus().descripProperty());
             
             clients.valueProperty().bindBidirectional(invoice.clientProperty());
             products.setData(invoice.getProductsWithCounts());
@@ -246,12 +247,20 @@ public class InvoiceDialogController implements Initializable {
         }
         
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
-            beginDate.setValue(LocalDate.now());
+            // Note: We changed objects field but is also change scene field values because of bidirectional binding.
+            invoice.beginDateProperty().set(null); // It is needed for beginDate valuePropety listener, that it does not go to DB for finances.
+            invoice.beginDateProperty().set(LocalDate.now());
             invoiceBackup.beginDateProperty().set(LocalDate.now());
             
             if (clients.getValue() != null){ // add by simple
-                invoiceNumber.setText("");
-                status.setText("");
+                invoice.setInvoiceNumber("");
+                invoiceBackup.setInvoiceNumber("");
+                
+                invoice.getInvoiceStatus().setDescrip(""); // set empty status
+                invoiceBackup.getInvoiceStatus().setDescrip(""); // set empty status
+                
+                System.out.println("<<<<<<< start recalc licenses >>>>>>>>>>>>>");
+                new Thread(financesFromSuitedLicense).start();
             }
         }
         
@@ -374,11 +383,11 @@ public class InvoiceDialogController implements Initializable {
             DBUtils.callInvoiceSuitedLicenses(invoiceId, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
             ArrayList<PartOfLicense> invoiceLicenses = DBUtils.getLicenses();
             
-//            for (PartOfLicense invoiceLicense : invoiceLicenses) {
-//                System.out.println("invoice license from suited. license number: " + invoiceLicense.licenseNumber +
-//                                                                 " license rec id: " + invoiceLicense.recId +
-//                                                                 " invoice license id: " + invoiceLicense.invoiceLicenseId);
-//            } 
+            for (PartOfLicense invoiceLicense : invoiceLicenses) {
+                System.out.println("invoice license from suited. license number: " + invoiceLicense.licenseNumber +
+                                                                 " license rec id: " + invoiceLicense.recId +
+                                                                 " invoice license id: " + invoiceLicense.invoiceLicenseId);
+            }
             
             ArrayList<LicenseFinaces> licenseFinances = DBUtils.getLicensesFinaces();
             

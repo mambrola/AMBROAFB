@@ -119,6 +119,7 @@ public class Invoice extends EditorPanelable {
     
     @AView.Column(title = "%invoice_status", width = "100")
     @JsonIgnore
+    private final StringProperty statusDescrip;
     private final ObjectProperty<InvoiceStatus> statusObj;
     private final IntegerProperty statusClarify;
     
@@ -157,6 +158,7 @@ public class Invoice extends EditorPanelable {
         moneyPaid = new SimpleStringProperty("");
         vat = new SimpleStringProperty("");
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
+        statusDescrip = new SimpleStringProperty("");
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
         statusClarify = new SimpleIntegerProperty();
         months = new SimpleObjectProperty<>(new MonthCounterItem(""));
@@ -164,12 +166,12 @@ public class Invoice extends EditorPanelable {
         isPaid = new SimpleBooleanProperty(false);
         
         beginDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            if (months.get() != null && months.get().getMonthCount() != -1){
+            if (months.get() != null && months.get().getMonthCount() != -1 && newValue != null){
                 rebindEndDate();
             }
         });
         months.addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
-            if (beginDateObj.get() != null){
+            if (beginDateObj.get() != null && newValue != null){
                 rebindEndDate();
             }
         });
@@ -340,10 +342,6 @@ public class Invoice extends EditorPanelable {
         return reissuingObj;
     }
     
-    public ObjectProperty<InvoiceStatus> statusProperty(){
-        return statusObj;
-    }
-    
     public ObjectProperty<MonthCounterItem> monthsProperty(){
         return months;
     }
@@ -366,6 +364,11 @@ public class Invoice extends EditorPanelable {
     @JsonIgnore
     public LocalDate getCreatedDateObj(){
         return DateConverter.getInstance().parseDate(createdDate.get());
+    }
+    
+    @JsonIgnore
+    public InvoiceStatus getInvoiceStatus(){
+        return statusObj.get();
     }
     
     @JsonIgnore
@@ -678,7 +681,7 @@ public class Invoice extends EditorPanelable {
         setVat(invoice.getVat());
         setMoneyPaid(invoice.getMoneyPaid());
         reissuingObj.get().copyFrom(invoice.reissuingProperty().get());
-        statusObj.get().copyFrom(invoice.statusProperty().get());
+        statusObj.get().copyFrom(invoice.getInvoiceStatus());
         setMonths(invoice.getMonths());
         
         System.out.println("-----------copyFrom-------------");
@@ -689,8 +692,9 @@ public class Invoice extends EditorPanelable {
         
         productsCounter.clear();
         invoice.getProductsWithCounts().keySet().stream().forEach((otherInvoiceProduct) -> {
+            Product thisInvoiceProduct = otherInvoiceProduct.cloneWithID();
             int count = invoice.getProductsWithCounts().get(otherInvoiceProduct);
-            productsCounter.put(otherInvoiceProduct, count);
+            productsCounter.put(thisInvoiceProduct, count);
         });
         
     }
@@ -708,18 +712,18 @@ public class Invoice extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         Invoice otherInvoice = (Invoice) backup;
         
-//        System.out.println("getFirstName().equals(otherInvoice.getFirstName()): " + (getFirstName().equals(otherInvoice.getFirstName())));
-//        System.out.println("getLastName().equals(otherInvoice.getLastName()): " + (getLastName().equals(otherInvoice.getLastName())));
-//        System.out.println("getEmail().equals(otherInvoice.getEmail()): " + (getEmail().equals(otherInvoice.getEmail())));
-//        System.out.println("getInvoiceNumber().equals(otherInvoice.getInvoiceNumber()): " + (getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())));
-//        System.out.println("Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()): " + (Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get())));
-//        System.out.println("Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()): " + (Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get())));
-//        System.out.println("Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()): " + (Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get())));
-//        System.out.println("getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate()): " + (getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate())));
-//        System.out.println("reissuingObj.get().compares(otherInvoice.reissuingProperty().get()): " + (reissuingObj.get().compares(otherInvoice.reissuingProperty().get())));
-//        System.out.println("statusObj.get().compares(otherInvoice.statusProperty().get()): " + (statusObj.get().compares(otherInvoice.statusProperty().get())));
-//        System.out.println("getMonths().equals(otherInvoice.getMonths()): " + (getMonths().equals(otherInvoice.getMonths())));
-//        System.out.println("Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses()): " + (Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())));
+        System.out.println("getFirstName().equals(otherInvoice.getFirstName()): " + (getFirstName().equals(otherInvoice.getFirstName())));
+        System.out.println("getLastName().equals(otherInvoice.getLastName()): " + (getLastName().equals(otherInvoice.getLastName())));
+        System.out.println("getEmail().equals(otherInvoice.getEmail()): " + (getEmail().equals(otherInvoice.getEmail())));
+        System.out.println("getInvoiceNumber().equals(otherInvoice.getInvoiceNumber()): " + (getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())));
+        System.out.println("Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()): " + (Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get())));
+        System.out.println("Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()): " + (Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get())));
+        System.out.println("Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()): " + (Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get())));
+        System.out.println("getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate()): " + (getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate())));
+        System.out.println("reissuingObj.get().compares(otherInvoice.reissuingProperty().get()): " + (reissuingObj.get().compares(otherInvoice.reissuingProperty().get())));
+        System.out.println("statusObj.get().compares(otherInvoice.getInvoiceStatus()): " + (statusObj.get().compares(otherInvoice.getInvoiceStatus())));
+        System.out.println("getMonths().equals(otherInvoice.getMonths()): " + (getMonths().equals(otherInvoice.getMonths())));
+        System.out.println("Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses()): " + (Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())));
         System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (Utils.compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
         
         
@@ -739,7 +743,7 @@ public class Invoice extends EditorPanelable {
                 getMoneyPaid().equals(otherInvoice.getMoneyPaid()) &&
                 
                 reissuingObj.get().compares(otherInvoice.reissuingProperty().get()) &&
-                statusObj.get().compares(otherInvoice.statusProperty().get()) &&
+                statusObj.get().compares(otherInvoice.getInvoiceStatus()) &&
                 getMonths().equals(otherInvoice.getMonths()) &&
                 Utils.compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts());
     }

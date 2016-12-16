@@ -17,7 +17,6 @@ import javafx.beans.property.StringProperty;
 @SuppressWarnings("EqualsAndHashcode")
 public class InvoiceStatus {
     
-    
     private int recId;
     private final IntegerProperty invoiceStatusId;
     private String language;

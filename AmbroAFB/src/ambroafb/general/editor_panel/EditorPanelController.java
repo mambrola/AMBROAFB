@@ -179,29 +179,24 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
-            EditorPanelable fromAView = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+            EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.getRecId());
+            if (real != null) {
+                selected.copyFrom(real);
+            }
             
             System.out.println("<<<<<<<<<<<< fromAView's map >>>>>>>>>>>>>>>");
-            Invoice inv = (Invoice)fromAView;
+            Invoice inv = (Invoice)selected;
             System.out.println("size: " + inv.getProductsWithCounts().size());
-            inv.getProductsWithCounts().keySet().stream().forEach((p) -> {
-                System.out.println("p: " + p + " count: " + inv.getProductsWithCounts().get(p));
-            });
-            
-            
-            EditorPanelable selected = fromAView.cloneWithoutID();
-            Invoice t = (Invoice)selected;
-            System.out.println("------------------p------------------------" + t.getProductsWithCounts().size());
-            t.getProductsWithCounts().keySet().stream().forEach((p) -> {
-                System.out.println("p: " + p);
-            });
+            System.out.println("map is: " + inv.getProductsWithCounts());
             
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
 
             EditorPanelable result = (EditorPanelable) dialog.getResult();
             if (result != null) {
-                Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+//                Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
                 EditorPanelable newInstanceWithId = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
 //                result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
                 if (newInstanceWithId != null){ // result != null
