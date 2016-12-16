@@ -37,6 +37,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -91,8 +92,8 @@ public class InvoiceDialogController implements Initializable {
     private boolean permissionToClose;
     private String colonDelimiter = ":";
     private String percentDelimiter = "%";
+    private Names.EDITOR_BUTTON_TYPE editorPanelButtonType;
     private Runnable financesFromSuitedLicense;
-    private Runnable financesFromGetFinacne;
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -102,8 +103,7 @@ public class InvoiceDialogController implements Initializable {
         products.getItems().addAll(Product.getAllFromDB());
         permissionToClose = true;
 
-        financesFromSuitedLicense = new RecalcFinancesInBackground(true);
-        financesFromGetFinacne = new RecalcFinancesInBackground(false);
+        financesFromSuitedLicense = new RecalcFinancesInBackground();
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
             if (oldValue != null && newValue != null){
                 System.out.println("rebind from clients");
@@ -237,6 +237,8 @@ public class InvoiceDialogController implements Initializable {
     }
     
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
+        editorPanelButtonType = buttonType;
+        
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
@@ -254,13 +256,16 @@ public class InvoiceDialogController implements Initializable {
             
             if (clients.getValue() != null){ // add by simple
                 invoice.setInvoiceNumber("");
-                invoiceBackup.setInvoiceNumber("");
+//                invoiceBackup.setInvoiceNumber("");
                 
                 invoice.getInvoiceStatus().setDescrip(""); // set empty status
-                invoiceBackup.getInvoiceStatus().setDescrip(""); // set empty status
+//                invoiceBackup.getInvoiceStatus().setDescrip(""); // set empty status
                 
                 System.out.println("<<<<<<< start recalc licenses >>>>>>>>>>>>>");
-                new Thread(financesFromSuitedLicense).start();
+                Consumer<Invoice> updateInvoiceBackup = (Invoice invoice1) -> {
+                    invoiceBackup.copyFrom(invoice1);
+                };
+                new Thread(new RecalcFinancesInBackground(updateInvoiceBackup)).start();
             }
         }
         
@@ -316,21 +321,21 @@ public class InvoiceDialogController implements Initializable {
      */
     private class RecalcFinancesInBackground implements Runnable {
 
-        private final Semaphore semLock = new Semaphore(1);
-        private boolean callSuitedLicenses;
+        private final Semaphore semLock;
+        private Consumer<Invoice> callBack;
         
-        public RecalcFinancesInBackground(boolean callSuitedLicenseProcedure){
-            callSuitedLicenses = callSuitedLicenseProcedure;
+        public RecalcFinancesInBackground(Consumer<Invoice> callBack){
+            this();
+            this.callBack = callBack;
+        }
+        
+        public RecalcFinancesInBackground(){
+            semLock = new Semaphore(1);
         }
         
         @Override
         public void run() {
-            if (callSuitedLicenses){
-                callSuitedLicenseFromDB();
-            }
-            else {
-                callGetFinancesFromDB();
-            }
+            callSuitedLicenseFromDB();
         }
         
         private void callSuitedLicenseFromDB(){
@@ -352,10 +357,6 @@ public class InvoiceDialogController implements Initializable {
             }
         }
         
-        private void callGetFinancesFromDB(){
-            
-        }
-        
         private void calculateFinaceData() {
             setShowFinanceData(true, true);
             Map<Product, Integer> productsMap = products.getData();
@@ -366,20 +367,25 @@ public class InvoiceDialogController implements Initializable {
             });
             System.out.println("rebindFinanceData -> productsArray: " + productsArray);
 
-            JSONArray licensesIds = new JSONArray();
-            invoice.getLicenses().stream().forEach((licenseShortData) -> {
-                licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
-            });
-//            System.out.println("licensesIds: " + licensesIds);
-
             Integer invoiceId = null;
-            if (invoice.getRecId() != 0){
+            if (invoice.getRecId() != 0 && !editorPanelButtonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
                 invoiceId = invoice.getRecId();
             }
+            
             String discount = invoice.getAdditionalDiscountRate();
             if (discount == null || discount.isEmpty()) {
                 discount = null;
             }
+            
+            JSONArray licensesIds = null;
+            if (invoiceId != null){ // If invoice is new and have licenses (Add-By-Sample), their licensesIds don't sent to DB.
+                licensesIds = new JSONArray();
+                for (Invoice.LicenseShortData licenseShortData : invoice.getLicenses()) {
+                    licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
+                }
+            }
+//            System.out.println("licensesIds: " + licensesIds);
+            
             DBUtils.callInvoiceSuitedLicenses(invoiceId, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
             ArrayList<PartOfLicense> invoiceLicenses = DBUtils.getLicenses();
             
@@ -414,6 +420,9 @@ public class InvoiceDialogController implements Initializable {
 //            } 
             
             invoice.setLicenses(wholeLicenses);
+            if (callBack != null){
+                callBack.accept(invoice);
+            }
         }
     }
 }

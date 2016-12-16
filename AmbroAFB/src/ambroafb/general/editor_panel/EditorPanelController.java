@@ -182,17 +182,21 @@ public class EditorPanelController implements Initializable {
             EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
             EditorPanelable real = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "getOneFromDB", new Class[]{int.class}, null, selected.getRecId());
+            EditorPanelable cloneOfSelected;
             if (real != null) {
-                selected.copyFrom(real);
+                cloneOfSelected = real.cloneWithoutID();
+            }
+            else {
+                cloneOfSelected = selected.cloneWithoutID();
             }
             
             System.out.println("<<<<<<<<<<<< fromAView's map >>>>>>>>>>>>>>>");
-            Invoice inv = (Invoice)selected;
+            Invoice inv = (Invoice)cloneOfSelected;
             System.out.println("size: " + inv.getProductsWithCounts().size());
             System.out.println("map is: " + inv.getProductsWithCounts());
             
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
-            Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
+            Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, cloneOfSelected, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
 
             EditorPanelable result = (EditorPanelable) dialog.getResult();
             if (result != null) {
