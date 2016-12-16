@@ -181,7 +181,12 @@ public class EditorPanelController implements Initializable {
         if(dialogStage == null || !dialogStage.isShowing()){
             EditorPanelable fromAView = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             
-            
+            System.out.println("<<<<<<<<<<<< fromAView's map >>>>>>>>>>>>>>>");
+            Invoice inv = (Invoice)fromAView;
+            System.out.println("size: " + inv.getProductsWithCounts().size());
+            inv.getProductsWithCounts().keySet().stream().forEach((p) -> {
+                System.out.println("p: " + p + " count: " + inv.getProductsWithCounts().get(p));
+            });
             
             
             EditorPanelable selected = fromAView.cloneWithoutID();

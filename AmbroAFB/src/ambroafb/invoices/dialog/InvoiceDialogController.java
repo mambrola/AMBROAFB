@@ -91,7 +91,8 @@ public class InvoiceDialogController implements Initializable {
     private boolean permissionToClose;
     private String colonDelimiter = ":";
     private String percentDelimiter = "%";
-    private Runnable calculateFinances;
+    private Runnable financesFromSuitedLicense;
+    private Runnable financesFromGetFinacne;
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -101,14 +102,19 @@ public class InvoiceDialogController implements Initializable {
         products.getItems().addAll(Product.getAllFromDB());
         permissionToClose = true;
 
-        calculateFinances = new FinancesInBackground();
+        financesFromSuitedLicense = new RecalcFinancesInBackground(true);
+        financesFromGetFinacne = new RecalcFinancesInBackground(false);
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
             if (oldValue != null){
                 rebindFinanceData();
             }
         });
         products.showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (oldValue != null && !newValue) {
+            if (oldValue != null && !newValue && !Utils.compareProductsCounter(invoice.getProductsWithCounts(), invoiceBackup.getProductsWithCounts())) {
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> products show prop: ");
+                System.out.println("invoice backup map: size: " + invoiceBackup.getProductsWithCounts().size());
+                printMap(invoiceBackup.getProductsWithCounts());
+                
                 rebindFinanceData();
             }
         });
@@ -160,7 +166,7 @@ public class InvoiceDialogController implements Initializable {
      * */
     private void rebindFinanceData(){
         if (isEveryNessesaryFieldValid()){
-            new Thread(calculateFinances).start();
+            new Thread(financesFromSuitedLicense).start();
         }
         else {
             setFinanceDataToDefaultText();
@@ -299,12 +305,26 @@ public class InvoiceDialogController implements Initializable {
      * The class uses semaphore for calculate operation by atomic. It updates UI component into 
      * Platform thread. The MaskerPane visible, while finances data is not new.
      */
-    private class FinancesInBackground implements Runnable {
+    private class RecalcFinancesInBackground implements Runnable {
 
         private final Semaphore semLock = new Semaphore(1);
+        private boolean callSuitedLicenses;
+        
+        public RecalcFinancesInBackground(boolean callSuitedLicenseProcedure){
+            callSuitedLicenses = callSuitedLicenseProcedure;
+        }
         
         @Override
         public void run() {
+            if (callSuitedLicenses){
+                callSuitedLicenseFromDB();
+            }
+            else {
+                callGetFinancesFromDB();
+            }
+        }
+        
+        private void callSuitedLicenseFromDB(){
             try {
                 semLock.acquire();
                 Platform.runLater(() -> {
@@ -321,6 +341,10 @@ public class InvoiceDialogController implements Initializable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(InvoiceDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+        
+        private void callGetFinancesFromDB(){
+            
         }
         
         private void calculateFinaceData() {

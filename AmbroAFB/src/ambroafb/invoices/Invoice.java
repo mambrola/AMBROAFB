@@ -720,7 +720,7 @@ public class Invoice extends EditorPanelable {
 //        System.out.println("statusObj.get().compares(otherInvoice.statusProperty().get()): " + (statusObj.get().compares(otherInvoice.statusProperty().get())));
 //        System.out.println("getMonths().equals(otherInvoice.getMonths()): " + (getMonths().equals(otherInvoice.getMonths())));
 //        System.out.println("Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses()): " + (Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())));
-        System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
+        System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (Utils.compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
         
         
         
@@ -741,29 +741,10 @@ public class Invoice extends EditorPanelable {
                 reissuingObj.get().compares(otherInvoice.reissuingProperty().get()) &&
                 statusObj.get().compares(otherInvoice.statusProperty().get()) &&
                 getMonths().equals(otherInvoice.getMonths()) &&
-                compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts());
+                Utils.compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts());
     }
     
-    private boolean compareProductsCounter(Map<Product, Integer> first, Map<Product, Integer> second){
-        boolean result = true;
-        if (first.keySet().size() != second.keySet().size()) {
-            result = false;
-        }
-        else {
-            for(Product p : first.keySet()){
-                
-                System.out.println("!second.containsKey(p): " + (!second.containsKey(p)));
-                System.out.println("first.get(p).intValue(): " + first.get(p));
-                System.out.println("second.get(p).intValue(): " + second.get(p));
-                
-                if (!second.containsKey(p) || first.get(p).intValue() != second.get(p).intValue()){
-                    result = false;
-                    break;
-                }
-            }
-        }
-        return result;
-    }
+    
 
     
     @SuppressWarnings("EqualsAndHashcode")

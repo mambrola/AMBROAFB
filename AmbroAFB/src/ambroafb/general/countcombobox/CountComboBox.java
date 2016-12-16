@@ -170,7 +170,7 @@ public class CountComboBox<T> extends ComboBox<T> {
             }
         }
         
-        // Returns item if it is comboBoxResult map.
+        // Returns item if it is into comboBoxResult map.
         private T getItemFromData(String name){
             for (T key : comboBoxResult.keySet()){
                 String saveItemName = (box.getConverter() == null) ? key.toString() : box.getConverter().toString(key);;

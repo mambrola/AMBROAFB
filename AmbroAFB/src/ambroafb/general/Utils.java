@@ -32,6 +32,7 @@ import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.mapeditor.MapEditor;
 import ambroafb.invoices.Invoice;
+import ambroafb.products.Product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -315,6 +316,28 @@ public class Utils {
             if (!first.get(i).equals(second.get(i))) return false;
         }
         return true;
+    }
+    
+    
+    public static boolean compareProductsCounter(Map<Product, Integer> first, Map<Product, Integer> second){
+        boolean result = true;
+        if (first.keySet().size() != second.keySet().size()) {
+            result = false;
+        }
+        else {
+            for(Product p : first.keySet()){
+                
+                System.out.println("!second.containsKey(p): " + (!second.containsKey(p)));
+                System.out.println("first.get(p).intValue(): " + first.get(p));
+                System.out.println("second.get(p).intValue(): " + second.get(p));
+                
+                if (!second.containsKey(p) || first.get(p).intValue() != second.get(p).intValue()){
+                    result = false;
+                    break;
+                }
+            }
+        }
+        return result;
     }
     
     /**
