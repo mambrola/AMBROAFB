@@ -40,10 +40,8 @@ import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -59,7 +57,7 @@ import org.json.JSONObject;
  * @author mambroladze
  */
 public class Invoice extends EditorPanelable { 
-    
+
     @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty createdDate;
     
@@ -67,12 +65,14 @@ public class Invoice extends EditorPanelable {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private final SimpleStringProperty invoiceNumber;
     
+    @AView.Column(title = "%invoice_status_clarify", width = "100")
+    private final StringProperty clarifyDescrip;
+    private final ObjectProperty<InvoiceStatusClarify> clarifyObj;
+    
     @AView.Column(title = "%licenses", width = "100")
     @JsonIgnore
     private final StringProperty licensesDescript;
     private final ObservableList<LicenseShortData> licenses;
-//    @JsonIgnore
-//    public ObservableList<License> licensesOnProducts; // ????
     
     @AView.Column(title = "%clients", width = "250")
     @JsonIgnore
@@ -121,12 +121,9 @@ public class Invoice extends EditorPanelable {
     @AView.Column(title = "%invoice_status", width = "100")
     @JsonIgnore
     private final ObjectProperty<InvoiceStatus> statusObj;
-    private final IntegerProperty statusClarify;
     
     private final ObjectProperty<MonthCounterItem> months;
     private final BooleanProperty isLogined, isPaid;
-    
-    private final ObjectProperty<InvoiceStatusClarify> clarifyObj;
     
     @JsonIgnore
     private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
@@ -142,6 +139,8 @@ public class Invoice extends EditorPanelable {
     
     @JsonIgnore
     private final Map<Product, Integer> productsCounter = new HashMap<>();
+    private static int clarifyStatus;
+    
     
     public Invoice(){
         invoiceNumber = new SimpleStringProperty("");
@@ -163,8 +162,8 @@ public class Invoice extends EditorPanelable {
         vat = new SimpleStringProperty("");
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         clarifyObj = new SimpleObjectProperty<>(new InvoiceStatusClarify());
+        clarifyDescrip = new SimpleStringProperty("");
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
-        statusClarify = new SimpleIntegerProperty();
         months = new SimpleObjectProperty<>(new MonthCounterItem("1"));
         isLogined = new SimpleBooleanProperty(false);
         isPaid = new SimpleBooleanProperty(false);
@@ -184,6 +183,18 @@ public class Invoice extends EditorPanelable {
             rebindLicenses();
         });
         
+        clarifyObj.addListener((ObservableValue<? extends InvoiceStatusClarify> observable, InvoiceStatusClarify oldValue, InvoiceStatusClarify newValue) -> {
+            rebindStatusClarify();
+        });
+        rebindStatusClarify();
+    }
+    
+    private void rebindStatusClarify(){
+        if (clarifyObj.get() != null){
+            clarifyDescrip.unbind();
+            System.out.println("rebind clarifyyyyyyyyyy : " + clarifyObj.get().descripProperty());
+            clarifyDescrip.bind(clarifyObj.get().descripProperty());
+        }
     }
     
     private void rebindLicenses(){
@@ -380,10 +391,6 @@ public class Invoice extends EditorPanelable {
         return isPaid;
     }
     
-    public IntegerProperty statusClarifyProperty(){
-        return statusClarify;
-    }
-    
     
     
     // Getters:
@@ -483,14 +490,14 @@ public class Invoice extends EditorPanelable {
         return (reissuingObj.isNull().get()) ? -1 : reissuingObj.get().getInvoiceReissuingId();
     }
     
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public int getStatusClarify(){
+        return (clarifyObj.isNull().get()) ? -1 : clarifyObj.get().getInvoiceStatusClarifyId();
+    }
+    
     @JsonIgnore
     public String getStatusClarifyDescrip(){
         return (clarifyObj.isNull().get()) ? "" : clarifyObj.get().getDescrip();
-    }
-    
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    public int getStatusClarifyId(){
-        return (clarifyObj.isNull().get()) ? -1 : clarifyObj.get().getInvoiceStatusClarifyId();
     }
     
     @JsonIgnore
@@ -506,11 +513,6 @@ public class Invoice extends EditorPanelable {
     @JsonIgnore
     public String getMonths(){
         return "" + months.get().getMonthCount();
-    }
-    
-    @JsonIgnore
-    public int getStatusClarify(){
-        return statusClarify.get();
     }
     
     
@@ -657,8 +659,15 @@ public class Invoice extends EditorPanelable {
         isPaid.set(paid == 1);
     }
     
+    @JsonProperty
     public void setStatusClarify(int clarify){
-        statusClarify.set(clarify);
+        clarifyObj.get().setInvoiceStatusClarifyId(clarify);
+    }
+    
+    @JsonProperty
+    public void setStatusClarifyDescrip(String descrip){
+        System.out.println("descrip is: " + descrip);
+        clarifyObj.get().setDescrip(descrip);
     }
     
     
@@ -719,12 +728,6 @@ public class Invoice extends EditorPanelable {
         statusObj.get().copyFrom(invoice.getInvoiceStatus());
         setMonths(invoice.getMonths());
         
-        System.out.println("-----------copyFrom-------------");
-        System.out.println("-----------other map size-------------" + invoice.getProductsWithCounts());
-        invoice.getProductsWithCounts().keySet().stream().forEach((op) -> {System.out.println("other p: " + op);});
-        System.out.println("-------this anu clone map size: " + productsCounter.size());
-        productsCounter.keySet().stream().forEach((thp) -> {System.out.println("this p: " + thp);});
-        
         productsCounter.clear();
         invoice.getProductsWithCounts().keySet().stream().forEach((otherInvoiceProduct) -> {
             Product thisInvoiceProduct = otherInvoiceProduct.cloneWithID();
@@ -747,21 +750,19 @@ public class Invoice extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         Invoice otherInvoice = (Invoice) backup;
         
-        System.out.println("getFirstName().equals(otherInvoice.getFirstName()): " + (getFirstName().equals(otherInvoice.getFirstName())));
-        System.out.println("getLastName().equals(otherInvoice.getLastName()): " + (getLastName().equals(otherInvoice.getLastName())));
-        System.out.println("getEmail().equals(otherInvoice.getEmail()): " + (getEmail().equals(otherInvoice.getEmail())));
-        System.out.println("getInvoiceNumber().equals(otherInvoice.getInvoiceNumber()): " + (getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())));
-        System.out.println("Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()): " + (Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get())));
-        System.out.println("Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()): " + (Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get())));
-        System.out.println("Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()): " + (Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get())));
-        System.out.println("getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate()): " + (getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate())));
-        System.out.println("reissuingObj.get().compares(otherInvoice.reissuingProperty().get()): " + (reissuingObj.get().compares(otherInvoice.reissuingProperty().get())));
-        System.out.println("statusObj.get().compares(otherInvoice.getInvoiceStatus()): " + (statusObj.get().compares(otherInvoice.getInvoiceStatus())));
-        System.out.println("getMonths().equals(otherInvoice.getMonths()): " + (getMonths().equals(otherInvoice.getMonths())));
-        System.out.println("Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses()): " + (Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())));
-        System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (Utils.compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
-        
-        
+//        System.out.println("getFirstName().equals(otherInvoice.getFirstName()): " + (getFirstName().equals(otherInvoice.getFirstName())));
+//        System.out.println("getLastName().equals(otherInvoice.getLastName()): " + (getLastName().equals(otherInvoice.getLastName())));
+//        System.out.println("getEmail().equals(otherInvoice.getEmail()): " + (getEmail().equals(otherInvoice.getEmail())));
+//        System.out.println("getInvoiceNumber().equals(otherInvoice.getInvoiceNumber()): " + (getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())));
+//        System.out.println("Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()): " + (Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get())));
+//        System.out.println("Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()): " + (Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get())));
+//        System.out.println("Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()): " + (Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get())));
+//        System.out.println("getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate()): " + (getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate())));
+//        System.out.println("reissuingObj.get().compares(otherInvoice.reissuingProperty().get()): " + (reissuingObj.get().compares(otherInvoice.reissuingProperty().get())));
+//        System.out.println("statusObj.get().compares(otherInvoice.getInvoiceStatus()): " + (statusObj.get().compares(otherInvoice.getInvoiceStatus())));
+//        System.out.println("getMonths().equals(otherInvoice.getMonths()): " + (getMonths().equals(otherInvoice.getMonths())));
+//        System.out.println("Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses()): " + (Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())));
+//        System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (Utils.compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
         
         return  getFirstName().equals(otherInvoice.getFirstName())  &&
                 getLastName().equals(otherInvoice.getLastName())    &&
@@ -870,4 +871,40 @@ public class Invoice extends EditorPanelable {
             return licenses;
         }
     }
+    
+//    private static Color getClarifyColor(){
+//        switch(clarifyStatus){
+//            case 1:
+//                return Color.GREEN;
+//            case 2:
+//                return Color.ORANGE;
+//            case 3:
+//                return Color.RED;
+//            case 4:
+//                return Color.LIGHTGRAY;
+//            default:
+//                return Color.BLUE;
+//        }
+//    }
+    
+//    public static class TextColorCellFactory implements Callback<TableColumn<Invoice, String>, TableCell<Invoice, String>> {
+//
+//        @Override
+//        public TableCell<Invoice, String> call(TableColumn<Invoice, String> param) {
+//            TableCell<Invoice, String> cell = new TableCell<Invoice, String>() {
+//
+//                @Override
+//                public void updateItem(String date, boolean empty) {
+//                    if (empty) {
+//                        setGraphic(null);
+//                    } else {
+//                        Label label = new Label(date);
+//                        label.setTextFill(getClarifyColor());
+//                        setGraphic(label); 
+//                    }
+//                }
+//            };
+//            return cell;
+//        }
+//    }
 }

@@ -219,7 +219,7 @@ public class DBUtils {
     private static JSONArray licensesFinaces;
     private static JSONArray invoicesFinaces;
     
-    public static void callInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, String additionalDiscount, JSONArray licensesIds){
+    public static void callInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, String additionalDiscount, JSONArray licensesIds) throws AuthServerException{
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         try {
             JSONArray licensesArray = dbClient.callProcedureAndGetAsJson("invoice_get_suited_licenses",
@@ -231,7 +231,7 @@ public class DBUtils {
             licenses = licensesArray.getJSONArray(0);
             licensesFinaces = licensesArray.getJSONArray(1);
             invoicesFinaces = licensesArray.getJSONArray(2);
-        } catch (IOException | AuthServerException | JSONException ex) {
+        } catch (IOException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

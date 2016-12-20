@@ -8,6 +8,7 @@ package ambroafb.invoices.dialog;
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
+import ambroafb.general.AlertMessage;
 import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.monthcountercombobox.MonthCounterComboBox;
@@ -33,9 +34,11 @@ import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.invoices.helper.InvoiceFinaces;
 import ambroafb.invoices.helper.PartOfLicense;
 import ambroafb.licenses.helper.LicenseFinaces;
+import authclient.AuthServerException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -43,9 +46,12 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -375,21 +381,21 @@ public class InvoiceDialogController implements Initializable {
                     licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
                 });
             }
-//            System.out.println("licensesIds: " + licensesIds);
-            
-            DBUtils.callInvoiceSuitedLicenses(invoiceId, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
-            ArrayList<PartOfLicense> invoiceLicenses = DBUtils.getLicenses();
-            
-            for (PartOfLicense invoiceLicense : invoiceLicenses) {
-                System.out.println("invoice license from suited. license number: " + invoiceLicense.licenseNumber +
-                                                                 " license rec id: " + invoiceLicense.recId +
-                                                                 " invoice license id: " + invoiceLicense.invoiceLicenseId);
+
+            try {
+                DBUtils.callInvoiceSuitedLicenses(invoiceId, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
+            } catch (AuthServerException ex) {
+                if (ex.getStatusCode() == 403){
+                    processManyProductChoiceException(ex);
+                }
+                else {
+                    Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return;
             }
             
+            ArrayList<PartOfLicense> invoiceLicenses = DBUtils.getLicenses();
             ArrayList<LicenseFinaces> licenseFinances = DBUtils.getLicensesFinaces();
-            
-            System.out.println("licenseFinances: " + licenseFinances.toString());
-            
             ArrayList<InvoiceFinaces> invoiceFinances = DBUtils.getInvoicesFinaces();
 
             invoice.setLicenseFinances(licenseFinances);
@@ -404,15 +410,37 @@ public class InvoiceDialogController implements Initializable {
                 return shortData;
             }).collect(Collectors.toList());
             
-//            for (Invoice.LicenseShortData wholeLicense : wholeLicenses) {
-//                System.out.println( " >>> license number: " + wholeLicense.getLicenseNumber() +
-//                                    " license rec id: " + wholeLicense.getRecId() +
-//                                    " invoice license id: " + wholeLicense.getRec_id());
-//            } 
-            
             invoice.setLicenses(wholeLicenses);
             if (callBack != null){
                 callBack.accept(invoice);
+            }
+        }
+        
+        private void processManyProductChoiceException(AuthServerException ex){
+            try {
+                String msg = "";
+                String title = GeneralConfig.getInstance().getTitleFor("many_product_warning");
+                
+                JSONObject json = new JSONObject(ex.getMessage());
+                System.out.println("message: " + json.optString("message"));
+                
+                StringTokenizer tok = new StringTokenizer(json.optString("message"), ",");
+                while(tok.hasMoreTokens()){
+                    String currErrorText = tok.nextToken();
+                    String prodId = StringUtils.substringBetween(currErrorText, "product:", "count:").trim();
+                    String prodCurrCount = StringUtils.substringBetween(currErrorText, "count:", "max:").trim();
+                    String prodMaxCount = StringUtils.substringAfter(currErrorText, "max:").trim();
+                    Product appProduct = invoice.getProductsWithCounts().keySet().stream().filter((Product p) -> p.getRecId() == Integer.parseInt(prodId)).collect(Collectors.toList()).get(0);
+                    if (appProduct != null){
+                        msg += appProduct.getDescrip() + GeneralConfig.getInstance().getTitleFor("max_count") + prodMaxCount + "\n";
+                    }
+                }
+                String result = msg;
+                Platform.runLater(() -> {
+                    new AlertMessage(Alert.AlertType.WARNING, ex, result, title).showAlert();
+                });
+            } catch (JSONException ex1) {
+                Logger.getLogger(InvoiceDialogController.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
     }
