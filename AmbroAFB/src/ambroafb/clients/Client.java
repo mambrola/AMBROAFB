@@ -60,11 +60,9 @@ public class Client extends EditorPanelable{
     private final StringProperty createdDate;
     
     @AView.Column(width = "24", cellFactory = FirmPersonCellFactory.class)
-//    private final SimpleIntegerProperty isJur;
     private final SimpleBooleanProperty isJurBool;
 
     @AView.Column(width = "24", cellFactory = RezCellFactory.class)
-//    private final SimpleIntegerProperty isRezident;
     private final SimpleBooleanProperty isRezidentBool;
 
     private final SimpleStringProperty firstName, lastName;
@@ -561,7 +559,7 @@ public class Client extends EditorPanelable{
         boolean fieldsCompareResult =   getIsJur() == otherClient.getIsJur() &&
                                         getIsRezident() == otherClient.getIsRezident() && 
                                         getFirstName().equals(otherClient.getFirstName()) &&
-                                        getLastName().equals(otherClient.getLastName()) &&
+                                        Utils.avoidNull(this.lastNameProperty()).get().equals(Utils.avoidNull(otherClient.lastNameProperty()).get()) &&
                                         getEmail().equals(otherClient.getEmail())    &&
                                         getAddress().equals(otherClient.getAddress()) &&
                                         getZipCode().equals(otherClient.getZipCode()) &&
@@ -635,7 +633,7 @@ public class Client extends EditorPanelable{
                                         .map((phoneNumber) -> phoneNumber.getNumber() + " ")
                                         .reduce("", String::concat);
 
-        String otherFieldsText = getFirstName() + " " + getLastName() + " " + 
+        String otherFieldsText = getFirstName() + " " + Utils.avoidNull(lastNameProperty()).get() + " " + 
                                  getEmail() + " " + getAddress() + " " + getCity();
                 
         return (otherFieldsText + " " + clientPhones);

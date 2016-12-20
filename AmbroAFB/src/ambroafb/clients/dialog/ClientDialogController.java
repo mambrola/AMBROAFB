@@ -39,7 +39,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
+import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,6 +89,8 @@ public class ClientDialogController implements Initializable {
     private TextField fax, zipCode, city, www;
     @FXML
     private DialogOkayCancelController okayCancelController;
+    @FXML
+    private HBox namesRootPane;
     
     private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
@@ -118,18 +122,43 @@ public class ClientDialogController implements Initializable {
     }
     
     private void switchJuridical(ActionEvent e) {
-        double w = ((VBox)firstName.getParent()).widthProperty().getValue() + ((VBox)lastName.getParent()).widthProperty().getValue();
+        String delimiter = " ";
         if (((CheckBox) e.getSource()).isSelected()) {
             first_name.setText(conf.getTitleFor("firm_name"));
-            last_name.setText(conf.getTitleFor("firm_form"));
-            ((VBox)firstName.getParent()).setPrefWidth(0.75 * w);
-            ((VBox)lastName.getParent()).setPrefWidth(0.25 * w);
+            
+            setStylesForNamesPaneElements("twoThirds", "coupleTwoThird", "coupleOneThird");
+            namesRootPane.getChildren().remove(1); // remove lastName VBox
+            
+            String firmDescrip = firstName.getText() + delimiter + lastName.getText();
+            firstName.setText(firmDescrip.trim());
+            lastName.setText(null);
         } else {
             first_name.setText(conf.getTitleFor("first_name"));
             last_name.setText(conf.getTitleFor("last_name"));
-            ((VBox)firstName.getParent()).setPrefWidth(0.50 * w);
-            ((VBox)lastName.getParent()).setPrefWidth(0.50 * w);
+            
+            VBox lastNameVBox = new VBox(last_name, lastName);
+            namesRootPane.getChildren().add(1, lastNameVBox);
+            lastNameVBox.getStyleClass().add("couple");
+            
+            setStylesForNamesPaneElements("oneThirds", "couple", "couple");
+            
+            String firmDescrip = firstName.getText();
+            String firstNameText = StringUtils.substringBeforeLast(firmDescrip, delimiter);
+            String lastNameText = StringUtils.substringAfterLast(firmDescrip, delimiter);
+            firstName.setText(firstNameText.trim());
+            lastName.setText(lastNameText.trim());
         }
+    }
+    
+    private void setStylesForNamesPaneElements(String namesRootPaneNewStyleClass, String firstNameVBoxNewStyleClass, String idNumberVBoxNewStyleClass){
+        namesRootPane.getStyleClass().clear();
+        namesRootPane.getStyleClass().add(namesRootPaneNewStyleClass);
+        
+        ((VBox)firstName.getParent()).getStyleClass().clear();
+        ((VBox)firstName.getParent()).getStyleClass().add(firstNameVBoxNewStyleClass);
+
+        ((VBox)idNumber.getParent()).getStyleClass().clear();
+        ((VBox)idNumber.getParent()).getStyleClass().add(idNumberVBoxNewStyleClass);
     }
     
     public void bindClient(Client client) {

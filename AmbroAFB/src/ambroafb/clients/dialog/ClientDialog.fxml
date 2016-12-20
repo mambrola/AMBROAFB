@@ -33,7 +33,7 @@
                     </VBox>
                 </children> 
             </HBox>
-            <HBox styleClass="oneThirds" >
+            <HBox fx:id="namesRootPane" styleClass="oneThirds" >
                 <children>
                     <VBox styleClass="couple">
                         <Label fx:id="first_name" text="%first_name" styleClass="validationMessage" /> 

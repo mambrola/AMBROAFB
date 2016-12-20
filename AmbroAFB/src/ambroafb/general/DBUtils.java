@@ -192,6 +192,9 @@ public class DBUtils {
         boolean result = false;
         try {
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            
+            System.out.println("delete invoice params: " + params);
+            
             dbClient.callProcedure(deleteProcName, params);
             result = true;
         } catch (IOException | AuthServerException ex) {
