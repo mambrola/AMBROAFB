@@ -62,7 +62,7 @@ public class Product extends EditorPanelable {
     @JsonIgnore
     private final ObjectProperty<ProductSpecific> productSpecific;
     
-    @AView.Column(width = "50", styleClass = "textRight")
+    @AView.Column(title = "%monthly_price", width = "64", styleClass = "textRight")
     private final SimpleStringProperty price;
     
     @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
@@ -77,7 +77,8 @@ public class Product extends EditorPanelable {
     @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)
     private final SimpleBooleanProperty isActive;
     
-    private final IntegerProperty notJurMaxCount;
+    @AView.Column(title = "%max_count", width = "50", styleClass = "textRight")
+    private final StringProperty notJurMaxCount;
     
     @JsonIgnore
     private static final String DB_VIEW_NAME = "products_whole";
@@ -102,7 +103,7 @@ public class Product extends EditorPanelable {
         discounts = FXCollections.observableArrayList();
         discountsForMapEditor = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
-        notJurMaxCount = new SimpleIntegerProperty();
+        notJurMaxCount = new SimpleStringProperty();
         
         productSpecific.addListener((ObservableValue<? extends ProductSpecific> observable, ProductSpecific oldValue, ProductSpecific newValue) -> {
             rebindSpecific();
@@ -217,7 +218,7 @@ public class Product extends EditorPanelable {
         return isActive;
     }
     
-    public IntegerProperty notJurMaxCountProperty(){
+    public StringProperty notJurMaxCountProperty(){
         return notJurMaxCount;
     }
     
@@ -266,7 +267,7 @@ public class Product extends EditorPanelable {
     }
     
     public int getNotJurMaxCount(){
-        return notJurMaxCount.get();
+        return Utils.getIntValueFor(notJurMaxCount.get());
     }
     
 
@@ -309,7 +310,7 @@ public class Product extends EditorPanelable {
     }
     
     public void setNotJurMaxCount(int notJurMaxCount){
-        this.notJurMaxCount.set(notJurMaxCount);
+        this.notJurMaxCount.set("" + notJurMaxCount);
     }
 
     
@@ -338,6 +339,7 @@ public class Product extends EditorPanelable {
         setPrice(product.getPrice());
         setIso(product.getIso());
         setIsActive(product.getIsActive());
+        setNotJurMaxCount(product.getNotJurMaxCount());
 
         discounts.clear();
         discountsForMapEditor.clear();
@@ -385,6 +387,7 @@ public class Product extends EditorPanelable {
                 this.getPrice() == productBackup.getPrice() &&
                 this.getIso().equals(productBackup.getIso()) &&
                 this.getIsActive() == productBackup.getIsActive() &&
+                this.getNotJurMaxCount() == productBackup.getNotJurMaxCount() &&
                 Utils.compareListsByElemOrder(getDiscounts(), productBackup.getDiscounts());
     }
     

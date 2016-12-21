@@ -61,7 +61,7 @@
                     </VBox>
                 </children>
             </HBox>
-            <HBox styleClass="oneHalf">
+            <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
                         <children>
@@ -69,8 +69,17 @@
                             <MapEditor fx:id="discounts" initialize="ambroafb.products.helpers.ProductDiscount"  delimiter=" : "  keyPattern="[0-9]*" valuePattern="(-?|-?(0|[0-9]{1,2})(\.[0-9]*)?)?" valueSpecChars="-" />
                         </children>
                     </VBox>
-                    <VBox styleClass="couple" alignment="CENTER_LEFT" >
-                        <CheckBox fx:id="isAlive" text="%product_is_alive" />
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label text="%max_count" />
+                            <TextField fx:id="maxCount" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label />
+                            <CheckBox fx:id="isAlive" text="%product_is_alive" />
+                        </children>
                     </VBox>
                 </children> 
             </HBox>

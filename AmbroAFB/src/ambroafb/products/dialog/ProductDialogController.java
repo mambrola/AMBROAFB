@@ -49,6 +49,8 @@ public class ProductDialogController implements Initializable {
     private MapEditor discounts;
     @FXML
     private CheckBox isAlive;
+    @FXML
+    private TextField maxCount;
     
     
     @FXML
@@ -82,6 +84,7 @@ public class ProductDialogController implements Initializable {
             price.textProperty().bindBidirectional(product.priceProperty());
             currency.valueProperty().bindBidirectional(product.currencyProperty());
             discounts.setItems(product.getDiscountsForMapEditor());
+            maxCount.textProperty().bindBidirectional(product.notJurMaxCountProperty());
             isAlive.selectedProperty().bindBidirectional(product.isAliveProperty());
         }
     }

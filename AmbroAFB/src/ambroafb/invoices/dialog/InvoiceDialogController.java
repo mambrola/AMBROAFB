@@ -431,7 +431,7 @@ public class InvoiceDialogController implements Initializable {
                 String prodMaxCount = StringUtils.substringAfter(currErrorText, "max:").trim();
                 Product appProduct = invoice.getProductsWithCounts().keySet().stream().filter((Product p) -> p.getRecId() == Integer.parseInt(prodId)).collect(Collectors.toList()).get(0);
                 if (appProduct != null) {
-                    msg += appProduct.getDescrip() + GeneralConfig.getInstance().getTitleFor("max_count") + prodMaxCount + "\n";
+                    msg += appProduct.getDescrip() + " -> " + GeneralConfig.getInstance().getTitleFor("max_count") + ": " + prodMaxCount + "\n";
                 }
             }
             return msg;
