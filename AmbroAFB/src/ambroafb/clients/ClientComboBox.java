@@ -43,6 +43,9 @@ public class ClientComboBox extends AnchorPane {
                 if (!search.isFocused()){ // If searchField has not front and focused yet.
                     search.toFront();
                     search.requestFocus();
+                    if (!search.getText().isEmpty()){
+                        search.setText("");
+                    }
                 }
             }
             else { // set new value that is not null and empty:
