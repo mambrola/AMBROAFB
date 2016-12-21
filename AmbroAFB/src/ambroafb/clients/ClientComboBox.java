@@ -47,7 +47,7 @@ public class ClientComboBox extends AnchorPane {
             }
             else { // set new value that is not null and empty:
                 search.toBack();
-                search.setText(""); // clear search conntext
+//                search.setText(""); // clear search conntext
             }
         });
         
@@ -165,7 +165,7 @@ public class ClientComboBox extends AnchorPane {
             String lastName = input.substring(firstSeparatorIndex + separator.length(), secondSeparatorIndex);
             int emailStartIndex = secondSeparatorIndex + separator.length();
             String email = input.substring(emailStartIndex);
-            return items.stream().filter((Client c) -> c.getFirstName().equals(name) && c.getLastName().equals(lastName) && c.getEmail().equals(email)).collect(Collectors.toList()).get(0);
+            return getItems().stream().filter((Client c) -> c.getFirstName().equals(name) && c.getLastName().equals(lastName) && c.getEmail().equals(email)).collect(Collectors.toList()).get(0);
         }
         
     }
