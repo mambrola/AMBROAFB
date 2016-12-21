@@ -170,7 +170,6 @@ public class Product extends EditorPanelable {
     public static Product getOneFromDB (int productId){
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", productId).condition().build();
         Product p = DBUtils.getObjectFromDB(Product.class, DB_VIEW_NAME, params);
-        System.out.println("Product getFromDB: descrip: " + p.getSpecificDescrip());
         return p;
     }
     

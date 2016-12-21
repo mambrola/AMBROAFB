@@ -254,6 +254,22 @@ public class Utils {
     }
     
     /**
+     * The function returns JSON object from string.
+     * Note: string must be JSON syntax.
+     * @param strAsJson JSON syntax string
+     * @return Null if can not create JSON from parameter, otherwise returns JSON object.
+     */
+    public static JSONObject getJsonFrom(String strAsJson){
+        try {
+            JSONObject json = new JSONObject(strAsJson);
+            return json;
+        } catch (JSONException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    /**
      * The method converts string to Integer. If String is incorrect, it returns  -1 (minus 1).
      * @param str String which must be converted to Integer.
      * @return -1 if parameter is incorrect, otherwise - appropriate Integer value.

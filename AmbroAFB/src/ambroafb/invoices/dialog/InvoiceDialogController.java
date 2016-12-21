@@ -51,7 +51,6 @@ import javafx.scene.control.Label;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -385,8 +384,14 @@ public class InvoiceDialogController implements Initializable {
             try {
                 DBUtils.callInvoiceSuitedLicenses(invoiceId, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
             } catch (AuthServerException ex) {
-                if (ex.getStatusCode() == 403){
-                    processManyProductChoiceException(ex);
+                JSONObject json = Utils.getJsonFrom(ex.getMessage());
+                if (json == null) return;
+                if (json.optInt("code") == 4020){
+                    String message = processManyProductChoiceException(json.optString("message"));
+                    String title = GeneralConfig.getInstance().getTitleFor("many_product_warning");
+                    Platform.runLater(() -> {
+                        new AlertMessage(Alert.AlertType.WARNING, ex, message, title).showAlert();
+                    });
                 }
                 else {
                     Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
@@ -416,32 +421,20 @@ public class InvoiceDialogController implements Initializable {
             }
         }
         
-        private void processManyProductChoiceException(AuthServerException ex){
-            try {
-                String msg = "";
-                String title = GeneralConfig.getInstance().getTitleFor("many_product_warning");
-                
-                JSONObject json = new JSONObject(ex.getMessage());
-                System.out.println("message: " + json.optString("message"));
-                
-                StringTokenizer tok = new StringTokenizer(json.optString("message"), ",");
-                while(tok.hasMoreTokens()){
-                    String currErrorText = tok.nextToken();
-                    String prodId = StringUtils.substringBetween(currErrorText, "product:", "count:").trim();
-                    String prodCurrCount = StringUtils.substringBetween(currErrorText, "count:", "max:").trim();
-                    String prodMaxCount = StringUtils.substringAfter(currErrorText, "max:").trim();
-                    Product appProduct = invoice.getProductsWithCounts().keySet().stream().filter((Product p) -> p.getRecId() == Integer.parseInt(prodId)).collect(Collectors.toList()).get(0);
-                    if (appProduct != null){
-                        msg += appProduct.getDescrip() + GeneralConfig.getInstance().getTitleFor("max_count") + prodMaxCount + "\n";
-                    }
+        private String processManyProductChoiceException(String exceptionMessage) {
+            String msg = "";
+            StringTokenizer tok = new StringTokenizer(exceptionMessage, ",");
+            while (tok.hasMoreTokens()) {
+                String currErrorText = tok.nextToken();
+                String prodId = StringUtils.substringBetween(currErrorText, "product:", "count:").trim();
+                String prodCurrCount = StringUtils.substringBetween(currErrorText, "count:", "max:").trim();
+                String prodMaxCount = StringUtils.substringAfter(currErrorText, "max:").trim();
+                Product appProduct = invoice.getProductsWithCounts().keySet().stream().filter((Product p) -> p.getRecId() == Integer.parseInt(prodId)).collect(Collectors.toList()).get(0);
+                if (appProduct != null) {
+                    msg += appProduct.getDescrip() + GeneralConfig.getInstance().getTitleFor("max_count") + prodMaxCount + "\n";
                 }
-                String result = msg;
-                Platform.runLater(() -> {
-                    new AlertMessage(Alert.AlertType.WARNING, ex, result, title).showAlert();
-                });
-            } catch (JSONException ex1) {
-                Logger.getLogger(InvoiceDialogController.class.getName()).log(Level.SEVERE, null, ex1);
             }
+            return msg;
         }
     }
 }
