@@ -65,8 +65,8 @@ public class Invoice extends EditorPanelable {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private final SimpleStringProperty invoiceNumber;
     
-    @AView.Column(title = "%invoice_status_clarify", width = "100")
-    private final StringProperty clarifyDescrip;
+//    @AView.Column(title = "%invoice_status_clarify", width = "100")
+//    private final StringProperty clarifyDescrip;
     private final ObjectProperty<InvoiceStatusClarify> clarifyObj;
     
     @AView.Column(title = "%licenses", width = "100")
@@ -162,7 +162,7 @@ public class Invoice extends EditorPanelable {
         vat = new SimpleStringProperty("");
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         clarifyObj = new SimpleObjectProperty<>(new InvoiceStatusClarify());
-        clarifyDescrip = new SimpleStringProperty("");
+//        clarifyDescrip = new SimpleStringProperty("");
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
         months = new SimpleObjectProperty<>(new MonthCounterItem("1"));
         isLogined = new SimpleBooleanProperty(false);
@@ -183,19 +183,18 @@ public class Invoice extends EditorPanelable {
             rebindLicenses();
         });
         
-        clarifyObj.addListener((ObservableValue<? extends InvoiceStatusClarify> observable, InvoiceStatusClarify oldValue, InvoiceStatusClarify newValue) -> {
-            rebindStatusClarify();
-        });
-        rebindStatusClarify();
+//        clarifyObj.addListener((ObservableValue<? extends InvoiceStatusClarify> observable, InvoiceStatusClarify oldValue, InvoiceStatusClarify newValue) -> {
+//            rebindStatusClarify();
+//        });
+//        rebindStatusClarify();
     }
     
-    private void rebindStatusClarify(){
-        if (clarifyObj.get() != null){
-            clarifyDescrip.unbind();
-            System.out.println("rebind clarifyyyyyyyyyy : " + clarifyObj.get().descripProperty());
-            clarifyDescrip.bind(clarifyObj.get().descripProperty());
-        }
-    }
+//    private void rebindStatusClarify(){
+//        if (clarifyObj.get() != null){
+//            clarifyDescrip.unbind();
+//            clarifyDescrip.bind(clarifyObj.get().descripProperty());
+//        }
+//    }
     
     private void rebindLicenses(){
         licensesDescript.unbind();
@@ -666,7 +665,6 @@ public class Invoice extends EditorPanelable {
     
     @JsonProperty
     public void setStatusClarifyDescrip(String descrip){
-        System.out.println("descrip is: " + descrip);
         clarifyObj.get().setDescrip(descrip);
     }
     
