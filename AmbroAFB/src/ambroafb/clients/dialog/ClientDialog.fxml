@@ -108,7 +108,7 @@
                             <ComboBox fx:id="statuses" />
                         </VBox>
                     </HBox>
-                    <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
+                    <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" style="-fx-background-color: red;">
                         <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
                     </HBox>
                 </VBox>

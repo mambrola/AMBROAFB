@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -63,6 +64,9 @@ public class LoginController extends Stage implements Initializable {
         login.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
             if (event.getCode().equals(KeyCode.ENTER))
                 login();
+        });
+        login.setOnAction((ActionEvent event) -> {
+            login();
         });
         if (!username.getText().isEmpty()){
             password.requestFocus();

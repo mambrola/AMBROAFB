@@ -7,19 +7,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<ambroafb.general.DialogPanel stylesheets="/styles/css/login.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+<ambroafb.general.DialogPanel stylesheets="/styles/css/login.css" 
+                              xmlns="http://javafx.com/javafx/8" 
+                              xmlns:fx="http://javafx.com/fxml/1" >
     <StackPane styleClass="unicode" >
         <children>
-            <VBox alignment="CENTER" spacing="20.0">
+            <VBox styleClass="vContainer" alignment="CENTER" >
                 <children>
                     <GridPane hgap="10.0" vgap="10.0">
                         <columnConstraints>
                             <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
-                            <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" minWidth="10.0" prefWidth="150.0" />
                         </columnConstraints>
                         <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
                         </rowConstraints>
                         <children>
@@ -27,7 +27,7 @@
                             <Label text="%password" GridPane.rowIndex="1" />
                             <TextField fx:id="username" GridPane.columnIndex="1" />
                             <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                            <Button fx:id="login" mnemonicParsing="false" onAction="#login" text="%enter" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Button fx:id="login" mnemonicParsing="false" text="%enter" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         </children>
                         <VBox.margin>
                             <Insets left="100.0" right="100.0" />
