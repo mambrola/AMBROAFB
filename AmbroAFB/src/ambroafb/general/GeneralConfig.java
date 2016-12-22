@@ -88,8 +88,8 @@ public class GeneralConfig {
     public DBClient getDBClient(String username, String password) {
         db_username = username;
         db_password = password;
-//        dbClient = new DBClient(db_username, db_password, authclient.Utils.getDefaultConfig(Names.DB_SERVICE_URL_ON_SERVER, Names.APP_NAME));
-        dbClient = new DBClient(db_username, db_password, authclient.Utils.getDefaultConfig(Names.DB_SERVICE_URL_FOR_TEST, "AmbroAFB"));
+        dbClient = new DBClient(db_username, db_password, authclient.Utils.getDefaultConfig(Names.DB_SERVICE_URL_ON_SERVER, Names.APP_NAME));
+//        dbClient = new DBClient(db_username, db_password, authclient.Utils.getDefaultConfig(Names.DB_SERVICE_URL_FOR_TEST, "AmbroAFB"));
         dbClient.withLang(GeneralConfig.getInstance().locale.getLanguage());
         return dbClient;
     }

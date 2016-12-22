@@ -803,7 +803,7 @@ public class Invoice extends EditorPanelable {
         
         @Override
         public String toString(){
-            return licenseNumber.get();
+            return "license_id: " + licenseId + " license_number: " + licenseNumber.get();
         }
         
         @Override

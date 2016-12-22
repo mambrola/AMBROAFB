@@ -262,9 +262,10 @@ public class InvoiceDialogController implements Initializable {
             if (clients.getValue() != null){ // add by simple
                 invoice.setInvoiceNumber("");
                 invoice.getInvoiceStatus().setDescrip(""); // set empty status
+                invoice.getLicenses().clear();
                 
-                Consumer<Invoice> updateInvoiceBackup = (Invoice invoice1) -> {
-                    invoiceBackup.copyFrom(invoice1);
+                Consumer<Invoice> updateInvoiceBackup = (Invoice inv) -> {
+                    invoiceBackup.copyFrom(inv);
                 };
                 if (isEveryNessesaryFieldValid()){
                     // we need new license numbers:
@@ -375,11 +376,12 @@ public class InvoiceDialogController implements Initializable {
             }
             
             JSONArray licensesIds = new JSONArray();
-            if (invoiceId != null){ // If invoice is new and have licenses (Add-By-Sample), their licensesIds don't sent to DB.
+//            if (invoiceId != null){ // If invoice is new and have licenses (Add-By-Sample), their licensesIds don't sent to DB.
                 invoice.getLicenses().forEach((licenseShortData) -> {
                     licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
                 });
-            }
+                System.out.println("license_ids: " + licensesIds);
+//            }
 
             try {
                 DBUtils.callInvoiceSuitedLicenses(invoiceId, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
@@ -416,6 +418,9 @@ public class InvoiceDialogController implements Initializable {
             }).collect(Collectors.toList());
             
             invoice.setLicenses(wholeLicenses);
+            
+            System.out.println("invoice new licenses: " + invoice.getLicenses().toString());
+            
             if (callBack != null){
                 callBack.accept(invoice);
             }
