@@ -36,7 +36,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
@@ -255,10 +254,6 @@ public class Invoice extends EditorPanelable {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
 
-        // for test reissuing json order:
-        ArrayList<InvoiceReissuing> re = DBUtils.getObjectsListFromDB(InvoiceReissuing.class, DB_REISSUINGS_TABLE, params);
-        System.out.println("reissuing: " + re.stream().map((reissuing) -> reissuing.getInvoiceReissuingId()).collect(Collectors.toList()).toString());
-        
         return DBUtils.getObjectsListFromDB(InvoiceReissuing.class, DB_REISSUINGS_TABLE, params);
     }
     
@@ -266,10 +261,6 @@ public class Invoice extends EditorPanelable {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
 
-        // for test clarifies json order:
-        ArrayList<InvoiceStatusClarify> clarifies = DBUtils.getObjectsListFromDB(InvoiceStatusClarify.class, DB_CLARIFIES_TABLE, params);
-        System.out.println("clarifies: " + clarifies.stream().map((reissuing) -> reissuing.getInvoiceStatusClarifyId()).collect(Collectors.toList()).toString());
-        
         return DBUtils.getObjectsListFromDB(InvoiceStatusClarify.class, DB_CLARIFIES_TABLE, params);
     }
     
@@ -289,39 +280,12 @@ public class Invoice extends EditorPanelable {
     
     public static Invoice saveOneToDB(Invoice invoice) {
         if (invoice == null) return null;
-//        Map<Product, Integer> productsMap = invoice.getProductsWithCounts();
-//        JSONArray productsArray = new JSONArray();
-//        productsMap.keySet().stream().forEach((product) -> {
-//            JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
-//            productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
-//        });
-//
-//        JSONArray licensesIds = new JSONArray();
-//        invoice.getLicenses().stream().forEach((licenseShortData) -> {
-//            licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.licenseId));
-//        });
-//        DBUtils.callInvoiceSuitedLicenses(null, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, invoice.getAdditionalDiscountRate(), licensesIds);
-//        ArrayList<PartOfLicense> licenses = DBUtils.getLicenses();
-//        List<LicenseShortData> wholeLicenses = licenses.stream().map((license) -> {
-//                                                                        LicenseShortData shortData = new LicenseShortData();
-//                                                                        shortData.licenseId = license.invoiceLicenseId;
-//                                                                        shortData.setLicenseNumber(license.licenseNumber);
-//                                                                        return shortData;
-//                                                                }).collect(Collectors.toList());
-//        System.out.println("invoice whole license: " + wholeLicenses);
-        
-//        invoice.setLicenses(wholeLicenses);
-//        BigDecimal additoinalDiscount = Utils.getBigDecimalFor(invoice.getAdditionalDiscountRate());
-//        System.out.println("addintinal disc: " + additoinalDiscount);
-        
-//        return DBUtils.saveObjectToDBWith("invoice_insert_update_from_afb", invoice, additoinalDiscount);
         return DBUtils.saveInvoice(invoice);
     }
 
     
     public static boolean deleteOneFromDB(int id) {
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-        return DBUtils.deleteObjectFromDB("invoice_delete", params);
+        return DBUtils.deleteObjectFromDB("invoice_delete", id);
     }
     
 
@@ -464,12 +428,12 @@ public class Invoice extends EditorPanelable {
         return (Utils.getDoubleValueFor(additionalDiscountRate.get()) <= 0) ? "" : additionalDiscountRate.get();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public String getMoneyToPay(){
         return moneyToPay.get();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public String getMoneyPaid(){
         return moneyPaid.get();
     }
@@ -489,7 +453,7 @@ public class Invoice extends EditorPanelable {
         return (reissuingObj.isNull().get()) ? -1 : reissuingObj.get().getInvoiceReissuingId();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonIgnore
     public int getStatusClarify(){
         return (clarifyObj.isNull().get()) ? -1 : clarifyObj.get().getInvoiceStatusClarifyId();
     }

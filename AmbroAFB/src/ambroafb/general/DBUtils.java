@@ -140,6 +140,9 @@ public class DBUtils {
     public static Invoice saveInvoice(Object invoice){
         try {
             JSONObject targetJson = Utils.getJSONFromClass(invoice);
+            
+            System.out.println("invoice target json: " + targetJson);
+            
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             Response r = dbClient.post("invoices/fromAfb?lang=" + dbClient.getLang(), targetJson.toString());
             return Utils.getClassFromJSON(invoice.getClass(), new JSONObject(r.getDataAsString()));
@@ -156,8 +159,7 @@ public class DBUtils {
             System.out.println("data for procedure to server: " + targetJson);
             
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newSourceFromDB;
-            newSourceFromDB = dbClient.callProcedureAndGetAsJson(procedureName, dbClient.getLang(), targetJson, params).getJSONObject(0);
+            JSONObject newSourceFromDB = dbClient.callProcedureAndGetAsJson(procedureName, dbClient.getLang(), targetJson, params).getJSONObject(0);
             
             System.out.println("data for procedure from server: " + newSourceFromDB);
             
@@ -186,14 +188,12 @@ public class DBUtils {
         return null;
     }
     
-    
-    
     public static boolean deleteObjectFromDB(String deleteProcName, JSONObject params) {
         boolean result = false;
         try {
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             
-            System.out.println("delete invoice params: " + params);
+            System.out.println("delete" + deleteProcName + " params: " + params);
             
             dbClient.callProcedure(deleteProcName, params);
             result = true;

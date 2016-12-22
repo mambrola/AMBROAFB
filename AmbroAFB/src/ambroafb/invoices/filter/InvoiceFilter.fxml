@@ -13,24 +13,18 @@
                                 xmlns:fx="http://javafx.com/fxml/1">
     <VBox fx:id="formPane" >
         <children>
-            <HBox styleClass="w3">
+            <HBox styleClass="w2">
                 <children>
                     <VBox >
                         <children>
-                            <Label text="startDateFrom" />
+                            <Label text="%start_date_from" />
                             <ADatePicker fx:id="startDateFrom" />
                         </children>
                     </VBox>
                     <VBox >
                         <children>
-                            <Label text="startDateTo" />
+                            <Label text="%start_date_to" />
                             <ADatePicker fx:id="startDateTo" />
-                        </children>
-                    </VBox>
-                    <VBox>
-                        <children>
-                            <Label text="%invoice_status_clarify" />
-                            <CheckComboBox fx:id="clarifyType" />
                         </children>
                     </VBox>
                 </children>
@@ -39,13 +33,13 @@
                 <children>
                     <VBox >
                         <children>
-                            <Label text="endDateFrom" />
+                            <Label text="%end_date_from" />
                             <ADatePicker fx:id="endDateFrom" />
                         </children>
                     </VBox>
                     <VBox >
                         <children>
-                            <Label text="endDateTo" />
+                            <Label text="%end_date_to" />
                             <ADatePicker fx:id="endDateTo" />
                         </children>
                     </VBox>
@@ -53,16 +47,26 @@
             </HBox>
             <HBox styleClass="w2" >
                 <children>
-                    <VBox >
+                    <VBox>
                         <children>
-                            <Label text="%clients" />
-                            <ClientComboBox fx:id="clients" />
+                            <Label text="%invoice_status_clarify" />
+                            <CheckComboBox fx:id="clarifyType" />
                         </children>
                     </VBox>
                     <VBox >
                         <children>
                             <Label text="%invoice_reissuings" />
                             <CheckComboBox fx:id="invoiceReissuings" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w1" >
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%clients" />
+                            <ClientComboBox fx:id="clients" />
                         </children>
                     </VBox>
                 </children>

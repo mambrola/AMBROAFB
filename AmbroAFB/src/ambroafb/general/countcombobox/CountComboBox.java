@@ -81,7 +81,6 @@ public class CountComboBox<T> extends ComboBox<T> {
     }
     
     public boolean nothingIsSelected(){
-        System.out.println("comboBoxResult.isEmpty(): " + comboBoxResult.isEmpty());
         return comboBoxResult.isEmpty();
     }
     
