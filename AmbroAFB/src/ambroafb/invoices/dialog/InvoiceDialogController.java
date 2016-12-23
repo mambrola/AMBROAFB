@@ -350,14 +350,14 @@ public class InvoiceDialogController implements Initializable {
             setShowFinanceData(true, true);
             Map<Product, Integer> productsMap = products.getData();
             
-            System.out.println("calculateFinaceData -> productsMap: " + productsMap);
+//            System.out.println("calculateFinaceData -> productsMap: " + productsMap);
 
             JSONArray productsArray = new JSONArray();
             productsMap.keySet().stream().forEach((product) -> {
                 JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
                 productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
             });
-            System.out.println("rebindFinanceData -> productsArray minda: " + productsArray);
+//            System.out.println("rebindFinanceData -> productsArray minda: " + productsArray);
 
             Integer invoiceId = null;
             if (invoice.getRecId() != 0 && !editorPanelButtonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
@@ -373,7 +373,7 @@ public class InvoiceDialogController implements Initializable {
             invoice.getLicenses().forEach((licenseShortData) -> {
                 licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
             });
-            System.out.println("maqvs  license_ids: " + licensesIds);
+//            System.out.println("maqvs  license_ids: " + licensesIds);
 
             try {
                 DBUtils.callInvoiceSuitedLicenses(invoiceId, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
@@ -411,7 +411,7 @@ public class InvoiceDialogController implements Initializable {
             
             invoice.setLicenses(wholeLicenses);
             
-            System.out.println("invoice new licenses: " + invoice.getLicenses().toString());
+//            System.out.println("invoice new licenses: " + invoice.getLicenses().toString());
             
             if (callBack != null){
                 callBack.accept(invoice);
