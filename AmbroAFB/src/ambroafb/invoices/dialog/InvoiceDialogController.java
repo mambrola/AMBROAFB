@@ -111,32 +111,32 @@ public class InvoiceDialogController implements Initializable {
         financesFromSuitedLicense = new RecalcFinancesInBackground();
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
             if (oldValue != null && newValue != null){
-                System.out.println("rebind from clients");
+                System.out.println("rebindFinance from clients");
                 rebindFinanceData();
             }
         });
         products.showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (oldValue != null && !newValue && !Utils.compareProductsCounter(invoice.getProductsWithCounts(), invoiceBackup.getProductsWithCounts())) {
-                System.out.println("rebind from products");
+                System.out.println("rebindFinance from products");
                 rebindFinanceData();
             }
         });
         beginDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
             if (oldValue != null && newValue != null){
-                System.out.println("rebind from beginDate");
+                System.out.println("rebindFinance from beginDate");
                 rebindFinanceData();
             }
         });
         monthCounter.valueProperty().addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
             if (oldValue != null && newValue != null){
-                System.out.println("rebind from monthCounter");
+                System.out.println("rebindFinance from monthCounter");
                 rebindFinanceData();
             }
         });
         additionalDiscount.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             double discount = Utils.getDoubleValueFor(additionalDiscount.getText());
             if (discount > 0 && !newValue){
-                System.out.println("rebind from additionalDiscount");
+                System.out.println("rebindFinance from additionalDiscount");
                 rebindFinanceData();
             }
         });
@@ -232,13 +232,6 @@ public class InvoiceDialogController implements Initializable {
     
     public ComboBox<Product> getProductsComboBox(){
         return products;
-    }
-    
-    // for test
-    private void printMap(Map<Product, Integer> items){
-        items.keySet().stream().forEach((p) -> {
-            System.out.println("product: " + p.getDescrip() + " count: " + items.get(p));
-        });
     }
     
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
@@ -358,6 +351,9 @@ public class InvoiceDialogController implements Initializable {
         private void calculateFinaceData() {
             setShowFinanceData(true, true);
             Map<Product, Integer> productsMap = products.getData();
+            
+            System.out.println("calculateFinaceData -> productsMap: " + productsMap);
+
             JSONArray productsArray = new JSONArray();
             productsMap.keySet().stream().forEach((product) -> {
                 JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());

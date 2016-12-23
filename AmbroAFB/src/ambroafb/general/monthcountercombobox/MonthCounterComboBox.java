@@ -30,7 +30,7 @@ public class MonthCounterComboBox extends ComboBox<MonthCounterItem> {
         MonthCounterItem item4 = new MonthCounterItem("12");
         
         getItems().addAll(item1, item2, item3, item4);
-        getSelectionModel().select(0);
+//        getSelectionModel().select(0); // this is bad case when we need recalc finance data, it has value and invoice has enother value, so become recalc in listener.
     }
     
 }

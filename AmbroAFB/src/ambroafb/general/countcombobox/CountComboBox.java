@@ -64,8 +64,6 @@ public class CountComboBox<T> extends ComboBox<T> {
             CountComboBoxItem boxItem = new CountComboBoxItem(name);
             boxItem.itemNumberProperty().set(count);
             itemsMap.put(name, boxItem);
-            
-            System.out.println("name: " + name);
         });
         
         
