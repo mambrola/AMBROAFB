@@ -343,8 +343,9 @@ public class Utils {
         else {
             for(Product p : first.keySet()){
                 Product pFromSecondMap = getAppropriateProductFrom(second, p.getRecId());
-                
-                System.out.println("pFromSecondMap: " + pFromSecondMap);
+
+                System.out.println("prod_id fromFirstMap: " + p.getRecId());
+                System.out.println("prod_id FromSecondMap: " + pFromSecondMap.getRecId());
                 System.out.println("first.get(p).intValue(): " + first.get(p));
                 System.out.println("second.get(pFromSecondMap).intValue(): " + second.get(pFromSecondMap));
                 

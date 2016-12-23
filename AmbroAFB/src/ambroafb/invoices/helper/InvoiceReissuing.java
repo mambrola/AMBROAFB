@@ -24,7 +24,7 @@ public class InvoiceReissuing {
     public static final int DEFAULT_REISSUING_ID = 2;
     
     public InvoiceReissuing(){
-        invoiceReissuingId = new SimpleIntegerProperty(0);
+        invoiceReissuingId = new SimpleIntegerProperty(DEFAULT_REISSUING_ID);
         descrip = new SimpleStringProperty("");
     }
     

@@ -103,7 +103,8 @@ public class InvoiceDialogController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        processInvoiceReissuingComboBox();
+        invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
+        
         clients.showCategoryALL(false);
         products.getItems().addAll(Product.getAllFromDB());
         permissionToClose = true;
@@ -135,19 +136,14 @@ public class InvoiceDialogController implements Initializable {
         });
         additionalDiscount.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             double discount = Utils.getDoubleValueFor(additionalDiscount.getText());
-            if (discount > 0 && !newValue){
+            if (discount > 0 && !discountText.getText().contains(additionalDiscount.getText()) && !newValue){
                 System.out.println("rebindFinance from additionalDiscount");
                 rebindFinanceData();
             }
         });
         
         setFinanceDataToDefaultText();
-    }
-    
-    private void processInvoiceReissuingComboBox(){
-        invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
-        InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
-        invoiceReissuings.setValue(defaultReissuing);
+        
     }
     
     private void setFinanceDataToDefaultText(){
@@ -221,9 +217,7 @@ public class InvoiceDialogController implements Initializable {
             additionalDiscount.textProperty().bindBidirectional(invoice.additionaldiscountProperty());
             licenses.textProperty().bind(invoice.licensesNumbersProperty());
             
-            if (invoice.reissuingProperty().get() != null){
-                invoiceReissuings.valueProperty().bindBidirectional(invoice.reissuingProperty());
-            }
+            invoiceReissuings.valueProperty().bindBidirectional(invoice.reissuingProperty());
             revokedDate.valueProperty().bindBidirectional(invoice.revokedDateProperty());
             
             processFinanceData(invoice.getInvoiceFinances());
@@ -251,6 +245,10 @@ public class InvoiceDialogController implements Initializable {
             invoice.beginDateProperty().set(null); // It is needed for beginDate valuePropety listener, that it does not go to DB for finances.
             invoice.beginDateProperty().set(LocalDate.now());
             invoiceBackup.beginDateProperty().set(LocalDate.now());
+            
+            InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
+            invoice.reissuingProperty().set(defaultReissuing);
+            invoiceBackup.reissuingProperty().set(defaultReissuing);
             
             if (clients.getValue() != null){ // add by simple
                 invoice.setInvoiceNumber("");
@@ -359,7 +357,7 @@ public class InvoiceDialogController implements Initializable {
                 JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
                 productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
             });
-            System.out.println("rebindFinanceData -> productsArray: " + productsArray);
+            System.out.println("rebindFinanceData -> productsArray minda: " + productsArray);
 
             Integer invoiceId = null;
             if (invoice.getRecId() != 0 && !editorPanelButtonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
@@ -372,12 +370,10 @@ public class InvoiceDialogController implements Initializable {
             }
             
             JSONArray licensesIds = new JSONArray();
-//            if (invoiceId != null){ // If invoice is new and have licenses (Add-By-Sample), their licensesIds don't sent to DB.
-                invoice.getLicenses().forEach((licenseShortData) -> {
-                    licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
-                });
-                System.out.println("license_ids: " + licensesIds);
-//            }
+            invoice.getLicenses().forEach((licenseShortData) -> {
+                licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
+            });
+            System.out.println("maqvs  license_ids: " + licensesIds);
 
             try {
                 DBUtils.callInvoiceSuitedLicenses(invoiceId, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);

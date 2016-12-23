@@ -64,8 +64,6 @@ public class Invoice extends EditorPanelable {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private final SimpleStringProperty invoiceNumber;
     
-//    @AView.Column(title = "%invoice_status_clarify", width = "100")
-//    private final StringProperty clarifyDescrip;
     private final ObjectProperty<InvoiceStatusClarify> clarifyObj;
     
     @AView.Column(title = "%licenses", width = "100")
@@ -100,7 +98,7 @@ public class Invoice extends EditorPanelable {
     private final BooleanProperty isRevoked;
     
     @AView.Column(title = "%extra_discount", width = "100", styleClass = "textRight")
-    private final StringProperty additionalDiscountRate;
+    private final StringProperty additionalDiscRate;
     
     @AView.Column(title = "%money_to_pay", width = "70", styleClass = "textRight" )
     private final StringProperty moneyToPay;
@@ -155,13 +153,12 @@ public class Invoice extends EditorPanelable {
         revokedDateDescrip = new SimpleStringProperty("");
         revokedDateObj = new SimpleObjectProperty<>();
         isRevoked = new SimpleBooleanProperty(false);
-        additionalDiscountRate = new SimpleStringProperty("");
+        additionalDiscRate = new SimpleStringProperty("");
         moneyToPay = new SimpleStringProperty("");
         moneyPaid = new SimpleStringProperty("");
         vat = new SimpleStringProperty("");
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         clarifyObj = new SimpleObjectProperty<>(new InvoiceStatusClarify());
-//        clarifyDescrip = new SimpleStringProperty("");
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
         months = new SimpleObjectProperty<>(new MonthCounterItem("1"));
         isLogined = new SimpleBooleanProperty(false);
@@ -182,18 +179,7 @@ public class Invoice extends EditorPanelable {
             rebindLicenses();
         });
         
-//        clarifyObj.addListener((ObservableValue<? extends InvoiceStatusClarify> observable, InvoiceStatusClarify oldValue, InvoiceStatusClarify newValue) -> {
-//            rebindStatusClarify();
-//        });
-//        rebindStatusClarify();
     }
-    
-//    private void rebindStatusClarify(){
-//        if (clarifyObj.get() != null){
-//            clarifyDescrip.unbind();
-//            clarifyDescrip.bind(clarifyObj.get().descripProperty());
-//        }
-//    }
     
     private void rebindLicenses(){
         licensesDescript.unbind();
@@ -201,10 +187,16 @@ public class Invoice extends EditorPanelable {
                                     .map(LicenseShortData::licenseNumberProperty)
                                     .reduce(new SimpleStringProperty(""), (StringProperty total, StringProperty unary) -> {
                                         StringProperty temp = new SimpleStringProperty("");
-                                        temp.bind(total.concat(Bindings.createStringBinding(() -> {
-                                            return (total.get().isEmpty()) ? "" : ", ";
-                                        }, total.isEmpty())).concat(unary));
+                                        StringExpression exp = total.concat(Bindings.createStringBinding(() -> {
+                                                                    return (total.get().isEmpty()) ? "" : ", ";
+                                                                }, total.isEmpty())).concat(unary);
+                                        temp.set(exp.get());
                                         return temp;
+//                                        StringProperty temp = new SimpleStringProperty("");
+//                                        temp.bind(total.concat(Bindings.createStringBinding(() -> {
+//                                            return (total.get().isEmpty()) ? "" : ", ";
+//                                        }, total.isEmpty())).concat(unary));
+//                                        return temp;
                                     })
                             );
     }
@@ -315,7 +307,7 @@ public class Invoice extends EditorPanelable {
     }
     
     public StringProperty additionaldiscountProperty(){
-        return additionalDiscountRate;
+        return additionalDiscRate;
     }
     
     public StringProperty licensesNumbersProperty(){
@@ -372,7 +364,6 @@ public class Invoice extends EditorPanelable {
         return invoiceNumber.get();
     }
 
-    @JsonIgnore
     public ObservableList<LicenseShortData> getLicenses(){
         return licenses;
     }
@@ -425,7 +416,7 @@ public class Invoice extends EditorPanelable {
     }
     
     public String getAdditionalDiscountRate(){
-        return (Utils.getDoubleValueFor(additionalDiscountRate.get()) <= 0) ? "" : additionalDiscountRate.get();
+        return (Utils.getDoubleValueFor(additionalDiscRate.get()) <= 0) ? "" : additionalDiscRate.get();
     }
     
     @JsonIgnore
@@ -448,7 +439,6 @@ public class Invoice extends EditorPanelable {
         return (reissuingObj.isNull().get()) ? "" : reissuingObj.get().getDescrip();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public int getReissuing(){
         return (reissuingObj.isNull().get()) ? -1 : reissuingObj.get().getInvoiceReissuingId();
     }
@@ -526,6 +516,8 @@ public class Invoice extends EditorPanelable {
     
     public void setInvoiceFinances(ArrayList<InvoiceFinaces> invoiceFinances){
         this.invoiceFinaceses = invoiceFinances;
+        InvoiceFinaces invFinances = invoiceFinances.get(0); // There is only one entry in list.
+        additionalDiscRate.set(invFinances.additionalDiscountRate);
     }
     
     public void setClientId(int recId){
@@ -572,7 +564,7 @@ public class Invoice extends EditorPanelable {
     
     @JsonProperty
     public void setAdditionalDiscountRate(String additDisc){
-        additionalDiscountRate.set(additDisc);
+        additionalDiscRate.set(additDisc);
     }
     
     @JsonProperty // Setter must be available from DB but getter not available to DB
