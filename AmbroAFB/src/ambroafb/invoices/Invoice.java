@@ -137,7 +137,7 @@ public class Invoice extends EditorPanelable {
     @JsonIgnore
     private final Map<Product, Integer> productsCounter = new HashMap<>();
     private static int clarifyStatus;
-    
+    private BooleanProperty isAllowToModify;
     
     public Invoice(){
         invoiceNumber = new SimpleStringProperty("");
@@ -163,6 +163,7 @@ public class Invoice extends EditorPanelable {
         months = new SimpleObjectProperty<>(new MonthCounterItem("1"));
         isLogined = new SimpleBooleanProperty(false);
         isPaid = new SimpleBooleanProperty(false);
+        isAllowToModify = new SimpleBooleanProperty(true);
         
         beginDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
             if (months.get() != null && months.get().getMonthCount() != -1 && newValue != null){
@@ -179,6 +180,9 @@ public class Invoice extends EditorPanelable {
             rebindLicenses();
         });
         
+        moneyPaid.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            isAllowToModify.set(newValue != null && !newValue.isEmpty() && Utils.getDoubleValueFor(newValue) <= 0);
+        });
     }
     
     private void rebindLicenses(){
@@ -739,6 +743,10 @@ public class Invoice extends EditorPanelable {
                 Utils.compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts());
     }
     
+    @Override
+    public BooleanProperty isAllowToModify(){
+        return isAllowToModify;
+    }
     
 
     

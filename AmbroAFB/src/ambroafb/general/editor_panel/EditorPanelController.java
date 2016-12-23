@@ -21,6 +21,7 @@ import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -265,6 +266,12 @@ public class EditorPanelController implements Initializable {
     }
     
     public void buttonsMainPropertysBinder (AView<EditorPanelable> aView){
+        BooleanBinding allowModify = Bindings.createBooleanBinding(() -> {
+                                                                    if (aView.getCustomSelectedItem() == null){
+                                                                        return true;
+                                                                    }
+                                                                    return aView.getCustomSelectedItem().isAllowToModify().not().get();
+                                                                }, aView.getCustomSelectionModel().selectedItemProperty());
         if (aView instanceof AFilterableTreeTableView){
             AFilterableTreeTableView<EditorPanelable> treeTable = (AFilterableTreeTableView)aView;
             delete.disableProperty().bind(Bindings.createBooleanBinding(() -> {
@@ -275,9 +282,9 @@ public class EditorPanelController implements Initializable {
             }, aView.getCustomSelectionModel().selectedItemProperty()));
         }
         else if (aView instanceof ATableView){
-            delete.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
+            delete.disableProperty().bind(allowModify);
         }
-        edit.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
+        edit.disableProperty().bind(allowModify);
         view.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
         addBySample.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
     }

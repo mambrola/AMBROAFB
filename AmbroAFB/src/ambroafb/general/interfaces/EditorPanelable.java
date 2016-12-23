@@ -5,8 +5,11 @@
  */
 package ambroafb.general.interfaces;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 /**
  *
@@ -35,5 +38,8 @@ public abstract class EditorPanelable {
         this.recId = recId;
     };
     
-    
+    @JsonIgnore
+    public BooleanProperty isAllowToModify(){
+        return new SimpleBooleanProperty(true);
+    }
 }
