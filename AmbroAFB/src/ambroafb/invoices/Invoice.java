@@ -181,7 +181,7 @@ public class Invoice extends EditorPanelable {
         });
         
         moneyPaid.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            isAllowToModify.set(newValue != null && !newValue.isEmpty() && Utils.getDoubleValueFor(newValue) <= 0);
+            isAllowToModify.set(newValue != null && !newValue.isEmpty() && Utils.getDoubleValueFor(newValue) <= 0 && isLogined.not().get());
         });
     }
     
