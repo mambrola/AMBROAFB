@@ -189,6 +189,7 @@ public class MapEditor extends ComboBox<MapEditorElement> {
     public void changeState(boolean isViewable){
         isViewableState = isViewable;
         if (isViewable){
+            setEditable(false);
             getStylesheets().add(viewableCSSFile);
         }
         else {
