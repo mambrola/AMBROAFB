@@ -38,6 +38,8 @@ public class MapEditor extends ComboBox<MapEditorElement> {
     private String keyPattern, valuePattern, initializeClass, keySpecChars, valueSpecChars;
     private Class<?> initialize;
     private BooleanProperty incorrectElem = new SimpleBooleanProperty(false);
+    private String viewableCSSFile = "/styles/css/countcomboboxviewable.css";
+    private boolean isViewableState = false;
     
     public MapEditor(){
         this.setEditable(true);
@@ -177,9 +179,20 @@ public class MapEditor extends ComboBox<MapEditorElement> {
             }
             else {
                 MapEditorItem mapEditorItem = new MapEditorItem(item, delimiter, removeElement, editElement);
+                mapEditorItem.setViewableState(isViewableState);
                 itemsMap.put(item.getKey(), item);
                 setGraphic(mapEditorItem);
             }
+        }
+    }
+    
+    public void changeState(boolean isViewable){
+        isViewableState = isViewable;
+        if (isViewable){
+            getStylesheets().add(viewableCSSFile);
+        }
+        else {
+            getStylesheets().remove(viewableCSSFile);
         }
     }
     

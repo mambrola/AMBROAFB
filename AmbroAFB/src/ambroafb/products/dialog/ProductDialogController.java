@@ -96,6 +96,7 @@ public class ProductDialogController implements Initializable {
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
+            discounts.changeState(true);
         }
         okayCancelController.setButtonsFeatures(buttonType);
     }
