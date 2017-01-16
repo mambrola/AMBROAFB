@@ -10,6 +10,7 @@ import ambroafb.AmbroAFB;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.countcombobox.CountComboBox;
+import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import java.io.File;
 import java.io.IOException;
@@ -335,14 +336,14 @@ public class Utils {
     }
     
     
-    public static boolean compareProductsCounter(Map<Product, Integer> first, Map<Product, Integer> second){
+    public static boolean compareProductsCounter(Map<CountComboBoxItem, Integer> first, Map<CountComboBoxItem, Integer> second){
         boolean result = true;
         if (first.keySet().size() != second.keySet().size()) {
             result = false;
         }
         else {
-            for(Product p : first.keySet()){
-                Product pFromSecondMap = getAppropriateProductFrom(second, p.getRecId());
+            for(CountComboBoxItem p : first.keySet()){
+                Product pFromSecondMap = getAppropriateProductFrom(second, p.getUniqueIdentifier());
 
 //                System.out.println("prod_id fromFirstMap: " + p.getRecId());
 //                System.out.println("prod_id FromSecondMap: " + pFromSecondMap.getRecId());
@@ -358,11 +359,11 @@ public class Utils {
         return result;
     }
     
-    private static Product getAppropriateProductFrom(Map<Product, Integer> map, int id){
+    private static Product getAppropriateProductFrom(Map<CountComboBoxItem, Integer> map, String identifier){
         Product result = null;
-        for (Product p : map.keySet()){
-            if (p.getRecId() == id){
-                result = p;
+        for (CountComboBoxItem p : map.keySet()){
+            if (p.getUniqueIdentifier().equals(identifier)){
+                result = (Product)p;
                 break;
             }
         }

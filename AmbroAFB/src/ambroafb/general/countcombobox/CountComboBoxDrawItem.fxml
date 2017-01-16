@@ -8,7 +8,7 @@
 
 <fx:root    type="javafx.scene.layout.HBox"
             fx:id="rootPane"
-            stylesheets="/styles/css/countcomboboxitem.css"
+            stylesheets="/styles/css/countcomboboxdrawitem.css"
             xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <HBox fx:id="numberPane" >

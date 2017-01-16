@@ -15,6 +15,7 @@ import ambroafb.general.monthcountercombobox.MonthCounterComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBox;
+import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.invoices.Invoice;
@@ -64,7 +65,7 @@ public class InvoiceDialogController implements Initializable {
     @FXML @ContentNotEmpty
     private ClientComboBox clients;
     @FXML @ContentNotEmpty
-    private CountComboBox<Product> products;
+    private CountComboBox products;
     @FXML @ContentNotEmpty
     private ADatePicker beginDate;
     @FXML @ContentNotEmpty
@@ -224,7 +225,7 @@ public class InvoiceDialogController implements Initializable {
         }
     }
     
-    public ComboBox<Product> getProductsComboBox(){
+    public CountComboBox getProductsComboBox(){
         return products;
     }
     
@@ -233,6 +234,7 @@ public class InvoiceDialogController implements Initializable {
         
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
+            products.changeState(true);
         }
         
         // This is Dialog "new" and not add by simple, which EDITOR_BUTTON_TYPE is also NEW.
@@ -348,12 +350,13 @@ public class InvoiceDialogController implements Initializable {
         
         private void calculateFinaceData() {
             setShowFinanceData(true, true);
-            Map<Product, Integer> productsMap = products.getData();
+            Map<CountComboBoxItem, Integer> productsMap = products.getData();
             
 //            System.out.println("calculateFinaceData -> productsMap: " + productsMap);
 
             JSONArray productsArray = new JSONArray();
-            productsMap.keySet().stream().forEach((product) -> {
+            productsMap.keySet().stream().forEach((item) -> {
+                Product product = (Product)item;
                 JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
                 productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
             });
@@ -426,7 +429,7 @@ public class InvoiceDialogController implements Initializable {
                 String prodId = StringUtils.substringBetween(currErrorText, "product:", "count:").trim();
                 String prodCurrCount = StringUtils.substringBetween(currErrorText, "count:", "max:").trim();
                 String prodMaxCount = StringUtils.substringAfter(currErrorText, "max:").trim();
-                Product appProduct = invoice.getProductsWithCounts().keySet().stream().filter((Product p) -> p.getRecId() == Integer.parseInt(prodId)).collect(Collectors.toList()).get(0);
+                Product appProduct = (Product)invoice.getProductsWithCounts().keySet().stream().filter((CountComboBoxItem p) -> ((Product)p).getRecId() == Integer.parseInt(prodId)).collect(Collectors.toList()).get(0);
                 if (appProduct != null) {
                     msg += appProduct.getDescrip() + " -> " + GeneralConfig.getInstance().getTitleFor("max_count") + ": " + prodMaxCount + "\n";
                 }

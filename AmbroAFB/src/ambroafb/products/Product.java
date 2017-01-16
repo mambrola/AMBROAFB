@@ -11,6 +11,7 @@ import ambroafb.currencies.Currency;
 import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
+import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.general.mapeditor.MapEditorElement;
@@ -45,7 +46,7 @@ import org.json.JSONObject;
  * @author mambroladze
  */
 @SuppressWarnings("EqualsAndHashcode")
-public class Product extends EditorPanelable {
+public class Product extends EditorPanelable implements CountComboBoxItem {
     
     @AView.Column(width = "30")
     private final SimpleStringProperty abbreviation;
@@ -390,6 +391,17 @@ public class Product extends EditorPanelable {
                 this.getNotJurMaxCount() == productBackup.getNotJurMaxCount() &&
                 Utils.compareListsByElemOrder(getDiscounts(), productBackup.getDiscounts());
     }
+
+    @Override
+    public String getDrawableName() {
+        return getDescrip();
+    }
+
+    @Override
+    public String getUniqueIdentifier() {
+        return "" + getRecId();
+    }
+    
     
     public static class DiscountCellFactory implements Callback<TableColumn<Product, ObservableList<ProductDiscount>>, TableCell<Product, ObservableList<ProductDiscount>>> {
 

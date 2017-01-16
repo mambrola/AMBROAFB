@@ -7,38 +7,39 @@ package ambroafb.general.countcombobox;
 
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author dato
- * @param <T>
  */
-public class CountComboBox<T> extends ComboBox<T> {
+public class CountComboBox extends ComboBox<CountComboBoxItem> {
     
-    private final Map<String, CountComboBoxItem> itemsMap;
-    private final Tooltip tooltip;
-    private Map<T, Integer> comboBoxResult;
+    private static final int defaultWidth = 500;
+    
+    private Map<CountComboBoxItem, Integer> data = new HashMap<>();
+    private final Map<String, CountComboBoxDrawItem> drawItems = new HashMap<>();
+    private boolean isViewableState = false;
+    private String viewableCSSFile = "/styles/css/countcomboboxviewable.css";
+    private final Tooltip tooltip = new Tooltip();;
     
     public CountComboBox(){
-        itemsMap = new HashMap<>();
-        tooltip = new Tooltip();
-        comboBoxResult = new HashMap<>();
-        
-        this.setPrefWidth(500);
-        this.setButtonCell(new ComboBoxCustomButtonCell());
-        this.setCellFactory((ListView<T> param) -> new ComboBoxCustomCell(this));
+        this.setPrefWidth(defaultWidth);
         this.setTooltip(tooltip);
+        
+        setCellFactory((ListView<CountComboBoxItem> param) -> new CustomCell());
+        setButtonCell(new CustomButtonCell());
         
         // Never hide comboBox items listView:
         this.setSkin(new ComboBoxListViewSkin(this){
@@ -47,25 +48,37 @@ public class CountComboBox<T> extends ComboBox<T> {
                 return false;
             }
         });
-    }
-    
-    public void setCustomConverter(StringConverter<T> converter){
-        if (converter != null){
-            this.setConverter(converter);
-        }
-    }
-    
-    public void setData(Map<T, Integer> items){
-        comboBoxResult = items;
         
-        items.keySet().stream().forEach((key) -> {
-            String name = (getConverter() == null ) ? key.toString() : getConverter().toString(key);
-            int count = items.get(key);
-            CountComboBoxItem boxItem = new CountComboBoxItem(name);
-            boxItem.itemNumberProperty().set(count);
-            itemsMap.put(name, boxItem);
+        addKeyListeners();
+    }
+    
+    private void addKeyListeners(){
+        KeyCode plus = KeyCode.ADD;
+        KeyCode minus = KeyCode.SUBTRACT;
+        setOnKeyPressed((KeyEvent event) -> {
+            KeyCode eventKey = event.getCode();
+            CountComboBoxItem selectedItem = getSelectionModel().getSelectedItem();
+            if (selectedItem == null) return;
+            CountComboBoxDrawItem selectedDrawItem = drawItems.get(selectedItem.getUniqueIdentifier());
+            
+            if (eventKey.equals(plus)){
+                selectedDrawItem.increaseNumberBy(1);
+            }
+            else if (eventKey.equals(minus)){
+                selectedDrawItem.decreaseNumberBy(1);
+            }
+            refreshButtonCell();
         });
+    }
+    
+    public void setData(Map<CountComboBoxItem, Integer> data){
+        this.data = data;
         
+        data.keySet().forEach((item) -> {
+            CountComboBoxDrawItem drawItem = convertIntoDrawItem(item);
+            drawItem.numberProperty().set(data.get(item));
+            drawItems.put(item.getUniqueIdentifier(), drawItem);
+        });
         
         // ComboBox button cell text will show after any item select in comboBox. 
         // So we select every item. The last selected item will be zero indexed (only for visually effect).
@@ -74,108 +87,121 @@ public class CountComboBox<T> extends ComboBox<T> {
         }
     }
     
-    public Map<T, Integer> getData(){
-        return comboBoxResult;
+    private CountComboBoxDrawItem convertIntoDrawItem(CountComboBoxItem item) {
+        String name = item.getDrawableName();
+        CountComboBoxDrawItem drawItem = new CountComboBoxDrawItem(name);
+        return drawItem;
+    }
+    
+    private void refreshButtonCell() {
+        int selected = getSelectionModel().getSelectedIndex();
+        if (selected == getItems().size() - 1) {
+            getSelectionModel().selectPrevious();
+            getSelectionModel().selectNext();
+        } else {
+            getSelectionModel().selectNext();
+            getSelectionModel().selectPrevious();
+        }
+    }
+    
+    // Returns items that count != 0.
+    public Map<CountComboBoxItem, Integer> getData(){
+        return data;
+    }
+    
+    public void changeState(boolean isViewable){
+        isViewableState = isViewable;
+        if (isViewable){
+            getStylesheets().add(viewableCSSFile);
+        }
+        else {
+            getStylesheets().remove(viewableCSSFile);
+        }
     }
     
     public boolean nothingIsSelected(){
-        return comboBoxResult.isEmpty();
+        return data.isEmpty();
     }
     
-    private class ComboBoxCustomButtonCell extends ListCell<T> {
+    
+    private void printData() {
+        data.keySet().stream().forEach((itm) -> {
+            System.out.println("name: " + itm.getDrawableName());
+        });
+        System.out.println("");
+    }
+    
+    // Private class
+    private class CustomCell extends ListCell<CountComboBoxItem> {
 
-        private final String delimiter = ", ";
-        
-        public ComboBoxCustomButtonCell() {
+        public CustomCell() {
             super();
         }
 
         @Override
-        public void updateItem(T item, boolean empty) {
+        public void updateItem(CountComboBoxItem item, boolean empty) {
+            super.updateItem(item, empty);
+            if (item != null) {
+                // make all draw items newly (to avoid difference width for draw items):
+                CountComboBoxDrawItem drawItem = convertIntoDrawItem(item);
+                if (drawItems.containsKey(item.getUniqueIdentifier())){
+                    int itemCounter = drawItems.get(item.getUniqueIdentifier()).numberProperty().get();
+                    drawItem.numberProperty().set(itemCounter);
+                }
+                drawItem.setViewableState(isViewableState);
+                drawItems.put(item.getUniqueIdentifier(), drawItem);
+                
+                drawItem.numberProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+                    List<CountComboBoxItem> itemsInData = data.keySet().stream().filter((CountComboBoxItem itm) -> itm.getUniqueIdentifier().equals(item.getUniqueIdentifier())).collect(Collectors.toList());
+                    CountComboBoxItem currItem = (itemsInData.isEmpty()) ? item : itemsInData.get(0);
+                    
+                    if (newValue.intValue() <= 0){
+                        data.remove(currItem);
+                    }
+                    else {
+                        data.put(currItem, newValue.intValue());
+                    }
+                });
+                
+                // This is need for immediately change button cell when counter is changed:
+                drawItem.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
+                    refreshButtonCell();
+                });
+                setGraphic(drawItem);
+            }
+        }
+        
+    }
+    
+    
+    // private button cell
+    private class CustomButtonCell extends ListCell<CountComboBoxItem> {
+        
+        private final String delimiter = ", ";
+        
+        public CustomButtonCell() {
+            super();
+        }
+
+        @Override
+        public void updateItem(CountComboBoxItem item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
                 String title = "";
-                SortedSet<String> sortedKeys = new TreeSet<>(itemsMap.keySet());
-                for (String key : sortedKeys) {
-                    CountComboBoxItem boxItem = itemsMap.get(key);
-                    String boxItemName = boxItem.itemNameExpression().getValueSafe();
-                    title = title.concat(boxItemName);
-                    if (!boxItemName.isEmpty()){
-                        title = title.concat(delimiter);
-                    }
-                }
-                String titleStr = StringUtils.substringBeforeLast(title, delimiter);
-                setText(titleStr);
-                tooltip.setText(titleStr);
-            }
-        }
-        
-    }
-    
-    private class ComboBoxCustomCell extends ListCell<T> {
-
-        private final ComboBox box;
-
-        public ComboBoxCustomCell(ComboBox box) {
-            super();
-            this.box = box;
-        }
-
-        @Override
-        public void updateItem(T item, boolean empty) {
-            super.updateItem(item, empty);
-            if (item != null) {
-                String name = (box.getConverter() == null) ? item.toString() : box.getConverter().toString(item);
-                CountComboBoxItem boxItem = itemsMap.get(name);
-                if (boxItem == null){
-                    boxItem = new CountComboBoxItem(name);
-                    itemsMap.put(name, boxItem);
-                }
-                
-//                CountComboBoxItem boxItem = new CountComboBoxItem(name);
-//                itemsMap.put(name, boxItem);
-                
-                boxItem.itemNumberProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-                    T itemForName = getItemFromData(name);
-                    if (itemForName == null){ // If now select item that is not in firstly map, then program put it into map.
-                        itemForName = item;
-                    }
-                    
-                    if (newValue.intValue() > 0){
-                        comboBoxResult.put(itemForName, newValue.intValue());
-                    }
-                    else {
-                        if (comboBoxResult.containsKey(itemForName)){
-                            comboBoxResult.remove(itemForName);
+                for (CountComboBoxItem boxItem : getItems()) {
+                    String identifier = boxItem.getUniqueIdentifier();
+                    if (drawItems.containsKey(identifier)) {
+                        CountComboBoxDrawItem boxDrawItem = drawItems.get(identifier);
+                        title = title.concat(boxDrawItem.nameExpression().getValueSafe());
+                        if (!boxDrawItem.nameExpression().getValueSafe().isEmpty()){
+                            title = title.concat(delimiter);
                         }
                     }
-                    
-                });
-                
-                // ComboBox item could not select twise, so make this kind of action:
-                boxItem.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-                    int selected = box.getSelectionModel().getSelectedIndex();
-                    if (selected == box.getItems().size() - 1) {
-                        box.getSelectionModel().selectPrevious();
-                        box.getSelectionModel().selectNext();
-                    } else {
-                        box.getSelectionModel().selectNext();
-                        box.getSelectionModel().selectPrevious();
-                    }
-                });
-                setGraphic(boxItem);
-            }
-        }
-        
-        // Returns item if it is into comboBoxResult map.
-        private T getItemFromData(String name){
-            for (T key : comboBoxResult.keySet()){
-                String saveItemName = (box.getConverter() == null) ? key.toString() : box.getConverter().toString(key);;
-                if (saveItemName.equals(name)){
-                    return key;
                 }
+                title = StringUtils.substringBeforeLast(title, delimiter);
+                setText(title);
+                tooltip.setText(title);
             }
-            return null;
         }
     }
 }

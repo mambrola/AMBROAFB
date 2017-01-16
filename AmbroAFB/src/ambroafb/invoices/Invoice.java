@@ -13,6 +13,7 @@ import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
+import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
@@ -135,7 +136,7 @@ public class Invoice extends EditorPanelable {
     public ArrayList<InvoiceFinaces> invoiceFinaceses = new ArrayList<>();
     
     @JsonIgnore
-    private final Map<Product, Integer> productsCounter = new HashMap<>();
+    private final Map<CountComboBoxItem, Integer> productsCounter = new HashMap<>();
     private static int clarifyStatus;
     private BooleanProperty isAllowToModify;
     
@@ -373,7 +374,7 @@ public class Invoice extends EditorPanelable {
     }
     
     @JsonIgnore
-    public Map<Product, Integer> getProductsWithCounts(){
+    public Map<CountComboBoxItem, Integer> getProductsWithCounts(){
         return productsCounter;
     }
     
@@ -688,7 +689,7 @@ public class Invoice extends EditorPanelable {
         
         productsCounter.clear();
         invoice.getProductsWithCounts().keySet().stream().forEach((otherInvoiceProduct) -> {
-            Product thisInvoiceProduct = otherInvoiceProduct.cloneWithID();
+            Product thisInvoiceProduct = ((Product)otherInvoiceProduct).cloneWithID();
             int count = invoice.getProductsWithCounts().get(otherInvoiceProduct);
             productsCounter.put(thisInvoiceProduct, count);
         });
