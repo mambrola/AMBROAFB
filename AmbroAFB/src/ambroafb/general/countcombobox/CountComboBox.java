@@ -128,7 +128,6 @@ public class CountComboBox<T> extends ComboBox<T> {
                 String name = (box.getConverter() == null) ? item.toString() : box.getConverter().toString(item);
                 CountComboBoxItem boxItem = itemsMap.get(name);
                 if (boxItem == null){
-                    System.out.println("name: " + name);
                     boxItem = new CountComboBoxItem(name);
                     itemsMap.put(name, boxItem);
                 }
