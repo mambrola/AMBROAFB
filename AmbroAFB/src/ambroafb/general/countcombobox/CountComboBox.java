@@ -153,6 +153,7 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
                 
                 drawItem.numberProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
                     List<CountComboBoxItem> itemsInData = data.keySet().stream().filter((CountComboBoxItem itm) -> itm.getUniqueIdentifier().equals(item.getUniqueIdentifier())).collect(Collectors.toList());
+                    // Note that 'item' and 'currItem' is not the same instance. 'item' is from comboBoxItems list and 'currItem' is from users data.
                     CountComboBoxItem currItem = (itemsInData.isEmpty()) ? item : itemsInData.get(0);
                     
                     if (newValue.intValue() <= 0){
