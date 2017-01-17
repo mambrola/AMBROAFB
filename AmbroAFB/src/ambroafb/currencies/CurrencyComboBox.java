@@ -39,6 +39,7 @@ public class CurrencyComboBox extends ComboBox<Currency>{
             String removedIso = (String)((JSONObject)jsonArr.opt(0)).opt("value");
             
             ArrayList<Currency> filteredCurrencies = (ArrayList<Currency>)Currency.getAllFromDB().stream().filter((Currency currency) -> !currency.getIso().equals(removedIso)).collect(Collectors.toList());
+            filteredCurrencies.sort((Currency c1, Currency c2) -> c1.getIso().compareTo(c2.getIso()));
             items.addAll(filteredCurrencies);
             
         } catch (IOException | AuthServerException ex) {

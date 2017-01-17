@@ -11,12 +11,14 @@ import ambroafb.clients.Client;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.licenses.filter.LicenseFilterModel;
 import ambroafb.products.Product;
 import authclient.db.ConditionBuilder;
+import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
@@ -192,7 +194,8 @@ public class License extends EditorPanelable {
 
     
     public static ArrayList<LicenseStatus> getAllLicenseStatusFromDB(){
-        JSONObject params = new ConditionBuilder().build();
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
         return DBUtils.getObjectsListFromDB(LicenseStatus.class, DB_STATUSES_TABLE_NAME, params);
     }
     

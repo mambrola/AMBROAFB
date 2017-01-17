@@ -19,6 +19,7 @@ import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatusClarify;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -102,8 +103,21 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        clarifyType.getItems().setAll(Invoice.getAllIvoiceClarifiesFromDB());
-        invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
+        ArrayList<InvoiceStatusClarify> clarifies = Invoice.getAllIvoiceClarifiesFromDB();
+        
+//        System.out.println("Before sort");
+//        printClarifiesIDsList(clarifies);
+        
+        clarifies.sort((InvoiceStatusClarify clarify1, InvoiceStatusClarify clarify2) -> clarify1.getRecId() - clarify2.getRecId());
+        
+//        System.out.println("After sort");
+//        printClarifiesIDsList(clarifies);
+        
+        clarifyType.getItems().setAll(clarifies);
+        
+        ArrayList<InvoiceReissuing> reissuings = Invoice.getAllIvoiceReissuingsesFromDB();
+        reissuings.sort((InvoiceReissuing reissuing1, InvoiceReissuing reissuing2) -> reissuing1.getRecId() - reissuing2.getRecId());
+        invoiceReissuings.getItems().setAll(reissuings);
         
         startDateFrom.setValue(invoiceFilterModel.getStartDate(true));
         startDateTo.setValue(invoiceFilterModel.getStartDate(false));
@@ -117,4 +131,10 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
         });
     }
     
+    private void printClarifiesIDsList(ArrayList<InvoiceStatusClarify> clarifies){
+        clarifies.stream().forEach((cl) -> {
+            System.out.print(cl.getRecId() + " ");
+        });
+        System.out.println("");
+    }
 }

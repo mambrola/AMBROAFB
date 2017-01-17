@@ -10,7 +10,7 @@ import ambroafb.general.DBUtils;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.List;
+import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -51,7 +51,7 @@ public class Country extends EditorPanelable{
         }, code));
     }
     
-    public static List<Country> getAllFromDB() {
+    public static ArrayList<Country> getAllFromDB() {
         JSONObject params =  new ConditionBuilder().build();
         return DBUtils.getObjectsListFromDB(Country.class, DB_TABLE_NAME, params);
     }

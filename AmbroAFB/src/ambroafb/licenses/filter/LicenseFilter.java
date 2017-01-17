@@ -18,6 +18,7 @@ import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseStatus;
 import ambroafb.products.ProductComboBox;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -98,11 +99,10 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        clients.registerBundle(resources);
-        statuses.getItems().setAll(License.getAllLicenseStatusFromDB());
+        ArrayList<LicenseStatus> licenseStatuses = License.getAllLicenseStatusFromDB();
+        licenseStatuses.sort((LicenseStatus status1, LicenseStatus status2) -> status1.getRecId() - status2.getRecId());
+        statuses.getItems().setAll(licenseStatuses);
         
-//        clients.getSelectionModel().select(filterModel.getSelectedClientIndex());
-//        products.getSelectionModel().select(filterModel.getSelectedProductIndex());
         filterModel.getSelectedStatusIndexes().stream().forEach((index) -> {
             statuses.getCheckModel().check(index);
         });

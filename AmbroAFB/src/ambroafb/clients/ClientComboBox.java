@@ -5,6 +5,7 @@
  */
 package ambroafb.clients;
 
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
@@ -74,8 +75,10 @@ public class ClientComboBox extends AnchorPane {
         clientALL.setFirstName("ALL");
         clientALL.setRecId(0);
         items.add(clientALL);
-        items.addAll(Client.getAllFromDB().stream().filter((Client c) -> c.getEmail() != null && !c.getEmail().isEmpty())
-                                                    .collect(Collectors.toList()));
+        List<Client> clientsList = Client.getAllFromDB().stream().filter((Client c) -> c.getEmail() != null && !c.getEmail().isEmpty())
+                                                    .collect(Collectors.toList());
+        clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
+        items.addAll(clientsList);
         setItems(items, (Client c) -> c.getShortDescrip(separator).get());
         clients.setValue(clientALL);
     }

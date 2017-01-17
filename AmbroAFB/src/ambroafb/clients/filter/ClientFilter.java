@@ -18,6 +18,7 @@ import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -97,9 +98,9 @@ public class ClientFilter  extends Stage implements Filterable, Initializable {
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Client.getAllStatusFromDB().forEach((clientStatus) -> {
-            statuses.getItems().add(clientStatus);
-        });
+        ArrayList<ClientStatus> clientStatuses = Client.getAllStatusFromDB();
+        clientStatuses.sort((ClientStatus status1, ClientStatus status2) -> status1.getRecId() - status2.getRecId());
+        statuses.getItems().addAll(clientStatuses);
         
         dateBigger.setValue(clientFilterModel.getFromDate());
         dateLess.setValue(clientFilterModel.getToDate());

@@ -5,6 +5,7 @@
  */
 package ambroafb.countries;
 
+import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -36,7 +37,9 @@ public class CountryComboBox extends ComboBox<Country> {
                 return null;
             }
         });
-        items.addAll(Country.getAllFromDB());
+        ArrayList<Country> countriesList = Country.getAllFromDB();
+        countriesList.sort((Country c1, Country c2) -> c1.getCode().compareTo(c2.getCode()));
+        items.addAll(countriesList);
         this.setValue(all);
     }
     

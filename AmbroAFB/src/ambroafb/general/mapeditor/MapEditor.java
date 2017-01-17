@@ -7,7 +7,6 @@ package ambroafb.general.mapeditor;
 
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -34,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 public class MapEditor extends ComboBox<MapEditorElement> {
     
     private Map<String, MapEditorElement> itemsMap;
-    private ArrayList<MapEditorElement> disabledItems;
     private String delimiter;
     private Consumer<MapEditorElement> removeElement, editElement;
     private String keyPattern, valuePattern, initializeClass, keySpecChars, valueSpecChars;
@@ -46,7 +44,6 @@ public class MapEditor extends ComboBox<MapEditorElement> {
     public MapEditor(){
         this.setEditable(true);
         itemsMap = new HashMap<>();
-        disabledItems = new ArrayList<>();
         delimiter = " : "; // default value of delimiter
         keyPattern = ""; // (?<![\\d-])\\d+
         valuePattern = ""; // [0-9]{1,13}(\\.[0-9]*)?

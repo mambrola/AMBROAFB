@@ -5,6 +5,7 @@
  */
 package ambroafb.products;
 
+import java.util.ArrayList;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 
@@ -37,8 +38,11 @@ public class ProductComboBox extends ComboBox<Product> {
 
         productALL.setDescrip(ALL);
         productALL.setRecId(0);
-        this.getItems().add(productALL);
-        this.getItems().addAll(Product.getAllFromDB());
+        ArrayList<Product> productList = Product.getAllFromDB();
+        productList.add(productALL);
+        productList.sort((Product p1, Product p2) -> p1.getRecId() - p2.getRecId());
+        
+        this.getItems().addAll(productList);
         this.setValue(productALL);
     }
     

@@ -214,7 +214,7 @@ public class Client extends EditorPanelable{
         return DBUtils.getObjectsListFromDB(Client.class, DB_TABLE_NAME, params);
     }
     
-    public static List<ClientStatus> getAllStatusFromDB(){
+    public static ArrayList<ClientStatus> getAllStatusFromDB(){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
         return DBUtils.getObjectsListFromDB(ClientStatus.class, DB_STATUS_TABLE, params);
