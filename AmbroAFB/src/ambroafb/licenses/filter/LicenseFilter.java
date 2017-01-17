@@ -54,9 +54,9 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
     public LicenseFilter(Stage owner){
         StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
         
+        Scene scene = SceneUtils.createScene("/ambroafb/licenses/filter/LicenseFilter.fxml", (LicenseFilter)this);
         this.initStyle(StageStyle.UNIFIED);
         this.setTitle(GeneralConfig.getInstance().getTitleFor("license_filter"));
-        Scene scene = SceneUtils.createScene("/ambroafb/licenses/filter/LicenseFilter.fxml", (LicenseFilter)this);
         this.setScene(scene);
         this.initOwner(owner);
         this.setResizable(false);

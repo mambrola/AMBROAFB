@@ -5,6 +5,7 @@
  */
 package ambroafb.currency_rates;
 
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
@@ -24,11 +25,11 @@ public class CurrencyRates extends Stage {
     public CurrencyRates(Stage owner){
         StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
         
-        this.setTitle("currencyRates");
         Scene scene = SceneUtils.createScene("/ambroafb/currency_rates/CurrencyRates.fxml", null);
         currencyRatesController = (CurrencyRatesController) scene.getProperties().get("controller");
         this.setScene(scene);
         this.initOwner(owner);
+        this.setTitle(GeneralConfig.getInstance().getTitleFor("currency_rates"));
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             currencyRatesController.getEditorPanelController().getExitButton().getOnAction().handle(null);

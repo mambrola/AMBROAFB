@@ -82,7 +82,6 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
             
             currencyRateFilterModel.setFromDate(dateBigger.getValue());
             currencyRateFilterModel.setToDate(dateLess.getValue());
-//            currencyRateFilterModel.setSelectedCurrencyIndex(currencies.getSelectionModel().getSelectedIndex());
             currencyRateFilterModel.setSelectedCurrency(currencies.getValue());
         }
     }
@@ -98,9 +97,6 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     public void initialize(URL url, ResourceBundle rb) {
         dateBigger.setValue(currencyRateFilterModel.getFromDate());
         dateLess.setValue(currencyRateFilterModel.getToDate());
-        
-        // Note: currencies.setValue(...); will be incorrect, when open this stage again getSelectedCurrency will be null. We read value from pref.
-//        currencies.getSelectionModel().select(currencyRateFilterModel.getSelectedCurrencyIndex());
     }    
     
 }

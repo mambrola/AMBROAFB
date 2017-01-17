@@ -46,7 +46,7 @@ public class CurrencyRateDialog extends Stage implements Dialogable {
         this.setScene(scene);
         this.setResizable(false);
         this.initOwner(owner);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("currency_rate_dialog_title"));
+        this.setTitle(GeneralConfig.getInstance().getTitleFor("currency_rates"));
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
