@@ -115,7 +115,7 @@
                         </Menu>
                     </menus>    
                 </MenuBar>
-                <Region fx:id="region" styleClass="menu-bar" HBox.hgrow="SOMETIMES" />
+                <HBox fx:id="region" styleClass="menu-bar" HBox.hgrow="SOMETIMES" />
                 <MenuBar fx:id="menuBarRight" >
                     <menus>
                         <Menu text="%administrator">

@@ -53,7 +53,7 @@ public class MainController implements Initializable {
     @FXML
     private HBox menusPane;
     @FXML
-    private Region region;
+    private HBox region;
     @FXML
     private BorderPane formPane;
     
