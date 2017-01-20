@@ -10,6 +10,7 @@ import ambroafb.general.FilterModel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -56,9 +57,9 @@ public class CurrencyRatesController implements Initializable {
             masker.setVisible(true);
             
             new Thread(() -> {
-                CurrencyRate.getFilteredFromDB(model).stream().forEach((currRate) -> {
-                    currencyRates.add(currRate);
-                });
+                ArrayList<CurrencyRate> currencyRateList = CurrencyRate.getFilteredFromDB(model);
+                currencyRateList.sort((CurrencyRate c1, CurrencyRate c2) -> c2.dateProperty().get().compareTo(c1.dateProperty().get()));
+                currencyRates.setAll(currencyRateList);
                 
                 Platform.runLater(() -> {
                     masker.setVisible(false);
