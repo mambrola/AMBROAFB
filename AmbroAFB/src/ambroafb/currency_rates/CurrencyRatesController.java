@@ -58,7 +58,11 @@ public class CurrencyRatesController implements Initializable {
             
             new Thread(() -> {
                 ArrayList<CurrencyRate> currencyRateList = CurrencyRate.getFilteredFromDB(model);
-                currencyRateList.sort((CurrencyRate c1, CurrencyRate c2) -> c2.dateProperty().get().compareTo(c1.dateProperty().get()));
+                currencyRateList.sort((CurrencyRate c1, CurrencyRate c2) -> {
+                    int dateCmp = c2.dateProperty().get().compareTo(c1.dateProperty().get());
+                    if (dateCmp == 0) return c1.getIso().compareTo(c2.getIso());
+                    return dateCmp;
+                });
                 currencyRates.setAll(currencyRateList);
                 
                 Platform.runLater(() -> {
