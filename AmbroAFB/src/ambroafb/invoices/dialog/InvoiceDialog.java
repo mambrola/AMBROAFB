@@ -5,13 +5,11 @@
  */
 package ambroafb.invoices.dialog;
 
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.UserInteractiveStage;
 import ambroafb.invoices.Invoice;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -22,7 +20,7 @@ import javafx.stage.WindowEvent;
  *
  * @author tabramishvili
  */
-public class InvoiceDialog extends Stage implements Dialogable {
+public class InvoiceDialog extends UserInteractiveStage implements Dialogable {
 
     private Invoice invoice;
     private final Invoice invoiceBackup;
@@ -30,7 +28,7 @@ public class InvoiceDialog extends Stage implements Dialogable {
     private InvoiceDialogController dialogController;
     
     public InvoiceDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        super(owner, Names.LEVEL_FOR_PATH, "invoice_dialog_title", "/images/dialog.png");
         
         Invoice invoiceObject;
         if (object == null)
@@ -47,17 +45,12 @@ public class InvoiceDialog extends Stage implements Dialogable {
         dialogController.setBackupInvoice(this.invoiceBackup);
         dialogController.setNextVisibleAndActionParameters(buttonType);
         this.setScene(currentScene);
-        this.setResizable(false);
-        this.initOwner(owner);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("invoice_dialog_title"));
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
     }
 
     @Override

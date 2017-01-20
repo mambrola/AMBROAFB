@@ -51,7 +51,7 @@ public class CountriesController implements Initializable {
         reAssignTable(null);
     }
 
-    private void reAssignTable(FilterModel model) {
+    public void reAssignTable(FilterModel model) {
         final int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         countries.clear();
         masker.setVisible(true);

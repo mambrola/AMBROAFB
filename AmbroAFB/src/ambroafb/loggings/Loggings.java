@@ -6,38 +6,34 @@
 package ambroafb.loggings;
 
 import ambroafb.general.SceneUtils;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.ListingStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author dato
  */
-public class Loggings extends Stage {
+public class Loggings extends ListingStage {
     
     private LoggingsController loggingsController;
     
     public Loggings(Stage owner){
-        StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
+        super(owner, StringUtils.substringAfterLast(Loggings.class.toString(), "."), "loggings", "/images/list.png");
         
         Scene scene = SceneUtils.createScene("/ambroafb/loggings/Loggings.fxml", null);
         loggingsController = (LoggingsController) scene.getProperties().get("controller");
         this.setScene(scene);
-        this.initOwner(owner);  
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             loggingsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if(event != null) event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
-        StageUtils.stopStageWidthDecrease((Stage)this, () -> loggingsController.getEditorPanelController().getPanelMinWidth());
-        StagesContainer.setSizeFor((Stage)this);
+        super.setFeatures(() -> loggingsController.getEditorPanelController().getPanelMinWidth());
     }
     
     public LoggingsController getLoggingsController(){

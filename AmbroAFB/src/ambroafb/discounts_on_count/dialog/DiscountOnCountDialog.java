@@ -6,14 +6,12 @@
 package ambroafb.discounts_on_count.dialog;
 
 import ambroafb.discounts_on_count.DiscountOnCount;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.*;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.UserInteractiveStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,7 +21,7 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class DiscountOnCountDialog extends Stage implements Dialogable {
+public class DiscountOnCountDialog extends UserInteractiveStage implements Dialogable {
     
     public DiscountOnCount discountOnCount;
     public final DiscountOnCount discountOnCountBackup;
@@ -31,7 +29,7 @@ public class DiscountOnCountDialog extends Stage implements Dialogable {
     private DiscountOnCountDialogController dialogController;
     
     public DiscountOnCountDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        super(owner, Names.LEVEL_FOR_PATH, "discounts_on_count", "/images/dialog.png");
         
         if (object == null)
             discountOnCount = new DiscountOnCount();
@@ -46,17 +44,12 @@ public class DiscountOnCountDialog extends Stage implements Dialogable {
         dialogController.setNextVisibleAndActionParameters(buttonType);
         dialogController.setBackupDiscountOnCount(this.discountOnCountBackup);
         this.setScene(currentScene);
-        this.setResizable(false);
-        this.initOwner(owner);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("discount_on_count_dialog_title"));
 
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
     }
     
     @Override

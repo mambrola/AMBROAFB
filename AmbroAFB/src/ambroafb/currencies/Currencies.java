@@ -6,38 +6,34 @@
 package ambroafb.currencies;
 
 import ambroafb.general.SceneUtils;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.ListingStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author dato
  */
-public class Currencies extends Stage {
+public class Currencies extends ListingStage {
     
     private CurrenciesController currenciesController;
     
     public Currencies(Stage owner){
-        StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
+        super(owner, StringUtils.substringAfterLast(Currencies.class.toString(), "."), "currencies", "/images/list.png");
         
         Scene scene = SceneUtils.createScene("/ambroafb/currencies/Currencies.fxml", null);
         currenciesController = (CurrenciesController) scene.getProperties().get("controller");
         this.setScene(scene);
-        this.initOwner(owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             currenciesController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
-        StageUtils.stopStageWidthDecrease((Stage)this, () -> currenciesController.getEditorPanelController().getPanelMinWidth());
-        StagesContainer.setSizeFor((Stage)this);
+        super.setFeatures(() -> currenciesController.getEditorPanelController().getPanelMinWidth());
     }
     
     public CurrenciesController getCurrenciesController(){

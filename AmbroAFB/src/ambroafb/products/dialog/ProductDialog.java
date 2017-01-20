@@ -5,14 +5,11 @@
  */
 package ambroafb.products.dialog;
 
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
-import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.UserInteractiveStage;
 import ambroafb.products.Product;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -23,15 +20,15 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class ProductDialog extends Stage implements Dialogable {
+public class ProductDialog extends UserInteractiveStage implements Dialogable {
     
     private Product product;
     private final Product productBackup;
     
     private ProductDialogController dialogController;
     
-    public ProductDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+    public ProductDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+        super(owner, Names.LEVEL_FOR_PATH, "product_dialog_title", "/images/dialog.png");
         
         if (object == null)
             this.product = new Product();
@@ -45,17 +42,12 @@ public class ProductDialog extends Stage implements Dialogable {
         dialogController.setNextVisibleAndActionParameters(buttonType);
         dialogController.setBackupProduct(this.productBackup);
         this.setScene(currentScene);
-        this.setResizable(false);
-        this.initOwner(owner);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("product_dialog_title"));
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
     }
 
     @Override

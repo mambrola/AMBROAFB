@@ -6,38 +6,36 @@
 package ambroafb.clients;
 
 import ambroafb.general.SceneUtils;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.ListingStage;
+import java.util.function.Supplier;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author murman
  */
-public class Clients extends Stage {
+public class Clients extends ListingStage {
     
     private ClientsController clientsController;
+    private static Supplier<Double> stageWidthCalculator;
     
     public Clients(Stage owner) {
-        StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
+        super(owner, StringUtils.substringAfterLast(Clients.class.toString(), "."), "clients", "/images/list.png");
         
         Scene scene = SceneUtils.createScene("/ambroafb/clients/Clients.fxml", null);
         clientsController = (ClientsController) scene.getProperties().get("controller");
         this.setScene(scene);
-        this.initOwner(owner);  
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             clientsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if(event != null) event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
-        StageUtils.stopStageWidthDecrease((Stage)this, () -> clientsController.getEditorPanelController().getPanelMinWidth());
-        StagesContainer.setSizeFor((Stage)this);
+        super.setFeatures(() -> clientsController.getEditorPanelController().getPanelMinWidth());
     }
     
     public ClientsController getClientsController(){

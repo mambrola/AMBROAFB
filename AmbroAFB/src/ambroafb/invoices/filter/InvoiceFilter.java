@@ -8,13 +8,11 @@ package ambroafb.invoices.filter;
 import ambro.ADatePicker;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.general.FilterModel;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
+import ambroafb.general.stages.UserInteractiveStage;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatusClarify;
@@ -26,7 +24,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.controlsfx.control.CheckComboBox;
 
@@ -34,7 +31,7 @@ import org.controlsfx.control.CheckComboBox;
  *
  * @author dato
  */
-public class InvoiceFilter extends Stage implements Filterable, Initializable {
+public class InvoiceFilter extends UserInteractiveStage implements Filterable, Initializable {
 
     
     @FXML
@@ -54,22 +51,15 @@ public class InvoiceFilter extends Stage implements Filterable, Initializable {
     public static final String DATE_LESS = "9999-01-01";
     
     public InvoiceFilter(Stage owner){
-        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        super(owner, Names.LEVEL_FOR_PATH, "invoices", "/images/filter.png");
         
-        this.initStyle(StageStyle.UNIFIED);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("invoices_filter"));
         Scene scene = SceneUtils.createScene("/ambroafb/invoices/filter/InvoiceFilter.fxml", (InvoiceFilter)this);
         this.setScene(scene);
-        this.initOwner(owner);
-        this.setResizable(false);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             okayCancelController.cancel(null);
             if (event != null) event.consume();
         });
-        
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
     }
 
     @Override

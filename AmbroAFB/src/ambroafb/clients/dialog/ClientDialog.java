@@ -6,14 +6,12 @@
 package ambroafb.clients.dialog;
 
 import ambroafb.clients.Client;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.UserInteractiveStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,7 +21,7 @@ import javafx.stage.WindowEvent;
  *
  * @author tabramishvili
  */
-public class ClientDialog extends Stage implements Dialogable {
+public class ClientDialog extends UserInteractiveStage implements Dialogable {
     
     public Client client;
     public final Client clientBackup;
@@ -31,7 +29,7 @@ public class ClientDialog extends Stage implements Dialogable {
     private ClientDialogController dialogController;
     
     public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        super(owner,  Names.LEVEL_FOR_PATH, "client_dialog_title", "/images/dialog.png");
         
         if (object == null)
             client = new Client();
@@ -46,17 +44,11 @@ public class ClientDialog extends Stage implements Dialogable {
         dialogController.setNextVisibleAndActionParameters(buttonType, "/clients/passport/");
         dialogController.setBackupClient(this.clientBackup);
         this.setScene(currentScene);
-        this.setResizable(false);
-        this.initOwner(owner);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("client_dialog_title"));
-
+        
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
-        
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
     }
     
     @Override

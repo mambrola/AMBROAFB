@@ -6,38 +6,34 @@
 package ambroafb.balance_accounts;
 
 import ambroafb.general.SceneUtils;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.ListingStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author dato
  */
-public class BalanceAccounts extends Stage {
+public class BalanceAccounts extends ListingStage {
     
     private BalanceAccountsController balanceAccountsController;
     
     public BalanceAccounts(Stage owner){
-        StagesContainer.registerStageByOwner(owner, BalanceAccounts.class.getSimpleName(), (Stage)this);
+        super(owner, StringUtils.substringAfterLast(BalanceAccounts.class.toString(), "."),  "balances", "/images/list.png");
         
         Scene scene = SceneUtils.createScene("/ambroafb/balance_accounts/BalanceAccounts.fxml", null);
         balanceAccountsController = (BalanceAccountsController) scene.getProperties().get("controller");
         this.setScene(scene);
-        this.initOwner(owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             balanceAccountsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if(event != null) event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
-        StageUtils.stopStageWidthDecrease((Stage)this, () -> balanceAccountsController.getEditorPanelController().getPanelMinWidth());
-        StagesContainer.setSizeFor((Stage)this);
+        super.setFeatures(() -> balanceAccountsController.getEditorPanelController().getPanelMinWidth());
     }
     
     public BalanceAccountsController getCountriesController(){

@@ -6,14 +6,11 @@
 package ambroafb.currencies.dialog;
 
 import ambroafb.currencies.Currency;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
-import ambroafb.general.Names.*;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.UserInteractiveStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,15 +20,15 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class CurrencyDialog extends Stage implements Dialogable {
+public class CurrencyDialog extends UserInteractiveStage implements Dialogable {
 
     private Currency currency;
     private final Currency currencyBackup;
     
     private CurrencyDialogController dialogController;
     
-    public CurrencyDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+    public CurrencyDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+        super(owner, Names.LEVEL_FOR_PATH, "currency_dialog_title", "/images/dialog.png");
         
         if (object == null)
             this.currency = new Currency();
@@ -45,17 +42,12 @@ public class CurrencyDialog extends Stage implements Dialogable {
         dialogController.setNextVisibleAndActionParameters(buttonType);
         dialogController.setBackupCurrency(this.currencyBackup);
         this.setScene(currentScene);
-        this.setResizable(false);
-        this.initOwner(owner);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("currency_dialog_title"));
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
     }
     
     @Override

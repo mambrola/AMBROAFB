@@ -8,13 +8,11 @@ package ambroafb.currency_rates.filter;
 import ambro.ADatePicker;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.FilterModel;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.UserInteractiveStage;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
@@ -22,7 +20,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 /**
@@ -30,7 +27,7 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class CurrencyRateFilter extends Stage implements Filterable, Initializable {
+public class CurrencyRateFilter extends UserInteractiveStage implements Filterable, Initializable {
 
     @FXML
     private ADatePicker dateBigger, dateLess;
@@ -42,26 +39,16 @@ public class CurrencyRateFilter extends Stage implements Filterable, Initializab
     private final CurrencyRateFilterModel currencyRateFilterModel = new CurrencyRateFilterModel();
     
     public CurrencyRateFilter(Stage owner){
-        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        super(owner, Names.LEVEL_FOR_PATH, "currency_rates", "/images/filter.png");
         
         Scene scene = SceneUtils.createScene("/ambroafb/currency_rates/filter/CurrencyRateFilter.fxml", (CurrencyRateFilter)this);
-        setStageFeatures(scene, owner);
+        this.setScene(scene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             okayCancelController.cancel(null);
             if(event != null) event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
-    }
-    
-    private void setStageFeatures(Scene scene, Stage owner){
-        this.setScene(scene);
-        this.initOwner(owner);
-        this.initStyle(StageStyle.UNIFIED);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("currency_rate_filter"));
-        this.setResizable(false);
     }
     
     @Override

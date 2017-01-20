@@ -6,38 +6,34 @@
 package ambroafb.discounts_on_count;
 
 import ambroafb.general.SceneUtils;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.ListingStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author dato
  */
-public class DiscountOnCounts extends Stage {
+public class DiscountOnCounts extends ListingStage {
     
     private DiscountOnCountsController discountsController;
     
     public DiscountOnCounts(Stage owner){
-        StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
+        super(owner, StringUtils.substringAfterLast(DiscountOnCounts.class.toString(), "."), "discounts_on_count", "/images/list.png");
         
         Scene scene = SceneUtils.createScene("/ambroafb/discounts_on_count/DiscountOnCounts.fxml", null);
         discountsController = (DiscountOnCountsController) scene.getProperties().get("controller");
         this.setScene(scene);
-        this.initOwner(owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             discountsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             if(event != null) event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
-        StageUtils.stopStageWidthDecrease((Stage)this, () -> discountsController.getEditorPanelController().getPanelMinWidth());
-        StagesContainer.setSizeFor((Stage)this);
+        super.setFeatures(() -> discountsController.getEditorPanelController().getPanelMinWidth());
     }
     
     public DiscountOnCountsController getDiscountOnCountsController(){

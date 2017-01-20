@@ -6,40 +6,35 @@
 package ambroafb.countries;
 
 import ambroafb.general.SceneUtils;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
+import ambroafb.general.stages.ListingStage;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.stage.WindowEvent;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author dato
  */
-public class Countries extends Stage {
+public class Countries extends ListingStage {
     
     private CountriesController countriesController;
     
-    public Countries(){}
-    
     public Countries(Stage owner){
-        StagesContainer.registerStageByOwner(owner, getClass().getSimpleName(), (Stage)this);
+        super(owner, StringUtils.substringAfterLast(Countries.class.toString(), "."), "countries", "/images/list.png");
         
         Scene scene = SceneUtils.createScene("/ambroafb/countries/Countries.fxml", null);
         countriesController = (CountriesController) scene.getProperties().get("controller");
         this.setScene(scene);
-        this.initOwner(owner);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             countriesController.getEditorPanelController().getExitButton().getOnAction().handle(null);
             event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
-        StageUtils.stopStageWidthDecrease((Stage)this, () -> countriesController.getEditorPanelController().getPanelMinWidth());
-        StagesContainer.setSizeFor((Stage)this);
+        super.setFeatures(() -> countriesController.getEditorPanelController().getPanelMinWidth());
+        
     }
     
     public CountriesController getCountriesController(){

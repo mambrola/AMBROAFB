@@ -7,13 +7,11 @@ package ambroafb.licenses.filter;
 
 import ambroafb.clients.ClientComboBox;
 import ambroafb.general.FilterModel;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
-import ambroafb.general.StageUtils;
-import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
+import ambroafb.general.stages.UserInteractiveStage;
 import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseStatus;
 import ambroafb.products.ProductComboBox;
@@ -26,16 +24,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.controlsfx.control.CheckComboBox;
-import org.json.JSONObject;
 
 /**
  *
  * @author Dato
  */
-public class LicenseFilter extends Stage implements Filterable, Initializable {
+public class LicenseFilter extends UserInteractiveStage implements Filterable, Initializable {
     
     @FXML
     private ClientComboBox clients;
@@ -48,26 +44,19 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
     @FXML
     private FilterOkayCancelController okayCancelController;
     
-    private final JSONObject jsonResult = new JSONObject();
     private final LicenseFilterModel filterModel = new LicenseFilterModel();
     
     public LicenseFilter(Stage owner){
-        StagesContainer.registerStageByOwner(owner, Names.LEVEL_FOR_PATH, (Stage)this);
+        super(owner, Names.LEVEL_FOR_PATH, "licenses", "/images/filter.png");
         
         Scene scene = SceneUtils.createScene("/ambroafb/licenses/filter/LicenseFilter.fxml", (LicenseFilter)this);
-        this.initStyle(StageStyle.UNIFIED);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("license_filter"));
         this.setScene(scene);
-        this.initOwner(owner);
-        this.setResizable(false);
 
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             okayCancelController.cancel(null);
             if(event != null) event.consume();
         });
         
-        StageUtils.centerChildOf(owner, (Stage)this);
-        StageUtils.followChildTo(owner, (Stage)this);
     }
 
     @Override
@@ -82,9 +71,7 @@ public class LicenseFilter extends Stage implements Filterable, Initializable {
             filterModel.changeModelAsEmpty();
         }
         else {
-//            filterModel.setSelectedClientIndex(clients.getSelectionModel().getSelectedIndex());
             filterModel.setSelectedClient(clients.getValue());
-//            filterModel.setSelectedProductIndex(products.getSelectionModel().getSelectedItem().getRecId());
             filterModel.setSelectedProduct(products.getValue());
             filterModel.setSelectedStatuses(statuses.getCheckModel().getCheckedItems());
             filterModel.setSelectedStatusIndexes(statuses.getCheckModel().getCheckedIndices());
