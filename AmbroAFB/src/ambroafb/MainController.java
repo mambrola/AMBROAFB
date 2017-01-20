@@ -38,8 +38,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.MenuBar;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 /**
@@ -51,9 +52,11 @@ public class MainController implements Initializable {
     private GeneralConfig config;
     
     @FXML
-    private MenuBar menuBar;
+    private HBox menusPane;
     @FXML
-    private HBox formPane;
+    private Region region;
+    @FXML
+    private BorderPane formPane;
     @FXML
     private Button back;
     
@@ -216,6 +219,9 @@ public class MainController implements Initializable {
             countriesStage.requestFocus();
             StageUtils.centerChildOf(AmbroAFB.mainStage, countriesStage);
         }
+        
+        System.out.println("formPane: " + formPane.getWidth());
+        System.out.println("menusPane: " + menusPane.getWidth());
     }
     
     
@@ -350,6 +356,6 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         config = GeneralConfig.getInstance();
-        menuBar.prefWidthProperty ().bind (AmbroAFB.mainStage.widthProperty ());
+//        menusPane.prefWidthProperty().bind(AmbroAFB.mainStage.widthProperty());
     }        
 }
