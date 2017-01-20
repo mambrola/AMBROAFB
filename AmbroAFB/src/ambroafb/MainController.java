@@ -37,7 +37,6 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -57,8 +56,6 @@ public class MainController implements Initializable {
     private Region region;
     @FXML
     private BorderPane formPane;
-    @FXML
-    private Button back;
     
     @FXML
     private void light(ActionEvent event) {
