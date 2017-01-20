@@ -100,6 +100,19 @@
                                 <MenuItem onAction="#countries" text="%countries" />
                             </items>
                         </Menu>
+                        <Menu text="processes">
+                            <items>
+                                <MenuItem onAction="#tm" text="list" />
+                                <Menu text="types">
+                                    <items>
+                                        <MenuItem onAction="#tm" text="buysell" />
+                                        <MenuItem onAction="#tm" text="permanences" />
+                                        <MenuItem onAction="#tm" text="subgects" />
+                                    </items>
+                                </Menu>
+                                <MenuItem onAction="#tm" text="general_params" />
+                            </items>
+                        </Menu>
                     </menus>    
                 </MenuBar>
                 <Region fx:id="region" styleClass="menu-bar" HBox.hgrow="SOMETIMES" />
