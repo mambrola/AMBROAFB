@@ -1,8 +1,6 @@
 @import url("/styles/css/core.css");
 #formPane {
-  -fx-pref-height: 1260px;
+  -fx-min-width: 1260px;
+  -fx-max-width: 1260px;
+  -fx-pref-height: 750px;
 }
-
-  /* -fx-min-width: 1260px; */
-  /* -fx-max-width: 1260px; */
-  /* -fx-pref-height: 750px; */
