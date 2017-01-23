@@ -16,9 +16,8 @@
         <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
     </top>
     <center>
-        <StackPane >
+        <StackPane fx:id="containerPane" >
             <children>
-                <AFilterableTableView fx:id="aview" styleClass="unicode" VBox.vgrow="ALWAYS" />
                 <MaskerPane fx:id="masker" visible="false" text="%loading"/>
             </children>
         </StackPane>

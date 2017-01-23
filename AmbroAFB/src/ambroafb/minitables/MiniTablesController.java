@@ -10,11 +10,14 @@ import ambroafb.general.FilterModel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.StackPane;
 import org.controlsfx.control.MaskerPane;
 
 /**
@@ -24,7 +27,6 @@ import org.controlsfx.control.MaskerPane;
  */
 public class MiniTablesController implements Initializable {
 
-    @FXML
     private AFilterableTableView<EditorPanelable> aview;
     
     @FXML
@@ -33,7 +35,12 @@ public class MiniTablesController implements Initializable {
     @FXML
     private MaskerPane masker;
     
-    private final ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();
+    @FXML
+    private StackPane containerPane;
+    
+    private final ObservableList<EditorPanelable> contents = FXCollections.observableArrayList();
+    
+    private ResourceBundle bundle;
     
     /**
      * Initializes the controller class.
@@ -42,20 +49,34 @@ public class MiniTablesController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        aview.setBundle(rb);
+        bundle = rb;
         editorPanelController.setOuterController(this);
-        editorPanelController.buttonsMainPropertysBinder(aview);
-        editorPanelController.setTableDataList(aview, clients);
         editorPanelController.removeButtonsByFxIDs("#search");
-        reAssignTable(null);
     } 
     
-    public void reAssignTable(FilterModel model){
+    public void reAssignTable(ArrayList<EditorPanelable> sortedList, FilterModel model){
+        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+        contents.clear();
+        masker.setVisible(true);
         
+        new Thread(() -> {
+            contents.setAll(sortedList);
+            Platform.runLater(() -> {
+                masker.setVisible(false);
+                if (selectedIndex >= 0){
+                    aview.getSelectionModel().select(selectedIndex);
+                }
+            });
+        }).start();
     }
     
-    public void setTableInitClass(Class targetClass){
-        aview.initialize(targetClass);
+    public void addTableByClass(Class targetClass){
+        aview = new AFilterableTableView<>(targetClass);
+        aview.setBundle(bundle);
+        editorPanelController.buttonsMainPropertysBinder(aview);
+        editorPanelController.setTableDataList(aview, contents);
+
+        containerPane.getChildren().add(0, aview);
     }
         
     

@@ -7,11 +7,10 @@ package ambroafb.minitables.permanences;
 
 import ambro.AView;
 import ambroafb.general.DBUtils;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.json.JSONObject;
@@ -23,7 +22,7 @@ import org.json.JSONObject;
 public class Permanence extends EditorPanelable {
 
     @AView.Column(title = "rec_id", width = "50", styleClass = "textRight")
-    private final IntegerProperty recId;
+    private final StringProperty recId;
     
     @AView.Column(title = "%descrip", width = "100")
     private final StringProperty descrip;
@@ -32,7 +31,7 @@ public class Permanence extends EditorPanelable {
     private static final String DB_TABLE_NAME = "process_permanences";
     
     public Permanence() {
-        recId = new SimpleIntegerProperty(0);
+        recId = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
     }
     
@@ -45,7 +44,7 @@ public class Permanence extends EditorPanelable {
     // Getters:
     @Override
     public int getRecId(){
-        return recId.get();
+        return Utils.getIntValueFor(recId.get());
     }
     
     public String getDescrip(){
@@ -56,7 +55,7 @@ public class Permanence extends EditorPanelable {
     // Setters:
     @Override
     public void setRecId(int recId){
-        this.recId.set(recId);
+        this.recId.set("" + recId);
     }
     
     public void setDescrip(String descrip){

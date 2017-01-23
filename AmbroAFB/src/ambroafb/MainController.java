@@ -20,25 +20,29 @@ import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.invoices.Invoices;
 import ambroafb.invoices.filter.InvoiceFilter;
 import ambroafb.licenses.Licenses;
 import ambroafb.licenses.filter.LicenseFilter;
 import ambroafb.loggings.Loggings;
 import ambroafb.loggings.filter.LoggingFilter;
-import ambroafb.minitables.buysells.BuySells;
-import ambroafb.minitables.permanences.Permanences;
+import ambroafb.minitables.MiniTables;
+import ambroafb.minitables.buysells.BuySell;
+import ambroafb.minitables.permanences.Permanence;
 import ambroafb.products.Products;
 import authclient.AuthServerException;
 import authclient.monitoring.MonitoringClient;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -250,44 +254,73 @@ public class MainController implements Initializable {
     
     
     @FXML private void tm(ActionEvent event) {
-        String contentClassFullName = "";
+        String contentClassName = "";
+        Class contentClass = null;
         String stageLocalizableTitle = "";
-//        if () {
-//            
-//        }
-//        else if (){
-//            
+        ArrayList<EditorPanelable> list = new ArrayList<>();
+        MenuItem source = (MenuItem) event.getSource();
+        if (source.getText().toLowerCase().equals("buysells")) {
+            contentClassName = "ambroafb.minitables.buysells.BuySell";
+            ArrayList<BuySell> buySellList = BuySell.getAllFromDB();
+            buySellList.sort((BuySell b1, BuySell b2) -> b1.getDescrip().compareTo(b2.getDescrip()));
+            list.addAll(buySellList);
+            stageLocalizableTitle = "buysells";
+        }
+        else if (source.getText().toLowerCase().equals("permanences")){
+            contentClassName = "ambroafb.minitables.permanences.Permanences";
+            ArrayList<Permanence> permanencesList = Permanence.getAllFromDB();
+            permanencesList.sort((Permanence p1, Permanence p2) -> p1.getDescrip().compareTo(p2.getDescrip()));
+            list.addAll(permanencesList);
+            stageLocalizableTitle = "permanences";
+        } else {
+            contentClassName = "ambroafb.minitables.subjects.Subjects";
+        }
+        
+        try {
+            contentClass = Class.forName(contentClassName);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if (contentClass != null) {
+            Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, contentClass.getSimpleName());
+            if(miniTablesStage == null || !miniTablesStage.isShowing()){
+                MiniTables miniTables = new MiniTables(AmbroAFB.mainStage, contentClass, stageLocalizableTitle);
+                miniTables.getController().reAssignTable(list, null);
+                miniTables.show();
+                
+            } else {
+                miniTablesStage.requestFocus();
+                StageUtils.centerChildOf(AmbroAFB.mainStage, miniTablesStage);
+            }
+        }
+    }
+    
+//    @FXML
+//    private void buysells(ActionEvent event){
+//        Stage buySellsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BuySells.class.getSimpleName());
+//        if(buySellsStage == null || !buySellsStage.isShowing()){
+////                MiniTables miniTables = new MiniTables(AmbroAFB.mainStage, contentClass, stageLocalizableTitle);
+////                
+////                miniTables.getController().reAssignTable(list, null);
+////                miniTables.show();
 //        } else {
-//            
+//            buySellsStage.requestFocus();
+//            StageUtils.centerChildOf(AmbroAFB.mainStage, buySellsStage);
 //        }
-//        Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Currencies.class.getSimpleName());
-//        MiniTables miniTables = new MiniTables(AmbroAFB.mainStage, contentClassFullName, stageLocalizableTitle);
-//        miniTables.show();
-    }
-    
-    @FXML
-    private void buysells(ActionEvent event){
-        Stage buySellsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BuySells.class.getSimpleName());
-        if(buySellsStage == null || !buySellsStage.isShowing()){
-            BuySells buySells = new BuySells(AmbroAFB.mainStage);
-            buySells.show();
-        } else {
-            buySellsStage.requestFocus();
-            StageUtils.centerChildOf(AmbroAFB.mainStage, buySellsStage);
-        }
-    }
-    
-    @FXML
-    private void permanences(ActionEvent event){
-        Stage permanencesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Permanences.class.getSimpleName());
-        if(permanencesStage == null || !permanencesStage.isShowing()){
-            Permanences permanences = new Permanences(AmbroAFB.mainStage);
-            permanences.show();
-        } else {
-            permanencesStage.requestFocus();
-            StageUtils.centerChildOf(AmbroAFB.mainStage, permanencesStage);
-        }
-    }
+//    }
+//    
+//    @FXML
+//    private void permanences(ActionEvent event){
+//        Stage permanencesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Permanences.class.getSimpleName());
+//        if(permanencesStage == null || !permanencesStage.isShowing()){
+//            Permanences permanences = new Permanences(AmbroAFB.mainStage);
+//            permanences.show();
+//        } else {
+//            permanencesStage.requestFocus();
+//            StageUtils.centerChildOf(AmbroAFB.mainStage, permanencesStage);
+//        }
+//    }
         
     
     @FXML private void currencies(ActionEvent event) {

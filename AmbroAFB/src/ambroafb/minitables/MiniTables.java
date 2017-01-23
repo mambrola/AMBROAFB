@@ -20,12 +20,12 @@ public class MiniTables extends ListingStage {
     
     private MiniTablesController miniTablesController;
     
-    public MiniTables(Stage owner, String contentClassFullName, String stageLocalizableTitle){
-        super(owner, contentClassFullName, stageLocalizableTitle, "/images/list.png");
+    public MiniTables(Stage owner, Class cellClass, String stageLocalizableTitle){
+        super(owner, cellClass.getSimpleName(), stageLocalizableTitle, "/images/list.png");
         
         Scene scene = SceneUtils.createScene("/ambroafb/minitables/MiniTables.fxml", null);
         miniTablesController = (MiniTablesController) scene.getProperties().get("controller");
-//        miniTablesController.setTableInitClass(contentClassFullName);
+        miniTablesController.addTableByClass(cellClass);
         this.setScene(scene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -34,5 +34,9 @@ public class MiniTables extends ListingStage {
         });
         
         super.setFeatures(() -> miniTablesController.getEditorPanelController().getPanelMinWidth());
+    }
+    
+    public MiniTablesController getController(){
+        return miniTablesController;
     }
 }
