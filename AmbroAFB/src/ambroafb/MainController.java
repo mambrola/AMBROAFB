@@ -26,6 +26,8 @@ import ambroafb.licenses.Licenses;
 import ambroafb.licenses.filter.LicenseFilter;
 import ambroafb.loggings.Loggings;
 import ambroafb.loggings.filter.LoggingFilter;
+import ambroafb.minitables.buysells.BuySells;
+import ambroafb.minitables.permanences.Permanences;
 import ambroafb.products.Products;
 import authclient.AuthServerException;
 import authclient.monitoring.MonitoringClient;
@@ -137,7 +139,7 @@ public class MainController implements Initializable {
             FilterModel model = filter.getResult();
             clients.getClientsController().reAssignTable(model);
             
-            if (model.isEmpty()){
+            if (model.isCanceled()){
                 clients.close();
             }
         }
@@ -159,7 +161,7 @@ public class MainController implements Initializable {
             FilterModel model = filter.getResult();
             loggings.getLoggingsController().reAssignTable(model);
 
-            if (model.isEmpty()) 
+            if (model.isCanceled()) 
                 loggings.close();
         }
         else {
@@ -179,7 +181,7 @@ public class MainController implements Initializable {
             FilterModel model = filter.getResult();
             invoices.getInvoicesController().reAssignTable(model);
             
-            if (model.isEmpty()){
+            if (model.isCanceled()){
                 invoices.close();
             }
         }
@@ -232,7 +234,7 @@ public class MainController implements Initializable {
             FilterModel filterModel = filter.getResult();
             licenses.getLicensesController().reAssignTable(filterModel);
 
-            if (filterModel.isEmpty()) 
+            if (filterModel.isCanceled()) 
                 licenses.close();
         }
         else {
@@ -245,7 +247,48 @@ public class MainController implements Initializable {
     @FXML private void licenseByInvoiceCovers(ActionEvent event) {}
     @FXML private void invoice_reissuings(ActionEvent event) {}
     @FXML private void productSpecifics(ActionEvent event) {}
-    @FXML private void tm(ActionEvent event) {}
+    
+    
+    @FXML private void tm(ActionEvent event) {
+        String contentClassFullName = "";
+        String stageLocalizableTitle = "";
+//        if () {
+//            
+//        }
+//        else if (){
+//            
+//        } else {
+//            
+//        }
+//        Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Currencies.class.getSimpleName());
+//        MiniTables miniTables = new MiniTables(AmbroAFB.mainStage, contentClassFullName, stageLocalizableTitle);
+//        miniTables.show();
+    }
+    
+    @FXML
+    private void buysells(ActionEvent event){
+        Stage buySellsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BuySells.class.getSimpleName());
+        if(buySellsStage == null || !buySellsStage.isShowing()){
+            BuySells buySells = new BuySells(AmbroAFB.mainStage);
+            buySells.show();
+        } else {
+            buySellsStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, buySellsStage);
+        }
+    }
+    
+    @FXML
+    private void permanences(ActionEvent event){
+        Stage permanencesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Permanences.class.getSimpleName());
+        if(permanencesStage == null || !permanencesStage.isShowing()){
+            Permanences permanences = new Permanences(AmbroAFB.mainStage);
+            permanences.show();
+        } else {
+            permanencesStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, permanencesStage);
+        }
+    }
+        
     
     @FXML private void currencies(ActionEvent event) {
         Stage currenciesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Currencies.class.getSimpleName());
@@ -269,7 +312,7 @@ public class MainController implements Initializable {
             FilterModel model = filter.getResult();
             currencyRates.getCurrencyRatesController().reAssignTable(model);
 
-            if (model.isEmpty()){
+            if (model.isCanceled()){
                 currencyRates.close();
             }
         }
@@ -350,6 +393,5 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         config = GeneralConfig.getInstance();
-//        menusPane.prefWidthProperty().bind(AmbroAFB.mainStage.widthProperty());
     }        
 }

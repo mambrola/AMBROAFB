@@ -7,7 +7,6 @@ package ambroafb.clients;
 
 import ambroafb.general.SceneUtils;
 import ambroafb.general.stages.ListingStage;
-import java.util.function.Supplier;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,10 +20,9 @@ import org.apache.commons.lang3.StringUtils;
 public class Clients extends ListingStage {
     
     private ClientsController clientsController;
-    private static Supplier<Double> stageWidthCalculator;
     
     public Clients(Stage owner) {
-        super(owner, StringUtils.substringAfterLast(Clients.class.toString(), "."), "clients", "/images/list.png");
+        super(owner, StringUtils.substringAfterLast(Clients.class.getSimpleName(), "."), "clients", "/images/list.png");
         
         Scene scene = SceneUtils.createScene("/ambroafb/clients/Clients.fxml", null);
         clientsController = (ClientsController) scene.getProperties().get("controller");

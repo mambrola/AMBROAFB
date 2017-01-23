@@ -50,8 +50,7 @@ public class ClientsController implements Initializable {
     }
 
     public void reAssignTable(FilterModel model) {
-        System.out.println("model isEmpty: " + model.isEmpty());
-        if (!model.isEmpty()) {
+        if (!model.isCanceled()) {
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             clients.clear();
             masker.setVisible(true);

@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.loggings;
+package ambroafb.minitables.permanences;
 
 import ambro.AFilterableTableView;
 import ambroafb.general.FilterModel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -19,13 +20,12 @@ import javafx.fxml.Initializable;
 import org.controlsfx.control.MaskerPane;
 
 /**
- * FXML Controller class
  *
  * @author dato
  */
-public class LoggingsController implements Initializable {
-
-        @FXML
+public class PermanencesController implements Initializable {
+    
+    @FXML
     private AFilterableTableView<EditorPanelable> aview;
     
     @FXML
@@ -34,8 +34,7 @@ public class LoggingsController implements Initializable {
     @FXML
     private MaskerPane masker;
     
-    private final ObservableList<EditorPanelable> loggings = FXCollections.observableArrayList();
-    
+    private final ObservableList<EditorPanelable> permanences = FXCollections.observableArrayList();
     
     /**
      * Initializes the controller class.
@@ -47,29 +46,27 @@ public class LoggingsController implements Initializable {
         aview.setBundle(rb);
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(aview);
-        editorPanelController.setTableDataList(aview, loggings);
-        editorPanelController.removeButtonsByFxIDs("#delete", "#edit", "#view", "#add");
+        editorPanelController.setTableDataList(aview, permanences);
+        editorPanelController.removeButtonsByFxIDs("#search");
+        reAssignTable(null);
     }    
     
     public void reAssignTable(FilterModel model){
-        if (!model.isCanceled()){
-            int selectedIndex = aview.getSelectionModel().getSelectedIndex();
-            loggings.clear();
-            masker.setVisible(true);
-            Thread t = new Thread(() -> {
-                Logging.getFilteredFromDB(model).stream().forEach((client) -> {
-                    loggings.add(client);
-                });
-                
-                Platform.runLater(() -> {
-                    masker.setVisible(false);
-                    if (selectedIndex >= 0){
-                        aview.getSelectionModel().select(selectedIndex);
-                    }
-                });
+        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+        permanences.clear();
+        masker.setVisible(true);
+        
+        new Thread(() -> {
+            ArrayList<Permanence> PermanenceList = Permanence.getAllFromDB();
+            PermanenceList.sort((Permanence b1, Permanence b2) -> b1.getDescrip().compareTo(b2.getDescrip()));
+            permanences.setAll(PermanenceList);
+            Platform.runLater(() -> {
+                masker.setVisible(false);
+                if (selectedIndex >= 0){
+                    aview.getSelectionModel().select(selectedIndex);
+                }
             });
-            t.start();
-        }
+        }).start();
     }
     
     public EditorPanelController getEditorPanelController(){

@@ -105,9 +105,9 @@
                                 <MenuItem onAction="#tm" text="list" />
                                 <Menu text="types">
                                     <items>
-                                        <MenuItem onAction="#tm" text="buysell" />
-                                        <MenuItem onAction="#tm" text="permanences" />
-                                        <MenuItem onAction="#tm" text="subgects" />
+                                        <MenuItem onAction="#buysells" text="buysells" />
+                                        <MenuItem onAction="#permanences" text="permanences" />
+                                        <MenuItem onAction="#tm" text="subjects" />
                                     </items>
                                 </Menu>
                                 <MenuItem onAction="#tm" text="general_params" />

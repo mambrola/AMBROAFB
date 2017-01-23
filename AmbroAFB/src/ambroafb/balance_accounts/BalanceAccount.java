@@ -100,21 +100,6 @@ public class BalanceAccount extends EditorPanelable {
     public static BalanceAccount saveOneToDB(BalanceAccount balAccount){
         if (balAccount == null) return null;
         return DBUtils.saveObjectToDBSimple(balAccount, DB_TABLE_NAME);
-        
-//        if (balAccount == null) return null;
-//        try {
-//            ObjectMapper mapper = new ObjectMapper();
-//            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-//            JSONObject balAccountJson = new JSONObject(writer.writeValueAsString(balAccount));
-//            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-//            JSONObject newBalAccount = dbClient.callProcedureAndGetAsJson("general_insert_update_simpledate", DB_TABLE_NAME, dbClient.getLang(), balAccountJson).getJSONObject(0);
-//            return mapper.readValue(newBalAccount.toString(), BalanceAccount.class);
-//        } catch (JsonProcessingException ex) {
-//            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException | AuthServerException | JSONException ex) {
-//            Logger.getLogger(BalanceAccount.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return null;
     }
     
     public static boolean deleteOneFromDB(int productId){

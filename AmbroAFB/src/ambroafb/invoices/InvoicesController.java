@@ -51,7 +51,7 @@ public class InvoicesController implements Initializable {
     }
     
     public void reAssignTable(FilterModel model) {
-        if (!model.isEmpty()){
+        if (!model.isCanceled()){
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             invoices.clear();
             masker.setVisible(true);

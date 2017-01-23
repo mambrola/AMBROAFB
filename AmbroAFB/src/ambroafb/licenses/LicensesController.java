@@ -49,7 +49,7 @@ public class LicensesController implements Initializable {
     }    
     
     public void reAssignTable(FilterModel model){
-        if (!model.isEmpty()) {
+        if (!model.isCanceled()) {
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             licenses.clear();
             masker.setVisible(true);

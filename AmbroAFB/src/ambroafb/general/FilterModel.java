@@ -13,7 +13,7 @@ public abstract class FilterModel {
     
     private boolean modelIsEmpty;
     
-    public boolean isEmpty(){
+    public boolean isCanceled(){
         return modelIsEmpty;
     }
     

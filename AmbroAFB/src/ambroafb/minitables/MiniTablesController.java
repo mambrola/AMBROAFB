@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.loggings;
+package ambroafb.minitables;
 
 import ambro.AFilterableTableView;
 import ambroafb.general.FilterModel;
@@ -11,7 +11,6 @@ import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,9 +22,9 @@ import org.controlsfx.control.MaskerPane;
  *
  * @author dato
  */
-public class LoggingsController implements Initializable {
+public class MiniTablesController implements Initializable {
 
-        @FXML
+    @FXML
     private AFilterableTableView<EditorPanelable> aview;
     
     @FXML
@@ -34,8 +33,7 @@ public class LoggingsController implements Initializable {
     @FXML
     private MaskerPane masker;
     
-    private final ObservableList<EditorPanelable> loggings = FXCollections.observableArrayList();
-    
+    private final ObservableList<EditorPanelable> clients = FXCollections.observableArrayList();
     
     /**
      * Initializes the controller class.
@@ -47,32 +45,21 @@ public class LoggingsController implements Initializable {
         aview.setBundle(rb);
         editorPanelController.setOuterController(this);
         editorPanelController.buttonsMainPropertysBinder(aview);
-        editorPanelController.setTableDataList(aview, loggings);
-        editorPanelController.removeButtonsByFxIDs("#delete", "#edit", "#view", "#add");
-    }    
+        editorPanelController.setTableDataList(aview, clients);
+        editorPanelController.removeButtonsByFxIDs("#search");
+        reAssignTable(null);
+    } 
     
     public void reAssignTable(FilterModel model){
-        if (!model.isCanceled()){
-            int selectedIndex = aview.getSelectionModel().getSelectedIndex();
-            loggings.clear();
-            masker.setVisible(true);
-            Thread t = new Thread(() -> {
-                Logging.getFilteredFromDB(model).stream().forEach((client) -> {
-                    loggings.add(client);
-                });
-                
-                Platform.runLater(() -> {
-                    masker.setVisible(false);
-                    if (selectedIndex >= 0){
-                        aview.getSelectionModel().select(selectedIndex);
-                    }
-                });
-            });
-            t.start();
-        }
+        
     }
     
-    public EditorPanelController getEditorPanelController(){
+    public void setTableInitClass(Class targetClass){
+        aview.initialize(targetClass);
+    }
+        
+    
+    public EditorPanelController getEditorPanelController() {
         return editorPanelController;
     }
 }

@@ -51,7 +51,7 @@ public class CurrencyRatesController implements Initializable {
     }
     
     public void reAssignTable(FilterModel model){
-        if (!model.isEmpty()){
+        if (!model.isCanceled()){
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             currencyRates.clear();
             masker.setVisible(true);
