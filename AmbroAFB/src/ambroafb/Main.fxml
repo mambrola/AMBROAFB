@@ -9,7 +9,7 @@
 <?import java.net.*?>
 
 <BorderPane     fx:id="formPane"
-                stylesheets="/styles/css/main.css" 
+                stylesheets="/styles/css/main.css"
                 xmlns:fx="http://javafx.com/fxml/1"
                 xmlns="http://javafx.com/javafx/8" 
                 fx:controller="ambroafb.MainController"
@@ -115,7 +115,7 @@
                         </Menu>
                     </menus>    
                 </MenuBar>
-                <HBox fx:id="region" styleClass="menu-bar" HBox.hgrow="SOMETIMES" />
+                <Region styleClass="menu-bar" HBox.hgrow="SOMETIMES"/>
                 <MenuBar fx:id="menuBarRight" >
                     <menus>
                         <Menu text="%administrator">

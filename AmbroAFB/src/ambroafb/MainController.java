@@ -39,7 +39,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 /**
@@ -51,11 +50,9 @@ public class MainController implements Initializable {
     private GeneralConfig config;
     
     @FXML
-    private HBox menusPane;
-    @FXML
-    private HBox region;
-    @FXML
     private BorderPane formPane;
+    @FXML
+    private HBox menusPane;
     
     @FXML
     private void light(ActionEvent event) {
