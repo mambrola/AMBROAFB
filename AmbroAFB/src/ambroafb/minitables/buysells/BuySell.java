@@ -9,8 +9,6 @@ import ambroafb.general.DBUtils;
 import ambroafb.minitables.MiniTable;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import org.json.JSONObject;
 
 /**
@@ -19,8 +17,6 @@ import org.json.JSONObject;
  */
 public class BuySell extends MiniTable {
 
-    StringProperty rec_id = new SimpleStringProperty("");
-    
     private static final String DB_TABLE_NAME = "process_buysells";
     
     public BuySell() {

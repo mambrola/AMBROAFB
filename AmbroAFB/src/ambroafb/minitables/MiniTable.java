@@ -23,13 +23,7 @@ public abstract class MiniTable extends EditorPanelable {
     @AView.Column(title = "%descrip", width = "100")
     protected StringProperty descrip = new SimpleStringProperty("");
     
-//    public static ArrayList<? extends MiniTable> getAllFromDB(){return null;}
-//    public static MiniTable getOneFromDB(int id){ return null; }
-//    public static MiniTable saveOneToDB(MiniTable buySell){ return null; }
-//    public static boolean deleteOneFromDB(int id){ return false; }
-    
-    
-    
+
     // Properties:
     public StringProperty recIdProperty(){
         return rec_id;

@@ -221,6 +221,7 @@ public class EditorPanelController implements Initializable {
             
             FilterModel model = (filter != null) ? filter.getResult() : null;
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
+            // getClassName(CLASS_TYPE.OBJECT).getAllFromDB() gadavcet reAssign-s Filtersmodeltan ertad.
             Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{FilterModel.class}, outerController, model);
         }
         else {
@@ -305,6 +306,7 @@ public class EditorPanelController implements Initializable {
             return rtrn.substring(0, rtrn.indexOf("@"));
         String path = rtrn.substring(0, rtrn.lastIndexOf(".") + 1);
         String className = rtrn.substring(path.length(), rtrn.lastIndexOf("Controller"));
+        String contentClassName = ((AView)exit.getScene().lookup("#aview")).getInitializer();
         String singularName = className.equals("Countries") ? "Country" : 
                                 className.equals("Currencies") ? "Currency" :
                               className.substring(0, className.length() - 1);
@@ -316,7 +318,7 @@ public class EditorPanelController implements Initializable {
                 rtrn = path + "filter." + singularName + "Filter";
                 break;
             default: // case OBJECT:
-                rtrn = path + singularName;
+                rtrn = contentClassName; // path + singularName;
                 break;
         }
         return rtrn;

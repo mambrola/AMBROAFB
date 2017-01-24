@@ -50,12 +50,6 @@ public class MiniTablesController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-//        aview = new AFilterableTableView<>(targetClass);
-//        aview.setBundle(bundle);
-//        editorPanelController.buttonsMainPropertysBinder(aview);
-//        editorPanelController.setTableDataList(aview, contents);
-        
         bundle = rb;
         editorPanelController.setOuterController(this);
         editorPanelController.removeButtonsByFxIDs("#search");
