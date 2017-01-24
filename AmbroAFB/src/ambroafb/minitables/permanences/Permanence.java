@@ -22,7 +22,7 @@ import org.json.JSONObject;
 public class Permanence extends EditorPanelable {
 
     @AView.Column(title = "rec_id", width = "50", styleClass = "textRight")
-    private final StringProperty recId;
+    private final StringProperty rec_id;
     
     @AView.Column(title = "%descrip", width = "100")
     private final StringProperty descrip;
@@ -31,7 +31,7 @@ public class Permanence extends EditorPanelable {
     private static final String DB_TABLE_NAME = "process_permanences";
     
     public Permanence() {
-        recId = new SimpleStringProperty("");
+        rec_id = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
     }
     
@@ -41,10 +41,26 @@ public class Permanence extends EditorPanelable {
         return DBUtils.getObjectsListFromDB(Permanence.class, DB_TABLE_NAME, params);
     }
     
+    public static Permanence getOneFromDB(int id){
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
+        return DBUtils.getObjectFromDB(Permanence.class, DB_TABLE_NAME, params);
+    }
+    
+    public static Permanence saveOneToDB(Permanence permanence){
+        if (permanence == null) return null;
+        return DBUtils.saveObjectToDBSimple(permanence, DB_TABLE_NAME);
+    }
+    
+    public static boolean deleteOneFromDB(int id){
+        System.out.println("delete from DB... ??");
+        return false;
+    }
+    
+    
     // Getters:
     @Override
     public int getRecId(){
-        return Utils.getIntValueFor(recId.get());
+        return Utils.getIntValueFor(rec_id.get());
     }
     
     public String getDescrip(){
@@ -55,7 +71,7 @@ public class Permanence extends EditorPanelable {
     // Setters:
     @Override
     public void setRecId(int recId){
-        this.recId.set("" + recId);
+        this.rec_id.set("" + recId);
     }
     
     public void setDescrip(String descrip){

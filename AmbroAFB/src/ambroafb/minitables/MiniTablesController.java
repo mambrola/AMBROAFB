@@ -54,7 +54,7 @@ public class MiniTablesController implements Initializable {
         editorPanelController.removeButtonsByFxIDs("#search");
     } 
     
-    public void reAssignTable(ArrayList<EditorPanelable> sortedList, FilterModel model){
+    public void reAssignTable(ArrayList<? extends EditorPanelable> sortedList, FilterModel model){
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         contents.clear();
         masker.setVisible(true);

@@ -30,6 +30,7 @@ import ambroafb.loggings.filter.LoggingFilter;
 import ambroafb.minitables.MiniTables;
 import ambroafb.minitables.buysells.BuySell;
 import ambroafb.minitables.permanences.Permanence;
+import ambroafb.minitables.subjects.Subject;
 import ambroafb.products.Products;
 import authclient.AuthServerException;
 import authclient.monitoring.MonitoringClient;
@@ -254,12 +255,14 @@ public class MainController implements Initializable {
     
     
     @FXML private void tm(ActionEvent event) {
-        String contentClassName = "";
+        String contentClassName;
         Class contentClass = null;
         String stageLocalizableTitle = "";
         ArrayList<EditorPanelable> list = new ArrayList<>();
         MenuItem source = (MenuItem) event.getSource();
         if (source.getText().toLowerCase().equals("buysells")) {
+            System.out.println("click buysells");
+            
             contentClassName = "ambroafb.minitables.buysells.BuySell";
             ArrayList<BuySell> buySellList = BuySell.getAllFromDB();
             buySellList.sort((BuySell b1, BuySell b2) -> b1.getDescrip().compareTo(b2.getDescrip()));
@@ -267,13 +270,19 @@ public class MainController implements Initializable {
             stageLocalizableTitle = "buysells";
         }
         else if (source.getText().toLowerCase().equals("permanences")){
-            contentClassName = "ambroafb.minitables.permanences.Permanences";
+            System.out.println("click Permanence");
+            
+            contentClassName = "ambroafb.minitables.permanences.Permanence";
             ArrayList<Permanence> permanencesList = Permanence.getAllFromDB();
             permanencesList.sort((Permanence p1, Permanence p2) -> p1.getDescrip().compareTo(p2.getDescrip()));
             list.addAll(permanencesList);
             stageLocalizableTitle = "permanences";
         } else {
-            contentClassName = "ambroafb.minitables.subjects.Subjects";
+            contentClassName = "ambroafb.minitables.subjects.Subject";
+            ArrayList<Subject> subjectList = Subject.getAllFromDB();
+            subjectList.sort((Subject s1, Subject s2) -> s1.getDescrip().compareTo(s2.getDescrip()));
+            list.addAll(subjectList);
+            stageLocalizableTitle = "Subject";
         }
         
         try {
@@ -296,32 +305,78 @@ public class MainController implements Initializable {
         }
     }
     
-//    @FXML
-//    private void buysells(ActionEvent event){
-//        Stage buySellsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BuySells.class.getSimpleName());
-//        if(buySellsStage == null || !buySellsStage.isShowing()){
-////                MiniTables miniTables = new MiniTables(AmbroAFB.mainStage, contentClass, stageLocalizableTitle);
-////                
-////                miniTables.getController().reAssignTable(list, null);
-////                miniTables.show();
-//        } else {
-//            buySellsStage.requestFocus();
-//            StageUtils.centerChildOf(AmbroAFB.mainStage, buySellsStage);
-//        }
-//    }
-//    
-//    @FXML
-//    private void permanences(ActionEvent event){
-//        Stage permanencesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Permanences.class.getSimpleName());
-//        if(permanencesStage == null || !permanencesStage.isShowing()){
-//            Permanences permanences = new Permanences(AmbroAFB.mainStage);
-//            permanences.show();
-//        } else {
-//            permanencesStage.requestFocus();
-//            StageUtils.centerChildOf(AmbroAFB.mainStage, permanencesStage);
-//        }
-//    }
+    @FXML
+    private void buysells(ActionEvent event){
+        Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, MiniTables.class.getSimpleName());
+        if(miniTablesStage == null || !miniTablesStage.isShowing()){
+            try {
+                Class contentClass = Class.forName("ambroafb.minitables.buysells.BuySell");
+                ArrayList<BuySell> buySellList = BuySell.getAllFromDB();
+                buySellList.sort((BuySell b1, BuySell b2) -> b1.getDescrip().compareTo(b2.getDescrip()));
+                String stageLocalizableTitle = GeneralConfig.getInstance().getTitleFor("buysells");
+                
+                showMiniTablesStage(contentClass, buySellList, stageLocalizableTitle);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            miniTablesStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, miniTablesStage);
+        }
+    }
+    
+    @FXML
+    private void permanences(ActionEvent event){
+        Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, MiniTables.class.getSimpleName());
+        if(miniTablesStage == null || !miniTablesStage.isShowing()){
+            try {
+                Class contentClass = Class.forName("ambroafb.minitables.permanences.Permanence");
+                ArrayList<Permanence> permanenceList = Permanence.getAllFromDB();
+                permanenceList.sort((Permanence p1, Permanence p2) -> p1.getDescrip().compareTo(p2.getDescrip()));
+                String stageLocalizableTitle = GeneralConfig.getInstance().getTitleFor("permanences");
+                
+                showMiniTablesStage(contentClass, permanenceList, stageLocalizableTitle);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            miniTablesStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, miniTablesStage);
+        }
+    }
+    
+    @FXML
+    private void subjects(ActionEvent event){
+        Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, MiniTables.class.getSimpleName());
+        if(miniTablesStage == null || !miniTablesStage.isShowing()){
+            try {
+                Class contentClass = Class.forName("ambroafb.minitables.subjects.Subject");
+                ArrayList<Subject> subjectList = Subject.getAllFromDB();
+                subjectList.sort((Subject s1, Subject s2) -> s1.getDescrip().compareTo(s2.getDescrip()));
+                String stageLocalizableTitle = GeneralConfig.getInstance().getTitleFor("subjects");
+                
+                showMiniTablesStage(contentClass, subjectList, stageLocalizableTitle);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            miniTablesStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, miniTablesStage);
+        }
+    }
         
+    private void showMiniTablesStage(Class contentClass, ArrayList<? extends EditorPanelable> list, String stageLocalizableTitle){
+        Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, contentClass.getSimpleName());
+        if (miniTablesStage == null || !miniTablesStage.isShowing()) {
+            MiniTables miniTables = new MiniTables(AmbroAFB.mainStage, contentClass, stageLocalizableTitle);
+            miniTables.getController().reAssignTable(list, null);
+            miniTables.show();
+
+        } else {
+            miniTablesStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, miniTablesStage);
+        }
+    }
     
     @FXML private void currencies(ActionEvent event) {
         Stage currenciesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Currencies.class.getSimpleName());
