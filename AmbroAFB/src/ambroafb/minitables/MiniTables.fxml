@@ -18,6 +18,7 @@
     <center>
         <StackPane fx:id="containerPane" >
             <children>
+                <AFilterableTableView fx:id="aview" initializer="ambroafb.minitables.MiniTable" styleClass="unicode" VBox.vgrow="ALWAYS" />
                 <MaskerPane fx:id="masker" visible="false" text="%loading"/>
             </children>
         </StackPane>

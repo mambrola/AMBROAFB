@@ -27,6 +27,7 @@ import org.controlsfx.control.MaskerPane;
  */
 public class MiniTablesController implements Initializable {
 
+    @FXML
     private AFilterableTableView<EditorPanelable> aview;
     
     @FXML
@@ -49,7 +50,13 @@ public class MiniTablesController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        bundle = rb;
+        
+//        aview = new AFilterableTableView<>(targetClass);
+        aview.setBundle(bundle);
+        editorPanelController.buttonsMainPropertysBinder(aview);
+        editorPanelController.setTableDataList(aview, contents);
+        
+//        bundle = rb;
         editorPanelController.setOuterController(this);
         editorPanelController.removeButtonsByFxIDs("#search");
     } 
@@ -70,14 +77,14 @@ public class MiniTablesController implements Initializable {
         }).start();
     }
     
-    public void addTableByClass(Class targetClass){
-        aview = new AFilterableTableView<>(targetClass);
-        aview.setBundle(bundle);
-        editorPanelController.buttonsMainPropertysBinder(aview);
-        editorPanelController.setTableDataList(aview, contents);
-
-        containerPane.getChildren().add(0, aview);
-    }
+//    public void addTableByClass(Class targetClass){
+//        aview = new AFilterableTableView<>(targetClass);
+//        aview.setBundle(bundle);
+//        editorPanelController.buttonsMainPropertysBinder(aview);
+//        editorPanelController.setTableDataList(aview, contents);
+//
+//        containerPane.getChildren().add(0, aview);
+//    }
         
     
     public EditorPanelController getEditorPanelController() {
