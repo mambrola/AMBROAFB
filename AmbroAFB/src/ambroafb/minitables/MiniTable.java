@@ -8,8 +8,6 @@ package ambroafb.minitables;
 import ambro.AView;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.minitables.buysells.BuySell;
-import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -20,12 +18,17 @@ import javafx.beans.property.StringProperty;
 public abstract class MiniTable extends EditorPanelable {
     
     @AView.Column(title = "rec_id", width = "50", styleClass = "textRight")
-    private final StringProperty rec_id = new SimpleStringProperty("");
+    protected StringProperty rec_id = new SimpleStringProperty("");
     
     @AView.Column(title = "%descrip", width = "100")
-    private final StringProperty descrip = new SimpleStringProperty("");
+    protected StringProperty descrip = new SimpleStringProperty("");
     
-    public static ArrayList<? extends MiniTable> getAllFromDB(){return null;}
+//    public static ArrayList<? extends MiniTable> getAllFromDB(){return null;}
+//    public static MiniTable getOneFromDB(int id){ return null; }
+//    public static MiniTable saveOneToDB(MiniTable buySell){ return null; }
+//    public static boolean deleteOneFromDB(int id){ return false; }
+    
+    
     
     // Properties:
     public StringProperty recIdProperty(){
@@ -59,30 +62,17 @@ public abstract class MiniTable extends EditorPanelable {
     }
     
     
-    @Override
-    public BuySell cloneWithoutID() {
-        BuySell clone = new BuySell();
-        clone.copyFrom(this);
-        return clone;
-    }
-
-    @Override
-    public BuySell cloneWithID() {
-        BuySell clone = cloneWithoutID();
-        clone.setRecId(this.getRecId());
-        return clone;
-    }
 
     @Override
     public void copyFrom(EditorPanelable other) {
-        BuySell otherBuySell = (BuySell) other;
-        setDescrip(otherBuySell.getDescrip());
+        MiniTable otherMiniTable = (MiniTable) other;
+        setDescrip(otherMiniTable.getDescrip());
     }
 
     @Override
     public boolean compares(EditorPanelable backup) {
-        BuySell backupBuySell = (BuySell) backup;
-        return getDescrip().equals(backupBuySell.getDescrip());
+        MiniTable backupotherMiniTable = (MiniTable) backup;
+        return getDescrip().equals(backupotherMiniTable.getDescrip());
     }
 
     @Override

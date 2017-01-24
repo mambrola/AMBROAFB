@@ -43,4 +43,18 @@ public class Subject extends MiniTable {
         return false;
     }
     
+    
+    @Override
+    public Subject cloneWithoutID() {
+        Subject clone = new Subject();
+        clone.copyFrom(this);
+        return clone;
+    }
+
+    @Override
+    public Subject cloneWithID() {
+        Subject clone = cloneWithoutID();
+        clone.setRecId(this.getRecId());
+        return clone;
+    }
 }

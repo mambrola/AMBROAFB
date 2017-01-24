@@ -25,7 +25,7 @@ public class MiniTables extends ListingStage {
         
         Scene scene = SceneUtils.createScene("/ambroafb/minitables/MiniTables.fxml", null);
         miniTablesController = (MiniTablesController) scene.getProperties().get("controller");
-//        miniTablesController.addTableByClass(cellClass);
+        miniTablesController.addTableByClass(cellClass);
         this.setScene(scene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {

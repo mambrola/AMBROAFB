@@ -44,4 +44,17 @@ public class Permanence extends MiniTable {
         return false;
     }
     
+    @Override
+    public Permanence cloneWithoutID() {
+        Permanence clone = new Permanence();
+        clone.copyFrom(this);
+        return clone;
+    }
+
+    @Override
+    public MiniTable cloneWithID() {
+        Permanence clone = cloneWithoutID();
+        clone.setRecId(this.getRecId());
+        return clone;
+    }
 }

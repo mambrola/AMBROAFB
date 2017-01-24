@@ -52,11 +52,11 @@ public class MiniTablesController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
 //        aview = new AFilterableTableView<>(targetClass);
-        aview.setBundle(bundle);
-        editorPanelController.buttonsMainPropertysBinder(aview);
-        editorPanelController.setTableDataList(aview, contents);
+//        aview.setBundle(bundle);
+//        editorPanelController.buttonsMainPropertysBinder(aview);
+//        editorPanelController.setTableDataList(aview, contents);
         
-//        bundle = rb;
+        bundle = rb;
         editorPanelController.setOuterController(this);
         editorPanelController.removeButtonsByFxIDs("#search");
     } 
@@ -77,14 +77,15 @@ public class MiniTablesController implements Initializable {
         }).start();
     }
     
-//    public void addTableByClass(Class targetClass){
-//        aview = new AFilterableTableView<>(targetClass);
-//        aview.setBundle(bundle);
-//        editorPanelController.buttonsMainPropertysBinder(aview);
-//        editorPanelController.setTableDataList(aview, contents);
-//
-//        containerPane.getChildren().add(0, aview);
-//    }
+    public void addTableByClass(Class targetClass){
+        aview = new AFilterableTableView<>(targetClass);
+        aview.setId("aview");
+        aview.setBundle(bundle);
+        editorPanelController.buttonsMainPropertysBinder(aview);
+        editorPanelController.setTableDataList(aview, contents);
+
+        containerPane.getChildren().add(0, aview);
+    }
         
     
     public EditorPanelController getEditorPanelController() {

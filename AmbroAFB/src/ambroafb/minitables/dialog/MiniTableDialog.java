@@ -37,7 +37,7 @@ public class MiniTableDialog extends UserInteractiveStage implements Dialogable 
             this.miniTable = getConcreteMinitableFrom(object);
         else
             this.miniTable = (MiniTable) object;
-        this.miniTableBackup = miniTable.cloneWithID();
+        this.miniTableBackup = (MiniTable)miniTable.cloneWithID();
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/minitables/dialog/MiniTableDialog.fxml", null);
         dialogController = (MiniTableDialogController) currentScene.getProperties().get("controller");
