@@ -53,6 +53,8 @@ import javafx.stage.Stage;
  */
 public class MainController implements Initializable {
     
+    private GeneralConfig config;
+    
     @FXML
     private BorderPane formPane;
     @FXML
@@ -259,7 +261,7 @@ public class MainController implements Initializable {
                 Class contentClass = Class.forName("ambroafb.minitables.buysells.BuySell");
                 ArrayList<BuySell> buySellList = BuySell.getAllFromDB();
                 buySellList.sort((BuySell b1, BuySell b2) -> b1.getDescrip().compareTo(b2.getDescrip()));
-                String stageLocalizableTitle = GeneralConfig.getInstance().getTitleFor("buysells");
+                String stageLocalizableTitle = config.getTitleFor("buysells");
                 
                 showMiniTablesStage(contentClass, buySellList, stageLocalizableTitle);
             } catch (ClassNotFoundException ex) {
@@ -279,7 +281,7 @@ public class MainController implements Initializable {
                 Class contentClass = Class.forName("ambroafb.minitables.permanences.Permanence");
                 ArrayList<Permanence> permanenceList = Permanence.getAllFromDB();
                 permanenceList.sort((Permanence p1, Permanence p2) -> p1.getDescrip().compareTo(p2.getDescrip()));
-                String stageLocalizableTitle = GeneralConfig.getInstance().getTitleFor("permanences");
+                String stageLocalizableTitle = config.getTitleFor("permanences");
                 
                 showMiniTablesStage(contentClass, permanenceList, stageLocalizableTitle);
             } catch (ClassNotFoundException ex) {
@@ -299,7 +301,7 @@ public class MainController implements Initializable {
                 Class contentClass = Class.forName("ambroafb.minitables.subjects.Subject");
                 ArrayList<Subject> subjectList = Subject.getAllFromDB();
                 subjectList.sort((Subject s1, Subject s2) -> s1.getDescrip().compareTo(s2.getDescrip()));
-                String stageLocalizableTitle = GeneralConfig.getInstance().getTitleFor("subjects");
+                String stageLocalizableTitle = config.getTitleFor("subjects");
                 
                 showMiniTablesStage(contentClass, subjectList, stageLocalizableTitle);
             } catch (ClassNotFoundException ex) {
