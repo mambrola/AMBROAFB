@@ -11,7 +11,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -22,7 +21,7 @@ public class CurrencyRates extends ListingStage {
     private final CurrencyRatesController currencyRatesController;
     
     public CurrencyRates(Stage owner){
-        super(owner, StringUtils.substringAfterLast(CurrencyRates.class.toString(), "."), "currency_rates", "/images/list.png");
+        super(owner, CurrencyRates.class.getSimpleName(), "currency_rates");
         
         Scene scene = SceneUtils.createScene("/ambroafb/currency_rates/CurrencyRates.fxml", null);
         currencyRatesController = (CurrencyRatesController) scene.getProperties().get("controller");

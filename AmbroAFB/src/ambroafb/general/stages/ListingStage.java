@@ -21,10 +21,9 @@ public abstract class ListingStage extends UserInteractiveStage {
      * @param owner The owner stage.
      * @param nameForPath Path for save the opened stage.
      * @param localizableTitle The key which will convert an appropriate language by bundle.
-     * @param iconPath The path for stage upper left icon.
      */
-    public ListingStage(Stage owner, String nameForPath, String localizableTitle, String iconPath){
-        super(owner, nameForPath, localizableTitle, iconPath);
+    public ListingStage(Stage owner, String nameForPath, String localizableTitle){
+        super(owner, nameForPath, localizableTitle, "/images/list.png");
         this.setResizable(true);
     }
     

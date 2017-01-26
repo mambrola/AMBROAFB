@@ -11,7 +11,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -22,7 +21,7 @@ public class DiscountOnCounts extends ListingStage {
     private DiscountOnCountsController discountsController;
     
     public DiscountOnCounts(Stage owner){
-        super(owner, StringUtils.substringAfterLast(DiscountOnCounts.class.toString(), "."), "discounts_on_count", "/images/list.png");
+        super(owner, DiscountOnCounts.class.getSimpleName(), "discounts_on_count");
         
         Scene scene = SceneUtils.createScene("/ambroafb/discounts_on_count/DiscountOnCounts.fxml", null);
         discountsController = (DiscountOnCountsController) scene.getProperties().get("controller");

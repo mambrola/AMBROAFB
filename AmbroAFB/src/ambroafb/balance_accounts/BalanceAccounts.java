@@ -11,7 +11,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -22,7 +21,7 @@ public class BalanceAccounts extends ListingStage {
     private BalanceAccountsController balanceAccountsController;
     
     public BalanceAccounts(Stage owner){
-        super(owner, StringUtils.substringAfterLast(BalanceAccounts.class.toString(), "."),  "balances", "/images/list.png");
+        super(owner, BalanceAccounts.class.getSimpleName(),  "balances");
         
         Scene scene = SceneUtils.createScene("/ambroafb/balance_accounts/BalanceAccounts.fxml", null);
         balanceAccountsController = (BalanceAccountsController) scene.getProperties().get("controller");

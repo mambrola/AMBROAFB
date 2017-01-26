@@ -21,7 +21,7 @@ public class MiniTables extends ListingStage {
     private MiniTablesController miniTablesController;
     
     public MiniTables(Stage owner, Class cellClass, String stageLocalizableTitle){
-        super(owner, cellClass.getSimpleName(), stageLocalizableTitle, "/images/list.png");
+        super(owner, cellClass.getSimpleName(), stageLocalizableTitle);
         
         Scene scene = SceneUtils.createScene("/ambroafb/minitables/MiniTables.fxml", null);
         miniTablesController = (MiniTablesController) scene.getProperties().get("controller");

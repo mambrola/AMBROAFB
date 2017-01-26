@@ -11,7 +11,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -22,7 +21,7 @@ public class Currencies extends ListingStage {
     private CurrenciesController currenciesController;
     
     public Currencies(Stage owner){
-        super(owner, StringUtils.substringAfterLast(Currencies.class.toString(), "."), "currencies", "/images/list.png");
+        super(owner, Currencies.class.getSimpleName(), "currencies");
         
         Scene scene = SceneUtils.createScene("/ambroafb/currencies/Currencies.fxml", null);
         currenciesController = (CurrenciesController) scene.getProperties().get("controller");

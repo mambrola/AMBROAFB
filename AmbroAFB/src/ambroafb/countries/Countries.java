@@ -11,7 +11,6 @@ import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.stage.WindowEvent;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -22,7 +21,7 @@ public class Countries extends ListingStage {
     private CountriesController countriesController;
     
     public Countries(Stage owner){
-        super(owner, StringUtils.substringAfterLast(Countries.class.toString(), "."), "countries", "/images/list.png");
+        super(owner, Countries.class.getSimpleName(), "countries");
         
         Scene scene = SceneUtils.createScene("/ambroafb/countries/Countries.fxml", null);
         countriesController = (CountriesController) scene.getProperties().get("controller");

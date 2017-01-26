@@ -11,7 +11,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -22,7 +21,7 @@ public class Invoices extends ListingStage {
     private InvoicesController invoicesController;
     
     public Invoices(Stage owner){
-        super(owner, StringUtils.substringAfterLast(Invoices.class.toString(), "."), "invoices", "/images/list.png");
+        super(owner, Invoices.class.getSimpleName(), "invoices");
         
         Scene scene = SceneUtils.createScene("/ambroafb/invoices/Invoices.fxml", null);
         invoicesController = (InvoicesController) scene.getProperties().get("controller");

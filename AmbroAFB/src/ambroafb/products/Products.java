@@ -11,7 +11,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -22,7 +21,7 @@ public class Products extends ListingStage {
     private ProductsController productsController;
     
     public Products(Stage owner){
-        super(owner, StringUtils.substringAfterLast(Products.class.toString(), "."), "products", "/images/list.png");
+        super(owner, Products.class.getSimpleName(), "products");
         
         Scene scene = SceneUtils.createScene("/ambroafb/products/Products.fxml", null);
         productsController = (ProductsController) scene.getProperties().get("controller");

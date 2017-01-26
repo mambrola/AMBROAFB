@@ -200,6 +200,9 @@ public class StagesContainer {
     public static boolean closeStageWithChildren(Stage currStage) {
         boolean closePermission = true;
         String currStagePath = (String) bidmap.getKey(currStage);
+        
+        System.out.println("currStagePath: " + currStagePath);
+        
         List<String> childrenPath = getFirstLevelChildrenFor(currStagePath);
         if (childrenPath.isEmpty()) {
             if (currStage instanceof Dialogable) {
