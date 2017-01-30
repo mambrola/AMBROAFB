@@ -196,9 +196,7 @@ public class EditorPanelController implements Initializable {
             
             EditorPanelable result = (EditorPanelable) dialog.getResult();
             if (result != null) {
-//                Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
                 EditorPanelable newInstanceWithId = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
-//                result = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
                 if (newInstanceWithId != null){ // result != null
                     tableData.add(result);
                 }
