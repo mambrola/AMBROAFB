@@ -197,11 +197,6 @@ public class Invoice extends EditorPanelable {
                                                                 }, total.isEmpty())).concat(unary);
                                         temp.set(exp.get());
                                         return temp;
-//                                        StringProperty temp = new SimpleStringProperty("");
-//                                        temp.bind(total.concat(Bindings.createStringBinding(() -> {
-//                                            return (total.get().isEmpty()) ? "" : ", ";
-//                                        }, total.isEmpty())).concat(unary));
-//                                        return temp;
                                     })
                             );
     }
