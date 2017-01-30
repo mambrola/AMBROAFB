@@ -25,7 +25,7 @@ import ambroafb.invoices.Invoice;
 import ambroafb.invoices.filter.InvoiceFilter;
 import ambroafb.licenses.License;
 import ambroafb.licenses.filter.LicenseFilter;
-import ambroafb.loggings.Loggings;
+import ambroafb.loggings.Logging;
 import ambroafb.loggings.filter.LoggingFilter;
 import ambroafb.minitables.MiniTables;
 import ambroafb.minitables.buysells.BuySell;
@@ -162,16 +162,17 @@ public class MainController implements Initializable {
     
     @FXML
     private void loggings(ActionEvent event){
-        Stage loggingsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Loggings.class.getSimpleName());
-        
+        String stageTitle = "loggings";
+        Stage loggingsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(loggingsStage == null || !loggingsStage.isShowing()){
-            Loggings loggings = new Loggings(AmbroAFB.mainStage);
+            TableList loggings = new TableList(AmbroAFB.mainStage, Logging.class, stageTitle);
             loggings.show();
             
             LoggingFilter filter = new LoggingFilter(loggings);
             FilterModel model = filter.getResult();
-            loggings.getLoggingsController().reAssignTable(model);
-
+            loggings.getController().reAssignTable(Logging.getFilteredFromDB(model), model);
+            loggings.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
+            
             if (model.isCanceled()) 
                 loggings.close();
         }
