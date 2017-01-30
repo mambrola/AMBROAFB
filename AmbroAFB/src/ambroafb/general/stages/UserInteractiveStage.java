@@ -21,10 +21,10 @@ public abstract class UserInteractiveStage extends Stage {
      * 
      * @param owner The owner stage.
      * @param nameForPath Path for save the opened stage.
-     * @param localizableTitle The key which will convert an appropriate language by bundle.
+     * @param stageTitleBundleKey The key which will convert an appropriate language by bundle.
      * @param iconPath The path for stage upper left icon.
      */
-    public UserInteractiveStage(Stage owner, String nameForPath, String localizableTitle, String iconPath) {
+    public UserInteractiveStage(Stage owner, String nameForPath, String stageTitleBundleKey, String iconPath) {
         super();
 
         this.initOwner(owner);
@@ -33,8 +33,8 @@ public abstract class UserInteractiveStage extends Stage {
         if (nameForPath != null && !nameForPath.isEmpty()){
             StagesContainer.registerStageByOwner(owner, nameForPath, (Stage)this);
         }
-        if (localizableTitle != null && !localizableTitle.isEmpty()){
-            this.setTitle(GeneralConfig.getInstance().getTitleFor(localizableTitle));
+        if (stageTitleBundleKey != null && !stageTitleBundleKey.isEmpty()){
+            this.setTitle(GeneralConfig.getInstance().getTitleFor(stageTitleBundleKey));
         }
         if (iconPath != null && !iconPath.isEmpty()) {
             this.getIcons().add(new Image(iconPath));

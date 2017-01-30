@@ -6,6 +6,7 @@
 package ambroafb;
 
 import ambroafb.balance_accounts.BalanceAccounts;
+import ambroafb.clients.Client;
 import ambroafb.clients.Clients;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.configuration.Configuration;
@@ -32,11 +33,13 @@ import ambroafb.minitables.buysells.BuySell;
 import ambroafb.minitables.permanences.Permanence;
 import ambroafb.minitables.subjects.Subject;
 import ambroafb.products.Products;
+import ambroafb.tablelist.TableList;
 import authclient.AuthServerException;
 import authclient.monitoring.MonitoringClient;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -136,12 +139,15 @@ public class MainController implements Initializable {
     private void clients(ActionEvent event) {
         Stage clientsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Clients.class.getSimpleName());
         if(clientsStage == null || !clientsStage.isShowing()){
-            Clients clients = new Clients(AmbroAFB.mainStage);
+//            Clients clients = new Clients(AmbroAFB.mainStage);
+            TableList clients = new TableList(AmbroAFB.mainStage, Client.class, "clients");
             clients.show();
             
             ClientFilter filter = new ClientFilter(clients);
             FilterModel model = filter.getResult();
-            clients.getClientsController().reAssignTable(model);
+            List<Client> clientsList = Client.getFilteredFromDB(model);
+            clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
+            clients.getController().reAssignTable(clientsList, model);
             
             if (model.isCanceled()){
                 clients.close();

@@ -11,14 +11,14 @@ package ambroafb.general;
  */
 public abstract class FilterModel {
     
-    private boolean modelIsEmpty;
+    private boolean modelCanceled;
     
     public boolean isCanceled(){
-        return modelIsEmpty;
+        return modelCanceled;
     }
     
     public void changeModelAsEmpty() {
-        modelIsEmpty = true;
+        modelCanceled = true;
     }
     
     public void saveIntoPref(String key, String value){

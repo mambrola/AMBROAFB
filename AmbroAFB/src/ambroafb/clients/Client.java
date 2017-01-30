@@ -209,7 +209,7 @@ public class Client extends EditorPanelable{
     
     
     // DBService methods:
-    public static List<Client> getAllFromDB() {
+    public static ArrayList<Client> getAllFromDB() {
         JSONObject params = new ConditionBuilder().build();
         return DBUtils.getObjectsListFromDB(Client.class, DB_TABLE_NAME, params);
     }
