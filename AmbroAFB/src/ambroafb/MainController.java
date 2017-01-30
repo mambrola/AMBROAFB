@@ -9,7 +9,7 @@ import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Client;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.configuration.Configuration;
-import ambroafb.countries.Countries;
+import ambroafb.countries.Country;
 import ambroafb.currencies.Currencies;
 import ambroafb.currency_rates.CurrencyRates;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
@@ -215,9 +215,15 @@ public class MainController implements Initializable {
     
     @FXML 
     private void countries(ActionEvent event) {
-        Stage countriesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Countries.class.getSimpleName());
+        String stageTitle = "countries";
+        Stage countriesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if (countriesStage == null || !countriesStage.isShowing()){
-            Countries countries = new Countries(AmbroAFB.mainStage);
+            TableList countries = new TableList(AmbroAFB.mainStage, Country.class, stageTitle);
+            countries.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
+                    
+            ArrayList<Country> countriesList = Country.getAllFromDB();
+            countriesList.sort((Country c1, Country c2) -> c1.getDescrip().compareTo(c2.getDescrip()));
+            countries.getController().reAssignTable(countriesList, null);
             countries.show();
         }
         else {
@@ -225,8 +231,6 @@ public class MainController implements Initializable {
             StageUtils.centerChildOf(AmbroAFB.mainStage, countriesStage);
         }
         
-        System.out.println("formPane: " + formPane.getWidth());
-        System.out.println("menusPane: " + menusPane.getWidth());
     }
     
     

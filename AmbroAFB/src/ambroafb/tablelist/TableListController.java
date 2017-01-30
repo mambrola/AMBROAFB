@@ -51,11 +51,11 @@ public class TableListController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         bundle = rb;
         editorPanelController.setOuterController(this);
-        editorPanelController.removeButtonsByFxIDs("#search");
     } 
     
     public void reAssignTable(List<? extends EditorPanelable> sortedList, FilterModel model){
-        if (!model.isCanceled()) {
+        // Stage has not filter or it is canceled from user:
+        if (model == null || !model.isCanceled()) {
             int selectedIndex = aview.getSelectionModel().getSelectedIndex();
             contents.clear();
             masker.setVisible(true);
@@ -81,7 +81,12 @@ public class TableListController implements Initializable {
 
         containerPane.getChildren().add(0, aview);
     }
-        
+    
+    public void removeElementsFromEditorPanel(String... componentFXids){
+        for (String id : componentFXids) {
+            editorPanelController.removeButtonsByFxIDs(id);
+        }
+    }
     
     public EditorPanelController getEditorPanelController() {
         return editorPanelController;

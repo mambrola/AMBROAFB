@@ -140,6 +140,9 @@ public class EditorPanelController implements Initializable {
                 selected.copyFrom(real);
             }
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
+            System.out.println("in the view");
+            System.out.println("dialogClass: " + dialogClass.getName());
+            System.out.println("in the view");
             Stage ownerStage = (Stage) exit.getScene().getWindow();
             Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.VIEW, ownerStage);
 
