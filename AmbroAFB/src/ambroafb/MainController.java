@@ -10,7 +10,7 @@ import ambroafb.clients.Client;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.configuration.Configuration;
 import ambroafb.countries.Country;
-import ambroafb.currencies.Currencies;
+import ambroafb.currencies.Currency;
 import ambroafb.currency_rates.CurrencyRates;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCounts;
@@ -336,9 +336,14 @@ public class MainController implements Initializable {
     }
     
     @FXML private void currencies(ActionEvent event) {
-        Stage currenciesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Currencies.class.getSimpleName());
+        String stageTitle = "currencies";
+        Stage currenciesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(currenciesStage == null || !currenciesStage.isShowing()){
-            Currencies currencies = new Currencies(AmbroAFB.mainStage);
+            TableList currencies = new TableList(AmbroAFB.mainStage, Currency.class, stageTitle);
+            currencies.getController().removeElementsFromEditorPanel("#search");
+            
+            ArrayList<Currency> currenciesList = Currency.getAllFromDB();
+            currencies.getController().reAssignTable(currenciesList, null);
             currencies.show();
         }
         else {

@@ -20,12 +20,12 @@ public class TableList extends ListingStage {
     
     private TableListController tableListController;
     
-    public TableList(Stage owner, Class cellClass, String stageLocalizableTitle){
-        super(owner, cellClass.getSimpleName(), stageLocalizableTitle);
+    public TableList(Stage owner, Class tableContent, String stageLocalizableTitle){
+        super(owner, tableContent.getSimpleName(), stageLocalizableTitle);
         
         Scene scene = SceneUtils.createScene("/ambroafb/tablelist/TableList.fxml", null);
         tableListController = (TableListController) scene.getProperties().get("controller");
-        tableListController.addTableByClass(cellClass);
+        tableListController.addTableByClass(tableContent);
         this.setScene(scene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {

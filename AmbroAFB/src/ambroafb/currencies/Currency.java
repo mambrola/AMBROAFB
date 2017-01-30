@@ -81,8 +81,9 @@ public class Currency extends EditorPanelable {
     // DB methods:
     public static ArrayList<Currency> getAllFromDB(){
         JSONObject params = new ConditionBuilder().build();
-        return DBUtils.getObjectsListFromDB(Currency.class, DB_TABLE_NAME, params);
-        
+        ArrayList<Currency> currencies = DBUtils.getObjectsListFromDB(Currency.class, DB_TABLE_NAME, params);
+        currencies.sort((Currency c1, Currency c2) -> c1.getIso().compareTo(c2.getIso()));
+        return currencies;
     }
     
     public static Currency getOneFromDB (int recId){
