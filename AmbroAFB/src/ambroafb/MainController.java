@@ -11,7 +11,7 @@ import ambroafb.clients.filter.ClientFilter;
 import ambroafb.configuration.Configuration;
 import ambroafb.countries.Country;
 import ambroafb.currencies.Currency;
-import ambroafb.currency_rates.CurrencyRates;
+import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCounts;
 import ambroafb.general.FilterModel;
@@ -40,8 +40,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -220,7 +222,15 @@ public class MainController implements Initializable {
         if (countriesStage == null || !countriesStage.isShowing()){
             TableList countries = new TableList(AmbroAFB.mainStage, Country.class, stageTitle);
             countries.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
-                    
+
+//            Supplier< List<EditorPanelable> > supplier = () -> {
+//                ArrayList<EditorPanelable> list = new ArrayList<>();
+//                list.addAll(Country.getAllFromDB());
+//                return list;
+//            };
+//            FetchTableListEntriesFromDB fetch = new FetchTableListEntriesFromDB(supplier, countries);
+//            fetch.start();
+            
             ArrayList<Country> countriesList = Country.getAllFromDB();
             countries.getController().reAssignTable(countriesList, null);
             countries.show();
@@ -353,14 +363,15 @@ public class MainController implements Initializable {
     }
     
     @FXML private void currencyRates(ActionEvent event) {
-        Stage currencyRatesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, CurrencyRates.class.getSimpleName());
+        String stageTitle = "currencyrates";
+        Stage currencyRatesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(currencyRatesStage == null || !currencyRatesStage.isShowing()){
-            CurrencyRates currencyRates = new CurrencyRates(AmbroAFB.mainStage);
+            TableList currencyRates = new TableList(AmbroAFB.mainStage, CurrencyRate.class, stageTitle);
             currencyRates.show();
             
             CurrencyRateFilter filter = new CurrencyRateFilter(currencyRates);
             FilterModel model = filter.getResult();
-            currencyRates.getCurrencyRatesController().reAssignTable(model);
+            currencyRates.getController().reAssignTable(CurrencyRate.getFilteredFromDB(model), model);
 
             if (model.isCanceled()){
                 currencyRates.close();
@@ -407,13 +418,12 @@ public class MainController implements Initializable {
         MonitoringClient monitoring = new MonitoringClient(email, password, authclient.Utils.getDefaultConfig(Names.MONITORING_URL_ON_SERVER, Names.APP_NAME));
         try {
             monitoring.loginAndOpenBrowser(email, password);
-        } catch (IOException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (AuthServerException ex) {
-//            String msg = GeneralConfig.getInstance().getTitleFor("failed_monitoring_login");
-//            new AlertMessage(Alert.AlertType.INFORMATION, ex, msg, "").show();
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
+//            String msg = GeneralConfig.getInstance().getTitleFor("failed_monitoring_login");
+//            new AlertMessage(Alert.AlertType.INFORMATION, ex, msg, "").show();
+
     }
     
 //    @FXML
@@ -443,5 +453,27 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         config = GeneralConfig.getInstance();
-    }        
+    }
+    
+    
+    private class FetchTableListEntriesFromDB extends Thread {
+
+        private final Supplier< List<EditorPanelable> > supplier;
+        private final TableList tableList;
+        
+        public FetchTableListEntriesFromDB(Supplier< List<EditorPanelable> > supplier, TableList tbList){
+            this.supplier = supplier;
+            tableList = tbList;
+        }
+        
+        @Override
+        public void run() {
+            List<EditorPanelable> contentList = supplier.get();
+            Platform.runLater(() -> {
+                tableList.getController().reAssignTable(contentList, null);
+                tableList.show();
+            });
+        }
+        
+    }
 }

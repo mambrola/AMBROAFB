@@ -89,7 +89,13 @@ public class CurrencyRate extends EditorPanelable {
             whereBuilder.and("iso", "=", currencyRateFilterModel.getSelectedCurrency().getIso());
         }
         JSONObject params = whereBuilder.condition().build();
-        return DBUtils.getObjectsListFromDB(CurrencyRate.class, DB_VIEW_NAME, params);
+        ArrayList<CurrencyRate> currencyRates = DBUtils.getObjectsListFromDB(CurrencyRate.class, DB_VIEW_NAME, params);
+        currencyRates.sort((CurrencyRate c1, CurrencyRate c2) -> {
+                    int dateCmp = c2.dateProperty().get().compareTo(c1.dateProperty().get());
+                    if (dateCmp == 0) return c1.getIso().compareTo(c2.getIso());
+                    return dateCmp;
+                });
+        return currencyRates;
     }
 
     public static CurrencyRate getOneFromDB (int recId){
