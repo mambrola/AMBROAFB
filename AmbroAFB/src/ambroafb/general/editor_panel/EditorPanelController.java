@@ -19,6 +19,7 @@ import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -140,9 +141,6 @@ public class EditorPanelController implements Initializable {
                 selected.copyFrom(real);
             }
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
-            System.out.println("in the view");
-            System.out.println("dialogClass: " + dialogClass.getName());
-            System.out.println("in the view");
             Stage ownerStage = (Stage) exit.getScene().getWindow();
             Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, selected, EDITOR_BUTTON_TYPE.VIEW, ownerStage);
 
@@ -220,18 +218,30 @@ public class EditorPanelController implements Initializable {
             Class className = Utils.getClassByName(getClassName(CLASS_TYPE.FILTER));
             Filterable filter = (className != null) ? (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow()) : null;
             
-            System.out.println("<EditorPanelController> refresh method. filter: " + filter);
-            
             FilterModel model = (filter != null) ? filter.getResult() : null;
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
-            // getClassName(CLASS_TYPE.OBJECT).getAllFromDB() gadavcet reAssign-s Filtersmodeltan ertad.
-            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{FilterModel.class}, outerController, model);
+            
+            Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+            List<EditorPanelable> list = getEntriesFromDB(objectClass, model);
+            
+            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{List.class, FilterModel.class}, outerController, list, model);
         }
         else {
             filterStage.requestFocus();
             StageUtils.centerChildOf(editorPanelSceneStage, filterStage);
         }
         refresh.setSelected(false);
+    }
+    
+    private List<EditorPanelable> getEntriesFromDB(Class targetClass, FilterModel model){
+        List<EditorPanelable> result;
+        if (model == null){
+            result = (List<EditorPanelable>) Utils.getInvokedClassMethod(targetClass, "getAllFromDB", null, null);
+        }
+        else {
+            result = (List<EditorPanelable>) Utils.getInvokedClassMethod(targetClass, "getFilteredFromDB", new Class[]{FilterModel.class}, null, model);
+        }
+        return result;
     }
     
     /**

@@ -27,7 +27,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -211,7 +210,9 @@ public class Client extends EditorPanelable{
     // DBService methods:
     public static ArrayList<Client> getAllFromDB() {
         JSONObject params = new ConditionBuilder().build();
-        return DBUtils.getObjectsListFromDB(Client.class, DB_TABLE_NAME, params);
+        ArrayList<Client> clients = DBUtils.getObjectsListFromDB(Client.class, DB_TABLE_NAME, params);
+        clients.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
+        return clients;
     }
     
     public static ArrayList<ClientStatus> getAllStatusFromDB(){
@@ -245,6 +246,7 @@ public class Client extends EditorPanelable{
         JSONObject params = whereBuilder.condition().build();
         System.out.println("filter params: " + params);
         ArrayList<Client> clientsFromDB = DBUtils.getObjectsListFromDB(Client.class, DB_VIEW_NAME, params);
+        clientsFromDB.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
         if (clientFilterModel.isTypeIndeterminate()){
             return clientsFromDB;
         }
@@ -262,27 +264,22 @@ public class Client extends EditorPanelable{
 
     public static Client saveOneToDB(Client client) {
         if (client == null) return null;
-//        Client clientFromDB = DBUtils.saveObjectToDB(client, "client");
         Client clientFromDB = DBUtils.saveClient(client);
         if (clientFromDB == null) return null;
-        System.out.println("client: " + clientFromDB.getRecId());
-        client.getClientImageGallery().sendDataToServer("" + clientFromDB.getRecId(), new BiConsumer<String, Boolean>() {
-            @Override
-            public void accept(String path, Boolean isDeleted) {
-                if (isDeleted){
-                    for (int i = 0; i < clientFromDB.getDocuments().size(); i++) {
-                        Document doc = clientFromDB.getDocuments().get(i);
-                        if (doc.path.equals(path)){
-                            clientFromDB.getDocuments().remove(i);
-                            break;
-                        }
+        client.getClientImageGallery().sendDataToServer("" + clientFromDB.getRecId(), (String path, Boolean isDeleted) -> {
+            if (isDeleted){
+                for (int i = 0; i < clientFromDB.getDocuments().size(); i++) {
+                    Document doc = clientFromDB.getDocuments().get(i);
+                    if (doc.path.equals(path)){
+                        clientFromDB.getDocuments().remove(i);
+                        break;
                     }
                 }
-                else {
-                    Document doc = new Document();
-                    doc.path = path;
-                    clientFromDB.getDocuments().add(doc);
-                }
+            }
+            else {
+                Document doc = new Document();
+                doc.path = path;
+                clientFromDB.getDocuments().add(doc);
             }
         }, new GalleryDBUpdater(clientFromDB));
         

@@ -12,7 +12,6 @@ import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -60,15 +59,13 @@ public class TableListController implements Initializable {
             contents.clear();
             masker.setVisible(true);
 
-            new Thread(() -> {
-                contents.setAll(sortedList);
-                Platform.runLater(() -> {
-                    masker.setVisible(false);
-                    if (selectedIndex >= 0){
-                        aview.getSelectionModel().select(selectedIndex);
-                    }
-                });
-            }).start();
+            contents.setAll(sortedList);
+//            Platform.runLater(() -> {
+            masker.setVisible(false);
+            if (selectedIndex >= 0){
+                aview.getSelectionModel().select(selectedIndex);
+            }
+//            });
         }
     }
     

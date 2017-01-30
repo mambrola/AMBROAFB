@@ -53,7 +53,9 @@ public class Country extends EditorPanelable{
     
     public static ArrayList<Country> getAllFromDB() {
         JSONObject params =  new ConditionBuilder().build();
-        return DBUtils.getObjectsListFromDB(Country.class, DB_TABLE_NAME, params);
+        ArrayList<Country> countries = DBUtils.getObjectsListFromDB(Country.class, DB_TABLE_NAME, params);
+        countries.sort((Country c1, Country c2) -> c1.getDescrip().compareTo(c2.getDescrip()));
+        return countries;
     }
     
     public static Country getOneFromDB(int recId) {

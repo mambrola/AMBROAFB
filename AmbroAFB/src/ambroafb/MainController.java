@@ -222,7 +222,6 @@ public class MainController implements Initializable {
             countries.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
                     
             ArrayList<Country> countriesList = Country.getAllFromDB();
-            countriesList.sort((Country c1, Country c2) -> c1.getDescrip().compareTo(c2.getDescrip()));
             countries.getController().reAssignTable(countriesList, null);
             countries.show();
         }
