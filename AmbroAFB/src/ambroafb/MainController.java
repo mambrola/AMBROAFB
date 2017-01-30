@@ -13,7 +13,7 @@ import ambroafb.countries.Country;
 import ambroafb.currencies.Currency;
 import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
-import ambroafb.discounts_on_count.DiscountOnCounts;
+import ambroafb.discounts_on_count.DiscountOnCount;
 import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -231,8 +231,7 @@ public class MainController implements Initializable {
 //            FetchTableListEntriesFromDB fetch = new FetchTableListEntriesFromDB(supplier, countries);
 //            fetch.start();
             
-            ArrayList<Country> countriesList = Country.getAllFromDB();
-            countries.getController().reAssignTable(countriesList, null);
+            countries.getController().reAssignTable(Country.getAllFromDB(), null);
             countries.show();
         }
         else {
@@ -352,8 +351,7 @@ public class MainController implements Initializable {
             TableList currencies = new TableList(AmbroAFB.mainStage, Currency.class, stageTitle);
             currencies.getController().removeElementsFromEditorPanel("#search");
             
-            ArrayList<Currency> currenciesList = Currency.getAllFromDB();
-            currencies.getController().reAssignTable(currenciesList, null);
+            currencies.getController().reAssignTable(Currency.getAllFromDB(), null);
             currencies.show();
         }
         else {
@@ -384,9 +382,12 @@ public class MainController implements Initializable {
     }
     
     @FXML private void discountsOnCount(ActionEvent event) {
-        Stage discountOnCountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, DiscountOnCounts.class.getSimpleName());
+        String stageTitle = "discountoncounts";
+        Stage discountOnCountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if (discountOnCountsStage == null || !discountOnCountsStage.isShowing()){
-            DiscountOnCounts discountOnCounts = new DiscountOnCounts(AmbroAFB.mainStage);
+            TableList discountOnCounts = new TableList(AmbroAFB.mainStage, DiscountOnCount.class, stageTitle);
+            discountOnCounts.getController().reAssignTable(DiscountOnCount.getAllFromDB(), null);
+            discountOnCounts.getController().removeElementsFromEditorPanel("#search");
             discountOnCounts.show();
         }
         else {

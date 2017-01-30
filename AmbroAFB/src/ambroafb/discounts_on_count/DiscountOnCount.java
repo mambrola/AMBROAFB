@@ -39,7 +39,9 @@ public class DiscountOnCount extends EditorPanelable {
     // DB methods:
     public static ArrayList<DiscountOnCount> getAllFromDB(){
         JSONObject params = new ConditionBuilder().build();
-        return DBUtils.getObjectsListFromDB(DiscountOnCount.class, DB_TABLE_NAME, params);
+        ArrayList<DiscountOnCount> discounts = DBUtils.getObjectsListFromDB(DiscountOnCount.class, DB_TABLE_NAME, params);
+        discounts.sort((DiscountOnCount d1, DiscountOnCount d2) -> d2.getRecId() - d1.getRecId());
+        return discounts;
     }
     
     public static DiscountOnCount getOneFromDB(int recId) {

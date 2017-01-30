@@ -211,7 +211,7 @@ public class Client extends EditorPanelable{
     public static ArrayList<Client> getAllFromDB() {
         JSONObject params = new ConditionBuilder().build();
         ArrayList<Client> clients = DBUtils.getObjectsListFromDB(Client.class, DB_TABLE_NAME, params);
-        clients.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
+        clients.sort((Client c1, Client c2) -> c2.getRecId() - c1.getRecId());
         return clients;
     }
     
