@@ -215,7 +215,9 @@ public class Invoice extends EditorPanelable {
     // DBService methods:
     public static ArrayList<Invoice> getAllFromDB (){
         JSONObject params = new ConditionBuilder().build();
-        return DBUtils.getObjectsListFromDB(Invoice.class, DB_INVOICES_VIEW, params);
+        ArrayList<Invoice> invoices = DBUtils.getObjectsListFromDB(Invoice.class, DB_INVOICES_VIEW, params);
+        invoices.sort((Invoice inv1, Invoice inv2) -> inv2.getRecId() - inv1.getRecId());
+        return invoices;
     }
     
     public static ArrayList<Invoice> getFilteredFromDB(FilterModel model){
@@ -244,7 +246,9 @@ public class Invoice extends EditorPanelable {
         }
         
         JSONObject params = whereBuilder.condition().build();
-        return DBUtils.getObjectsListFromDB(Invoice.class, DB_INVOICES_VIEW, params);
+        ArrayList<Invoice> invoices = DBUtils.getObjectsListFromDB(Invoice.class, DB_INVOICES_VIEW, params);
+        invoices.sort((Invoice inv1, Invoice inv2) -> inv2.getRecId() - inv1.getRecId());
+        return invoices;
     }
     
     public static ArrayList<InvoiceReissuing> getAllIvoiceReissuingsesFromDB(){

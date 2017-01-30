@@ -21,7 +21,7 @@ import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.invoices.Invoices;
+import ambroafb.invoices.Invoice;
 import ambroafb.invoices.filter.InvoiceFilter;
 import ambroafb.licenses.Licenses;
 import ambroafb.licenses.filter.LicenseFilter;
@@ -183,14 +183,15 @@ public class MainController implements Initializable {
     
     @FXML 
     private void invoices(ActionEvent event) {
-        Stage invoicesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Invoices.class.getSimpleName());
+        String stageTitle = "invoices";
+        Stage invoicesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(invoicesStage == null || !invoicesStage.isShowing()){
-            Invoices invoices = new Invoices(AmbroAFB.mainStage);
+            TableList invoices = new TableList(AmbroAFB.mainStage, Invoice.class, stageTitle);
             invoices.show();
             
             InvoiceFilter filter = new InvoiceFilter(invoices);
             FilterModel model = filter.getResult();
-            invoices.getInvoicesController().reAssignTable(model);
+            invoices.getController().reAssignTable(Invoice.getFilteredFromDB(model), model);
             
             if (model.isCanceled()){
                 invoices.close();
