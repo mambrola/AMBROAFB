@@ -31,7 +31,7 @@ import ambroafb.minitables.MiniTables;
 import ambroafb.minitables.buysells.BuySell;
 import ambroafb.minitables.permanences.Permanence;
 import ambroafb.minitables.subjects.Subject;
-import ambroafb.products.Products;
+import ambroafb.products.Product;
 import ambroafb.tablelist.TableList;
 import authclient.AuthServerException;
 import authclient.monitoring.MonitoringClient;
@@ -206,9 +206,11 @@ public class MainController implements Initializable {
     
     @FXML 
     private void products(ActionEvent event) {
-        Stage productsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Products.class.getSimpleName());
+        String stageTitle = "products";
+        Stage productsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if (productsStage == null || !productsStage.isShowing()){
-            Products products = new Products(AmbroAFB.mainStage);
+            TableList products = new TableList(AmbroAFB.mainStage, Product.class, stageTitle);
+            products.getController().reAssignTable(Product.getAllFromDB(), null);
             products.show();
         }
         else{
