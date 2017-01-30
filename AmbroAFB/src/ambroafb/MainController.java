@@ -23,7 +23,7 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.filter.InvoiceFilter;
-import ambroafb.licenses.Licenses;
+import ambroafb.licenses.License;
 import ambroafb.licenses.filter.LicenseFilter;
 import ambroafb.loggings.Loggings;
 import ambroafb.loggings.filter.LoggingFilter;
@@ -247,14 +247,16 @@ public class MainController implements Initializable {
     @FXML private void accounts(ActionEvent event) {}
     
     @FXML private void licenses(ActionEvent event) {
-        Stage licensesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Licenses.class.getSimpleName());
+        String stageTitle = "licenses";
+        Stage licensesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(licensesStage == null || !licensesStage.isShowing()){
-            Licenses licenses = new Licenses(AmbroAFB.mainStage);
+            TableList licenses = new TableList(AmbroAFB.mainStage, License.class, stageTitle);
             licenses.show();
             
             LicenseFilter filter = new LicenseFilter(licenses);
             FilterModel filterModel = filter.getResult();
-            licenses.getLicensesController().reAssignTable(filterModel);
+            licenses.getController().reAssignTable(License.getFilteredFromDB(filterModel), filterModel);
+            licenses.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
 
             if (filterModel.isCanceled()) 
                 licenses.close();

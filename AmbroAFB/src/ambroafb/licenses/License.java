@@ -189,7 +189,9 @@ public class License extends EditorPanelable {
         }
         
         JSONObject params = whereBuilder.condition().build();
-        return DBUtils.getObjectsListFromDB(License.class, DB_VIEW_NAME, params);
+        ArrayList<License> licenses = DBUtils.getObjectsListFromDB(License.class, DB_VIEW_NAME, params);
+        licenses.sort((License lic1, License lic2) -> lic2.getCreatedDate().compareTo(lic1.getCreatedDate()));
+        return licenses;
     }
 
     
