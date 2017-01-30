@@ -7,7 +7,6 @@ package ambroafb;
 
 import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Client;
-import ambroafb.clients.Clients;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.configuration.Configuration;
 import ambroafb.countries.Countries;
@@ -137,10 +136,10 @@ public class MainController implements Initializable {
     
     @FXML
     private void clients(ActionEvent event) {
-        Stage clientsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Clients.class.getSimpleName());
+        String stageTitle = "clients";
+        Stage clientsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(clientsStage == null || !clientsStage.isShowing()){
-//            Clients clients = new Clients(AmbroAFB.mainStage);
-            TableList clients = new TableList(AmbroAFB.mainStage, Client.class, "clients");
+            TableList clients = new TableList(AmbroAFB.mainStage, Client.class, stageTitle);
             clients.show();
             
             ClientFilter filter = new ClientFilter(clients);
