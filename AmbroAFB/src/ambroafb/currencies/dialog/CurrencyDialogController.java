@@ -33,7 +33,7 @@ public class CurrencyDialogController implements Initializable {
     private VBox formPane;
     @FXML
     private ADatePicker openDate;
-    @FXML @ContentNotEmpty @ContentPattern(value = "[a-zA-Z]{3, 3}", explain = "The length must be 3")
+    @FXML @ContentNotEmpty @ContentPattern(value = "[a-zA-Z]{3}", explain = "The length must be 3")
     private IsoComboBox iso;
     @FXML @ContentNotEmpty
     private TextField descrip;

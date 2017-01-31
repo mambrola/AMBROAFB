@@ -38,8 +38,6 @@ public class Currency extends EditorPanelable {
     
     @AView.Column(title = "%currency_name", width = TableColumnWidths.ISO, styleClass = "textCenter")
     private final StringProperty iso;
-//    @JsonIgnore
-//    private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%descrip", width = "150")
     private final StringProperty descrip;
@@ -56,7 +54,6 @@ public class Currency extends EditorPanelable {
         createdDate = new SimpleStringProperty("");
         dateProperty = new SimpleObjectProperty<>();
         iso = new SimpleStringProperty("");
-//        currency = new SimpleObjectProperty<>(this);
         descrip = new SimpleStringProperty("");
         symbol = new SimpleStringProperty("");
         
@@ -67,15 +64,6 @@ public class Currency extends EditorPanelable {
             }
             createdDate.set(dateStr);
         });
-        
-//        // Bind components does not work for this case. Because DB methods calls setters ("bind" and also settter is conflicted couple). So listener also call setters to change currency values:
-//        currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
-//            if (newValue != null){
-//                setIso(newValue.getIso());
-//                setDescrip(newValue.getDescrip());
-//                setSymbol(newValue.getSymbol());
-//            }
-//        });
         
     }
     
