@@ -25,7 +25,9 @@ public class Subject extends MiniTable {
     // DB methods:
     public static ArrayList<Subject> getAllFromDB(){
         JSONObject params = new ConditionBuilder().build();
-        return DBUtils.getObjectsListFromDB(Subject.class, DB_TABLE_NAME, params);
+        ArrayList<Subject> subjects = DBUtils.getObjectsListFromDB(Subject.class, DB_TABLE_NAME, params);
+        subjects.sort((Subject s1, Subject s2) -> s1.getDescrip().compareTo(s2.getDescrip()));
+        return subjects;
     }
     
     public static Subject getOneFromDB(int id){
@@ -41,6 +43,10 @@ public class Subject extends MiniTable {
     public static boolean deleteOneFromDB(int id){
         System.out.println("delete from DB... ??");
         return false;
+    }
+    
+    public static String getDialogStagePath(){
+        return "ambroafb.minitables.dialog.MiniTableDialog";
     }
     
     

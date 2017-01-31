@@ -25,7 +25,9 @@ public class BuySell extends MiniTable {
     //DB methods:
     public static ArrayList<BuySell> getAllFromDB(){
         JSONObject params = new ConditionBuilder().build();
-        return DBUtils.getObjectsListFromDB(BuySell.class, DB_TABLE_NAME, params);
+        ArrayList<BuySell> buySellList = DBUtils.getObjectsListFromDB(BuySell.class, DB_TABLE_NAME, params);
+        buySellList.sort((BuySell b1, BuySell b2) -> b1.getDescrip().compareTo(b2.getDescrip()));
+        return buySellList;
     }
     
     public static BuySell getOneFromDB(int id){
@@ -41,6 +43,10 @@ public class BuySell extends MiniTable {
     public static boolean deleteOneFromDB(int id){
         System.out.println("delete from DB... ??");
         return false;
+    }
+    
+    public static String getDialogStagePath(){
+        return "ambroafb.minitables.dialog.MiniTableDialog";
     }
     
     @Override

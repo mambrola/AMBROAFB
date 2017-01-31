@@ -38,6 +38,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -397,6 +398,7 @@ public class Utils {
      * @return
      */
     public static Class getClassByName(String name) {
+        if (name == null) return null;
         Class result = null;
         try {
             result = Class.forName(name);
@@ -422,6 +424,16 @@ public class Utils {
             result = owner.getMethod(methodName, argsTypes).invoke(object, argsValues);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+    
+    public static boolean existsMethodFor(Class owner, String methodName) {
+        boolean result = false;
+        try {
+            Method  m = owner.getMethod(methodName);
+            result = true;
+        } catch (NoSuchMethodException | SecurityException ex) {
         }
         return result;
     }

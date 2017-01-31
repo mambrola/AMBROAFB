@@ -26,7 +26,9 @@ public class Permanence extends MiniTable {
     // DB methods:
     public static ArrayList<Permanence> getAllFromDB(){
         JSONObject params = new ConditionBuilder().build();
-        return DBUtils.getObjectsListFromDB(Permanence.class, DB_TABLE_NAME, params);
+        ArrayList<Permanence> permanences = DBUtils.getObjectsListFromDB(Permanence.class, DB_TABLE_NAME, params);
+        permanences.sort((Permanence p1,Permanence p2) -> p1.getDescrip().compareTo(p2.getDescrip()));
+        return permanences;
     }
     
     public static Permanence getOneFromDB(int id){
@@ -42,6 +44,10 @@ public class Permanence extends MiniTable {
     public static boolean deleteOneFromDB(int id){
         System.out.println("delete from DB... ??");
         return false;
+    }
+    
+    public static String getDialogStagePath(){
+        return "ambroafb.minitables.dialog.MiniTableDialog";
     }
     
     @Override

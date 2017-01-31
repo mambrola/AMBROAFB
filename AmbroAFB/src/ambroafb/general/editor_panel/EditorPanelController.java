@@ -315,38 +315,49 @@ public class EditorPanelController implements Initializable {
         String rtrn = exit.getScene().getProperties().get("controller").toString();
         if(type.equals(CLASS_TYPE.CONTROLLER))
             return rtrn.substring(0, rtrn.indexOf("@"));
-        String contentClassPath = ((AView)exit.getScene().lookup("#aview")).getInitializer();
-        String path = contentClassPath.substring(0, contentClassPath.lastIndexOf(".") + 1);
-        String contentClassShortName = contentClassPath.substring(contentClassPath.lastIndexOf(".") + 1);
+        String contentClassPathOfAView = ((AView)exit.getScene().lookup("#aview")).getInitializer();
+        Class contentClassOfAView = Utils.getClassByName(contentClassPathOfAView);
+        
+        String path = contentClassPathOfAView.substring(0, contentClassPathOfAView.lastIndexOf(".") + 1);
+        String contentClassShortName = contentClassPathOfAView.substring(contentClassPathOfAView.lastIndexOf(".") + 1);
+        
+        
         
         switch (type){
             case DIALOG:
-                rtrn = path + "dialog." + contentClassShortName + "Dialog";
+                if (Utils.existsMethodFor(contentClassOfAView, "getDialogStagePath")) {
+                    rtrn = (String)Utils.getInvokedClassMethod(contentClassOfAView, "getDialogStagePath", null, null);
+                }
+                else {
+                    rtrn = findCorrectPathFor("dialog", contentClassShortName + "Dialog", contentClassPathOfAView); // path + "dialog." + contentClassShortName + "Dialog";
+                }
                 break;
             case FILTER:
-                rtrn = path + "filter." + contentClassShortName + "Filter";
+                if (Utils.existsMethodFor(contentClassOfAView, "getFilterStagePath")) {
+                    rtrn = (String)Utils.getInvokedClassMethod(contentClassOfAView, "getFilterStagePath", null, null);
+                }
+                else {
+                    rtrn = findCorrectPathFor("filter", contentClassShortName + "Filter", contentClassPathOfAView); // path + "dialog." + contentClassShortName + "Dialog";
+                }
+//                rtrn = path + "filter." + contentClassShortName + "Filter";
                 break;
             default: // case OBJECT:
-                rtrn = contentClassPath; // path + singularName;
+                rtrn = contentClassPathOfAView; // path + singularName;
                 break;
         }
         return rtrn;
     }
     
-
-//    private void selectOneAgain(EditorPanelable selected, int selectionIndex) {
-//        if (selected == null) return;
-//        AView aview = (AView) exit.getScene().lookup("#aview");
-//        if (aview instanceof ATableView){
-//            ATableView table = (ATableView)aview;
-//            int i = table.getItems().size() - 1;
-//            System.out.println("selected one again. i = " + i);
-//            while (i >= 0 && ((EditorPanelable) table.getItems().get(i)).getRecId() != selected.getRecId()) {
-//                i--;
-//            }
-//            if (i >= 0) {
-//                table.getSelectionModel().select(i);
-//            }
-//        }
-//    }
+    private String findCorrectPathFor(String targetPkg, String targetPkgClass, String currClassPath) {
+        if (currClassPath == null || currClassPath.isEmpty() || !currClassPath.contains(".")) return null;
+        
+        String cuttingLastPart = currClassPath.substring(0, currClassPath.lastIndexOf(".") + 1);
+        String result = cuttingLastPart + targetPkg + "." + targetPkgClass;
+        
+        if (Utils.getClassByName(result) == null){
+            result = findCorrectPathFor(targetPkg, targetPkgClass, cuttingLastPart.substring(0, cuttingLastPart.length() - 1));
+        }
+        return result;
+    }
+    
 }
