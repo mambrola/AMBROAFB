@@ -7,7 +7,7 @@ package ambroafb.currencies.dialog;
 
 import ambro.ADatePicker;
 import ambroafb.currencies.Currency;
-import ambroafb.currencies.CurrencyComboBox;
+import ambroafb.currencies.IsoComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -31,10 +31,10 @@ public class CurrencyDialogController implements Initializable {
 
     @FXML
     private VBox formPane;
-    @FXML @ContentNotEmpty
+    @FXML
     private ADatePicker openDate;
-    @FXML @ContentNotEmpty
-    private CurrencyComboBox currencies;
+    @FXML @ContentNotEmpty @ContentPattern(value = "[a-zA-Z]{3, 3}", explain = "The length must be 3")
+    private IsoComboBox iso;
     @FXML @ContentNotEmpty
     private TextField descrip;
     @FXML @ContentNotEmpty @ContentPattern(value = "\\p{Sc}", explain = "Only one symbol of currency.")
@@ -55,7 +55,7 @@ public class CurrencyDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContentListener(symbol, "\\p{Sc}");
-        currencies.setShowCategoryALL(false);
+        iso.getItems().setAll(Currency.getAllIsoFromDB());
         permissionToClose = true;
     }    
 
@@ -64,7 +64,7 @@ public class CurrencyDialogController implements Initializable {
         this.currency = currency;
         if (currency != null){
             openDate.valueProperty().bindBidirectional(currency.dateProperty());
-//            currencies.valueProperty().bindBidirectional(currency.currencyProperty());
+            iso.valueProperty().bindBidirectional(currency.isoProperty());
             descrip.textProperty().bindBidirectional(currency.descripProperty());
             symbol.textProperty().bindBidirectional(currency.symbolProperty());
         }
@@ -78,6 +78,9 @@ public class CurrencyDialogController implements Initializable {
         openDate.setDisable(true);
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
+        }
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
+            iso.setEditable(true);
         }
         okayCancelController.setButtonsFeatures(buttonType);
     }

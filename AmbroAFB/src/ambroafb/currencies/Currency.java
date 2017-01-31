@@ -14,6 +14,8 @@ import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -84,6 +86,10 @@ public class Currency extends EditorPanelable {
         ArrayList<Currency> currencies = DBUtils.getObjectsListFromDB(Currency.class, DB_TABLE_NAME, params);
         currencies.sort((Currency c1, Currency c2) -> c1.getIso().compareTo(c2.getIso()));
         return currencies;
+    }
+    
+    public static List<String> getAllIsoFromDB(){
+        return getAllFromDB().stream().map((Currency currency) -> currency.getIso()).collect(Collectors.toList());
     }
     
     public static Currency getOneFromDB (int recId){

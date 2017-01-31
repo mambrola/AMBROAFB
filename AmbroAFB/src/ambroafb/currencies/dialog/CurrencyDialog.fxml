@@ -25,7 +25,7 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%iso_code" styleClass="validationMessage" />
-                            <CurrencyComboBox fx:id="currencies" />
+                            <IsoComboBox fx:id="iso" />
                         </children>
                     </VBox>
                 </children>
