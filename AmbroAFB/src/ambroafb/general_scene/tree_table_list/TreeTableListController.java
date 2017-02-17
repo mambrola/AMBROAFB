@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.tree_table_list;
+package ambroafb.general_scene.tree_table_list;
 
 import ambroafb.balance_accounts.*;
 import ambro.AFilterableTreeTableView;

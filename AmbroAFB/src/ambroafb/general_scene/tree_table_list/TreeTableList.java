@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.tree_table_list;
+package ambroafb.general_scene.tree_table_list;
 
 import ambroafb.general.SceneUtils;
 import ambroafb.general.stages.ListingStage;
@@ -23,7 +23,7 @@ public class TreeTableList extends ListingStage {
     public TreeTableList(Stage owner, Class treeContent, String stageTitleBundleKey){
         super(owner, treeContent.getSimpleName(),  stageTitleBundleKey);
         
-        Scene scene = SceneUtils.createScene("/ambroafb/tree_table_list/TreeTableList.fxml", null);
+        Scene scene = SceneUtils.createScene("/ambroafb/general_scene/tree_table_list/TreeTableList.fxml", null);
         treeTableListController = (TreeTableListController) scene.getProperties().get("controller");
         treeTableListController.addTreeTableByClass(treeContent);
         this.setScene(scene);

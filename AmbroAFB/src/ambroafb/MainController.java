@@ -31,7 +31,7 @@ import ambroafb.minitables.buysells.BuySell;
 import ambroafb.minitables.permanences.Permanence;
 import ambroafb.minitables.subjects.Subject;
 import ambroafb.products.Product;
-import ambroafb.table_list.TableList;
+import ambroafb.general_scene.table_list.TableList;
 import authclient.AuthServerException;
 import authclient.monitoring.MonitoringClient;
 import java.io.IOException;

@@ -12,7 +12,7 @@
 <BorderPane id="formPane" 
             stylesheets="/styles/css/tablelist.css" 
             xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="ambroafb.table_list.TableListController">
+            fx:controller="ambroafb.general_scene.table_list.TableListController">
     <top>
         <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
     </top>

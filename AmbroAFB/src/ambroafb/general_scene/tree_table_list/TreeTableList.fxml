@@ -11,7 +11,7 @@
 <BorderPane fx:id="formPane" 
             stylesheets="/styles/css/balanceaccounts.css" 
             xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="ambroafb.tree_table_list.TreeTableListController">
+            fx:controller="ambroafb.general_scene.tree_table_list.TreeTableListController">
     <top>
         <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
     </top>

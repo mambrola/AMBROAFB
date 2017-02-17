@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.table_list;
+package ambroafb.general_scene.table_list;
 
 import ambro.AFilterableTableView;
 import ambroafb.general.FilterModel;
