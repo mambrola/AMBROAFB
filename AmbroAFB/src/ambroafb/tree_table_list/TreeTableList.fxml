@@ -8,18 +8,18 @@
 <?import ambro.* ?>
 <?import org.controlsfx.control.*?>
 
-
-<BorderPane id="formPane" 
-            stylesheets="/styles/css/tablelist.css" 
+<BorderPane fx:id="formPane" 
+            stylesheets="/styles/css/balanceaccounts.css" 
             xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="ambroafb.tablelist.TableListController">
+            fx:controller="ambroafb.tree_table_list.TreeTableListController">
     <top>
         <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
     </top>
     <center>
         <StackPane fx:id="containerPane" >
             <children>
-                <MaskerPane fx:id="masker" visible="false" text="%loading"/>
+                <!--<AFilterableTreeTableView fx:id="aview" initializer="ambroafb.balance_accounts.BalanceAccount" styleClass="unicode" />--> 
+                <MaskerPane fx:id="masker" />
             </children>
         </StackPane>
     </center>

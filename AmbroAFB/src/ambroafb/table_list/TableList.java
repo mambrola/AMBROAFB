@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.tablelist;
+package ambroafb.table_list;
 
 import ambroafb.general.SceneUtils;
 import ambroafb.general.stages.ListingStage;
@@ -20,10 +20,10 @@ public class TableList extends ListingStage {
     
     private TableListController tableListController;
     
-    public TableList(Stage owner, Class tableContent, String stageLocalizableTitle){
-        super(owner, tableContent.getSimpleName(), stageLocalizableTitle);
+    public TableList(Stage owner, Class tableContent, String stageTitleBundleKey){
+        super(owner, tableContent.getSimpleName(), stageTitleBundleKey);
         
-        Scene scene = SceneUtils.createScene("/ambroafb/tablelist/TableList.fxml", null);
+        Scene scene = SceneUtils.createScene("/ambroafb/table_list/TableList.fxml", null);
         tableListController = (TableListController) scene.getProperties().get("controller");
         tableListController.addTableByClass(tableContent);
         this.setScene(scene);

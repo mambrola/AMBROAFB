@@ -31,7 +31,7 @@ import ambroafb.minitables.buysells.BuySell;
 import ambroafb.minitables.permanences.Permanence;
 import ambroafb.minitables.subjects.Subject;
 import ambroafb.products.Product;
-import ambroafb.tablelist.TableList;
+import ambroafb.table_list.TableList;
 import authclient.AuthServerException;
 import authclient.monitoring.MonitoringClient;
 import java.io.IOException;
@@ -374,7 +374,8 @@ public class MainController implements Initializable {
     }
     
     @FXML private void balAccounts(ActionEvent event) {
-        Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BalanceAccounts.class.getSimpleName());
+        String stageTitle = "balanceaccounts";
+        Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
             BalanceAccounts accounts = new BalanceAccounts(AmbroAFB.mainStage);
             accounts.show();
