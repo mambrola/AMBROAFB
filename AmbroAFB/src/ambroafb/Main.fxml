@@ -106,7 +106,6 @@
                                 <Menu text="types">
                                     <items>
                                         <MenuItem onAction="#buysells" text="%buysells" />
-                                        <MenuItem onAction="#permanences" text="%permanences" />
                                         <MenuItem onAction="#subjects" text="%subjects" />
                                     </items>
                                 </Menu>

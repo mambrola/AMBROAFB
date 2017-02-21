@@ -28,7 +28,6 @@ import ambroafb.licenses.filter.LicenseFilter;
 import ambroafb.loggings.Logging;
 import ambroafb.loggings.filter.LoggingFilter;
 import ambroafb.minitables.buysells.BuySell;
-import ambroafb.minitables.permanences.Permanence;
 import ambroafb.minitables.subjects.Subject;
 import ambroafb.products.Product;
 import ambroafb.general_scene.table_list.TableList;
@@ -291,20 +290,6 @@ public class MainController implements Initializable {
         }
     }
     
-    @FXML
-    private void permanences(ActionEvent event){
-        String stageTitle = "permanences";
-        Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
-        if(miniTablesStage == null || !miniTablesStage.isShowing()){
-            TableList permanences = new TableList(AmbroAFB.mainStage, Permanence.class, stageTitle);
-            permanences.getController().reAssignTable(Permanence.getAllFromDB(), null);
-            permanences.getController().removeElementsFromEditorPanel("#search");
-            permanences.show();
-        } else {
-            miniTablesStage.requestFocus();
-            StageUtils.centerChildOf(AmbroAFB.mainStage, miniTablesStage);
-        }
-    }
     
     @FXML
     private void subjects(ActionEvent event){
