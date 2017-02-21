@@ -7,12 +7,12 @@ package ambroafb.params_general;
 
 import ambro.AView;
 import ambroafb.general.DBUtils;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.util.Callback;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.json.JSONObject;
 
 /**
@@ -23,22 +23,30 @@ public class ParamGeneral extends EditorPanelable {
     
     private static final String DB_VIEW_NAME = "process_general_params";
     
-    @AView.Column(title = "%clients", width = "100", cellFactory = ParamsCellFactory.class)
-    private int clientId;
+    @AView.Column(title = "%clients", width = "100")
+//    private int clientId;
+    private final StringProperty clientId;
     
-    @AView.Column(title = "%buysells", width = "100", cellFactory = ParamsCellFactory.class)
-    private int buysellId;
+    @AView.Column(title = "%buysells", width = "100")
+//    private int buysellId;
+    private final StringProperty buysellId;
     
-    @AView.Column(title = "%subjects", width = "100", cellFactory = ParamsCellFactory.class)
-    private int subjectId;
+    @AView.Column(title = "%subjects", width = "100")
+//    private int subjectId;
+    private final StringProperty subjectId;
     
     @AView.Column(title = "%param_type", width = "100")
-    private String paramType;
+    private final StringProperty paramType;
     
     @AView.Column(title = "%param", width = "100")
-    private String param;
+    private final StringProperty param;
     
     public ParamGeneral(){
+        clientId = new SimpleStringProperty("ALL");
+        buysellId = new SimpleStringProperty("ALL");
+        subjectId = new SimpleStringProperty("ALL");
+        paramType = new SimpleStringProperty("ALL");
+        param = new SimpleStringProperty("ALL");
     }
     
     // DB methods:
@@ -49,48 +57,75 @@ public class ParamGeneral extends EditorPanelable {
         return paramsGeneral;
     }
     
+    public static ParamGeneral getOneFromDB(int id) {
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
+        return DBUtils.getObjectFromDB(ParamGeneral.class, DB_VIEW_NAME, params);
+    }
     
-    // Getters:
-    public int getClientId() {
+    
+    // Propertis:
+    public StringProperty clientProperty(){
         return clientId;
     }
-
-    public int getBuysell() {
+    
+    public StringProperty buysellProperty(){
         return buysellId;
     }
-
-    public int getSubject() {
+    
+    public StringProperty subjectProperty(){
         return subjectId;
     }
 
-    public String getParamType() {
+    public StringProperty paramTypeProperty() {
         return paramType;
     }
 
-    public String getParam() {
+    public StringProperty paramProperty() {
         return param;
+    }
+    
+    
+    // Getters:
+    public int getClientId() {
+        return Utils.getIntValueFor(clientId.get());
+    }
+
+    public int getBuysell() {
+        return Utils.getIntValueFor(buysellId.get());
+    }
+
+    public int getSubject() {
+        return Utils.getIntValueFor(subjectId.get());
+    }
+
+    public String getParamType() {
+        return paramType.get();
+    }
+
+    public String getParam() {
+        return param.get();
     }
     
     
     // Setters:
     public void setClientId(int clientId) {
-        this.clientId = clientId;
+        this.clientId.set("" + clientId);
     }
 
-    public void setBuysell(int bysellId) {
-        this.buysellId = bysellId;
+    public void setBuysell(int buysellId) {
+        this.buysellId.set("" + buysellId);
     }
 
     public void setSubject(int subjectId) {
-        this.subjectId = subjectId;
+        this.subjectId.set("" + subjectId);
     }
 
     public void setParamType(String paramType) {
-        this.paramType = paramType;
+        this.paramType.set(paramType);
     }
 
     public void setParam(String param) {
-        this.param = param;
+        this.param.set(param);
     }
     
     
@@ -137,16 +172,16 @@ public class ParamGeneral extends EditorPanelable {
     }
     
     
-    public static class ParamsCellFactory implements Callback<TableColumn<ParamGeneral, Integer>, TableCell<ParamGeneral, Integer>> {
-
-        @Override
-        public TableCell<ParamGeneral, Integer> call(TableColumn<ParamGeneral, Integer> param) {
-            return new TableCell<ParamGeneral, Integer>() {
-                @Override
-                public void updateItem(Integer id, boolean empty) {
-                    setText(empty ? null : (id == 0 ? "ALL" : "" + id));
-                }
-            };
-        }
-    } 
+//    public static class ParamsCellFactory implements Callback<TableColumn<ParamGeneral, Integer>, TableCell<ParamGeneral, Integer>> {
+//
+//        @Override
+//        public TableCell<ParamGeneral, Integer> call(TableColumn<ParamGeneral, Integer> param) {
+//            return new TableCell<ParamGeneral, Integer>() {
+//                @Override
+//                public void updateItem(Integer id, boolean empty) {
+//                    setText(empty ? null : (id == 0 ? "ALL" : "" + id));
+//                }
+//            };
+//        }
+//    } 
 }
