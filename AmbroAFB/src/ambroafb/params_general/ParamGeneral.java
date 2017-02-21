@@ -7,7 +7,6 @@ package ambroafb.params_general;
 
 import ambro.AView;
 import ambroafb.general.DBUtils;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
@@ -86,16 +85,16 @@ public class ParamGeneral extends EditorPanelable {
     
     
     // Getters:
-    public int getClientId() {
-        return Utils.getIntValueFor(clientId.get());
+    public String getClientId() {
+        return clientId.get();
     }
 
-    public int getBuysell() {
-        return Utils.getIntValueFor(buysellId.get());
+    public String getBuysell() {
+        return buysellId.get();
     }
 
-    public int getSubject() {
-        return Utils.getIntValueFor(subjectId.get());
+    public String getSubject() {
+        return subjectId.get();
     }
 
     public String getParamType() {
@@ -108,16 +107,16 @@ public class ParamGeneral extends EditorPanelable {
     
     
     // Setters:
-    public void setClientId(int clientId) {
-        this.clientId.set("" + clientId);
+    public void setClientId(String clientId) {
+        this.clientId.set(clientId);
     }
 
-    public void setBuysell(int buysellId) {
-        this.buysellId.set("" + buysellId);
+    public void setBuysell(String buysellId) {
+        this.buysellId.set(buysellId);
     }
 
-    public void setSubject(int subjectId) {
-        this.subjectId.set("" + subjectId);
+    public void setSubject(String subjectId) {
+        this.subjectId.set(subjectId);
     }
 
     public void setParamType(String paramType) {
@@ -158,9 +157,9 @@ public class ParamGeneral extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         ParamGeneral other = (ParamGeneral)backup;
-        return  getClientId() == other.getClientId() &&
-                getBuysell() == other.getBuysell() &&
-                getSubject() == other.getSubject() &&
+        return  getClientId().equals(other.getClientId()) &&
+                getBuysell().equals(other.getBuysell()) &&
+                getSubject().equals(other.getSubject()) &&
                 getParamType().equals(other.getParamType()) &&
                 getParam().equals(other.getParam());
     }
