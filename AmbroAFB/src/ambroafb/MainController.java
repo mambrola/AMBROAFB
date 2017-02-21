@@ -31,6 +31,7 @@ import ambroafb.minitables.buysells.BuySell;
 import ambroafb.minitables.subjects.Subject;
 import ambroafb.products.Product;
 import ambroafb.general_scene.table_list.TableList;
+import ambroafb.params_general.ParamGeneral;
 import authclient.AuthServerException;
 import authclient.monitoring.MonitoringClient;
 import java.io.IOException;
@@ -303,6 +304,20 @@ public class MainController implements Initializable {
         } else {
             miniTablesStage.requestFocus();
             StageUtils.centerChildOf(AmbroAFB.mainStage, miniTablesStage);
+        }
+    }
+    
+    @FXML private void generalParams(ActionEvent event){
+        Stage paramsGeneralStage = StagesContainer.getStageFor(AmbroAFB.mainStage, ParamGeneral.class.getSimpleName());
+        if(paramsGeneralStage == null || !paramsGeneralStage.isShowing()){
+            TableList generalParams = new TableList(AmbroAFB.mainStage, ParamGeneral.class, "general_params");
+            
+            generalParams.getController().reAssignTable(ParamGeneral.getAllFromDB(), null);
+            generalParams.show();
+        }
+        else {
+            paramsGeneralStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, paramsGeneralStage);
         }
     }
         

@@ -109,7 +109,7 @@
                                         <MenuItem onAction="#subjects" text="%subjects" />
                                     </items>
                                 </Menu>
-                                <MenuItem onAction="#tm" text="general_params" />
+                                <MenuItem onAction="#generalParams" text="%general_params" />
                             </items>
                         </Menu>
                     </menus>    
