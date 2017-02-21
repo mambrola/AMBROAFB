@@ -17,7 +17,7 @@ import javafx.beans.property.StringProperty;
  */
 public abstract class MiniTable extends EditorPanelable {
     
-    @AView.Column(title = "rec_id", width = "50", styleClass = "textRight")
+//    @AView.Column(title = "rec_id", width = "50", styleClass = "textRight")
     protected StringProperty rec_id = new SimpleStringProperty("");
     
     @AView.Column(title = "%descrip", width = "100")

@@ -12,14 +12,14 @@
                               fx:controller="ambroafb.minitables.dialog.MiniTableDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer" >
         <children>
-            <HBox styleClass="oneHalf">
+            <HBox styleClass="one">
                 <children>
-                    <VBox styleClass="couple">
+<!--                    <VBox styleClass="couple">
                         <children>
                             <Label text="rec_id" styleClass="validationMessage" />
                             <TextField fx:id="rec_id" />
                         </children>
-                    </VBox>
+                    </VBox>-->
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%descrip" styleClass="validationMessage" />

@@ -28,8 +28,8 @@ public class MiniTableDialogController implements Initializable {
 
     @FXML
     private VBox formPane;
-    @FXML
-    private TextField rec_id;
+//    @FXML
+//    private TextField rec_id;
     @FXML
     private TextField descrip;
     @FXML
@@ -53,7 +53,7 @@ public class MiniTableDialogController implements Initializable {
     public void bindSceneContentTo(MiniTable miniTable){
         this.minitable = miniTable;
         if (miniTable != null){
-            rec_id.textProperty().bindBidirectional(miniTable.recIdProperty());
+//            rec_id.textProperty().bindBidirectional(miniTable.recIdProperty());
             descrip.textProperty().bindBidirectional(miniTable.descripProperty());
         }
     }
@@ -62,9 +62,9 @@ public class MiniTableDialogController implements Initializable {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.EDIT)){
-            rec_id.setDisable(true);
-        }
+//        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.EDIT)){
+//            rec_id.setDisable(true);
+//        }
         okayCancelController.setButtonsFeatures(buttonType);
     }
     
