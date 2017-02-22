@@ -45,9 +45,9 @@ public class BuySell extends MiniTable {
         return false;
     }
     
-    public static String getDialogStagePath(){
-        return "ambroafb.minitables.dialog.MiniTableDialog";
-    }
+//    public static String getDialogStagePath(){
+//        return "ambroafb.minitables.dialog.MiniTableDialog";
+//    }
     
     @Override
     public BuySell cloneWithoutID() {
