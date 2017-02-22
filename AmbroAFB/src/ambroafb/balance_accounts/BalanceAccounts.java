@@ -6,7 +6,7 @@
 package ambroafb.balance_accounts;
 
 import ambroafb.general.SceneUtils;
-import ambroafb.general.stages.ListingStage;
+import ambroafb.general.interfaces.ListingStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

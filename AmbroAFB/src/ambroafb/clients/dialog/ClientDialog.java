@@ -11,7 +11,7 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.stages.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

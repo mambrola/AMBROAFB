@@ -9,7 +9,7 @@ import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.stages.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveStage;
 import ambroafb.invoices.Invoice;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;

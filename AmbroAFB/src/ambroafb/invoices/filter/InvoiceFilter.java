@@ -12,7 +12,7 @@ import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
-import ambroafb.general.stages.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveStage;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatusClarify;

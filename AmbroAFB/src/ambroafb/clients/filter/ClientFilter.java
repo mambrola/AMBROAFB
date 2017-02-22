@@ -14,7 +14,7 @@ import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
-import ambroafb.general.stages.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveStage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;

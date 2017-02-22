@@ -11,7 +11,7 @@ import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
-import ambroafb.general.stages.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveStage;
 import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseStatus;
 import ambroafb.products.ProductComboBox;
