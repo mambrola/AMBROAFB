@@ -57,6 +57,24 @@ public class DBUtils {
         return new ArrayList<>();
     }
     
+    public static <T> ArrayList<T> getObjectsListFromDBProcess(Class<?> listElementClass, String procName, Object... params){
+        try {
+            System.out.println(procName + " params For DB: ");
+            for (int i = 0; i < params.length; i++) {
+                System.out.println("param[" + i + "] = " + params[i]);
+            }
+            
+            String data = GeneralConfig.getInstance().getDBClient().callProcedureAndGetAsJson(procName, params).toString();
+            
+            System.out.println(procName + " data from DB: " + data);
+            
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(data, mapper.getTypeFactory().constructCollectionType(ArrayList.class, listElementClass));
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
+    }
     
     /**
      * The static function gets one element from DB.
@@ -70,6 +88,20 @@ public class DBUtils {
     public static <T> T getObjectFromDB(Class<?> targetClass, String dbTableOrViewName, JSONObject params){
         try {
             JSONArray selectResultAsArray = GeneralConfig.getInstance().getDBClient().select(dbTableOrViewName, params);
+            JSONObject jsonResult = selectResultAsArray.optJSONObject(0);
+            
+            System.out.println("one " + targetClass + " data: " + jsonResult);
+            
+            return Utils.getClassFromJSON(targetClass, jsonResult);
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public static <T> T getObjectFromDBProcess(Class<?> targetClass, String procName, JSONObject params){
+        try {
+            JSONArray selectResultAsArray = GeneralConfig.getInstance().getDBClient().callProcedureAndGetAsJson(procName, params);
             JSONObject jsonResult = selectResultAsArray.optJSONObject(0);
             
             System.out.println("one " + targetClass + " data: " + jsonResult);
@@ -131,6 +163,26 @@ public class DBUtils {
             return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
         } 
         catch (IOException | AuthServerException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAlert();
+        }
+        return null;
+    }
+    
+    public static <T> T saveObjectToDBByProcess(Object source, String procName){
+        try {
+            JSONObject targetJson = Utils.getJSONFromClass(source);
+            
+            System.out.println("data for simple table to server: " + targetJson);
+            
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONArray newSourceFromDB = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), targetJson); // insertUpdate(tableName, targetJson);
+            
+            System.out.println("data for simple table from server: " + newSourceFromDB);
+            if (newSourceFromDB == null || newSourceFromDB.length() == 0) return null;
+            return Utils.getClassFromJSON(source.getClass(), newSourceFromDB.getJSONObject(0));
+        } 
+        catch (IOException | AuthServerException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
             new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAlert();
         }

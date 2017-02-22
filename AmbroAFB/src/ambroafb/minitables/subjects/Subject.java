@@ -63,4 +63,9 @@ public class Subject extends MiniTable {
         clone.setRecId(this.getRecId());
         return clone;
     }
+    
+    @Override
+    public String toString(){
+        return getDescrip();
+    }
 }

@@ -63,4 +63,9 @@ public class BuySell extends MiniTable {
         return clone;
     }
 
+    
+    @Override
+    public String toString(){
+        return getDescrip();
+    }
 }
