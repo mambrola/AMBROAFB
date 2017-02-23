@@ -65,7 +65,7 @@ public class ParamGeneralDialogController implements Initializable {
         this.paramGeneral = paramGeneral;
         if (paramGeneral != null){
             client.textProperty().bindBidirectional(paramGeneral.clientProperty());
-            buysell.textProperty().bindBidirectional(paramGeneral.buysellProperty());
+            buysell.textProperty().bindBidirectional(paramGeneral.buySellProperty());
             subject.textProperty().bindBidirectional(paramGeneral.subjectProperty());
             paramType.textProperty().bindBidirectional(paramGeneral.paramTypeProperty());
             param.textProperty().bindBidirectional(paramGeneral.paramProperty());
