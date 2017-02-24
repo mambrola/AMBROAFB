@@ -7,7 +7,6 @@ package ambroafb.params_general;
 
 import ambro.AView;
 import ambroafb.general.DBUtils;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.params_general.helper.ParamGeneralDBResponse;
@@ -76,9 +75,8 @@ public class ParamGeneral extends EditorPanelable {
     
     // DB methods:
     public static ArrayList<ParamGeneral> getAllFromDB(){
-        String lang = GeneralConfig.getInstance().getDBClient().getLang();
         JSONObject json = new ConditionBuilder().build();
-        ParamGeneralDBResponse paramsGeneralResponse = DBUtils.getParamsGeneral(DB_SELECT_PROC_NAME, lang, json);
+        ParamGeneralDBResponse paramsGeneralResponse = DBUtils.getParamsGeneral(DB_SELECT_PROC_NAME, json);
 //        DBUtils.getObjectsListFromDBProcedure(ParamGeneral.class, DB_SELECT_PROC_NAME, lang, json) ;// 
         ArrayList<ParamGeneral> paramsGeneral = paramsGeneralResponse.getParamGenerals();
         paramsGeneral.sort((ParamGeneral p1, ParamGeneral p2) -> p1.getRecId() - p2.getRecId());
@@ -86,16 +84,8 @@ public class ParamGeneral extends EditorPanelable {
     }
     
     public static ParamGeneral getOneFromDB(int id) {
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-        return DBUtils.getObjectFromDB(ParamGeneral.class, DB_SELECT_PROC_NAME, params);
-
-//        List<ParamGeneral> list = getAllFromDB().stream().filter((ParamGeneral genParam) -> {
-//            return genParam.getRecId() == id;
-//        }).collect(Collectors.toList());
-//        if (list != null && !list.isEmpty()) {
-//            return list.get(0);
-//        }
-//        return null;
+        JSONObject json = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
+        return DBUtils.getObjectFromDBProcedure(ParamGeneral.class, DB_SELECT_PROC_NAME, json);
     }
     
     public static ParamGeneral saveOneToDB(ParamGeneral genParam) {
@@ -178,7 +168,7 @@ public class ParamGeneral extends EditorPanelable {
 //    }
     
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    public int getClient_id() {
+    public int getClientId() {
         return Utils.getIntValueFor(client.get());
     }
     
@@ -202,7 +192,7 @@ public class ParamGeneral extends EditorPanelable {
         return subjectDescrip.get();
     }
 
-    public String getParam_type() {
+    public String getParamType() {
         return paramType.get();
     }
 
@@ -215,22 +205,6 @@ public class ParamGeneral extends EditorPanelable {
     public void setClientId(int clientId) {
         this.client.set((clientId <= 0) ? ALL : "" + clientId);
     }
-
-//    public void setBuysell(int buysellId) {
-//        this.buySellObj.get().setRecId(buysellId);
-//    }
-//    
-//    public void setBuysellDescrip(String descrip) {
-//        this.buySellObj.get().setDescrip(descrip);
-//    }
-//
-//    public void setSubject(int subjectId) {
-//        this.subjectObj.get().setRecId(subjectId);
-//    }
-//    
-//    public void setSubjectDescrip(String descrip) {
-//        this.subjectObj.get().setDescrip(descrip);
-//    }
 
     public void setBuysell(int buysellId) {
         this.buySell.set((buysellId <= 0) ? ALL : "" + buysellId);
@@ -277,7 +251,7 @@ public class ParamGeneral extends EditorPanelable {
     public void copyFrom(EditorPanelable other) {
         ParamGeneral otherParamGeneral = (ParamGeneral)other;
         
-        setClientId(otherParamGeneral.getClient_id());
+        setClientId(otherParamGeneral.getClientId());
 //        buySellObjProperty().get().copyFrom(otherParamGeneral.buySellObjProperty().get());
 //        subjectObjProperty().get().copyFrom(otherParamGeneral.subjectObjProperty().get());
         setBuysell(otherParamGeneral.getBuysell());
@@ -286,34 +260,34 @@ public class ParamGeneral extends EditorPanelable {
         setSubject(otherParamGeneral.getSubject());
         setSubjectDescrip(otherParamGeneral.getSubjectDescrip());
         
-        setParamType(otherParamGeneral.getParam_type());
+        setParamType(otherParamGeneral.getParamType());
         setParam(otherParamGeneral.getParam());
     }
 
     @Override
     public boolean compares(EditorPanelable backup) {
         ParamGeneral other = (ParamGeneral)backup;
-        return  getClient_id() == other.getClient_id() &&
+        return  getClientId() == other.getClientId() &&
                 getBuysell() == other.getBuysell() &&
                 getBuysellDescrip().equals(other.getBuysellDescrip()) &&
                 getSubject() == other.getSubject() &&
                 getSubjectDescrip().equals(other.getSubjectDescrip()) &&
 //                buySellObjProperty().get().compares(other.buySellObjProperty().get()) &&
 //                subjectObjProperty().get().compares(other.subjectObjProperty().get()) &&
-                getParam_type().equals(other.getParam_type()) &&
+getParamType().equals(other.getParamType()) &&
                 getParam().equals(other.getParam());
     }
 
     @Override
     public String toStringForSearch() {
-        int clientId = getClient_id();
+        int clientId = getClientId();
         int buySellId = getBuysell();
         int subjectId =  getSubject();
         String clientStr = (clientId <= 0) ? ALL : "" + clientId;
         String buySellStr = (buySellId <= 0) ? ALL : "" + buySellId;
         String subjectStr = (subjectId <= 0) ? ALL : "" + subjectId;
         return  clientStr + " " + buySellStr + " " + subjectStr + " " +
-                    getParam_type() + " " + getParam();
+                    getParamType() + " " + getParam();
     }
     
     

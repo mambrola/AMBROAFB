@@ -88,12 +88,13 @@ public class DBUtils {
     }
     
     
-    public static ParamGeneralDBResponse getParamsGeneral(String procedureName, Object... params){
+    public static ParamGeneralDBResponse getParamsGeneral(String procedureName, JSONObject params){
         ParamGeneralDBResponse response = new ParamGeneralDBResponse();
         try {
-            JSONArray resultDB = GeneralConfig.getInstance().getDBClient().callProcedureAndGetAsJson(procedureName, params);
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONArray resultDB = dbClient.callProcedureAndGetAsJson(procedureName, dbClient.getLang(), params);
             
-            String generalParams = resultDB.getJSONArray(1).toString();
+            String generalParams = authclient.Utils.toCamelCase(resultDB.getJSONArray(1)).toString();
             ObjectMapper mapper = new ObjectMapper();
             ArrayList<ParamGeneral> generalParamsList = mapper.readValue(generalParams, mapper.getTypeFactory().constructCollectionType(ArrayList.class, ParamGeneral.class));
             response.setParamGenerals(generalParamsList);
@@ -134,7 +135,8 @@ public class DBUtils {
     
     public static <T> T getObjectFromDBProcedure(Class<?> targetClass, String procName, JSONObject params){
         try {
-            JSONArray selectResultAsArray = GeneralConfig.getInstance().getDBClient().callProcedureAndGetAsJson(procName, params);
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONArray selectResultAsArray = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), params);
             JSONObject jsonResult = selectResultAsArray.optJSONObject(0);
             
             System.out.println("one " + targetClass + " data: " + jsonResult);
@@ -203,7 +205,7 @@ public class DBUtils {
     
     public static <T> T saveObjectToDBByProcedure(Object source, String procName){
         try {
-            JSONObject targetJson = Utils.getJSONFromClass(source);
+            JSONObject targetJson = authclient.Utils.toUnderScore(Utils.getJSONFromClass(source));
             
             System.out.println("data for simple table to server: " + targetJson);
             
