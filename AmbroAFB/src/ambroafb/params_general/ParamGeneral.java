@@ -10,6 +10,7 @@ import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.params_general.helper.ParamGeneralDBResponse;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -28,7 +29,7 @@ public class ParamGeneral extends EditorPanelable {
     private static final String DB_INSERT_UPDATE_PROC_NAME = "process_general_param_insert_update";
                                                 
     @AView.Column(title = "%client", width = "100", styleClass = "textCenter")
-    private final StringProperty clientId;
+    private final StringProperty client;
     
     @AView.Column(title = "%buysell", width = "100", styleClass = "textCenter")
 //    private final ObjectProperty<BuySell> buySellObj;
@@ -61,7 +62,7 @@ public class ParamGeneral extends EditorPanelable {
 //        paramType = new SimpleStringProperty("");
 //        param = new SimpleStringProperty("");
 
-        clientId = new SimpleStringProperty(ALL);
+        client = new SimpleStringProperty(ALL);
         buySell = new SimpleStringProperty(ALL);
         buySellDescrip = new SimpleStringProperty("");
                 
@@ -76,9 +77,10 @@ public class ParamGeneral extends EditorPanelable {
     // DB methods:
     public static ArrayList<ParamGeneral> getAllFromDB(){
         String lang = GeneralConfig.getInstance().getDBClient().getLang();
-//        JSONObject json = new ConditionBuilder().build();
-        JSONObject json = new ConditionBuilder().where().and("rec_id", "=", 1).condition().build();
-        ArrayList<ParamGeneral> paramsGeneral = DBUtils.getObjectsListFromDBProcess(ParamGeneral.class, DB_SELECT_PROC_NAME, lang, json);
+        JSONObject json = new ConditionBuilder().build();
+        ParamGeneralDBResponse paramsGeneralResponse = DBUtils.getParamsGeneral(DB_SELECT_PROC_NAME, lang, json);
+//        DBUtils.getObjectsListFromDBProcedure(ParamGeneral.class, DB_SELECT_PROC_NAME, lang, json) ;// 
+        ArrayList<ParamGeneral> paramsGeneral = paramsGeneralResponse.getParamGenerals();
         paramsGeneral.sort((ParamGeneral p1, ParamGeneral p2) -> p1.getRecId() - p2.getRecId());
         return paramsGeneral;
     }
@@ -98,7 +100,7 @@ public class ParamGeneral extends EditorPanelable {
     
     public static ParamGeneral saveOneToDB(ParamGeneral genParam) {
         if (genParam == null) return null;
-        return DBUtils.saveObjectToDBByProcess(genParam, DB_INSERT_UPDATE_PROC_NAME);
+        return DBUtils.saveObjectToDBByProcedure(genParam, DB_INSERT_UPDATE_PROC_NAME);
     }
     
     public static boolean deleteOneFromDB(int id) {
@@ -109,7 +111,7 @@ public class ParamGeneral extends EditorPanelable {
     
     // Propertis:
     public StringProperty clientProperty(){
-        return clientId;
+        return client;
     }
     
     public StringProperty buySellProperty(){
@@ -177,7 +179,7 @@ public class ParamGeneral extends EditorPanelable {
     
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public int getClient_id() {
-        return Utils.getIntValueFor(clientId.get());
+        return Utils.getIntValueFor(client.get());
     }
     
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
@@ -211,7 +213,7 @@ public class ParamGeneral extends EditorPanelable {
     
     // Setters:
     public void setClientId(int clientId) {
-        this.clientId.set((clientId <= 0) ? ALL : "" + clientId);
+        this.client.set((clientId <= 0) ? ALL : "" + clientId);
     }
 
 //    public void setBuysell(int buysellId) {
@@ -304,7 +306,13 @@ public class ParamGeneral extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return  getClient_id() + " " + getBuysell() + " " + getSubject() + " " +
+        int clientId = getClient_id();
+        int buySellId = getBuysell();
+        int subjectId =  getSubject();
+        String clientStr = (clientId <= 0) ? ALL : "" + clientId;
+        String buySellStr = (buySellId <= 0) ? ALL : "" + buySellId;
+        String subjectStr = (subjectId <= 0) ? ALL : "" + subjectId;
+        return  clientStr + " " + buySellStr + " " + subjectStr + " " +
                     getParam_type() + " " + getParam();
     }
     

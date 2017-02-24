@@ -11,6 +11,8 @@ import ambroafb.invoices.helper.InvoiceFinaces;
 import ambroafb.invoices.helper.PartOfLicense;
 import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseFinaces;
+import ambroafb.params_general.ParamGeneral;
+import ambroafb.params_general.helper.ParamGeneralDBResponse;
 import authclient.AuthServerException;
 import authclient.Response;
 import authclient.db.DBClient;
@@ -57,7 +59,16 @@ public class DBUtils {
         return new ArrayList<>();
     }
     
-    public static <T> ArrayList<T> getObjectsListFromDBProcess(Class<?> listElementClass, String procName, Object... params){
+    /**
+     * The function returns list from DB procedure by appropriate class.
+     * Note: DB procedure must return one ResultSet!
+     * @param <T>
+     * @param listElementClass
+     * @param procName
+     * @param params
+     * @return 
+     */
+    public static <T> ArrayList<T> getObjectsListFromDBProcedure(Class<?> listElementClass, String procName, Object... params){
         try {
             System.out.println(procName + " params For DB: ");
             for (int i = 0; i < params.length; i++) {
@@ -74,6 +85,28 @@ public class DBUtils {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new ArrayList<>();
+    }
+    
+    
+    public static ParamGeneralDBResponse getParamsGeneral(String procedureName, Object... params){
+        ParamGeneralDBResponse response = new ParamGeneralDBResponse();
+        try {
+            JSONArray resultDB = GeneralConfig.getInstance().getDBClient().callProcedureAndGetAsJson(procedureName, params);
+            
+            String generalParams = resultDB.getJSONArray(1).toString();
+            ObjectMapper mapper = new ObjectMapper();
+            ArrayList<ParamGeneral> generalParamsList = mapper.readValue(generalParams, mapper.getTypeFactory().constructCollectionType(ArrayList.class, ParamGeneral.class));
+            response.setParamGenerals(generalParamsList);
+            
+//            if (resultDB.length() == 2) { // Also contains array of conflicted id-s.
+//                String conflictedIds = resultDB.getJSONArray(1).toString();
+//                ArrayList<Integer> conflictedIdsList = mapper.readValue(conflictedIds, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Integer.class));
+//                response.setConflictParamsIDs(conflictedIdsList);
+//            }
+        } catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return response;
     }
     
     /**
@@ -99,7 +132,7 @@ public class DBUtils {
         return null;
     }
     
-    public static <T> T getObjectFromDBProcess(Class<?> targetClass, String procName, JSONObject params){
+    public static <T> T getObjectFromDBProcedure(Class<?> targetClass, String procName, JSONObject params){
         try {
             JSONArray selectResultAsArray = GeneralConfig.getInstance().getDBClient().callProcedureAndGetAsJson(procName, params);
             JSONObject jsonResult = selectResultAsArray.optJSONObject(0);
@@ -145,7 +178,6 @@ public class DBUtils {
      * @param source The element which must save to DB.
      * @param tableName The DB table name in singular form (ex: client, product ...)
      *                                  
-     * @param optionals
      * @return 
      */
     public static <T> T saveObjectToDB(Object source, String tableName){
@@ -169,7 +201,7 @@ public class DBUtils {
         return null;
     }
     
-    public static <T> T saveObjectToDBByProcess(Object source, String procName){
+    public static <T> T saveObjectToDBByProcedure(Object source, String procName){
         try {
             JSONObject targetJson = Utils.getJSONFromClass(source);
             
