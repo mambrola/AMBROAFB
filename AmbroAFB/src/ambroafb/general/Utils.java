@@ -286,6 +286,19 @@ public class Utils {
     }
     
     /**
+     * The method converts string to Integer. If String is incorrect, it returns  null.
+     * @param str String which must be converted to Integer.
+     * @return null if parameter is incorrect, otherwise - appropriate Integer value.
+     */
+    public static Integer getIntegerFrom(String str){
+        Integer result = null;
+        try {
+            result = Integer.parseInt(str);
+        } catch (Exception ex){ }
+        return result;
+    }
+    
+    /**
      * The method converts string to Double. If String is incorrect, it returns  -1 (minus 1).
      * @param str String which must be converted to Double.
      * @return -1 if parameter is incorrect, otherwise - appropriate Double value.

@@ -28,11 +28,11 @@ public class ParamGeneral extends EditorPanelable {
     private static final String DB_INSERT_UPDATE_PROC_NAME = "process_general_param_insert_update";
                                                 
     @AView.Column(title = "%client", width = "100", styleClass = "textCenter")
-    private final StringProperty client;
+    private final StringProperty clientId;
     
     @AView.Column(title = "%buysell", width = "100", styleClass = "textCenter")
 //    private final ObjectProperty<BuySell> buySellObj;
-    private final StringProperty buySell;
+    private final StringProperty buysell;
     private final StringProperty buySellDescrip;
     
     @AView.Column(title = "%subject", width = "100", styleClass = "textCenter")
@@ -50,24 +50,11 @@ public class ParamGeneral extends EditorPanelable {
     private static final String ALL = "ALL";
     
     public ParamGeneral(){
-//        clientIdStr = new SimpleStringProperty("");
-//        
-//        buySellObj = new SimpleObjectProperty<>(new BuySell());
-//        buySellObj.get().setDescrip("ALL");
-//        
-//        subjectObj = new SimpleObjectProperty<>(new Subject());
-//        subjectObj.get().setDescrip("ALL");
-//        
-//        paramType = new SimpleStringProperty("");
-//        param = new SimpleStringProperty("");
-
-        client = new SimpleStringProperty(ALL);
-        buySell = new SimpleStringProperty(ALL);
+        clientId = new SimpleStringProperty(ALL);
+        buysell = new SimpleStringProperty(ALL);
         buySellDescrip = new SimpleStringProperty("");
-                
         subject = new SimpleStringProperty(ALL);
         subjectDescrip = new SimpleStringProperty("");
-        
         paramType = new SimpleStringProperty("");
         param = new SimpleStringProperty("");
         
@@ -101,11 +88,11 @@ public class ParamGeneral extends EditorPanelable {
     
     // Propertis:
     public StringProperty clientProperty(){
-        return client;
+        return clientId;
     }
     
     public StringProperty buySellProperty(){
-        return buySell;
+        return buysell;
     }
     
     public StringProperty buySellDescripProperty(){
@@ -120,14 +107,6 @@ public class ParamGeneral extends EditorPanelable {
         return subjectDescrip;
     }
     
-//    public StringProperty buysellProperty(){
-//        return buySellObj.get().descripProperty();
-//    }
-//    
-//    public StringProperty subjectProperty(){
-//        return subjectObj.get().descripProperty();
-//    }
-
     public StringProperty paramTypeProperty() {
         return paramType;
     }
@@ -136,45 +115,16 @@ public class ParamGeneral extends EditorPanelable {
         return param;
     }
     
-//    public ObjectProperty<BuySell> buySellObjProperty(){
-//        return buySellObj;
-//    }
-//    
-//    public ObjectProperty<Subject> subjectObjProperty(){
-//        return subjectObj;
-//    }
-    
-    
     
     // Getters:
-//    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-//    public int getBuysell() {
-//        return buySellObj.get().getRecId();
-//    }
-
-//    @JsonIgnore
-//    public String getBuysell_descrip(){
-//        return buySellObj.get().getDescrip();
-//    }
-//
-//    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-//    public int getSubject() {
-//        return subjectObj.get().getRecId();
-//    }
-//    
-//    @JsonIgnore
-//    public String getSubject_descrip(){
-//        return subjectObj.get().getDescrip();
-//    }
-    
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    public int getClientId() {
-        return Utils.getIntValueFor(client.get());
+    public Integer getClientId() {
+        return Utils.getIntegerFrom(clientId.get()); // For DB we need that method returns null;
     }
     
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    public int getBuysell() {
-        return Utils.getIntValueFor(buySell.get());
+    public Integer getBuysell() {
+        return Utils.getIntegerFrom(buysell.get()); // For DB we need that method returns null;
     }
 
     @JsonIgnore
@@ -183,8 +133,8 @@ public class ParamGeneral extends EditorPanelable {
     }
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    public int getSubject() {
-        return Utils.getIntValueFor(subject.get());
+    public Integer getSubject() {
+        return Utils.getIntegerFrom(subject.get()); // For DB we need that method returns null;
     }
 
     @JsonIgnore
@@ -203,11 +153,11 @@ public class ParamGeneral extends EditorPanelable {
     
     // Setters:
     public void setClientId(int clientId) {
-        this.client.set((clientId <= 0) ? ALL : "" + clientId);
+        this.clientId.set((clientId <= 0) ? ALL : "" + clientId);
     }
 
     public void setBuysell(int buysellId) {
-        this.buySell.set((buysellId <= 0) ? ALL : "" + buysellId);
+        this.buysell.set((buysellId <= 0) ? ALL : "" + buysellId);
     }
     
     public void setBuysellDescrip(String descrip) {
@@ -251,13 +201,11 @@ public class ParamGeneral extends EditorPanelable {
     public void copyFrom(EditorPanelable other) {
         ParamGeneral otherParamGeneral = (ParamGeneral)other;
         
-        setClientId(otherParamGeneral.getClientId());
-//        buySellObjProperty().get().copyFrom(otherParamGeneral.buySellObjProperty().get());
-//        subjectObjProperty().get().copyFrom(otherParamGeneral.subjectObjProperty().get());
-        setBuysell(otherParamGeneral.getBuysell());
+        setClientId(Utils.avoidNullAndReturnInt(otherParamGeneral.getClientId()));
+        setBuysell(Utils.avoidNullAndReturnInt(otherParamGeneral.getBuysell()));
         setBuysellDescrip(otherParamGeneral.getBuysellDescrip());
         
-        setSubject(otherParamGeneral.getSubject());
+        setSubject(Utils.avoidNullAndReturnInt(otherParamGeneral.getSubject()));
         setSubjectDescrip(otherParamGeneral.getSubjectDescrip());
         
         setParamType(otherParamGeneral.getParamType());
@@ -267,10 +215,10 @@ public class ParamGeneral extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         ParamGeneral other = (ParamGeneral)backup;
-        return  getClientId() == other.getClientId() &&
-                getBuysell() == other.getBuysell() &&
+        return  Utils.avoidNullAndReturnInt(getClientId()) == Utils.avoidNullAndReturnInt(other.getClientId()) &&
+                Utils.avoidNullAndReturnInt(getBuysell()) == Utils.avoidNullAndReturnInt(other.getBuysell()) &&
                 getBuysellDescrip().equals(other.getBuysellDescrip()) &&
-                getSubject() == other.getSubject() &&
+                Utils.avoidNullAndReturnInt(getSubject()) == Utils.avoidNullAndReturnInt(other.getSubject()) &&
                 getSubjectDescrip().equals(other.getSubjectDescrip()) &&
 //                buySellObjProperty().get().compares(other.buySellObjProperty().get()) &&
 //                subjectObjProperty().get().compares(other.subjectObjProperty().get()) &&
@@ -280,12 +228,12 @@ getParamType().equals(other.getParamType()) &&
 
     @Override
     public String toStringForSearch() {
-        int clientId = getClientId();
-        int buySellId = getBuysell();
-        int subjectId =  getSubject();
-        String clientStr = (clientId <= 0) ? ALL : "" + clientId;
-        String buySellStr = (buySellId <= 0) ? ALL : "" + buySellId;
-        String subjectStr = (subjectId <= 0) ? ALL : "" + subjectId;
+        int clientID = Utils.avoidNullAndReturnInt(getClientId());
+        int buySellID = Utils.avoidNullAndReturnInt(getBuysell());
+        int subjectID =  Utils.avoidNullAndReturnInt(getSubject());
+        String clientStr = (clientID <= 0) ? ALL : "" + clientID;
+        String buySellStr = (buySellID <= 0) ? ALL : "" + buySellID;
+        String subjectStr = (subjectID <= 0) ? ALL : "" + subjectID;
         return  clientStr + " " + buySellStr + " " + subjectStr + " " +
                     getParamType() + " " + getParam();
     }
