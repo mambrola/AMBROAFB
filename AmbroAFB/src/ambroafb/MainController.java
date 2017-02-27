@@ -311,8 +311,8 @@ public class MainController implements Initializable {
         Stage paramsGeneralStage = StagesContainer.getStageFor(AmbroAFB.mainStage, ParamGeneral.class.getSimpleName());
         if(paramsGeneralStage == null || !paramsGeneralStage.isShowing()){
             TableList generalParams = new TableList(AmbroAFB.mainStage, ParamGeneral.class, "general_params");
-            
             generalParams.getController().reAssignTable(ParamGeneral.getAllFromDB(), null);
+            generalParams.getController().removeElementsFromEditorPanel("#refresh");
             generalParams.show();
         }
         else {

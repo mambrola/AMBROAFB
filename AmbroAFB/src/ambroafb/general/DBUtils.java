@@ -263,7 +263,7 @@ public class DBUtils {
                 int startIndex = errorData[1].indexOf(startStr) + startStr.length();
                 int endIndex = errorData[1].indexOf(";");
                 String[] ids = errorData[1].substring(startIndex, endIndex).split(",");
-                String msg = GeneralConfig.getInstance().getTitleFor("param_general_error");
+                String msg = GeneralConfig.getInstance().getTitleFor("param_general_error") + "\n";
                 for (int i = 0; i < ids.length - 1; i++) {
                     msg += ids[i] + ",";
                 }
