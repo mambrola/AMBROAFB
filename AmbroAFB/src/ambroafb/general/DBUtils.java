@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,7 +95,7 @@ public class DBUtils {
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             JSONArray resultDB = dbClient.callProcedureAndGetAsJson(procedureName, dbClient.getLang(), params);
             
-            String generalParams = authclient.Utils.toCamelCase(resultDB.getJSONArray(1)).toString();
+            String generalParams = authclient.Utils.toCamelCase(resultDB).toString();
             ObjectMapper mapper = new ObjectMapper();
             ArrayList<ParamGeneral> generalParamsList = mapper.readValue(generalParams, mapper.getTypeFactory().constructCollectionType(ArrayList.class, ParamGeneral.class));
             response.setParamGenerals(generalParamsList);
@@ -104,7 +105,7 @@ public class DBUtils {
 //                ArrayList<Integer> conflictedIdsList = mapper.readValue(conflictedIds, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Integer.class));
 //                response.setConflictParamsIDs(conflictedIdsList);
 //            }
-        } catch (IOException | AuthServerException | JSONException ex) {
+        } catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return response;
@@ -184,17 +185,7 @@ public class DBUtils {
      */
     public static <T> T saveObjectToDB(Object source, String tableName){
         try {
-            JSONObject targetJson = Utils.getJSONFromClass(source);
-            
-            System.out.println("data for simple table to server: " + targetJson);
-            
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newSourceFromDB;
-            newSourceFromDB = dbClient.insertUpdate(tableName, targetJson);
-            
-            System.out.println("data for simple table from server: " + newSourceFromDB);
-            
-            return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
+            return saveObjectSample(source, tableName);
         } 
         catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
@@ -205,16 +196,7 @@ public class DBUtils {
     
     public static <T> T saveObjectToDBByProcedure(Object source, String procName){
         try {
-            JSONObject targetJson = authclient.Utils.toUnderScore(Utils.getJSONFromClass(source));
-            
-            System.out.println("data for simple table to server: " + targetJson);
-            
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONArray newSourceFromDB = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), targetJson); // insertUpdate(tableName, targetJson);
-            
-            System.out.println("data for simple table from server: " + newSourceFromDB);
-            if (newSourceFromDB == null || newSourceFromDB.length() == 0) return null;
-            return Utils.getClassFromJSON(source.getClass(), newSourceFromDB.getJSONObject(0));
+            return saveObjectByProcedure(source, procName);
         } 
         catch (IOException | AuthServerException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
@@ -223,6 +205,35 @@ public class DBUtils {
         return null;
     }
     
+    private static <T> T saveObjectSample(Object source, String tableName) throws IOException, AuthServerException{
+        JSONObject targetJson = Utils.getJSONFromClass(source);
+
+        System.out.println("data for simple table to server: " + targetJson);
+
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        JSONObject newSourceFromDB;
+        newSourceFromDB = dbClient.insertUpdate(tableName, targetJson);
+
+        System.out.println("data for simple table from server: " + newSourceFromDB);
+
+        return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
+    }
+    
+    private static <T> T saveObjectByProcedure(Object source, String procName) throws IOException, AuthServerException, JSONException{
+        JSONObject targetJson = authclient.Utils.toUnderScore(Utils.getJSONFromClass(source));
+            
+        System.out.println("data for simple table to server: " + targetJson);
+
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        JSONArray newSourceFromDB = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), targetJson); // insertUpdate(tableName, targetJson);
+
+        System.out.println("data for simple table from server: " + newSourceFromDB);
+        if (newSourceFromDB == null || newSourceFromDB.length() == 0) return null;
+        return Utils.getClassFromJSON(source.getClass(), newSourceFromDB.getJSONObject(0));
+    }
+    
+    
+    // Concrete class methods:
     public static Invoice saveInvoice(Object invoice){
         try {
             JSONObject targetJson = Utils.getJSONFromClass(invoice);
@@ -238,27 +249,31 @@ public class DBUtils {
         return null;
     }
     
-    public static <T> T saveObjectToDBWith(String procedureName, Object source, Object... params) {
+    
+    public static ParamGeneral saveParamGeneral(ParamGeneral paramGeneral, String procName){
+        ParamGeneral result = null;
         try {
-            JSONObject targetJson = Utils.getJSONFromClass(source);
-            
-            System.out.println("data for procedure to server: " + targetJson);
-            
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            JSONObject newSourceFromDB = dbClient.callProcedureAndGetAsJson(procedureName, dbClient.getLang(), targetJson, params).getJSONObject(0);
-            
-            System.out.println("data for procedure from server: " + newSourceFromDB);
-            
-            return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
-        }
-        catch (IOException | AuthServerException | JSONException ex) {
+            result = saveObjectByProcedure(paramGeneral, procName);
+        } catch (IOException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAlert();
+        } catch (AuthServerException ex) {
+            String[] errorData = Utils.processAuthServerError(ex);
+            if (errorData[0].equals("4042")){ // conflicted entry
+                String startStr = ": ";
+                int startIndex = errorData[1].indexOf(startStr) + startStr.length();
+                int endIndex = errorData[1].indexOf(";");
+                String[] ids = errorData[1].substring(startIndex, endIndex).split(",");
+                String msg = GeneralConfig.getInstance().getTitleFor("param_general_error");
+                for (int i = 0; i < ids.length - 1; i++) {
+                    msg += ids[i] + ",";
+                }
+                String newMsg = StringUtils.substringBeforeLast(msg, ",");
+                new AlertMessage(Alert.AlertType.ERROR, ex, newMsg, GeneralConfig.getInstance().getTitleFor("conflict_params_general")).showAlert();
+            }
         }
-        return null;
+        return result;
     }
     
-    // ...
     public static Client saveClient(Client client){
         try {
             JSONObject targetJson = Utils.getJSONFromClass(client);

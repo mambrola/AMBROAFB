@@ -34,8 +34,8 @@ public class AlertMessage extends Alert {
             case WARNING: titleForAlertType = Names.ALERT_WARNING_WINDOW_TITLE; break;
             default: titleForAlertType = "?";
         }
-        setTitle(GeneralConfig.getInstance().getTitleFor(title + " " + titleForAlertType));
-        setHeaderText(GeneralConfig.getInstance().getTitleFor(message));
+        setTitle(GeneralConfig.getInstance().getTitleFor(title));
+        setHeaderText(message);
         
         getDialogPane().getStylesheets().add(
             getClass().getResource("/styles/css/core.css").toExternalForm());
