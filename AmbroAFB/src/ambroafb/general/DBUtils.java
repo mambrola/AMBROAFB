@@ -96,15 +96,13 @@ public class DBUtils {
             JSONArray resultDB = dbClient.callProcedureAndGetAsJson(procedureName, dbClient.getLang(), params);
             
             String generalParams = authclient.Utils.toCamelCase(resultDB).toString();
+            
+            System.out.println("params general from DB: " + generalParams);
+            
             ObjectMapper mapper = new ObjectMapper();
             ArrayList<ParamGeneral> generalParamsList = mapper.readValue(generalParams, mapper.getTypeFactory().constructCollectionType(ArrayList.class, ParamGeneral.class));
             response.setParamGenerals(generalParamsList);
             
-//            if (resultDB.length() == 2) { // Also contains array of conflicted id-s.
-//                String conflictedIds = resultDB.getJSONArray(1).toString();
-//                ArrayList<Integer> conflictedIdsList = mapper.readValue(conflictedIds, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Integer.class));
-//                response.setConflictParamsIDs(conflictedIdsList);
-//            }
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }

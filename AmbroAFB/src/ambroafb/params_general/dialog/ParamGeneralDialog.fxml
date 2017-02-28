@@ -7,6 +7,9 @@
 <?import javafx.scene.layout.*?>
 <?import ambro.*?>
 <?import ambroafb.currencies.*?>
+<?import ambroafb.clients.*?>
+<?import ambroafb.minitables.buysells.*?>
+<?import ambroafb.minitables.subjects.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/paramgeneraldialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 
@@ -14,24 +17,28 @@
                               fx:controller="ambroafb.params_general.dialog.ParamGeneralDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer" >
         <children>
-            <HBox styleClass="oneThirds">
+            <HBox styleClass="one">
                 <children>
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%clients" styleClass="validationMessage" />
-                            <TextField fx:id="client" />
+                            <ClientComboBox fx:id="clients" styleClass="couple" />
                         </children>
                     </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneHalf">
+                <children>
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%buysells" styleClass="validationMessage" />
-                            <TextField fx:id="buysell" />
+                            <BuySellComboBox fx:id="buysells" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%subjects" styleClass="validationMessage" />
-                            <TextField fx:id="subject" />
+                            <SubjectComboBox fx:id="subjects" />
                         </children>
                     </VBox>
                 </children>

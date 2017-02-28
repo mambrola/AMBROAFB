@@ -68,4 +68,11 @@ public class BuySell extends MiniTable {
     public String toString(){
         return getDescrip();
     }
+    
+    @Override
+    public boolean equals(Object other){
+        if (other == null) return false;
+        BuySell otherBuySell = (BuySell) other;
+        return  getRecId() == otherBuySell.getRecId() && compares(otherBuySell);
+    }
 }

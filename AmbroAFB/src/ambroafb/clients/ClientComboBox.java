@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,8 +25,8 @@ import javafx.util.StringConverter;
  */
 public class ClientComboBox extends AnchorPane {
     
-    public static final Client clientALL = new Client();
-    private static final String separator = ", ";
+    private final Client clientALL = new Client();
+    private final String separator = ", ";
     
     private final ComboBox<Client> clients = new ComboBox<>();
     private final TextField comboBoxEditor = clients.getEditor();
@@ -68,6 +69,10 @@ public class ClientComboBox extends AnchorPane {
             if (newValue && clients.getValue() != null){
                 clients.requestFocus(); // If ClientComboBox is first element of scene and value is ALL, then search field is focused. So this is needed.
             }
+        });
+        
+        this.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            clients.setPrefWidth(newValue.doubleValue());
         });
         
         addIntoChildren();

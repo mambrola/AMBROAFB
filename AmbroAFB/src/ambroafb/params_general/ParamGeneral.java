@@ -6,16 +6,22 @@
 package ambroafb.params_general;
 
 import ambro.AView;
+import ambroafb.clients.Client;
 import ambroafb.general.DBUtils;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.minitables.buysells.BuySell;
+import ambroafb.minitables.subjects.Subject;
 import ambroafb.params_general.helper.ParamGeneralDBResponse;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import org.json.JSONObject;
 
 /**
@@ -27,18 +33,17 @@ public class ParamGeneral extends EditorPanelable {
     private static final String DB_SELECT_PROC_NAME = "process_general_param_select";
     private static final String DB_INSERT_UPDATE_PROC_NAME = "process_general_param_insert_update";
                                                 
-    @AView.Column(title = "%client", width = "100", styleClass = "textCenter")
-    private final StringProperty clientId;
+    @AView.Column(title = "%client", width = "150", styleClass = "textCenter")
+    private final StringProperty clientDescrip;
+    private final ObjectProperty<Client> clientObj;
     
     @AView.Column(title = "%buysell", width = "100", styleClass = "textCenter")
-//    private final ObjectProperty<BuySell> buySellObj;
-    private final StringProperty buysell;
     private final StringProperty buySellDescrip;
+    private final ObjectProperty<BuySell> buySellObj;
     
     @AView.Column(title = "%subject", width = "100", styleClass = "textCenter")
-//    private final ObjectProperty<Subject> subjectObj;
-    private final StringProperty subject;
     private final StringProperty subjectDescrip;
+    private final ObjectProperty<Subject> subjectObj;
     
     @AView.Column(title = "%param_type", width = "150")
     private final StringProperty paramType;
@@ -46,18 +51,61 @@ public class ParamGeneral extends EditorPanelable {
     @AView.Column(title = "%param", width = "100")
     private final StringProperty param;
     
-    
     private static final String ALL = "ALL";
     
     public ParamGeneral(){
-        clientId = new SimpleStringProperty(ALL);
-        buysell = new SimpleStringProperty(ALL);
-        buySellDescrip = new SimpleStringProperty("");
-        subject = new SimpleStringProperty(ALL);
-        subjectDescrip = new SimpleStringProperty("");
+        clientDescrip = new SimpleStringProperty(ALL);
+        clientObj = new SimpleObjectProperty<>(new Client());
+        clientObj.get().setFirstName(ALL);
+        clientObj.get().setRecId(0);
+        
+        buySellDescrip = new SimpleStringProperty(ALL);
+        buySellObj = new SimpleObjectProperty<>(new BuySell());
+        buySellObj.get().setDescrip(ALL);
+        buySellObj.get().setRecId(0);
+        
+        subjectDescrip = new SimpleStringProperty(ALL);
+        subjectObj = new SimpleObjectProperty<>(new Subject());
+        subjectObj.get().setDescrip(ALL);
+        subjectObj.get().setRecId(0);
+        
         paramType = new SimpleStringProperty("");
         param = new SimpleStringProperty("");
         
+        clientObj.addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
+            resetClientDescrip();
+        });
+        
+        buySellObj.addListener((ObservableValue<? extends BuySell> observable, BuySell oldValue, BuySell newValue) -> {
+            rebindBuySellDescrip();
+        });
+        rebindBuySellDescrip();
+        
+        subjectObj.addListener((ObservableValue<? extends Subject> observable, Subject oldValue, Subject newValue) -> {
+            rebindSubjectDescrip();
+        });
+        rebindSubjectDescrip();
+    }
+    
+    private void resetClientDescrip(){
+        Client newValue = clientObj.get();
+        if (newValue != null){
+            clientDescrip.set(newValue.getShortDescrip(",").get());
+        }
+    }
+    
+    private void rebindBuySellDescrip(){
+        buySellDescrip.unbind();
+        if (buySellObj.get() != null){
+            buySellDescrip.bind(buySellObj.get().descripProperty());
+        }
+    }
+    
+    private void rebindSubjectDescrip(){
+        subjectDescrip.unbind();
+        if (subjectObj.get() != null){
+            subjectDescrip.bind(subjectObj.get().descripProperty());
+        }
     }
     
     // DB methods:
@@ -88,20 +136,20 @@ public class ParamGeneral extends EditorPanelable {
     
     
     // Propertis:
-    public StringProperty clientProperty(){
-        return clientId;
+    public ObjectProperty<Client> clientProperty(){
+        return clientObj;
     }
     
-    public StringProperty buySellProperty(){
-        return buysell;
+    public ObjectProperty<BuySell> buySellProperty(){
+        return buySellObj;
     }
     
     public StringProperty buySellDescripProperty(){
         return buySellDescrip;
     }
     
-    public StringProperty subjectProperty(){
-        return subject;
+    public ObjectProperty<Subject> subjectProperty(){
+        return subjectObj;
     }
     
     public StringProperty subjectDescripProperty(){
@@ -118,24 +166,30 @@ public class ParamGeneral extends EditorPanelable {
     
     
     // Getters:
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    public Integer getClientId() {
-        return Utils.getIntegerFrom(clientId.get()); // For DB we need that method returns null;
+    private Integer getIdFrom(EditorPanelable object){
+        Integer result = null;
+        if (object != null){
+            int id = object.getRecId();
+            result = (id == 0) ? null : id;  // For DB we need that method returns null;
+        }
+        return result;
     }
     
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public Integer getClientId() {
+        return getIdFrom(clientObj.get());
+    }
+    
     public Integer getBuysell() {
-        return Utils.getIntegerFrom(buysell.get()); // For DB we need that method returns null;
+        return getIdFrom(buySellObj.get());
     }
 
     @JsonIgnore
     public String getBuysellDescrip() {
-        return buySellDescrip.get();
+        return (buySellObj.get() != null) ? buySellObj.get().getDescrip() : buySellDescrip.get();
     }
 
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public Integer getSubject() {
-        return Utils.getIntegerFrom(subject.get()); // For DB we need that method returns null;
+        return getIdFrom(subjectObj.get());
     }
 
     @JsonIgnore
@@ -153,24 +207,36 @@ public class ParamGeneral extends EditorPanelable {
     
     
     // Setters:
-    public void setClientId(int clientId) {
-        this.clientId.set((clientId <= 0) ? ALL : "" + clientId);
+    public void setClientId(Integer clientId) { // It is needed in "copyFrom" method.
+        if (clientObj.get() != null){
+            clientObj.get().setRecId((clientId == null) ? 0 : clientId);
+        }
     }
 
-    public void setBuysell(int buysellId) {
-        this.buysell.set((buysellId <= 0) ? ALL : "" + buysellId);
+    public void setBuysell(Integer buysellId) {
+        if (buySellObj.get() != null){
+            buySellObj.get().setRecId((buysellId == null) ? 0 : buysellId);
+        }
     }
     
+    @JsonProperty
     public void setBuysellDescrip(String descrip) {
-        this.buySellDescrip.set(descrip);
+        if (buySellObj.get() != null){
+            buySellObj.get().setDescrip(descrip);
+        }
     }
 
-    public void setSubject(int subjectId) {
-        this.subject.set((subjectId <= 0) ? ALL : "" + subjectId);
+    public void setSubject(Integer subjectId) {
+        if (subjectObj.get() != null){
+            subjectObj.get().setRecId((subjectId == null) ? 0 : subjectId);
+        }
     }
     
+    @JsonProperty
     public void setSubjectDescrip(String descrip) {
-        this.subjectDescrip.set(descrip);
+        if (subjectObj.get() != null){
+            subjectObj.get().setDescrip(descrip);
+        }
     }
 
     public void setParamType(String paramType) {
@@ -202,12 +268,15 @@ public class ParamGeneral extends EditorPanelable {
     public void copyFrom(EditorPanelable other) {
         ParamGeneral otherParamGeneral = (ParamGeneral)other;
         
+        clientObj.set(otherParamGeneral.clientProperty().get());
         setClientId(Utils.avoidNullAndReturnInt(otherParamGeneral.getClientId()));
-        setBuysell(Utils.avoidNullAndReturnInt(otherParamGeneral.getBuysell()));
-        setBuysellDescrip(otherParamGeneral.getBuysellDescrip());
         
-        setSubject(Utils.avoidNullAndReturnInt(otherParamGeneral.getSubject()));
-        setSubjectDescrip(otherParamGeneral.getSubjectDescrip());
+        buySellObj.get().copyFrom(otherParamGeneral.buySellProperty().get());
+//        setBuysell(Utils.avoidNullAndReturnInt(otherParamGeneral.getBuysell()));
+//        setBuysellDescrip(otherParamGeneral.getBuysellDescrip());
+        subjectObj.get().copyFrom(otherParamGeneral.subjectProperty().get());
+//        setSubject(Utils.avoidNullAndReturnInt(otherParamGeneral.getSubject()));
+//        setSubjectDescrip(otherParamGeneral.getSubjectDescrip());
         
         setParamType(otherParamGeneral.getParamType());
         setParam(otherParamGeneral.getParam());
@@ -217,25 +286,28 @@ public class ParamGeneral extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         ParamGeneral other = (ParamGeneral)backup;
         return  Utils.avoidNullAndReturnInt(getClientId()) == Utils.avoidNullAndReturnInt(other.getClientId()) &&
-                Utils.avoidNullAndReturnInt(getBuysell()) == Utils.avoidNullAndReturnInt(other.getBuysell()) &&
-                getBuysellDescrip().equals(other.getBuysellDescrip()) &&
-                Utils.avoidNullAndReturnInt(getSubject()) == Utils.avoidNullAndReturnInt(other.getSubject()) &&
-                getSubjectDescrip().equals(other.getSubjectDescrip()) &&
-//                buySellObjProperty().get().compares(other.buySellObjProperty().get()) &&
-//                subjectObjProperty().get().compares(other.subjectObjProperty().get()) &&
-getParamType().equals(other.getParamType()) &&
+                buySellObj.get().compares(other.buySellProperty().get()) &&
+//                Utils.avoidNullAndReturnInt(getBuysell()) == Utils.avoidNullAndReturnInt(other.getBuysell()) &&
+//                getBuysellDescrip().equals(other.getBuysellDescrip()) &&
+//                Utils.avoidNullAndReturnInt(getSubject()) == Utils.avoidNullAndReturnInt(other.getSubject()) &&
+//                getSubjectDescrip().equals(other.getSubjectDescrip()) &&
+//                subjectObj.get().compares(other.buySellObjProperty().get()) &&
+                subjectObj.get().compares(other.subjectProperty().get()) &&
+                getParamType().equals(other.getParamType()) &&
                 getParam().equals(other.getParam());
     }
 
     @Override
     public String toStringForSearch() {
-        int clientID = Utils.avoidNullAndReturnInt(getClientId());
-        int buySellID = Utils.avoidNullAndReturnInt(getBuysell());
+//        int clientID = Utils.avoidNullAndReturnInt(getClientId());
+//        String clientDescr = ""; // (clientID <= 0) ? ALL : "" + clientID;
+        
+//        int buySellID = Utils.avoidNullAndReturnInt(getBuysell());
+//        String buySellStr = (buySellID <= 0) ? ALL : "" + buySellID;
+
         int subjectID =  Utils.avoidNullAndReturnInt(getSubject());
-        String clientStr = (clientID <= 0) ? ALL : "" + clientID;
-        String buySellStr = (buySellID <= 0) ? ALL : "" + buySellID;
         String subjectStr = (subjectID <= 0) ? ALL : "" + subjectID;
-        return  clientStr + " " + buySellStr + " " + subjectStr + " " +
+        return  clientDescrip.get() + " " + buySellDescrip.get() + " " + subjectDescrip.get() + " " +
                     getParamType() + " " + getParam();
     }
     
