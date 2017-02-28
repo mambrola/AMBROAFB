@@ -126,7 +126,6 @@ public class ParamGeneral extends EditorPanelable {
     public static ParamGeneral saveOneToDB(ParamGeneral genParam) {
         if (genParam == null) return null;
         return DBUtils.saveParamGeneral(genParam, DB_INSERT_UPDATE_PROC_NAME);
-//        return DBUtils.saveObjectToDBByProcedure(genParam, DB_INSERT_UPDATE_PROC_NAME);
     }
     
     public static boolean deleteOneFromDB(int id) {
