@@ -15,7 +15,9 @@ import ambroafb.params_general.ParamGeneral;
 import ambroafb.params_general.helper.ParamGeneralDBResponse;
 import authclient.AuthServerException;
 import authclient.Response;
+import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
+import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -24,7 +26,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -262,14 +263,21 @@ public class DBUtils {
                 int endIndex = errorData[1].indexOf(";");
                 String[] ids = errorData[1].substring(startIndex, endIndex).split(",");
                 String msg = GeneralConfig.getInstance().getTitleFor("param_general_error") + "\n";
-                for (int i = 0; i < ids.length - 1; i++) {
-                    msg += ids[i] + ",";
-                }
-                String newMsg = StringUtils.substringBeforeLast(msg, ",");
+                ArrayList<ParamGeneral> entries = selectConflictedEntries(ids);
+                String newMsg = entries.stream().map((entry) -> "[" + entry.getParamType() + ",  " + entry.getParam() + "]\n").reduce(msg, String::concat);
                 new AlertMessage(Alert.AlertType.ERROR, ex, newMsg, GeneralConfig.getInstance().getTitleFor("conflict_params_general")).showAlert();
             }
         }
         return result;
+    }
+    
+    private static ArrayList<ParamGeneral> selectConflictedEntries(String[] ids){
+        WhereBuilder whereBuilder = new ConditionBuilder().where().orGroup();
+        for (int i = 0; i < ids.length - 1; i++) {
+            whereBuilder.or("rec_id", "=", ids[i]);
+        }
+        JSONObject conflictedIDs = whereBuilder.closeGroup().condition().build();
+        return getObjectsListFromDB(ParamGeneral.class, "process_general_params", conflictedIDs);
     }
     
     public static Client saveClient(Client client){
