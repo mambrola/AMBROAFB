@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

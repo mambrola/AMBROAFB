@@ -12,6 +12,7 @@ package ambroafb.general;
 public class Names {
     
     public static final String DB_SERVICE_URL_ON_SERVER = "http://db.kfz-soft.com/DBService/api";
+    public static final String DB_SERVICE_ALTERNATIVE_URL_ON_SERVER = "http://db.kfz-soft.de/DBService/api";
     public static final String DB_SERVICE_URL_FOR_TEST = "http://192.168.0.30:8080/DBService/api";
     
     public static final String MONITORING_URL_ON_SERVER = "http://kfz-soft.com/Monitoring/webapi";

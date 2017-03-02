@@ -49,12 +49,27 @@ public class DBUtils {
         try {
             System.out.println(dbTableOrViewName + " params For DB: " + params);
             
-            String data = GeneralConfig.getInstance().getDBClient().select(dbTableOrViewName, params).toString();
+            JSONArray data = GeneralConfig.getInstance().getDBClient().select(dbTableOrViewName, params);
             
             System.out.println(dbTableOrViewName + " data from DB: " + data);
             
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, mapper.getTypeFactory().constructCollectionType(ArrayList.class, listElementClass));
+            return Utils.getListFromJSONArray(listElementClass, data);
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
+    }
+    
+    public static <T> ArrayList<T> getObjectListFromDBProcedure(Class<?> listElementClass, String procName, JSONObject params){
+        try {
+            System.out.println(procName + " params For DB: " + params);
+            
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            JSONArray data = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), params);
+            
+            System.out.println(procName + " data from DB: " + data);
+            
+            return Utils.getListFromJSONArray(listElementClass, data);
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -262,22 +277,24 @@ public class DBUtils {
                 int startIndex = errorData[1].indexOf(startStr) + startStr.length();
                 int endIndex = errorData[1].indexOf(";");
                 String[] ids = errorData[1].substring(startIndex, endIndex).split(",");
-                String msg = GeneralConfig.getInstance().getTitleFor("param_general_error") + "\n";
+                String headerTxt = GeneralConfig.getInstance().getTitleFor("param_general_error") + "\n";
                 ArrayList<ParamGeneral> entries = selectConflictedEntries(ids);
-                String newMsg = entries.stream().map((entry) -> "[" + entry.toString() + "]\n").reduce(msg, String::concat);
-                new AlertMessage(Alert.AlertType.ERROR, ex, newMsg, GeneralConfig.getInstance().getTitleFor("conflict_params_general")).showAlert();
+                String newMsg = entries.stream().map((entry) -> "[" + entry.toString() + "]" + ",\n").reduce("", String::concat);
+                AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, newMsg, GeneralConfig.getInstance().getTitleFor("conflict_params_general"));
+                alert.setHeaderText(headerTxt);
+                alert.showAlert();
             }
         }
         return result;
     }
     
     private static ArrayList<ParamGeneral> selectConflictedEntries(String[] ids){
-        WhereBuilder whereBuilder = new ConditionBuilder().where().orGroup();
+        WhereBuilder whereBuilder = new ConditionBuilder().where();
         for (int i = 0; i < ids.length - 1; i++) {
             whereBuilder.or("rec_id", "=", ids[i]);
         }
-        JSONObject conflictedIDs = whereBuilder.closeGroup().condition().build();
-        return getObjectsListFromDB(ParamGeneral.class, "process_general_params", conflictedIDs);
+        JSONObject conflictedIDs = whereBuilder.condition().build();
+        return getObjectListFromDBProcedure(ParamGeneral.class, ParamGeneral.DB_SELECT_PROC_NAME, conflictedIDs);
     }
     
     public static Client saveClient(Client client){

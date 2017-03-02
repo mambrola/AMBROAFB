@@ -63,6 +63,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -175,6 +176,15 @@ public class Utils {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public static <T> ArrayList<T> getListFromJSONArray(Class targetClass, JSONArray array){
+        try {
+            return mapper.readValue(array.toString(), mapper.getTypeFactory().constructCollectionType(ArrayList.class, targetClass));
+        } catch (IOException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
     }
     
     

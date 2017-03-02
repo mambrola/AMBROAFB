@@ -30,8 +30,8 @@ import org.json.JSONObject;
  */
 public class ParamGeneral extends EditorPanelable {
     
-    private static final String DB_SELECT_PROC_NAME = "process_general_param_select";
-    private static final String DB_INSERT_UPDATE_PROC_NAME = "process_general_param_insert_update";
+    public static final String DB_SELECT_PROC_NAME = "process_general_param_select";
+    public static final String DB_INSERT_UPDATE_PROC_NAME = "process_general_param_insert_update";
                                                 
     @AView.Column(title = "%client", width = "150", styleClass = "textCenter")
     private final StringProperty clientDescrip;

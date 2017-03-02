@@ -35,7 +35,9 @@ public class AlertMessage extends Alert {
             default: titleForAlertType = "?";
         }
         setTitle(GeneralConfig.getInstance().getTitleFor(title));
-        setHeaderText(message);
+        setResizable(true);
+//        setHeaderText(message);
+        setContentText(message);
         
         getDialogPane().getStylesheets().add(
             getClass().getResource("/styles/css/core.css").toExternalForm());
