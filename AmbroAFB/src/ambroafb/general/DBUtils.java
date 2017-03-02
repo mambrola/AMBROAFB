@@ -264,7 +264,7 @@ public class DBUtils {
                 String[] ids = errorData[1].substring(startIndex, endIndex).split(",");
                 String msg = GeneralConfig.getInstance().getTitleFor("param_general_error") + "\n";
                 ArrayList<ParamGeneral> entries = selectConflictedEntries(ids);
-                String newMsg = entries.stream().map((entry) -> "[" + entry.getParamType() + ",  " + entry.getParam() + "]\n").reduce(msg, String::concat);
+                String newMsg = entries.stream().map((entry) -> "[" + entry.toString() + "]\n").reduce(msg, String::concat);
                 new AlertMessage(Alert.AlertType.ERROR, ex, newMsg, GeneralConfig.getInstance().getTitleFor("conflict_params_general")).showAlert();
             }
         }

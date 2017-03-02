@@ -310,6 +310,13 @@ public class ParamGeneral extends EditorPanelable {
                     getParamType() + " " + getParam();
     }
     
+    @Override
+    public String toString(){
+        String delimiter = "; ";
+        return  clientDescrip.get() + delimiter + buySellDescrip.get() + delimiter + 
+                subjectDescrip.get() + delimiter + getParamType() + delimiter + getParam();
+    }
+    
     
     
 //    public static class ParamsCellFactory implements Callback<TableColumn<ParamGeneral, String>, TableCell<ParamGeneral, String>> {
