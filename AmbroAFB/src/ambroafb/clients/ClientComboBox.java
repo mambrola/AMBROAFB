@@ -6,8 +6,8 @@
 package ambroafb.clients;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -27,54 +27,62 @@ public class ClientComboBox extends AnchorPane {
     private final Client clientALL = new Client();
     private final String separator = ", ";
     
-    private final ComboBox<Client> clients = new ComboBox<>();
-    private final TextField comboBoxEditor = clients.getEditor();
-    private TextField search = new TextField();
+    private final ComboBox<Client> clientsBox = new ComboBox<>();
+    private final TextField comboBoxEditor = clientsBox.getEditor();
+    private TextField searchField = new TextField();
     
+    private int valueSelected = 0;
+    private int movedInField = 0;
     private ObservableList<Client> items = FXCollections.observableArrayList();
     private FilteredList<Client> filteredList;
     
     public ClientComboBox(){
+        addSceneComponentsToAnchorPane();
         setFeatures();
+
+        // Field width must be equals to comboBox editor width:
+        clientsBox.getEditor().widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            searchField.setPrefWidth(newValue.doubleValue());
+        });
         
-        comboBoxEditor.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            // 1. Remove selected item text from editor (Note: item stay selected in list):
-            // 2. Set value null:
-            if (newValue == null || newValue.isEmpty()){
-                if (!search.isFocused()){ // If searchField has not front and focused yet.
-                    search.toFront();
-                    search.requestFocus();
-                    if (!search.getText().isEmpty()){
-                        search.setText("");
+        searchField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+//            System.out.println("1   field.textProperty oldValue, newValue: " + oldValue + ", " + newValue);
+            fieldTextChangeReaction(newValue);
+        });
+        
+        clientsBox.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
+//            System.out.println("2   box.valueProperty oldValue, newValue: " + oldValue + ", " + newValue);
+            valueSelected = 1;
+            movedInField = 0;
+            if (newValue != null) {
+                Platform.runLater(() -> {
+                    clientsBox.requestFocus();
+                    clientsBox.getEditor().end();
+                    clientsBox.toFront();
+                });
+            }
+        });
+        
+        clientsBox.getEditor().textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+//            System.out.println("3   box.getEditor().textProperty oldValue, newValue: " + oldValue + ", " + newValue);
+            if (valueSelected != 1 && movedInField != 1) {
+//                System.out.println("ვწერ");
+
+                Platform.runLater(() -> {
+                    int currCaret = clientsBox.getEditor().getCaretPosition();
+                    if (searchField.getText().equals(newValue)) {
+                        fieldTextChangeReaction(newValue);
+                    } else {
+                        searchField.setText(newValue == null || newValue.equals("") ? "" : newValue);
                     }
-                }
+                    searchField.requestFocus();
+                    searchField.positionCaret(currCaret);
+                    searchField.toFront();
+                });
+                movedInField = 1;
             }
-            else { // set new value that is not null and empty:
-                search.toBack();
-//                search.setText(""); // clear search conntext
-            }
+            valueSelected = 0;
         });
-        
-        // Show clients items list when typed into search field:
-        search.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (newValue != null && !newValue.isEmpty()){
-                if (!clients.isShowing()){
-                    clients.show();
-                }
-            }
-        });
-        
-        search.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (newValue && clients.getValue() != null){
-                clients.requestFocus(); // If ClientComboBox is first element of scene and value is ALL, then search field is focused. So this is needed.
-            }
-        });
-        
-        this.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            clients.setPrefWidth(newValue.doubleValue());
-        });
-        
-        addIntoChildren();
         
         clientALL.setFirstName("ALL");
         clientALL.setRecId(0);
@@ -83,8 +91,24 @@ public class ClientComboBox extends AnchorPane {
                                                     .collect(Collectors.toList());
         clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
         items.addAll(clientsList);
-        setItems(items, (Client c) -> c.getShortDescrip(separator).get());
-        clients.setValue(clientALL);
+//        setItems(items, (Client c) -> c.getShortDescrip(separator).get());
+        setItems(items);
+        clientsBox.setValue(clientALL);
+    }
+    
+    private void addSceneComponentsToAnchorPane(){
+        this.getChildren().add(clientsBox);
+        this.getChildren().add(searchField);
+    }
+    
+    private void fieldTextChangeReaction(String value) {
+        filteredList.setPredicate((Client elem) -> {
+            return elem.getShortDescrip(separator).get().toLowerCase().contains(value.toLowerCase());
+        });
+        Platform.runLater(() -> {
+            clientsBox.hide();
+            clientsBox.show();
+        });
     }
     
     public void showCategoryALL(boolean show){
@@ -99,46 +123,29 @@ public class ClientComboBox extends AnchorPane {
     
     
     private void setFeatures(){
-        clients.setEditable(true);
-        search.setPromptText("Search"); 
+        clientsBox.setEditable(true);
+        searchField.setPromptText("Search"); 
         
         comboBoxEditor.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            search.setMinWidth(newValue.doubleValue());
-            search.setMaxWidth(newValue.doubleValue());
+            searchField.setMinWidth(newValue.doubleValue());
+            searchField.setMaxWidth(newValue.doubleValue());
         });
         
         comboBoxEditor.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            search.setMinHeight(newValue.doubleValue());
-            search.setMaxHeight(newValue.doubleValue());
+            searchField.setMinHeight(newValue.doubleValue());
+            searchField.setMaxHeight(newValue.doubleValue());
         });
         
-        clients.setConverter(new CustomConverter());
+        clientsBox.setConverter(new CustomConverter());
         
         getStyleClass().add("blockAccessToChildrenFocus");
     }
     
-    private void addIntoChildren(){
-        getChildren().add(clients);
-        getChildren().add(search);
-    }
-    
     // Final keyword is needed for call in constructor. It must not be allowed to override.
-    public final void setItems(ObservableList<Client> clientsList, Function<Client, String> clientFilterDataFn){
+    public final void setItems(ObservableList<Client> clientsList){ // Function<Client, String> clientFilterDataFn
         filteredList = new FilteredList(clientsList);
         items = clientsList;
-        clients.setItems(filteredList);
-        
-        // Every search text changed, the filteredList must give new predicate for filter:
-        search.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            filteredList.setPredicate((Client c) -> {
-                String searchText = search.getText();
-                if (searchText == null || searchText.isEmpty()) {
-                    return true;
-                }
-                return clientFilterDataFn.apply(c).toLowerCase().contains(searchText.toLowerCase());
-            });
-        });
-        
+        clientsBox.setItems(filteredList);
     }
     
     public final ObservableList<Client> getItems(){
@@ -146,15 +153,15 @@ public class ClientComboBox extends AnchorPane {
     }
     
     public ObjectProperty<Client> valueProperty(){
-        return clients.valueProperty();
+        return clientsBox.valueProperty();
     }
     
     public Client getValue(){
-        return clients.getValue();
+        return clientsBox.getValue();
     }
     
     public SingleSelectionModel<Client> getSelectionModel(){
-        return clients.getSelectionModel();
+        return clientsBox.getSelectionModel();
     }
     
     private class CustomConverter extends StringConverter<Client> {
