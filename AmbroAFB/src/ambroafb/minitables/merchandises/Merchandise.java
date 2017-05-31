@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.minitables.subjects;
+package ambroafb.minitables.merchandises;
 
 import ambroafb.general.DBUtils;
 import ambroafb.minitables.MiniTable;
@@ -15,29 +15,29 @@ import org.json.JSONObject;
  *
  * @author dato
  */
-public class Subject extends MiniTable {
+public class Merchandise extends MiniTable {
     
-    private static final String DB_TABLE_NAME = "process_subjects";
+    private static final String DB_TABLE_NAME = "process_merchandises";
     
-    public Subject() {
+    public Merchandise() {
     }
     
     // DB methods:
-    public static ArrayList<Subject> getAllFromDB(){
+    public static ArrayList<Merchandise> getAllFromDB(){
         JSONObject params = new ConditionBuilder().build();
-        ArrayList<Subject> subjects = DBUtils.getObjectsListFromDB(Subject.class, DB_TABLE_NAME, params);
-        subjects.sort((Subject s1, Subject s2) -> s1.getDescrip().compareTo(s2.getDescrip()));
-        return subjects;
+        ArrayList<Merchandise> merchandises = DBUtils.getObjectsListFromDB(Merchandise.class, DB_TABLE_NAME, params);
+        merchandises.sort((Merchandise s1, Merchandise s2) -> s1.getDescrip().compareTo(s2.getDescrip()));
+        return merchandises;
     }
     
-    public static Subject getOneFromDB(int id){
+    public static Merchandise getOneFromDB(int id){
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-        return DBUtils.getObjectFromDB(Subject.class, DB_TABLE_NAME, params);
+        return DBUtils.getObjectFromDB(Merchandise.class, DB_TABLE_NAME, params);
     }
     
-    public static Subject saveOneToDB(Subject subject){
-        if (subject == null) return null;
-        return DBUtils.saveObjectToDBSimple(subject, DB_TABLE_NAME);
+    public static Merchandise saveOneToDB(Merchandise merchandise){
+        if (merchandise == null) return null;
+        return DBUtils.saveObjectToDBSimple(merchandise, DB_TABLE_NAME);
     }
     
     public static boolean deleteOneFromDB(int id){
@@ -51,15 +51,15 @@ public class Subject extends MiniTable {
     
     
     @Override
-    public Subject cloneWithoutID() {
-        Subject clone = new Subject();
+    public Merchandise cloneWithoutID() {
+        Merchandise clone = new Merchandise();
         clone.copyFrom(this);
         return clone;
     }
 
     @Override
-    public Subject cloneWithID() {
-        Subject clone = cloneWithoutID();
+    public Merchandise cloneWithID() {
+        Merchandise clone = cloneWithoutID();
         clone.setRecId(this.getRecId());
         return clone;
     }

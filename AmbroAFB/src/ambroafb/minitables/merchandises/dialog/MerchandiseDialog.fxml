@@ -9,7 +9,7 @@
     <ambroafb.general.DialogPanel stylesheets="/styles/css/minitabledialog.css"
                               xmlns:fx="http://javafx.com/fxml/1" 
                               xmlns="http://javafx.com/javafx/8"
-                              fx:controller="ambroafb.minitables.buysells.dialog.BuySellDialogController" >
+                              fx:controller="ambroafb.minitables.merchandises.dialog.MerchandiseDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer" >
         <children>
             <HBox styleClass="one">

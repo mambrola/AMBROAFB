@@ -8,8 +8,8 @@
 <?import ambro.*?>
 <?import ambroafb.currencies.*?>
 <?import ambroafb.clients.*?>
-<?import ambroafb.minitables.buysells.*?>
-<?import ambroafb.minitables.subjects.*?>
+<?import ambroafb.minitables.attitudes.*?>
+<?import ambroafb.minitables.merchandises.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/paramgeneraldialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 
@@ -31,14 +31,14 @@
                 <children>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="%buysells" styleClass="validationMessage" />
-                            <BuySellComboBox fx:id="buysells" />
+                            <Label text="%attitudes" styleClass="validationMessage" />
+                            <AttitudeComboBox fx:id="attitudes" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="%subjects" styleClass="validationMessage" />
-                            <SubjectComboBox fx:id="subjects" />
+                            <Label text="%merchandises" styleClass="validationMessage" />
+                            <MerchandiseComboBox fx:id="merchandises" />
                         </children>
                     </VBox>
                 </children>

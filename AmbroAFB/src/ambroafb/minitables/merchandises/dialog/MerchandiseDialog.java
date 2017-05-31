@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.minitables.subjects.dialog;
+package ambroafb.minitables.merchandises.dialog;
 
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveStage;
-import ambroafb.minitables.subjects.Subject;
+import ambroafb.minitables.merchandises.Merchandise;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,27 +20,27 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class SubjectDialog extends UserInteractiveStage implements Dialogable {
+public class MerchandiseDialog extends UserInteractiveStage implements Dialogable {
     
-    private Subject subject;
-    private final Subject subjectBackup;
+    private Merchandise merchandise;
+    private final Merchandise merchandiseBackup;
     
-    private SubjectDialogController dialogController;
+    private MerchandiseDialogController dialogController;
     
-    public SubjectDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "subject", "/images/dialog.png");
+    public MerchandiseDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+        super(owner, Names.LEVEL_FOR_PATH, "merchandise", "/images/dialog.png");
         
         if (object == null)
-            this.subject = new Subject();
+            this.merchandise = new Merchandise();
         else
-            this.subject = (Subject) object;
-        this.subjectBackup = subject.cloneWithID();
+            this.merchandise = (Merchandise) object;
+        this.merchandiseBackup = merchandise.cloneWithID();
         
-        Scene currentScene = SceneUtils.createScene("/ambroafb/minitables/subjects/dialog/SubjectDialog.fxml", null);
-        dialogController = (SubjectDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindSubject(this.subject);
+        Scene currentScene = SceneUtils.createScene("/ambroafb/minitables/merchandises/dialog/MerchandiseDialog.fxml", null);
+        dialogController = (MerchandiseDialogController) currentScene.getProperties().get("controller");
+        dialogController.bindMerchandise(this.merchandise);
         dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupSubject(this.subjectBackup);
+        dialogController.setBackupMerchandise(this.merchandiseBackup);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -53,12 +53,12 @@ public class SubjectDialog extends UserInteractiveStage implements Dialogable {
     @Override
     public EditorPanelable getResult() {
         showAndWait();
-        return subject;
+        return merchandise;
     }
 
     @Override
     public void operationCanceled() {
-        subject = null;
+        merchandise = null;
     }
     
 }

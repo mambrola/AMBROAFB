@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.minitables.buysells;
+package ambroafb.minitables.attitudes;
 
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
@@ -15,35 +15,35 @@ import javafx.util.StringConverter;
  *
  * @author dkobuladze
  */
-public class BuySellComboBox extends ComboBox<BuySell> {
+public class AttitudeComboBox extends ComboBox<Attitude> {
     
-    private final ObservableList<BuySell> items = FXCollections.observableArrayList();
-    private final BuySell all = new BuySell();
+    private final ObservableList<Attitude> items = FXCollections.observableArrayList();
+    private final Attitude all = new Attitude();
     
-    public BuySellComboBox(){
+    public AttitudeComboBox(){
         this.setItems(items);
         all.setRecId(0);
         all.setDescrip("ALL");
         items.add(all);
 
-        this.setConverter(new StringConverter<BuySell>() {
+        this.setConverter(new StringConverter<Attitude>() {
             @Override
-            public String toString(BuySell buySell) {
-                return buySell.toString();
+            public String toString(Attitude attitude) {
+                return attitude.toString();
             }
             @Override
-            public BuySell fromString(String input) {
+            public Attitude fromString(String input) {
                 return null;
             }
         });
-        ArrayList<BuySell> buysells = BuySell.getAllFromDB();
-        buysells.sort((BuySell b1, BuySell b2) -> b1.getRecId() - b2.getRecId());
-        items.addAll(buysells);
+        ArrayList<Attitude> attitudes = Attitude.getAllFromDB();
+        attitudes.sort((Attitude b1, Attitude b2) -> b1.getRecId() - b2.getRecId());
+        items.addAll(attitudes);
         this.setValue(all);
     }
     
-    public void selectItem(BuySell buysell){
-        this.getSelectionModel().select(buysell);
+    public void selectItem(Attitude attitude){
+        this.getSelectionModel().select(attitude);
     }
 
     public void showCategoryAll(boolean show){

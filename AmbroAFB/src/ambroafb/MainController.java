@@ -27,8 +27,8 @@ import ambroafb.licenses.License;
 import ambroafb.licenses.filter.LicenseFilter;
 import ambroafb.loggings.Logging;
 import ambroafb.loggings.filter.LoggingFilter;
-import ambroafb.minitables.buysells.BuySell;
-import ambroafb.minitables.subjects.Subject;
+import ambroafb.minitables.attitudes.Attitude;
+import ambroafb.minitables.merchandises.Merchandise;
 import ambroafb.products.Product;
 import ambroafb.general_scene.table_list.TableList;
 import ambroafb.params_general.ParamGeneral;
@@ -276,14 +276,14 @@ public class MainController implements Initializable {
     
     
     @FXML
-    private void buysells(ActionEvent event){
-        String stageTitle = "buysells";
+    private void attitudes(ActionEvent event){
+        String stageTitle = "attitudes";
         Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(miniTablesStage == null || !miniTablesStage.isShowing()){
-            TableList buySells = new TableList(AmbroAFB.mainStage, BuySell.class, stageTitle);
-            buySells.getController().reAssignTable(BuySell.getAllFromDB(), null);
-            buySells.getController().removeElementsFromEditorPanel("#search");
-            buySells.show();
+            TableList attitudes = new TableList(AmbroAFB.mainStage, Attitude.class, stageTitle);
+            attitudes.getController().reAssignTable(Attitude.getAllFromDB(), null);
+            attitudes.getController().removeElementsFromEditorPanel("#search");
+            attitudes.show();
             
         } else {
             miniTablesStage.requestFocus();
@@ -293,14 +293,14 @@ public class MainController implements Initializable {
     
     
     @FXML
-    private void subjects(ActionEvent event){
-        String stageTitle = "subjects";
+    private void merchandises(ActionEvent event){
+        String stageTitle = "merchandises";
         Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(miniTablesStage == null || !miniTablesStage.isShowing()){
-            TableList subjects = new TableList(AmbroAFB.mainStage, Subject.class, stageTitle);
-            subjects.getController().reAssignTable(Subject.getAllFromDB(), null);
-            subjects.getController().removeElementsFromEditorPanel("#search");
-            subjects.show();
+            TableList merchandises = new TableList(AmbroAFB.mainStage, Merchandise.class, stageTitle);
+            merchandises.getController().reAssignTable(Merchandise.getAllFromDB(), null);
+            merchandises.getController().removeElementsFromEditorPanel("#search");
+            merchandises.show();
         } else {
             miniTablesStage.requestFocus();
             StageUtils.centerChildOf(AmbroAFB.mainStage, miniTablesStage);

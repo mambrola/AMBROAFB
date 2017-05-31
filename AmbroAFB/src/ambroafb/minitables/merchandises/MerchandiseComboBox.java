@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.minitables.subjects;
+package ambroafb.minitables.merchandises;
 
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
@@ -15,35 +15,35 @@ import javafx.util.StringConverter;
  *
  * @author dkobuladze
  */
-public class SubjectComboBox extends ComboBox<Subject> {
+public class MerchandiseComboBox extends ComboBox<Merchandise> {
     
-    private final ObservableList<Subject> items = FXCollections.observableArrayList();
-    private final Subject all = new Subject();
+    private final ObservableList<Merchandise> items = FXCollections.observableArrayList();
+    private final Merchandise all = new Merchandise();
     
-    public SubjectComboBox(){
+    public MerchandiseComboBox(){
         this.setItems(items);
         all.setRecId(0);
         all.setDescrip("ALL");
         items.add(all);
 
-        this.setConverter(new StringConverter<Subject>() {
+        this.setConverter(new StringConverter<Merchandise>() {
             @Override
-            public String toString(Subject subject) {
-                return subject.toString();
+            public String toString(Merchandise merchandise) {
+                return merchandise.toString();
             }
             @Override
-            public Subject fromString(String input) {
+            public Merchandise fromString(String input) {
                 return null;
             }
         });
-        ArrayList<Subject> subjects = Subject.getAllFromDB();
-        subjects.sort((Subject b1, Subject b2) -> b1.getRecId() - b2.getRecId());
-        items.addAll(subjects);
+        ArrayList<Merchandise> merchandises = Merchandise.getAllFromDB();
+        merchandises.sort((Merchandise b1, Merchandise b2) -> b1.getRecId() - b2.getRecId());
+        items.addAll(merchandises);
         this.setValue(all);
     }
     
-    public void selectItem(Subject subject){
-        this.getSelectionModel().select(subject);
+    public void selectItem(Merchandise merchandise){
+        this.getSelectionModel().select(merchandise);
     }
 
     public void showCategoryAll(boolean show){

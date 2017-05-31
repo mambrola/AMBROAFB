@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.minitables.buysells;
+package ambroafb.minitables.attitudes;
 
 import ambroafb.general.DBUtils;
 import ambroafb.minitables.MiniTable;
@@ -15,29 +15,29 @@ import org.json.JSONObject;
  *
  * @author dato
  */
-public class BuySell extends MiniTable {
+public class Attitude extends MiniTable {
 
-    private static final String DB_TABLE_NAME = "process_buysells";
+    private static final String DB_TABLE_NAME = "process_attitudes";
     
-    public BuySell() {
+    public Attitude() {
     }
     
     //DB methods:
-    public static ArrayList<BuySell> getAllFromDB(){
+    public static ArrayList<Attitude> getAllFromDB(){
         JSONObject params = new ConditionBuilder().build();
-        ArrayList<BuySell> buySellList = DBUtils.getObjectsListFromDB(BuySell.class, DB_TABLE_NAME, params);
-        buySellList.sort((BuySell b1, BuySell b2) -> b1.getDescrip().compareTo(b2.getDescrip()));
-        return buySellList;
+        ArrayList<Attitude> attitudeList = DBUtils.getObjectsListFromDB(Attitude.class, DB_TABLE_NAME, params);
+        attitudeList.sort((Attitude b1, Attitude b2) -> b1.getDescrip().compareTo(b2.getDescrip()));
+        return attitudeList;
     }
     
-    public static BuySell getOneFromDB(int id){
+    public static Attitude getOneFromDB(int id){
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-        return DBUtils.getObjectFromDB(BuySell.class, DB_TABLE_NAME, params);
+        return DBUtils.getObjectFromDB(Attitude.class, DB_TABLE_NAME, params);
     }
     
-    public static BuySell saveOneToDB(BuySell buySell){
-        if (buySell == null) return null;
-        return DBUtils.saveObjectToDBSimple(buySell, DB_TABLE_NAME);
+    public static Attitude saveOneToDB(Attitude attitude){
+        if (attitude == null) return null;
+        return DBUtils.saveObjectToDBSimple(attitude, DB_TABLE_NAME);
     }
     
     public static boolean deleteOneFromDB(int id){
@@ -50,15 +50,15 @@ public class BuySell extends MiniTable {
 //    }
     
     @Override
-    public BuySell cloneWithoutID() {
-        BuySell clone = new BuySell();
+    public Attitude cloneWithoutID() {
+        Attitude clone = new Attitude();
         clone.copyFrom(this);
         return clone;
     }
 
     @Override
-    public BuySell cloneWithID() {
-        BuySell clone = cloneWithoutID();
+    public Attitude cloneWithID() {
+        Attitude clone = cloneWithoutID();
         clone.setRecId(this.getRecId());
         return clone;
     }
@@ -72,7 +72,7 @@ public class BuySell extends MiniTable {
     @Override
     public boolean equals(Object other){
         if (other == null) return false;
-        BuySell otherBuySell = (BuySell) other;
-        return  getRecId() == otherBuySell.getRecId() && compares(otherBuySell);
+        Attitude otherAttitude = (Attitude) other;
+        return  getRecId() == otherAttitude.getRecId() && compares(otherAttitude);
     }
 }
