@@ -10,8 +10,8 @@ import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
-import ambroafb.minitables.buysells.BuySellComboBox;
-import ambroafb.minitables.subjects.SubjectComboBox;
+import ambroafb.minitables.attitudes.AttitudeComboBox;
+import ambroafb.minitables.merchandises.MerchandiseComboBox;
 import ambroafb.params_general.ParamGeneral;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,9 +35,9 @@ public class ParamGeneralDialogController implements Initializable {
     private ClientComboBox clients;
 //    private TextField client;
     @FXML 
-    private BuySellComboBox buysells;
+    private AttitudeComboBox attitudes;
     @FXML 
-    private SubjectComboBox subjects;
+    private MerchandiseComboBox merchandises;
     @FXML 
     private TextField paramType;
     @FXML 
@@ -69,8 +69,8 @@ public class ParamGeneralDialogController implements Initializable {
         this.paramGeneral = paramGeneral;
         if (paramGeneral != null){
             clients.valueProperty().bindBidirectional(paramGeneral.clientProperty());
-            buysells.valueProperty().bindBidirectional(paramGeneral.buySellProperty());
-            subjects.valueProperty().bindBidirectional(paramGeneral.subjectProperty());
+            attitudes.valueProperty().bindBidirectional(paramGeneral.attitudeProperty());
+            merchandises.valueProperty().bindBidirectional(paramGeneral.merchandiseProperty());
             paramType.textProperty().bindBidirectional(paramGeneral.paramTypeProperty());
             param.textProperty().bindBidirectional(paramGeneral.paramProperty());
         }

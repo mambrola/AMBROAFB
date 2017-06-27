@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.minitables.buysells.dialog;
+package ambroafb.minitables.attitudes.dialog;
 
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveStage;
-import ambroafb.minitables.buysells.BuySell;
+import ambroafb.minitables.attitudes.Attitude;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,27 +20,27 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class BuySellDialog extends UserInteractiveStage implements Dialogable {
+public class AttitudeDialog extends UserInteractiveStage implements Dialogable {
 
-    private BuySell buysell;
-    private final BuySell buysellBackup;
+    private Attitude attitude;
+    private final Attitude attitudeBackup;
     
-    private BuySellDialogController dialogController;
+    private AttitudeDialogController dialogController;
     
-    public BuySellDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "buysell", "/images/dialog.png");
+    public AttitudeDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+        super(owner, Names.LEVEL_FOR_PATH, "attitude", "/images/dialog.png");
         
         if (object == null)
-            this.buysell = new BuySell();
+            this.attitude = new Attitude();
         else
-            this.buysell = (BuySell) object;
-        this.buysellBackup = buysell.cloneWithID();
+            this.attitude = (Attitude) object;
+        this.attitudeBackup = attitude.cloneWithID();
         
-        Scene currentScene = SceneUtils.createScene("/ambroafb/minitables/buysells/dialog/BuySellDialog.fxml", null);
-        dialogController = (BuySellDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindBuySell(this.buysell);
+        Scene currentScene = SceneUtils.createScene("/ambroafb/minitables/attitudes/dialog/AttitudeDialog.fxml", null);
+        dialogController = (AttitudeDialogController) currentScene.getProperties().get("controller");
+        dialogController.bindAttitude(this.attitude);
         dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupBuySell(this.buysellBackup);
+        dialogController.setBackupAttitude(this.attitudeBackup);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -53,12 +53,12 @@ public class BuySellDialog extends UserInteractiveStage implements Dialogable {
     @Override
     public EditorPanelable getResult() {
         showAndWait();
-        return buysell;
+        return attitude;
     }
 
     @Override
     public void operationCanceled() {
-        buysell = null;
+        attitude = null;
     }
     
 }

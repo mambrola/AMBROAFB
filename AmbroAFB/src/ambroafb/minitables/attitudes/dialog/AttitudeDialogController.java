@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.minitables.buysells.dialog;
+package ambroafb.minitables.attitudes.dialog;
 
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
-import ambroafb.minitables.buysells.BuySell;
+import ambroafb.minitables.attitudes.Attitude;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -24,15 +24,15 @@ import javafx.scene.layout.VBox;
  *
  * @author dato
  */
-public class BuySellDialogController implements Initializable {
+public class AttitudeDialogController implements Initializable {
 
     @FXML
     private VBox formPane;
     @FXML
     private TextField descrip;
     
-    private BuySell buysell;
-    private BuySell buysellBackup;
+    private Attitude attitude;
+    private Attitude attitudeBackup;
     
     private ArrayList<Node> focusTraversableNodes;
     private boolean permissionToClose;
@@ -51,10 +51,10 @@ public class BuySellDialogController implements Initializable {
         permissionToClose = true;
     }    
 
-    public void bindBuySell(BuySell buysell) {
-        this.buysell = buysell;
-        if (buysell != null){
-            descrip.textProperty().bindBidirectional(buysell.descripProperty());
+    public void bindAttitude(Attitude attitude) {
+        this.attitude = attitude;
+        if (attitude != null){
+            descrip.textProperty().bindBidirectional(attitude.descripProperty());
         }
     }
 
@@ -71,8 +71,8 @@ public class BuySellDialogController implements Initializable {
         });
     }
     
-    public void setBackupBuySell(BuySell buysellBackup) {
-        this.buysellBackup = buysellBackup;
+    public void setBackupAttitude(Attitude attitudeBackup) {
+        this.attitudeBackup = attitudeBackup;
     }
 
     public DialogOkayCancelController getOkayCancelController() {
@@ -93,6 +93,6 @@ public class BuySellDialogController implements Initializable {
     }
     
     public boolean anyComponentChanged(){
-        return !buysell.compares(buysellBackup);
+        return !attitude.compares(attitudeBackup);
     }
 }

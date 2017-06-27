@@ -11,8 +11,8 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveStage;
 import ambroafb.minitables.MiniTable;
-import ambroafb.minitables.buysells.BuySell;
-import ambroafb.minitables.subjects.Subject;
+import ambroafb.minitables.attitudes.Attitude;
+import ambroafb.minitables.merchandises.Merchandise;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -67,9 +67,9 @@ public class MiniTableDialog extends UserInteractiveStage implements Dialogable 
     }
     
     private MiniTable getConcreteMinitableFrom(EditorPanelable object) {
-        MiniTable result = new BuySell();
-        if (object instanceof Subject) {
-            result = new Subject();
+        MiniTable result = new Attitude();
+        if (object instanceof Merchandise) {
+            result = new Merchandise();
         }
         return result;
     }

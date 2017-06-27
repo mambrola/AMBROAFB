@@ -10,8 +10,8 @@ import ambroafb.clients.Client;
 import ambroafb.general.DBUtils;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.minitables.buysells.BuySell;
-import ambroafb.minitables.subjects.Subject;
+import ambroafb.minitables.attitudes.Attitude;
+import ambroafb.minitables.merchandises.Merchandise;
 import ambroafb.params_general.helper.ParamGeneralDBResponse;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,13 +37,13 @@ public class ParamGeneral extends EditorPanelable {
     private final StringProperty clientDescrip;
     private final ObjectProperty<Client> clientObj;
     
-    @AView.Column(title = "%buysell", width = "100", styleClass = "textCenter")
-    private final StringProperty buySellDescrip;
-    private final ObjectProperty<BuySell> buySellObj;
+    @AView.Column(title = "%attitude", width = "100", styleClass = "textCenter")
+    private final StringProperty attitudeDescrip;
+    private final ObjectProperty<Attitude> attitudeObj;
     
-    @AView.Column(title = "%subject", width = "100", styleClass = "textCenter")
-    private final StringProperty subjectDescrip;
-    private final ObjectProperty<Subject> subjectObj;
+    @AView.Column(title = "%merchandise", width = "100", styleClass = "textCenter")
+    private final StringProperty merchandiseDescrip;
+    private final ObjectProperty<Merchandise> merchandiseObj;
     
     @AView.Column(title = "%param_type", width = "150")
     private final StringProperty paramType;
@@ -59,15 +59,15 @@ public class ParamGeneral extends EditorPanelable {
         clientObj.get().setFirstName(ALL);
         clientObj.get().setRecId(0);
         
-        buySellDescrip = new SimpleStringProperty(ALL);
-        buySellObj = new SimpleObjectProperty<>(new BuySell());
-        buySellObj.get().setDescrip(ALL);
-        buySellObj.get().setRecId(0);
+        attitudeDescrip = new SimpleStringProperty(ALL);
+        attitudeObj = new SimpleObjectProperty<>(new Attitude());
+        attitudeObj.get().setDescrip(ALL);
+        attitudeObj.get().setRecId(0);
         
-        subjectDescrip = new SimpleStringProperty(ALL);
-        subjectObj = new SimpleObjectProperty<>(new Subject());
-        subjectObj.get().setDescrip(ALL);
-        subjectObj.get().setRecId(0);
+        merchandiseDescrip = new SimpleStringProperty(ALL);
+        merchandiseObj = new SimpleObjectProperty<>(new Merchandise());
+        merchandiseObj.get().setDescrip(ALL);
+        merchandiseObj.get().setRecId(0);
         
         paramType = new SimpleStringProperty("");
         param = new SimpleStringProperty("");
@@ -76,15 +76,15 @@ public class ParamGeneral extends EditorPanelable {
             resetClientDescrip();
         });
         
-        buySellObj.addListener((ObservableValue<? extends BuySell> observable, BuySell oldValue, BuySell newValue) -> {
-            rebindBuySellDescrip();
+        attitudeObj.addListener((ObservableValue<? extends Attitude> observable, Attitude oldValue, Attitude newValue) -> {
+            rebindAttitudeDescrip();
         });
-        rebindBuySellDescrip();
+        rebindAttitudeDescrip();
         
-        subjectObj.addListener((ObservableValue<? extends Subject> observable, Subject oldValue, Subject newValue) -> {
-            rebindSubjectDescrip();
+        merchandiseObj.addListener((ObservableValue<? extends Merchandise> observable, Merchandise oldValue, Merchandise newValue) -> {
+            rebindMerchandiseDescrip();
         });
-        rebindSubjectDescrip();
+        rebindMerchandiseDescrip();
     }
     
     private void resetClientDescrip(){
@@ -94,17 +94,17 @@ public class ParamGeneral extends EditorPanelable {
         }
     }
     
-    private void rebindBuySellDescrip(){
-        buySellDescrip.unbind();
-        if (buySellObj.get() != null){
-            buySellDescrip.bind(buySellObj.get().descripProperty());
+    private void rebindAttitudeDescrip(){
+        attitudeDescrip.unbind();
+        if (attitudeObj.get() != null){
+            attitudeDescrip.bind(attitudeObj.get().descripProperty());
         }
     }
     
-    private void rebindSubjectDescrip(){
-        subjectDescrip.unbind();
-        if (subjectObj.get() != null){
-            subjectDescrip.bind(subjectObj.get().descripProperty());
+    private void rebindMerchandiseDescrip(){
+        merchandiseDescrip.unbind();
+        if (merchandiseObj.get() != null){
+            merchandiseDescrip.bind(merchandiseObj.get().descripProperty());
         }
     }
     
@@ -139,20 +139,20 @@ public class ParamGeneral extends EditorPanelable {
         return clientObj;
     }
     
-    public ObjectProperty<BuySell> buySellProperty(){
-        return buySellObj;
+    public ObjectProperty<Attitude> attitudeProperty(){
+        return attitudeObj;
     }
     
-    public StringProperty buySellDescripProperty(){
-        return buySellDescrip;
+    public StringProperty attitudeDescripProperty(){
+        return attitudeDescrip;
     }
     
-    public ObjectProperty<Subject> subjectProperty(){
-        return subjectObj;
+    public ObjectProperty<Merchandise> merchandiseProperty(){
+        return merchandiseObj;
     }
     
-    public StringProperty subjectDescripProperty(){
-        return subjectDescrip;
+    public StringProperty merchandiseDescripProperty(){
+        return merchandiseDescrip;
     }
     
     public StringProperty paramTypeProperty() {
@@ -179,21 +179,21 @@ public class ParamGeneral extends EditorPanelable {
 //    }
     
     public Integer getAttitude() {
-        return getIdFrom(buySellObj.get());
+        return getIdFrom(attitudeObj.get());
     }
 
     @JsonIgnore
     public String getAttitudeDescrip() {
-        return (buySellObj.get() != null) ? buySellObj.get().getDescrip() : buySellDescrip.get();
+        return (attitudeObj.get() != null) ? attitudeObj.get().getDescrip() : attitudeDescrip.get();
     }
 
     public Integer getMerchandise() {
-        return getIdFrom(subjectObj.get());
+        return getIdFrom(merchandiseObj.get());
     }
 
     @JsonIgnore
     public String getMerchandiseDescrip() {
-        return subjectDescrip.get();
+        return merchandiseDescrip.get();
     }
 
     public String getParamType() {
@@ -212,29 +212,29 @@ public class ParamGeneral extends EditorPanelable {
 //        }
 //    }
 
-    public void setAttitude(Integer buysellId) {
-        if (buySellObj.get() != null){
-            buySellObj.get().setRecId((buysellId == null) ? 0 : buysellId);
+    public void setAttitude(Integer attitudeId) {
+        if (attitudeObj.get() != null){
+            attitudeObj.get().setRecId((attitudeId == null) ? 0 : attitudeId);
         }
     }
     
     @JsonProperty
     public void setAttitudeDescrip(String descrip) {
-        if (buySellObj.get() != null){
-            buySellObj.get().setDescrip(descrip);
+        if (attitudeObj.get() != null){
+            attitudeObj.get().setDescrip(descrip);
         }
     }
 
-    public void setMerchandise(Integer subjectId) {
-        if (subjectObj.get() != null){
-            subjectObj.get().setRecId((subjectId == null) ? 0 : subjectId);
+    public void setMerchandise(Integer merchandiseId) {
+        if (merchandiseObj.get() != null){
+            merchandiseObj.get().setRecId((merchandiseId == null) ? 0 : merchandiseId);
         }
     }
     
     @JsonProperty
     public void setMerchandiseDescrip(String descrip) {
-        if (subjectObj.get() != null){
-            subjectObj.get().setDescrip(descrip);
+        if (merchandiseObj.get() != null){
+            merchandiseObj.get().setDescrip(descrip);
         }
     }
 
@@ -270,12 +270,12 @@ public class ParamGeneral extends EditorPanelable {
         clientObj.set(otherParamGeneral.clientProperty().get());
 //        setClientId(Utils.avoidNullAndReturnInt(otherParamGeneral.getClientId()));
         
-        buySellObj.get().copyFrom(otherParamGeneral.buySellProperty().get());
-//        setBuysell(Utils.avoidNullAndReturnInt(otherParamGeneral.getBuysell()));
-//        setBuysellDescrip(otherParamGeneral.getBuysellDescrip());
-        subjectObj.get().copyFrom(otherParamGeneral.subjectProperty().get());
-//        setSubject(Utils.avoidNullAndReturnInt(otherParamGeneral.getSubject()));
-//        setSubjectDescrip(otherParamGeneral.getSubjectDescrip());
+        attitudeObj.get().copyFrom(otherParamGeneral.attitudeProperty().get());
+//        setAttitude(Utils.avoidNullAndReturnInt(otherParamGeneral.getAttitude()));
+//        setAttitudeDescrip(otherParamGeneral.getAttitudeDescrip());
+        merchandiseObj.get().copyFrom(otherParamGeneral.merchandiseProperty().get());
+//        setMerchandise(Utils.avoidNullAndReturnInt(otherParamGeneral.getMerchandise()));
+//        setMerchandiseDescrip(otherParamGeneral.getMerchandiseDescrip());
         
         setParamType(otherParamGeneral.getParamType());
         setParam(otherParamGeneral.getParam());
@@ -285,9 +285,8 @@ public class ParamGeneral extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         ParamGeneral other = (ParamGeneral)backup;
 //        Utils.avoidNullAndReturnInt(getClientId()) == Utils.avoidNullAndReturnInt(other.getClientId()) &&
-        return  
-                buySellObj.get().compares(other.buySellProperty().get()) &&
-                subjectObj.get().compares(other.subjectProperty().get()) &&
+        return  attitudeObj.get().compares(other.attitudeProperty().get()) &&
+                merchandiseObj.get().compares(other.merchandiseProperty().get()) &&
                 getParamType().equals(other.getParamType()) &&
                 getParam().equals(other.getParam());
     }
@@ -297,20 +296,20 @@ public class ParamGeneral extends EditorPanelable {
 //        int clientID = Utils.avoidNullAndReturnInt(getClientId());
 //        String clientDescr = ""; // (clientID <= 0) ? ALL : "" + clientID;
         
-//        int buySellID = Utils.avoidNullAndReturnInt(getBuysell());
-//        String buySellStr = (buySellID <= 0) ? ALL : "" + buySellID;
+//        int attitudeID = Utils.avoidNullAndReturnInt(getAttitude());
+//        String attitudeStr = (attitudeID <= 0) ? ALL : "" + attitudeID;
 
-        int subjectID =  Utils.avoidNullAndReturnInt(getMerchandise());
-        String subjectStr = (subjectID <= 0) ? ALL : "" + subjectID;
-        return  clientDescrip.get() + " " + buySellDescrip.get() + " " + subjectDescrip.get() + " " +
+        int merchandiseID =  Utils.avoidNullAndReturnInt(getMerchandise());
+        String merchandiseStr = (merchandiseID <= 0) ? ALL : "" + merchandiseID;
+        return  clientDescrip.get() + " " + attitudeDescrip.get() + " " + merchandiseDescrip.get() + " " +
                     getParamType() + " " + getParam();
     }
     
     @Override
     public String toString(){
         String delimiter = "; ";
-        return  clientDescrip.get() + delimiter + buySellDescrip.get() + delimiter + 
-                subjectDescrip.get() + delimiter + getParamType() + delimiter + getParam();
+        return  clientDescrip.get() + delimiter + attitudeDescrip.get() + delimiter + 
+                merchandiseDescrip.get() + delimiter + getParamType() + delimiter + getParam();
     }
     
     
@@ -328,27 +327,27 @@ public class ParamGeneral extends EditorPanelable {
 //        }
 //    } 
 //    
-//    public static class BuySellCellFactory implements Callback<TableColumn<ParamGeneral, BuySell>, TableCell<ParamGeneral, BuySell>> {
+//    public static class AttitudeCellFactory implements Callback<TableColumn<ParamGeneral, Attitude>, TableCell<ParamGeneral, Attitude>> {
 //
 //        @Override
-//        public TableCell<ParamGeneral, BuySell> call(TableColumn<ParamGeneral, BuySell> param) {
-//            return new TableCell<ParamGeneral, BuySell>() {
+//        public TableCell<ParamGeneral, Attitude> call(TableColumn<ParamGeneral, Attitude> param) {
+//            return new TableCell<ParamGeneral, Attitude>() {
 //                @Override
-//                public void updateItem(BuySell buysell, boolean empty) {
-//                    setText(empty ? null : (buysell.getDescrip().isEmpty() ? "ALL" : buysell.getDescrip()));
+//                public void updateItem(Attitude attitude, boolean empty) {
+//                    setText(empty ? null : (attitude.getDescrip().isEmpty() ? "ALL" : attitude.getDescrip()));
 //                }
 //            };
 //        }
 //    } 
 //    
-//    public static class SubjectCellFactory implements Callback<TableColumn<ParamGeneral, Subject>, TableCell<ParamGeneral, Subject>> {
+//    public static class MerchandiseCellFactory implements Callback<TableColumn<ParamGeneral, Merchandise>, TableCell<ParamGeneral, Merchandise>> {
 //
 //        @Override
-//        public TableCell<ParamGeneral, Subject> call(TableColumn<ParamGeneral, Subject> param) {
-//            return new TableCell<ParamGeneral, Subject>() {
+//        public TableCell<ParamGeneral, Merchandise> call(TableColumn<ParamGeneral, Merchandise> param) {
+//            return new TableCell<ParamGeneral, Merchandise>() {
 //                @Override
-//                public void updateItem(Subject buysell, boolean empty) {
-//                    setText(empty ? null : (buysell.getDescrip().isEmpty() ? "ALL" : buysell.getDescrip()));
+//                public void updateItem(Merchandise attitude, boolean empty) {
+//                    setText(empty ? null : (attitude.getDescrip().isEmpty() ? "ALL" : attitude.getDescrip()));
 //                }
 //            };
 //        }

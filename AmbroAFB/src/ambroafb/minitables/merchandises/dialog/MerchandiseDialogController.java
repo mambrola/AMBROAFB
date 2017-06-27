@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.minitables.subjects.dialog;
+package ambroafb.minitables.merchandises.dialog;
 
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
-import ambroafb.minitables.subjects.Subject;
+import ambroafb.minitables.merchandises.Merchandise;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -24,15 +24,15 @@ import javafx.scene.layout.VBox;
  *
  * @author dato
  */
-public class SubjectDialogController implements Initializable {
+public class MerchandiseDialogController implements Initializable {
 
      @FXML
     private VBox formPane;
     @FXML
     private TextField descrip;
     
-    private Subject subject;
-    private Subject subjectBackup;
+    private Merchandise merchandise;
+    private Merchandise merchandiseBackup;
     
     private ArrayList<Node> focusTraversableNodes;
     private boolean permissionToClose;
@@ -51,10 +51,10 @@ public class SubjectDialogController implements Initializable {
         permissionToClose = true;
     }    
 
-    public void bindSubject(Subject subject) {
-        this.subject = subject;
-        if (subject != null){
-            descrip.textProperty().bindBidirectional(subject.descripProperty());
+    public void bindMerchandise(Merchandise merchandise) {
+        this.merchandise = merchandise;
+        if (merchandise != null){
+            descrip.textProperty().bindBidirectional(merchandise.descripProperty());
         }
     }
 
@@ -71,8 +71,8 @@ public class SubjectDialogController implements Initializable {
         });
     }
     
-    public void setBackupSubject(Subject subjectBackup) {
-        this.subjectBackup = subjectBackup;
+    public void setBackupMerchandise(Merchandise merchandiseBackup) {
+        this.merchandiseBackup = merchandiseBackup;
     }
 
     public DialogOkayCancelController getOkayCancelController() {
@@ -92,7 +92,7 @@ public class SubjectDialogController implements Initializable {
     }
     
     public boolean anyComponentChanged(){
-        return !subject.compares(subjectBackup);
+        return !merchandise.compares(merchandiseBackup);
     }
     
 }
