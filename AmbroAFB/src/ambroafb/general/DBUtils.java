@@ -109,6 +109,7 @@ public class DBUtils {
         ParamGeneralDBResponse response = new ParamGeneralDBResponse();
         try {
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            System.out.println("params: " + params.toString());
             JSONArray resultDB = dbClient.callProcedureAndGetAsJson(procedureName, dbClient.getLang(), params);
             
             String generalParams = authclient.Utils.toCamelCase(resultDB).toString();

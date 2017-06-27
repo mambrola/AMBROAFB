@@ -174,25 +174,25 @@ public class ParamGeneral extends EditorPanelable {
         return result;
     }
     
-    public Integer getClientId() {
-        return getIdFrom(clientObj.get());
-    }
+//    public Integer getClientId() {
+//        return getIdFrom(clientObj.get());
+//    }
     
-    public Integer getBuysell() {
+    public Integer getAttitude() {
         return getIdFrom(buySellObj.get());
     }
 
     @JsonIgnore
-    public String getBuysellDescrip() {
+    public String getAttitudeDescrip() {
         return (buySellObj.get() != null) ? buySellObj.get().getDescrip() : buySellDescrip.get();
     }
 
-    public Integer getSubject() {
+    public Integer getMerchandise() {
         return getIdFrom(subjectObj.get());
     }
 
     @JsonIgnore
-    public String getSubjectDescrip() {
+    public String getMerchandiseDescrip() {
         return subjectDescrip.get();
     }
 
@@ -206,33 +206,33 @@ public class ParamGeneral extends EditorPanelable {
     
     
     // Setters:
-    public void setClientId(Integer clientId) { // It is needed in "copyFrom" method.
-        if (clientObj.get() != null){
-            clientObj.get().setRecId((clientId == null) ? 0 : clientId);
-        }
-    }
+//    public void setClientId(Integer clientId) { // It is needed in "copyFrom" method.
+//        if (clientObj.get() != null){
+//            clientObj.get().setRecId((clientId == null) ? 0 : clientId);
+//        }
+//    }
 
-    public void setBuysell(Integer buysellId) {
+    public void setAttitude(Integer buysellId) {
         if (buySellObj.get() != null){
             buySellObj.get().setRecId((buysellId == null) ? 0 : buysellId);
         }
     }
     
     @JsonProperty
-    public void setBuysellDescrip(String descrip) {
+    public void setAttitudeDescrip(String descrip) {
         if (buySellObj.get() != null){
             buySellObj.get().setDescrip(descrip);
         }
     }
 
-    public void setSubject(Integer subjectId) {
+    public void setMerchandise(Integer subjectId) {
         if (subjectObj.get() != null){
             subjectObj.get().setRecId((subjectId == null) ? 0 : subjectId);
         }
     }
     
     @JsonProperty
-    public void setSubjectDescrip(String descrip) {
+    public void setMerchandiseDescrip(String descrip) {
         if (subjectObj.get() != null){
             subjectObj.get().setDescrip(descrip);
         }
@@ -268,7 +268,7 @@ public class ParamGeneral extends EditorPanelable {
         ParamGeneral otherParamGeneral = (ParamGeneral)other;
         
         clientObj.set(otherParamGeneral.clientProperty().get());
-        setClientId(Utils.avoidNullAndReturnInt(otherParamGeneral.getClientId()));
+//        setClientId(Utils.avoidNullAndReturnInt(otherParamGeneral.getClientId()));
         
         buySellObj.get().copyFrom(otherParamGeneral.buySellProperty().get());
 //        setBuysell(Utils.avoidNullAndReturnInt(otherParamGeneral.getBuysell()));
@@ -284,13 +284,9 @@ public class ParamGeneral extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         ParamGeneral other = (ParamGeneral)backup;
-        return  Utils.avoidNullAndReturnInt(getClientId()) == Utils.avoidNullAndReturnInt(other.getClientId()) &&
+//        Utils.avoidNullAndReturnInt(getClientId()) == Utils.avoidNullAndReturnInt(other.getClientId()) &&
+        return  
                 buySellObj.get().compares(other.buySellProperty().get()) &&
-//                Utils.avoidNullAndReturnInt(getBuysell()) == Utils.avoidNullAndReturnInt(other.getBuysell()) &&
-//                getBuysellDescrip().equals(other.getBuysellDescrip()) &&
-//                Utils.avoidNullAndReturnInt(getSubject()) == Utils.avoidNullAndReturnInt(other.getSubject()) &&
-//                getSubjectDescrip().equals(other.getSubjectDescrip()) &&
-//                subjectObj.get().compares(other.buySellObjProperty().get()) &&
                 subjectObj.get().compares(other.subjectProperty().get()) &&
                 getParamType().equals(other.getParamType()) &&
                 getParam().equals(other.getParam());
@@ -304,7 +300,7 @@ public class ParamGeneral extends EditorPanelable {
 //        int buySellID = Utils.avoidNullAndReturnInt(getBuysell());
 //        String buySellStr = (buySellID <= 0) ? ALL : "" + buySellID;
 
-        int subjectID =  Utils.avoidNullAndReturnInt(getSubject());
+        int subjectID =  Utils.avoidNullAndReturnInt(getMerchandise());
         String subjectStr = (subjectID <= 0) ? ALL : "" + subjectID;
         return  clientDescrip.get() + " " + buySellDescrip.get() + " " + subjectDescrip.get() + " " +
                     getParamType() + " " + getParam();
