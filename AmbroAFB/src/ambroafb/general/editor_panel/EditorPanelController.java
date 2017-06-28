@@ -6,17 +6,17 @@
 package ambroafb.general.editor_panel;
 
 import ambro.AFilterableTableView;
-import ambro.ATableView;
 import ambro.AFilterableTreeTableView;
+import ambro.ATableView;
 import ambro.AView;
 import ambroafb.general.FilterModel;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
-import ambroafb.general.interfaces.Dialogable;
-import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
+import ambroafb.general.Utils;
+import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
 import java.util.List;
@@ -121,7 +121,10 @@ public class EditorPanelController implements Initializable {
             if (result == null){
                 selected.copyFrom(backup);
             } else {
-                Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
+                Object resultFromDB = Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
+                if (resultFromDB == null){
+                    selected.copyFrom(backup);
+                }
             }
         }
         else {
