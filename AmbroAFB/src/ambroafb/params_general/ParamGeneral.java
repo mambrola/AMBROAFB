@@ -32,6 +32,8 @@ public class ParamGeneral extends EditorPanelable {
     
     public static final String DB_SELECT_PROC_NAME = "process_general_param_select";
     public static final String DB_INSERT_UPDATE_PROC_NAME = "process_general_param_insert_update";
+    public static final String DB_DELETE_PROC_NAME = "general_delete";
+    public static final String DB_TABLE_NAME = "process_general_params";
                                                 
     @AView.Column(title = "%client", width = "150", styleClass = "textCenter")
     private final StringProperty clientDescrip;
@@ -129,8 +131,7 @@ public class ParamGeneral extends EditorPanelable {
     }
     
     public static boolean deleteOneFromDB(int id) {
-        System.out.println("delete general_params ??");
-        return false;
+        return DBUtils.deleteObjectFromDB(DB_DELETE_PROC_NAME, DB_TABLE_NAME, id);
     }
     
     

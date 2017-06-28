@@ -313,7 +313,7 @@ public class DBUtils {
         return null;
     }
     
-    public static boolean deleteObjectFromDB(String deleteProcName, JSONObject params) {
+    public static boolean deleteObjectFromDB(String deleteProcName, Object... params) {
         boolean result = false;
         try {
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
