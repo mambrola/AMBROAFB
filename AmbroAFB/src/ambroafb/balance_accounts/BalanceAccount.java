@@ -8,7 +8,6 @@ package ambroafb.balance_accounts;
 import ambro.AFilterableTreeTableView;
 import ambro.AView;
 import ambroafb.general.DBUtils;
-import ambroafb.general.Utils;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
@@ -58,7 +57,8 @@ public class BalanceAccount extends EditorPanelable {
     public final ObservableList<String> rowStyle = FXCollections.observableArrayList();
     
     @JsonIgnore
-    private static final String DB_TABLE_NAME = "bal_accounts";
+    public static final String DB_TABLE_NAME = "bal_accounts";
+    public static final String DB_DELETE_PROC_NAME = "general_delete";
     
     @JsonIgnore 
     private static final int ACT = 1, PAS = 2, INDETERMINATE = 3;
@@ -102,9 +102,8 @@ public class BalanceAccount extends EditorPanelable {
         return DBUtils.saveObjectToDBSimple(balAccount, DB_TABLE_NAME);
     }
     
-    public static boolean deleteOneFromDB(int productId){
-        System.out.println("delete balAccount ...???");
-        return false;
+    public static boolean deleteOneFromDB(int id){
+        return DBUtils.deleteObjectFromDB(DB_DELETE_PROC_NAME, DB_TABLE_NAME, id);
     }
     
     
@@ -132,7 +131,7 @@ public class BalanceAccount extends EditorPanelable {
     }
 
     public int getBalAcc(){
-        return Utils.getIntValueFor(balAcc.get());
+        return Integer.parseInt(balAcc.get());
     }
     
     public String getDescrip(){
@@ -142,13 +141,13 @@ public class BalanceAccount extends EditorPanelable {
     
     // Setters:
     public void setActPas(int act_pas) {
-//        this.actPas.set(act_pas);
         if (act_pas == INDETERMINATE){
             indeterminateProperty.set(true);
         }
         else {
             activeProperty.set(act_pas == ACT);
         }
+        actPas.set(act_pas);
     }
 
     public void setBalAcc(int code){
@@ -203,5 +202,5 @@ public class BalanceAccount extends EditorPanelable {
                 getActPas() == balAccountBackup.getActPas() &&
                 getDescrip().equals(balAccountBackup.getDescrip());
     }
-    
+
 }
