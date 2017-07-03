@@ -57,7 +57,7 @@ public class BalanceAccountsController implements Initializable {
         });
     }
 
-    public void reAssignTable(Supplier<List<BalanceAccount>> fetchBalAccsData){
+    public void reAssignTable(Supplier<ArrayList<EditorPanelable>> fetchBalAccsData){
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         roots.clear();
         aview.removeAll();
@@ -162,12 +162,12 @@ public class BalanceAccountsController implements Initializable {
     }
     
     
-    private class BalanceAccountsRunnable implements Runnable {
+    public class BalanceAccountsRunnable implements Runnable {
 
-        private final Supplier<List<BalanceAccount>> supplier;
+        private final Supplier<ArrayList<EditorPanelable>> supplier;
         private final int selectedIndex;
         
-        public BalanceAccountsRunnable(Supplier<List<BalanceAccount>> supplier, int selectedIndex){
+        public BalanceAccountsRunnable(Supplier<ArrayList<EditorPanelable>> supplier, int selectedIndex){
             this.supplier = supplier;
             this.selectedIndex = selectedIndex;
         }
@@ -178,7 +178,7 @@ public class BalanceAccountsController implements Initializable {
                 masker.setVisible(true); 
             });
             supplier.get().stream().forEach((account) -> {
-                makeTreeStructure(account);
+                makeTreeStructure((BalanceAccount) account);
             });
             Platform.runLater(() -> {
                 roots.stream().forEach((account) -> {

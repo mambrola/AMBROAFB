@@ -428,7 +428,7 @@ public class MainController implements Initializable {
         Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
             BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage);
-            Supplier<List<BalanceAccount>> fetchData = () -> BalanceAccount.getAllFromDB();
+            Supplier<ArrayList<EditorPanelable>> fetchData = () -> new ArrayList(BalanceAccount.getAllFromDB());
             balAccounts.getBalanceAccountsController().reAssignTable(fetchData);
             balAccounts.show();
         }

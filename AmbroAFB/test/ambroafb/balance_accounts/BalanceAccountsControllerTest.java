@@ -5,18 +5,18 @@
  */
 package ambroafb.balance_accounts;
 
-import ambroafb.general.FilterModel;
 import ambroafb.general.Names;
-import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.ArrayList;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 /**
  *
@@ -24,34 +24,38 @@ import org.junit.Test;
  */
 public class BalanceAccountsControllerTest {
     
+    private final BalanceAccountsController instance = new BalanceAccountsController();
+    
+    ArrayList<EditorPanelable> spyList = Mockito.spy(ArrayList.class);
+    @Mock
+    BalanceAccountsController.BalanceAccountsRunnable balanceAccountsRannable;
+    
+    
     public BalanceAccountsControllerTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
     }
     
     @Before
     public void setUp() {
+        spyList.add(createBalAccount(1, 1000, "Current Actives"));
+            spyList.add(createBalAccount(1, 1100, "Money in cashBox"));
+                spyList.add(createBalAccount(1, 1110, "Money in Georgian Currency"));
+            spyList.add(createBalAccount(1, 1200, "Money in Bank"));
+                spyList.add(createBalAccount(1, 1210, "Acreditive"));
+            spyList.add(createBalAccount(1, 1300, "Short-term Investments"));
+                spyList.add(createBalAccount(1, 1310, "Short-term Investments in Shares"));
+    }
+    
+    private BalanceAccount createBalAccount(int actPas, int balAccCode, String descrip){
+        BalanceAccount balAcc = new BalanceAccount();
+        balAcc.setActPas(actPas);
+        balAcc.setBalAcc(balAccCode);
+        balAcc.setDescrip(descrip);
+        return balAcc;
     }
     
     @After
     public void tearDown() {
-    }
-
-    /**
-     * Test of initialize method, of class BalanceAccountsController.
-     */
-    @Test @Ignore
-    public void testInitialize() {
-        URL url = null;
-        ResourceBundle rb = null;
-        BalanceAccountsController instance = new BalanceAccountsController();
-        instance.initialize(url, rb);
+        spyList.clear();
     }
 
     /**
@@ -59,21 +63,16 @@ public class BalanceAccountsControllerTest {
      */
     @Test @Ignore
     public void testReAssignTable() {
-        System.out.println("reAssignTable");
-        FilterModel model = null;
-        BalanceAccountsController instance = new BalanceAccountsController();
-        instance.reAssignTable(null, model);
-    }
-
-    /**
-     * Test of getEditorPanelController method, of class BalanceAccountsController.
-     */
-    @Test @Ignore
-    public void testGetEditorPanelController() {
-        System.out.println("getEditorPanelController");
-        BalanceAccountsController instance = new BalanceAccountsController();
-        EditorPanelController expResult = null;
-        EditorPanelController result = instance.getEditorPanelController();
+        Supplier<ArrayList<EditorPanelable>> supplier = () -> spyList;
+        instance.reAssignTable(supplier);
+        
+        try {
+            Thread.currentThread().sleep(500);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BalanceAccountsControllerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Mockito.verify(supplier).get();
     }
 
     /**

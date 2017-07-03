@@ -8,11 +8,9 @@ package ambroafb.balance_accounts;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,14 +20,6 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitParamsRunner.class)
 public class BalanceAccountParameterizedTest {
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
     
     private BalanceAccount balAcc;
     

@@ -36,9 +36,6 @@ public class BalanceAccountStaticMethodsTest {
         balAcc = new BalanceAccount();
         
         PowerMockito.mockStatic(DBUtils.class);
-//        PowerMockito.when(DBUtils.getObjectFromDB(BalanceAccount.class, BalanceAccount.DB_TABLE_NAME, params))
-//                    .thenReturn(new ArrayList<>());
-        
     }
     
     /**
