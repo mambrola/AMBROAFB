@@ -35,7 +35,7 @@ public class BalanceAccounts extends ListingStage {
         super.setFeatures(() -> balanceAccountsController.getEditorPanelController().getPanelMinWidth());
     }
     
-    public BalanceAccountsController getCountriesController(){
+    public BalanceAccountsController getBalanceAccountsController(){
         return balanceAccountsController;
     }
 }

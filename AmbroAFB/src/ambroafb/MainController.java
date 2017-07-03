@@ -5,6 +5,7 @@
  */
 package ambroafb;
 
+import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Client;
 import ambroafb.clients.filter.ClientFilter;
@@ -21,6 +22,7 @@ import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general_scene.table_list.TableList;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.filter.InvoiceFilter;
 import ambroafb.licenses.License;
@@ -29,9 +31,8 @@ import ambroafb.loggings.Logging;
 import ambroafb.loggings.filter.LoggingFilter;
 import ambroafb.minitables.attitudes.Attitude;
 import ambroafb.minitables.merchandises.Merchandise;
-import ambroafb.products.Product;
-import ambroafb.general_scene.table_list.TableList;
 import ambroafb.params_general.ParamGeneral;
+import ambroafb.products.Product;
 import authclient.AuthServerException;
 import authclient.monitoring.MonitoringClient;
 import java.io.IOException;
@@ -377,8 +378,10 @@ public class MainController implements Initializable {
         String stageTitle = "balanceaccounts";
         Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
-            BalanceAccounts accounts = new BalanceAccounts(AmbroAFB.mainStage);
-            accounts.show();
+            BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage);
+            Supplier<List<BalanceAccount>> fetchData = () -> BalanceAccount.getAllFromDB();
+            balAccounts.getBalanceAccountsController().reAssignTable(fetchData);
+            balAccounts.show();
         }
         else {
             balAccountsStage.requestFocus();

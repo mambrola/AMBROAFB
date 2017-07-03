@@ -21,6 +21,7 @@ import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ObservableList;
@@ -223,9 +224,9 @@ public class EditorPanelController implements Initializable {
             Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
             
             Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
-            List<EditorPanelable> list = getEntriesFromDB(objectClass, model);
+            Supplier<List<EditorPanelable>> fetchData = makeAppropSupplier(objectClass, model);
             
-            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{List.class, FilterModel.class}, outerController, list, model);
+            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{Supplier.class}, outerController, fetchData);
         }
         else {
             filterStage.requestFocus();
@@ -234,13 +235,13 @@ public class EditorPanelController implements Initializable {
         refresh.setSelected(false);
     }
     
-    private List<EditorPanelable> getEntriesFromDB(Class targetClass, FilterModel model){
-        List<EditorPanelable> result;
+    private Supplier<List<EditorPanelable>> makeAppropSupplier(Class targetClass, FilterModel model){
+        Supplier<List<EditorPanelable>> result;
         if (model == null){
-            result = (List<EditorPanelable>) Utils.getInvokedClassMethod(targetClass, "getAllFromDB", null, null);
+            result = () -> (List<EditorPanelable>) Utils.getInvokedClassMethod(targetClass, "getAllFromDB", null, null);
         }
         else {
-            result = (List<EditorPanelable>) Utils.getInvokedClassMethod(targetClass, "getFilteredFromDB", new Class[]{FilterModel.class}, null, model);
+            result = () -> (List<EditorPanelable>) Utils.getInvokedClassMethod(targetClass, "getFilteredFromDB", new Class[]{FilterModel.class}, null, model);
         }
         return result;
     }

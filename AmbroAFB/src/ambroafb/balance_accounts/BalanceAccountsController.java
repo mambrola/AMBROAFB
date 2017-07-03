@@ -6,7 +6,6 @@
 package ambroafb.balance_accounts;
 
 import ambro.AFilterableTreeTableView;
-import ambroafb.general.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -14,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,14 +55,13 @@ public class BalanceAccountsController implements Initializable {
         aview.getColumns().stream().forEach((column) -> {
             column.setSortable(false);
         });
-        reAssignTable(null);
     }
 
-    public void reAssignTable(FilterModel model){
+    public void reAssignTable(Supplier<List<BalanceAccount>> fetchBalAccsData){
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         roots.clear();
         aview.removeAll();
-        new Thread(new BalanceAccountsFromDB(roots, selectedIndex)).start();
+        new Thread(new BalanceAccountsRunnable(fetchBalAccsData, selectedIndex)).start();
     }
     
     public EditorPanelController getEditorPanelController(){
@@ -163,13 +162,13 @@ public class BalanceAccountsController implements Initializable {
     }
     
     
-    private class BalanceAccountsFromDB implements Runnable {
+    private class BalanceAccountsRunnable implements Runnable {
 
-        private final ObservableList<BalanceAccount> roots;
+        private final Supplier<List<BalanceAccount>> supplier;
         private final int selectedIndex;
         
-        public BalanceAccountsFromDB(ObservableList<BalanceAccount> roots, int selectedIndex){
-            this.roots = roots;
+        public BalanceAccountsRunnable(Supplier<List<BalanceAccount>> supplier, int selectedIndex){
+            this.supplier = supplier;
             this.selectedIndex = selectedIndex;
         }
         
@@ -178,7 +177,7 @@ public class BalanceAccountsController implements Initializable {
             Platform.runLater(() -> {
                 masker.setVisible(true); 
             });
-            BalanceAccount.getAllFromDB().stream().forEach((account) -> {
+            supplier.get().stream().forEach((account) -> {
                 makeTreeStructure(account);
             });
             Platform.runLater(() -> {
