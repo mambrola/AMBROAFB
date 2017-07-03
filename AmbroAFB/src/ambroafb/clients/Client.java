@@ -12,11 +12,11 @@ import ambroafb.countries.Country;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
-import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.GeneralConfig;
-import ambroafb.phones.Phone;
 import ambroafb.general.Utils;
 import ambroafb.general.image_gallery.ImageGalleryController;
+import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.phones.Phone;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -221,7 +220,7 @@ public class Client extends EditorPanelable{
         return DBUtils.getObjectsListFromDB(ClientStatus.class, DB_STATUS_TABLE, params);
     }
     
-    public static List<Client> getFilteredFromDB(FilterModel model) { // JSONObject filter
+    public static ArrayList<Client> getFilteredFromDB(FilterModel model) { // JSONObject filter
         final ClientFilterModel clientFilterModel = (ClientFilterModel) model;
         WhereBuilder whereBuilder = new ConditionBuilder().where()
                                                 .and("created_date", ">=", clientFilterModel.getFromDateForDB())
@@ -251,7 +250,7 @@ public class Client extends EditorPanelable{
             return clientsFromDB;
         }
         // else filter only clients or only partners:
-        return clientsFromDB.stream().filter((Client c) -> {
+        return (ArrayList<Client>) clientsFromDB.stream().filter((Client c) -> {
             boolean partner = c.getEmail() == null || c.getEmail().isEmpty();
             return (clientFilterModel.isTypeSelected()) ? !partner : partner;
         }).collect(Collectors.toList());

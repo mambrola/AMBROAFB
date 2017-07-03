@@ -6,12 +6,13 @@
 package ambroafb.general_scene.table_list;
 
 import ambro.AFilterableTableView;
-import ambroafb.general.FilterModel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -52,21 +53,27 @@ public class TableListController implements Initializable {
         editorPanelController.setOuterController(this);
     } 
     
-    public void reAssignTable(List<? extends EditorPanelable> sortedList, FilterModel model){
-        // Stage has not filter or it is canceled from user:
-        if (model == null || !model.isCanceled()) {
-            int selectedIndex = aview.getSelectionModel().getSelectedIndex();
-            contents.clear();
-            masker.setVisible(true);
-
-            contents.setAll(sortedList);
-//            Platform.runLater(() -> {
-            masker.setVisible(false);
-            if (selectedIndex >= 0){
-                aview.getSelectionModel().select(selectedIndex);
-            }
-//            });
-        }
+    public void reAssignTable(Supplier<ArrayList<EditorPanelable>> fetchData){
+        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+        contents.clear();
+        
+        new Thread(() -> {
+            Platform.runLater(() -> {
+                masker.setVisible(true);
+            });
+            
+            ArrayList<EditorPanelable> list = fetchData.get();
+            System.out.println("+++++++++++++++++++++++++ list.size(): " + list.size());
+            contents.setAll(list);
+            
+            Platform.runLater(() -> {
+                masker.setVisible(false);
+                if (selectedIndex >= 0){
+                    aview.getSelectionModel().select(selectedIndex);
+                }
+            });
+        }).start();
+        
     }
     
     public void addTableByClass(Class targetClass){

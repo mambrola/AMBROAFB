@@ -37,6 +37,7 @@ import authclient.AuthServerException;
 import authclient.monitoring.MonitoringClient;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
@@ -145,12 +146,18 @@ public class MainController implements Initializable {
             
             ClientFilter filter = new ClientFilter(clients);
             FilterModel model = filter.getResult();
-            List<Client> clientsList = Client.getFilteredFromDB(model);
-            clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
-            clients.getController().reAssignTable(clientsList, model);
             
             if (model.isCanceled()){
                 clients.close();
+            }
+            else {
+                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                            ArrayList<Client> clientsList = Client.getFilteredFromDB(model);
+                                            clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
+                                            return new ArrayList(clientsList);
+                                        };
+                
+                clients.getController().reAssignTable(fetchData);
             }
         }
         else {
@@ -165,15 +172,21 @@ public class MainController implements Initializable {
         Stage loggingsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(loggingsStage == null || !loggingsStage.isShowing()){
             TableList loggings = new TableList(AmbroAFB.mainStage, Logging.class, stageTitle);
+            loggings.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
             loggings.show();
             
             LoggingFilter filter = new LoggingFilter(loggings);
             FilterModel model = filter.getResult();
-            loggings.getController().reAssignTable(Logging.getFilteredFromDB(model), model);
-            loggings.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
             
-            if (model.isCanceled()) 
+            if (model.isCanceled()) {
                 loggings.close();
+            }
+            else {
+                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                        return new ArrayList(Logging.getFilteredFromDB(model));
+                                                    };
+                loggings.getController().reAssignTable(fetchData);
+            }
         }
         else {
             loggingsStage.requestFocus();
@@ -191,10 +204,15 @@ public class MainController implements Initializable {
             
             InvoiceFilter filter = new InvoiceFilter(invoices);
             FilterModel model = filter.getResult();
-            invoices.getController().reAssignTable(Invoice.getFilteredFromDB(model), model);
             
             if (model.isCanceled()){
                 invoices.close();
+            }
+            else {
+                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                        return new ArrayList(Invoice.getFilteredFromDB(model));
+                                                    };
+                invoices.getController().reAssignTable(fetchData);
             }
         }
         else {
@@ -209,7 +227,10 @@ public class MainController implements Initializable {
         Stage productsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if (productsStage == null || !productsStage.isShowing()){
             TableList products = new TableList(AmbroAFB.mainStage, Product.class, stageTitle);
-            products.getController().reAssignTable(Product.getAllFromDB(), null);
+            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                    return new ArrayList(Product.getAllFromDB());
+                                                };
+            products.getController().reAssignTable(fetchData);
             products.show();
         }
         else{
@@ -234,7 +255,10 @@ public class MainController implements Initializable {
 //            FetchTableListEntriesFromDB fetch = new FetchTableListEntriesFromDB(supplier, countries);
 //            fetch.start();
             
-            countries.getController().reAssignTable(Country.getAllFromDB(), null);
+            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                    return new ArrayList(Country.getAllFromDB());
+                                                };
+            countries.getController().reAssignTable(fetchData);
             countries.show();
         }
         else {
@@ -253,15 +277,21 @@ public class MainController implements Initializable {
         Stage licensesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(licensesStage == null || !licensesStage.isShowing()){
             TableList licenses = new TableList(AmbroAFB.mainStage, License.class, stageTitle);
+            licenses.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
             licenses.show();
             
             LicenseFilter filter = new LicenseFilter(licenses);
             FilterModel filterModel = filter.getResult();
-            licenses.getController().reAssignTable(License.getFilteredFromDB(filterModel), filterModel);
-            licenses.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
 
-            if (filterModel.isCanceled()) 
+            if (filterModel.isCanceled()){
                 licenses.close();
+            }
+            else {
+                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                        return new ArrayList(License.getFilteredFromDB(filterModel));
+                                                    };
+                licenses.getController().reAssignTable(fetchData);
+            }
         }
         else {
             licensesStage.requestFocus();
@@ -282,7 +312,10 @@ public class MainController implements Initializable {
         Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(miniTablesStage == null || !miniTablesStage.isShowing()){
             TableList attitudes = new TableList(AmbroAFB.mainStage, Attitude.class, stageTitle);
-            attitudes.getController().reAssignTable(Attitude.getAllFromDB(), null);
+            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                    return new ArrayList(Attitude.getAllFromDB());
+                                                };
+            attitudes.getController().reAssignTable(fetchData);
             attitudes.getController().removeElementsFromEditorPanel("#search");
             attitudes.show();
             
@@ -299,7 +332,10 @@ public class MainController implements Initializable {
         Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(miniTablesStage == null || !miniTablesStage.isShowing()){
             TableList merchandises = new TableList(AmbroAFB.mainStage, Merchandise.class, stageTitle);
-            merchandises.getController().reAssignTable(Merchandise.getAllFromDB(), null);
+            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                    return new ArrayList(Merchandise.getAllFromDB());
+                                                };
+            merchandises.getController().reAssignTable(fetchData);
             merchandises.getController().removeElementsFromEditorPanel("#search");
             merchandises.show();
         } else {
@@ -312,7 +348,10 @@ public class MainController implements Initializable {
         Stage paramsGeneralStage = StagesContainer.getStageFor(AmbroAFB.mainStage, ParamGeneral.class.getSimpleName());
         if(paramsGeneralStage == null || !paramsGeneralStage.isShowing()){
             TableList generalParams = new TableList(AmbroAFB.mainStage, ParamGeneral.class, "general_params");
-            generalParams.getController().reAssignTable(ParamGeneral.getAllFromDB(), null);
+            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                    return new ArrayList(ParamGeneral.getAllFromDB());
+                                                };
+            generalParams.getController().reAssignTable(fetchData);
             generalParams.getController().removeElementsFromEditorPanel("#refresh");
             generalParams.show();
         }
@@ -328,8 +367,10 @@ public class MainController implements Initializable {
         if(currenciesStage == null || !currenciesStage.isShowing()){
             TableList currencies = new TableList(AmbroAFB.mainStage, Currency.class, stageTitle);
             currencies.getController().removeElementsFromEditorPanel("#search");
-            
-            currencies.getController().reAssignTable(Currency.getAllFromDB(), null);
+            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                    return new ArrayList(Currency.getAllFromDB());
+                                                };
+            currencies.getController().reAssignTable(fetchData);
             currencies.show();
         }
         else {
@@ -347,10 +388,15 @@ public class MainController implements Initializable {
             
             CurrencyRateFilter filter = new CurrencyRateFilter(currencyRates);
             FilterModel model = filter.getResult();
-            currencyRates.getController().reAssignTable(CurrencyRate.getFilteredFromDB(model), model);
 
             if (model.isCanceled()){
                 currencyRates.close();
+            }
+            else {
+                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                        return new ArrayList(CurrencyRate.getFilteredFromDB(model));
+                                                    };
+                currencyRates.getController().reAssignTable(fetchData);
             }
         }
         else {
@@ -364,7 +410,10 @@ public class MainController implements Initializable {
         Stage discountOnCountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if (discountOnCountsStage == null || !discountOnCountsStage.isShowing()){
             TableList discountOnCounts = new TableList(AmbroAFB.mainStage, DiscountOnCount.class, stageTitle);
-            discountOnCounts.getController().reAssignTable(DiscountOnCount.getAllFromDB(), null);
+            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                    return new ArrayList(DiscountOnCount.getAllFromDB());
+                                                };
+            discountOnCounts.getController().reAssignTable(fetchData);
             discountOnCounts.getController().removeElementsFromEditorPanel("#search");
             discountOnCounts.show();
         }
@@ -452,7 +501,8 @@ public class MainController implements Initializable {
         public void run() {
             List<EditorPanelable> contentList = supplier.get();
             Platform.runLater(() -> {
-                tableList.getController().reAssignTable(contentList, null);
+//                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {};
+//                tableList.getController().reAssignTable(contentList, null);
                 tableList.show();
             });
         }
