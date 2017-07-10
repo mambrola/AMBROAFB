@@ -63,7 +63,6 @@ public class TableListController implements Initializable {
             });
             
             ArrayList<EditorPanelable> list = fetchData.get();
-            System.out.println("+++++++++++++++++++++++++ list.size(): " + list.size());
             contents.setAll(list);
             
             Platform.runLater(() -> {
