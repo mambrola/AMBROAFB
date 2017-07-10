@@ -17,16 +17,6 @@
                               fx:controller="ambroafb.params_general.dialog.ParamGeneralDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer" >
         <children>
-            <HBox styleClass="one">
-                <children>
-                    <VBox styleClass="couple">
-                        <children>
-                            <Label text="%clients" styleClass="validationMessage" />
-                            <ClientComboBox fx:id="clients" styleClass="couple" />
-                        </children>
-                    </VBox>
-                </children>
-            </HBox>
             <HBox styleClass="oneHalf">
                 <children>
                     <VBox styleClass="couple">

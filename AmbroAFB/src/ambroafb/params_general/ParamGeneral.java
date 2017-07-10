@@ -6,7 +6,6 @@
 package ambroafb.params_general;
 
 import ambro.AView;
-import ambroafb.clients.Client;
 import ambroafb.general.DBUtils;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -35,9 +34,9 @@ public class ParamGeneral extends EditorPanelable {
     public static final String DB_DELETE_PROC_NAME = "general_delete";
     public static final String DB_TABLE_NAME = "process_general_params";
                                                 
-    @AView.Column(title = "%client", width = "150", styleClass = "textCenter")
-    private final StringProperty clientDescrip;
-    private final ObjectProperty<Client> clientObj;
+//    @AView.Column(title = "%client", width = "150", styleClass = "textCenter")
+//    private final StringProperty clientDescrip;
+//    private final ObjectProperty<Client> clientObj;
     
     @AView.Column(title = "%attitude", width = "100", styleClass = "textCenter")
     private final StringProperty attitudeDescrip;
@@ -56,10 +55,10 @@ public class ParamGeneral extends EditorPanelable {
     private static final String ALL = "ALL";
     
     public ParamGeneral(){
-        clientDescrip = new SimpleStringProperty(ALL);
-        clientObj = new SimpleObjectProperty<>(new Client());
-        clientObj.get().setFirstName(ALL);
-        clientObj.get().setRecId(0);
+//        clientDescrip = new SimpleStringProperty(ALL);
+//        clientObj = new SimpleObjectProperty<>(new Client());
+//        clientObj.get().setFirstName(ALL);
+//        clientObj.get().setRecId(0);
         
         attitudeDescrip = new SimpleStringProperty(ALL);
         attitudeObj = new SimpleObjectProperty<>(new Attitude());
@@ -74,9 +73,9 @@ public class ParamGeneral extends EditorPanelable {
         paramType = new SimpleStringProperty("");
         param = new SimpleStringProperty("");
         
-        clientObj.addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
-            resetClientDescrip();
-        });
+//        clientObj.addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
+//            resetClientDescrip();
+//        });
         
         attitudeObj.addListener((ObservableValue<? extends Attitude> observable, Attitude oldValue, Attitude newValue) -> {
             rebindAttitudeDescrip();
@@ -89,12 +88,12 @@ public class ParamGeneral extends EditorPanelable {
         rebindMerchandiseDescrip();
     }
     
-    private void resetClientDescrip(){
-        Client newValue = clientObj.get();
-        if (newValue != null){
-            clientDescrip.set(newValue.getShortDescrip(",").get());
-        }
-    }
+//    private void resetClientDescrip(){
+//        Client newValue = clientObj.get();
+//        if (newValue != null){
+//            clientDescrip.set(newValue.getShortDescrip(",").get());
+//        }
+//    }
     
     private void rebindAttitudeDescrip(){
         attitudeDescrip.unbind();
@@ -136,9 +135,9 @@ public class ParamGeneral extends EditorPanelable {
     
     
     // Propertis:
-    public ObjectProperty<Client> clientProperty(){
-        return clientObj;
-    }
+//    public ObjectProperty<Client> clientProperty(){
+//        return clientObj;
+//    }
     
     public ObjectProperty<Attitude> attitudeProperty(){
         return attitudeObj;
@@ -175,10 +174,6 @@ public class ParamGeneral extends EditorPanelable {
         return result;
     }
     
-//    public Integer getClientId() {
-//        return getIdFrom(clientObj.get());
-//    }
-    
     public Integer getAttitude() {
         return getIdFrom(attitudeObj.get());
     }
@@ -207,12 +202,6 @@ public class ParamGeneral extends EditorPanelable {
     
     
     // Setters:
-//    public void setClientId(Integer clientId) { // It is needed in "copyFrom" method.
-//        if (clientObj.get() != null){
-//            clientObj.get().setRecId((clientId == null) ? 0 : clientId);
-//        }
-//    }
-
     public void setAttitude(Integer attitudeId) {
         if (attitudeObj.get() != null){
             attitudeObj.get().setRecId((attitudeId == null) ? 0 : attitudeId);
@@ -268,15 +257,8 @@ public class ParamGeneral extends EditorPanelable {
     public void copyFrom(EditorPanelable other) {
         ParamGeneral otherParamGeneral = (ParamGeneral)other;
         
-        clientObj.set(otherParamGeneral.clientProperty().get());
-//        setClientId(Utils.avoidNullAndReturnInt(otherParamGeneral.getClientId()));
-        
         attitudeObj.get().copyFrom(otherParamGeneral.attitudeProperty().get());
-//        setAttitude(Utils.avoidNullAndReturnInt(otherParamGeneral.getAttitude()));
-//        setAttitudeDescrip(otherParamGeneral.getAttitudeDescrip());
         merchandiseObj.get().copyFrom(otherParamGeneral.merchandiseProperty().get());
-//        setMerchandise(Utils.avoidNullAndReturnInt(otherParamGeneral.getMerchandise()));
-//        setMerchandiseDescrip(otherParamGeneral.getMerchandiseDescrip());
         
         setParamType(otherParamGeneral.getParamType());
         setParam(otherParamGeneral.getParam());
@@ -285,7 +267,6 @@ public class ParamGeneral extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         ParamGeneral other = (ParamGeneral)backup;
-//        Utils.avoidNullAndReturnInt(getClientId()) == Utils.avoidNullAndReturnInt(other.getClientId()) &&
         return  attitudeObj.get().compares(other.attitudeProperty().get()) &&
                 merchandiseObj.get().compares(other.merchandiseProperty().get()) &&
                 getParamType().equals(other.getParamType()) &&
@@ -294,63 +275,17 @@ public class ParamGeneral extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-//        int clientID = Utils.avoidNullAndReturnInt(getClientId());
-//        String clientDescr = ""; // (clientID <= 0) ? ALL : "" + clientID;
-        
-//        int attitudeID = Utils.avoidNullAndReturnInt(getAttitude());
-//        String attitudeStr = (attitudeID <= 0) ? ALL : "" + attitudeID;
-
         int merchandiseID =  Utils.avoidNullAndReturnInt(getMerchandise());
         String merchandiseStr = (merchandiseID <= 0) ? ALL : "" + merchandiseID;
-        return  clientDescrip.get() + " " + attitudeDescrip.get() + " " + merchandiseDescrip.get() + " " +
+        return  attitudeDescrip.get() + " " + merchandiseDescrip.get() + " " +
                     getParamType() + " " + getParam();
     }
     
     @Override
     public String toString(){
         String delimiter = "; ";
-        return  clientDescrip.get() + delimiter + attitudeDescrip.get() + delimiter + 
+        return  attitudeDescrip.get() + delimiter + 
                 merchandiseDescrip.get() + delimiter + getParamType() + delimiter + getParam();
     }
     
-    
-    
-//    public static class ParamsCellFactory implements Callback<TableColumn<ParamGeneral, String>, TableCell<ParamGeneral, String>> {
-//
-//        @Override
-//        public TableCell<ParamGeneral, String> call(TableColumn<ParamGeneral, String> param) {
-//            return new TableCell<ParamGeneral, String>() {
-//                @Override
-//                public void updateItem(String str, boolean empty) {
-//                    setText(empty ? null : (str.isEmpty() ? "ALL" : str));
-//                }
-//            };
-//        }
-//    } 
-//    
-//    public static class AttitudeCellFactory implements Callback<TableColumn<ParamGeneral, Attitude>, TableCell<ParamGeneral, Attitude>> {
-//
-//        @Override
-//        public TableCell<ParamGeneral, Attitude> call(TableColumn<ParamGeneral, Attitude> param) {
-//            return new TableCell<ParamGeneral, Attitude>() {
-//                @Override
-//                public void updateItem(Attitude attitude, boolean empty) {
-//                    setText(empty ? null : (attitude.getDescrip().isEmpty() ? "ALL" : attitude.getDescrip()));
-//                }
-//            };
-//        }
-//    } 
-//    
-//    public static class MerchandiseCellFactory implements Callback<TableColumn<ParamGeneral, Merchandise>, TableCell<ParamGeneral, Merchandise>> {
-//
-//        @Override
-//        public TableCell<ParamGeneral, Merchandise> call(TableColumn<ParamGeneral, Merchandise> param) {
-//            return new TableCell<ParamGeneral, Merchandise>() {
-//                @Override
-//                public void updateItem(Merchandise attitude, boolean empty) {
-//                    setText(empty ? null : (attitude.getDescrip().isEmpty() ? "ALL" : attitude.getDescrip()));
-//                }
-//            };
-//        }
-//    } 
 }

@@ -5,7 +5,6 @@
  */
 package ambroafb.params_general.dialog;
 
-import ambroafb.clients.ClientComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -31,9 +30,6 @@ public class ParamGeneralDialogController implements Initializable {
 
     @FXML
     private VBox formPane;
-    @FXML
-    private ClientComboBox clients;
-//    private TextField client;
     @FXML 
     private AttitudeComboBox attitudes;
     @FXML 
@@ -68,7 +64,6 @@ public class ParamGeneralDialogController implements Initializable {
     void bindParamGeneral(ParamGeneral paramGeneral) {
         this.paramGeneral = paramGeneral;
         if (paramGeneral != null){
-            clients.valueProperty().bindBidirectional(paramGeneral.clientProperty());
             attitudes.valueProperty().bindBidirectional(paramGeneral.attitudeProperty());
             merchandises.valueProperty().bindBidirectional(paramGeneral.merchandiseProperty());
             paramType.textProperty().bindBidirectional(paramGeneral.paramTypeProperty());
