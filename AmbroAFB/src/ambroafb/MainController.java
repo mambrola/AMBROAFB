@@ -15,6 +15,7 @@ import ambroafb.currencies.Currency;
 import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCount;
+import ambroafb.docs.Doc;
 import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -271,6 +272,24 @@ public class MainController implements Initializable {
     
     
     @FXML private void accounts(ActionEvent event) {}
+    
+    @FXML private void docs(ActionEvent event){
+        String stageTitle = "docs";
+        Stage docsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        if(docsStage == null || !docsStage.isShowing()){
+            TableList docs = new TableList(AmbroAFB.mainStage, Doc.class, stageTitle);
+//            docs.getController().getEditorPanelController().addPanelButton(new DocsButton());
+            docs.show();
+            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                        return new ArrayList(Doc.getAllFromDB());
+                                                    };
+            docs.getController().reAssignTable(fetchData);
+        }
+        else {
+            docsStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, docsStage);
+        }
+    }
     
     @FXML private void licenses(ActionEvent event) {
         String stageTitle = "licenses";

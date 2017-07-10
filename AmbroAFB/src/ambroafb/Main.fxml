@@ -75,6 +75,7 @@
                         </Menu>
                         <Menu text="%books">
                             <items>
+                                <MenuItem onAction="#docs" text="%docs" />
                                 <MenuItem onAction="#licenses" text="%licenses" />
                                 <MenuItem onAction="#invoices" text="%invoices" />
                                 <SeparatorMenuItem />

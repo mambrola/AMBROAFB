@@ -15,6 +15,7 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
+import ambroafb.general.editor_panel.elements.buttons.SimpleButton;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.Filterable;
@@ -307,6 +308,15 @@ public class EditorPanelController implements Initializable {
     
     public void setOuterController(Initializable controller){
         outerController = controller;
+    }
+    
+    /**
+     * Adds SimplePanelButton (like exit, add, edit, or delete) before refresh button.
+     * @param button 
+     */
+    public void addPanelButton(SimpleButton button){
+        int emptySpaceIndex = formNode.getChildren().size() - 3;
+        formNode.getChildren().add(emptySpaceIndex, button);
     }
     
     public void removeButtonsByFxIDs(String... fxIds){
