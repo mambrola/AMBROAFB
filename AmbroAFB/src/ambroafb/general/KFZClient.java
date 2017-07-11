@@ -56,8 +56,8 @@ public class KFZClient {
     
      private static String serverAddress = "https://localhost:8443/KFZ_Server/api";
     
-     */ //    private static String serverAddress = "http://localhost:8080/KFZ_Server/api";
-    private String serverAddress = "http://136.243.102.152:8080/KFZ_Server/api"; //"http://136.243.102.152:8080/KFZ_Server/api"; //
+     */ //    private static String serverAddress = "http://localhost:8080/KFZ_Server/api";      //  DBService
+    private String serverAddress = "http://136.243.102.152:8080/DBService/api";  //  "http://192.168.0.30:8080/DBService/api";          
 
     private final Credentials credentials;
     private String token;
@@ -108,7 +108,6 @@ public class KFZClient {
         } else {
             String error = readStream(con.getErrorStream());
             con.getErrorStream().close();
-            con.getInputStream().close();
             con.disconnect();
             throw new KFZServerException(error, status);
         }
@@ -150,7 +149,6 @@ public class KFZClient {
         }
         String error = readStream(con.getErrorStream());
         con.getErrorStream().close();
-        con.getInputStream().close();
         con.disconnect();
         throw new KFZServerException(error, status);
     }

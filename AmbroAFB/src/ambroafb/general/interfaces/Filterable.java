@@ -5,13 +5,13 @@
  */
 package ambroafb.general.interfaces;
 
-import org.json.JSONObject;
+import ambroafb.general.FilterModel;
 
 /**
  *
  * @author mambroladze
  */
 public interface Filterable {
-    public JSONObject getResult();
+    public FilterModel getResult();
     public void setResult(boolean isOk);
 }

@@ -1,6 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To setLanguage this license header, choose License Headers in Project Properties.
+ * To setLanguage this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package ambroafb.general;
@@ -21,28 +21,35 @@ public class AlertMessage extends Alert {
      * დაუსეტავს ფანჯარას დასახელებას და ასევე დასასელებას, თუ რის შესახებაა დიალოგი. , 
      * @param alertType    - მესიჯის ტიპი, (AlertType.ERROR, AlertType.WARNING, AlertType.CONFIRMATION ...)
      * @param ex
-     * @param messageName  - შიდა, კონტექსტის დასახელება
+     * @param message  - შიდა, კონტექსტის დასახელება
+     * @param title The title addition on stage up-left corner. It will show with message type inscription.
      */
-    public AlertMessage(AlertType alertType, Exception ex, String messageName) {
+    public AlertMessage(AlertType alertType, Exception ex, String message, String title) {
         super(alertType);
-        String titleAlert; //added by Murman 
+        String titleForAlertType; //added by Murman 
         switch (alertType){
-            case CONFIRMATION: titleAlert = Names.ALERT_CONFIRMATION_WINDOW_TITLE; break;
-            case ERROR: titleAlert = Names.ALERT_ERROR_WINDOW_TITLE; break;
-            case INFORMATION: titleAlert = Names.ALERT_INFORMATION_WINDOW_TITLE; break;
-            case WARNING: titleAlert = Names.ALERT_WARNING_WINDOW_TITLE; break;
-            default: titleAlert = "?";
+            case CONFIRMATION: titleForAlertType = Names.ALERT_CONFIRMATION_WINDOW_TITLE; break;
+            case ERROR: titleForAlertType = Names.ALERT_ERROR_WINDOW_TITLE; break;
+            case INFORMATION: titleForAlertType = Names.ALERT_INFORMATION_WINDOW_TITLE; break;
+            case WARNING: titleForAlertType = Names.ALERT_WARNING_WINDOW_TITLE; break;
+            default: titleForAlertType = "?";
         }
-        setTitle(GeneralConfig.getInstance().getTitleFor(titleAlert));
-        setHeaderText(GeneralConfig.getInstance().getTitleFor(messageName));
+        setTitle(GeneralConfig.getInstance().getTitleFor(title));
+        setResizable(true);
+//        setHeaderText(message);
+        setContentText(message);
         
         getDialogPane().getStylesheets().add(
             getClass().getResource("/styles/css/core.css").toExternalForm());
         
-//        getDialogPane().getScene().getStylesheets().add("/ambroafb/general/core.css");
         ((Stage)getDialogPane().getScene().getWindow()).initOwner(AmbroAFB.mainStage);
-        if (titleAlert.equals(Names.ALERT_ERROR_WINDOW_TITLE))
-            Utils.log(messageName, ex);
+        if (titleForAlertType.equals(Names.ALERT_ERROR_WINDOW_TITLE))
+            Utils.log(message, ex);
+    }
+    
+    public void setOwner(Stage owner){
+        this.initOwner(owner);
+        StageUtils.centerChildOf(owner, (Stage)this.getDialogPane().getScene().getWindow());
     }
     
     /**

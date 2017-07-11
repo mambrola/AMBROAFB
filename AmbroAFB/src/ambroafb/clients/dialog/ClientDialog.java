@@ -8,9 +8,10 @@ package ambroafb.clients.dialog;
 import ambroafb.clients.Client;
 import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import ambroafb.general.Utils;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.UserInteractiveStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,38 +21,33 @@ import javafx.stage.WindowEvent;
  *
  * @author tabramishvili
  */
-public class ClientDialog extends Stage implements Dialogable {
+public class ClientDialog extends UserInteractiveStage implements Dialogable {
     
-    public Client client, clientBackup;
+    public Client client;
+    public final Client clientBackup;
     
     private ClientDialogController dialogController;
     
     public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        String ownerPath = Utils.getPathForStage(owner);
-        String clientsDialogPath = ownerPath + Names.LEVEL_FOR_PATH;
-        Utils.saveShowingStageByPath(clientsDialogPath, (Stage)this);
+        super(owner,  Names.LEVEL_FOR_PATH, "client_dialog_title", "/images/dialog.png");
         
-        Client clientObject;
         if (object == null)
-            clientObject = new Client();
+            client = new Client();
         else
-            clientObject = (Client) object; 
+            client = (Client) object;
         
-        this.client = clientObject;
-        this.clientBackup = clientObject.cloneWithID();
+        this.clientBackup = client.cloneWithID();
         
-        Scene currentScene = Utils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml", null);
+        Scene currentScene = SceneUtils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml", null);
         dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
         dialogController.bindClient(this.client); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
-        dialogController.setNextVisibleAndActionParameters(buttonType);
+        dialogController.setNextVisibleAndActionParameters(buttonType, "/clients/passport/");
         dialogController.setBackupClient(this.clientBackup);
         this.setScene(currentScene);
-        setResizable(false);
-        initOwner(owner);
-
+        
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            event.consume();
+            if (event != null) event.consume();
         });
     }
     

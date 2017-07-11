@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.*?>
+<?import ambroafb.currencies.*?>
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/currencydialog.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" 
+                              xmlns="http://javafx.com/javafx/8"
+                              fx:controller="ambroafb.currencies.dialog.CurrencyDialogController" >
+    <VBox fx:id="formPane" styleClass="vContainer" >
+        <children>
+            <HBox styleClass="oneHalf">
+                <children>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%date" styleClass="validationMessage" />
+                            <ADatePicker fx:id="openDate" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%iso_code" styleClass="validationMessage" />
+                            <IsoComboBox fx:id="iso" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneHalf">
+                <children>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%descrip" styleClass="validationMessage" />
+                            <TextField fx:id="descrip" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%symbol" styleClass="validationMessage" />
+                            <TextField fx:id="symbol" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

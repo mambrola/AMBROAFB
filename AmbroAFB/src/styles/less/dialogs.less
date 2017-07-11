@@ -1,0 +1,64 @@
+
+@formWidth          : 800;
+@gap                :  15;
+@spaceWidth         :  35;
+@formHeight         : 800;
+@rotateHboxSpacing  :  65;
+
+.setFormPaneRules(@width) {
+    @formWidth:     @width;
+    //@formHeight:    @height;
+    
+    #formPane {
+        -fx-min-width: @formWidth + 2*@gap;
+        -fx-max-width: @formWidth + 2*@gap;
+        -fx-padding: @gap;
+    }
+}
+
+.vContainer {
+    -fx-spacing: @gap;
+}
+
+.label {
+    -fx-font-weight: bold;
+    -fx-font-size: 0.9em;
+    -fx-padding: 1 0 1 2;
+}
+
+.one>.couple, .one>.couple>* {
+    -fx-pref-width: @formWidth;
+}
+.oneHalf>.couple, .oneHalf>.couple>* {
+    -fx-pref-width: (@formWidth - @spaceWidth)/2;
+}
+.oneThirds>.couple,  .oneThirds>.couple>*, .oneThirds>.couple>.innerCouple>* {
+    -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
+}
+
+.twoThirds>.coupleOneThird, .twoThirds>.coupleOneThird>*{
+    -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
+}
+ .twoThirds>.coupleTwoThird, .twoThirds>.coupleTwoThird>* {
+    -fx-pref-width: 2*((@formWidth - 2*@spaceWidth)/3) + @spaceWidth;
+}
+
+.oneThirds {
+    -fx-pref-width: 2*(@formWidth - 2*@spaceWidth)/3 + @spaceWidth;
+}
+
+.oneHalf, .oneThirds, .twoThirds {
+    -fx-spacing: @spaceWidth;
+}
+
+.okayCancelPane {
+    -fx-padding: 4*@gap 0 0 0;
+}
+
+.button {
+    -fx-font-weight: bold;
+}
+
+*:disabled {
+    -fx-opacity: 0.9;
+}

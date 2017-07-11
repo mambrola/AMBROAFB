@@ -25,3 +25,159 @@ Accounting for Busines
 	ამას გებულობს იმ სცენის კონტროლერის მიხედვით, რომელზედაც თვითონ იმყოფება. ClientDialog-ს აქვს სცენის კონტროლერი რომელიც უზრუნველყოფს სცენის კომპონენტების ურთიერთობას და დიალოგ კლასის ძირითად ლოგიკას.
 
 იხილეთ "სტუქტურის სურათი.pdf"
+
+
+
+ +  -> მოგვარებულია
+ -  -> მოსაგვარებელია
+ |  -> კარგი იქნებოდა ყოფილიყო
+ @  -> აღარაა საჭირო
+
+
+კითხვები რომლებიც საჭიროებენ დასაბუთებულ ახსნას:
+* როცა stage დაიხურება ამოიშალოს თუ არა  bidmap-იდან?
+* iso-ს bind და set-ის შემთხვევები შესაბამისად CurrencyRate-სა და Currency (ასევე Product) კლასებში. იგივეა Country Client-ებში
+    +  ჯობია rebind() მეთოდები გამოვიძახოთ და არ დავსეტოთ ხელით მნიშვნელობები:
+    	1. კოდი ინარჩუნებს მოქნილობას. ამ მნიშვნელობებს dialog კლასებში ვაბაინდებთ ამიტომ შესაძლოა ხელით დაწერილმა set-მა runtime exception-ი მოგვცეს ან სადმე გამოგვრჩეს set-ის დაწერა.
+    	2. ეს მეთოდები Listener-ის გარეთაც საჭიროა, თავად კონსტრუქტორში. ყველა property-ის თავდაპირველად აქვს default მნიშვნელობა, იმის გამო რომ რომელიმე dialog-ის ფანჯარამ (მაგ. new ან new for templ.) არ ამოაგდოს runtime NullPointerException-ი. ამიტომ ბაზიდან წამოღებული მნიშვნელობების შესაბამის setter-ებსა და getter-ებში ხდება ამ objectProperty-ების ობიექტების set-ი და get-ი. რადგან ამ ობიექტის შეცვლა ავტომატურად არ ნიშნავს იმას რომ შესაბამისი column-ის მნიშვნელობაც შეიცვლება tableView-ში, ამიტომ საჭიროა ამ column-ის მნიშვნელობა დაბაინდებული იყოს უკვე objectProperty-ი ობიექტის მნიშვნელობის შესაბამის property-ისთან.
+	შენიშვნა: გამონაკლისია შემთხვევები მაშინ როცა ცვლადები bidirectional კავშირში არიან სცენის ომპონენტებთან. მაშინ მათზე unbind-ი შეცომას მოგვცემს. ამ შემთხვევაში resetი უნდა მოხდეს მნიშვნელობის და არა unbind / bind-ი.
+	ზოგ შემთხვევაში objectProperty ობიქტის შიგთავსი ობიექტის ველები თავიდანვე არაა ცნობილი და setter-ში იცვლება, ამიტომ კონსტრუქტორში bind უნდა გვეწეროს და არა set რომ მნიშვნელობა შეიცვალოს შესაბამისმა property-მ.
+
+* (+) Date-ების გამოჩენა სიაში და DatePicker-ში 
+	+ ორი ცვალდი გვაქვს, ერთი ბაზიდან რაც მოდის იმის შესაბამისი LocalDate და მეორე stringProperty, თუ სიაშია გამოსაჩენი .
+* (+) setAll-ის გამოყენება ხომ არ აჯობებს reAssignTable-ებში სტატიკური მეთოდების result-ის forEach-ით გადაყოლას?
+	+ გააჩნია შემთხვევას, მაგალითად კლიენტების დროს არ აჯობებს, იმიტომ რომ ეს სია Java-ს მხარეს უნდა გაიფილტროს პარტიორებზე და უშუალოდ კლიენტებზე. თუმცა შეიძლება setAll-ში გამოვიყენოთ list-ის filte-ი. მაგრამ აქ მეორე მომენტია ის რომ setAll-ის შემთხვევაში შევინახავთ უშაუალოდ მიმთითებელს სიაზე და თუ სია სხვა მხრიდან შევცვალეთ ავტომატურად item-ებშიც შეიცვლება, მაგრამ static-ური მეთოდებისგან დაბრუნებული სიები სხვა კლასებიდან არ იცვლება და მხოლო გამოძახების ადგილზეა გამოყენებული, ამიტომ არ აქვს მნიშვნელობა გადავაკოპირებთ თუ უშუალოდ მიმთიტებელს დავსეტავთ. დროის თვალსაზრისით ჯობია setAll.
+* (+) mapEditor-ის გამოყენება productDiscount-ებში. 
+	+ MapEditor-ი იმისათვის რომ მასთან მანიპულაცია მოხერხებული იყოს იყენებს Element ნტერფეისს (afb-ს შემთხვევაში MapEditorElement-ს). თუ MapEditor-ში გვინდა ელემენტი ჩავდოთ ეს ობიექტი უნდა implement-ირებდეს MapEditorelement ინტერფეისს (get.set Key/get.set Value/compare). თუმცა ამან გამოიწვია ის რომ საჭირო გახდა product-ების discount-ების დაბრუნების ახალი მეთოდი, რომელიც დააბრუნებს ObservableList<MapEditorElement>-ს. ეს სია უნდა დაესეტოს mapEditorComboBox-ს და ჩამატება წაშლა უნდა მოხდეს ამ სიაში. თუმცა ბაზიდან productDiscount-ების ასავსებად და გამოსაჩენად product-ებს აქვთ ObservableList<ProductDiscount> სია. რომლეიც თანხვედრაში უნდა მოვიდეს ზემოთ ნახსენებ სიასთან. ამიტომ setDiscount(Collection<ProductDiscount> discounts) მეთოდში, რომელიც ბაზიდან წამოღებულ მნიშვნელობებს უსეტავს product კლასს, საჭირო გახდა პირველი სიის შეცვლა. ხოლო ამ სიის შეცვლა უნდა იწვევდეს ObservableList<ProductDiscount> სიის ცვლილებას, ამიტომ დაუყენდა Listener-ი. copyFrom-შიც ხდება ObservableList<MapEditorElement> სიის გადაკოპირება.
+	mapEditor-ის ძველ, generic ვერსიაში, განსხვავება იყო stringConverter-ის რეალიზებაში. ახალი stringConverter-ი გაცილებით დახვეწილია და მხოლოდ ახალი item-ის ჩამატების ფუნქციონალს მოიცავს. delete და edit გამოიყო stringConverter-ისგან და გატანილია MapEditorItem კლასში.
+ძველი რეალიზება გულისხმობდა რომ mapeditor-ის Items უნდა ქონოდა konstruqtori key-სა და value-სთვის.
+
+
+დასახვეწია:
+* (+) აჯობებს path-ის აგება გავაკეთოთ იმ კლასში სადაც გავაკეთებთ ჩაკეცვის(iconified) ლოგიკის რეალიზებას. ყველა stage-ი არ უნდა აგებდეს path-ს თავისთან ხელით. მომავალში რომ მოგვიხდეს pathDelimmiter-ის შეცვლა (/) შესაცვლელი იქნება ყველა stage-ში. (registerStageByOwner)
+* (+) callGallerySendMethod არ უნდა იყოს Utils-ში (აჯობებს Client-ს ქონდეს imageGalleryController-ის Instance-ი და saveOneToDB-ში იძახებდეს ამ instance-ის send მეთოდს)
+* (+) closeStageWithChildren-ის ლოგიკა, ეს ფუნქცია საჭიროა, წინააღმდეგ შემთხვევაში არ დაიხურებიან შვილიშვილი stage-ები და ამავე დროს აქ ხდება ის პროცესი რომ თუ dialog-ია გახსნილი და რაიმე შეცვლილია მშობელი stage-ის გამორთვისას მაინც ამოაგდებს ცვლილების გაფრთხილების alert-ს. გარდა ამისა თუ ფილტრია გახსნილი და მშობელი stage-ი იხურება მაშინ ამ ფილტრის closeRequest-ი გამოიძახება რაც გამოიწვევს იმას რომ filter-ის model-ი გაცარიელდება და მშობელი კლასის controller-ის reAssignTable-ში ტყუილად არ შევა კოდი (ეს ახსნილია ქვემოთაც).
+* (+) StagesContainer კლასში შემოსატანია delimiter = "/"
+* (+) Utils კლასში არასაჭირო მეთოდების ამოშლა ან გატანა სხვა კლასებში (მაგ. SceneUtils-ში იყოს Scene-თან დაკავშირებული მეთოდები)
+* (+) MVS პატერნის გამოყენება Filter-ში
+* (@) ATableView-ს contextMenu-დან იყოს შესაძლებლობა რომელ სვეტზეც ვდგავართ იმის content-ის alignment-ი ვცვალოთ
+* (+) recId-ის ვერ ცნობს callProcedureAndGetAsJson, წამოღებისას ცნობს (getDBClient().select("discounts_on_licenses_count") და ჩაწერისას ვერა. (პასუხი: general-insert-update-simple უნდა გამოვიძახოთ მაშინ როცა გვინდა ჩავდოთ ობიექტები რომლებიც მხოლოდ ერთ ცხრილით შემოიფარგლებიან და სხვა ცხრილშიც არ აქვთ რაიმე ველი, რთულ შემთხვევაში კონკრეტულ ობიექტს აქვს თავის ჩამატების პროცედურა, თუმცა DBClient.insertUpdate უზუნველყოფს შესაბამისი procedur-ის გამოძახებას)
+* (+) DBUtils რომელიც პასუხისმგებელი იქნება DBService-ისთან ურთიერთობაზე
+* (+) currency-ის განმეორებადი კოდი ყველგან სადაც iso string მოდის ბაზიდან (მაგ. CurrencyRate). მოგვარება -> Product კლასში
+* (+) StagesContainer.getPathForStage შესაცვლელია getPathForStage(owner, stageName)
+* (+) ბაზის სტატიკურ მეთოდებში კოპირების გამო error ex-ში ან სადმე შესაძლოა იყოს ჩარჩენილი სხვადასხვა კლასის class ცვლადი... (DBUtils მოაგვარებს ამ პრობლემას და ეს მეთოდები უფრო მოკლეები გახდებიან)
+* (+) product-ებში ზოგს მოაქვს ველი descrip და ასევე specificesrcip და ზოგს მხოლოდ specificDesrcip
+* (+) product-ების width დაპატარავებისას editorPanel-ის region-ის ადგილი უჩვეულოდ დიდა რჩება
+	+ less ფაილში ეწერა minWidth და maxWidth
+* (+) fxml, css, less ფაილები   (formPane_ზე Min და Max width_ები  // sheidzleba tavdapirvel zomas vusetavdit, tumca arc esaa sachiro)
+* (|) UML დიაგრამები
+* (+) Editorpanelable კლასების db მეთოდები ერთ სტილზე
+* (+) product-ების დიალოგში ორჯერ ჩნდება ფასდაკლებები mapEditor-ში. (discounts.addAll() შეიცვალა discounts.setAll()-ით)
+* (-) შესამოწმებელია ყველა Editorpanelable კლასში compare/copyFrom მეთოდების სისწორე, გააჩნია კლასს რა სიის ველები აქვს. შეიძლება გადაკოპირდეს deepCopy-ით შესაძლოა ნაწილობრივ გადაკოპირდეს (Map-ის მაგალითი invoice-ში product -> counter).
+* (-) ALL currencies-ში და country-ში
+* (+) Client-ის compare მეთოდში Phone.copmareList-ის მაგივრად Utils.compareList
+* (|) ტესტები
+* (+) Client-ის comboBox (+ALL, search.  წერია და კარგად მუშაობს TestExcelGeneral პროექტში)
+* (+) სადაც equals და compares-ს ვიყენებთ მარტო equals-ზე ხომ არ გადავიდეთ. compares-ს საჭიროება? equals-ს საჭიროება?
+compare / equals ორივე საჭიროა, მაგალითად ქვეყნებისთვის country.equal(other) ადარებს country code-ის მიხედვით, ხოლო compare ადარებს ყველა კომპონენტის მიხედვით (რადგან თუ სცენაზე რამე შეიცვალა compare მეთოდი გაარკვევს და მოამზადებს პროგრამას ალერტის ამოსაგდებად)
+* (+) clientComboBox-ის ნაცვლად ერთი generic filterableComboBox-ი.
+* (-) whereBuilder-ის andGroup() ან orGroup() მეთოდების გამოყენების დროს closeGroup-ის გამოძახება.
+* (+) გასუფთავდეს statis hashMap-ები ??  + საერთოდ აღარ ვიყენებთ static HashMap-ს...
+* (-) whereBuilder-ი საჭიროებს:  whereBuilder = whereBuilder.andGroup(); ...     whereBuilder = whereBuilder.closeGroup()
+* (+) client-ებს მოაქვს rezident გერმანია, როცა არ უნდ აწამოიღოს. ფილტრში ეთითება:  ორივე date -> null,  juridical -> false, country -> ALL, სტტუსები: მხოლოდ პირველი, rezident -> true
+* (+) Client-ის დიალოგის დროს თუ რეზიდენტობა გაინიშნა ალბათ ქვეყანა საქართველო შესაძლოა დარჩეს არჩეული comboBox-ში.
+	+ აღარაა საჭირო გადაბმა
+* (-) ქვეყნების comboBox-ი ძებნადი ??
+* (-) @JsonIgnore
+    public String language;  არ მოაქვს productSpecific_ის language, მაშინ როცა იგივე ჩანაწერი არ მუშაობს LicenseStatus კლასისთვის
+* (+) TestExcelGeneral კომპონენტების საფუძვლიანი ტესტი
+* (+) კონფიგურაციის განყოფილების გადაყვანა ახალ სტილზე
+* (+) BallanceAccount- refresh აგდებს UnSupportedOperationException-ს როცა მოინიშნება TreeTableView column (საკუთრივ) და მერე დაეჭირება refresh
+	+ treeTableView-ს შემთხვევაში არ გვაქვს განსაზღვრული რას ნიშნავდეს column-ის მიხედვით სორტირება. column-ზე კლიკი კი ავტომატურად ამ ფუქნციონალს ამოქმედებს. ეს იყო პრობლემა და არა refresh-ი. გადაწყვეტა: BallanceAccountController-ში TreeTableView-ს ყველა column-ს ვუთხარით რომ არ იყოს sortable.
+* (-) invoice-სა და client განყოფილებების შედარება
+* (+) სპეც. ComboBox-ების მოწესრიგება (პატერნებით)
+	+ სცენაზე უნდა დაიხატოს ამიტომ ერთი კონსტრუქტორი ჭირდება უპარამეტრო, შეიძლება გართულდეს და ჯობდეს extends ComboBox<T>
+* (+) localDB-ის შექმნა და derby-ის გამოყენება კიდევ საჭიროა ?? class UtilsDB მაინც დარჩეს, იქნებ საჭირო გახდეს, თუმცა კოდში არ ვიყენებთ.
+* (+) რატომღაც AFB-ს არ აქვს ის პრობლემა რომ თუ lib დირექტორიის გარეშ გაეშვა აღარ გაითიშოს და გაშვებული დარჩეს განსხვავებით testMain-სგან (შესაძლოა ამის მიზეზი იყოს ის რომ AFB ორჯერ არ ეშვება - ეს არ იყო მიზეზი, არამედ ის რომ main კლასში არ ეწერა ისეთი import-ი რომელიც lib დირექტორიას საჭიროებდა).
+* (-) ტელეფონების გადაყვანა ახალ mapEditor-ზე თუ არ გართულდება პროგრამა
+* (+) bal_account-ების comboBox. ალბათ დაჭირდება valueProperty, და promptText-ის დასეტვა აღარ გახდება საჭირო თუ იგივე მიდგომას გამოვიყენებთ რასაც clientComboBox-ის შემთხვევაში. + აქვს valueProperty-ის მსგავსი (selectedItemProperty) და გამოყენებულია AFilterableTableViewComboBox-ი.
+* (|) რამე ველი ხომ არ იყოს სადაც გამოჩნდება ამჟამად სიაში რამდენი ელემტია და ზოგადად რამდენია (შეიძლება გაფილტრულია სიის მონაცემები).
+toolTip დაყენდა თითოეულ სტრიქონზე თუმცა დავამატოთ Filter-ი გამოყენებულია თუ არა.
+* (+) supperWarnnigs  equals და hashCode მეთოდებზე
+	+ equals-ის გადატვირთვა აუცილებელია მაგალითად CheckComboBox<ClientsStatus>-ის დროს რადგან შეიძლება value მონიშნული იყოს მაგრამ selectionIndex დაბრუნდეს -1, რადგან ვერ იცნოს რომელია მონიშნული. (სიის ელემენტებში გამოყენებულია checkBox და string-ები დასახელებისთვის). ეს კი პრობლემას შექმნის isEmptyAnnotation-ის შემოწმებისას Utils კლასში.
+* (+) compare მეთოდებში ჯობია objectProperty-ების შედარებისას object-ები შევადაროთ და დავაზღვიოთ Null-ობაზე. შეიძლება რთული ჩანაწერი გამოვიდეს მაგრამ არ გამოგვრჩება შემთხვევა. მაგ: როცა comboBox-ში უნდა ჩაჯდეს კლასი იმის შესაბამისი ცვლადები ავსებულია default მნიშვნელობებით. binBidirectional კავშირის დროს კი პრიორიტეტია მარცხნივ ანუ ფრჩხილებში ჩასმული objectProperty და რადგან ეს მნიშვნელობაც default პარამეტრიანია, იმის მნიშვნელობა უყენდება comboBox-სს.  როცა comboBox-ს გავააქტიურებთ comboBox value ხდება null. ანუ ვიწყებთ აკრებას, გაქრა editor-ში მონიშნული ტექსტი (default მნიშვნეობა ისედაც "" იქნებოდა იმ კლასის რომელიც დაუყენდა, ამიტომ ვიზუალურად არ გამოჩნდება ეს პროცესი).  და არც ლურჯად მოინიშნა რომელიმე ელემენტი იმიტომ რომ არცერთთან არ მოხდა ძველად მონიშნული ელემენტის ტოლობა. ამიტომ setValue გახდა Null. ახლა უკვე null დაესეტა bindbidirection-ით comboBox-ის valueProperty-ის შესაბამის Property-ის.
+* (+) სიის ველებიანი stage-ები (მაგ. clients) როცა პირველ ჯერზე იხსნებოდნენ და მათი ფილტრიც ჩანდა, თუ გავთიშავდით არა ფილტრის cancel-ით არამედ ამ სიის stage-ის წითელი x-ით, კოდი შედიოდა reAssignTable-ში რასაც აზრი არ ქონდა იმიტომ რომ მალე ისედაც გაითიშებოდა stage-ი. ამის თავიდან ასაცილებლად exit_button-ის გათიშვის რეკურსიულ ფუნქციას დავამატეთ ფილტრის შემთხვევის გათვალისწინებაც. იძახება filter_ის onCloseRequest-ი, რაც იწვევს იმას რომ filter-ის model ცარიელდება და reAssign-ის if staetement-ი აღარ სრულდება. ამიტომ აღარ შედის reAssignTable მეთოდში
+* (-) Decimal-ების გამოჩენა ერთნაირი სიგრძით (Decmial-ებით გამოვა, currency-ის გამოყენება Decimal-ში ?)
+* (-) column-ების სახელები
+* (+) განახლებული excel_ის ფაილი (email-ზეცაა კონკრეტული ცვლილებების შესახებ)
+* (-) AFilterableTableViewComboBox-ისა და AFilterableTreeTableViewComboBox-ის ვიზუალის მოწესრიგება.
+* (+) Utils.getIntValue და Utils.getDoubleValue ხომ არ აჯობებს რომ null-ს აბრუნებდნენ თუ ვერ გადაიყვანეს?? 
+	+ არ აჯობებს, რადგან textField ებში null ისეტება და შემდეგ compare-ს გონია რომ რაიმე შეიცვალა, მაშინ გვიწევს ორი რამე მოვაგვაროთ: 1. null არ უნდა გამოჩნდეს textFiled-ებში, 2. null უნდა ვითვალისწინოთ ყველგან compare-ში.
+* (+) equals მეთოდების საჭიროება helper კლასებში. + თუ comboBox-ებში არიან მაშინ სასურველია იყოს გადატვირთული, თუ არა მაშინ საკმარისია compares მეთოდის არსებობაც.
+* (@) ClientDialog-ის ფანჯარა imageGallery-ის გამო დიდია სიმაღლეში, შეიძლება არ დაეტიოს ლეპტოპების ეკრანზე. ხომ არ ჯობია runtime-ში გავიგოთ ეკრანის ზომები და იმის მიხედვით დავსეტოთ imageGallery-ის ზომები.
+* (-) შენახვა / წაშლა ბაზაში. (ყველა editorPanelable-ს მიმართ, product-ების შემთხვევაში discounts შეიძლება შეფერხდეს...)
+* (-) თუ კლასებს აქვთ collection-ების setter მეთოდი რა ჯობია მათში setAll-ი, თუ clear() oldData და შემდეგ addAll(). setAll-ის შემთხვევაში გადმოცემული სიის ობიექტის მიმთითებელი ინახება, თუ შემდეგ ამ მიმთითებელზე გარედან ვინმე შეცვლის ობიექტს დასეტილ სიაშიც ის ობიექტი შეცლვილი იქნება. თუმცა addAll-ის დროს ხდება ელემენტების კოპირება მაგრამ ეს ელემენტები თვის მხრივ კლასის ობიექტებზე მიმთითებლები არიან, ამიტომ გადაკოპირებულ სიასაც ექნება ის "პრობლემა" რომ თუ რომელიმე ელემენტი სცენაზე შეიცვალა ის backup-შიც შეცვლილი იქნება.
+პირდაპირ ამ მეთოდის გამოყენება შეიძლება copyFrom-ის დროს და არა ვთქვათ copyFrom-ში გამოვიძახოთ clear და მერე addAll.
+* (-) licenses TextField-იც უნდა შეიცვალოს licenses ახალი სიის მიღებისას ფინანსურ ინფორმაციასთან ერთად. გამოვიყენოთ ისეთი მიდგომა როგორიც Client ტელეფონების შემთხვევაში
+
+
+ბაზა: 
+* (+) products_whole ?
+* (+) general_select-ს როგორ მიეთითოს appLanguage
+* (+) DBClient-ში select-ზე return new JSONArray(res.getDataAsString()); - ში ალბათ response უნდა გადაეცემოდეს ნაცვლად res.getDataAsString()-სა
+* (+) BallanceAccount-ებში მოდის ორი descrip-ი. 
+* (+) BallanceAccount-ებში actPas არის boolean. ადრე შეიძლებოდა რომ actPas ერთდროულად ყოფილიყო ანგარიში
+* (+) product_specific_descrips და product_specifics ცხრილები ?
+* (-) წაშლის პროცედურა
+* (+) approved Client_Status-descrips
+* (+) Client-ის შენახვის დროს (saveOneToDB) ვარდება error: 
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[]' at line 1
+client-ის phones არის ცარიელი მასივი და შეიძლება ამის ბრალი იყოს?  +  whereBuilder-ის ბრალი იყო, ყველაფრის წამორება გვინდა გადაეცემა ცარიელი json ანუ conditionBuilder.build(). თუ გვინდა ფილტრი მხოლოდ მაშინ ვიყენებთ whereBuilder-ს.
+* (+) general_select-ი  status_descrip-ების ცხრილებზე ენას ითვალისწინებს call general_select('client_status_descrips', 'en', '{}'); ???
+* (+) Client.saveOneToDB მეთოდი ჯავაში ვერ ამატებს კლიენტს და პასუხად უბრუნდება სულ recId = 1 კლიენტი.
+       + rec_id საერთოდ არ უნდა ფიგურირებდეს ბაზის json-ში თუ ახალს ვამატებთ, java-დან კი მიდიოდა rec_id = 0. მოაგავარა @JsonInculde(JsonInculde.non_default)-მა
+* (+) login_by_license_whole-ში LicenseNumber-ის ველი. login_time-ის მიხედვით დალაგებული ხომ არ წამოვიდეს ??
+
+
+
+დასატესტია:
+* (+) ჩაკეცვა / ამოკეცვის  ფუნქციონალი. (თუ გადიდებულია მშობელი ფანჯარა, ჩაკეცვა/ამოკეცვა ცუდად მუშაობს)
+* (+) stage-ის ზედა მარცხენა კუთხის კოორდინატების უარყოფითში გადასვლისას stage-ი აღარ მიყვება მშობელს
+* (-) closeStageWithChildren  StagesContainer კლასში
+* (-) textField-ების regular expression-ები
+* (-) პროგრამა რა მეხსიერებას მოიხმარს და cpu-ს რა დონეზე ტვირთავს
+* (-) invoice-ები begin, end და revoked  date-ებზე.
+* (-) შენახვა / წაშლა ბაზაში. (ყველა editorPanelable-ს მიმართ)
+
+
+
+კომპონენტები და მოსაგვარებელი საკითხები:
+* bal_accounts: 
+	1) (+) comboBox-ის რომელიც საჭიროებს clientComboBox-ის მსგავსს ფუნქციონალს ფილტრის თვალსაზრისით.
+
+
+* Clients: 
+	1) (+) compare-ში Phone.compareList-ის მაგივრად Utils.compareLis-ის შემოტანა. Utils.compareList ადარებს object-ების სიებს, ამიტომ მათ გადატვირთული უნდა ქონდეთ equals მეთოდი. აუცილებელია რომ equals მეთოდის header-ი იყოს: public boolean equals(Object someName); თუ პარამეტრი არ იქნა Object ტიპის მაშინ არ ითვლება გადატვირთულად equals მეთოდი და შესაბამისად იძახება Object კლასის equals-ი, რომელიც მიმთითებლებს ადარებს.
+	2) (+) clientComboBox-არჩევისას error-ი ხდება. გადავედით FilterableTableView_ის გამოჩენიაზე comboBox-ში.
+	3) (+) clientComboBox-ში თუ ხელმეორედ ავირჩიეთ უკვე არჩეული ობიექტი, მაშინ popup არ იხურება. 
+	4) (+) clientComboBox-ში უმჯობესია ისრებით მოძრაობისას თან ისქროლებოდეს tableView
+	5) (-) მცირე, თუ იფილტრება clientComboBox-ი და ავირჩიეთ ელემენტი მაშინ ფილტრში შეყვანილი ტექსტი არ იშლება. თუმცა ელემტი მონიშნულია და თუ ხელით წავშლით შეყვანილ საძიებო ტექსტს მაშინ გამოჩნდება არჩეულის toString-იც.
+	
+	
+* productsDiscount: 
+	1) (+) productsDiscount-ებში equals-ის დროს ზოგ შემმთხვევაში other არის null. ეს ხდება comboBox-ის გამოყენების დროს(comboBox_ის თავისებურებიდან გამომდინარე, setValue(null)-ის დროს შესაძლოა items-ს გადაყვება). იგივე პრობლემა არის Country-ის equals მეთოდზე, comboBox_ის დროს.
+
+* (-) licenses:
+	1) (+) licenses filter model-ში  ჯობია იყოს  setSelectedClient, setSelectedProduct, setSelectedClientIndex, setSelectedProductIndex
+
+* (-) Currencies:
+	1) (-) currencyDialog-ში  ვალუტის  iso  კოდის  comboBox-ი  ალბათ  editable უნდა იყოს
+	
+* (-) CurrencyRates:
+	1) (-) date-ის ცვლილების შესასლებლობა უნდა იყოს დიალოგში ?
+	2) (-) dialog-იდან new-ს და new by simple-ს შესაძლებლობა უნდა იყოს ?
+* (-) invoice:
+	1) (+) დიალოგის ველები
+	
+*(-) product:
+	1) (-) setDiscounts(Collection<ProductDiscount> discounts) მეთოდი 

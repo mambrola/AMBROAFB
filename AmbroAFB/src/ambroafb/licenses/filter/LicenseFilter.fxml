@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambroafb.clients.*?>
+<?import ambroafb.products.*?>
+<?import org.controlsfx.control.*?>
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/licensefilter.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" >
+    <VBox   fx:id="formPane" >
+        <children>
+            <HBox styleClass="w2" >
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%clients" />
+                            <ClientComboBox fx:id="clients" /> 
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label text="%products" />
+                            <ProductComboBox fx:id="products" /> 
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w2" >
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%license_statuses" />
+                            <CheckComboBox fx:id="statuses" /> 
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label />
+                            <CheckBox fx:id="extraDays" text="%extra_days" allowIndeterminate="true" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

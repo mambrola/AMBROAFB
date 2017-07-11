@@ -1,97 +1,109 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To setLanguage this license header, choose License Headers in Project Properties.
+ * To setLanguage this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package ambroafb.clients.filter;
 
 import ambro.ADatePicker;
-import ambroafb.general.GeneralConfig;
+import ambroafb.clients.Client;
+import ambroafb.clients.helper.ClientStatus;
+import ambroafb.countries.CountryComboBox;
+import ambroafb.general.FilterModel;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
-import ambroafb.general.UtilsDB;
+import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
+import ambroafb.general.okay_cancel.FilterOkayCancelController;
+import ambroafb.general.interfaces.UserInteractiveStage;
 import java.net.URL;
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.json.JSONException;
-import org.json.JSONObject;
+import javafx.stage.WindowEvent;
+import org.controlsfx.control.CheckComboBox;
 
 /**
  *
  * @author mambroladze
  */
-public class ClientFilter  extends Stage implements Filterable, Initializable {
+public class ClientFilter  extends UserInteractiveStage implements Filterable, Initializable {
     @FXML
     private ADatePicker dateBigger, dateLess;
+    @FXML
+    private CheckBox juridical, rezident, type;
+    @FXML
+    private CountryComboBox countries;
+    @FXML
+    private CheckComboBox<ClientStatus> statuses;
+    @FXML
+    private FilterOkayCancelController okayCancelController;
     
-    private JSONObject jSonResult;
-    public static final String DATE_BIGGER = "1970-01-01";
-    public static final String DATE_LESS = "9999-01-01";
+    private final ClientFilterModel clientFilterModel = new ClientFilterModel();
     
     public ClientFilter(Stage owner) {
-        String ownerPath = Utils.getPathForStage(owner);
-        String clientFilterPath = ownerPath + Names.LEVEL_FOR_PATH;
-        Utils.saveShowingStageByPath(clientFilterPath, (Stage)this);
+        super(owner, Names.LEVEL_FOR_PATH, "clients", "/images/filter.png");
         
-        this.initStyle(StageStyle.UNIFIED);
-        this.setTitle(GeneralConfig.getInstance().getTitleFor("clients_filter"));
-        Scene scene = Utils.createScene("/ambroafb/clients/filter/ClientFilter.fxml", (ClientFilter)this);
+        Scene scene = SceneUtils.createScene("/ambroafb/clients/filter/ClientFilter.fxml", (ClientFilter)this);
         this.setScene(scene);
-        this.initOwner(owner);
-        this.setResizable(false);
+        
+        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
+            okayCancelController.cancel(null);
+            if(event != null) event.consume();
+        });
+        
     }
 
     @Override
-    public JSONObject getResult() {
+    public FilterModel getResult() {
         showAndWait();
-        return jSonResult;
+        return clientFilterModel;
     }
 
     @Override
     public void setResult(boolean isOk){
-        jSonResult = new JSONObject();
-        if(!isOk)
-            return;
-        try {
+        if(!isOk){
+            clientFilterModel.changeModelAsEmpty();
+        }
+        else {
             dateBigger.setEditingValue();
             dateLess.setEditingValue();
             
-            jSonResult.put("dateBigger", (dateBigger.getValue() == null ? DATE_BIGGER : dateBigger.getValue()).toString());
-            jSonResult.put(  "dateLess", (  dateLess.getValue() == null ? DATE_LESS   :   dateLess.getValue()).toString());
-            
-            JSONObject baseJS = new JSONObject();
-            baseJS.put("dateBigger", (dateBigger.getValue() == null) ? "" : dateBigger.getValue());
-            baseJS.put(  "dateLess", (  dateLess.getValue() == null) ? "" :   dateLess.getValue());
-            
-            UtilsDB.getInstance().updateOrInsertDefaultParameters("clients", "filter", baseJS);
-        } catch (JSONException ex) { Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex); }
+            clientFilterModel.setFromDate(dateBigger.getValue());
+            clientFilterModel.setToDate(dateLess.getValue());
+            clientFilterModel.setSelectedCountry(countries.getValue());
+            clientFilterModel.setSelectedStatusesIndexes(statuses.getCheckModel().getCheckedIndices());
+            clientFilterModel.setSelectedStatuses(statuses.getCheckModel().getCheckedItems());
+            clientFilterModel.setJuridicalIndeterminate(juridical.isIndeterminate());
+            clientFilterModel.setJuridicalSelected(juridical.isSelected());
+            clientFilterModel.setRezidentIndeterminate(rezident.isIndeterminate());
+            clientFilterModel.setRezidentSelected(rezident.isSelected());
+            clientFilterModel.setTypeIndeterminate(type.isIndeterminate());
+            clientFilterModel.setTypeSelected(type.isSelected());
+        }
     }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            JSONObject json = UtilsDB.getInstance().getDefaultParametersJson("clients", "filter");
-            if (json != null && json.length() > 0){
-                String dateB = json.getString("dateBigger");
-                String dateL = json.getString(  "dateLess");
-                
-                LocalDate bigger = (dateB.isEmpty()) ? null : LocalDate.parse(dateB);
-                LocalDate less   = (dateL.isEmpty()) ? null : LocalDate.parse(dateL);
- 
-                dateBigger.setValue(bigger);
-                dateLess.setValue(less);
-            } 
-        }
-        catch (JSONException ex) {
-            Logger.getLogger(ClientFilter.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        ArrayList<ClientStatus> clientStatuses = Client.getAllStatusFromDB();
+        clientStatuses.sort((ClientStatus status1, ClientStatus status2) -> status1.getRecId() - status2.getRecId());
+        statuses.getItems().addAll(clientStatuses);
+        
+        dateBigger.setValue(clientFilterModel.getFromDate());
+        dateLess.setValue(clientFilterModel.getToDate());
+        juridical.setSelected(clientFilterModel.isJuridicalSelected());
+        juridical.setIndeterminate(clientFilterModel.isJuridicalIndeterminate());
+        rezident.setSelected(clientFilterModel.isRezidentSelected());
+        rezident.setIndeterminate(clientFilterModel.isRezidentIndeterminate());
+        type.setSelected(clientFilterModel.isTypeSelected());
+        type.setIndeterminate(clientFilterModel.isTypeIndeterminate());
+        clientFilterModel.getSelectedStatusesIndexes().stream().forEach((index) -> {
+            statuses.getCheckModel().check(index);
+        });
     }
+    
 }

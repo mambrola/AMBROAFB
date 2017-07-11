@@ -1,0 +1,43 @@
+
+
+@formWidth  : 480;
+@gap        :  10;
+@spaceWidth :  30;
+
+.changeFormPaneWidth(@width: 480){
+    @formWidth: @width;
+
+    #formPane {
+        -fx-pref-width: @formWidth;
+        -fx-padding: @gap;
+        -fx-spacing: 2*@gap;
+    }
+}
+
+.label {
+    -fx-font-weight: bold;
+    -fx-font-size: 0.9em;
+    -fx-padding: 1 0 1 2;
+}
+
+.w1 .text-field, .w1 .combo-box, .w1 .date-picker {
+    -fx-pref-width: @formWidth;
+}
+.w2 .text-field, .w2 .combo-box, .w2 .date-picker {
+    -fx-pref-width: (@formWidth - @spaceWidth)/2;
+}
+.w3 .text-field, .w3 .combo-box, .w3 .date-picker {
+    -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
+}
+
+ .w2, .w3 {
+    -fx-spacing: @spaceWidth;
+}
+
+.button {
+    -fx-font-weight: bold;
+}
+
+*:disabled {
+    -fx-opacity: 0.9;
+}

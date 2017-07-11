@@ -1,0 +1,11 @@
+@import url("/styles/css/core.css");
+@import url("/styles/css/filters.css"); // for styleClass rules
+@import url("/filters.less");           // for functions
+@import url("/variables.less");
+
+
+.changeFormPaneWidth();
+
+.w3 .c2 {
+    -fx-pref-width: 2*(@formWidth - 2*@spaceWidth)/3 + @spaceWidth;
+}

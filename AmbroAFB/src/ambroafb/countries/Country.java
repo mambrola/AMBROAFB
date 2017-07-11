@@ -1,108 +1,107 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To setLanguage this license header, choose License Headers in Project Properties.
+ * To setLanguage this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package ambroafb.countries;
 
 import ambro.AView;
-import ambroafb.general.GeneralConfig;
-import ambroafb.general.KFZClient;
+import ambroafb.general.DBUtils;
 import ambroafb.general.interfaces.EditorPanelable;
+import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.binding.StringExpression;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.json.JSONObject;
 
 /**
  *
  * @author mambroladze
  */
+@SuppressWarnings("EqualsAndHashcode")
 public class Country extends EditorPanelable{
 
-    @AView.Column(width = "24")
-    private final StringProperty code = new SimpleStringProperty();
+    @AView.Column(width = "30")
+    private final StringProperty code;
 
     @AView.Column(title = "%descrip", width = "250")
-    private final StringProperty name = new SimpleStringProperty();
-
+    private final StringProperty descrip;
+    
     @JsonIgnore
-    private final StringExpression description;
+    private static final String DB_TABLE_NAME = "countries";
+    @JsonIgnore
+    public static final String ALL = "ALL";
+    @JsonIgnore
+    private static final String REZIDENT_COUNTRY_CODE = "GE";
     
-    private int recId;
-
+    @JsonIgnore
+    private BooleanProperty rezidentCountry;
+    
     public Country() {
-        description = code.concat("\t").concat(name);
+        code = new SimpleStringProperty("");
+        descrip = new SimpleStringProperty("");
+        rezidentCountry = new SimpleBooleanProperty(false);
+        
+        rezidentCountry.bind(Bindings.createBooleanBinding(() -> {
+            return code.get().equals(REZIDENT_COUNTRY_CODE);
+        }, code));
     }
-
-//    @Override
-//    public String toString(){
-//        return getCode().concat("\t").concat(getName());
-//    }
     
+    public static ArrayList<Country> getAllFromDB() {
+        JSONObject params =  new ConditionBuilder().build();
+        ArrayList<Country> countries = DBUtils.getObjectsListFromDB(Country.class, DB_TABLE_NAME, params);
+        countries.sort((Country c1, Country c2) -> c1.getDescrip().compareTo(c2.getDescrip()));
+        return countries;
+    }
     
-    public Country(String code, String name) {
-        this();
-        this.code.set(code);
-        this.name.set(name);
+    public static Country getOneFromDB(int recId) {
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+        return getOneFromDBHelper(conditionBuilder);
+    }
+    
+    public static Country getOneFromDB(String countryCode) {
+        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("code", "=", countryCode).condition();
+        return getOneFromDBHelper(conditionBuilder);
+    }
+    
+    private static Country getOneFromDBHelper(ConditionBuilder conditionBuilder){
+        return DBUtils.getObjectFromDB(Country.class, DB_TABLE_NAME, conditionBuilder.build());
     }
 
-    public String getCode() {
-        return code.get();
-    }
-
-    public void setCode(String value) {
-        code.set(value);
-    }
-
+    // Properties:
     public StringProperty codeProperty() {
         return code;
     }
 
-    public String getName() {
-        return name.get();
+    public StringProperty descripProperty() {
+        return descrip;
+    }
+    
+    public BooleanProperty rezidentCountryProperty(){
+        return rezidentCountry;
     }
 
-    public void setName(String value) {
-        name.set(value);
+    
+    // Gettres:
+    public String getCode() {
+        return code.get();
     }
 
-    public StringProperty nameProperty() {
-        return name;
+    public String getDescrip(){
+        return descrip.get();
+    }
+    
+    // Setters:
+    public void setCode(String value) {
+        code.set(value);
     }
 
-    public String getDescription() {
-        return description.get();
-    }
-
-    public static Country getOneFromDB(String countryCode) throws IOException, KFZClient.KFZServerException {
-        String country_json = GeneralConfig.getInstance().getServerClient().get("countries/" + countryCode);
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(country_json, Country.class);
-    }
-
-    public static List<Country> getAllFromDB() {
-        String countries_json;
-        try {
-            countries_json = GeneralConfig.getInstance().getServerClient().get("countries");
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(countries_json, new TypeReference<ArrayList<Country>>(){});
-        } catch (IOException | KFZClient.KFZServerException ex) {
-            Logger.getLogger(Country.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
-    }
-
-    public boolean equals(Country other){
-        return this.code.get().equals(other.getCode()) && this.name.get().equals(other.getName());
+    public void setDescrip(String value){
+        this.descrip.set(value);
     }
 
     @Override
@@ -115,7 +114,7 @@ public class Country extends EditorPanelable{
     @Override
     public Country cloneWithID() {
         Country clone = cloneWithoutID();
-        clone.recId = recId;
+        clone.setRecId(this.getRecId());
         return clone;
     }
 
@@ -123,11 +122,32 @@ public class Country extends EditorPanelable{
     public void copyFrom(EditorPanelable object) {
         Country other = (Country) object;
         setCode(other.getCode());
-        setName(other.getName());
+        setDescrip(other.getDescrip());
     }
 
     @Override
     public String toStringForSearch() {
-        return name.get();
+        return getCode() + " " + getDescrip();
     }
+    
+    @Override
+    public String toString(){
+        return getCode().concat("\t").concat(getDescrip());
+    }
+    
+    @Override
+    public boolean compares(EditorPanelable backup){
+        Country country = (Country) backup;
+        return  this.getCode().equals(country.getCode()) && 
+                this.getDescrip().equals(country.getDescrip());
+    }
+
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object other){
+        if (other == null) return false;
+        Country otherCountry = (Country) other;
+        return getCode().equals(otherCountry.getCode());
+    }
+
 }

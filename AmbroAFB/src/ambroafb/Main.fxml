@@ -8,65 +8,136 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
 
-<AnchorPane fx:id="formPane" 
-            stylesheets="/styles/css/main.css" 
-            xmlns:fx="http://javafx.com/fxml/1" 
-            xmlns="http://javafx.com/javafx/8" 
-            fx:controller="ambroafb.MainController">
-    <children>
-        <MenuBar prefWidth="1500.0">
-            <menus>
-                <Menu text="%home">
-                    <items>
-                        <MenuItem onAction="#mainConfig" text="%menu_main_config" />
-                        <MenuItem onAction="#mainExit" text="%exit" />
-                    </items>
-                </Menu>
-                <Menu text="%operations">
-                    <items>
-                        <Menu text="%clients">
+<BorderPane     fx:id="formPane"
+                stylesheets="/styles/css/main.css"
+                xmlns:fx="http://javafx.com/fxml/1"
+                xmlns="http://javafx.com/javafx/8" 
+                fx:controller="ambroafb.MainController"
+        >
+    <top>
+        <HBox fx:id="menusPane" >
+            <children>
+                <MenuBar fx:id="menuBarLeft" >
+                    <menus>
+                        <Menu text="%home">
                             <items>
-                                <MenuItem onAction="#autoDealers" text="%auto_dealers" />
+                                <MenuItem onAction="#mainConfig" text="%menu_main_config" />
+                                <MenuItem onAction="#mainExit" text="%exit" />
                             </items>
                         </Menu>
-                        <Menu text="%communal_services">
+                        <Menu text="%proceses">
                             <items>
-                                <MenuItem onAction="#light" text="%light" />
-                                <MenuItem text="%gas" />
-                                <MenuItem text="%water" />
+                                <Menu text="%disposable_sells">
+                                    <items>
+                                        <MenuItem onAction="#tm" text="%of_service" />
+                                        <MenuItem onAction="#tm" text="%of_thing" />
+                                        <MenuItem onAction="#tm" text="%of_fixed_assets" />
+                                    </items>
+                                </Menu>
+                                <Menu text="%permanent_buys">
+                                    <items>
+                                        <MenuItem onAction="#tm" text="%of_service" />
+                                        <MenuItem onAction="#tm" text="%of_thing" />
+                                        <MenuItem onAction="#tm" text="%of_fixed_assets" />
+                                    </items>
+                                </Menu>
+                                <Menu text="%disposable_buys">
+                                    <items>
+                                        <MenuItem onAction="#tm" text="%of_service" />
+                                        <MenuItem onAction="#tm" text="%of_thing" />
+                                        <MenuItem onAction="#tm" text="%of_fixed_assets" />
+                                    </items>
+                                </Menu>
                             </items>
                         </Menu>
-                        <Menu text="%communications">
+                        <Menu text="%operations">
                             <items>
-                                <MenuItem text="%internet" />
-                                <MenuItem text="%phone" />
-                                <MenuItem text="%tv" />
+                                <Menu text="%clients">
+                                    <items>
+                                        <MenuItem onAction="#autoDealers" text="%auto_dealers" />
+                                    </items>
+                                </Menu>
+                                <Menu text="%communal_services">
+                                    <items>
+                                        <MenuItem onAction="#light" text="%light" />
+                                        <MenuItem text="%gas" />
+                                        <MenuItem text="%water" />
+                                    </items>
+                                </Menu>
+                                <Menu text="%communications">
+                                    <items>
+                                        <MenuItem text="%internet" />
+                                        <MenuItem text="%phone" />
+                                        <MenuItem text="%tv" />
+                                    </items>
+                                </Menu>
                             </items>
                         </Menu>
-                    </items>
-                </Menu>
-                <Menu text="%directories">
-                    <items>
-                        <MenuItem onAction="#clients" text="%clients" />
-                        <MenuItem onAction="#accounts" text="%accounts" />
-                        <MenuItem onAction="#invoices" text="%invoices" />
-                        <MenuItem onAction="#products" text="%products" />
-                        <SeparatorMenuItem />
-                        <MenuItem onAction="#countries" text="%countries" />
-                    </items>
-                </Menu>
-                <Menu text="%reports">
-                    <items>
-                        <MenuItem onAction="#balances" text="%balances" />
-                        <MenuItem onAction="#account_statments" text="%account_statments" />
-                    </items>
-                </Menu>
-                <Menu text="%administrator" >
-                    <items>
-                        <MenuItem onAction="#other" text="%other" />
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
-    </children>
-</AnchorPane>
+                        <Menu text="%books">
+                            <items>
+                                <MenuItem onAction="#docs" text="%docs" />
+                                <MenuItem onAction="#licenses" text="%licenses" />
+                                <MenuItem onAction="#invoices" text="%invoices" />
+                                <SeparatorMenuItem />
+                                <MenuItem onAction="#clients" text="%clients" />
+                                <MenuItem onAction="#loggings" text="%loggings" />
+                                <MenuItem onAction="#accounts" text="%accounts" />
+                            </items>
+                        </Menu>
+                        <Menu text="%reports">
+                            <items>
+                                <MenuItem onAction="#balances" text="%balances" />
+                                <MenuItem onAction="#account_statments" text="%account_statments" />
+                            </items>
+                        </Menu>
+                        <Menu text="%directories">
+                            <items>
+                                <MenuItem onAction="#currencyRates" text="%currency_rates" />
+                                <MenuItem onAction="#discountsOnCount" text="%discounts_on_count" />
+                                <MenuItem onAction="#products" text="%products" />
+                                <SeparatorMenuItem />
+                                <MenuItem onAction="#currencies" text="%currencies" />
+                                <MenuItem onAction="#balAccounts" text="%bal_accounts" />
+                                <MenuItem onAction="#countries" text="%countries" />
+                            </items>
+                        </Menu>
+                        <Menu text="%processes">
+                            <items>
+                                <MenuItem onAction="#tm" text="%process_list" />
+                                <Menu text="%types">
+                                    <items>
+                                        <MenuItem onAction="#attitudes" text="%attitudes" />
+                                        <MenuItem onAction="#merchandises" text="%merchandises" />
+                                    </items>
+                                </Menu>
+                                <MenuItem onAction="#generalParams" text="%general_params" />
+                            </items>
+                        </Menu>
+                    </menus>    
+                </MenuBar>
+                <Region styleClass="menu-bar" HBox.hgrow="SOMETIMES"/>
+                <MenuBar fx:id="menuBarRight" >
+                    <menus>
+                        <Menu text="%administrator">
+                            <items>
+                                <Menu text="%mini_directories">
+                                    <items>
+                                        <MenuItem onAction="#clientStatuses" text="%client_statuses" />
+                                        <MenuItem onAction="#licenseByInvoiceCovers" text="%license_by_invoice_covers" />
+                                        <MenuItem onAction="#invoice_reissuings" text="%invoice_reissuings" />
+                                        <MenuItem onAction="#productSpecifics" text="%product-specifics" />
+                                    </items>
+                                </Menu>
+                            </items>
+                        </Menu>
+                        <Menu text="%site" >
+                            <items>
+                                <MenuItem onAction="#goToMonitoring" text="%monitoring" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+            </children>
+        </HBox>
+    </top>
+</BorderPane>

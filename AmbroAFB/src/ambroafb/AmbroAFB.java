@@ -1,15 +1,17 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To setLanguage this license header, choose License Headers in Project Properties.
+ * To setLanguage this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package ambroafb;
 
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.GeneralConfig.Sizes;
 import ambroafb.general.Names;
+import ambroafb.general.SceneUtils;
+import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
-import ambroafb.general.UtilsDB;
+import ambroafb.login.LoginController;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -19,8 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -38,38 +38,37 @@ public class AmbroAFB extends Application {
     @Override
     public void start(Stage stage) {
         mainStage = stage;
-        UtilsDB.getInstance().createLocalUsageTables();
-        Utils.saveShowingStageByPath("main", mainStage);
-        Scene scene = Utils.createScene(Names.MAIN_FXML, null);
+        StagesContainer.registerStageByOwner(null, getClass().getSimpleName(), mainStage);
+        Scene scene = SceneUtils.createScene(Names.MAIN_FXML, null);
         stage.setScene(scene);
         stage.setTitle(GeneralConfig.getInstance().getTitleFor(Names.MAIN_TITLE));
         if (Names.MAIN_LOGO != null) {
-            try {
-                stage.getIcons().add(new Image(Utils.class.getResource(Names.MAIN_LOGO).openStream()));
-            } catch (IOException ex) { Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex); }
+            stage.getIcons().add(new Image(Names.MAIN_LOGO));
         }
 
-        GeneralConfig conf = GeneralConfig.getInstance();
-        Sizes size = conf.getSizeFor(Names.MAIN_FXML);
-        if (size != null) {
-            if (size.width > 0) {
-                stage.setWidth(size.width);
-            }
-            if (size.height > 0) {
-                stage.setHeight(size.height);
-            }
-
-            stage.setMaximized(size.maximized);
-        }
-
-        stage.setOnCloseRequest((WindowEvent we) -> {
-            Utils.exit();
+        stage.setOnCloseRequest((WindowEvent event) -> {
+            MainController controller = (MainController) scene.getProperties().get("controller");
+            controller.mainExit(null);
+            event.consume();
         });
         
-        Utils.regulateStageSize(stage);
-        Utils.setSizeFor(stage);
-
+        StagesContainer.setSizeFor(mainStage);
         stage.show();
+
+        scene.getRoot().setDisable(true);
+        if (promptLogin()) {
+            scene.getRoot().setDisable(false);
+        } else {
+            Utils.exitApplication();
+        }
+    }
+
+    private boolean promptLogin() {
+        LoginController login = new LoginController();
+        login.initOwner(mainStage);
+        StageUtils.centerChildOf(mainStage, login);
+        StageUtils.followChildTo(mainStage, login);
+        return login.prompt();
     }
 
     /**
@@ -85,13 +84,12 @@ public class AmbroAFB extends Application {
                         if (signal == 1) {
                             Platform.runLater(() -> {
                                 if (mainStage != null) {
-                                    //mainStage.centerOnScreen();  უხერხულობას უფრო ქმნის, ვიდრე კომფორტს
-                                    mainStage.toFront();//წინ არ გამოდის, თუმცა taskbar-ში არსებულ პროგრამის ნიშანს ეს აციმციმებს
+                                    mainStage.toFront();
                                 }
                             });
                         }
                     } catch (IOException ex) {
-                        Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex);
+                        //Logger.getLogger(AmbroAFB.class.getName()).log(Level.SEVERE, null, ex);
                         break;
                     }
                 }

@@ -1,37 +1,44 @@
 @import url("/styles/css/core.css");
-#formPane {
-  -fx-min-height: 473;
-  -fx-max-height: 473;
-  -fx-min-width: 820;
-  -fx-max-width: 820;
-  -fx-padding: 10;
-  -fx-spacing: 10;
+@import url("/styles/css/dialogs.css");
+.vContainer {
+  -fx-spacing: 10px;
 }
 .label {
   -fx-font-weight: bold;
   -fx-font-size: 0.9em;
   -fx-padding: 1 0 1 2;
 }
-.w1 .text-field {
+.one > .couple,
+.one > .couple > * {
   -fx-pref-width: 800;
 }
-.w2 .text-field {
-  -fx-pref-width: 385;
+.oneHalf > .couple,
+.oneHalf > .couple > * {
+  -fx-pref-width: 382.5;
 }
-.w3 .text-field,
-.w3 .combo-box {
-  -fx-pref-width: 246.66666667;
+.oneThirds > .couple,
+.oneThirds > .couple > *,
+.oneThirds > .couple > .innerCouple > * {
+  -fx-pref-width: 243.33333333;
 }
-.w3 .c2 {
-  -fx-pref-width: 523.33333333;
+.twoThirds > .coupleOneThird,
+.twoThirds > .coupleOneThird > * {
+  -fx-pref-width: 243.33333333;
 }
-.w2,
-.w3 {
-  -fx-spacing: 30;
+.twoThirds > .coupleTwoThird,
+.twoThirds > .coupleTwoThird > * {
+  -fx-pref-width: 521.66666667;
 }
-.doubleHeight {
-  /*-fx-background-color: yellow;*/
-  -fx-pref-height: 105.11111111;
+.oneThirds {
+  -fx-pref-width: 521.66666667;
+}
+.oneHalf,
+.oneThirds,
+.twoThirds {
+  -fx-spacing: 35;
+}
+.okayCancelPane {
+  -fx-padding: 40px 0 0 0;
 }
 .button {
   -fx-font-weight: bold;
@@ -39,7 +46,15 @@
 *:disabled {
   -fx-opacity: 0.9;
 }
-#email {
-  -fx-border-width: 1;
-  -fx-border-color: transparent;
+#formPane {
+  -fx-min-width: 820px;
+  -fx-max-width: 820px;
+  -fx-padding: 10px;
+}
+.okayCancelPane {
+  -fx-padding: 100px 0 0 0;
+}
+#imageGalleryPane {
+  -fx-min-height: 555;
+  -fx-max-height: 555;
 }

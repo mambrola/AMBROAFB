@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/discountoncountdialog.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" 
+                              xmlns="http://javafx.com/javafx/8"
+                              fx:controller="ambroafb.discounts_on_count.dialog.DiscountOnCountDialogController" >
+    <VBox fx:id="formPane" styleClass="vContainer" >
+        <children>
+            <HBox styleClass="oneHalf">
+                <children>
+                    <VBox styleClass="couple" alignment="CENTER_LEFT" >
+                        <Label text="%licenses_count" styleClass="validationMessage" />
+                        <TextField fx:id="licenseCount" />
+                    </VBox>
+                    <VBox styleClass="couple" alignment="CENTER_LEFT" >
+                        <Label text="%sales_percent" styleClass="validationMessage" />
+                        <TextField fx:id="discountRate" />
+                    </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

@@ -17,13 +17,14 @@ import javafx.beans.value.ObservableValue;
  *
  * @author tabramishvili
  */
+@SuppressWarnings("EqualsAndHashcode")
 public class Phone implements Editable<String> {
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int recId;
     
 //    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    private int clientId;
+//    private int clientId;
 
     private final StringProperty number = new SimpleStringProperty();
 
@@ -47,13 +48,13 @@ public class Phone implements Editable<String> {
         this.recId = id;
     }
     
-    public int getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
-    }
+//    public int getClientId() {
+//        return clientId;
+//    }
+//
+//    public void setClientId(int clientId) {
+//        this.clientId = clientId;
+//    }
 
     public String getNumber() {
         return number.get();
@@ -78,6 +79,7 @@ public class Phone implements Editable<String> {
         return number;
     }
     
+    @JsonIgnore
     public StringProperty getNumberProperty(){
         return number;
     }
@@ -87,9 +89,13 @@ public class Phone implements Editable<String> {
         return "PhoneNumber{" + "id=" + recId + ", number=" + number + '}';
     }
 
-    public boolean equals(Phone other){
+    @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    public boolean equals(Object other){
+        if (other == null) return false;
+        Phone phoneOther = (Phone) other;
         String thisNumber = getOnlyDigitsFrom(number.get());
-        String otherNumber = getOnlyDigitsFrom(other.getNumber());
+        String otherNumber = getOnlyDigitsFrom(phoneOther.getNumber());
         return thisNumber.equals(otherNumber);
     }
     

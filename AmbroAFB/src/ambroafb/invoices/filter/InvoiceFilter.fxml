@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.*?>
+<?import ambro.*?>
+<?import ambroafb.clients.*?>
+
+<ambroafb.general.DialogPanel   stylesheets="/styles/css/invoicefilter.css" 
+                                xmlns:fx="http://javafx.com/fxml/1">
+    <VBox fx:id="formPane" >
+        <children>
+            <HBox styleClass="w2">
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%start_date_from" />
+                            <ADatePicker fx:id="startDateFrom" />
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label text="%start_date_to" />
+                            <ADatePicker fx:id="startDateTo" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w2">
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%end_date_from" />
+                            <ADatePicker fx:id="endDateFrom" />
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label text="%end_date_to" />
+                            <ADatePicker fx:id="endDateTo" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w2" >
+                <children>
+                    <VBox>
+                        <children>
+                            <Label text="%invoice_status_clarify" />
+                            <CheckComboBox fx:id="clarifyType" />
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label text="%invoice_reissuings" />
+                            <CheckComboBox fx:id="invoiceReissuings" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w1" >
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%clients" />
+                            <ClientComboBox fx:id="clients" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

@@ -1,0 +1,46 @@
+.vContainer {
+  -fx-spacing: 15;
+}
+.label {
+  -fx-font-weight: bold;
+  -fx-font-size: 0.9em;
+  -fx-padding: 1 0 1 2;
+}
+.one > .couple,
+.one > .couple > * {
+  -fx-pref-width: 800;
+}
+.oneHalf > .couple,
+.oneHalf > .couple > * {
+  -fx-pref-width: 382.5;
+}
+.oneThirds > .couple,
+.oneThirds > .couple > *,
+.oneThirds > .couple > .innerCouple > * {
+  -fx-pref-width: 243.33333333;
+}
+.twoThirds > .coupleOneThird,
+.twoThirds > .coupleOneThird > * {
+  -fx-pref-width: 243.33333333;
+}
+.twoThirds > .coupleTwoThird,
+.twoThirds > .coupleTwoThird > * {
+  -fx-pref-width: 521.66666667;
+}
+.oneThirds {
+  -fx-pref-width: 521.66666667;
+}
+.oneHalf,
+.oneThirds,
+.twoThirds {
+  -fx-spacing: 35;
+}
+.okayCancelPane {
+  -fx-padding: 60 0 0 0;
+}
+.button {
+  -fx-font-weight: bold;
+}
+*:disabled {
+  -fx-opacity: 0.9;
+}

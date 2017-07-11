@@ -20,8 +20,10 @@ public class Annotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface ContentNotEmpty {
-        boolean value() default true;
         String explain() default "This is required.";
+        Class predicate() default DEFAULT.class;
+        public static class DEFAULT {
+        }
     }
     
     @Retention(RetentionPolicy.RUNTIME)
@@ -33,12 +35,42 @@ public class Annotations {
         String valueForAlphabet() default 
                 "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         String explainForAlphabet() default "Only Latin alphabet in text place.";
+        
+        Class predicate() default DEFAULT.class;
+        public static class DEFAULT {
+        }
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface ContentTreeItem {
+        String valueForLength() default "1";
+        String explainForLength() default "The content length must be ";
+        
+        String valueForSyntax() default "\\w"; // [a-zA-Z_0-9]
+        String explainForSyntax() default "The content must contains only digits.";
+        
+        String explainForHasNotParent() default "The item has not parent.";
+        String explainForExists() default "This item has already exist.";
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface ContentMapEditor {
+        String key() default "\\d"; // [0-9] {1}  for default
+        String value() default "\\d";
+        String explainKey() default "";
+        String explainValue() default "";
+        String explainEmpty() default "Left or right value of delimiter must not be empty.";
     }
     
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface ContentPattern {
-        String value();
-        String explain();
+        String value() default "";
+        String explain() default "";
+        Class predicate() default DEFAULT.class;
+        public static class DEFAULT {
+        }
     }
 }

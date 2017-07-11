@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import ambro.*?>
+<?import ambroafb.general.image_gallery.*?>
+<?import org.controlsfx.control.*?>
+
+
+<VBox   fx:id="imagesGalleryRoot" 
+        stylesheets="/styles/css/imagegallery.css"
+        xmlns:fx="http://javafx.com/fxml/1" 
+        xmlns="http://javafx.com/javafx/8"
+        fx:controller="ambroafb.general.image_gallery.ImageGalleryController" >
+    <children>
+        <!--<Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />-->
+        <StackPane fx:id="galleryStack" >
+            <VBox fx:id="galleryImageFrameVBox" alignment="CENTER" >
+                <children>
+                    <HBox fx:id="galleryImageFrameHBox" >
+                        <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
+                        <MagnifierPane fx:id="magnifier" >
+                            <ImageView fx:id="galleryImageView" preserveRatio="true" />
+                        </MagnifierPane>
+                        <Region styleClass="hgrowalways" HBox.hgrow="ALWAYS" />
+                    </HBox>
+                </children>
+            </VBox>
+            <ImageView fx:id="deletedImageView" fitWidth="100" fitHeight="100" visible="false" onMouseEntered="#enterMouse" onMouseExited="#exitMouse" >    
+                <image>
+                    <Image url="/images/deleted.png" />
+                </image>
+            </ImageView>
+            <VBox fx:id="vPagingPane" styleClass="alwaysEnable" alignment="BOTTOM_CENTER" visible="false" >
+                <HBox fx:id="hPagingPane" alignment="CENTER_RIGHT" >
+                    <VBox alignment="CENTER" onMouseEntered="#enterMouse" onMouseExited="#exitMouse" >
+                        <Button fx:id="up" text="▲"  onAction="#spreadOutPDF" userData="-1" />
+                        <Label  fx:id="page" />
+                        <Button fx:id="down" text="▼" onAction="#spreadOutPDF" userData="1" />
+                    </VBox>
+                </HBox>
+            </VBox>
+            <MaskerPane fx:id="masker" visible="false" text="%loading"/>
+        </StackPane>
+        <!--<Region styleClass="vgrowalways" VBox.vgrow="ALWAYS" />-->
+        <HBox fx:id="imageButtonsHBox" >
+            <children>
+                <Button  fx:id="deleteOrUndo" onAction="#deleteImage" >
+                    <graphic>
+                        <ImageView  fitWidth="20" fitHeight="20" >
+                            <image>
+                                <Image url="/images/delete_128.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="upload" onAction="#uploadFile" >
+                    <graphic>
+                        <ImageView  fitWidth="20" fitHeight="20" >
+                            <image>
+                                <Image url="/images/upload_128.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="rotateToRight" onAction="#rotate" >
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20" >
+                            <image>
+                                <Image url="/images/rotate_128.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Region HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

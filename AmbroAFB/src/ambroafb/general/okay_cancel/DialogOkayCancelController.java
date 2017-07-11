@@ -5,15 +5,11 @@
  */
 package ambroafb.general.okay_cancel;
 
-import ambroafb.clients.dialog.ClientDialogController;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -59,7 +55,8 @@ public class DialogOkayCancelController implements Initializable {
                 okay.setText("Delete");
                 alertText = "You Realy want Delete this item?";
                 okay.setOnAction((ActionEvent event) -> {
-                    if(new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
+                    String stageName = ((Stage)okay.getScene().getWindow()).getTitle();
+                    if(new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, stageName).showAndWait().get().equals(ButtonType.OK)){
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -74,18 +71,32 @@ public class DialogOkayCancelController implements Initializable {
                 okay.setOnAction((ActionEvent event) -> {
                     Scene currScene = okay.getScene();
                     Object controller = currScene.getProperties().get("controller");
-                    boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller);
-                    if (allRequiredFieldsAreValid)
+                    boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller, type);
+                    if (allRequiredFieldsAreValid){
+                        changeClosePermissionForStage(true);
                         ((Stage) okay.getScene().getWindow()).close();
+                    }
                 });
                 alertText = "Close without saving changes?";    
                 cancel.setOnAction((ActionEvent event) -> {
-                    boolean anyFieldWasChanged = false;
-                    try {
-                        anyFieldWasChanged = (boolean)cancel.getScene().getProperties().get("controller").getClass().getMethod("anyFieldChanged").invoke(cancel.getScene().getProperties().get("controller"));
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(DialogOkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
-                    if(!anyFieldWasChanged || new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText).showAndWait().get().equals(ButtonType.OK)){
+                    Object ownerObject = cancel.getScene().getProperties().get("controller");
+                    boolean anyFieldWasChanged = (Boolean) Utils.getInvokedClassMethod(ownerObject.getClass(), "anyComponentChanged", null, ownerObject);
+                    if (anyFieldWasChanged) {
+                        String stageName = ((Stage)okay.getScene().getWindow()).getTitle();
+                        AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, stageName);
+                        alert.setOwner((Stage)okay.getScene().getWindow());
+                        ButtonType buttonType = alert.showAndWait().get();
+                        if (buttonType.equals(ButtonType.OK)){
+                            operationCanceled();
+                            changeClosePermissionForStage(true);
+                            ((Stage) okay.getScene().getWindow()).close();
+                        }
+                        else{
+                            changeClosePermissionForStage(false);
+                        }
+                    }else{ // This case is needed. If nothing change the real object must become null.
                         operationCanceled();
+                        changeClosePermissionForStage(true);
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -104,9 +115,14 @@ public class DialogOkayCancelController implements Initializable {
     }
     
     private void operationCanceled(){
-        try {
-            cancel.getScene().getProperties().get("controller").getClass().getMethod("operationCanceled").invoke(cancel.getScene().getProperties().get("controller"));
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) { Logger.getLogger(DialogOkayCancelController.class.getName()).log(Level.SEVERE, null, ex); }
+        Object controller = cancel.getScene().getProperties().get("controller");
+        Utils.getInvokedClassMethod(controller.getClass(), "operationCanceled", null, controller);
+    }
+
+    private void changeClosePermissionForStage(boolean value) {
+        Stage stage = ((Stage) okay.getScene().getWindow());
+        Object controller = stage.getScene().getProperties().get("controller");
+        Utils.getInvokedClassMethod(controller.getClass(), "changePermissionForClose", new Class[]{boolean.class}, controller, value);
     }
     
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.*?>
+<?import ambroafb.clients.*?>
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/loggingfilter.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" >
+    
+    <VBox   fx:id="formPane" >
+        <HBox styleClass="w3" >
+            <children>
+                <VBox >
+                    <Label text="%open_date_bigger" /> 
+                    <ADatePicker fx:id="dateBigger" />
+                </VBox>
+                <VBox >
+                    <Label text="%open_date_less" /> 
+                    <ADatePicker fx:id="dateLess" />
+                </VBox >
+                <VBox >
+                    <Label text="%clients" />
+                    <ClientComboBox fx:id="clients" />
+                </VBox >
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" >
+            <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
+        </HBox>
+    </VBox>
+</ambroafb.general.DialogPanel>
+
