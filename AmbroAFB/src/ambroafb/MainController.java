@@ -22,6 +22,7 @@ import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
+import ambroafb.general.editor_panel.elements.buttons.DocsButton;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general_scene.table_list.TableList;
 import ambroafb.invoices.Invoice;
@@ -278,7 +279,7 @@ public class MainController implements Initializable {
         Stage docsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(docsStage == null || !docsStage.isShowing()){
             TableList docs = new TableList(AmbroAFB.mainStage, Doc.class, stageTitle);
-//            docs.getController().getEditorPanelController().addPanelButton(new DocsButton());
+            docs.getController().getEditorPanelController().addPanelButton(new DocsButton());
             docs.show();
             Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
                                                         return new ArrayList(Doc.getAllFromDB());

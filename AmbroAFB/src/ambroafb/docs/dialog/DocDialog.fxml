@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox   fx:id="formPane" 
+        prefHeight="400.0" 
+        prefWidth="600.0" 
+        xmlns:fx="http://javafx.com/fxml/1" 
+        fx:controller="ambroafb.docs.dialog.DocDialogController">
+    
+        <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
+            <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+        </HBox>
+</VBox>

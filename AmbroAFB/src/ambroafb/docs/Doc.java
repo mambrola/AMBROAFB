@@ -29,17 +29,17 @@ import org.json.JSONObject;
  */
 public class Doc extends EditorPanelable {
     
-    @AView.Column(title = "par_id", width = "50")
+    @AView.Column(title = "par_id", width = "60")
     private final IntegerProperty parentRecId;
     
-    @AView.Column(title = "proc_id", width = "50")
+    @AView.Column(title = "proc_id", width = "60")
     private final IntegerProperty processId;
     
-    @AView.Column(title = "docDate", width = "70")
+    @AView.Column(title = "docDate", width = "100")
     private final StringProperty docDate;
     private final ObjectProperty<LocalDate> docDateObj;
 
-    @AView.Column(title = "%pocInDocDate", width = "70")
+    @AView.Column(title = "%pocInDocDate", width = "100")
     private final StringProperty docInDocDate;
     private final ObjectProperty<LocalDate> docInDocDateObj;
     
@@ -54,7 +54,7 @@ public class Doc extends EditorPanelable {
     @AView.Column(title = "%docCode", width = "70")
     private final StringProperty docCode;
     
-    @AView.Column(title = "%descrip", width = "100")
+    @AView.Column(title = "%descrip", width = "120")
     private final StringProperty descrip;
     private final IntegerProperty ownerId;
     
@@ -63,9 +63,9 @@ public class Doc extends EditorPanelable {
     public Doc(){
         parentRecId = new SimpleIntegerProperty();
         processId = new SimpleIntegerProperty();
-        docDate = new SimpleStringProperty();
+        docDate = new SimpleStringProperty("");
         docDateObj = new SimpleObjectProperty<>();
-        docInDocDate = new SimpleStringProperty();
+        docInDocDate = new SimpleStringProperty("");
         docInDocDateObj = new SimpleObjectProperty<>();
         iso = new SimpleStringProperty();
         debitId = new SimpleIntegerProperty();
@@ -95,12 +95,12 @@ public class Doc extends EditorPanelable {
     // DB methods:
     public static ArrayList<License> getAllFromDB() {
         JSONObject params = new ConditionBuilder().build();
-        return DBUtils.getObjectsListFromDB(License.class, DB_TABLE_NAME, params);
+        return DBUtils.getObjectsListFromDB(Doc.class, DB_TABLE_NAME, params);
     }
     
     public static Doc getOneFromDB (int recId){
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
-        return DBUtils.getObjectFromDB(Currency.class, DB_TABLE_NAME, params);
+        return DBUtils.getObjectFromDB(Doc.class, DB_TABLE_NAME, params);
     }
     
     public static Currency saveOneToDB(Doc doc){
