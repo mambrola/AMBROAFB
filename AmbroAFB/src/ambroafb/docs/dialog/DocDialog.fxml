@@ -5,14 +5,40 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import ambro.*?>
 
-<VBox   fx:id="formPane" 
-        prefHeight="400.0" 
-        prefWidth="600.0" 
-        xmlns:fx="http://javafx.com/fxml/1" 
-        fx:controller="ambroafb.docs.dialog.DocDialogController">
-    
-        <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
-            <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
-        </HBox>
-</VBox>
+<ambroafb.general.DialogPanel stylesheets="/styles/css/currencyratedialog.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" 
+                              xmlns="http://javafx.com/javafx/8"
+                              fx:controller="ambroafb.docs.dialog.DocDialogController" >
+
+    <VBox   fx:id="formPane" styleClass="vContainer" >
+        <children>
+            <HBox styleClass="oneHalf">
+                <children>
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label text="%doc_date" styleClass="validationMessage" />
+                            <ADatePicker fx:id="docDate" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%doc_in_doc_date" styleClass="validationMessage" />
+                            <ADatePicker fx:id="docInDocDate" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <children>
+                            <Label text="%utilities" styleClass="validationMessage" />
+                            <ComboBox fx:id="utilities" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

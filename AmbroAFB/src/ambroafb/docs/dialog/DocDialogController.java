@@ -5,6 +5,7 @@
  */
 package ambroafb.docs.dialog;
 
+import ambro.ADatePicker;
 import ambroafb.docs.Doc;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
@@ -27,6 +28,8 @@ public class DocDialogController implements Initializable {
 
     @FXML
     private VBox formPane;
+    @FXML
+    private ADatePicker docDate, docInDocDate;
     
     
     @FXML
@@ -53,6 +56,7 @@ public class DocDialogController implements Initializable {
         this.doc = doc;
         if (doc != null){
             // binds
+            
         }
     }
 
