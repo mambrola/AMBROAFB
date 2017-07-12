@@ -8,29 +8,24 @@ package ambroafb.clients.dialog;
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
 import ambroafb.clients.helper.ClientStatus;
+import ambroafb.countries.*;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
-import ambroafb.countries.*;
 import ambroafb.general.image_gallery.ImageGalleryController;
-import ambroafb.phones.PhoneComboBox;
+import ambroafb.general.interfaces.Annotations.*;
+import ambroafb.general.interfaces.Annotations.ContentMail;
+import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
+import ambroafb.phones.PhoneComboBox;
+import authclient.AuthServerException;
+import authclient.db.DBClient;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
-import ambroafb.general.interfaces.Annotations.*;
-import authclient.AuthServerException;
-import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,14 +33,22 @@ import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.controlsfx.control.textfield.TextFields;
 
 
 /**
@@ -254,7 +257,9 @@ public class ClientDialogController implements Initializable {
         @Override
         public void run() {
             try {
-                JSONArray cities = new JSONArray(GeneralConfig.getInstance().getDBClient().get(pathCities).getDataAsString());
+                DBClient dbClinet = GeneralConfig.getInstance().getDBClient();
+                String responseAsString = dbClinet.get(pathCities).getDataAsString();
+                JSONArray cities = new JSONArray(responseAsString);
                 List<String> citiesAsList = getListFromJSONArray(cities);
                 TextFields.bindAutoCompletion(  city,
                                                 (AutoCompletionBinding.ISuggestionRequest param) -> citiesAsList.stream().filter((cityName) ->
