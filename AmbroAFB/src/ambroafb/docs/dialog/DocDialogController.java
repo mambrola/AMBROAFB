@@ -5,8 +5,11 @@
  */
 package ambroafb.docs.dialog;
 
-import ambro.ADatePicker;
 import ambroafb.docs.Doc;
+import ambroafb.docs.DocType;
+import ambroafb.docs.DocTypeComboBox;
+import ambroafb.docs.types.DocDialogAbstraction;
+import ambroafb.docs.types.DocDialogsFactory;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -14,9 +17,11 @@ import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
@@ -29,8 +34,9 @@ public class DocDialogController implements Initializable {
     @FXML
     private VBox formPane;
     @FXML
-    private ADatePicker docDate, docInDocDate;
-    
+    private DocTypeComboBox docTypes;
+    @FXML
+    private HBox concreteScene;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -49,7 +55,20 @@ public class DocDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         permissionToClose = true;
-    }   
+        
+        DocDialogAbstraction ab = DocDialogsFactory.getDocDialogObject(docTypes.getValue().getId());
+        setConcreteSceneNode(ab.getSceneNode());
+        
+        docTypes.valueProperty().addListener((ObservableValue<? extends DocType> observable, DocType oldValue, DocType newValue) -> {
+            DocDialogAbstraction cda = DocDialogsFactory.getDocDialogObject(newValue.getId());
+            setConcreteSceneNode(cda.getSceneNode());
+        });
+    }
+    
+    public void setConcreteSceneNode(Node node){
+        concreteScene.getChildren().remove(0);
+        concreteScene.getChildren().add(node);
+    }
     
     
     public void bindDoc(Doc doc) {

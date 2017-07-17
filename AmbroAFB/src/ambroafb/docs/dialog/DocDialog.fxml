@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import ambro.*?>
+<?import ambroafb.docs.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/currencyratedialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 
@@ -18,22 +19,14 @@
                 <children>
                     <VBox styleClass="couple" >
                         <children>
-                            <Label text="%doc_date" styleClass="validationMessage" />
-                            <ADatePicker fx:id="docDate" />
+                            <Label text="%types" />
+                            <DocTypeComboBox fx:id="docTypes" />
                         </children>
                     </VBox>
-                    <VBox styleClass="couple">
-                        <children>
-                            <Label text="%doc_in_doc_date" styleClass="validationMessage" />
-                            <ADatePicker fx:id="docInDocDate" />
-                        </children>
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <children>
-                            <Label text="%utilities" styleClass="validationMessage" />
-                            <ComboBox fx:id="utilities" />
-                        </children>
-                    </VBox>
+                </children>
+            </HBox>
+            <HBox fx:id="concreteScene" styleClass="one" >
+                <children>
                 </children>
             </HBox>
             <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >

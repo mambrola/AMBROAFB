@@ -5,10 +5,34 @@
  */
 package ambroafb.docs.types.custom;
 
+import ambroafb.docs.types.DocDialogAbstraction;
+import ambroafb.docs.types.SceneWithVBoxRoot;
+import javafx.scene.Node;
+import org.json.JSONObject;
+
 /**
  *
  * @author dkobuladze
  */
-public class Custom {
+public class Custom extends SceneWithVBoxRoot implements DocDialogAbstraction {
+    
+    public Custom(){
+        super("/ambroafb/docs/types/custom/Custom.fxml");
+    }
+    
+    @Override
+    public Node getSceneNode() {
+        return this;
+    }
+
+    @Override
+    public JSONObject getResult() {
+        return null;
+    }
+
+    @Override
+    public void cancel() {
+        System.out.println("Custom cancel method");
+    }
     
 }
