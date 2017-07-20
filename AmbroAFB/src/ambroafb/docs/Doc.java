@@ -7,11 +7,13 @@ package ambroafb.docs;
 
 import ambro.AView;
 import ambroafb.currencies.Currency;
+import ambroafb.docs.types.DocDialogAbstraction;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.licenses.License;
 import authclient.db.ConditionBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javafx.beans.property.IntegerProperty;
@@ -59,6 +61,7 @@ public class Doc extends EditorPanelable {
     private final IntegerProperty ownerId;
     
     private static final String DB_TABLE_NAME = "docs";
+    private DocDialogAbstraction dialogAbstraction;
     
     public Doc(){
         parentRecId = new SimpleIntegerProperty();
@@ -197,6 +200,11 @@ public class Doc extends EditorPanelable {
         return ownerId.get();
     }
     
+    @JsonIgnore
+    public DocDialogAbstraction getDialogAbstraction(){
+        return dialogAbstraction;
+    }
+    
 
     // Setters:
     public void setParentRecId(int parentId){
@@ -241,6 +249,12 @@ public class Doc extends EditorPanelable {
     
     public void setOwnerId(int ownerId){
         this.ownerId.set(ownerId);
+    }
+    
+    
+    @JsonIgnore
+    public void setDialogAbstraction(DocDialogAbstraction dda) {
+        this.dialogAbstraction = dda;
     }
     
     
@@ -295,4 +309,5 @@ public class Doc extends EditorPanelable {
         return  getDocDate()+ " " + getDocInDocDate() + " " + getIso() + " " + getAmount() + " " +
                 getDocCode() + " " + getDescrip();
     }
+
 }

@@ -39,7 +39,7 @@ public class DocType {
 
     @Override
     public String toString() {
-        return "DocType{" + "id=" + id + ", descrip=" + descrip + '}';
+        return descrip;
     }
     
     

@@ -41,7 +41,7 @@ public class DocDialog extends UserInteractiveStage implements Dialogable {
         dialogController = (DocDialogController) currentScene.getProperties().get("controller");
         dialogController.bindDoc(this.doc); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
         dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupDoc(this.docBackup);
+//        dialogController.setBackupDoc(this.docBackup);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {

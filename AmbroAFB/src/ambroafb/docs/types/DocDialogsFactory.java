@@ -6,6 +6,8 @@
 package ambroafb.docs.types;
 
 import ambroafb.docs.types.custom.Custom;
+import ambroafb.docs.types.monthly.Monthly;
+import ambroafb.docs.types.refund.Refund;
 import ambroafb.docs.types.utilities.Utility;
 
 /**
@@ -15,9 +17,18 @@ import ambroafb.docs.types.utilities.Utility;
 public class DocDialogsFactory {
     
     public static DocDialogAbstraction getDocDialogObject(int id){
-        if (id == 1){
-            return new Custom();
+        switch (id) {
+            case 1:
+                return new Custom();
+            case 2:
+                return new Utility();
+            case 3:
+                return new Monthly();
+            case 4:
+                return new Refund();
+            default:
+                break;
         }
-        return new Utility();
+        return null;
     }
 }

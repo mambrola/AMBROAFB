@@ -24,6 +24,7 @@ public class DocTypeComboBox extends ComboBox<DocType> {
         types.add(new DocType(3, "Monthly"));
         types.add(new DocType(4, "Refund"));
         this.setItems(types);
+        this.setValue(types.get(0));
     }
     
 }

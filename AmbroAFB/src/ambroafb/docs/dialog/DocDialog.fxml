@@ -15,12 +15,12 @@
 
     <VBox   fx:id="formPane" styleClass="vContainer" >
         <children>
-            <HBox styleClass="oneHalf">
+            <HBox styleClass="one">
                 <children>
                     <VBox styleClass="couple" >
                         <children>
                             <Label text="%types" />
-                            <DocTypeComboBox fx:id="docTypes" />
+                            <DocTypeComboBox fx:id="docTypes" styleClass="alwaysEnable" />
                         </children>
                     </VBox>
                 </children>

@@ -16,6 +16,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -56,18 +57,28 @@ public class DocDialogController implements Initializable {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         permissionToClose = true;
         
-        DocDialogAbstraction ab = DocDialogsFactory.getDocDialogObject(docTypes.getValue().getId());
-        setConcreteSceneNode(ab.getSceneNode());
+        if (docTypes.getValue() != null){
+            int docTypeId = docTypes.getValue().getId();
+            setConcreteNodeFrom(DocDialogsFactory.getDocDialogObject(docTypeId));
+        }
         
         docTypes.valueProperty().addListener((ObservableValue<? extends DocType> observable, DocType oldValue, DocType newValue) -> {
-            DocDialogAbstraction cda = DocDialogsFactory.getDocDialogObject(newValue.getId());
-            setConcreteSceneNode(cda.getSceneNode());
+            DocDialogAbstraction dda = DocDialogsFactory.getDocDialogObject(newValue.getId());
+            setConcreteNodeFrom(dda);
+            doc.setDialogAbstraction(dda);
         });
     }
     
-    public void setConcreteSceneNode(Node node){
-        concreteScene.getChildren().remove(0);
-        concreteScene.getChildren().add(node);
+    /**
+     * Sets new node instead of old.
+     * @param dda Abstraction that gives node object. The node object must draw on scene, according to value of DocTypesComboBox.
+     */
+    public void setConcreteNodeFrom(DocDialogAbstraction dda){
+        List<Node> concreteDocDialogsNodes = concreteScene.getChildren();
+        if (!concreteDocDialogsNodes.isEmpty()){
+            concreteDocDialogsNodes.remove(0);
+        }
+        concreteDocDialogsNodes.add(dda.getSceneNode());
     }
     
     
@@ -95,17 +106,17 @@ public class DocDialogController implements Initializable {
         });
     }
 
-    public void setBackupDoc(Doc docBackup) {
-        this.docBackup = docBackup;
-    }
-    
+//    public void setBackupDoc(Doc docBackup) {
+//        this.docBackup = docBackup;
+//    }
     
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }
     
     public boolean anyComponentChanged(){
-        return !doc.compares(docBackup);
+        return false;
+//        return !doc.compares(docBackup);
     }
     
     public void operationCanceled(){

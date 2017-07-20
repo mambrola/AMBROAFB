@@ -34,5 +34,4 @@ public class Custom extends SceneWithVBoxRoot implements DocDialogAbstraction {
     public void cancel() {
         System.out.println("Custom cancel method");
     }
-    
 }
