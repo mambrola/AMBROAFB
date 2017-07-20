@@ -278,7 +278,6 @@ public class MainController implements Initializable {
         Stage docsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(docsStage == null || !docsStage.isShowing()){
             TableList docs = new TableList(AmbroAFB.mainStage, Doc.class, stageTitle);
-//            docs.getController().getEditorPanelController().addPanelButton(new DocsButton());
             docs.show();
             Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
                                                         return new ArrayList(Doc.getAllFromDB());

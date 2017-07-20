@@ -11,7 +11,6 @@ import ambroafb.docs.types.DocDialogAbstraction;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.licenses.License;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
@@ -22,7 +21,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import org.json.JSONObject;
 
 /**
@@ -41,7 +39,7 @@ public class Doc extends EditorPanelable {
     private final StringProperty docDate;
     private final ObjectProperty<LocalDate> docDateObj;
 
-    @AView.Column(title = "%pocInDocDate", width = "100")
+    @AView.Column(title = "%docInDocDate", width = "100")
     private final StringProperty docInDocDate;
     private final ObjectProperty<LocalDate> docInDocDateObj;
     
@@ -78,13 +76,13 @@ public class Doc extends EditorPanelable {
         descrip = new SimpleStringProperty();
         ownerId = new SimpleIntegerProperty();
         
-        docDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            docDate.set(convertDateToString(newValue));
-        });
-        
-        docInDocDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            docInDocDate.set(convertDateToString(newValue));
-        });
+//        docDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+//            docDate.set(convertDateToString(newValue));
+//        });
+//        
+//        docInDocDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+//            docInDocDate.set(convertDateToString(newValue));
+//        });
     }
     
     private String convertDateToString(LocalDate date){
@@ -96,7 +94,7 @@ public class Doc extends EditorPanelable {
     }
     
     // DB methods:
-    public static ArrayList<License> getAllFromDB() {
+    public static ArrayList<Doc> getAllFromDB() {
         JSONObject params = new ConditionBuilder().build();
         return DBUtils.getObjectsListFromDB(Doc.class, DB_TABLE_NAME, params);
     }
@@ -216,7 +214,7 @@ public class Doc extends EditorPanelable {
     }
     
     public void setDocDate(String docDate){
-        this.docCode.set(docDate);
+        this.docDate.set(docDate);
     }
     
     public void setDocInDocDate(String docInDocDate){
