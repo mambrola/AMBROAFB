@@ -7,6 +7,12 @@ package ambroafb.docs.doc_editor_panel;
 
 import ambro.AFilterableTableView;
 import ambro.ATableView;
+import ambroafb.docs.dialog.DocDialog;
+import ambroafb.general.DataDistributor;
+import ambroafb.general.Names;
+import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
+import ambroafb.general.interfaces.DocDialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -76,7 +83,22 @@ public class DocEditorPanelController implements Initializable {
     
     @FXML
     private void add(ActionEvent e) {
-        System.out.println("add");
+        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            DocDialogable dialogable = new DocDialog(null, Names.EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
+            DataDistributor dataDis = dialogable.getResult();
+            if (dataDis != null){
+                System.out.println("--- make Ok ---\nDataDistribution is: " + dataDis);
+            }
+            else {
+                System.out.println("--- make Cancel ---");
+            }
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+        }
     }
     
     @FXML

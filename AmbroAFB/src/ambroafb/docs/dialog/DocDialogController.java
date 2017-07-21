@@ -58,13 +58,15 @@ public class DocDialogController implements Initializable {
         if (docTypes.getValue() != null){
             DocComponent dc = DocDialogsFactory.getDocTypeComponent(docTypes.getValue().getId());
             setConcreteNodeFrom(dc);
-            docBackup.cloneWithoutID(dc);
+            doc = dc;
+            docBackup = dc.cloneWithoutID();
         }
         
         docTypes.valueProperty().addListener((ObservableValue<? extends DocType> observable, DocType oldValue, DocType newValue) -> {
             DocComponent dc = DocDialogsFactory.getDocTypeComponent(newValue.getId());
             setConcreteNodeFrom(dc);
-            docBackup.cloneWithoutID(dc);
+            doc = dc;
+            docBackup = dc.cloneWithoutID();
         });
     }
     
@@ -81,9 +83,17 @@ public class DocDialogController implements Initializable {
     }
     
     
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
+    public void setNextVisibleAndActionParameters(DocComponent docComp, Names.EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
+        }
+        if (docComp != null){ // All case besides ADD.
+            docTypes.setValue(docTypes.getItems().stream().filter((type) -> type.getId() == docComp.getType().getId()).findFirst().get());
+            docTypes.setDisable(true);
+            
+            setConcreteNodeFrom(docComp);
+            doc = docComp;
+            docBackup = docComp.cloneWithoutID();
         }
         okayCancelController.setButtonsFeatures(buttonType);
     }
@@ -111,7 +121,8 @@ public class DocDialogController implements Initializable {
     }
     
     public void operationCanceled(){
-        doc = null;
+        doc.copyFrom(docBackup);
+        doc.discardData();
     }
     
     public void changePermissionForClose(boolean value){

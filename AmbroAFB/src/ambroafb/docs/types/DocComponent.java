@@ -5,6 +5,7 @@
  */
 package ambroafb.docs.types;
 
+import ambroafb.docs.DocType;
 import ambroafb.general.DataDistributor;
 import javafx.scene.Node;
 
@@ -18,11 +19,12 @@ public interface DocComponent {
     public void setRecId(int id);
     
     public Node getSceneNode();
-    public DataDistributor getResult();
-    public void cancel();
+    public DataDistributor getDocData();
+    public void discardData();
     public boolean compare(DocComponent other);
-    public DocComponent cloneWithoutID(DocComponent other);
-    public DocComponent cloneWithID(DocComponent other);
+    public DocComponent cloneWithoutID();
+    public DocComponent cloneWithID();
     public void copyFrom(DocComponent other);
     
+    public DocType getType();
 }

@@ -5,10 +5,15 @@
  */
 package ambroafb.docs.types.refund;
 
+import ambroafb.docs.DocType;
 import ambroafb.docs.types.DocComponent;
 import ambroafb.docs.types.SceneWithVBoxRoot;
 import ambroafb.general.DataDistributor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.Node;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -17,6 +22,10 @@ import javafx.scene.Node;
 public class Refund extends SceneWithVBoxRoot implements DocComponent {
 
     private int recId;
+    private final DocType type = new DocType(3, "Refund");
+    private final DataDistributor dataDistributor = new DataDistributor();
+    private final String Refund_Doc_Table = "Some Table";
+    private boolean dataIsValid = true;
     
     public Refund() {
         load("/ambroafb/docs/types/refund/Refund.fxml");
@@ -32,13 +41,22 @@ public class Refund extends SceneWithVBoxRoot implements DocComponent {
     }
 
     @Override
-    public DataDistributor getResult() {
+    public DataDistributor getDocData() {
+        if (dataIsValid){
+            dataDistributor.setTableName(Refund_Doc_Table);
+            try {
+                dataDistributor.setData(new JSONObject("{id: 3}"));
+            } catch (JSONException ex) {
+                Logger.getLogger(Refund.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return dataDistributor;
+        }
         return null;
     }
 
     @Override
-    public void cancel() {
-        System.out.println("Refund cancel method");
+    public void discardData() {
+        dataIsValid = false;
     }
 
     @Override
@@ -53,26 +71,32 @@ public class Refund extends SceneWithVBoxRoot implements DocComponent {
 
     @Override
     public boolean compare(DocComponent other) {
+        Refund otherRefund = (Refund)other;
         return true;
     }
 
     @Override
-    public Refund cloneWithoutID(DocComponent other) {
+    public Refund cloneWithoutID() {
         Refund clone = new Refund();
-        clone.copyFrom(other);
+        clone.copyFrom(this);
         return clone;
     }
 
     @Override
-    public Refund cloneWithID(DocComponent other) {
-        Refund clone = cloneWithoutID(other);
-        clone.setRecId(other.getRecId());
+    public Refund cloneWithID() {
+        Refund clone = cloneWithoutID();
+        clone.setRecId(this.getRecId());
         return clone;
     }
 
     @Override
     public void copyFrom(DocComponent other) {
 
+    }
+
+    @Override
+    public DocType getType() {
+        return type;
     }
     
     

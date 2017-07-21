@@ -80,4 +80,8 @@ public class Names {
         DELETE, EDIT, VIEW, ADD
     } 
     
+    public static enum DOC_EDITOR_BUTTON_TYPE {
+        DELETE, EDIT, VIEW, ADD, ADD_BY_SAMPLE;
+    } 
+    
 }

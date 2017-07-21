@@ -5,11 +5,11 @@
  */
 package ambroafb.docs.dialog;
 
+import ambroafb.docs.types.DocComponent;
 import ambroafb.general.DataDistributor;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.DocDialogable;
-import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -24,12 +24,12 @@ public class DocDialog extends UserInteractiveStage implements DocDialogable {
 
     private DocDialogController dialogController;
     
-    public DocDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+    public DocDialog(DocComponent object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         super(owner, Names.LEVEL_FOR_PATH, "doc_dialog_title", "/images/dialog.png");
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/docs/dialog/DocDialog.fxml", null);
         dialogController = (DocDialogController) currentScene.getProperties().get("controller");
-        dialogController.setNextVisibleAndActionParameters(buttonType);
+        dialogController.setNextVisibleAndActionParameters(object, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -41,7 +41,7 @@ public class DocDialog extends UserInteractiveStage implements DocDialogable {
     @Override
     public DataDistributor getResult() {
         showAndWait();
-        return dialogController.getDocComponent().getResult();
+        return dialogController.getDocComponent().getDocData();
     }
 
 }

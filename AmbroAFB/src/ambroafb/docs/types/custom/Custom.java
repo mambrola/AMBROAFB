@@ -5,10 +5,16 @@
  */
 package ambroafb.docs.types.custom;
 
+import ambroafb.docs.DocType;
 import ambroafb.docs.types.DocComponent;
 import ambroafb.docs.types.SceneWithVBoxRoot;
 import ambroafb.general.DataDistributor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.Node;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -17,6 +23,10 @@ import javafx.scene.Node;
 public class Custom extends SceneWithVBoxRoot implements DocComponent {
     
     private int recId;
+    private final DocType type = new DocType(1, "Custom");
+    private final DataDistributor dataDistributor = new DataDistributor();
+    private final String Custom_Doc_Table = "Some Table";
+    private boolean dataIsValid = true;
     
     public Custom(){
         load("/ambroafb/docs/types/custom/Custom.fxml");
@@ -38,43 +48,58 @@ public class Custom extends SceneWithVBoxRoot implements DocComponent {
     
     
     
-    @Override
+    @Override @JsonIgnore
     public Node getSceneNode() {
         return this;
     }
 
-    @Override
-    public DataDistributor getResult() {
+    @Override @JsonIgnore
+    public DataDistributor getDocData() {
+        if (dataIsValid){
+            dataDistributor.setTableName(Custom_Doc_Table);
+            try {
+                dataDistributor.setData(new JSONObject("{id: 1}"));
+            } catch (JSONException ex) {
+                Logger.getLogger(Custom.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return dataDistributor;
+        }
         return null;
     }
 
     @Override
-    public void cancel() {
-        System.out.println("Custom cancel method");
+    public void discardData() {
+        dataIsValid = false;
     }
 
-    @Override
+    @Override @JsonIgnore
     public boolean compare(DocComponent other) {
+        Custom otherCustom = (Custom) other;
         return true;
     }
 
-    @Override
-    public Custom cloneWithoutID(DocComponent other) {
+    @Override @JsonIgnore
+    public Custom cloneWithoutID() {
         Custom clone = new Custom();
-        clone.copyFrom(other);
+        clone.copyFrom(this);
         return clone;
     }
 
-    @Override
-    public Custom cloneWithID(DocComponent other) {
-        Custom clone = cloneWithoutID(other);
-        clone.setRecId(other.getRecId());
+    @Override @JsonIgnore
+    public Custom cloneWithID() {
+        Custom clone = cloneWithoutID();
+        clone.setRecId(this.getRecId());
         return clone;
     }
 
     @Override
     public void copyFrom(DocComponent other) {
-        
+        // ar unda id-is copy  aq.......
+    }
+
+    @Override @JsonIgnore
+    public DocType getType() {
+        return type;
     }
 
 }

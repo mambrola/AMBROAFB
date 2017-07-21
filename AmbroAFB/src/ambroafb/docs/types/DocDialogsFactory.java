@@ -21,11 +21,11 @@ public class DocDialogsFactory {
             case 1:
                 return new Custom();
             case 2:
-                return new Utility();
-            case 3:
                 return new Monthly();
-            case 4:
+            case 3:
                 return new Refund();
+            case 4:
+                return new Utility();
             default:
                 break;
         }

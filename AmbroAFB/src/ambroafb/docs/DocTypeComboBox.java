@@ -20,9 +20,9 @@ public class DocTypeComboBox extends ComboBox<DocType> {
         
         ObservableList<DocType> types = FXCollections.observableArrayList();
         types.add(new DocType(1, "Custom"));
-        types.add(new DocType(2, "Utilities"));
-        types.add(new DocType(3, "Monthly"));
-        types.add(new DocType(4, "Refund"));
+        types.add(new DocType(2, "Monthly"));
+        types.add(new DocType(3, "Refund"));
+        types.add(new DocType(4, "Utilities"));
         this.setItems(types);
         this.setValue(types.get(0));
     }

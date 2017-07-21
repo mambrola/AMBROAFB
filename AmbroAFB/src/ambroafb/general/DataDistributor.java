@@ -13,8 +13,32 @@ import org.json.JSONObject;
  */
 public class DataDistributor {
     
-    public String tableName;
-    public JSONObject data;
+    private String tableName;
+    private JSONObject data;
+    
+    public DataDistributor(){
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public JSONObject getData() {
+        return data;
+    }
+
+    public void setData(JSONObject data) {
+        this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "DataDistributor{" + "tableName=" + tableName + ", data=" + data + '}';
+    }
     
     
 }
