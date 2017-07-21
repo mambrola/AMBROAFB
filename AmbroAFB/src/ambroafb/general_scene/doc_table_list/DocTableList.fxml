@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.* ?>
+<?import org.controlsfx.control.*?>
+
+<BorderPane id="formPane" 
+            stylesheets="/styles/css/tablelist.css" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="ambroafb.general_scene.doc_table_list.DocTableListController">
+    <top>
+        <fx:include fx:id="docEditorPanel" source="/ambroafb/docs/doc_editor_panel/DocEditorPanel.fxml"/>
+    </top>
+    <center>
+        <StackPane fx:id="containerPane" >
+            <children>
+                <MaskerPane fx:id="masker" visible="false" text="%loading"/>
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>
