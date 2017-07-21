@@ -5,11 +5,13 @@
  */
 package ambroafb.general.interfaces;
 
+import ambroafb.docs.types.DocComponent;
+
 /**
  *
  * @author dkobuladze
  */
 public interface DocsDataManager {
     
-    
+    public DocComponent getDocComponentBy(int id);
 }

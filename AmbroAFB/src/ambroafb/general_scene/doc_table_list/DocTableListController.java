@@ -78,7 +78,7 @@ public class DocTableListController implements Initializable {
         aview = new AFilterableTableView<>(targetClass);
         aview.setId("aview");
         aview.setBundle(bundle);
-//        editorPanelController.buttonsMainPropertysBinder(aview);
+        docEditorPanelController.buttonsMainPropertysBinder(aview);
         docEditorPanelController.setTableDataList(aview, contents);
 
         containerPane.getChildren().add(0, aview);

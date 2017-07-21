@@ -5,6 +5,8 @@
  */
 package ambroafb.docs.doc_editor_panel;
 
+import ambroafb.docs.types.DocComponent;
+import ambroafb.docs.types.DocDialogsFactory;
 import ambroafb.general.interfaces.DocsDataManager;
 
 /**
@@ -12,5 +14,10 @@ import ambroafb.general.interfaces.DocsDataManager;
  * @author dkobuladze
  */
 public class DBDocsDataManager implements DocsDataManager {
+
+    @Override
+    public DocComponent getDocComponentBy(int id) {
+        return DocDialogsFactory.getDocTypeComponent(id);
+    }
     
 }

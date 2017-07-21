@@ -6,8 +6,12 @@
 package ambroafb.docs.doc_editor_panel;
 
 import ambro.AFilterableTableView;
+import ambro.AFilterableTreeTableView;
 import ambro.ATableView;
+import ambro.AView;
+import ambroafb.docs.Doc;
 import ambroafb.docs.dialog.DocDialog;
+import ambroafb.docs.types.DocComponent;
 import ambroafb.general.DataDistributor;
 import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
@@ -16,6 +20,8 @@ import ambroafb.general.interfaces.DocDialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -73,7 +79,22 @@ public class DocEditorPanelController implements Initializable {
     
     @FXML
     private void edit(ActionEvent e) {
-        System.out.println("edit");
+        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            Doc docFromList = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            System.out.println("rec id: " + docFromList.getRecId());
+            DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getRecId());
+            
+            DocDialogable dialogable = new DocDialog(docComp, Names.EDITOR_BUTTON_TYPE.EDIT, (Stage) exit.getScene().getWindow());
+            DataDistributor dataDis = dialogable.getResult();
+            if (dataDis != null){
+                System.out.println("--- make Ok ---\nDataDistribution is: " + dataDis);
+            }
+            else {
+                System.out.println("--- make Cancel ---");
+            }
+        }
     }
     
     @FXML
@@ -132,6 +153,30 @@ public class DocEditorPanelController implements Initializable {
             AFilterableTableView<EditorPanelable> filterableTable = (AFilterableTableView) table;
             filterableTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
         }
+    }
+    
+    public void buttonsMainPropertysBinder (AView<EditorPanelable> aView){
+        BooleanBinding allowModify = Bindings.createBooleanBinding(() -> {
+                                                                    if (aView.getCustomSelectedItem() == null){
+                                                                        return true;
+                                                                    }
+                                                                    return aView.getCustomSelectedItem().isAllowToModify().not().get();
+                                                                }, aView.getCustomSelectionModel().selectedItemProperty());
+        if (aView instanceof AFilterableTreeTableView){
+            AFilterableTreeTableView<EditorPanelable> treeTable = (AFilterableTreeTableView)aView;
+            delete.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+                if (aView.getCustomSelectionModel().selectedItemProperty().isNull().get()) {
+                    return true;
+                }
+                return !treeTable.getSelectionModel().getSelectedItem().isLeaf();
+            }, aView.getCustomSelectionModel().selectedItemProperty()));
+        }
+        else if (aView instanceof ATableView){
+            delete.disableProperty().bind(allowModify);
+        }
+        edit.disableProperty().bind(allowModify);
+        view.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
+        addBySample.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
     }
     
     /**

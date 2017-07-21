@@ -5,6 +5,7 @@
  */
 package ambroafb.docs.doc_editor_panel;
 
+import ambroafb.docs.types.DocComponent;
 import ambroafb.general.interfaces.DocsDataManager;
 
 /**
@@ -23,5 +24,7 @@ public class DocEditorPanelModel {
         this(new DBDocsDataManager());
     }
     
-    
+    public DocComponent getDocComponent(int id){
+        return dataManager.getDocComponentBy(id);
+    }
 }
