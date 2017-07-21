@@ -5,19 +5,25 @@
  */
 package ambroafb.docs.types.monthly;
 
-import ambroafb.docs.types.DocDialogAbstraction;
+import ambroafb.docs.types.DocComponent;
 import ambroafb.docs.types.SceneWithVBoxRoot;
+import ambroafb.general.DataDistributor;
 import javafx.scene.Node;
-import org.json.JSONObject;
 
 /**
  *
  * @author dkobuladze
  */
-public class Monthly extends SceneWithVBoxRoot implements DocDialogAbstraction {
+public class Monthly extends SceneWithVBoxRoot implements DocComponent {
 
+    private int recId;
+    
     public Monthly() {
-        super("/ambroafb/docs/types/monthly/Monthly.fxml");
+        load("/ambroafb/docs/types/monthly/Monthly.fxml");
+    }
+    
+    private void load(String fxmlPath){
+        super.assignLoader(fxmlPath, this);
     }
 
     @Override
@@ -26,13 +32,47 @@ public class Monthly extends SceneWithVBoxRoot implements DocDialogAbstraction {
     }
 
     @Override
-    public JSONObject getResult() {
+    public DataDistributor getResult() {
         return null;
     }
 
     @Override
     public void cancel() {
         System.out.println("Monthly cancel method");
+    }
+
+    @Override
+    public int getRecId() {
+        return recId;
+    }
+
+    @Override
+    public void setRecId(int id) {
+        recId = id;
+    }
+
+    @Override
+    public boolean compare(DocComponent other) {
+        return true;
+    }
+
+    @Override
+    public Monthly cloneWithoutID(DocComponent other) {
+        Monthly clone = new Monthly();
+        clone.copyFrom(other);
+        return clone;
+    }
+
+    @Override
+    public Monthly cloneWithID(DocComponent other) {
+        Monthly clone = cloneWithoutID(other);
+        clone.setRecId(other.getRecId());
+        return clone;
+    }
+
+    @Override
+    public void copyFrom(DocComponent other) {
+        
     }
     
 }

@@ -20,15 +20,20 @@ import javafx.scene.layout.VBox;
  */
 public class SceneWithVBoxRoot extends VBox {
     
-    public SceneWithVBoxRoot(String fxmlPath){
-        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource(fxmlPath));
-        loader.setResources(GeneralConfig.getInstance().getBundle());
-        assignLoader(loader);
+    public SceneWithVBoxRoot(){
+    
     }
     
-    private void assignLoader(FXMLLoader loader){
-        loader.setRoot(this);
-        loader.setController(this);
+    /**
+     * The method finds appropriate FXML and set root on it.
+     * @param fxmlPath FXML file path.
+     * @param root Object that must be root of given FXML.
+     */
+    protected final void assignLoader(String fxmlPath, Object root){
+        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource(fxmlPath));
+        loader.setResources(GeneralConfig.getInstance().getBundle());
+        loader.setRoot(root);
+        loader.setController(root);
         
         try {
             loader.load();

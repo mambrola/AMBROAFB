@@ -5,19 +5,25 @@
  */
 package ambroafb.docs.types.utilities;
 
-import ambroafb.docs.types.DocDialogAbstraction;
+import ambroafb.docs.types.DocComponent;
 import ambroafb.docs.types.SceneWithVBoxRoot;
+import ambroafb.general.DataDistributor;
 import javafx.scene.Node;
-import org.json.JSONObject;
 
 /**
  *
  * @author dkobuladze
  */
-public class Utility extends SceneWithVBoxRoot implements DocDialogAbstraction {
+public class Utility extends SceneWithVBoxRoot implements DocComponent {
 
+    private int recId;
+    
     public Utility(){
-        super("/ambroafb/docs/types/utilities/Utility.fxml");
+        load("/ambroafb/docs/types/utilities/Utility.fxml");
+    }
+    
+    private void load(String fxmlPath){
+        super.assignLoader(fxmlPath, this);
     }
     
     @Override
@@ -26,7 +32,7 @@ public class Utility extends SceneWithVBoxRoot implements DocDialogAbstraction {
     }
 
     @Override
-    public JSONObject getResult() {
+    public DataDistributor getResult() {
         return null;
     }
 
@@ -34,5 +40,39 @@ public class Utility extends SceneWithVBoxRoot implements DocDialogAbstraction {
     public void cancel() {
         System.out.println("Utilities cancel method"); 
    }
+
+    @Override
+    public int getRecId() {
+        return recId;
+    }
+
+    @Override
+    public void setRecId(int id) {
+        recId = id;
+    }
+
+    @Override
+    public boolean compare(DocComponent other) {
+        return true;
+    }
+
+    @Override
+    public Utility cloneWithoutID(DocComponent other) {
+        Utility clone = new Utility();
+        clone.copyFrom(other);
+        return clone;
+    }
+
+    @Override
+    public Utility cloneWithID(DocComponent other) {
+        Utility clone = cloneWithoutID(other);
+        clone.setRecId(other.getRecId());
+        return clone;
+    }
+
+    @Override
+    public void copyFrom(DocComponent other) {
+
+    }
     
 }

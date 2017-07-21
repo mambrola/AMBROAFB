@@ -5,14 +5,12 @@
  */
 package ambroafb.docs.dialog;
 
-import ambroafb.docs.Doc;
 import ambroafb.docs.DocType;
 import ambroafb.docs.DocTypeComboBox;
-import ambroafb.docs.types.DocDialogAbstraction;
+import ambroafb.docs.types.DocComponent;
 import ambroafb.docs.types.DocDialogsFactory;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
-import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
@@ -44,7 +42,7 @@ public class DocDialogController implements Initializable {
     
     private ArrayList<Node> focusTraversableNodes;
 
-    private Doc doc, docBackup;
+    private DocComponent doc, docBackup;
     private boolean permissionToClose;
     
     /**
@@ -58,14 +56,15 @@ public class DocDialogController implements Initializable {
         permissionToClose = true;
         
         if (docTypes.getValue() != null){
-            int docTypeId = docTypes.getValue().getId();
-            setConcreteNodeFrom(DocDialogsFactory.getDocDialogObject(docTypeId));
+            DocComponent dc = DocDialogsFactory.getDocTypeComponent(docTypes.getValue().getId());
+            setConcreteNodeFrom(dc);
+            docBackup.cloneWithoutID(dc);
         }
         
         docTypes.valueProperty().addListener((ObservableValue<? extends DocType> observable, DocType oldValue, DocType newValue) -> {
-            DocDialogAbstraction dda = DocDialogsFactory.getDocDialogObject(newValue.getId());
-            setConcreteNodeFrom(dda);
-            doc.setDialogAbstraction(dda);
+            DocComponent dc = DocDialogsFactory.getDocTypeComponent(newValue.getId());
+            setConcreteNodeFrom(dc);
+            docBackup.cloneWithoutID(dc);
         });
     }
     
@@ -73,7 +72,7 @@ public class DocDialogController implements Initializable {
      * Sets new node instead of old.
      * @param dda Abstraction that gives node object. The node object must draw on scene, according to value of DocTypesComboBox.
      */
-    public void setConcreteNodeFrom(DocDialogAbstraction dda){
+    public void setConcreteNodeFrom(DocComponent dda){
         List<Node> concreteDocDialogsNodes = concreteScene.getChildren();
         if (!concreteDocDialogsNodes.isEmpty()){
             concreteDocDialogsNodes.remove(0);
@@ -82,19 +81,15 @@ public class DocDialogController implements Initializable {
     }
     
     
-    public void bindDoc(Doc doc) {
-        this.doc = doc;
-        if (doc != null){
-            // binds
-            
-        }
-    }
-
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
         okayCancelController.setButtonsFeatures(buttonType);
+    }
+    
+    public DocComponent getDocComponent(){
+        return doc;
     }
     
      /**
@@ -106,21 +101,17 @@ public class DocDialogController implements Initializable {
         });
     }
 
-//    public void setBackupDoc(Doc docBackup) {
-//        this.docBackup = docBackup;
-//    }
-    
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }
     
+    
     public boolean anyComponentChanged(){
-        return false;
-//        return !doc.compares(docBackup);
+        return !doc.compare(docBackup);
     }
     
     public void operationCanceled(){
-        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
+        doc = null;
     }
     
     public void changePermissionForClose(boolean value){

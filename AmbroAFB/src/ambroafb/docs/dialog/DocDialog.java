@@ -5,10 +5,10 @@
  */
 package ambroafb.docs.dialog;
 
-import ambroafb.docs.Doc;
+import ambroafb.general.DataDistributor;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.DocDialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveStage;
 import javafx.event.EventHandler;
@@ -20,28 +20,16 @@ import javafx.stage.WindowEvent;
  *
  * @author dkobuladze
  */
-public class DocDialog extends UserInteractiveStage implements Dialogable {
+public class DocDialog extends UserInteractiveStage implements DocDialogable {
 
-    public Doc doc;
-    public final Doc docBackup;
-    
     private DocDialogController dialogController;
     
     public DocDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner,  Names.LEVEL_FOR_PATH, "doc_dialog_title", "/images/dialog.png");
-        
-        if (object == null)
-            doc = new Doc();
-        else 
-            doc = (Doc) object;
-        
-        docBackup = doc.cloneWithID();
+        super(owner, Names.LEVEL_FOR_PATH, "doc_dialog_title", "/images/dialog.png");
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/docs/dialog/DocDialog.fxml", null);
         dialogController = (DocDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindDoc(this.doc); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
         dialogController.setNextVisibleAndActionParameters(buttonType);
-//        dialogController.setBackupDoc(this.docBackup);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -51,14 +39,9 @@ public class DocDialog extends UserInteractiveStage implements Dialogable {
     }
 
     @Override
-    public EditorPanelable getResult() {
+    public DataDistributor getResult() {
         showAndWait();
-        return doc;
+        return dialogController.getDocComponent().getResult();
     }
 
-    @Override
-    public void operationCanceled() {
-        doc = null;
-    }
-    
 }

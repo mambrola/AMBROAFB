@@ -3,19 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.docs.types;
+package ambroafb.general;
 
-import javafx.scene.Node;
 import org.json.JSONObject;
 
 /**
  *
  * @author dkobuladze
  */
-public interface DocDialogAbstraction {
+public class DataDistributor {
     
-    public Node getSceneNode();
-    public JSONObject getResult();
-    public void cancel();
+    public String tableName;
+    public JSONObject data;
+    
     
 }

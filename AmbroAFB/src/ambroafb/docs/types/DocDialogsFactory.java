@@ -16,7 +16,7 @@ import ambroafb.docs.types.utilities.Utility;
  */
 public class DocDialogsFactory {
     
-    public static DocDialogAbstraction getDocDialogObject(int id){
+    public static DocComponent getDocTypeComponent(int id){
         switch (id) {
             case 1:
                 return new Custom();
