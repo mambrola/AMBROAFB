@@ -83,7 +83,6 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc docFromList = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            System.out.println("rec id: " + docFromList.getRecId());
             DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getRecId());
             
             DocDialogable dialogable = new DocDialog(docComp, Names.EDITOR_BUTTON_TYPE.EDIT, (Stage) exit.getScene().getWindow());
@@ -95,11 +94,27 @@ public class DocEditorPanelController implements Initializable {
                 System.out.println("--- make Cancel ---");
             }
         }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+        }
     }
     
     @FXML
     private void view(ActionEvent e) {
-        System.out.println("view");
+        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            Doc docFromList = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getRecId());
+            
+            DocDialogable dialogable = new DocDialog(docComp, Names.EDITOR_BUTTON_TYPE.VIEW, (Stage) exit.getScene().getWindow());
+            dialogable.showAndWait();
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+        }
     }
     
     @FXML
