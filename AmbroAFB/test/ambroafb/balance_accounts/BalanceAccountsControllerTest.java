@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -80,12 +81,11 @@ public class BalanceAccountsControllerTest {
      */
     @Test @Ignore
     public void testAccountAlreadyExistForCode() {
-        System.out.println("accountAlreadyExistForCode");
-        EditorPanelable newElem = null;
-        Names.EDITOR_BUTTON_TYPE type = null;
-        BalanceAccountsController instance = new BalanceAccountsController();
-        boolean expResult = false;
-        boolean result = instance.accountAlreadyExistForCode(newElem, type);
+        Supplier<ArrayList<EditorPanelable>> supplier = () -> spyList;
+        instance.reAssignTable(supplier);
+        EditorPanelable newElem = createBalAccount(1, 1000, "some desc");
+        Names.EDITOR_BUTTON_TYPE type = Names.EDITOR_BUTTON_TYPE.ADD;
+        Assert.assertTrue(instance.accountAlreadyExistForCode(newElem, type));
     }
 
     /**

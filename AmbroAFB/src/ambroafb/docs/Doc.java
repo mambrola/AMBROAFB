@@ -57,6 +57,8 @@ public class Doc extends EditorPanelable {
     private final StringProperty descrip;
     private final IntegerProperty ownerId;
     
+    private int docType;
+    
     private static final String DB_TABLE_NAME = "docs";
     private DocComponent dialogAbstraction;
     
@@ -153,6 +155,10 @@ public class Doc extends EditorPanelable {
     
     
     // Getters:
+    public int getDocType(){
+        return docType;
+    }
+    
     public int getParentRecId(){
         return parentRecId.get();
     }
@@ -198,6 +204,10 @@ public class Doc extends EditorPanelable {
     }
     
     // Setters:
+    public void setDocType(int docType){
+        this.docType = docType;
+    }
+    
     public void setParentRecId(int parentId){
         this.parentRecId.set(parentId);
     }
