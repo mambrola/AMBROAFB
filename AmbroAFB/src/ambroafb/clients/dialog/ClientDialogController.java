@@ -13,7 +13,6 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.general.image_gallery.ImageGalleryController;
-import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.Annotations.ContentMail;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Dialogable;
@@ -127,7 +126,14 @@ public class ClientDialogController implements Initializable {
     private void switchJuridical(ActionEvent e) {
         String delimiter = " ";
         if (((CheckBox) e.getSource()).isSelected()) {
-            first_name.setText(conf.getTitleFor("firm_name"));
+            changeSceneVisualAsFirm(delimiter);
+        } else {
+            changeSceneVisualAsPerson(delimiter);
+        }
+    }
+    
+    private void changeSceneVisualAsFirm(String delimiter){
+        first_name.setText(conf.getTitleFor("firm_name"));
             
             setStylesForNamesPaneElements("twoThirds", "coupleTwoThird", "coupleOneThird");
             namesRootPane.getChildren().remove(1); // remove lastName VBox
@@ -135,22 +141,23 @@ public class ClientDialogController implements Initializable {
             String firmDescrip = firstName.getText() + delimiter + lastName.getText();
             firstName.setText(firmDescrip.trim());
             lastName.setText(null);
-        } else {
-            first_name.setText(conf.getTitleFor("first_name"));
-            last_name.setText(conf.getTitleFor("last_name"));
-            
-            VBox lastNameVBox = new VBox(last_name, lastName);
-            namesRootPane.getChildren().add(1, lastNameVBox);
-            lastNameVBox.getStyleClass().add("couple");
-            
-            setStylesForNamesPaneElements("oneThirds", "couple", "couple");
-            
-            String firmDescrip = firstName.getText();
-            String firstNameText = StringUtils.substringBeforeLast(firmDescrip, delimiter);
-            String lastNameText = StringUtils.substringAfterLast(firmDescrip, delimiter);
-            firstName.setText(firstNameText.trim());
-            lastName.setText(lastNameText.trim());
-        }
+    }
+    
+    private void changeSceneVisualAsPerson(String delimiter){
+        first_name.setText(conf.getTitleFor("first_name"));
+        last_name.setText(conf.getTitleFor("last_name"));
+
+        VBox lastNameVBox = new VBox(last_name, lastName);
+        namesRootPane.getChildren().add(1, lastNameVBox);
+        lastNameVBox.getStyleClass().add("couple");
+
+        setStylesForNamesPaneElements("oneThirds", "couple", "couple");
+
+        String firmDescrip = firstName.getText();
+        String firstNameText = StringUtils.substringBeforeLast(firmDescrip, delimiter);
+        String lastNameText = StringUtils.substringAfterLast(firmDescrip, delimiter);
+        firstName.setText(firstNameText.trim());
+        lastName.setText(lastNameText.trim());
     }
     
     private void setStylesForNamesPaneElements(String namesRootPaneNewStyleClass, String firstNameVBoxNewStyleClass, String idNumberVBoxNewStyleClass){
@@ -185,7 +192,7 @@ public class ClientDialogController implements Initializable {
         }
     }
     
-    public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType, String serviceURLPrefix) {
+    public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType, String serviceURLPrefix, boolean isJuridical) {
         openDate.setDisable(true);
         boolean editable = true;
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
@@ -198,6 +205,9 @@ public class ClientDialogController implements Initializable {
         }
         if (!buttonType.equals(EDITOR_BUTTON_TYPE.ADD) && (client.getEmail() == null || client.getEmail().isEmpty())){
             email.setDisable(true);
+        }
+        if (isJuridical){
+            changeSceneVisualAsFirm(" ");
         }
 //        if (client.getStatus() == Client.SPECIFIC_STATUS){
 //            Utils.changeContentNotEmptyAnnotationValue(this, false);

@@ -41,7 +41,7 @@ public class ClientDialog extends UserInteractiveStage implements Dialogable {
         Scene currentScene = SceneUtils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml", null);
         dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
         dialogController.bindClient(this.client); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
-        dialogController.setNextVisibleAndActionParameters(buttonType, "/clients/passport/");
+        dialogController.setNextVisibleAndActionParameters(buttonType, "/clients/passport/", client.getIsJur());
         dialogController.setBackupClient(this.clientBackup);
         this.setScene(currentScene);
         
