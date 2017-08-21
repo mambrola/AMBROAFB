@@ -8,7 +8,9 @@ package ambroafb.products.dialog;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
-import ambroafb.general.interfaces.Annotations.*;
+import ambroafb.general.interfaces.Annotations.ContentMapEditor;
+import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.mapeditor.MapEditor;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -50,7 +52,7 @@ public class ProductDialogController implements Initializable {
     @FXML
     private CheckBox isAlive;
     @FXML
-    private TextField maxCount;
+    private TextField maxCount, testingDays;
     
     
     @FXML
@@ -69,6 +71,7 @@ public class ProductDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContentListener(former, "[0-9]{1,2}");
+        Utils.validateTextFieldContentListener(testingDays, "[1-9][0-9]*");
         Utils.validateTextFieldContentListener(price, "(^0|[1-9][0-9]*)?([.]|[.][0-9]{1,2})?");
         currency.setShowCategoryALL(false);
         permissionToClose = true;
@@ -86,6 +89,7 @@ public class ProductDialogController implements Initializable {
             discounts.setItems(product.getDiscountsForMapEditor());
             maxCount.textProperty().bindBidirectional(product.notJurMaxCountProperty());
             isAlive.selectedProperty().bindBidirectional(product.isAliveProperty());
+            testingDays.textProperty().bindBidirectional(product.testingDaysProperty());
         }
     }
     

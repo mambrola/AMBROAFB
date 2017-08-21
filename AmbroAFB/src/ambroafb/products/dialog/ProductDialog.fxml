@@ -77,6 +77,22 @@
                     </VBox>
                     <VBox styleClass="couple" >
                         <children>
+                            <Label text="%testing_days" styleClass="validationMessage" />
+                            <TextField fx:id="testingDays" />
+                        </children>
+                    </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label />
+                            <Label />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple" >
+                        <children>
                             <Label />
                             <CheckBox fx:id="isAlive" text="%product_is_alive" />
                         </children>

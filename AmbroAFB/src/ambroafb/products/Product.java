@@ -81,6 +81,9 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @AView.Column(title = "%max_count", width = "50", styleClass = "textRight")
     private final StringProperty notJurMaxCount;
     
+    @AView.Column(title = "%testing_days", width = "100", styleClass = "textRight")
+    private final StringProperty testingDays;
+    
     @JsonIgnore
     private static final String DB_VIEW_NAME = "products_whole";
     @JsonIgnore
@@ -104,7 +107,8 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         discounts = FXCollections.observableArrayList();
         discountsForMapEditor = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
-        notJurMaxCount = new SimpleStringProperty();
+        notJurMaxCount = new SimpleStringProperty("");
+        testingDays = new SimpleStringProperty("");
         
         productSpecific.addListener((ObservableValue<? extends ProductSpecific> observable, ProductSpecific oldValue, ProductSpecific newValue) -> {
             rebindSpecific();
@@ -225,6 +229,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return notJurMaxCount;
     }
     
+    public StringProperty testingDaysProperty(){
+        return testingDays;
+    }
+    
     
     
     // Getters:
@@ -273,6 +281,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return Utils.getIntValueFor(notJurMaxCount.get());
     }
     
+    public int getTestingDays(){
+        return Utils.getIntValueFor(testingDays.get());
+    }
+    
 
     
     // Setters:
@@ -316,6 +328,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         this.notJurMaxCount.set("" + notJurMaxCount);
     }
 
+    public void setTestingDays(int testingDays){
+        this.testingDays.set("" + testingDays);
+    }
+
     
     // Overrides:
     @Override
@@ -343,6 +359,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         setIso(product.getIso());
         setIsActive(product.getIsActive());
         setNotJurMaxCount(product.getNotJurMaxCount());
+        setTestingDays(product.getTestingDays());
 
         discounts.clear();
         discountsForMapEditor.clear();
@@ -391,6 +408,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
                 this.getIso().equals(productBackup.getIso()) &&
                 this.getIsActive() == productBackup.getIsActive() &&
                 this.getNotJurMaxCount() == productBackup.getNotJurMaxCount() &&
+                this.getTestingDays() == productBackup.getTestingDays() &&
                 Utils.compareListsByElemOrder(getDiscounts(), productBackup.getDiscounts());
     }
 
