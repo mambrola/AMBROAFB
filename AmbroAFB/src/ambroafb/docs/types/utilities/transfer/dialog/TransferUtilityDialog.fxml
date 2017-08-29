@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.* ?>
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/transferutilitydialog.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" 
+                              xmlns="http://javafx.com/javafx/8"
+                              fx:controller="ambroafb.docs.types.utilities.transfer.dialog.TransferUtilityDialogController" >
+    <VBox fx:id="formPane" styleClass="vContainer">
+        <children>
+            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple">
+                        <Label text="%utilities" /> 
+                        <ComboBox fx:id="utilities" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%doc_date" /> 
+                        <ADatePicker fx:id="docDate" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%doc_in_doc_date" /> 
+                        <ADatePicker fx:id="docInDocDate" />
+                    </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple">
+                        <Label text="%currency" /> 
+                        <ComboBox fx:id="currency" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%money" /> 
+                        <TextField fx:id="money" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%assignment" /> 
+                        <TextField fx:id="assign" />
+                    </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

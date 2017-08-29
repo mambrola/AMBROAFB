@@ -8,10 +8,14 @@ package ambroafb.general.interfaces;
 import ambroafb.docs.types.DocComponent;
 
 /**
- *
- * @author dkobuladze
+ * The abstraction that provides to save and retrieve data from data storage.
  */
 public interface DocsDataManager {
     
-    public DocComponent getDocComponentBy(int id);
+    /**
+     *  According to docType, the method returns appropriate DocComponent.
+     * @param flag The digit consider Doc Component scene type (Utility, Monthly, Refund, Custom ...).
+     * @return Appropriate DocComponent on flag.
+     */
+    public DocComponent getDocComponentBy(int flag);
 }

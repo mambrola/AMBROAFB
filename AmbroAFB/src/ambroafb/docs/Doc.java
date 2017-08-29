@@ -282,6 +282,7 @@ public class Doc extends EditorPanelable {
         setDocCode(otherDoc.getDocCode());
         setDescrip(otherDoc.getDescrip());
         setOwnerId(otherDoc.getOwnerId());
+        setDocType(otherDoc.getDocType());
     }
 
     @Override
@@ -297,7 +298,8 @@ public class Doc extends EditorPanelable {
                 getAmount().equals(docBackup.getAmount()) &&
                 getDocCode().equals(docBackup.getDocCode()) &&
                 getDescrip().equals(docBackup.getDescrip()) &&
-                getOwnerId() == docBackup.getOwnerId();
+                getOwnerId() == docBackup.getOwnerId() &&
+                getDocType() == docBackup.getDocType();
     }
 
     @Override

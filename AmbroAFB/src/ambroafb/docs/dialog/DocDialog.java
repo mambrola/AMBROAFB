@@ -6,10 +6,10 @@
 package ambroafb.docs.dialog;
 
 import ambroafb.docs.types.DocComponent;
-import ambroafb.general.DataDistributor;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.DocDialogable;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -38,10 +38,16 @@ public class DocDialog extends UserInteractiveStage implements DocDialogable {
         });
     }
 
+//    @Override
+//    public DataDistributor getResult() {
+//        showAndWait();
+//        return dialogController.getDocComponent().getDocData();
+//    }
+    
     @Override
-    public DataDistributor getResult() {
+    public EditorPanelable getResult() {
         showAndWait();
-        return dialogController.getDocComponent().getDocData();
+        return null;
     }
 
 }

@@ -12,7 +12,8 @@ import ambro.AView;
 import ambroafb.docs.Doc;
 import ambroafb.docs.dialog.DocDialog;
 import ambroafb.docs.types.DocComponent;
-import ambroafb.general.DataDistributor;
+import ambroafb.docs.types.DocManager;
+import ambroafb.docs.types.utilities.transfer.TransferUtilityManager;
 import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
@@ -86,13 +87,13 @@ public class DocEditorPanelController implements Initializable {
             DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getRecId());
             
             DocDialogable dialogable = new DocDialog(docComp, Names.EDITOR_BUTTON_TYPE.EDIT, (Stage) exit.getScene().getWindow());
-            DataDistributor dataDis = dialogable.getResult();
-            if (dataDis != null){
-                System.out.println("--- make Ok ---\nDataDistribution is: " + dataDis);
-            }
-            else {
-                System.out.println("--- make Cancel ---");
-            }
+//            DataDistributor dataDis = dialogable.getResult();
+//            if (dataDis != null){
+//                System.out.println("--- make Ok ---\nDataDistribution is: " + dataDis);
+//            }
+//            else {
+//                System.out.println("--- make Cancel ---");
+//            }
         }
         else {
             dialogStage.requestFocus();
@@ -106,8 +107,7 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc docFromList = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getRecId());
-            
+            DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getDocType());
             DocDialogable dialogable = new DocDialog(docComp, Names.EDITOR_BUTTON_TYPE.VIEW, (Stage) exit.getScene().getWindow());
             dialogable.showAndWait();
         }
@@ -119,22 +119,38 @@ public class DocEditorPanelController implements Initializable {
     
     @FXML
     private void add(ActionEvent e) {
+
+    }
+    
+    @FXML
+    private void addCustom(ActionEvent e) {
+        System.out.println("add custom");
+    }
+    
+    @FXML
+    private void addTransferUtility(ActionEvent e) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
-            DocDialogable dialogable = new DocDialog(null, Names.EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
-            DataDistributor dataDis = dialogable.getResult();
-            if (dataDis != null){
-                System.out.println("--- make Ok ---\nDataDistribution is: " + dataDis);
-            }
-            else {
-                System.out.println("--- make Cancel ---");
+            DocManager dm = new TransferUtilityManager();
+            DocDialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD);
+            EditorPanelable newTransferUtility = dd.getResult();
+            if (newTransferUtility != null){
+                EditorPanelable newFromDB = dm.saveOneToDB(newTransferUtility);
+                if (newFromDB != null){
+                    tableData.add(newFromDB);
+                }
             }
         }
         else {
             dialogStage.requestFocus();
             StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
         }
+    }
+    
+    @FXML
+    private void addChargeUtility(ActionEvent e) {
+        System.out.println("add addChargeUtility");
     }
     
     @FXML

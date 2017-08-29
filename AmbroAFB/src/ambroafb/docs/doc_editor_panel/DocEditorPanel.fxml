@@ -11,11 +11,11 @@
 <?import javafx.scene.layout.*?>
 
 <HBox   
-        fx:id = "formNode"
-        alignment="CENTER_LEFT" 
-        stylesheets="/styles/css/editorpanel.css"
-        xmlns:fx="http://javafx.com/fxml/1" 
-        fx:controller="ambroafb.docs.doc_editor_panel.DocEditorPanelController">
+    fx:id = "formNode"
+    alignment="CENTER_LEFT" 
+    stylesheets="/styles/css/editorpanel.css"
+    xmlns:fx="http://javafx.com/fxml/1" 
+    fx:controller="ambroafb.docs.doc_editor_panel.DocEditorPanelController">
     <children>
         <fx:include fx:id="exit" source="/ambroafb/general/exit_button/ExitButton.fxml"/>
         <Button fx:id="delete" onAction="#delete" >
@@ -48,7 +48,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <SplitMenuButton fx:id="add" onAction="#add">
+        <SplitMenuButton fx:id="add" onAction="#add" >
             <tooltip>
                 <Tooltip text="%new" />
             </tooltip>
@@ -73,9 +73,47 @@
                                 </HBox>
                             </graphic>
                         </Label> 
-                                
                     </graphic>
                 </MenuItem>
+                <SeparatorMenuItem />
+                <MenuItem fx:id="addCustom" onAction="#addCustom" mnemonicParsing="false">
+                    <graphic>
+                        <Label text="%add_custom">
+                            <tooltip>
+                                <Tooltip text="%new" />
+                            </tooltip>
+                            <graphic>
+                                <HBox  spacing="4" >
+                                    <ImageView fitHeight="22.0" fitWidth="22.0"  pickOnBounds="true" preserveRatio="true" >
+                                        <Image url="/images/new.png" />
+                                    </ImageView>
+                                    <Separator orientation="VERTICAL" />
+                                </HBox>
+                            </graphic>
+                        </Label> 
+                    </graphic>
+                </MenuItem>
+                <Menu>
+                    <graphic>
+                        <Label text="%add_utility">
+                            <tooltip>
+                                <Tooltip text="%new" />
+                            </tooltip>
+                            <graphic>
+                                <HBox  spacing="4" >
+                                    <ImageView fitHeight="22.0" fitWidth="22.0"  pickOnBounds="true" preserveRatio="true" >
+                                        <Image url="/images/new.png" />
+                                    </ImageView>
+                                    <Separator orientation="VERTICAL" />
+                                </HBox>
+                            </graphic>
+                        </Label> 
+                    </graphic>
+                    <items>
+                        <MenuItem fx:id="addTransferUtility" text="%transfer" onAction="#addTransferUtility" mnemonicParsing="false" />
+                        <MenuItem fx:id="addChargeUtility" text="%charge" onAction="#addChargeUtility" mnemonicParsing="false" />
+                    </items>
+                </Menu>
             </items>
         </SplitMenuButton>
         <ToggleButton fx:id="refresh" onAction="#refresh">

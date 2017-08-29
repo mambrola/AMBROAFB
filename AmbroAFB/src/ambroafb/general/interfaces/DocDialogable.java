@@ -5,7 +5,6 @@
  */
 package ambroafb.general.interfaces;
 
-import ambroafb.general.DataDistributor;
 import javafx.scene.Scene;
 
 /**
@@ -13,7 +12,8 @@ import javafx.scene.Scene;
  * @author dkobuladze
  */
 public interface DocDialogable {
-    public DataDistributor getResult();
+//    public DataDistributor getResult();
+    public EditorPanelable getResult();
     public Scene getScene();
     public void showAndWait();
 }

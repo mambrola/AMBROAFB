@@ -6,7 +6,6 @@
 package ambroafb.docs.types;
 
 import ambroafb.AmbroAFB;
-import ambroafb.docs.types.utilities.Utility;
 import ambroafb.general.GeneralConfig;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -38,7 +37,7 @@ public class SceneWithVBoxRoot extends VBox {
         try {
             loader.load();
         } catch (IOException ex) {
-            Logger.getLogger(Utility.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SceneWithVBoxRoot.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
