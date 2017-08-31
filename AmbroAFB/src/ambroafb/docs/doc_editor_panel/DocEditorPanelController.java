@@ -13,7 +13,8 @@ import ambroafb.docs.Doc;
 import ambroafb.docs.dialog.DocDialog;
 import ambroafb.docs.types.DocComponent;
 import ambroafb.docs.types.DocManager;
-import ambroafb.docs.types.utilities.transfer.TransferUtilityManager;
+import ambroafb.docs.types.DocManagersFactory;
+import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
@@ -84,9 +85,12 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc docFromList = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getRecId());
+            DocManager dm = DocManagersFactory.getDocManager(docFromList.getDocType());
+            DocComponent dc = dm.getOneFromDB(docFromList.getRecId());
             
-            DocDialogable dialogable = new DocDialog(docComp, Names.EDITOR_BUTTON_TYPE.EDIT, (Stage) exit.getScene().getWindow());
+//            DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getRecId());
+            
+//            DocDialogable dialogable = new DocDialog(docComp, Names.EDITOR_BUTTON_TYPE.EDIT, (Stage) exit.getScene().getWindow());
 //            DataDistributor dataDis = dialogable.getResult();
 //            if (dataDis != null){
 //                System.out.println("--- make Ok ---\nDataDistribution is: " + dataDis);
@@ -118,21 +122,21 @@ public class DocEditorPanelController implements Initializable {
     }
     
     @FXML
-    private void add(ActionEvent e) {
-
+    private void addBySample(ActionEvent e) {
+        System.out.println("addBySample method");
     }
     
     @FXML
     private void addCustom(ActionEvent e) {
-        System.out.println("add custom");
+        System.out.println("addCustom method");
     }
     
     @FXML
-    private void addTransferUtility(ActionEvent e) {
+    private void addPaymentUtility(ActionEvent e) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
-            DocManager dm = new TransferUtilityManager();
+            DocManager dm = new PaymentUtilityManager();
             DocDialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD);
             EditorPanelable newTransferUtility = dd.getResult();
             if (newTransferUtility != null){
@@ -150,14 +154,13 @@ public class DocEditorPanelController implements Initializable {
     
     @FXML
     private void addChargeUtility(ActionEvent e) {
-        System.out.println("add addChargeUtility");
+        System.out.println("addChargeUtility method");
     }
     
     @FXML
-    private void addBySample(ActionEvent e) {
-        System.out.println("add By Sample");
+    private void addRefund(ActionEvent e){
+        System.out.println("addRefund method");
     }
-    
     @FXML
     private void refresh(ActionEvent e) {
         System.out.println("refresh");

@@ -6,18 +6,20 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import ambro.* ?>
+<?import ambroafb.currencies.*?>
+<?import ambroafb.docs.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/transferutilitydialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 
                               xmlns="http://javafx.com/javafx/8"
-                              fx:controller="ambroafb.docs.types.utilities.transfer.dialog.TransferUtilityDialogController" >
+                              fx:controller="ambroafb.docs.types.utilities.payment.dialog.PaymentUtilityDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer">
         <children>
             <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
                         <Label text="%utilities" /> 
-                        <ComboBox fx:id="utilities" />
+                        <DocMerchandiseComboBox fx:id="utilities" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="%doc_date" /> 
@@ -33,15 +35,15 @@
                 <children>
                     <VBox styleClass="couple">
                         <Label text="%currency" /> 
-                        <ComboBox fx:id="currency" />
+                        <TextField fx:id="currency" disable="true"/>
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="%money" /> 
-                        <TextField fx:id="money" />
+                        <Label text="%amount" /> 
+                        <TextField fx:id="amount" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="%assignment" /> 
-                        <TextField fx:id="assign" />
+                        <ComboBox fx:id="assign" />
                     </VBox>
                 </children> 
             </HBox>

@@ -48,7 +48,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <SplitMenuButton fx:id="add" onAction="#add" >
+        <SplitMenuButton fx:id="addCustom" onAction="#addCustom" >
             <tooltip>
                 <Tooltip text="%new" />
             </tooltip>
@@ -76,9 +76,9 @@
                     </graphic>
                 </MenuItem>
                 <SeparatorMenuItem />
-                <MenuItem fx:id="addCustom" onAction="#addCustom" mnemonicParsing="false">
+                <MenuItem fx:id="addRefund" onAction="#addRefund" mnemonicParsing="false">
                     <graphic>
-                        <Label text="%add_custom">
+                        <Label text="%doc_refund">
                             <tooltip>
                                 <Tooltip text="%new" />
                             </tooltip>
@@ -95,7 +95,7 @@
                 </MenuItem>
                 <Menu>
                     <graphic>
-                        <Label text="%add_utility">
+                        <Label text="%doc_utility">
                             <tooltip>
                                 <Tooltip text="%new" />
                             </tooltip>
@@ -110,7 +110,7 @@
                         </Label> 
                     </graphic>
                     <items>
-                        <MenuItem fx:id="addTransferUtility" text="%transfer" onAction="#addTransferUtility" mnemonicParsing="false" />
+                        <MenuItem fx:id="addTransferUtility" text="%transfer" onAction="#addPaymentUtility" mnemonicParsing="false" />
                         <MenuItem fx:id="addChargeUtility" text="%charge" onAction="#addChargeUtility" mnemonicParsing="false" />
                     </items>
                 </Menu>

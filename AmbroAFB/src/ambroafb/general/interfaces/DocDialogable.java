@@ -16,4 +16,5 @@ public interface DocDialogable {
     public EditorPanelable getResult();
     public Scene getScene();
     public void showAndWait();
+    public void operationCanceled();
 }

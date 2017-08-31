@@ -50,4 +50,9 @@ public class DocDialog extends UserInteractiveStage implements DocDialogable {
         return null;
     }
 
+    @Override
+    public void operationCanceled() {
+
+    }
+
 }

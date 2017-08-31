@@ -21,7 +21,7 @@ public interface DocManager {
         * @param id The id of interesting doc.
         * @return 
         */
-    public EditorPanelable getOneFromDB(int id);
+    public DocComponent getOneFromDB(int id);
     
     /**
         * The method saves doc component to DB.

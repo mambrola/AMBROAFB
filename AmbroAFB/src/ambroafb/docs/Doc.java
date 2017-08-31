@@ -34,11 +34,11 @@ public class Doc extends EditorPanelable {
     @AView.Column(title = "proc_id", width = "60")
     private final IntegerProperty processId;
     
-    @AView.Column(title = "docDate", width = "100")
+    @AView.Column(title = "%doc_date", width = "100")
     private final StringProperty docDate;
     private final ObjectProperty<LocalDate> docDateObj;
 
-    @AView.Column(title = "%docInDocDate", width = "100")
+    @AView.Column(title = "%doc_in_doc_date", width = "100")
     private final StringProperty docInDocDate;
     private final ObjectProperty<LocalDate> docInDocDateObj;
     
@@ -47,7 +47,7 @@ public class Doc extends EditorPanelable {
     private final IntegerProperty debitId;
     private final IntegerProperty creditId;
     
-    @AView.Column(title = "amount", width = "80")
+    @AView.Column(title = "%amount", width = "80")
     private final StringProperty amount;
     
     @AView.Column(title = "%docCode", width = "70")
@@ -97,7 +97,42 @@ public class Doc extends EditorPanelable {
     // DB methods:
     public static ArrayList<Doc> getAllFromDB() {
         JSONObject params = new ConditionBuilder().build();
-        return DBUtils.getObjectsListFromDB(Doc.class, DB_TABLE_NAME, params);
+        ArrayList<Doc> docs = DBUtils.getObjectsListFromDB(Doc.class, DB_TABLE_NAME, params);
+        addTestUtilityDocs(docs);
+        return docs;
+    }
+    
+    private static void addTestUtilityDocs(ArrayList<Doc> list){
+        Doc paymentDoc = makeDocFrom(100, -1, 0, LocalDate.now().toString(), LocalDate.now().toString(),
+                "GEL", 0, 0, new Float(10.10), "payment", "კომუნალურის გადახდა", 82, -1);
+        Doc chargeDoc = makeDocFrom(200, -1, 0, LocalDate.now().toString(), LocalDate.now().toString(), 
+                        "GEL", 0, 0, 20.20f, "bankCharge", "კომუნალურის დარიცხვა", 12, -1);
+        Doc chargeDoc2 = makeDocFrom(201, 200, 0, LocalDate.now().toString(), LocalDate.now().toString(), 
+                        "GEL", 0, 0, 20.20f, "bankCharge", "კომუნალურის დარიცხვა", 12, -1);
+        
+        list.add(paymentDoc);
+        list.add(chargeDoc);
+        list.add(chargeDoc2);
+    }
+    
+    private static Doc makeDocFrom(int recId, int parentRecId, int processId, String docDate, String docInDocDate,
+                                String iso, int debitID, int creditID, Float amount, String docCode, String descrip,
+                                int docType, int ownerID){
+        Doc transferDoc = new Doc();
+        transferDoc.setRecId(recId);
+        transferDoc.setParentRecId(parentRecId);
+        transferDoc.setProcessId(processId);
+        transferDoc.setDocDate(docDate);
+        transferDoc.setDocInDocDate(docInDocDate);
+        transferDoc.setIso(iso);
+        transferDoc.setDebitId(debitID);
+        transferDoc.setCreditId(creditID);
+        transferDoc.setAmount(amount);
+        transferDoc.setDocCode(docCode);
+        transferDoc.setDescrip(descrip);
+        transferDoc.setDocType(docType);
+        transferDoc.setOwnerId(ownerID);
+        return transferDoc;
     }
     
     public static Doc getOneFromDB (int recId){
@@ -305,6 +340,11 @@ public class Doc extends EditorPanelable {
     @Override
     public String toStringForSearch() {
         return  getDocDate()+ " " + getDocInDocDate() + " " + getDocCode() + " " + getDescrip();
+    }
+
+    @Override
+    public String toString() {
+        return "Doc{" + "parentRecId=" + parentRecId + ", processId=" + processId + ", docDate=" + docDate + ", docDateObj=" + docDateObj + ", docInDocDate=" + docInDocDate + ", docInDocDateObj=" + docInDocDateObj + ", iso=" + iso + ", debitId=" + debitId + ", creditId=" + creditId + ", amount=" + amount + ", docCode=" + docCode + ", descrip=" + descrip + ", ownerId=" + ownerId + ", docType=" + docType + ", dialogAbstraction=" + dialogAbstraction + '}';
     }
 
 }
