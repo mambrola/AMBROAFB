@@ -25,7 +25,9 @@ public class PaymentUtility extends EditorPanelable {
     private final ObjectProperty<LocalDate> docDate;
     private final ObjectProperty<LocalDate> docInDocDate;
     private final ObjectProperty<DocMerchandise> utility;
-    private final StringProperty iso, amount, descrip;
+    private final StringProperty iso, amount, docCode, descrip;
+    
+    private final String docCodeValue = "payment";
     
     
     public PaymentUtility(){
@@ -36,6 +38,7 @@ public class PaymentUtility extends EditorPanelable {
         utility = new SimpleObjectProperty<>();
         iso = new SimpleStringProperty("");
         amount = new SimpleStringProperty("");
+        docCode = new SimpleStringProperty(docCodeValue); // when ADD form is open.
         descrip = new SimpleStringProperty("");
     }
     
@@ -57,6 +60,10 @@ public class PaymentUtility extends EditorPanelable {
     
     public StringProperty amountProperty(){
         return amount;
+    }
+    
+    public StringProperty docCodeProperty() {
+        return docCode;
     }
     
     public StringProperty descripProperty() {
@@ -84,6 +91,10 @@ public class PaymentUtility extends EditorPanelable {
         return amount.get();
     }
     
+    public String getDocCode(){
+        return docCode.get();
+    }
+    
     public String getDescrip(){
         return descrip.get();
     }
@@ -109,6 +120,10 @@ public class PaymentUtility extends EditorPanelable {
     
     public void setAmount(String amount){
         this.amount.set(amount);
+    }
+    
+    public void setDocCode(String docCode){
+        this.docCode.set(docCode);
     }
     
     public void setDescrip(String assign){
@@ -139,6 +154,7 @@ public class PaymentUtility extends EditorPanelable {
         setIso(otherPayment.getIso());
         setAmount(otherPayment.getAmount());
         setDescrip(otherPayment.getDescrip());
+        setDocCode(otherPayment.getDocCode());
     }
 
     @Override
@@ -149,7 +165,8 @@ public class PaymentUtility extends EditorPanelable {
                 docInDocDate.get().equals(other.docInDocDateProperty().get()) &&
                 getIso().equals(other.getIso()) &&
                 getAmount().equals(other.getAmount()) &&
-                getDescrip().equals(other.getDescrip());
+                getDescrip().equals(other.getDescrip()) &&
+                getDocCode().equals(other.getDocCode());
     }
 
     @Override

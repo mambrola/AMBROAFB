@@ -327,12 +327,13 @@ public class DBUtils {
         LocalDate date = paymentUtility.docDateProperty().get();
         Timestamp docDatetime = Timestamp.valueOf(date.atStartOfDay());
         try {
-            dbClient.callProcedureAndGetAsJson("doc_utilities_insert_update", dbClient.getLang(), id, paymentUtility.getDocDate(),
-                    paymentUtility.utilityProperty().get().getMerchandise(),
-                    docDatetime, paymentUtility.docInDocDateProperty().get(),
-                    Float.parseFloat(paymentUtility.getAmount()),
-                    Float.parseFloat(paymentUtility.utilityProperty().get().getVatRate()),
-                    -1);
+            JSONArray data = dbClient.callProcedureAndGetAsJson("doc_utilities_insert_update", dbClient.getLang(), id, paymentUtility.getDocCode(),
+                                                            paymentUtility.utilityProperty().get().getMerchandise(),
+                                                            docDatetime, paymentUtility.docInDocDateProperty().get(),
+                                                            Float.parseFloat(paymentUtility.getAmount()),
+                                                            Float.parseFloat(paymentUtility.utilityProperty().get().getVatRate()),
+                                                            -1);
+            System.out.println("data: " + data);
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
