@@ -46,7 +46,7 @@ public class PaymentUtilityDialogController implements Initializable {
     @FXML
     private TextField currency;
     
-    @FXML @ContentNotEmpty @ContentPattern(value = "\\d+\\.?\\d+")
+    @FXML @ContentNotEmpty @ContentPattern(value = "\\d+(\\.\\d+)?", explain = "Amount Pattern is incorrct.")
     private TextField amount;
     
     @FXML
@@ -75,7 +75,7 @@ public class PaymentUtilityDialogController implements Initializable {
             currency.setText(newValue.getIso());
         });
         
-//        Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d\\.\\d*");
+        Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
         assign.setEditable(true);
     }    
 
