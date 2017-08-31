@@ -22,7 +22,6 @@ import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -324,16 +323,15 @@ public class DBUtils {
     public static void savePaymentUtility(PaymentUtility paymentUtility){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         Integer id = (paymentUtility.getRecId() == 0) ? null : paymentUtility.getRecId();
-        LocalDate date = paymentUtility.docDateProperty().get();
-        Timestamp docDatetime = Timestamp.valueOf(date.atStartOfDay());
         try {
             JSONArray data = dbClient.callProcedureAndGetAsJson("doc_utilities_insert_update", dbClient.getLang(), id, paymentUtility.getDocCode(),
                                                             paymentUtility.utilityProperty().get().getMerchandise(),
-                                                            docDatetime, paymentUtility.docInDocDateProperty().get(),
+                                                            paymentUtility.docDateProperty().get(),
+                                                            paymentUtility.docInDocDateProperty().get(),
                                                             Float.parseFloat(paymentUtility.getAmount()),
                                                             Float.parseFloat(paymentUtility.utilityProperty().get().getVatRate()),
                                                             -1);
-            System.out.println("data: " + data);
+            System.out.println("save PaymentUtility data from DB: " + data);
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
