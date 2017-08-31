@@ -140,9 +140,10 @@ public class DocEditorPanelController implements Initializable {
             DocDialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD);
             EditorPanelable newTransferUtility = dd.getResult();
             if (newTransferUtility != null){
-                EditorPanelable newFromDB = dm.saveOneToDB(newTransferUtility);
-                if (newFromDB != null){
-                    tableData.add(newFromDB);
+                EditorPanelable newPaymentUtilityFromDB = dm.saveOneToDB(newTransferUtility);
+//                Doc newDocFromDB = DBUtils.
+                if (newPaymentUtilityFromDB != null){
+//                    tableData.add(newFromDB); // table-ში უნდა ჩაიდოს Doc კლასი და არა DocComponent კლასი.
                 }
             }
         }

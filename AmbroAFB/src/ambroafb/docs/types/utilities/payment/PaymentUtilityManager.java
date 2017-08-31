@@ -33,6 +33,7 @@ public class PaymentUtilityManager implements DocManager {
 
     @Override
     public EditorPanelable saveOneToDB(EditorPanelable newDocComponent) {
+        DBUtils.savePaymentUtility((PaymentUtility) newDocComponent);
         return null;
     }
 

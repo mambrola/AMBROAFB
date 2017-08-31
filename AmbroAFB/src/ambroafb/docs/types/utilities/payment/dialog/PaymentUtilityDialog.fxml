@@ -18,7 +18,7 @@
             <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
-                        <Label text="%utilities" /> 
+                        <Label text="%utilities" styleClass="validationMessage" /> 
                         <DocMerchandiseComboBox fx:id="utilities" />
                     </VBox>
                     <VBox styleClass="couple">
@@ -38,7 +38,7 @@
                         <TextField fx:id="currency" disable="true"/>
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="%amount" /> 
+                        <Label text="%amount" styleClass="validationMessage" /> 
                         <TextField fx:id="amount" />
                     </VBox>
                     <VBox styleClass="couple">

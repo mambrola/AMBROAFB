@@ -145,8 +145,8 @@ public class PaymentUtility extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         PaymentUtility other = (PaymentUtility) backup;
         return  getUtility().equals(other.getUtility()) &&
-                getDocDate().equals(other.getDocDate()) &&
-                getDocInDocDate().equals(other.getDocInDocDate()) &&
+                docDate.get().equals(other.docDateProperty().get()) &&
+                docInDocDate.get().equals(other.docInDocDateProperty().get()) &&
                 getIso().equals(other.getIso()) &&
                 getAmount().equals(other.getAmount()) &&
                 getDescrip().equals(other.getDescrip());

@@ -41,6 +41,7 @@ public class PaymentUtilityDialogController implements Initializable {
     
     @FXML
     private ADatePicker docDate, docInDocDate;
+    private final String docDatePattern = "dd-MM-yyyy HH:mm:ss";
     
     @FXML
     private TextField currency;

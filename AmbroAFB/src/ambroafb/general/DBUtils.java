@@ -6,6 +6,7 @@
 package ambroafb.general;
 
 import ambroafb.clients.Client;
+import ambroafb.docs.types.utilities.payment.PaymentUtility;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceFinaces;
 import ambroafb.invoices.helper.PartOfLicense;
@@ -21,6 +22,7 @@ import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -317,6 +319,23 @@ public class DBUtils {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public static void savePaymentUtility(PaymentUtility paymentUtility){
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        Integer id = (paymentUtility.getRecId() == 0) ? null : paymentUtility.getRecId();
+        LocalDate date = paymentUtility.docDateProperty().get();
+        Timestamp docDatetime = Timestamp.valueOf(date.atStartOfDay());
+        try {
+            dbClient.callProcedureAndGetAsJson("doc_utilities_insert_update", dbClient.getLang(), id, paymentUtility.getDocDate(),
+                    paymentUtility.utilityProperty().get().getMerchandise(),
+                    docDatetime, paymentUtility.docInDocDateProperty().get(),
+                    Float.parseFloat(paymentUtility.getAmount()),
+                    Float.parseFloat(paymentUtility.utilityProperty().get().getVatRate()),
+                    -1);
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public static boolean deleteObjectFromDB(String deleteProcName, Object... params) {
