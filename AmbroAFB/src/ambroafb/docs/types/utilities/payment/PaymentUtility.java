@@ -8,6 +8,8 @@ package ambroafb.docs.types.utilities.payment;
 import ambroafb.docs.DocMerchandise;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -26,6 +28,7 @@ public class PaymentUtility extends EditorPanelable {
     private final ObjectProperty<LocalDate> docInDocDate;
     private final ObjectProperty<DocMerchandise> utility;
     private final StringProperty iso, amount, docCode, descrip;
+    private int parentRecId, processId, debitId, creditId, docType, ownerId;
     
     private final String docCodeValue = "payment";
     
@@ -35,7 +38,7 @@ public class PaymentUtility extends EditorPanelable {
         docDate = new SimpleObjectProperty<>(LocalDate.now()); 
         docInDocDate = new SimpleObjectProperty<>(LocalDate.now());
         
-        utility = new SimpleObjectProperty<>();
+        utility = new SimpleObjectProperty<>(new DocMerchandise());
         iso = new SimpleStringProperty("");
         amount = new SimpleStringProperty("");
         docCode = new SimpleStringProperty(docCodeValue); // when ADD form is open.
@@ -71,9 +74,9 @@ public class PaymentUtility extends EditorPanelable {
     }
     
     // Getters:
-    public String getUtility(){
-        return (utility.get() == null) ? "" : utility.get().getDescrip();
-    }
+//    public String getUtility(){
+//        return (utility.get() == null) ? "" : utility.get().getDescrip();
+//    }
     
     public String getDocDate(){
         return (docDate.get() == null) ? "" : docDate.get().toString();
@@ -87,8 +90,8 @@ public class PaymentUtility extends EditorPanelable {
         return iso.get();
     }
     
-    public String getAmount(){
-        return amount.get();
+    public float getAmount(){
+        return Float.parseFloat(amount.get());
     }
     
     public String getDocCode(){
@@ -99,12 +102,43 @@ public class PaymentUtility extends EditorPanelable {
         return descrip.get();
     }
     
-    // Setters:
-    public void setUtility(String utility){
-        if (this.utility.get() != null){
-            this.utility.get().setDescrip(utility);
-        }
+    @JsonIgnore
+    public int getParentRectId(){
+        return parentRecId;
     }
+    
+    @JsonIgnore
+    public int getProcessId(){
+        return processId;
+    }
+    
+    @JsonIgnore
+    public int getDebitId(){
+        return debitId;
+    }
+    
+    @JsonIgnore
+    public int getCreditId(){
+        return creditId;
+    }
+    
+    @JsonIgnore
+    public int getDocType(){
+        return docType;
+    }
+    
+    @JsonIgnore
+    public int getOwnerId(){
+        return ownerId;
+    }
+    
+    
+    // Setters:
+//    public void setUtility(String utility){
+//        if (this.utility.get() != null){
+//            this.utility.get().setDescrip(utility);
+//        }
+//    }
     
     public void setDocDate(String date){
         this.docDate.set(DateConverter.getInstance().parseDate(date));
@@ -118,8 +152,8 @@ public class PaymentUtility extends EditorPanelable {
         this.iso.set(iso);
     }
     
-    public void setAmount(String amount){
-        this.amount.set(amount);
+    public void setAmount(float amount){
+        this.amount.set("" + amount);
     }
     
     public void setDocCode(String docCode){
@@ -128,6 +162,36 @@ public class PaymentUtility extends EditorPanelable {
     
     public void setDescrip(String assign){
         this.descrip.set(assign);
+    }
+    
+    @JsonProperty
+    public void setParentRecId(int parentRecId){
+        this.parentRecId = parentRecId;
+    }
+    
+    @JsonProperty
+    public void setProcessId(int processId){
+        this.processId = processId;
+    }
+    
+    @JsonProperty
+    public void setDebitId(int debitId){
+        this.debitId = debitId;
+    }
+
+    @JsonProperty
+    public void setCreditId(int creditId){
+        this.creditId = creditId;
+    }
+
+    @JsonProperty
+    public void setDocType(int docType){
+        this.docType = docType;
+    }
+    
+    @JsonProperty
+    public void setOwnerId(int ownerId){
+        this.ownerId = ownerId;
     }
 
     
@@ -148,25 +212,31 @@ public class PaymentUtility extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         PaymentUtility otherPayment = (PaymentUtility) other;
-        setUtility(otherPayment.getUtility());
+        utilityProperty().set(otherPayment.utilityProperty().get());
         setDocDate(otherPayment.getDocDate());
         setDocInDocDate(otherPayment.getDocInDocDate());
         setIso(otherPayment.getIso());
         setAmount(otherPayment.getAmount());
         setDescrip(otherPayment.getDescrip());
         setDocCode(otherPayment.getDocCode());
+        setParentRecId(otherPayment.getParentRectId());
+        setProcessId(otherPayment.getProcessId());
+        setDocType(otherPayment.getDocType());
     }
 
     @Override
     public boolean compares(EditorPanelable backup) {
         PaymentUtility other = (PaymentUtility) backup;
-        return  getUtility().equals(other.getUtility()) &&
+        return  utilityProperty().get().getRecId() == other.utilityProperty().get().getRecId() &&
                 docDate.get().equals(other.docDateProperty().get()) &&
                 docInDocDate.get().equals(other.docInDocDateProperty().get()) &&
                 getIso().equals(other.getIso()) &&
-                getAmount().equals(other.getAmount()) &&
+                getAmount() == other.getAmount() &&
                 getDescrip().equals(other.getDescrip()) &&
-                getDocCode().equals(other.getDocCode());
+                getDocCode().equals(other.getDocCode()) &&
+                getParentRectId() == other.getParentRectId() &&
+                getProcessId() == other.getProcessId() &&
+                getDocType() == other.getDocType();
     }
 
     @Override

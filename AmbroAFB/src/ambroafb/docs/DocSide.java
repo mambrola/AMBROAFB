@@ -5,6 +5,9 @@
  */
 package ambroafb.docs;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  *
  * @author dkobuladze
@@ -13,11 +16,12 @@ public class DocSide {
     
     private int id;
     private int account;
-    private String descrip;
+    private StringProperty descrip;
     private boolean isDebit;
     
     public DocSide(boolean isDebit){
         this.isDebit = isDebit;
+        descrip = new SimpleStringProperty("");
     }
 
     public int getId() {
@@ -37,11 +41,11 @@ public class DocSide {
     }
 
     public String getDescrip() {
-        return descrip;
+        return descrip.get();
     }
 
     public void setDescrip(String descrip) {
-        this.descrip = descrip;
+        this.descrip.set(descrip);
     }
 
     public boolean isIsDebit() {
@@ -68,7 +72,7 @@ public class DocSide {
 
     @Override
     public String toString() {
-        return "DocSide{" + "id=" + id + ", account=" + account + ", descrip=" + descrip + ", isDebit=" + isDebit + '}';
+        return "DocSide{" + "id=" + id + ", account=" + account + ", descrip=" + descrip.get() + ", isDebit=" + isDebit + '}';
     }
     
     

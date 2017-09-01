@@ -13,7 +13,7 @@ import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
-import ambroafb.general.interfaces.DocDialogable;
+import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
@@ -121,7 +121,7 @@ public class PaymentUtilityDialogController implements Initializable {
     }
     
     public void operationCanceled(){
-        ((DocDialogable)formPane.getScene().getWindow()).operationCanceled();
+        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
     }
     
     public DialogOkayCancelController getOkayCancelController() {

@@ -61,7 +61,7 @@ public class DBUtils {
         return new ArrayList<>();
     }
     
-    public static <T> ArrayList<T> getObjectListFromDBProcedure(Class<?> listElementClass, String procName, JSONObject params){
+    public static <T> ArrayList<T> getObjectsListFromDBProcedure(Class<?> listElementClass, String procName, JSONObject params){
         try {
             System.out.println(procName + " params For DB: " + params);
             
@@ -302,7 +302,7 @@ public class DBUtils {
             whereBuilder.or("rec_id", "=", ids[i]);
         }
         JSONObject conflictedIDs = whereBuilder.condition().build();
-        return getObjectListFromDBProcedure(ParamGeneral.class, ParamGeneral.DB_SELECT_PROC_NAME, conflictedIDs);
+        return getObjectsListFromDBProcedure(ParamGeneral.class, ParamGeneral.DB_SELECT_PROC_NAME, conflictedIDs);
     }
     
     public static Client saveClient(Client client){
@@ -328,8 +328,8 @@ public class DBUtils {
                                                             paymentUtility.utilityProperty().get().getMerchandise(),
                                                             paymentUtility.docDateProperty().get(),
                                                             paymentUtility.docInDocDateProperty().get(),
-                                                            Float.parseFloat(paymentUtility.getAmount()),
-                                                            Float.parseFloat(paymentUtility.utilityProperty().get().getVatRate()),
+                                                            paymentUtility.getAmount(),
+                                                            paymentUtility.utilityProperty().get().getVatRate(),
                                                             -1);
             System.out.println("save PaymentUtility data from DB: " + data);
         } catch (IOException | AuthServerException ex) {

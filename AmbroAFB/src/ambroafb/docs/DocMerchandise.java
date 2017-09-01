@@ -52,8 +52,8 @@ public class DocMerchandise {
         return iso.get();
     }
 
-    public String getVatRate() {
-        return vatRate.get();
+    public float getVatRate() {
+        return Float.parseFloat(vatRate.get());
     }
 
     

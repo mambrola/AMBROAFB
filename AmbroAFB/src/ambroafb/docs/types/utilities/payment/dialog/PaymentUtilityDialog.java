@@ -8,7 +8,7 @@ package ambroafb.docs.types.utilities.payment.dialog;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.DocDialogable;
+import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveStage;
 import javafx.event.EventHandler;
@@ -20,7 +20,7 @@ import javafx.stage.WindowEvent;
  *
  * @author dkobuladze
  */
-public class PaymentUtilityDialog extends UserInteractiveStage implements DocDialogable {
+public class PaymentUtilityDialog extends UserInteractiveStage implements Dialogable {
 
     private PaymentUtility paymentUtility, paymentUtilityBackup;
     
@@ -35,7 +35,7 @@ public class PaymentUtilityDialog extends UserInteractiveStage implements DocDia
         else {
             paymentUtility = (PaymentUtility) object;
         }
-        paymentUtilityBackup = paymentUtility.cloneWithID();
+//        paymentUtilityBackup = paymentUtility.cloneWithID();
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/utilities/payment/dialog/PaymentUtilityDialog.fxml", null);
         dialogController = (PaymentUtilityDialogController) currentScene.getProperties().get("controller");

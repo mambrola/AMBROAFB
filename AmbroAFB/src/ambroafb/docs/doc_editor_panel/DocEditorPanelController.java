@@ -14,10 +14,12 @@ import ambroafb.docs.dialog.DocDialog;
 import ambroafb.docs.types.DocComponent;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.DocManagersFactory;
+import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
 import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
+import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.DocDialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -76,7 +78,25 @@ public class DocEditorPanelController implements Initializable {
     
     @FXML
     private void delete(ActionEvent e) {
-        System.out.println("delete");
+        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            Doc docFromList = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            DocManager dm = DocManagersFactory.getDocManager(docFromList.getDocType());
+            EditorPanelable docFromDB = dm.getOneFromDB(docFromList.getRecId());
+            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.DELETE, docFromDB);
+            EditorPanelable result = dd.getResult();
+            if (result != null){
+                boolean isDeleted = dm.deleteOneFromDB(docFromDB.getRecId());
+                if (isDeleted){
+                    tableData.remove(result);
+                }
+            }
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+        }
     }
     
     @FXML
@@ -86,7 +106,7 @@ public class DocEditorPanelController implements Initializable {
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc docFromList = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             DocManager dm = DocManagersFactory.getDocManager(docFromList.getDocType());
-            DocComponent dc = dm.getOneFromDB(docFromList.getRecId());
+            EditorPanelable dc = dm.getOneFromDB(docFromList.getRecId());
             
 //            DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getRecId());
             
@@ -137,7 +157,7 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             DocManager dm = new PaymentUtilityManager();
-            DocDialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD);
+            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
             EditorPanelable newTransferUtility = dd.getResult();
             if (newTransferUtility != null){
                 EditorPanelable newPaymentUtilityFromDB = dm.saveOneToDB(newTransferUtility);
@@ -155,7 +175,24 @@ public class DocEditorPanelController implements Initializable {
     
     @FXML
     private void addChargeUtility(ActionEvent e) {
-        System.out.println("addChargeUtility method");
+        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            DocManager dm = new ChargeUtilityManager();
+            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
+            EditorPanelable newChargeUtility = dd.getResult();
+            if (newChargeUtility != null){
+                EditorPanelable newChargeUtilityFromDB = dm.saveOneToDB(newChargeUtility);
+//                Doc newDocFromDB = DBUtils.
+                if (newChargeUtilityFromDB != null){
+//                    tableData.add(newFromDB); // table-ში უნდა ჩაიდოს Doc კლასი და არა DocComponent კლასი.
+                }
+            }
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+        }
     }
     
     @FXML

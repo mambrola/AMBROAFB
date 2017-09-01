@@ -6,7 +6,7 @@
 package ambroafb.docs.types;
 
 import ambroafb.general.Names;
-import ambroafb.general.interfaces.DocDialogable;
+import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import javafx.stage.Stage;
 
@@ -21,7 +21,7 @@ public interface DocManager {
         * @param id The id of interesting doc.
         * @return 
         */
-    public DocComponent getOneFromDB(int id);
+    public EditorPanelable getOneFromDB(int id);
     
     /**
         * The method saves doc component to DB.
@@ -44,9 +44,10 @@ public interface DocManager {
     
     /**
         * The method returns doc component specific dialog according to editor_button_type.
-     * @param owner The owner for dialog stage.
+        *  @param owner The owner for dialog stage.
         * @param type One from: Delete, View, Edit, Add
+        * @param object Object that must be show on scene.
         * @return DocDialogable abstraction.
         */
-    public DocDialogable getDocDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type);
+    public Dialogable getDocDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object);
 }
