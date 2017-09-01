@@ -19,6 +19,7 @@ import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.DocDialogable;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -202,17 +203,26 @@ public class DocEditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage filterStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (filterStage == null || !filterStage.isShowing()){
-            Object controllerObject = exit.getScene().getProperties().get("controller");
+            Class controllerClass = getClassByName("ambroafb.general_scene.doc_table_list.DocTableListController");
             Supplier<ArrayList<Doc>> fetchData = () -> {
                                                         return new ArrayList(Doc.getAllFromDB());
                                                     };
-//            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{Supplier.class}, outerController, fetchData);
+            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{Supplier.class}, outerController, fetchData);
         }
         else {
             filterStage.requestFocus();
             StageUtils.centerChildOf(editorPanelSceneStage, filterStage);
         }
         refresh.setSelected(false);
+    }
+    
+    private Class getClassByName(String name){
+        if (name == null) return null;
+        Class result = null;
+        try {
+            result = Class.forName(name);
+        } catch (ClassNotFoundException ex) { }
+        return result;
     }
     
     /**
