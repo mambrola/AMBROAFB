@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.general.interfaces;
+package ambroafb.docs;
 
 import ambroafb.docs.types.DocComponent;
 

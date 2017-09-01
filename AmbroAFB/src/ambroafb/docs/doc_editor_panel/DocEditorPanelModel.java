@@ -6,7 +6,7 @@
 package ambroafb.docs.doc_editor_panel;
 
 import ambroafb.docs.types.DocComponent;
-import ambroafb.general.interfaces.DocsDataManager;
+import ambroafb.docs.DocsDataManager;
 
 /**
  *

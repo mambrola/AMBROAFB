@@ -5,6 +5,7 @@
  */
 package ambroafb.docs.types.utilities.charge;
 
+import ambroafb.docs.Doc;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
 import ambroafb.general.DBUtils;
@@ -31,7 +32,7 @@ public class ChargeUtilityManager implements DocManager {
     }
 
     @Override
-    public EditorPanelable saveOneToDB(EditorPanelable newDocComponent) {
+    public Doc saveOneToDB(EditorPanelable newDocComponent) {
         return null;
     }
 

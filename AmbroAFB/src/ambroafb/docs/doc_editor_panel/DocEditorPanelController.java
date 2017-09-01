@@ -23,7 +23,9 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.DocDialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ObservableList;
@@ -73,7 +75,7 @@ public class DocEditorPanelController implements Initializable {
     
     private enum CLASS_TYPE {OBJECT, DIALOG, FILTER, CONTROLLER};
     
-    private ObservableList<EditorPanelable> tableData;
+    private ObservableList<Doc> tableData;
     private final DocEditorPanelModel editorPanelModel = new DocEditorPanelModel();
     
     @FXML
@@ -81,15 +83,15 @@ public class DocEditorPanelController implements Initializable {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
-            Doc docFromList = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocManager dm = DocManagersFactory.getDocManager(docFromList.getDocType());
-            EditorPanelable docFromDB = dm.getOneFromDB(docFromList.getRecId());
-            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.DELETE, docFromDB);
-            EditorPanelable result = dd.getResult();
+            Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
+            EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
+            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.DELETE, docFromDB);
+            EditorPanelable result = dialog.getResult();
             if (result != null){
                 boolean isDeleted = dm.deleteOneFromDB(docFromDB.getRecId());
                 if (isDeleted){
-                    tableData.remove(result);
+                    tableData.remove(selected);
                 }
             }
         }
@@ -104,20 +106,17 @@ public class DocEditorPanelController implements Initializable {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
-            Doc docFromList = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocManager dm = DocManagersFactory.getDocManager(docFromList.getDocType());
-            EditorPanelable docFromDB = dm.getOneFromDB(docFromList.getRecId());
-            
-//            DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getRecId());
-            
-//            DocDialogable dialogable = new DocDialog(docComp, Names.EDITOR_BUTTON_TYPE.EDIT, (Stage) exit.getScene().getWindow());
-//            DataDistributor dataDis = dialogable.getResult();
-//            if (dataDis != null){
-//                System.out.println("--- make Ok ---\nDataDistribution is: " + dataDis);
-//            }
-//            else {
-//                System.out.println("--- make Cancel ---");
-//            }
+            Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
+            EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
+            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.EDIT, docFromDB);
+            EditorPanelable result = dialog.getResult();
+            if (result != null){ // If result is null, "selected" Doc object stay in table. The edit dialog changed "docFromDB" object.
+                Doc newFromDB = dm.saveOneToDB(docFromDB);
+                if (newFromDB != null){ // "selected" object in list does not change, if newFromDB is null. Otherwise,  EditorPanelable abstraction must convert to Doc
+                    selected.copyFrom(newFromDB);
+                }
+            }
         }
         else {
             dialogStage.requestFocus();
@@ -160,10 +159,9 @@ public class DocEditorPanelController implements Initializable {
             Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
             EditorPanelable newTransferUtility = dd.getResult();
             if (newTransferUtility != null){
-                EditorPanelable newPaymentUtilityFromDB = dm.saveOneToDB(newTransferUtility);
-//                Doc newDocFromDB = DBUtils.
+                Doc newPaymentUtilityFromDB = dm.saveOneToDB(newTransferUtility);
                 if (newPaymentUtilityFromDB != null){
-//                    tableData.add(newFromDB); // table-ში უნდა ჩაიდოს Doc კლასი და არა DocComponent კლასი.
+                    tableData.add(newPaymentUtilityFromDB); // table-ში უნდა ჩაიდოს Doc კლასი და არა DocComponent კლასი.
                 }
             }
         }
@@ -201,7 +199,20 @@ public class DocEditorPanelController implements Initializable {
     }
     @FXML
     private void refresh(ActionEvent e) {
-        System.out.println("refresh");
+        Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage filterStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if (filterStage == null || !filterStage.isShowing()){
+            Object controllerObject = exit.getScene().getProperties().get("controller");
+            Supplier<ArrayList<Doc>> fetchData = () -> {
+                                                        return new ArrayList(Doc.getAllFromDB());
+                                                    };
+//            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{Supplier.class}, outerController, fetchData);
+        }
+        else {
+            filterStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, filterStage);
+        }
+        refresh.setSelected(false);
     }
     
     /**
@@ -218,7 +229,7 @@ public class DocEditorPanelController implements Initializable {
      * @param table Table component on scene.
      * @param list  Data list of given table (At the beginning, it may be empty).
      */
-    public void setTableDataList(ATableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
+    public void setTableDataList(ATableView<Doc> table, ObservableList<Doc> list){
         tableData = list;
         table.setItems(list);
         if (table instanceof AFilterableTableView){
@@ -227,7 +238,7 @@ public class DocEditorPanelController implements Initializable {
         }
     }
     
-    public void buttonsMainPropertysBinder (AView<EditorPanelable> aView){
+    public void buttonsMainPropertysBinder (AView<Doc> aView){
         BooleanBinding allowModify = Bindings.createBooleanBinding(() -> {
                                                                     if (aView.getCustomSelectedItem() == null){
                                                                         return true;

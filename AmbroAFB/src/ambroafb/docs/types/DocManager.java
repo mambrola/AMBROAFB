@@ -5,6 +5,7 @@
  */
 package ambroafb.docs.types;
 
+import ambroafb.docs.Doc;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -28,7 +29,7 @@ public interface DocManager {
         * @param newDocComponent New doc component abstraction that must be save.
         * @return 
         */
-    public EditorPanelable saveOneToDB(EditorPanelable newDocComponent);
+    public Doc saveOneToDB(EditorPanelable newDocComponent);
     
     /**
         * The method removes specific doc component from DB.

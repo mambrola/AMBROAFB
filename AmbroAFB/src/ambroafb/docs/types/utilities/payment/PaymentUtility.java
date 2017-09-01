@@ -163,8 +163,9 @@ public class PaymentUtility extends EditorPanelable {
     }
     
     @JsonProperty
-    public void setDescrip(String assign){
-        this.descrip.set(assign);
+    public void setDescrip(String descrip){
+        System.out.println("descrip: " + descrip);
+        this.descrip.set(descrip);
     }
     
     @JsonProperty
@@ -241,13 +242,11 @@ public class PaymentUtility extends EditorPanelable {
                 getProcessId() == other.getProcessId() &&
                 getDocType() == other.getDocType();
     }
-
+    
     @Override
     public String toStringForSearch() {
         return ""; // This object is not in table list, so the search string value does not metter.
     }
-
-
 
     
 }

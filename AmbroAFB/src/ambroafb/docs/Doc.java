@@ -109,41 +109,7 @@ public class Doc extends EditorPanelable {
     public static ArrayList<Doc> getAllFromDB() {
         JSONObject params = new ConditionBuilder().build();
         ArrayList<Doc> docs = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
-        addTestUtilityDocs(docs);
         return docs;
-    }
-    
-    private static void addTestUtilityDocs(ArrayList<Doc> list){
-        Doc paymentDoc = makeDocFrom(100, -1, 0, LocalDate.now().toString(), LocalDate.now().toString(),
-                "GEL", 0, 0, new Float(10.10), "payment", "კომუნალურის გადახდა", 82, -1);
-        Doc chargeDoc = makeDocFrom(200, -1, 0, LocalDate.now().toString(), LocalDate.now().toString(), 
-                        "GEL", 0, 0, 20.20f, "bankCharge", "კომუნალურის დარიცხვა", 12, -1);
-        Doc chargeDoc2 = makeDocFrom(201, 200, 0, LocalDate.now().toString(), LocalDate.now().toString(), 
-                        "GEL", 0, 0, 20.20f, "bankCharge", "კომუნალურის დარიცხვა", 12, -1);
-        
-        list.add(paymentDoc);
-        list.add(chargeDoc);
-        list.add(chargeDoc2);
-    }
-    
-    private static Doc makeDocFrom(int recId, int parentRecId, int processId, String docDate, String docInDocDate,
-                                String iso, int debitID, int creditID, Float amount, String docCode, String descrip,
-                                int docType, int ownerID){
-        Doc transferDoc = new Doc();
-        transferDoc.setRecId(recId);
-        transferDoc.setParentRecId(parentRecId);
-        transferDoc.setProcessId(processId);
-        transferDoc.setDocDate(docDate);
-        transferDoc.setDocInDocDate(docInDocDate);
-        transferDoc.setIso(iso);
-        transferDoc.setDebitId(debitID);
-        transferDoc.setCreditId(creditID);
-        transferDoc.setAmount(amount);
-        transferDoc.setDocCode(docCode);
-        transferDoc.setDescrip(descrip);
-        transferDoc.setDocType(docType);
-        transferDoc.setOwnerId(ownerID);
-        return transferDoc;
     }
     
     public static Doc getOneFromDB (int recId){

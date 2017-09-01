@@ -5,6 +5,7 @@
  */
 package ambroafb.docs.types.utilities.payment;
 
+import ambroafb.docs.Doc;
 import ambroafb.docs.DocMerchandise;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.utilities.payment.dialog.PaymentUtilityDialog;
@@ -44,9 +45,8 @@ public class PaymentUtilityManager implements DocManager {
     }
 
     @Override
-    public EditorPanelable saveOneToDB(EditorPanelable newDocComponent) {
-        DBUtils.savePaymentUtility((PaymentUtility) newDocComponent);
-        return null;
+    public Doc saveOneToDB(EditorPanelable newDocComponent) {
+        return DBUtils.savePaymentUtility((PaymentUtility) newDocComponent);
     }
 
     @Override

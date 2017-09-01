@@ -6,6 +6,7 @@
 package ambroafb.general;
 
 import ambroafb.clients.Client;
+import ambroafb.docs.Doc;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceFinaces;
@@ -320,7 +321,7 @@ public class DBUtils {
         return null;
     }
     
-    public static void savePaymentUtility(PaymentUtility paymentUtility){
+    public static Doc savePaymentUtility(PaymentUtility paymentUtility){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         Integer id = (paymentUtility.getRecId() == 0) ? null : paymentUtility.getRecId();
         try {
@@ -332,9 +333,11 @@ public class DBUtils {
                                                             paymentUtility.utilityProperty().get().getVatRate(),
                                                             -1);
             System.out.println("save PaymentUtility data from DB: " + data);
-        } catch (IOException | AuthServerException ex) {
+            return Utils.getClassFromJSON(Doc.class, data.getJSONObject(0));
+        } catch (IOException | AuthServerException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
     
     public static boolean deleteObjectFromDB(String deleteProcName, Object... params) {

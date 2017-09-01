@@ -8,7 +8,6 @@ package ambroafb.general_scene.doc_table_list;
 import ambro.AFilterableTableView;
 import ambroafb.docs.Doc;
 import ambroafb.docs.doc_editor_panel.DocEditorPanelController;
-import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -28,7 +27,7 @@ import org.controlsfx.control.MaskerPane;
  */
 public class DocTableListController implements Initializable {
 
-    private AFilterableTableView<EditorPanelable> aview;
+    private AFilterableTableView<Doc> aview;
     
     @FXML
     private DocEditorPanelController docEditorPanelController;
@@ -39,7 +38,7 @@ public class DocTableListController implements Initializable {
     @FXML
     private StackPane containerPane;
     
-    private final ObservableList<EditorPanelable> contents = FXCollections.observableArrayList();
+    private final ObservableList<Doc> contents = FXCollections.observableArrayList();
     private ResourceBundle bundle;
     
     /**
