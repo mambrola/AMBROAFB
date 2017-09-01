@@ -10,8 +10,6 @@ import ambro.AFilterableTreeTableView;
 import ambro.ATableView;
 import ambro.AView;
 import ambroafb.docs.Doc;
-import ambroafb.docs.dialog.DocDialog;
-import ambroafb.docs.types.DocComponent;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.DocManagersFactory;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
@@ -21,7 +19,6 @@ import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
-import ambroafb.general.interfaces.DocDialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ArrayList;
@@ -130,10 +127,11 @@ public class DocEditorPanelController implements Initializable {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
-            Doc docFromList = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getDocType());
-            DocDialogable dialogable = new DocDialog(docComp, Names.EDITOR_BUTTON_TYPE.VIEW, (Stage) exit.getScene().getWindow());
-            dialogable.showAndWait();
+            Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
+            EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
+            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.VIEW, docFromDB);
+            dialog.showAndWait();
         }
         else {
             dialogStage.requestFocus();
