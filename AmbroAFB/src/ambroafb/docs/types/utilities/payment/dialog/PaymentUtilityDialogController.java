@@ -22,7 +22,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -50,9 +49,6 @@ public class PaymentUtilityDialogController implements Initializable {
     private TextField amount;
     
     @FXML
-    private ComboBox<String> assign;
-    
-    @FXML
     private DialogOkayCancelController okayCancelController;
     
     
@@ -76,7 +72,6 @@ public class PaymentUtilityDialogController implements Initializable {
         });
         
         Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
-        assign.setEditable(true);
     }    
 
     public void bindUtility(PaymentUtility paymentUtility) {
@@ -87,7 +82,6 @@ public class PaymentUtilityDialogController implements Initializable {
             docInDocDate.valueProperty().bindBidirectional(paymentUtility.docInDocDateProperty());
             currency.textProperty().bindBidirectional(paymentUtility.isoProperty());
             amount.textProperty().bindBidirectional(paymentUtility.amountProperty());
-            assign.valueProperty().bindBidirectional(paymentUtility.descripProperty());
         }
     }
 

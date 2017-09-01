@@ -35,7 +35,7 @@ public class PaymentUtilityDialog extends UserInteractiveStage implements Dialog
         else {
             paymentUtility = (PaymentUtility) object;
         }
-//        paymentUtilityBackup = paymentUtility.cloneWithID();
+        paymentUtilityBackup = paymentUtility.cloneWithID();
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/utilities/payment/dialog/PaymentUtilityDialog.fxml", null);
         dialogController = (PaymentUtilityDialogController) currentScene.getProperties().get("controller");

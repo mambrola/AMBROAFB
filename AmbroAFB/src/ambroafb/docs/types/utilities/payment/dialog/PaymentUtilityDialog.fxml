@@ -22,6 +22,17 @@
                         <DocMerchandiseComboBox fx:id="utilities" />
                     </VBox>
                     <VBox styleClass="couple">
+                        <Label /> 
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%currency" /> 
+                        <TextField fx:id="currency" disable="true"/>
+                    </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple">
                         <Label text="%doc_date" /> 
                         <ADatePicker fx:id="docDate" />
                     </VBox>
@@ -29,21 +40,9 @@
                         <Label text="%doc_in_doc_date" /> 
                         <ADatePicker fx:id="docInDocDate" />
                     </VBox>
-                </children> 
-            </HBox>
-            <HBox styleClass="oneThirds">
-                <children>
-                    <VBox styleClass="couple">
-                        <Label text="%currency" /> 
-                        <TextField fx:id="currency" disable="true"/>
-                    </VBox>
                     <VBox styleClass="couple">
                         <Label text="%amount" styleClass="validationMessage" /> 
                         <TextField fx:id="amount" />
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <Label text="%assignment" /> 
-                        <ComboBox fx:id="assign" />
                     </VBox>
                 </children> 
             </HBox>

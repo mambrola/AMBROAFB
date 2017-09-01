@@ -31,6 +31,7 @@ public class PaymentUtility extends EditorPanelable {
     private int parentRecId, processId, debitId, creditId, docType, ownerId;
     
     private final String docCodeValue = "payment";
+    private final float amountDefaultValue = -1;
     
     
     public PaymentUtility(){
@@ -40,7 +41,7 @@ public class PaymentUtility extends EditorPanelable {
         
         utility = new SimpleObjectProperty<>(new DocMerchandise());
         iso = new SimpleStringProperty("");
-        amount = new SimpleStringProperty("");
+        amount = new SimpleStringProperty("" + amountDefaultValue); // when ADD form is open and amount is empty, then getAmount method throw exception when objects cloning.
         docCode = new SimpleStringProperty(docCodeValue); // when ADD form is open.
         descrip = new SimpleStringProperty("");
     }
@@ -98,6 +99,7 @@ public class PaymentUtility extends EditorPanelable {
         return docCode.get();
     }
     
+    @JsonIgnore
     public String getDescrip(){
         return descrip.get();
     }
@@ -153,13 +155,14 @@ public class PaymentUtility extends EditorPanelable {
     }
     
     public void setAmount(float amount){
-        this.amount.set("" + amount);
+        this.amount.set((amount == amountDefaultValue) ? "" : "" + amount);
     }
     
     public void setDocCode(String docCode){
         this.docCode.set(docCode);
     }
     
+    @JsonProperty
     public void setDescrip(String assign){
         this.descrip.set(assign);
     }

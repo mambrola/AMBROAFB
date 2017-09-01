@@ -106,7 +106,7 @@ public class DocEditorPanelController implements Initializable {
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc docFromList = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             DocManager dm = DocManagersFactory.getDocManager(docFromList.getDocType());
-            EditorPanelable dc = dm.getOneFromDB(docFromList.getRecId());
+            EditorPanelable docFromDB = dm.getOneFromDB(docFromList.getRecId());
             
 //            DocComponent docComp = editorPanelModel.getDocComponent(docFromList.getRecId());
             
