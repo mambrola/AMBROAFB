@@ -140,13 +140,28 @@ public class DocEditorPanelController implements Initializable {
     }
     
     @FXML
-    private void addBySample(ActionEvent e) {
-        System.out.println("addBySample method");
+    private void addCustom(ActionEvent e) {
+        System.out.println("addCustom method");
     }
     
     @FXML
-    private void addCustom(ActionEvent e) {
-        System.out.println("addCustom method");
+    private void addBySample(ActionEvent e) {
+        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
+            EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
+            EditorPanelable cloneFromReal = docFromDB.cloneWithoutID(); // Without this coping, program make "edit" action.
+            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, cloneFromReal);
+            EditorPanelable newFromDialog =  dialog.getResult();
+            if (newFromDialog != null){
+                Doc newFromDB = dm.saveOneToDB(newFromDialog);
+                if (newFromDB != null){
+                    tableData.add(newFromDB);
+                }
+            }
+        }
     }
     
     @FXML

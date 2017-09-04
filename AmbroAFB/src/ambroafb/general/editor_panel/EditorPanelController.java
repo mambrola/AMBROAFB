@@ -202,7 +202,7 @@ public class EditorPanelController implements Initializable {
             if (result != null) {
                 EditorPanelable newInstanceWithId = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
                 if (newInstanceWithId != null){ // result != null
-                    tableData.add(result);
+                    tableData.add(newInstanceWithId);
                 }
             }
         }

@@ -326,7 +326,8 @@ public class Doc extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return  getDocDate()+ " " + getDocInDocDate() + " " + getDocCode() + " " + getDescrip();
+        return  getDocDate() + " " + getDocInDocDate() + " " + getDebit().getDescrip() + " "  + 
+                getCredit().getDescrip() + " " + getIso() + " " + getDocCode() + " " + getDescrip();
     }
 
     @Override
