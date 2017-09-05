@@ -74,11 +74,8 @@ public class PaymentUtility extends EditorPanelable {
         return descrip;
     }
     
-    // Getters:
-//    public String getUtility(){
-//        return (utility.get() == null) ? "" : utility.get().getDescrip();
-//    }
     
+    // Getters:
     public String getDocDate(){
         return (docDate.get() == null) ? "" : docDate.get().toString();
     }
@@ -155,7 +152,7 @@ public class PaymentUtility extends EditorPanelable {
     }
     
     public void setAmount(float amount){
-        this.amount.set((amount == amountDefaultValue) ? "" : "" + amount);
+        this.amount.set("" + amount);
     }
     
     public void setDocCode(String docCode){

@@ -20,6 +20,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Callback;
 import org.json.JSONObject;
 
 /**
@@ -28,38 +33,38 @@ import org.json.JSONObject;
  */
 public class Doc extends EditorPanelable {
     
-    @AView.Column(title = "par_id", width = "60")
-    private final IntegerProperty parentRecId;
+    @AView.Column(width = "24", cellFactory = MarkerCellFactory.class)
+    private final IntegerProperty marker;
     
-    @AView.Column(title = "proc_id", width = "60")
+    private final IntegerProperty parentRecId;
     private final IntegerProperty processId;
     
-    @AView.Column(title = "%doc_date", width = "100")
+    @AView.Column(title = "%doc_date", width = "130", styleClass = "textCenter")
     private final StringProperty docDate;
     private final ObjectProperty<LocalDate> docDateObj;
 
-    @AView.Column(title = "%doc_in_doc_date", width = "100")
+    @AView.Column(title = "%doc_in_doc_date", width = "130", styleClass = "textCenter")
     private final StringProperty docInDocDate;
     private final ObjectProperty<LocalDate> docInDocDateObj;
     
-    @AView.Column(title = "%debit", width = "150")
+    @AView.Column(title = "%debit", width = "230")
     private final StringProperty debitDescrip;
     private final DocSide debitObj;
     
-    @AView.Column(title = "%credit", width = "150")
+    @AView.Column(title = "%credit", width = "230")
     private final StringProperty creditDescrip;
     private final DocSide creditObj;
     
-    @AView.Column(title = "%iso", width = "50")
+    @AView.Column(title = "%iso", width = "50", styleClass = "textCenter")
     private final StringProperty iso;
     
-    @AView.Column(title = "%amount", width = "80")
+    @AView.Column(title = "%amount", width = "80", styleClass = "textRight")
     private final StringProperty amount;
     
-    @AView.Column(title = "%docCode", width = "70")
+    @AView.Column(title = "%docCode", width = "80")
     private final StringProperty docCode;
     
-    @AView.Column(title = "%descrip", width = "120")
+    @AView.Column(title = "%descrip", width = "270")
     private final StringProperty descrip;
     private final IntegerProperty ownerId;
     
@@ -69,6 +74,7 @@ public class Doc extends EditorPanelable {
     private DocComponent dialogAbstraction;
     
     public Doc(){
+        marker = new SimpleIntegerProperty(0);
         parentRecId = new SimpleIntegerProperty();
         processId = new SimpleIntegerProperty();
         docDate = new SimpleStringProperty("");
@@ -207,6 +213,11 @@ public class Doc extends EditorPanelable {
         return ownerId.get();
     }
     
+    public int getMarker(){
+        return marker.get();
+    }
+    
+    
     // Setters:
     public void setDocType(int docType){
         this.docType = docType;
@@ -274,6 +285,9 @@ public class Doc extends EditorPanelable {
         this.ownerId.set(ownerId);
     }
     
+    public void setMarker(int marker){
+        this.marker.set(marker);
+    }
     
     
     @Override
@@ -305,6 +319,7 @@ public class Doc extends EditorPanelable {
         setDescrip(otherDoc.getDescrip());
         setOwnerId(otherDoc.getOwnerId());
         setDocType(otherDoc.getDocType());
+        setMarker(otherDoc.getMarker());
     }
 
     @Override
@@ -321,7 +336,8 @@ public class Doc extends EditorPanelable {
                 getDocCode().equals(docBackup.getDocCode()) &&
                 getDescrip().equals(docBackup.getDescrip()) &&
                 getOwnerId() == docBackup.getOwnerId() &&
-                getDocType() == docBackup.getDocType();
+                getDocType() == docBackup.getDocType() &&
+                getMarker() == docBackup.getMarker();
     }
 
     @Override
@@ -335,4 +351,38 @@ public class Doc extends EditorPanelable {
         return "Doc{" + "parentRecId=" + parentRecId + ", processId=" + processId + ", docDate=" + docDate + ", docDateObj=" + docDateObj + ", docInDocDate=" + docInDocDate + ", docInDocDateObj=" + docInDocDateObj + ", debitDescrip=" + debitDescrip + ", debitObj=" + debitObj + ", creditDescrip=" + creditDescrip + ", creditObj=" + creditObj + ", iso=" + iso + ", amount=" + amount + ", docCode=" + docCode + ", descrip=" + descrip + ", ownerId=" + ownerId + ", docType=" + docType + ", dialogAbstraction=" + dialogAbstraction + '}';
     }
 
+    private static final String DOC_NO_CHILD_IMG_URL = "/images/doc_hasnot_child.png", DOC_PARENT_IMG_URL = "/images/doc_parent.png", DOC_CHILD_IMG_URL = "/images/doc_child.png";
+    
+    public static class MarkerCellFactory implements Callback<TableColumn<Doc, Integer>, TableCell<Doc, Integer>> {
+
+        @Override
+        public TableCell<Doc, Integer> call(TableColumn<Doc, Integer> param) {
+            TableCell<Doc, Integer> cell = new TableCell<Doc, Integer>(){
+                private final ImageView view = new ImageView();
+
+                @Override
+                public void updateItem(Integer marker, boolean empty) {
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        String imgPath = DOC_NO_CHILD_IMG_URL;
+                        switch(marker){
+                            case -1:
+                                imgPath = DOC_PARENT_IMG_URL;
+                                break;
+                            case 1:
+                                imgPath = DOC_CHILD_IMG_URL;
+                                break;
+                            default:
+                                break;
+                        }
+                        view.setImage(new Image(imgPath));
+                        setGraphic(view);
+                    }
+                }
+            };
+            return cell;
+        }
+        
+    }
 }

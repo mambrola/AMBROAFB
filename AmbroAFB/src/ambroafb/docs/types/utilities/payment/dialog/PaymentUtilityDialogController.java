@@ -81,7 +81,7 @@ public class PaymentUtilityDialogController implements Initializable {
             docDate.valueProperty().bindBidirectional(paymentUtility.docDateProperty());
             docInDocDate.valueProperty().bindBidirectional(paymentUtility.docInDocDateProperty());
             currency.textProperty().bindBidirectional(paymentUtility.isoProperty());
-            amount.textProperty().bindBidirectional(paymentUtility.amountProperty());
+            amount.textProperty().bindBidirectional(paymentUtility.amountProperty()); // -1 default value not show in dialog, becouse of "amount" textfield value pattern.
         }
     }
 
