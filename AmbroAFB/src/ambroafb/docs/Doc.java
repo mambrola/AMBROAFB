@@ -50,11 +50,11 @@ public class Doc extends EditorPanelable {
     
     @AView.Column(title = "%debit", width = "230")
     private final StringProperty debitDescrip;
-    private final DocSide debitObj;
+    private final ObjectProperty<DocSide> debitObj;
     
     @AView.Column(title = "%credit", width = "230")
     private final StringProperty creditDescrip;
-    private final DocSide creditObj;
+    private final ObjectProperty<DocSide> creditObj;
     
     @AView.Column(title = "%iso", width = "50", styleClass = "textCenter")
     private final StringProperty iso;
@@ -74,8 +74,13 @@ public class Doc extends EditorPanelable {
     private static final String DB_VIEW_NAME = "docs_whole";
     private DocComponent dialogAbstraction;
     
+    private final int markerDefaultValue = 0;
+    private final String isoDefaultValue = "GEL";
+    private final float amountDefaultValue = -1; // for ADD dialog, that clone method does not throw exception.
+    private final int ownerIdDefaultValue = -1;      // for ADD dialog, that clone method does not throw exception.
+    
     public Doc(){
-        marker = new SimpleIntegerProperty(0);
+        marker = new SimpleIntegerProperty(markerDefaultValue);
         parentRecId = new SimpleIntegerProperty();
         processId = new SimpleIntegerProperty();
         docDate = new SimpleStringProperty("");
@@ -84,16 +89,16 @@ public class Doc extends EditorPanelable {
         docInDocDateObj = new SimpleObjectProperty<>();
         
         debitDescrip = new SimpleStringProperty("");
-        debitObj = new DocSide(true);
+        debitObj = new SimpleObjectProperty<>(new DocSide(true));
         
         creditDescrip = new SimpleStringProperty("");
-        creditObj = new DocSide(false);
+        creditObj = new SimpleObjectProperty<>(new DocSide(false));
         
-        iso = new SimpleStringProperty();
-        amount = new SimpleStringProperty();
-        docCode = new SimpleStringProperty();
-        descrip = new SimpleStringProperty();
-        ownerId = new SimpleIntegerProperty();
+        iso = new SimpleStringProperty(isoDefaultValue);
+        amount = new SimpleStringProperty("" + amountDefaultValue);
+        docCode = new SimpleStringProperty("");
+        descrip = new SimpleStringProperty("");
+        ownerId = new SimpleIntegerProperty(ownerIdDefaultValue);
         
 //        docDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
 //            docDate.set(convertDateToString(newValue));
@@ -159,6 +164,14 @@ public class Doc extends EditorPanelable {
         return amount;
     }
     
+    public StringProperty docCodeProperty(){
+        return docCode;
+    }
+    
+    public StringProperty descripProperty(){
+        return descrip;
+    }
+    
     public IntegerProperty ownerIdProperty(){
         return ownerId;
     }
@@ -187,11 +200,11 @@ public class Doc extends EditorPanelable {
     }
     
     public DocSide getCredit(){
-        return creditObj;
+        return creditObj.get();
     }
     
     public DocSide getDebit(){
-        return debitObj;
+        return debitObj.get();
     }
     
     public String getIso(){
@@ -246,28 +259,28 @@ public class Doc extends EditorPanelable {
     }
     
     public void setDebitId(int debitId){
-        debitObj.setId(debitId);
+        debitObj.get().setId(debitId);
     }
     
     public void setDebitAccount(int accountNumber){
-        debitObj.setAccount(accountNumber);
+        debitObj.get().setAccount(accountNumber);
     }
     
     public void setDebitDescrip(String descrip){
-        debitObj.setDescrip(descrip);
+        debitObj.get().setDescrip(descrip);
         debitDescrip.set(descrip);
     }
     
     public void setCreditId(int creditId){
-        creditObj.setId(recId);
+        creditObj.get().setId(recId);
     }
     
     public void setCreditAccount(int accountNumber){
-        creditObj.setAccount(accountNumber);
+        creditObj.get().setAccount(accountNumber);
     }
     
     public void setCreditDescrip(String descrip){
-        creditObj.setDescrip(descrip);
+        creditObj.get().setDescrip(descrip);
         creditDescrip.set(descrip);
     }
     
@@ -318,8 +331,8 @@ public class Doc extends EditorPanelable {
         setDocDate(otherDoc.getDocDate());
         setDocInDocDate(otherDoc.getDocInDocDate());
         setIso(otherDoc.getIso());
-        debitObj.copyFrom(otherDoc.getDebit());
-        creditObj.copyFrom(otherDoc.getCredit());
+        debitObj.get().copyFrom(otherDoc.getDebit());
+        creditObj.get().copyFrom(otherDoc.getCredit());
         setAmount(otherDoc.getAmount());
         setDocCode(otherDoc.getDocCode());
         setDescrip(otherDoc.getDescrip());
@@ -336,8 +349,8 @@ public class Doc extends EditorPanelable {
                 getDocDate().equals(docBackup.getDocDate()) &&
                 getDocInDocDate().equals(docBackup.getDocInDocDate()) &&
                 getIso().equals(docBackup.getIso()) &&
-                creditObj.equals(docBackup.getCredit()) &&
-                debitObj.equals(docBackup.getDebit()) &&
+                creditObj.get().equals(docBackup.getCredit()) &&
+                debitObj.get().equals(docBackup.getDebit()) &&
                 getAmount().equals(docBackup.getAmount()) &&
                 getDocCode().equals(docBackup.getDocCode()) &&
                 getDescrip().equals(docBackup.getDescrip()) &&
@@ -354,7 +367,7 @@ public class Doc extends EditorPanelable {
 
     @Override
     public String toString() {
-        return "Doc{" + "parentRecId=" + parentRecId + ", processId=" + processId + ", docDate=" + docDate + ", docDateObj=" + docDateObj + ", docInDocDate=" + docInDocDate + ", docInDocDateObj=" + docInDocDateObj + ", debitDescrip=" + debitDescrip + ", debitObj=" + debitObj + ", creditDescrip=" + creditDescrip + ", creditObj=" + creditObj + ", iso=" + iso + ", amount=" + amount + ", docCode=" + docCode + ", descrip=" + descrip + ", ownerId=" + ownerId + ", docType=" + docType + ", dialogAbstraction=" + dialogAbstraction + '}';
+        return "Doc{" + "parentRecId=" + parentRecId + ", processId=" + processId + ", docDate=" + docDate + ", docDateObj=" + docDateObj + ", docInDocDate=" + docInDocDate + ", docInDocDateObj=" + docInDocDateObj + ", debitDescrip=" + debitDescrip + ", debitObj=" + debitObj.get() + ", creditDescrip=" + creditDescrip + ", creditObj=" + creditObj.get() + ", iso=" + iso + ", amount=" + amount + ", docCode=" + docCode + ", descrip=" + descrip + ", ownerId=" + ownerId + ", docType=" + docType + ", dialogAbstraction=" + dialogAbstraction + '}';
     }
 
     private static final String DOC_NO_CHILD_IMG_URL = "/images/doc_hasnot_child.png", DOC_PARENT_IMG_URL = "/images/doc_parent.png", DOC_CHILD_IMG_URL = "/images/doc_child.png";

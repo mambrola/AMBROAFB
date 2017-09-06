@@ -18,12 +18,11 @@
             <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
-                        <Label text="%utilities" styleClass="validationMessage" /> 
-                        <DocMerchandiseComboBox fx:id="utilities" />
-                    </VBox>
-                    <VBox styleClass="couple">
                         <Label text="%doc_date" /> 
                         <ADatePicker fx:id="docDate" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="" /> 
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="%doc_in_doc_date" /> 
@@ -31,19 +30,39 @@
                     </VBox>
                 </children> 
             </HBox>
-            <HBox styleClass="oneThirds">
+            <HBox styleClass="oneHalf">
                 <children>
                     <VBox styleClass="couple">
-                        <Label text="%currency" />
-                        <TextField fx:id="currency" disable="true"/>
+                        <Label text="%debit" /> 
+                        <ComboBox fx:id="debits" />
                     </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%credit" /> 
+                        <ComboBox fx:id="credits" />
+                    </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="oneThirds">
+                <children>
                     <VBox styleClass="couple">
                         <Label text="%amount" styleClass="validationMessage" /> 
                         <TextField fx:id="amount" />
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="%vat" styleClass="validationMessage" /> 
-                        <TextField fx:id="vat" />
+                        <Label text="%currency" />
+                        <TextField fx:id="currency" disable="true"/>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%doc_code" styleClass="validationMessage" /> 
+                        <TextField fx:id="docCode" />
+                    </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="one">
+                <children>
+                    <VBox styleClass="couple">
+                        <Label text="%descrip" /> 
+                        <TextField fx:id="descrip" />
                     </VBox>
                 </children> 
             </HBox>

@@ -12,6 +12,7 @@ import ambro.AView;
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.DocManagersFactory;
+import ambroafb.docs.types.custom.dialog.CustomDialog;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
 import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 import ambroafb.general.Names;
@@ -162,7 +163,20 @@ public class DocEditorPanelController implements Initializable {
     
     @FXML
     private void addCustom(ActionEvent e) {
-        System.out.println("addCustom method. Must show custom dialog.");
+        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            Dialogable dd = new CustomDialog(selected, Names.EDITOR_BUTTON_TYPE.ADD, docEditorPanelSceneStage);
+            EditorPanelable result = dd.getResult();
+            if (result != null){
+                
+            }
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+        }
     }
     
     @FXML
@@ -184,6 +198,10 @@ public class DocEditorPanelController implements Initializable {
                     });
                 }
             }
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
         }
     }
     

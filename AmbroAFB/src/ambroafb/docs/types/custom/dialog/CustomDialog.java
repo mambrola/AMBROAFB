@@ -5,10 +5,60 @@
  */
 package ambroafb.docs.types.custom.dialog;
 
+import ambroafb.docs.Doc;
+import ambroafb.general.Names;
+import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.UserInteractiveStage;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 /**
  *
  * @author dkobuladze
  */
-public class CustomDialog {
+public class CustomDialog extends UserInteractiveStage implements Dialogable {
+
+    private Doc doc, docBackup;
+    
+    private CustomDialogController dialogController;
+    
+    public CustomDialog(Doc doc, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+        super(owner, Names.LEVEL_FOR_PATH, "doc_dialog_title", "/images/dialog.png");
+        
+        if (doc == null){
+            this.doc = new Doc();
+        }
+        else {
+            this.doc = doc;
+        }
+        docBackup = this.doc.cloneWithID();
+        
+        Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/custom/dialog/CustomDialog.fxml", null);
+        dialogController = (CustomDialogController) currentScene.getProperties().get("controller");
+        dialogController.bindDoc(this.doc); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
+        dialogController.setNextVisibleAndActionParameters(buttonType);
+        dialogController.setBackupDoc(this.docBackup);
+        this.setScene(currentScene);
+        
+        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
+            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
+            if (event != null) event.consume();
+        });
+    }
+
+    @Override
+    public EditorPanelable getResult() {
+        showAndWait();
+        return doc;
+    }
+
+    @Override
+    public void operationCanceled() {
+        doc = null;
+    }
     
 }
