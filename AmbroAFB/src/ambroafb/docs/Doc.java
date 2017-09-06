@@ -12,6 +12,7 @@ import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javafx.beans.property.IntegerProperty;
@@ -215,6 +216,11 @@ public class Doc extends EditorPanelable {
     
     public int getMarker(){
         return marker.get();
+    }
+    
+    @JsonIgnore
+    public boolean isParentDoc(){
+        return marker.get() == -1;
     }
     
     

@@ -83,15 +83,20 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
-            EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
-            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.DELETE, docFromDB);
-            EditorPanelable result = dialog.getResult();
-            if (result != null){
-                boolean isDeleted = dm.deleteOneFromDB(docFromDB.getRecId());
-                if (isDeleted){
-                    tableData.remove(selected);
+            if (selected.isParentDoc()){
+                DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
+                EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
+                Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.DELETE, docFromDB);
+                EditorPanelable result = dialog.getResult();
+                if (result != null){
+                    boolean isDeleted = dm.deleteOneFromDB(docFromDB.getRecId());
+                    if (isDeleted){
+                        tableData.remove(selected);
+                    }
                 }
+            }
+            else {
+                System.out.println("must show custom dialog");
             }
         }
         else {
@@ -106,20 +111,25 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
-            EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
-            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.EDIT, docFromDB);
-            EditorPanelable result = dialog.getResult();
-            if (result != null){ // If result is null, "selected" Doc object stay in table. The edit dialog changed "docFromDB" object.
-                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(docFromDB);
-                if (!newDocsFromDB.isEmpty()){ // "selected" object in list does not change, if newFromDB is null. Otherwise,  EditorPanelable abstraction must convert to Doc
-                    newDocsFromDB.stream().forEach((newDoc) -> {
-                        Optional<Doc> docFromAFBTable = tableData.stream().filter((Doc doc) -> doc.getRecId() == newDoc.getRecId()).findFirst();
-                        if (docFromAFBTable.isPresent()){
-                            docFromAFBTable.get().copyFrom(newDoc);
-                        }
-                    });
+            if (selected.isParentDoc()){
+                DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
+                EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
+                Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.EDIT, docFromDB);
+                EditorPanelable result = dialog.getResult();
+                if (result != null){ // If result is null, "selected" Doc object stay in table. The edit dialog changed "docFromDB" object.
+                    ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(docFromDB);
+                    if (!newDocsFromDB.isEmpty()){ // "selected" object in list does not change, if newFromDB is null. Otherwise,  EditorPanelable abstraction must convert to Doc
+                        newDocsFromDB.stream().forEach((newDoc) -> {
+                            Optional<Doc> docFromAFBTable = tableData.stream().filter((Doc doc) -> doc.getRecId() == newDoc.getRecId()).findFirst();
+                            if (docFromAFBTable.isPresent()){
+                                docFromAFBTable.get().copyFrom(newDoc);
+                            }
+                        });
+                    }
                 }
+            }
+            else {
+                System.out.println("must show custom dialog");
             }
         }
         else {
@@ -134,10 +144,15 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
-            EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
-            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.VIEW, docFromDB);
-            dialog.showAndWait();
+            if (selected.isParentDoc()){
+                DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
+                EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
+                Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.VIEW, docFromDB);
+                dialog.showAndWait();
+            }
+            else {
+                System.out.println("must show custom dialog");
+            }
         }
         else {
             dialogStage.requestFocus();
@@ -147,7 +162,7 @@ public class DocEditorPanelController implements Initializable {
     
     @FXML
     private void addCustom(ActionEvent e) {
-        System.out.println("addCustom method");
+        System.out.println("addCustom method. Must show custom dialog.");
     }
     
     @FXML

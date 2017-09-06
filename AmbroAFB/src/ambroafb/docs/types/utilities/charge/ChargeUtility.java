@@ -60,7 +60,7 @@ public class ChargeUtility extends EditorPanelable {
         return dateTime.toLocalDate();
     }
 
-    public ObjectProperty<DocMerchandise> utilityProperty() {
+    public ObjectProperty<DocMerchandise> merchandiseProperty() {
         return utility;
     }
 
@@ -229,7 +229,7 @@ public class ChargeUtility extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         ChargeUtility otherCharge = (ChargeUtility) other;
-        utilityProperty().set(otherCharge.utilityProperty().get());
+        merchandiseProperty().set(otherCharge.merchandiseProperty().get());
         setParentRecId(otherCharge.getParentRectId());
         setProcessId(otherCharge.getProcessId());
         setDocDate(otherCharge.getDocDate());
@@ -248,7 +248,7 @@ public class ChargeUtility extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         ChargeUtility other = (ChargeUtility) backup;
-        return utilityProperty().get().getRecId() == other.utilityProperty().get().getRecId()
+        return merchandiseProperty().get().getRecId() == other.merchandiseProperty().get().getRecId()
                 && getParentRectId() == other.getParentRectId()
                 && getProcessId() == other.getProcessId()
                 && docDate.get().equals(other.docDateProperty().get())

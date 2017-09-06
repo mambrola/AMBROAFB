@@ -75,7 +75,7 @@ public class ChargeUtilityDialogController implements Initializable {
     public void bindUtility(ChargeUtility chargeUtility) {
         this.chargeUtility = chargeUtility;
         if (chargeUtility != null){
-            utilities.valueProperty().bindBidirectional(chargeUtility.utilityProperty());
+            utilities.valueProperty().bindBidirectional(chargeUtility.merchandiseProperty());
             docDate.valueProperty().bindBidirectional(chargeUtility.docDateProperty());
             docInDocDate.valueProperty().bindBidirectional(chargeUtility.docInDocDateProperty());
             currency.textProperty().bindBidirectional(chargeUtility.isoProperty());

@@ -346,7 +346,7 @@ public class DBUtils {
         Integer id = (chargeUtility.getRecId() == 0) ? null : chargeUtility.getRecId();
         try {
             JSONArray data = dbClient.callProcedureAndGetAsJson("doc_utilities_insert_update", dbClient.getLang(), id, chargeUtility.getDocCode(),
-                                                            chargeUtility.utilityProperty().get().getMerchandise(),
+                                                            chargeUtility.merchandiseProperty().get().getMerchandise(),
                                                             chargeUtility.docDateProperty().get(),
                                                             chargeUtility.docInDocDateProperty().get(),
                                                             chargeUtility.getAmount(),
