@@ -45,8 +45,10 @@ public class PaymentUtilityManager implements DocManager {
     }
 
     @Override
-    public Doc saveOneToDB(EditorPanelable newDocComponent) {
-        return DBUtils.savePaymentUtility((PaymentUtility) newDocComponent);
+    public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent) {
+        ArrayList<Doc> docs = new ArrayList<>();
+        docs.add(DBUtils.savePaymentUtility((PaymentUtility) newDocComponent));
+        return docs;
     }
 
     @Override

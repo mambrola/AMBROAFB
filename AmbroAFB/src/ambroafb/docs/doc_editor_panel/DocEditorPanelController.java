@@ -22,6 +22,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 import javafx.beans.binding.Bindings;
@@ -110,9 +111,14 @@ public class DocEditorPanelController implements Initializable {
             Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.EDIT, docFromDB);
             EditorPanelable result = dialog.getResult();
             if (result != null){ // If result is null, "selected" Doc object stay in table. The edit dialog changed "docFromDB" object.
-                Doc newFromDB = dm.saveOneToDB(docFromDB);
-                if (newFromDB != null){ // "selected" object in list does not change, if newFromDB is null. Otherwise,  EditorPanelable abstraction must convert to Doc
-                    selected.copyFrom(newFromDB);
+                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(docFromDB);
+                if (!newDocsFromDB.isEmpty()){ // "selected" object in list does not change, if newFromDB is null. Otherwise,  EditorPanelable abstraction must convert to Doc
+                    newDocsFromDB.stream().forEach((newDoc) -> {
+                        Optional<Doc> docFromAFBTable = tableData.stream().filter((Doc doc) -> doc.getRecId() == newDoc.getRecId()).findFirst();
+                        if (docFromAFBTable.isPresent()){
+                            docFromAFBTable.get().copyFrom(newDoc);
+                        }
+                    });
                 }
             }
         }
@@ -156,9 +162,11 @@ public class DocEditorPanelController implements Initializable {
             Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, cloneFromReal);
             EditorPanelable newFromDialog =  dialog.getResult();
             if (newFromDialog != null){
-                Doc newFromDB = dm.saveOneToDB(newFromDialog);
-                if (newFromDB != null){
-                    tableData.add(newFromDB);
+                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newFromDialog);
+                if (!newDocsFromDB.isEmpty()){
+                    newDocsFromDB.stream().forEach((doc) -> {
+                        tableData.add(doc);
+                    });
                 }
             }
         }
@@ -171,11 +179,13 @@ public class DocEditorPanelController implements Initializable {
         if(dialogStage == null || !dialogStage.isShowing()){
             DocManager dm = new PaymentUtilityManager();
             Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
-            EditorPanelable newTransferUtility = dd.getResult();
-            if (newTransferUtility != null){
-                Doc newPaymentUtilityFromDB = dm.saveOneToDB(newTransferUtility);
-                if (newPaymentUtilityFromDB != null){
-                    tableData.add(newPaymentUtilityFromDB); // table-ში უნდა ჩაიდოს Doc კლასი და არა DocComponent კლასი.
+            EditorPanelable newPaymentUtility = dd.getResult();
+            if (newPaymentUtility != null){
+                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newPaymentUtility);
+                if (!newDocsFromDB.isEmpty()){
+                    newDocsFromDB.stream().forEach((doc) -> {
+                        tableData.add(doc);
+                    });
                 }
             }
         }
@@ -194,10 +204,11 @@ public class DocEditorPanelController implements Initializable {
             Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
             EditorPanelable newChargeUtility = dd.getResult();
             if (newChargeUtility != null){
-                EditorPanelable newChargeUtilityFromDB = dm.saveOneToDB(newChargeUtility);
-//                Doc newDocFromDB = DBUtils.
-                if (newChargeUtilityFromDB != null){
-//                    tableData.add(newFromDB); // table-ში უნდა ჩაიდოს Doc კლასი და არა DocComponent კლასი.
+                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newChargeUtility);
+                if (!newDocsFromDB.isEmpty()){
+                    newDocsFromDB.stream().forEach((doc) -> {
+                        tableData.add(doc);
+                    });
                 }
             }
         }

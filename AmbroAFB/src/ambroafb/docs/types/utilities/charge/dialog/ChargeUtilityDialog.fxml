@@ -5,7 +5,51 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import ambro.* ?>
+<?import ambroafb.currencies.*?>
+<?import ambroafb.docs.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ambroafb.docs.types.utilities.charge.dialog.ChargeUtilityDialogController">
-    
-</AnchorPane>
+<ambroafb.general.DialogPanel stylesheets="/styles/css/chargeutilitydialog.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" 
+                              xmlns="http://javafx.com/javafx/8"
+                              fx:controller="ambroafb.docs.types.utilities.charge.dialog.ChargeUtilityDialogController" >
+    <VBox fx:id="formPane" styleClass="vContainer">
+        <children>
+            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple">
+                        <Label text="%utilities" styleClass="validationMessage" /> 
+                        <DocMerchandiseComboBox fx:id="utilities" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%doc_date" /> 
+                        <ADatePicker fx:id="docDate" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%doc_in_doc_date" /> 
+                        <ADatePicker fx:id="docInDocDate" />
+                    </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple">
+                        <Label text="%currency" />
+                        <TextField fx:id="currency" disable="true"/>
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%amount" styleClass="validationMessage" /> 
+                        <TextField fx:id="amount" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%vat" styleClass="validationMessage" /> 
+                        <TextField fx:id="vat" />
+                    </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

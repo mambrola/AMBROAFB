@@ -7,6 +7,7 @@ package ambroafb.general;
 
 import ambroafb.clients.Client;
 import ambroafb.docs.Doc;
+import ambroafb.docs.types.utilities.charge.ChargeUtility;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceFinaces;
@@ -338,6 +339,25 @@ public class DBUtils {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public static ArrayList<Doc> saveChargeUtility(ChargeUtility chargeUtility){
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        Integer id = (chargeUtility.getRecId() == 0) ? null : chargeUtility.getRecId();
+        try {
+            JSONArray data = dbClient.callProcedureAndGetAsJson("doc_utilities_insert_update", dbClient.getLang(), id, chargeUtility.getDocCode(),
+                                                            chargeUtility.utilityProperty().get().getMerchandise(),
+                                                            chargeUtility.docDateProperty().get(),
+                                                            chargeUtility.docInDocDateProperty().get(),
+                                                            chargeUtility.getAmount(),
+                                                            chargeUtility.getVat(),
+                                                            chargeUtility.getOwnerId());
+            System.out.println("save ChangeUtility data from DB: " + data);
+            return Utils.getListFromJSONArray(Doc.class, data);
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      return new ArrayList();
     }
     
     public static boolean deleteObjectFromDB(String deleteProcName, Object... params) {

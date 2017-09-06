@@ -9,7 +9,7 @@
 <?import ambroafb.currencies.*?>
 <?import ambroafb.docs.*?>
 
-<ambroafb.general.DialogPanel stylesheets="/styles/css/transferutilitydialog.css" 
+<ambroafb.general.DialogPanel stylesheets="/styles/css/paymentutilitydialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 
                               xmlns="http://javafx.com/javafx/8"
                               fx:controller="ambroafb.docs.types.utilities.payment.dialog.PaymentUtilityDialogController" >

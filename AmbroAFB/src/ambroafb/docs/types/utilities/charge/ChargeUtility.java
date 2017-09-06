@@ -5,7 +5,21 @@
  */
 package ambroafb.docs.types.utilities.charge;
 
+import ambroafb.docs.DocMerchandise;
+import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
@@ -13,29 +27,246 @@ import ambroafb.general.interfaces.EditorPanelable;
  */
 public class ChargeUtility extends EditorPanelable {
 
-    @Override
-    public EditorPanelable cloneWithoutID() {
-        return null;
+    private final ObjectProperty<LocalDate> docDate;
+    private final ObjectProperty<LocalDate> docInDocDate;
+    private final ObjectProperty<DocMerchandise> utility;
+    private final StringProperty iso, amount, docCode, descrip, vat;
+    private int parentRecId, processId, debitId, creditId, docType, ownerId = -1;
+
+    private final String docCodeValue = "accrual";
+    private final float amountDefaultValue = -1;
+    private final float vatDefaultValue = -1;
+
+    public ChargeUtility() {
+        // By the time "bindBidirectional" the value of brackets object will be set to left side object, of binding. So the default value must set this object.
+        docDate = new SimpleObjectProperty<>(LocalDate.now());
+        docInDocDate = new SimpleObjectProperty<>(getLastDateOfMonth());
+
+        utility = new SimpleObjectProperty<>(new DocMerchandise());
+        iso = new SimpleStringProperty("");
+        amount = new SimpleStringProperty("" + amountDefaultValue); // when ADD form is open and amount is empty, then getAmount method throw exception when objects cloning.
+        docCode = new SimpleStringProperty(docCodeValue); // when ADD form is open.
+        descrip = new SimpleStringProperty("");
+        vat = new SimpleStringProperty("" + vatDefaultValue);
+    }
+
+    private LocalDate getLastDateOfMonth() {
+        Calendar c = Calendar.getInstance();
+        Date currDate = new Date();
+        c.setTime(currDate);
+        c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Instant instant = Instant.ofEpochMilli(c.getTimeInMillis());
+        LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+        return dateTime.toLocalDate();
+    }
+
+    public ObjectProperty<DocMerchandise> utilityProperty() {
+        return utility;
+    }
+
+    public ObjectProperty<LocalDate> docDateProperty() {
+        return docDate;
+    }
+
+    public ObjectProperty<LocalDate> docInDocDateProperty() {
+        return docInDocDate;
+    }
+
+    public StringProperty isoProperty() {
+        return iso;
+    }
+
+    public StringProperty amountProperty() {
+        return amount;
+    }
+
+    public StringProperty docCodeProperty() {
+        return docCode;
+    }
+
+    public StringProperty descripProperty() {
+        return descrip;
+    }
+
+    public StringProperty vatProperty() {
+        return vat;
+    }
+
+    // Getters:
+    public String getDocDate() {
+        return (docDate.get() == null) ? "" : docDate.get().toString();
+    }
+
+    public String getDocInDocDate() {
+        return (docInDocDate.get() == null) ? "" : docInDocDate.get().toString();
+    }
+
+    public String getIso() {
+        return iso.get();
+    }
+
+    public float getAmount() {
+        return Float.parseFloat(amount.get());
+    }
+
+    public String getDocCode() {
+        return docCode.get();
+    }
+
+    @JsonIgnore
+    public String getDescrip() {
+        return descrip.get();
+    }
+
+    @JsonIgnore
+    public int getParentRectId() {
+        return parentRecId;
+    }
+
+    @JsonIgnore
+    public int getProcessId() {
+        return processId;
+    }
+
+    @JsonIgnore
+    public int getDebitId() {
+        return debitId;
+    }
+
+    @JsonIgnore
+    public int getCreditId() {
+        return creditId;
+    }
+
+    @JsonIgnore
+    public int getDocType() {
+        return docType;
+    }
+
+    @JsonIgnore
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public float getVat() {
+        return Float.parseFloat(vat.get());
+    }
+
+    // Setters:
+    public void setDocDate(String date) {
+        this.docDate.set(DateConverter.getInstance().parseDate(date));
+    }
+
+    public void setDocInDocDate(String date) {
+        this.docInDocDate.set(DateConverter.getInstance().parseDate(date));
+    }
+
+    public void setIso(String iso) {
+        this.iso.set(iso);
+    }
+
+    public void setAmount(float amount) {
+        this.amount.set("" + amount);
+    }
+
+    public void setDocCode(String docCode) {
+        this.docCode.set(docCode);
+    }
+
+    @JsonProperty
+    public void setDescrip(String descrip) {
+        this.descrip.set(descrip);
+    }
+
+    @JsonProperty
+    public void setParentRecId(int parentRecId) {
+        this.parentRecId = parentRecId;
+    }
+
+    @JsonProperty
+    public void setProcessId(int processId) {
+        this.processId = processId;
+    }
+
+    @JsonProperty
+    public void setDebitId(int debitId) {
+        this.debitId = debitId;
+    }
+
+    @JsonProperty
+    public void setCreditId(int creditId) {
+        this.creditId = creditId;
+    }
+
+    @JsonProperty
+    public void setDocType(int docType) {
+        this.docType = docType;
+    }
+
+    @JsonProperty
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public void setVat(float vat) {
+        this.vat.set("" + vat);
     }
 
     @Override
-    public EditorPanelable cloneWithID() {
-        return null;
+    public ChargeUtility cloneWithoutID() {
+        ChargeUtility clone = new ChargeUtility();
+        clone.copyFrom(this);
+        return clone;
+    }
+
+    @Override
+    public ChargeUtility cloneWithID() {
+        ChargeUtility clone = cloneWithoutID();
+        clone.setRecId(this.getRecId());
+        return clone;
     }
 
     @Override
     public void copyFrom(EditorPanelable other) {
-
+        ChargeUtility otherCharge = (ChargeUtility) other;
+        utilityProperty().set(otherCharge.utilityProperty().get());
+        setParentRecId(otherCharge.getParentRectId());
+        setProcessId(otherCharge.getProcessId());
+        setDocDate(otherCharge.getDocDate());
+        setDocInDocDate(otherCharge.getDocInDocDate());
+        setIso(otherCharge.getIso());
+        setDebitId(otherCharge.getDebitId());
+        setCreditId(otherCharge.getCreditId());
+        setAmount(otherCharge.getAmount());
+        setDocCode(otherCharge.getDocCode());
+        setDescrip(otherCharge.getDescrip());
+        setDocType(otherCharge.getDocType());
+        setOwnerId(otherCharge.getOwnerId());
+        setVat(otherCharge.getVat());
     }
 
     @Override
     public boolean compares(EditorPanelable backup) {
-        return false;
+        ChargeUtility other = (ChargeUtility) backup;
+        return utilityProperty().get().getRecId() == other.utilityProperty().get().getRecId()
+                && getParentRectId() == other.getParentRectId()
+                && getProcessId() == other.getProcessId()
+                && docDate.get().equals(other.docDateProperty().get())
+                && docInDocDate.get().equals(other.docInDocDateProperty().get())
+                && getDebitId() == other.getDebitId()
+                && getCreditId() == other.getCreditId()
+                && getIso().equals(other.getIso())
+                && getAmount() == other.getAmount()
+                && getDocCode().equals(other.getDocCode())
+                && getDescrip().equals(other.getDescrip())
+                && getDocType() == other.getDocType()
+                && getOwnerId() == other.getOwnerId()
+                && getVat() == other.getVat();
     }
 
     @Override
     public String toStringForSearch() {
         return "";
     }
-    
+
 }

@@ -9,6 +9,7 @@ import ambroafb.docs.Doc;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import java.util.ArrayList;
 import javafx.stage.Stage;
 
 /**
@@ -29,7 +30,7 @@ public interface DocManager {
         * @param newDocComponent New doc component abstraction that must be save.
         * @return 
         */
-    public Doc saveOneToDB(EditorPanelable newDocComponent);
+    public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent);
     
     /**
         * The method removes specific doc component from DB.

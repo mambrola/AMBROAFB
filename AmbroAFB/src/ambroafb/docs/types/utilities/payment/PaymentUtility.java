@@ -22,8 +22,6 @@ import javafx.beans.property.StringProperty;
  */
 public class PaymentUtility extends EditorPanelable {
 
-//    private final String default_iso = "GEL";
-    
     private final ObjectProperty<LocalDate> docDate;
     private final ObjectProperty<LocalDate> docInDocDate;
     private final ObjectProperty<DocMerchandise> utility;
@@ -133,12 +131,6 @@ public class PaymentUtility extends EditorPanelable {
     
     
     // Setters:
-//    public void setUtility(String utility){
-//        if (this.utility.get() != null){
-//            this.utility.get().setDescrip(utility);
-//        }
-//    }
-    
     public void setDocDate(String date){
         this.docDate.set(DateConverter.getInstance().parseDate(date));
     }
@@ -161,7 +153,6 @@ public class PaymentUtility extends EditorPanelable {
     
     @JsonProperty
     public void setDescrip(String descrip){
-        System.out.println("descrip: " + descrip);
         this.descrip.set(descrip);
     }
     
@@ -214,30 +205,36 @@ public class PaymentUtility extends EditorPanelable {
     public void copyFrom(EditorPanelable other) {
         PaymentUtility otherPayment = (PaymentUtility) other;
         utilityProperty().set(otherPayment.utilityProperty().get());
+        setParentRecId(otherPayment.getParentRectId());
+        setProcessId(otherPayment.getProcessId());
         setDocDate(otherPayment.getDocDate());
         setDocInDocDate(otherPayment.getDocInDocDate());
         setIso(otherPayment.getIso());
+        setDebitId(otherPayment.getDebitId());
+        setCreditId(otherPayment.getCreditId());
         setAmount(otherPayment.getAmount());
-        setDescrip(otherPayment.getDescrip());
         setDocCode(otherPayment.getDocCode());
-        setParentRecId(otherPayment.getParentRectId());
-        setProcessId(otherPayment.getProcessId());
+        setDescrip(otherPayment.getDescrip());
         setDocType(otherPayment.getDocType());
+        setOwnerId(otherPayment.getOwnerId());
     }
 
     @Override
     public boolean compares(EditorPanelable backup) {
         PaymentUtility other = (PaymentUtility) backup;
         return  utilityProperty().get().getRecId() == other.utilityProperty().get().getRecId() &&
+                getParentRectId() == other.getParentRectId() &&
+                getProcessId() == other.getProcessId() &&
                 docDate.get().equals(other.docDateProperty().get()) &&
                 docInDocDate.get().equals(other.docInDocDateProperty().get()) &&
                 getIso().equals(other.getIso()) &&
+                getDebitId() == other.getDebitId() &&
+                getCreditId() == other.getCreditId() &&
                 getAmount() == other.getAmount() &&
                 getDescrip().equals(other.getDescrip()) &&
                 getDocCode().equals(other.getDocCode()) &&
-                getParentRectId() == other.getParentRectId() &&
-                getProcessId() == other.getProcessId() &&
-                getDocType() == other.getDocType();
+                getDocType() == other.getDocType() &&
+                getOwnerId() == other.getOwnerId();
     }
     
     @Override
