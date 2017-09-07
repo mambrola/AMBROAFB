@@ -39,7 +39,7 @@ public class CustomDialogController implements Initializable {
     @FXML @ContentNotEmpty
     private AccountComboBox debits, credits;
     
-    @FXML @ContentNotEmpty
+    @FXML
     private DocCodeComboBox docCodes;
     
     @FXML

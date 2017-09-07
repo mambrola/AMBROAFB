@@ -28,6 +28,7 @@ public class ChargeUtilityManager implements DocManager {
     
     private final String DB_VIEW_NAME = "docs_whole";
     private final String DB_MERCHANDISES_PROCEDURE_NAME = "utility_get_merchandises";
+    private final String DB_DELETE_PROCEDURE_NAME = "general_delete";
     private PaymentUtility chargeUtility, chargeUtilityBackup;
     
     @Override
@@ -79,6 +80,7 @@ public class ChargeUtilityManager implements DocManager {
     @Override
     public boolean deleteOneFromDB(int id) {
         return false;
+//        return DBUtils.deleteObjectFromDB(DB_DELETE_PROCEDURE_NAME, id);
     }
 
     @Override

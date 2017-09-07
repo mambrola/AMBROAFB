@@ -24,6 +24,8 @@ import org.json.JSONObject;
 public class CustomManager implements DocManager {
     
     private final String DB_VIEW_NAME = "docs_whole";
+    private final String DB_DELETE_PROCEDURE_NAME = "general_delete";
+    private final String DB_TABLE_NAME = "docs";
     private Doc doc, docBackup;
 
     @Override
@@ -34,13 +36,13 @@ public class CustomManager implements DocManager {
 
     @Override
     public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent) {
-        System.out.println("save one to DB");
+        System.out.println("save one to DB ??????????????????");
         return new ArrayList<>();
     }
 
     @Override
     public boolean deleteOneFromDB(int id) {
-        return false;
+        return DBUtils.deleteObjectFromDB(DB_DELETE_PROCEDURE_NAME, DB_TABLE_NAME, id);
     }
 
     @Override
