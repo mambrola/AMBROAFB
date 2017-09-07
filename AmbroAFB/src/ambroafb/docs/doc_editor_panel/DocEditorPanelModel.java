@@ -5,8 +5,8 @@
  */
 package ambroafb.docs.doc_editor_panel;
 
-import ambroafb.docs.types.DocComponent;
 import ambroafb.docs.DocsDataManager;
+import ambroafb.docs.types.DocComponent;
 
 /**
  *
@@ -21,7 +21,6 @@ public class DocEditorPanelModel {
     }
     
     public DocEditorPanelModel(){
-        this(new DBDocsDataManager());
     }
     
     /**
