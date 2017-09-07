@@ -40,11 +40,9 @@ public class Doc extends EditorPanelable {
     private final IntegerProperty processId;
     
     @AView.Column(title = "%doc_date", width = "130", styleClass = "textCenter")
-    private final StringProperty docDate;
     private final ObjectProperty<LocalDate> docDateObj;
 
     @AView.Column(title = "%doc_in_doc_date", width = "130", styleClass = "textCenter")
-    private final StringProperty docInDocDate;
     private final ObjectProperty<LocalDate> docInDocDateObj;
     
     @AView.Column(title = "%debit", width = "230")
@@ -81,9 +79,7 @@ public class Doc extends EditorPanelable {
         marker = new SimpleIntegerProperty(markerDefaultValue);
         parentRecId = new SimpleIntegerProperty();
         processId = new SimpleIntegerProperty();
-        docDate = new SimpleStringProperty("");
         docDateObj = new SimpleObjectProperty<>(LocalDate.now());
-        docInDocDate = new SimpleStringProperty("");
         docInDocDateObj = new SimpleObjectProperty<>(LocalDate.now());
         
         debitDescrip = new SimpleStringProperty("");
@@ -181,11 +177,11 @@ public class Doc extends EditorPanelable {
     }
     
     public String getDocDate(){
-        return docDate.get();
+        return docDateObj.get().toString();
     }
     
     public String getDocInDocDate(){
-        return docInDocDate.get();
+        return docInDocDateObj.get().toString();
     }
     
     public Account getCredit(){
@@ -240,11 +236,11 @@ public class Doc extends EditorPanelable {
     }
     
     public void setDocDate(String docDate){
-        this.docDate.set(docDate);
+        docDateObj.set(DateConverter.getInstance().parseDate(docDate));
     }
     
     public void setDocInDocDate(String docInDocDate){
-        this.docInDocDate.set(docInDocDate);
+        docInDocDateObj.set(DateConverter.getInstance().parseDate(docInDocDate));
     }
     
     public void setDebitId(int debitId){
@@ -354,6 +350,12 @@ public class Doc extends EditorPanelable {
                 getCredit().getDescrip() + " " + getIso() + " " + getDocCode() + " " + getDescrip();
     }
 
+    @Override
+    public String toString() {
+        return "Doc{" + "marker=" + marker + ", parentRecId=" + parentRecId + ", processId=" + processId + ", docDateObj=" + docDateObj.get().toString() + ", docInDocDateObj=" + docInDocDateObj.get().toString() + ", debitDescrip=" + debitDescrip + ", debitObj=" + debitObj.get().toString() + ", creditDescrip=" + creditDescrip + ", creditObj=" + creditObj.get().toString() + ", iso=" + iso + ", amount=" + amount + ", docCode=" + docCode + ", descrip=" + descrip + ", ownerId=" + ownerId + ", docType=" + docType + ", markerDefaultValue=" + markerDefaultValue + ", isoDefaultValue=" + isoDefaultValue + ", amountDefaultValue=" + amountDefaultValue + ", ownerIdDefaultValue=" + ownerIdDefaultValue + '}';
+    }
+
+    
     
     private static final String DOC_NO_CHILD_IMG_URL = "/images/doc_hasnot_child.png", DOC_PARENT_IMG_URL = "/images/doc_parent.png", DOC_CHILD_IMG_URL = "/images/doc_child.png";
     

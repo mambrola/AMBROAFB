@@ -152,7 +152,7 @@ public class Account extends EditorPanelable {
     @Override
     public boolean equals(Object other){
         if (other == null) return false;
-        return compares((Account)other);
+        return getRecId() == ((Account)other).getRecId(); // Doc  (in table)  has not full info for Account, so this equal works as full data accounts as partly data accounts.
     }
     
     @Override

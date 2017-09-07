@@ -31,6 +31,14 @@ public class DocCode {
     public void setDocCode(String docCode) {
         this.docCode.set(docCode);
     }
+    
+    
+    @Override
+    public boolean equals(Object other){
+        if (other == null) return false;
+        DocCode otherDocCode = (DocCode)other;
+        return getDocCode().equals(otherDocCode.getDocCode());
+    }
 
     @Override
     public String toString() {

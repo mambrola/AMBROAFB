@@ -26,16 +26,16 @@ public class CustomDialog extends UserInteractiveStage implements Dialogable {
     
     private CustomDialogController dialogController;
     
-    public CustomDialog(Doc doc, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+    public CustomDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         super(owner, Names.LEVEL_FOR_PATH, "doc_dialog_title", "/images/dialog.png");
         
-        if (doc == null){
-            this.doc = new Doc();
+        if (object == null){
+            doc = new Doc();
         }
         else {
-            this.doc = doc;
+            doc = (Doc) object;
         }
-        docBackup = this.doc.cloneWithID();
+        docBackup = doc.cloneWithID();
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/custom/dialog/CustomDialog.fxml", null);
         dialogController = (CustomDialogController) currentScene.getProperties().get("controller");

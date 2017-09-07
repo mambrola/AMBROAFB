@@ -49,7 +49,7 @@ public class CustomManager implements DocManager {
 
     @Override
     public Dialogable getDocDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
-        CustomDialog dialog = new CustomDialog(doc, type, owner);
+        CustomDialog dialog = new CustomDialog(object, type, owner);
         return dialog;
     }
     

@@ -144,15 +144,13 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            DocManager dm = new CustomManager();
             if (selected.isParentDoc()){
-                DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
-                EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
-                Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.VIEW, docFromDB);
-                dialog.showAndWait();
+                dm = DocManagersFactory.getDocManager(selected.getDocType());
             }
-            else {
-                System.out.println("must show custom dialog");
-            }
+            EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
+            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.VIEW, docFromDB);
+            dialog.showAndWait();
         }
         else {
             dialogStage.requestFocus();
