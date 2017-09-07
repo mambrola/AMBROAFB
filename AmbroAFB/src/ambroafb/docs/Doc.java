@@ -6,7 +6,7 @@
 package ambroafb.docs;
 
 import ambro.AView;
-import ambroafb.currencies.Currency;
+import ambroafb.accounts.Account;
 import ambroafb.docs.types.DocComponent;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
@@ -50,11 +50,11 @@ public class Doc extends EditorPanelable {
     
     @AView.Column(title = "%debit", width = "230")
     private final StringProperty debitDescrip;
-    private final ObjectProperty<DocSide> debitObj;
+    private final ObjectProperty<Account> debitObj;
     
     @AView.Column(title = "%credit", width = "230")
     private final StringProperty creditDescrip;
-    private final ObjectProperty<DocSide> creditObj;
+    private final ObjectProperty<Account> creditObj;
     
     @AView.Column(title = "%iso", width = "50", styleClass = "textCenter")
     private final StringProperty iso;
@@ -63,7 +63,7 @@ public class Doc extends EditorPanelable {
     private final StringProperty amount;
     
     @AView.Column(title = "%docCode", width = "80")
-    private final StringProperty docCode;
+    private final ObjectProperty<DocCode> docCode;
     
     @AView.Column(title = "%descrip", width = "270")
     private final StringProperty descrip;
@@ -84,29 +84,22 @@ public class Doc extends EditorPanelable {
         parentRecId = new SimpleIntegerProperty();
         processId = new SimpleIntegerProperty();
         docDate = new SimpleStringProperty("");
-        docDateObj = new SimpleObjectProperty<>();
+        docDateObj = new SimpleObjectProperty<>(LocalDate.now());
         docInDocDate = new SimpleStringProperty("");
-        docInDocDateObj = new SimpleObjectProperty<>();
+        docInDocDateObj = new SimpleObjectProperty<>(LocalDate.now());
         
         debitDescrip = new SimpleStringProperty("");
-        debitObj = new SimpleObjectProperty<>(new DocSide(true));
+        debitObj = new SimpleObjectProperty<>(new Account());
         
         creditDescrip = new SimpleStringProperty("");
-        creditObj = new SimpleObjectProperty<>(new DocSide(false));
+        creditObj = new SimpleObjectProperty<>(new Account());
         
         iso = new SimpleStringProperty(isoDefaultValue);
         amount = new SimpleStringProperty("" + amountDefaultValue);
-        docCode = new SimpleStringProperty("");
+        docCode = new SimpleObjectProperty<>(new DocCode());
         descrip = new SimpleStringProperty("");
         ownerId = new SimpleIntegerProperty(ownerIdDefaultValue);
         
-//        docDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-//            docDate.set(convertDateToString(newValue));
-//        });
-//        
-//        docInDocDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-//            docInDocDate.set(convertDateToString(newValue));
-//        });
     }
     
     private String convertDateToString(LocalDate date){
@@ -129,16 +122,6 @@ public class Doc extends EditorPanelable {
         return DBUtils.getObjectFromDB(Doc.class, DB_VIEW_NAME, params);
     }
     
-    public static Currency saveOneToDB(Doc doc){
-        if (doc == null) return null;
-//        return DBUtils.saveObjectToDBSimple(doc, DB_TABLE_NAME);
-        return null;
-    }
-    
-    public static boolean deleteOneFromDB(int productId){
-        System.out.println("delete from db...??");
-        return false;
-    }
     
     // Properties:
     public IntegerProperty parentRecIdProperty(){
@@ -156,6 +139,14 @@ public class Doc extends EditorPanelable {
         return docInDocDateObj;
     }
     
+    public ObjectProperty<Account> debitProperty(){
+        return debitObj;
+    }
+    
+    public ObjectProperty<Account> creditProperty(){
+        return creditObj;
+    }
+    
     public StringProperty isoProperty(){
         return iso;
     }
@@ -164,7 +155,7 @@ public class Doc extends EditorPanelable {
         return amount;
     }
     
-    public StringProperty docCodeProperty(){
+    public ObjectProperty<DocCode> docCodeProperty(){
         return docCode;
     }
     
@@ -199,11 +190,11 @@ public class Doc extends EditorPanelable {
         return docInDocDate.get();
     }
     
-    public DocSide getCredit(){
+    public Account getCredit(){
         return creditObj.get();
     }
     
-    public DocSide getDebit(){
+    public Account getDebit(){
         return debitObj.get();
     }
     
@@ -216,7 +207,7 @@ public class Doc extends EditorPanelable {
     }
     
     public String getDocCode(){
-        return docCode.get();
+        return docCode.get().getDocCode();
     }
     
     public String getDescrip(){
@@ -259,7 +250,7 @@ public class Doc extends EditorPanelable {
     }
     
     public void setDebitId(int debitId){
-        debitObj.get().setId(debitId);
+        debitObj.get().setRecId(debitId);
     }
     
     public void setDebitAccount(int accountNumber){
@@ -272,7 +263,7 @@ public class Doc extends EditorPanelable {
     }
     
     public void setCreditId(int creditId){
-        creditObj.get().setId(recId);
+        creditObj.get().setRecId(recId);
     }
     
     public void setCreditAccount(int accountNumber){
@@ -293,7 +284,7 @@ public class Doc extends EditorPanelable {
     }
     
     public void setDocCode(String docCode){
-        this.docCode.set(docCode);
+        this.docCode.get().setDocCode(docCode);
     }
     
     public void setDescrip(String descrip){
@@ -349,8 +340,8 @@ public class Doc extends EditorPanelable {
                 getDocDate().equals(docBackup.getDocDate()) &&
                 getDocInDocDate().equals(docBackup.getDocInDocDate()) &&
                 getIso().equals(docBackup.getIso()) &&
-                creditObj.get().equals(docBackup.getCredit()) &&
                 debitObj.get().equals(docBackup.getDebit()) &&
+                creditObj.get().equals(docBackup.getCredit()) &&
                 getAmount().equals(docBackup.getAmount()) &&
                 getDocCode().equals(docBackup.getDocCode()) &&
                 getDescrip().equals(docBackup.getDescrip()) &&
@@ -365,11 +356,7 @@ public class Doc extends EditorPanelable {
                 getCredit().getDescrip() + " " + getIso() + " " + getDocCode() + " " + getDescrip();
     }
 
-    @Override
-    public String toString() {
-        return "Doc{" + "parentRecId=" + parentRecId + ", processId=" + processId + ", docDate=" + docDate + ", docDateObj=" + docDateObj + ", docInDocDate=" + docInDocDate + ", docInDocDateObj=" + docInDocDateObj + ", debitDescrip=" + debitDescrip + ", debitObj=" + debitObj.get() + ", creditDescrip=" + creditDescrip + ", creditObj=" + creditObj.get() + ", iso=" + iso + ", amount=" + amount + ", docCode=" + docCode + ", descrip=" + descrip + ", ownerId=" + ownerId + ", docType=" + docType + ", dialogAbstraction=" + dialogAbstraction + '}';
-    }
-
+    
     private static final String DOC_NO_CHILD_IMG_URL = "/images/doc_hasnot_child.png", DOC_PARENT_IMG_URL = "/images/doc_parent.png", DOC_CHILD_IMG_URL = "/images/doc_child.png";
     
     public static class MarkerCellFactory implements Callback<TableColumn<Doc, Integer>, TableCell<Doc, Integer>> {

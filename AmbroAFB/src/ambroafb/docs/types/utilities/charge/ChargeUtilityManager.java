@@ -56,8 +56,8 @@ public class ChargeUtilityManager implements DocManager {
         utility.setDocDate(doc.getDocDate());
         utility.setDocInDocDate(doc.getDocInDocDate());
         utility.setIso(doc.getIso());
-        utility.setDebitId(doc.getDebit().getId());
-        utility.setCreditId(doc.getCredit().getId());
+        utility.setDebitId(doc.getDebit().getRecId());
+        utility.setCreditId(doc.getCredit().getRecId());
         utility.setAmount(doc.getAmount());
         utility.setDocCode(doc.getDocCode());
         utility.setDescrip(doc.getDescrip());

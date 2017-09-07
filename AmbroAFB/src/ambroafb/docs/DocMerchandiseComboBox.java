@@ -26,18 +26,19 @@ public class DocMerchandiseComboBox extends ComboBox<DocMerchandise> {
     private class FetchDataRunnable implements Runnable {
 
         private final String procedureName = "utility_get_merchandises";
+        private ObservableList<DocMerchandise> items;
         
         public FetchDataRunnable(ObservableList<DocMerchandise> items){
+            this.items = items;
+        }
+        
+        @Override
+        public void run() {
             ArrayList<DocMerchandise> merchandises = DBUtils.getObjectsListFromDBProcedure(DocMerchandise.class, procedureName);
             merchandises.sort((DocMerchandise m1, DocMerchandise m2) -> m1.compares(m2));
             Platform.runLater(() -> {
                 items.setAll(merchandises);
             });
-        }
-        
-        @Override
-        public void run() {
-            
         }
         
     }

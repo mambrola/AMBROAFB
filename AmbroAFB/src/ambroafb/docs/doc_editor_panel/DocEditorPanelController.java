@@ -12,7 +12,7 @@ import ambro.AView;
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.DocManagersFactory;
-import ambroafb.docs.types.custom.dialog.CustomDialog;
+import ambroafb.docs.types.custom.CustomManager;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
 import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 import ambroafb.general.Names;
@@ -166,11 +166,14 @@ public class DocEditorPanelController implements Initializable {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
-            Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            Dialogable dd = new CustomDialog(selected, Names.EDITOR_BUTTON_TYPE.ADD, docEditorPanelSceneStage);
+            DocManager dm = new CustomManager();
+            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
             EditorPanelable result = dd.getResult();
             if (result != null){
-                
+                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(result);
+                if (!newDocsFromDB.isEmpty()){
+                    tableData.add(newDocsFromDB.get(0));
+                }
             }
         }
         else {

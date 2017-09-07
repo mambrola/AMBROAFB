@@ -8,6 +8,8 @@
 <?import ambro.* ?>
 <?import ambroafb.currencies.*?>
 <?import ambroafb.docs.*?>
+<?import ambroafb.accounts.*?>
+
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/customdialog.css"
                               xmlns:fx="http://javafx.com/fxml/1" 
@@ -18,14 +20,14 @@
             <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
-                        <Label text="%doc_date" /> 
+                        <Label text="%doc_date" styleClass="validationMessage" /> 
                         <ADatePicker fx:id="docDate" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="" /> 
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="%doc_in_doc_date" /> 
+                        <Label text="%doc_in_doc_date" styleClass="validationMessage" /> 
                         <ADatePicker fx:id="docInDocDate" />
                     </VBox>
                 </children> 
@@ -33,12 +35,12 @@
             <HBox styleClass="oneHalf">
                 <children>
                     <VBox styleClass="couple">
-                        <Label text="%debit" /> 
-                        <ComboBox fx:id="debits" />
+                        <Label text="%debit" styleClass="validationMessage" /> 
+                        <AccountComboBox fx:id="debits" />
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="%credit" /> 
-                        <ComboBox fx:id="credits" />
+                        <Label text="%credit" styleClass="validationMessage" /> 
+                        <AccountComboBox fx:id="credits" />
                     </VBox>
                 </children> 
             </HBox>
@@ -54,7 +56,7 @@
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="%doc_code" styleClass="validationMessage" /> 
-                        <TextField fx:id="docCode" />
+                        <DocCodeComboBox fx:id="docCodes" />
                     </VBox>
                 </children> 
             </HBox>
