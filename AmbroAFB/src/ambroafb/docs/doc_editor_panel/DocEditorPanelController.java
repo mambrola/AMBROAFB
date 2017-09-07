@@ -76,8 +76,7 @@ public class DocEditorPanelController implements Initializable {
     private enum CLASS_TYPE {OBJECT, DIALOG, FILTER, CONTROLLER};
     
     private ObservableList<Doc> tableData;
-    private final DocEditorPanelModel editorPanelModel = new DocEditorPanelModel();
-    
+
     @FXML
     private void delete(ActionEvent e) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();

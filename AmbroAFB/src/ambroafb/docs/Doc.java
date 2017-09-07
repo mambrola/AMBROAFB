@@ -7,7 +7,6 @@ package ambroafb.docs;
 
 import ambro.AView;
 import ambroafb.accounts.Account;
-import ambroafb.docs.types.DocComponent;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -72,7 +71,6 @@ public class Doc extends EditorPanelable {
     private int docType;
     
     private static final String DB_VIEW_NAME = "docs_whole";
-    private DocComponent dialogAbstraction;
     
     private final int markerDefaultValue = 0;
     private final String isoDefaultValue = "GEL";
