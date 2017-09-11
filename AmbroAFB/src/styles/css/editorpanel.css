@@ -1,1 +1,8 @@
-@import url(/styles/css/core.css);#formNode{-fx-spacing:20;-fx-padding:3 10 3 10}#search{-fx-min-width:250}
+@import url("/styles/css/core.css");
+#formNode {
+  -fx-spacing: 20;
+  -fx-padding: 3 10 3 10;
+}
+#search {
+  -fx-min-width: 250;
+}

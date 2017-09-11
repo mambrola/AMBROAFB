@@ -6,22 +6,30 @@
 package ambroafb.docs.types.custom.dialog;
 
 import ambro.ADatePicker;
+import ambroafb.accounts.Account;
 import ambroafb.accounts.AccountComboBox;
+import ambroafb.currencies.IsoComboBox;
 import ambroafb.docs.Doc;
 import ambroafb.docs.DocCodeComboBox;
+import ambroafb.general.DBUtils;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
+import authclient.db.ConditionBuilder;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -43,7 +51,9 @@ public class CustomDialogController implements Initializable {
     private DocCodeComboBox docCodes;
     
     @FXML
-    private TextField amount, currency, descrip;
+    private TextField amount, descrip;
+    @FXML
+    private IsoComboBox currency;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -63,7 +73,22 @@ public class CustomDialogController implements Initializable {
         permissionToClose = true;
         
         Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
-    }    
+        
+        currency.setValueToGEL();
+        if (currency.getValue() != null){
+            resetAccounts(debits.getItems(), currency.getValue());
+            resetAccounts(credits.getItems(), currency.getValue());
+        }
+        
+        currency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            resetAccounts(debits.getItems(), newValue);
+            resetAccounts(credits.getItems(), newValue);
+        });
+    }
+    
+    private void resetAccounts(ObservableList<Account> items, String newValue){
+        new Thread(new FetchAccountsFromDB(items, newValue)).start();
+    }
 
     public void bindDoc(Doc doc) {
         this.doc = doc;
@@ -73,7 +98,7 @@ public class CustomDialogController implements Initializable {
             debits.valueProperty().bindBidirectional(doc.debitProperty());
             credits.valueProperty().bindBidirectional(doc.creditProperty());
             amount.textProperty().bindBidirectional(doc.amountProperty());
-            currency.textProperty().bindBidirectional(doc.isoProperty());
+            currency.valueProperty().bindBidirectional(doc.isoProperty());
             docCodes.valueProperty().bindBidirectional(doc.docCodeProperty());
             descrip.textProperty().bindBidirectional(doc.descripProperty());
             
@@ -115,6 +140,28 @@ public class CustomDialogController implements Initializable {
     
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
+    }
+
+    private static class FetchAccountsFromDB implements Runnable {
+
+        private final ObservableList<Account> items;
+        private final String iso;
+        private final String DB_TABLE_NAME = "accounts";
+        
+        public FetchAccountsFromDB(ObservableList<Account> items, String iso) {
+            this.items = items;
+            this.iso = iso;
+        }
+
+        @Override
+        public void run() {
+            JSONObject params = new ConditionBuilder().where().and("iso", "=", iso).condition().build();
+            ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_TABLE_NAME, params);
+            accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
+            Platform.runLater(() -> {
+                items.setAll(accountFromDB);
+            });
+        }
     }
     
 }

@@ -90,6 +90,8 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     private static final String DB_SPECIFIC_TABLE_NAME = "product_specific_descrips";
     @JsonIgnore
     private static final String DB_TABLE_NAME = "products";
+    @JsonIgnore
+    private static final String DB_DELETE_PROCEDURE_NAME = "general_delete";
     
     public static final int ABREVIATION_LENGTH = 2;
     public static final int FORMER_LENGTH = 2;
@@ -187,8 +189,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     }
     
     public static boolean deleteOneFromDB(int productId){
-        System.out.println("delete from db...??");
-        return false;
+        return DBUtils.deleteObjectFromDB(DB_DELETE_PROCEDURE_NAME, DB_TABLE_NAME, productId);
     }
     
     

@@ -1,1 +1,30 @@
-.label{-fx-font-weight:bold;-fx-font-size:.9em;-fx-padding:1 0 1 2}.w1 .combo-box,.w1 .date-picker,.w1 .text-field{-fx-pref-width:480}.w2 .combo-box,.w2 .date-picker,.w2 .text-field{-fx-pref-width:225}.w3 .combo-box,.w3 .date-picker,.w3 .text-field{-fx-pref-width:140}.w2,.w3{-fx-spacing:30}.button{-fx-font-weight:bold}:disabled{-fx-opacity:.9}
+.label {
+  -fx-font-weight: bold;
+  -fx-font-size: 0.9em;
+  -fx-padding: 1 0 1 2;
+}
+.w1 .text-field,
+.w1 .combo-box,
+.w1 .date-picker {
+  -fx-pref-width: 480;
+}
+.w2 .text-field,
+.w2 .combo-box,
+.w2 .date-picker {
+  -fx-pref-width: 225;
+}
+.w3 .text-field,
+.w3 .combo-box,
+.w3 .date-picker {
+  -fx-pref-width: 140;
+}
+.w2,
+.w3 {
+  -fx-spacing: 30;
+}
+.button {
+  -fx-font-weight: bold;
+}
+*:disabled {
+  -fx-opacity: 0.9;
+}

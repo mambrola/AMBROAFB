@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
+import javafx.util.StringConverter;
 import org.json.JSONObject;
 
 /**
@@ -22,7 +23,25 @@ public class DocCodeComboBox extends ComboBox<DocCode> {
     public DocCodeComboBox(){
         super();
         
+        this.setEditable(true);
+        this.setConverter(new customStringConverter());
         new Thread(new FetchDataFromDB(this.getItems())).start();
+    }
+    
+    private class customStringConverter extends StringConverter<DocCode> {
+
+        @Override
+        public String toString(DocCode object) {
+            return object.getDocCode();
+        }
+
+        @Override
+        public DocCode fromString(String string) {
+            DocCode docCode = new DocCode();
+            docCode.setDocCode(string);
+            return docCode;
+        }
+        
     }
 
     private class FetchDataFromDB implements Runnable {
@@ -42,7 +61,6 @@ public class DocCodeComboBox extends ComboBox<DocCode> {
                 items.setAll(itemsFromDB);
             });
         }
-        
     }
     
 }

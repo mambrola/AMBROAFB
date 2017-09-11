@@ -1,1 +1,5 @@
-@import url(/styles/css/core.css);#formPane{-fx-min-width:650px;-fx-max-width:650px}
+@import url("/styles/css/core.css");
+#formPane {
+  -fx-min-width: 650px;
+  -fx-max-width: 650px;
+}

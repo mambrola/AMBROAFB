@@ -184,7 +184,7 @@ public class DBUtils {
      */
     public static <T> T saveObjectToDBSimple(Object source, String dbTableName){
         try {
-            JSONObject targetJson = Utils.getJSONFromClass(source);
+            JSONObject targetJson = authclient.Utils.toUnderScore(Utils.getJSONFromClass(source));
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             JSONObject newSourceFromDB = dbClient.callProcedureAndGetAsJson("general_insert_update_simple", dbTableName, dbClient.getLang(), targetJson).getJSONObject(0);
             
@@ -203,7 +203,7 @@ public class DBUtils {
      * So after this function the element will has every old value and a DB id too.
      * @param <T>
      * @param source The element which must save to DB.
-     * @param tableName The DB table name in singular form (ex: client, product ...)
+     * @param tableName The DB table name. (Specific for clients and products: client, product - singular form)
      *                                  
      * @return 
      */

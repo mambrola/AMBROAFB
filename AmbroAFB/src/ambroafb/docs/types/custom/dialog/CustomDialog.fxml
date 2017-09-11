@@ -24,11 +24,12 @@
                         <ADatePicker fx:id="docDate" />
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="" /> 
-                    </VBox>
-                    <VBox styleClass="couple">
                         <Label text="%doc_in_doc_date" styleClass="validationMessage" /> 
                         <ADatePicker fx:id="docInDocDate" />
+                    </VBox>
+                    <VBox styleClass="couple">
+                        <Label text="%currency" />
+                        <IsoComboBox fx:id="currency" />
                     </VBox>
                 </children> 
             </HBox>
@@ -51,19 +52,11 @@
                         <TextField fx:id="amount" />
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="%currency" />
-                        <TextField fx:id="currency" disable="true"/>
-                    </VBox>
-                    <VBox styleClass="couple">
                         <Label text="%doc_code" styleClass="validationMessage" /> 
                         <DocCodeComboBox fx:id="docCodes" />
                     </VBox>
-                </children> 
-            </HBox>
-            <HBox styleClass="one">
-                <children>
                     <VBox styleClass="couple">
-                        <Label text="%descrip" /> 
+                        <Label text="%doc_descrip" />
                         <TextField fx:id="descrip" />
                     </VBox>
                 </children> 

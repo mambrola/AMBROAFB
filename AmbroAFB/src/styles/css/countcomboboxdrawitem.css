@@ -1,1 +1,16 @@
-#rootPane{-fx-border-width:1;-fx-border-color:#000}#numberPane{-fx-pref-width:40;-fx-border-color:transparent #000 transparent transparent}#down,#up{-fx-min-height:12.5;-fx-max-height:12.5}#numberText{-fx-font-size:20}
+#rootPane {
+  -fx-border-width: 1;
+  -fx-border-color: black;
+}
+#numberPane {
+  -fx-pref-width: 40;
+  -fx-border-color: transparent black transparent transparent;
+}
+#up,
+#down {
+  -fx-min-height: 12.5;
+  -fx-max-height: 12.5;
+}
+#numberText {
+  -fx-font-size: 20;
+}

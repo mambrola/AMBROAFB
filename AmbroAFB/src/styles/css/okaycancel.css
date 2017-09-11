@@ -1,1 +1,5 @@
-@import url(/styles/css/core.css);#formNode{-fx-padding:10px 0 10px 10px;-fx-spacing:30}
+@import url("/styles/css/core.css");
+#formNode {
+  -fx-padding: 10px 0 10px 10px;
+  -fx-spacing: 30;
+}

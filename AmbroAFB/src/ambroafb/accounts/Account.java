@@ -177,7 +177,7 @@ public class Account extends EditorPanelable {
     public String toString() {
         String toString = "";
         if (!accountNumber.get().isEmpty() && !descrip.get().isEmpty())
-            toString = accountNumber.get() + " - " + descrip.get();
+            toString = accountNumber.get() + "(" + iso.get() + ")" + " - " + descrip.get();
         return toString;
     }
     
