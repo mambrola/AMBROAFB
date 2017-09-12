@@ -74,12 +74,6 @@ public class CustomDialogController implements Initializable {
         
         Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
         
-        currency.setValueToGEL();
-        if (currency.getValue() != null){
-            resetAccounts(debits.getItems(), currency.getValue());
-            resetAccounts(credits.getItems(), currency.getValue());
-        }
-        
         currency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             resetAccounts(debits.getItems(), newValue);
             resetAccounts(credits.getItems(), newValue);

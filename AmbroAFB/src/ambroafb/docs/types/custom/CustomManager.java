@@ -25,7 +25,6 @@ public class CustomManager implements DocManager {
     
     private final String DB_VIEW_NAME = "docs_whole";
     private final String DB_DELETE_PROCEDURE_NAME = "general_delete";
-    private final String DB_DOC_INSERT_UPDATE = "general_insert_update_simple";
     private final String DB_TABLE_NAME = "docs";
     private Doc doc, docBackup;
 
@@ -38,7 +37,6 @@ public class CustomManager implements DocManager {
     @Override
     public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent) {
         Doc newDoc = (Doc) newDocComponent;
-//        Doc newFromDB = DBUtils.saveObjectToDBByProcedure(newDoc, DB_DOC_INSERT_UPDATE);
         Doc newFromDB = DBUtils.saveObjectToDBSimple(newDoc, "docs");
         ArrayList<Doc> docsFromDB = new ArrayList<>();
         if (newFromDB != null){

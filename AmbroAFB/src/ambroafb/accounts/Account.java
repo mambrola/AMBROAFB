@@ -150,12 +150,6 @@ public class Account extends EditorPanelable {
     }
 
     @Override
-    public boolean equals(Object other){
-        if (other == null) return false;
-        return getRecId() == ((Account)other).getRecId(); // Doc  (in table)  has not full info for Account, so this equal works as full data accounts as partly data accounts.
-    }
-    
-    @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
         return  getAccount() == other.getAccount() &&
@@ -177,7 +171,7 @@ public class Account extends EditorPanelable {
     public String toString() {
         String toString = "";
         if (!accountNumber.get().isEmpty() && !descrip.get().isEmpty())
-            toString = accountNumber.get() + "(" + iso.get() + ")" + " - " + descrip.get();
+            toString = accountNumber.get() + " - " + descrip.get();
         return toString;
     }
     

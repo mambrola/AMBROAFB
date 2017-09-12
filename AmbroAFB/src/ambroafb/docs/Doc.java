@@ -21,6 +21,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.image.ImageView;
@@ -39,19 +40,19 @@ public class Doc extends EditorPanelable {
     private final IntegerProperty parentRecId;
     private final IntegerProperty processId;
     
-    @AView.Column(title = "%doc_date", width = "130", styleClass = "textCenter")
+    @AView.Column(title = "%doc_date", width = "100", styleClass = "textCenter")
     private final ObjectProperty<LocalDate> docDateObj;
 
-    @AView.Column(title = "%doc_in_doc_date", width = "130", styleClass = "textCenter")
+    @AView.Column(title = "%doc_in_doc_date", width = "100", styleClass = "textCenter")
     private final ObjectProperty<LocalDate> docInDocDateObj;
     
     @AView.Column(title = "%debit", width = "230")
+    private final StringProperty debitDescrip;
     private final ObjectProperty<Account> debitObj;
-//    private final StringProperty debitDescrip;
     
     @AView.Column(title = "%credit", width = "230")
+    private final StringProperty creditDescrip;
     private final ObjectProperty<Account> creditObj;
-//    private final StringProperty creditDescrip;
     
     @AView.Column(title = "%iso", width = "50", styleClass = "textCenter")
     private final StringProperty iso;
@@ -59,7 +60,7 @@ public class Doc extends EditorPanelable {
     @AView.Column(title = "%amount", width = "80", styleClass = "textRight")
     private final StringProperty amount;
     
-    @AView.Column(title = "%docCode", width = "80")
+    @AView.Column(title = "%doc_code", width = "130")
     private final ObjectProperty<DocCode> docCode;
     
     @AView.Column(title = "%doc_descrip", width = "270")
@@ -71,7 +72,7 @@ public class Doc extends EditorPanelable {
     private static final String DB_VIEW_NAME = "docs_whole";
     
     private final int markerDefaultValue = 0;
-//    private final String isoDefaultValue = "GEL";
+    private final String isoDefaultValue = "GEL";
     private final float amountDefaultValue = -1; // for ADD dialog, that clone method does not throw exception.
     private final int ownerIdDefaultValue = -1;      // for ADD dialog, that clone method does not throw exception.
     
@@ -82,29 +83,29 @@ public class Doc extends EditorPanelable {
         docDateObj = new SimpleObjectProperty<>(LocalDate.now());
         docInDocDateObj = new SimpleObjectProperty<>(LocalDate.now());
         
-//        debitDescrip = new SimpleStringProperty("");
+        debitDescrip = new SimpleStringProperty("");
         debitObj = new SimpleObjectProperty<>(new Account());
         
-//        creditDescrip = new SimpleStringProperty("");
+        creditDescrip = new SimpleStringProperty("");
         creditObj = new SimpleObjectProperty<>(new Account());
         
-        iso = new SimpleStringProperty("");
+        iso = new SimpleStringProperty(isoDefaultValue);
         amount = new SimpleStringProperty("" + amountDefaultValue);
         docCode = new SimpleObjectProperty<>(new DocCode());
         descrip = new SimpleStringProperty("");
         ownerId = new SimpleIntegerProperty(ownerIdDefaultValue);
         
-//        debitObj.addListener((ObservableValue<? extends Account> observable, Account oldValue, Account newValue) -> {
-//            if (newValue != null){
-//                debitDescrip.set(newValue.getDescrip());
-//            }
-//        });
-//        
-//        creditObj.addListener((ObservableValue<? extends Account> observable, Account oldValue, Account newValue) -> {
-//            if (newValue != null){
-//                creditDescrip.set(newValue.getDescrip());
-//            }
-//        });
+        debitObj.addListener((ObservableValue<? extends Account> observable, Account oldValue, Account newValue) -> {
+            if (newValue != null){
+                debitDescrip.set(newValue.getDescrip());
+            }
+        });
+        
+        creditObj.addListener((ObservableValue<? extends Account> observable, Account oldValue, Account newValue) -> {
+            if (newValue != null){
+                creditDescrip.set(newValue.getDescrip());
+            }
+        });
     }
     
     private String convertDateToString(LocalDate date){
@@ -265,11 +266,11 @@ public class Doc extends EditorPanelable {
     
     public void setDebitDescrip(String descrip){
         debitObj.get().setDescrip(descrip);
-//        debitDescrip.set(descrip);
+        debitDescrip.set(descrip);
     }
     
     public void setCreditId(int creditId){
-        creditObj.get().setRecId(recId);
+        creditObj.get().setRecId(creditId);
     }
     
     public void setCreditAccount(int accountNumber){
@@ -278,7 +279,7 @@ public class Doc extends EditorPanelable {
     
     public void setCreditDescrip(String descrip){
         creditObj.get().setDescrip(descrip);
-//        creditDescrip.set(descrip);
+        creditDescrip.set(descrip);
     }
     
     public void setIso(String iso){
@@ -330,7 +331,9 @@ public class Doc extends EditorPanelable {
         setDocInDocDate(otherDoc.getDocInDocDate());
         setIso(otherDoc.getIso());
         debitObj.get().copyFrom(otherDoc.debitProperty().get());
+        debitDescrip.set(otherDoc.debitProperty().get().getDescrip());
         creditObj.get().copyFrom(otherDoc.creditProperty().get());
+        creditDescrip.set(otherDoc.creditProperty().get().getDescrip());
         setAmount(otherDoc.getAmount());
         setDocCode(otherDoc.getDocCode());
         setDescrip(otherDoc.getDescrip());
@@ -343,26 +346,13 @@ public class Doc extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         Doc docBackup = (Doc) backup;
         
-//        System.out.println("doc: " + toString());
-//        System.out.println("docBackup: " + docBackup);
-        
-        
-        System.out.println("debitObj.get().getRecId(): " + debitObj.get().getRecId());
-        System.out.println("debitObj.get().getRecId(): " + docBackup.debitProperty().get().getRecId());
-        
-        System.out.println("credit.get().getRecId(): " + creditObj.get().getRecId());
-        System.out.println("credit.get().getRecId(): " + docBackup.creditProperty().get().getRecId());
-        
-//        System.out.println("debitObj.get().equals(docBackup.debitProperty().get()): " + debitObj.get().equals(docBackup.debitProperty().get()));
-//        System.out.println("creditObj.get().equals(docBackup.creditProperty().get()): " + creditObj.get().equals(docBackup.creditProperty().get()));
-        
         return  getParentRecId() == docBackup.getParentRecId() &&
                 getProcessId() == docBackup.getProcessId() &&
                 getDocDate().equals(docBackup.getDocDate()) &&
                 getDocInDocDate().equals(docBackup.getDocInDocDate()) &&
                 getIso().equals(docBackup.getIso()) &&
-                debitObj.get().equals(docBackup.debitProperty().get()) &&
-                creditObj.get().equals(docBackup.creditProperty().get()) &&
+                debitObj.get().compares(docBackup.debitProperty().get()) &&
+                creditObj.get().compares(docBackup.creditProperty().get()) &&
                 getAmount().equals(docBackup.getAmount()) &&
                 getDocCode().equals(docBackup.getDocCode()) &&
                 getDescrip().equals(docBackup.getDescrip()) &&
@@ -404,7 +394,8 @@ public class Doc extends EditorPanelable {
                 @Override
                 public void updateItem(Integer marker, boolean empty) {
                     if (empty) {
-                        setGraphic(null);
+//                        setGraphic(null);
+                        setText(null);
                     } else {
 //                        String imgPath = DOC_NO_CHILD_IMG_URL;
                         String imgPath = "\u25EF";
