@@ -40,7 +40,7 @@ public class Doc extends EditorPanelable {
     private final IntegerProperty parentRecId;
     private final IntegerProperty processId;
     
-    @AView.Column(title = "%doc_date", width = "100", styleClass = "textCenter")
+    @AView.Column(title = "%doc_date", width = "120", styleClass = "textCenter")
     private final ObjectProperty<LocalDate> docDateObj;
 
     @AView.Column(title = "%doc_in_doc_date", width = "100", styleClass = "textCenter")
