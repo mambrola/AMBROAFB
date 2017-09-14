@@ -22,6 +22,15 @@ public class AccountComboBox extends ComboBox<Account> {
     public AccountComboBox(){
         super();
         
+    }
+    
+    /**
+     * The method fills comboBox by accounts from DB.
+     * Note: method starts thread and fetch data in it. If this method call in AccountComboBox  constructor, they may cause problem
+     * for other class, where this comboBox use -  it will become that other class fetch thread execute first and after execute this fetch.
+     * So the list will not be change from other class.
+     */
+    public void fillComboBox(){
         new Thread(new FetchDataFromDB(this.getItems())).start();
     }
     

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -76,13 +75,13 @@ public class CustomDialogController implements Initializable {
         Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
         
         currency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            resetAccounts(debits.getItems(), newValue);
-            resetAccounts(credits.getItems(), newValue);
+            //
+            resetAccounts(newValue);
         });
     }
     
-    private void resetAccounts(ObservableList<Account> items, String newValue){
-        new Thread(new FetchAccountsFromDB(items, newValue)).start();
+    private void resetAccounts(String newValue){
+        new Thread(new FetchAccountsFromDB(newValue)).start();
     }
 
     public void bindDoc(Doc doc) {
@@ -137,14 +136,12 @@ public class CustomDialogController implements Initializable {
         return okayCancelController;
     }
 
-    private static class FetchAccountsFromDB implements Runnable {
+    private class FetchAccountsFromDB implements Runnable {
 
-        private final ObservableList<Account> items;
         private final String iso;
         private final String DB_TABLE_NAME = "accounts";
         
-        public FetchAccountsFromDB(ObservableList<Account> items, String iso) {
-            this.items = items;
+        public FetchAccountsFromDB(String iso) {
             this.iso = iso;
         }
 
@@ -154,7 +151,10 @@ public class CustomDialogController implements Initializable {
             ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_TABLE_NAME, params);
             accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
             Platform.runLater(() -> {
-                items.setAll(accountFromDB);
+                debits.getItems().clear();
+                debits.getItems().addAll(accountFromDB); // not use setAll method because by this method "debits" and "credits" components will has the same list object.
+                credits.getItems().clear();
+                credits.getItems().addAll(accountFromDB);
             });
         }
     }

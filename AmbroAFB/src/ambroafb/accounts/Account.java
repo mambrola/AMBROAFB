@@ -171,9 +171,21 @@ public class Account extends EditorPanelable {
     public String toString() {
         String toString = "";
         if (!accountNumber.get().isEmpty() && !descrip.get().isEmpty())
-            toString = accountNumber.get() + " - " + descrip.get();
+            toString = getSpaces(accountNumber.get().length()) + 
+                        accountNumber.get() + " / " + iso.get() + " - " + descrip.get();
         return toString;
     }
     
+    private final int max_account_num_length = 10;
     
+    private String getSpaces(int accountNumLength){
+        String result = "";
+        int diff = max_account_num_length - accountNumLength;
+        if (diff > 0){
+            for (int i = 0; i < diff; i++) {
+                result += " ";
+            }
+        }
+        return result;
+    }
 }
