@@ -25,6 +25,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Paint;
 import javafx.util.Callback;
 import org.json.JSONObject;
 
@@ -397,10 +398,8 @@ public class Doc extends EditorPanelable {
                 @Override
                 public void updateItem(Integer marker, boolean empty) {
                     if (empty) {
-//                        setGraphic(null);
                         setText(null);
                     } else {
-//                        String imgPath = DOC_NO_CHILD_IMG_URL;
                         String imgPath = "\u25EF";
                         switch(marker){
                             case -1:
@@ -412,9 +411,8 @@ public class Doc extends EditorPanelable {
                             default:
                                 break;
                         }
-//                        view.setImage(new Image(imgPath));
-//                        setGraphic(view);
                         setText(imgPath);
+                        setTextFill(Paint.valueOf("black"));
                     }
                 }
             };
