@@ -106,7 +106,7 @@ public class ChargeUtility extends EditorPanelable {
     }
 
     public float getAmount() {
-        return Float.parseFloat(amount.get());
+        return amount.get().isEmpty() ? amountDefaultValue : Float.parseFloat(amount.get());
     }
 
     public String getDocCode() {
@@ -149,7 +149,7 @@ public class ChargeUtility extends EditorPanelable {
     }
 
     public float getVat() {
-        return Float.parseFloat(vat.get());
+        return vat.get().isEmpty() ? vatDefaultValue : Float.parseFloat(vat.get());
     }
 
     // Setters:

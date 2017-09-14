@@ -87,7 +87,7 @@ public class PaymentUtility extends EditorPanelable {
     }
     
     public float getAmount(){
-        return Float.parseFloat(amount.get());
+        return amount.get().isEmpty() ? amountDefaultValue : Float.parseFloat(amount.get());
     }
     
     public String getDocCode(){

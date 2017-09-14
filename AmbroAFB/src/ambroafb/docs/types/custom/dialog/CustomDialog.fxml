@@ -56,7 +56,7 @@
                 <children>
                     <VBox styleClass="couple">
                         <Label text="%amount" styleClass="validationMessage" /> 
-                        <TextField fx:id="amount" />
+                        <TextField fx:id="amount" alignment="BASELINE_RIGHT" />
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="" /> 

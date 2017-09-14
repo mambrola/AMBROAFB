@@ -209,7 +209,7 @@ public class Doc extends EditorPanelable {
     }
     
     public Float getAmount(){
-        return Float.valueOf(amount.get());
+        return amount.get().isEmpty() ? amountDefaultValue : Float.valueOf(amount.get());
     }
     
     public String getDocCode(){

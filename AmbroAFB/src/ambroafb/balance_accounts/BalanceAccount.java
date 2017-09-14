@@ -131,7 +131,7 @@ public class BalanceAccount extends EditorPanelable {
     }
 
     public int getBalAcc(){
-        return Integer.parseInt(balAcc.get());
+        return balAcc.get().isEmpty() ? 0 : Integer.parseInt(balAcc.get());
     }
     
     public String getDescrip(){

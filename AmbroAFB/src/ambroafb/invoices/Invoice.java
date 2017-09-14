@@ -18,9 +18,9 @@ import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.invoices.filter.InvoiceFilterModel;
+import ambroafb.invoices.helper.InvoiceFinaces;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
-import ambroafb.invoices.helper.InvoiceFinaces;
 import ambroafb.invoices.helper.InvoiceStatusClarify;
 import ambroafb.licenses.helper.LicenseFinaces;
 import ambroafb.products.Product;
@@ -773,7 +773,7 @@ public class Invoice extends EditorPanelable {
         
         @JsonIgnore
         public int getLicenseNumber(){
-            return Integer.parseInt(licenseNumber.get());
+            return licenseNumber.get().isEmpty() ? 0 : Integer.parseInt(licenseNumber.get());
         }
         
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
