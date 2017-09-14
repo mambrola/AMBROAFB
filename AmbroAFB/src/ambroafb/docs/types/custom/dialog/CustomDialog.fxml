@@ -33,13 +33,20 @@
                     </VBox>
                 </children> 
             </HBox>
-            <HBox styleClass="oneHalf">
+            <HBox styleClass="twoThirds">
                 <children>
-                    <VBox styleClass="couple">
+                    <VBox styleClass="coupleTwoThird">
                         <Label text="%debit" styleClass="validationMessage" /> 
                         <AccountComboBox fx:id="debits" />
                     </VBox>
-                    <VBox styleClass="couple">
+                </children> 
+            </HBox>
+            <HBox styleClass="twoThirds">
+                <children>
+                    <VBox styleClass="coupleOneThird">
+                        <Label text="" /> 
+                    </VBox>
+                    <VBox styleClass="coupleTwoThird">
                         <Label text="%credit" styleClass="validationMessage" /> 
                         <AccountComboBox fx:id="credits" />
                     </VBox>
@@ -52,9 +59,16 @@
                         <TextField fx:id="amount" />
                     </VBox>
                     <VBox styleClass="couple">
+                        <Label text="" /> 
+                    </VBox>
+                    <VBox styleClass="couple">
                         <Label text="%doc_code" /> 
                         <DocCodeComboBox fx:id="docCodes" />
                     </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="one">
+                <children>
                     <VBox styleClass="couple">
                         <Label text="%doc_descrip" styleClass="validationMessage" />
                         <TextField fx:id="descrip" />
