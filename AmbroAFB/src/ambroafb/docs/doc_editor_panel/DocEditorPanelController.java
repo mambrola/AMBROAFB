@@ -88,10 +88,7 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocManager dm = new CustomManager();
-            if (!selected.isChildDoc()){
-                dm = DocManagersFactory.getDocManager(selected.getDocType());
-            }
+            DocManager dm = DocManagersFactory.getDocManager(selected);
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
             Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.DELETE, docFromDB);
             EditorPanelable result = dialog.getResult();
@@ -119,10 +116,7 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocManager dm = new CustomManager();
-            if (!selected.isChildDoc()){
-                dm = DocManagersFactory.getDocManager(selected.getDocType());
-            }
+            DocManager dm = DocManagersFactory.getDocManager(selected);
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
             Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.EDIT, docFromDB);
             EditorPanelable result = dialog.getResult();
@@ -160,10 +154,7 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocManager dm = new CustomManager();
-            if (!selected.isChildDoc()){
-                dm = DocManagersFactory.getDocManager(selected.getDocType());
-            }
+            DocManager dm = DocManagersFactory.getDocManager(selected);
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
             Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.VIEW, docFromDB);
             dialog.showAndWait();
@@ -209,7 +200,7 @@ public class DocEditorPanelController implements Initializable {
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            DocManager dm = DocManagersFactory.getDocManager(selected.getDocType());
+            DocManager dm = DocManagersFactory.getDocManager(selected);
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
             EditorPanelable cloneFromReal = docFromDB.cloneWithoutID(); // Without this coping, program make "edit" action.
             Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, cloneFromReal);

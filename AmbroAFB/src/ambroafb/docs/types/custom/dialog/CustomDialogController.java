@@ -50,8 +50,9 @@ public class CustomDialogController implements Initializable {
     @FXML
     private DocCodeComboBox docCodes;
     
-    @FXML
+    @FXML @ContentNotEmpty
     private TextField amount, descrip;
+    
     @FXML
     private IsoComboBox currency;
     

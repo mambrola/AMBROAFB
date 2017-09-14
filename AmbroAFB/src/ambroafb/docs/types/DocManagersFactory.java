@@ -5,6 +5,8 @@
  */
 package ambroafb.docs.types;
 
+import ambroafb.docs.Doc;
+import ambroafb.docs.types.custom.CustomManager;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
 import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 
@@ -15,18 +17,29 @@ import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 public class DocManagersFactory {
     
     /**
-     * The method returns specific DocManager by docType.
-     * @param docType
+     * The method returns specific DocManager by doc object docType and parent/child status.
+     * @param doc
      * @return 
      */
-    public static DocManager getDocManager(int docType){
-        switch(docType){
-            case 82:
-                return new PaymentUtilityManager();
-            case 12:
+    public static DocManager getDocManager(Doc doc){
+        if (doc.isChildDoc()){
+            return new CustomManager();
+        }
+        else if (doc.isParentDoc()){
+            if (doc.getDocType() == 12){
                 return new ChargeUtilityManager();
-            default:
-                return null;
+            }
+            else {
+                return null; // aq unda saerto scena list-is ???
+            }
+        }
+        else { // Doc has not children
+            if (doc.getDocType() == 82){
+                return new PaymentUtilityManager();
+            }
+            else {
+                return new CustomManager();
+            }
         }
     }
     

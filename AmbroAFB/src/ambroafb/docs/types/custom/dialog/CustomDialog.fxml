@@ -52,11 +52,11 @@
                         <TextField fx:id="amount" />
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="%doc_code" styleClass="validationMessage" /> 
+                        <Label text="%doc_code" /> 
                         <DocCodeComboBox fx:id="docCodes" />
                     </VBox>
                     <VBox styleClass="couple">
-                        <Label text="%doc_descrip" />
+                        <Label text="%doc_descrip" styleClass="validationMessage" />
                         <TextField fx:id="descrip" />
                     </VBox>
                 </children> 

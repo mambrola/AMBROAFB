@@ -78,7 +78,7 @@ public class Doc extends EditorPanelable {
     
     public Doc(){
         marker = new SimpleIntegerProperty(markerDefaultValue);
-        parentRecId = new SimpleIntegerProperty();
+        parentRecId = new SimpleIntegerProperty(-1);
         processId = new SimpleIntegerProperty();
         docDateObj = new SimpleObjectProperty<>(LocalDate.now());
         docInDocDateObj = new SimpleObjectProperty<>(LocalDate.now());
