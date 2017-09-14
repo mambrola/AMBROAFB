@@ -230,6 +230,11 @@ public class Doc extends EditorPanelable {
     }
     
     @JsonIgnore
+    public boolean isChildDoc(){
+        return marker.get() == 1;
+    }
+    
+    @JsonIgnore
     public boolean isParentDoc(){
         return marker.get() == -1;
     }

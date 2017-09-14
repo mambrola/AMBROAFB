@@ -84,7 +84,7 @@ public class DocEditorPanelController implements Initializable {
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             DocManager dm = new CustomManager();
-            if (selected.isParentDoc()){
+            if (!selected.isChildDoc()){
                 dm = DocManagersFactory.getDocManager(selected.getDocType());
             }
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
@@ -110,7 +110,7 @@ public class DocEditorPanelController implements Initializable {
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             DocManager dm = new CustomManager();
-            if (selected.isParentDoc()){
+            if (!selected.isChildDoc()){
                 dm = DocManagersFactory.getDocManager(selected.getDocType());
             }
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
@@ -146,7 +146,7 @@ public class DocEditorPanelController implements Initializable {
         if(dialogStage == null || !dialogStage.isShowing()){
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             DocManager dm = new CustomManager();
-            if (selected.isParentDoc()){
+            if (!selected.isChildDoc()){
                 dm = DocManagersFactory.getDocManager(selected.getDocType());
             }
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
