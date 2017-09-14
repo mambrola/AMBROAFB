@@ -9,6 +9,7 @@ import ambro.AView;
 import ambroafb.accounts.Account;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -349,14 +350,15 @@ public class Doc extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Doc docBackup = (Doc) backup;
-        
+        Account debitAcc = Utils.avoidNullAndReturnEmpty(debitObj.get());
+        Account creditAcc = Utils.avoidNullAndReturnEmpty(creditObj.get());
         return  getParentRecId() == docBackup.getParentRecId() &&
                 getProcessId() == docBackup.getProcessId() &&
                 getDocDate().equals(docBackup.getDocDate()) &&
                 getDocInDocDate().equals(docBackup.getDocInDocDate()) &&
                 getIso().equals(docBackup.getIso()) &&
-                debitObj.get().compares(docBackup.debitProperty().get()) &&
-                creditObj.get().compares(docBackup.creditProperty().get()) &&
+                debitAcc.compares(docBackup.debitProperty().get()) &&
+                creditAcc.compares(docBackup.creditProperty().get()) &&
                 getAmount().equals(docBackup.getAmount()) &&
                 getDocCode().equals(docBackup.getDocCode()) &&
                 getDescrip().equals(docBackup.getDescrip()) &&

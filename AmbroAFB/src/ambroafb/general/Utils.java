@@ -7,6 +7,7 @@ package ambroafb.general;
     
 import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
+import ambroafb.accounts.Account;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.countcombobox.CountComboBox;
@@ -234,6 +235,10 @@ public class Utils {
 //        Bindings.when(strPropRight.isNull().or(strPropRight.isEmpty())).
 //                                            then(".").
 //                                            otherwise(delimiter)
+    }
+    
+    public static Account avoidNullAndReturnEmpty(Account acc){
+        return acc == null ? new Account() : acc;
     }
 
     public static String avoidNullAndReturnString(Object object) {

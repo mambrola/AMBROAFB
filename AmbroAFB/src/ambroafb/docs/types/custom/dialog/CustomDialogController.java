@@ -75,7 +75,6 @@ public class CustomDialogController implements Initializable {
         Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
         
         currency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            //
             resetAccounts(newValue);
         });
     }
@@ -151,11 +150,25 @@ public class CustomDialogController implements Initializable {
             ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_TABLE_NAME, params);
             accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
             Platform.runLater(() -> {
-                debits.getItems().clear();
-                debits.getItems().addAll(accountFromDB); // not use setAll method because by this method "debits" and "credits" components will has the same list object.
-                credits.getItems().clear();
-                credits.getItems().addAll(accountFromDB);
+                fillItemsToList(debits, accountFromDB);
+                fillItemsToList(credits, accountFromDB);
             });
+        }
+        
+        private void fillItemsToList(AccountComboBox accBox, ArrayList<Account> accounts){
+            long oldAccNum = 0;
+                if (accBox.getValue() != null){
+                    oldAccNum = accBox.getValue().getAccount();
+                }
+                accBox.getItems().clear();
+                accBox.getItems().addAll(accounts); // not use setAll method because by this method "debits" and "credits" components will has the same list object.
+                for (Account account : accounts) {
+                    if (account.getAccount() == oldAccNum){
+                        accBox.setValue(account);
+                        break;
+                    }
+                }
+                
         }
     }
     
