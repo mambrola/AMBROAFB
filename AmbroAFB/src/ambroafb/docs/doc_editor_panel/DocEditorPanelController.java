@@ -229,6 +229,21 @@ public class DocEditorPanelController implements Initializable {
         }
     }
     
+    @FXML
+    private void addConvert(ActionEvent e){
+        System.out.println("addConvert method");
+    }
+    
+    @FXML
+    private void addMonthlyAccrual(ActionEvent e){
+        System.out.println("addMonthlyAccrual method");
+    }
+    
+    @FXML
+    private void addRefund(ActionEvent e){
+        System.out.println("addRefund method");
+    }
+    
     /**
      * The method adds payment utility into docs table.
      * @param e 
@@ -281,11 +296,6 @@ public class DocEditorPanelController implements Initializable {
             dialogStage.requestFocus();
             StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
         }
-    }
-    
-    @FXML
-    private void addRefund(ActionEvent e){
-        System.out.println("addRefund method");
     }
     
     /**
