@@ -14,6 +14,11 @@ import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
  */
 public class DocManagersFactory {
     
+    /**
+     * The method returns specific DocManager by docType.
+     * @param docType
+     * @return 
+     */
     public static DocManager getDocManager(int docType){
         switch(docType){
             case 82:

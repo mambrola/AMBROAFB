@@ -117,17 +117,15 @@ public class Doc extends EditorPanelable {
     }
     
     // DB methods:
+    /**
+     * Fetch Docs from DB.
+     * @return 
+     */
     public static ArrayList<Doc> getAllFromDB() {
         JSONObject params = new ConditionBuilder().build();
         ArrayList<Doc> docs = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
         return docs;
     }
-    
-    public static Doc getOneFromDB (int recId){
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
-        return DBUtils.getObjectFromDB(Doc.class, DB_VIEW_NAME, params);
-    }
-    
     
     // Properties:
     public IntegerProperty parentRecIdProperty(){

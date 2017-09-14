@@ -33,7 +33,7 @@ public class CustomManager implements DocManager {
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
         return DBUtils.getObjectFromDB(Doc.class, DB_VIEW_NAME, params);
     }
-
+    
     @Override
     public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent) {
         Doc newDoc = (Doc) newDocComponent;

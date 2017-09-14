@@ -77,6 +77,11 @@ public class DocEditorPanelController implements Initializable {
     
     private ObservableList<Doc> tableData;
 
+    /**
+     * The method removes entry from docs table. If doc is child, Custom dialog scene will be shown. Otherwise, docType variable 
+     * defines which dialog scene must be shown.
+     * @param e 
+     */
     @FXML
     private void delete(ActionEvent e) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
@@ -103,6 +108,11 @@ public class DocEditorPanelController implements Initializable {
         }
     }
     
+    /**
+     * The method edits entry from docs table. If doc is child, Custom dialog scene will be shown. Otherwise, docType variable 
+     * defines which dialog scene must be shown. If selected entry is parent doc,  its every children also change.
+     * @param e 
+     */
     @FXML
     private void edit(ActionEvent e) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
@@ -139,6 +149,11 @@ public class DocEditorPanelController implements Initializable {
         }
     }
     
+    /**
+     * The method views entry from docs table. If doc is child, Custom dialog scene will be shown. Otherwise, docType variable 
+     * defines which dialog scene must be shown.
+     * @param e 
+     */
     @FXML
     private void view(ActionEvent e) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
@@ -159,6 +174,10 @@ public class DocEditorPanelController implements Initializable {
         }
     }
     
+    /**
+     * The method adds custom doc into docs table.
+     * @param e 
+     */
     @FXML
     private void addCustom(ActionEvent e) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
@@ -180,6 +199,10 @@ public class DocEditorPanelController implements Initializable {
         }
     }
     
+    /**
+     * The method adds entry into docs table.  Dialog scene will be the same dialog that is selected.
+     * @param e 
+     */
     @FXML
     private void addBySample(ActionEvent e) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
@@ -206,6 +229,10 @@ public class DocEditorPanelController implements Initializable {
         }
     }
     
+    /**
+     * The method adds payment utility into docs table.
+     * @param e 
+     */
     @FXML
     private void addPaymentUtility(ActionEvent e) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
@@ -229,6 +256,10 @@ public class DocEditorPanelController implements Initializable {
         }
     }
     
+    /**
+     * The method adds charge utility into docs table.
+     * @param e 
+     */
     @FXML
     private void addChargeUtility(ActionEvent e) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
@@ -256,6 +287,11 @@ public class DocEditorPanelController implements Initializable {
     private void addRefund(ActionEvent e){
         System.out.println("addRefund method");
     }
+    
+    /**
+     * The mthod refresh scene. Newly entries fetches from DB.
+     * @param e 
+     */
     @FXML
     private void refresh(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
@@ -306,6 +342,10 @@ public class DocEditorPanelController implements Initializable {
         }
     }
     
+    /**
+     * The method binds editor panel buttons to scene list elements.
+     * @param aView The list components that is on the scene (ATableView, ATreeTableView).
+     */
     public void buttonsMainPropertysBinder (AView<Doc> aView){
         BooleanBinding allowModify = Bindings.createBooleanBinding(() -> {
                                                                     if (aView.getCustomSelectedItem() == null){
