@@ -98,14 +98,17 @@ public class DBUtils {
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
 //            String data = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), params).toString();
             JSONArray data;
-            if (params.length > 0)
-                data = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), params);
-            else
+            if (params.length > 0){
+                Object[] paramsObject = new Object[params.length + 1];
+                paramsObject[0] = dbClient.getLang();
+                System.arraycopy(params, 0, paramsObject, 1, params.length);
+                data = dbClient.callProcedureAndGetAsJson(procName, paramsObject);
+            }
+            else {
                 data = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang());
-            
+            }
             System.out.println(procName + " data from DB: " + data.toString());
             
-//            ObjectMapper mapper = new ObjectMapper();
             return Utils.getListFromJSONArray(listElementClass, data);
         } catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);

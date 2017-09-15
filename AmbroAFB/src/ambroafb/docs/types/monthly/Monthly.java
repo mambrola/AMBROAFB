@@ -74,7 +74,10 @@ public class Monthly extends EditorPanelable {
     public void copyFrom(EditorPanelable other) {
         Monthly otherMonthly = (Monthly) other;
         setDocDate(otherMonthly.getDocDate());
-        setDocs(otherMonthly.getDocs());
+        docs.clear();
+        otherMonthly.getDocs().forEach((othersDoc) -> {
+            docs.add(othersDoc.cloneWithoutID());
+        });
     }
 
     @Override

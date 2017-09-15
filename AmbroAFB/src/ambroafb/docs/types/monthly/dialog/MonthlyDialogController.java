@@ -59,7 +59,7 @@ public class MonthlyDialogController implements Initializable {
     }
 
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
-      if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
         okayCancelController.setButtonsFeatures(buttonType);
@@ -67,6 +67,7 @@ public class MonthlyDialogController implements Initializable {
             DocListDialogSceneComponent lsComp = new DocListDialogSceneComponent();
             lsComp.removeDocDateComponent();
             lsComp.binTo(doc);
+            lsComp.setDiableComponents(buttonType);
             formPane.getChildren().add(1, lsComp);
         });
     }

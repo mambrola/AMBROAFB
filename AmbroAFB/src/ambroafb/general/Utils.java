@@ -378,7 +378,7 @@ public class Utils {
         docs1.sort((Doc d1, Doc d2) -> d1.compareWith(d2));
         docs2.sort((Doc d1, Doc d2) -> d1.compareWith(d2));
         for (int i = 0; i < docs1.size(); i++) {
-            if (docs1.get(i).compareWith(docs2.get(i)) != 0){
+            if (!docs1.get(i).compares(docs2.get(i))){
                 return false;
             }
         }

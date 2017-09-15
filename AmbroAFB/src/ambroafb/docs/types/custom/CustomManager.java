@@ -24,7 +24,7 @@ import org.json.JSONObject;
 public class CustomManager implements DocManager {
     
     private final String DB_VIEW_NAME = "docs_whole";
-    private final String DB_DELETE_PROCEDURE_NAME = "general_delete";
+    private final String DB_DELETE_PROCEDURE_NAME = "doc_delete";
     private final String DB_TABLE_NAME = "docs";
     private Doc doc, docBackup;
 
@@ -47,7 +47,7 @@ public class CustomManager implements DocManager {
 
     @Override
     public boolean deleteOneFromDB(int id) {
-        return DBUtils.deleteObjectFromDB(DB_DELETE_PROCEDURE_NAME, DB_TABLE_NAME, id);
+        return DBUtils.deleteObjectFromDB(DB_DELETE_PROCEDURE_NAME, id);
     }
 
     @Override
