@@ -7,6 +7,7 @@ package ambroafb.accounts;
 
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -130,7 +131,7 @@ public class Account extends EditorPanelable {
     }
 
     @Override
-    public EditorPanelable cloneWithID() {
+    public Account cloneWithID() {
         Account clone = cloneWithoutID();
         clone.setRecId(this.getRecId());
         return clone;
@@ -148,10 +149,23 @@ public class Account extends EditorPanelable {
 //        setRemark(otherAccount.getRemark());
 //        setFlag(otherAccount.getFlag());
     }
+    
+    /**
+     * The method use for partly data accounts (Docs in table list). It compares account numbers and iso. 
+     * If they are same, account are same. Otherwise they are difference.
+     * @param other
+     * @return 
+     */
+    @JsonIgnore
+    public boolean partlyCompare(Account other){
+        return  getAccount() == other.getAccount() &&
+                getIso().equals(other.getIso());
+    }
 
     @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
+        
         return  getAccount() == other.getAccount() &&
                 getIso().equals(other.getIso()) &&
                 getBalAcc() == other.getBalAcc() &&

@@ -108,6 +108,9 @@ public class Doc extends EditorPanelable {
                 creditDescrip.set(newValue.getDescrip());
             }
         });
+        
+        debitObj.get().setIso(isoDefaultValue);
+        creditObj.get().setIso(isoDefaultValue);
     }
     
     private String convertDateToString(LocalDate date){
@@ -357,8 +360,8 @@ public class Doc extends EditorPanelable {
                 getDocDate().equals(docBackup.getDocDate()) &&
                 getDocInDocDate().equals(docBackup.getDocInDocDate()) &&
                 getIso().equals(docBackup.getIso()) &&
-                debitAcc.compares(docBackup.debitProperty().get()) &&
-                creditAcc.compares(docBackup.creditProperty().get()) &&
+                debitAcc.partlyCompare(docBackup.debitProperty().get()) &&
+                creditAcc.partlyCompare(docBackup.creditProperty().get()) &&
                 getAmount().equals(docBackup.getAmount()) &&
                 getDocCode().equals(docBackup.getDocCode()) &&
                 getDescrip().equals(docBackup.getDescrip()) &&
