@@ -7,6 +7,7 @@ package ambroafb.docs.types;
 
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.custom.CustomManager;
+import ambroafb.docs.types.monthly.MonthlyManager;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
 import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 
@@ -30,7 +31,7 @@ public class DocManagersFactory {
                 return new ChargeUtilityManager();
             }
             else {
-                return null; // aq unda saerto scena list-is ???
+                return new MonthlyManager();
             }
         }
         else { // Doc has not children

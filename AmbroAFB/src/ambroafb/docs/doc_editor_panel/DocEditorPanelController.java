@@ -13,6 +13,7 @@ import ambroafb.docs.Doc;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.DocManagersFactory;
 import ambroafb.docs.types.custom.CustomManager;
+import ambroafb.docs.types.monthly.MonthlyManager;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
 import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 import ambroafb.general.Names;
@@ -227,7 +228,25 @@ public class DocEditorPanelController implements Initializable {
     
     @FXML
     private void addMonthlyAccrual(ActionEvent e){
-        System.out.println("addMonthlyAccrual method");
+        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            DocManager dm = new MonthlyManager();
+            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
+            EditorPanelable newMonthly = dd.getResult();
+            if (newMonthly != null){
+                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newMonthly);
+                if (!newDocsFromDB.isEmpty()){
+                    newDocsFromDB.stream().forEach((doc) -> {
+                        tableData.add(doc);
+                    });
+                }
+            }
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+        }
     }
     
     @FXML
