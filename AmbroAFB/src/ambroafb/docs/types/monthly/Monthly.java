@@ -5,9 +5,14 @@
  */
 package ambroafb.docs.types.monthly;
 
+import ambroafb.docs.Doc;
 import ambroafb.general.DateConverter;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -18,9 +23,11 @@ import javafx.beans.property.SimpleObjectProperty;
 public class Monthly extends EditorPanelable {
 
     private final ObjectProperty<LocalDate> docDate;
+    private List<Doc> docs;
     
     public Monthly(){
         docDate = new SimpleObjectProperty<>(LocalDate.now());
+        docs = new ArrayList<>();
     }
     
     public ObjectProperty<LocalDate> docDateProperty(){
@@ -32,9 +39,20 @@ public class Monthly extends EditorPanelable {
         return (docDate.get() == null) ? "" : docDate.get().toString();
     }
     
+    @JsonIgnore
+    public List<Doc> getDocs(){
+        return docs;
+    }
+    
     // Setters:
     public void setDocDate(String docDate){
         this.docDate.set(DateConverter.getInstance().parseDate(docDate));
+    }
+    
+    @JsonIgnore
+    public void setDocs(List<Doc> docList){
+        docs.clear();
+        docs.addAll(docList);
     }
     
     
@@ -56,13 +74,14 @@ public class Monthly extends EditorPanelable {
     public void copyFrom(EditorPanelable other) {
         Monthly otherMonthly = (Monthly) other;
         setDocDate(otherMonthly.getDocDate());
-        
+        setDocs(otherMonthly.getDocs());
     }
 
     @Override
     public boolean compares(EditorPanelable backup) {
         Monthly other = (Monthly) backup;
-        return docDate.get().equals(other.docDateProperty().get());
+        return  docDate.get().equals(other.docDateProperty().get()) &&
+                Utils.compareDocs(docs, other.getDocs());
     }
 
     @Override

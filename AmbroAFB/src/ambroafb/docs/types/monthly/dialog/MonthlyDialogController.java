@@ -6,6 +6,7 @@
 package ambroafb.docs.types.monthly.dialog;
 
 import ambro.ADatePicker;
+import ambroafb.docs.types.monthly.DocListDialogSceneComponent;
 import ambroafb.docs.types.monthly.Monthly;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
@@ -62,6 +63,12 @@ public class MonthlyDialogController implements Initializable {
             setDisableComponents();
         }
         okayCancelController.setButtonsFeatures(buttonType);
+        monthly.getDocs().stream().forEach((doc) -> {
+            DocListDialogSceneComponent lsComp = new DocListDialogSceneComponent();
+            lsComp.removeDocDateComponent();
+            lsComp.binTo(doc);
+            formPane.getChildren().add(1, lsComp);
+        });
     }
     
     private void setDisableComponents(){

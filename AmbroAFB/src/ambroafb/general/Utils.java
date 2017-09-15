@@ -9,6 +9,7 @@ import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
 import ambroafb.accounts.Account;
 import ambroafb.clients.ClientComboBox;
+import ambroafb.docs.Doc;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.countcombobox.CountComboBox;
 import ambroafb.general.countcombobox.CountComboBoxItem;
@@ -368,6 +369,20 @@ public class Utils {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex1);
         }
         return codeAndMsg;
+    }
+    
+    public static boolean compareDocs(List<Doc> docs1, List<Doc> docs2){
+        if (docs1.size() != docs2.size()){
+            return false;
+        }
+        docs1.sort((Doc d1, Doc d2) -> d1.compareWith(d2));
+        docs2.sort((Doc d1, Doc d2) -> d1.compareWith(d2));
+        for (int i = 0; i < docs1.size(); i++) {
+            if (docs1.get(i).compareWith(docs2.get(i)) != 0){
+                return false;
+            }
+        }
+        return true;
     }
     
     /**

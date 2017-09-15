@@ -20,12 +20,13 @@ import javafx.stage.Stage;
  */
 public class MonthlyManager implements DocManager {
     
-    
+    private final String DB_VIEW_NAME = "docs_whole";
 
     @Override
     public EditorPanelable getOneFromDB(int id) {
         return null;
     }
+    
 
     @Override
     public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent) {
