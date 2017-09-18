@@ -31,6 +31,10 @@ public class MonthlyManager implements DocManager {
     public EditorPanelable getOneFromDB(int id) {
         JSONObject params = new ConditionBuilder().where().orGroup().or("rec_id", "=", id).or("parent_rec_id", "=", id).closeGroup().condition().build();
         ArrayList<Doc> docsFromDB = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
+        System.out.println("---------------------------------");
+        for (Doc doc : docsFromDB) {
+            System.out.println(doc);
+        }
         Monthly monthly = new Monthly();
         monthly.setDocs(docsFromDB);
         return monthly;

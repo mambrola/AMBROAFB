@@ -292,6 +292,8 @@ public class Doc extends EditorPanelable {
     
     public void setIso(String iso){
         this.iso.set(iso);
+        debitObj.get().setIso(iso);
+        creditObj.get().setIso(iso);
     }
     
     public void setAmount(Float amount){
@@ -360,6 +362,11 @@ public class Doc extends EditorPanelable {
         Doc docBackup = (Doc) backup;
         Account debitAcc = Utils.avoidNullAndReturnEmpty(debitObj.get());
         Account creditAcc = Utils.avoidNullAndReturnEmpty(creditObj.get());
+        
+        System.out.println("debitAcc: " + debitAcc);
+        System.out.println("docBackup.debitProperty().get(): " + docBackup.debitProperty().get());
+        System.out.println("debitAcc.partlyCompare(docBackup.debitProperty().get()): " + debitAcc.partlyCompare(docBackup.debitProperty().get()));
+        
         return  getParentRecId() == docBackup.getParentRecId() &&
                 getProcessId() == docBackup.getProcessId() &&
                 getDocDate().equals(docBackup.getDocDate()) &&
