@@ -10,27 +10,27 @@
 }
 .one > .couple,
 .one > .couple > * {
-  -fx-pref-width: 800;
+  -fx-pref-width: 780;
 }
 .oneHalf > .couple,
 .oneHalf > .couple > * {
-  -fx-pref-width: 382.5;
+  -fx-pref-width: 372.5;
 }
 .oneThirds > .couple,
 .oneThirds > .couple > *,
 .oneThirds > .couple > .innerCouple > * {
-  -fx-pref-width: 243.33333333;
+  -fx-pref-width: 236.66666667;
 }
 .twoThirds > .coupleOneThird,
 .twoThirds > .coupleOneThird > * {
-  -fx-pref-width: 243.33333333;
+  -fx-pref-width: 236.66666667;
 }
 .twoThirds > .coupleTwoThird,
 .twoThirds > .coupleTwoThird > * {
-  -fx-pref-width: 521.66666667;
+  -fx-pref-width: 508.33333333;
 }
 .oneThirds {
-  -fx-pref-width: 521.66666667;
+  -fx-pref-width: 508.33333333;
 }
 .oneHalf,
 .oneThirds,
@@ -46,8 +46,12 @@
 *:disabled {
   -fx-opacity: 0.9;
 }
-.vContainer {
+#formPaneInner {
+  -fx-min-width: 800px;
+  -fx-max-width: 800px;
   -fx-padding: 10px;
+}
+.vContainer {
   -fx-border-color: black;
   -fx-border-style: dashed;
   -fx-border-width: 2;

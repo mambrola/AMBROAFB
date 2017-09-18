@@ -11,6 +11,7 @@
 <?import ambroafb.accounts.*?>
 
 <fx:root    type="javafx.scene.layout.VBox"
+            fx:id="formPaneInner"
             styleClass="vContainer"
             alignment="CENTER" 
             xmlns:fx="http://javafx.com/fxml/1" 

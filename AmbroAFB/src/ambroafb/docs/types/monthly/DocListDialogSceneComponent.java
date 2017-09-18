@@ -27,6 +27,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -62,6 +63,11 @@ public class DocListDialogSceneComponent extends VBox {
     private ArrayList<Node> focusTraversableNodes;
     private boolean isDocDateRemoved;
     
+    private final String docDatePaneID = "docDatePane";
+            
+    private VBox spaceFiller;
+    private Label spaceFillerLabel;
+    
     public DocListDialogSceneComponent(){
         super();
         assignLoader();
@@ -85,6 +91,10 @@ public class DocListDialogSceneComponent extends VBox {
         currency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             resetAccounts(newValue);
         });
+        spaceFiller = new VBox();
+        spaceFiller.getStyleClass().add("couple");
+        spaceFillerLabel = new Label("");
+        spaceFiller.getChildren().add(spaceFillerLabel);
     }
     
     private void resetAccounts(String newValue){
@@ -96,8 +106,39 @@ public class DocListDialogSceneComponent extends VBox {
      */
     public void removeDocDateComponent(){
         HBox firstRow = (HBox)getChildren().get(0);
-        firstRow.getChildren().remove(0);
-        isDocDateRemoved = true;
+        if (existsDocDatePane()){
+            firstRow.getChildren().remove(0);
+            isDocDateRemoved = true;
+            setHelperVBox(true);
+        }
+    }
+    
+    /**
+     * The method adds helper component (empty label VBox) into scene first row. , Scene components had disordered after  remove docDatePane.
+     * @param flag remove or add helper component. True - add. False - remove.
+     */
+    private void setHelperVBox(boolean flag){
+        HBox firstRow = (HBox)getChildren().get(0);
+        if (flag){
+            firstRow.getChildren().add(spaceFiller);
+        }
+        else {
+            firstRow.getChildren().remove(2);
+        }
+    }
+    
+    /**
+     * The method finds docDate VBox id in scene parent node.
+     * @return True, if this id is found. Otherwise - false.
+     */
+    private boolean existsDocDatePane(){
+        HBox firstRow = (HBox)getChildren().get(0);
+        return firstRow.getChildren().stream().filter((Node node) -> {
+            if (node.getId() != null)
+                return node.getId().equals(docDatePaneID);
+            else
+                return false;
+            }).count() != 0;
     }
     
     /**
@@ -105,8 +146,11 @@ public class DocListDialogSceneComponent extends VBox {
      */
     public void addDocDateComponent(){
         HBox firstRow = (HBox)getChildren().get(0);
-        firstRow.getChildren().add(0, docDatePane);
-        isDocDateRemoved = false;
+        if (!existsDocDatePane()){
+            firstRow.getChildren().add(0, docDatePane);
+            isDocDateRemoved = false;
+            setHelperVBox(false);
+        }
     }
     
     public void binTo(Doc doc){
