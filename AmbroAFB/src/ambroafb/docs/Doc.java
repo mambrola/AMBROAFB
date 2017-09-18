@@ -363,10 +363,6 @@ public class Doc extends EditorPanelable {
         Account debitAcc = Utils.avoidNullAndReturnEmpty(debitObj.get());
         Account creditAcc = Utils.avoidNullAndReturnEmpty(creditObj.get());
         
-        System.out.println("debitAcc: " + debitAcc);
-        System.out.println("docBackup.debitProperty().get(): " + docBackup.debitProperty().get());
-        System.out.println("debitAcc.partlyCompare(docBackup.debitProperty().get()): " + debitAcc.partlyCompare(docBackup.debitProperty().get()));
-        
         return  getParentRecId() == docBackup.getParentRecId() &&
                 getProcessId() == docBackup.getProcessId() &&
                 getDocDate().equals(docBackup.getDocDate()) &&

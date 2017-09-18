@@ -78,11 +78,6 @@ public class Monthly extends EditorPanelable {
         otherMonthly.getDocs().forEach((othersDoc) -> {
             docs.add(othersDoc.cloneWithoutID());
         });
-        
-        System.out.println("after copy -------------------------------");
-        for (Doc doc : docs) {
-            System.out.println(doc);
-        }
     }
 
     @Override

@@ -411,11 +411,6 @@ public class Utils {
             for(CountComboBoxItem p : first.keySet()){
                 Product pFromSecondMap = getAppropriateProductFrom(second, p.getUniqueIdentifier());
 
-//                System.out.println("prod_id fromFirstMap: " + p.getRecId());
-//                System.out.println("prod_id FromSecondMap: " + pFromSecondMap.getRecId());
-//                System.out.println("first.get(p).intValue(): " + first.get(p));
-//                System.out.println("second.get(pFromSecondMap).intValue(): " + second.get(pFromSecondMap));
-                
                 if (pFromSecondMap == null || first.get(p).intValue() != second.get(pFromSecondMap).intValue()){
                     result = false;
                     break;
