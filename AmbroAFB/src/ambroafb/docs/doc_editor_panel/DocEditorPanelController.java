@@ -24,9 +24,11 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ObservableList;
@@ -97,6 +99,14 @@ public class DocEditorPanelController implements Initializable {
                 boolean isDeleted = dm.deleteOneFromDB(docFromDB.getRecId());
                 if (isDeleted){
                     tableData.remove(selected);
+                    if (selected.isParentDoc()){
+                        List<Doc> childrenDocs = tableData.stream().
+                                                            filter((doc) -> doc.getParentRecId() == selected.getRecId()).
+                                                        collect(Collectors.toList());
+                        childrenDocs.forEach((childrenDoc) -> {
+                            tableData.remove(childrenDoc);
+                        });
+                    }
                 }
             }
         }

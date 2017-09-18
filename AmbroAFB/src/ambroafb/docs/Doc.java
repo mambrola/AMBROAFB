@@ -69,7 +69,7 @@ public class Doc extends EditorPanelable {
     private final StringProperty descrip;
     private final IntegerProperty ownerId;
     
-    private int docType;
+    private int docType = 10; // by default
     
     private static final String DB_VIEW_NAME = "docs_whole";
     

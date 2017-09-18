@@ -363,6 +363,32 @@ public class DBUtils {
       return new ArrayList();
     }
     
+    public static Doc saveCustomDoc(Doc doc){
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        Integer id = (doc.getRecId() == 0) ? null : doc.getRecId();
+        try {
+            JSONArray data = dbClient.callProcedureAndGetAsJson("doc_insert_update", 
+                                                            dbClient.getLang(), 
+                                                            id,
+                                                            doc.getParentRecId(),
+                                                            doc.getProcessId(),
+                                                            doc.docDateProperty().get(),
+                                                            doc.docInDocDateProperty().get(),
+                                                            doc.getIso(),
+                                                            doc.getDebitId(),
+                                                            doc.getCreditId(),
+                                                            doc.getAmount(),
+                                                            doc.getDocCode(),
+                                                            doc.getDescrip(),
+                                                            doc.getDocType(),
+                                                            doc.getOwnerId());
+            return Utils.getClassFromJSON(Doc.class, data.getJSONObject(0));
+        } catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public static boolean deleteObjectFromDB(String deleteProcName, Object... params) {
         boolean result = false;
         try {
