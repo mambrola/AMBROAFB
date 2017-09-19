@@ -67,40 +67,6 @@ public class MainController implements Initializable {
     private HBox menusPane;
     
     @FXML
-    private void light(ActionEvent event) {
-//        try{
-//            Stage stage = Utils.createStage("/ambroafb/light/Light.fxml", config.getTitleFor("light"), "/images/innerLogo.png", AmbroAFB.mainStage);
-//            stage.show();
-//        } catch(IOException ex){
-//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION,  "Light");
-//            alert.showAlert();
-//        }
-    }
-    @FXML
-    private void autoDealers(ActionEvent event) {
-//        try{
-//            Stage stage = Utils.createStage("/ambroafb/auto_dealers/AutoDealers.fxml", config.getTitleFor("auto_dealers"), "/images/innerLogo.png", AmbroAFB.mainStage);
-//            stage.setResizable(false);
-//            stage.show();
-//        } catch(IOException ex){
-//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Auto Dealers");
-//            alert.showAlert();
-//        }
-    }
-    
-    @FXML //დროებით აღარ ვიყენებ, მენიუს პუნქტიდან ამოვიღეთ და ჩავსვამთ ანგარიშთა სიაში ერთ-ერთ პიქტოგრამად
-    private void newAccount(ActionEvent event) {
-//        try{
-//            Stage stage = Utils.createStage("/ambroafb/new_account/NewAccount.fxml", config.getTitleFor("open_new_account"), "/images/innerLogo.png", AmbroAFB.mainStage);
-//            stage.setResizable(false);
-//            stage.show();
-//        } catch(IOException ex){
-//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_MAIN_CONFIGURATION, "Account");
-//            alert.showAlert();
-//        }
-    }
-    
-    @FXML
     private void mainConfig(ActionEvent event) {
         Stage configStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Configuration.class.getSimpleName());
         
