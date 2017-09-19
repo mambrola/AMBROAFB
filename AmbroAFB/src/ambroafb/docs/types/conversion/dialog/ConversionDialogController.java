@@ -70,6 +70,14 @@ public class ConversionDialogController implements Initializable {
 
     public void bindObject(Conversion conversion) {
         this.conversion = conversion;
+        if(conversion != null){
+            currencyFromAccount.valueProperty().bindBidirectional(conversion.currencyFromAccountProperty());
+            currencyToAccount.valueProperty().bindBidirectional(conversion.currencyToAccountProperty());
+            fromAccount.valueProperty().bindBidirectional(conversion.accountFromProperty());
+            toAccount.valueProperty().bindBidirectional(conversion.accountToProperty());
+            amountFromAccount.textProperty().bindBidirectional(conversion.amountFromAccountProperty());
+            amountToAccount.textProperty().bindBidirectional(conversion.amountToAccountProperty());
+        }
     }
 
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
