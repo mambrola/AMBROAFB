@@ -21,6 +21,12 @@
                     </VBox>
                 </children> 
             </HBox>
+            <ScrollPane fx:id="scrollPane" hbarPolicy="never" vbarPolicy="always">
+                <VBox fx:id="listVBox" >
+                    <children>
+                    </children>
+                </VBox>
+            </ScrollPane>
             <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
                 <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
             </HBox>

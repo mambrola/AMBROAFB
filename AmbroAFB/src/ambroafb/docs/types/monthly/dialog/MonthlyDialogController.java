@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
 /**
@@ -35,6 +36,11 @@ public class MonthlyDialogController implements Initializable {
     
     @FXML
     private DialogOkayCancelController okayCancelController;
+    
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private VBox listVBox;
     
     private  Monthly monthly, monthlyBackup;
     private ArrayList<Node> focusTraversableNodes;
@@ -68,7 +74,8 @@ public class MonthlyDialogController implements Initializable {
             lsComp.removeDocDateComponent();
             lsComp.binTo(doc);
             lsComp.setDiableComponents(buttonType);
-            formPane.getChildren().add(1, lsComp);
+            listVBox.getChildren().add(lsComp);
+//            formPane.getChildren().add(1, lsComp);
         });
     }
     

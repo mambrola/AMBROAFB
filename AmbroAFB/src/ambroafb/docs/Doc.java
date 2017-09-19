@@ -77,10 +77,11 @@ public class Doc extends EditorPanelable {
     private final String isoDefaultValue = "GEL";
     private final float amountDefaultValue = -1; // for ADD dialog, that clone method does not throw exception.
     private final int ownerIdDefaultValue = -1;      // for ADD dialog, that clone method does not throw exception.
+    private final int parentRecIdDefaultValue = -1;      // for ADD dialog, that clone method does not throw exception.
     
     public Doc(){
         marker = new SimpleIntegerProperty(markerDefaultValue);
-        parentRecId = new SimpleIntegerProperty(-1);
+        parentRecId = new SimpleIntegerProperty(parentRecIdDefaultValue);
         processId = new SimpleIntegerProperty();
         docDateObj = new SimpleObjectProperty<>(LocalDate.now());
         docInDocDateObj = new SimpleObjectProperty<>(LocalDate.now());
