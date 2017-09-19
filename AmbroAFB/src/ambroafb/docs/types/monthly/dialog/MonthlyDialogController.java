@@ -68,15 +68,19 @@ public class MonthlyDialogController implements Initializable {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
+            formPane.getChildren().remove(1);
+        }
+        else {
+            monthly.getDocs().stream().forEach((doc) -> {
+                DocListDialogSceneComponent lsComp = new DocListDialogSceneComponent();
+                lsComp.removeDocDateComponent();
+                lsComp.binTo(doc);
+                lsComp.setDiableComponents(buttonType);
+                listVBox.getChildren().add(lsComp);
+            });
+        }
         okayCancelController.setButtonsFeatures(buttonType);
-        monthly.getDocs().stream().forEach((doc) -> {
-            DocListDialogSceneComponent lsComp = new DocListDialogSceneComponent();
-            lsComp.removeDocDateComponent();
-            lsComp.binTo(doc);
-            lsComp.setDiableComponents(buttonType);
-            listVBox.getChildren().add(lsComp);
-//            formPane.getChildren().add(1, lsComp);
-        });
     }
     
     private void setDisableComponents(){
