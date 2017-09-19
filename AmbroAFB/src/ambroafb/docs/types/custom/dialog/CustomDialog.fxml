@@ -17,64 +17,7 @@
                               fx:controller="ambroafb.docs.types.custom.dialog.CustomDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer">
         <children>
-            <HBox styleClass="oneThirds">
-                <children>
-                    <VBox styleClass="couple">
-                        <Label text="%doc_date" styleClass="validationMessage" /> 
-                        <ADatePicker fx:id="docDate" />
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <Label text="%doc_in_doc_date" styleClass="validationMessage" /> 
-                        <ADatePicker fx:id="docInDocDate" />
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <Label text="%currency" />
-                        <IsoComboBox fx:id="currency" />
-                    </VBox>
-                </children> 
-            </HBox>
-            <HBox styleClass="twoThirds">
-                <children>
-                    <VBox styleClass="coupleTwoThird">
-                        <Label text="%debit" styleClass="validationMessage" /> 
-                        <AccountComboBox fx:id="debits" />
-                    </VBox>
-                </children> 
-            </HBox>
-            <HBox styleClass="twoThirds">
-                <children>
-                    <VBox styleClass="coupleOneThird">
-                        <Label text="" /> 
-                    </VBox>
-                    <VBox styleClass="coupleTwoThird">
-                        <Label text="%credit" styleClass="validationMessage" /> 
-                        <AccountComboBox fx:id="credits" />
-                    </VBox>
-                </children> 
-            </HBox>
-            <HBox styleClass="oneThirds">
-                <children>
-                    <VBox styleClass="couple">
-                        <Label text="%amount" styleClass="validationMessage" /> 
-                        <TextField fx:id="amount" alignment="BASELINE_RIGHT" />
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <Label text="" /> 
-                    </VBox>
-                    <VBox styleClass="couple">
-                        <Label text="%doc_code" /> 
-                        <DocCodeComboBox fx:id="docCodes" />
-                    </VBox>
-                </children> 
-            </HBox>
-            <HBox styleClass="one">
-                <children>
-                    <VBox styleClass="couple">
-                        <Label text="%doc_descrip" styleClass="validationMessage" />
-                        <TextField fx:id="descrip" />
-                    </VBox>
-                </children> 
-            </HBox>
+            
             <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
                 <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
             </HBox>
