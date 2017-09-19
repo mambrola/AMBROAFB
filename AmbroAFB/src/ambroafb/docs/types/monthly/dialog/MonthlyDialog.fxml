@@ -21,7 +21,7 @@
                     </VBox>
                 </children> 
             </HBox>
-            <ScrollPane fx:id="scrollPane" hbarPolicy="never" vbarPolicy="always">
+            <ScrollPane fx:id="scrollPane" hbarPolicy="never" vbarPolicy="always" pannable="true" >
                 <VBox fx:id="listVBox" >
                     <children>
                     </children>
