@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.* ?>
+<?import ambroafb.currencies.*?>
+<?import ambroafb.docs.*?>
+<?import ambroafb.accounts.*?>
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/conversiondialog.css"
+                              xmlns:fx="http://javafx.com/fxml/1" 
+                              xmlns="http://javafx.com/javafx/8"
+                              fx:controller="ambroafb.docs.types.conversion.dialog.ConversionDialogController" >
+    <VBox fx:id="formPane" styleClass="vContainer">
+        <children>
+            <HBox styleClass="oneThirds" >
+                <children>
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label text="%currency" />
+                            <IsoComboBox fx:id="currencyFromAccount" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="twoThirds" >
+                <children>
+                    <VBox styleClass="coupleTwoThird" >
+                        <children>
+                            <Label text="%account_from" styleClass="validationMessage" />
+                            <AccountComboBox fx:id="fromAccount" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="coupleOneThird" >
+                        <children>
+                            <Label text="%amount" styleClass="validationMessage" />
+                            <TextField fx:id="amountFromAccount" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneThirds" >
+                <children>
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label text="%currency" />
+                            <IsoComboBox fx:id="currencyToAccount" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="twoThirds" >
+                <children>
+                    <VBox styleClass="coupleTwoThird" >
+                        <children>
+                            <Label text="%account_from" styleClass="validationMessage" />
+                            <AccountComboBox fx:id="toAccount" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="coupleOneThird" >
+                        <children>
+                            <Label text="%amount" styleClass="validationMessage" />
+                            <TextField fx:id="amountToAccount" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

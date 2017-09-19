@@ -367,7 +367,7 @@ public class DBUtils {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         Integer id = (doc.getRecId() == 0) ? null : doc.getRecId();
         try {
-            JSONArray data = dbClient.callProcedureAndGetAsJson("doc_insert_update", 
+            JSONArray data = dbClient.callProcedureAndGetAsJson("doc_memorial_insert_update", 
                                                             dbClient.getLang(), 
                                                             id,
                                                             doc.getParentRecId(),

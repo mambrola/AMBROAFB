@@ -12,6 +12,7 @@ import ambro.AView;
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.DocManagersFactory;
+import ambroafb.docs.types.conversion.ConversionManager;
 import ambroafb.docs.types.custom.CustomManager;
 import ambroafb.docs.types.monthly.MonthlyManager;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
@@ -233,7 +234,25 @@ public class DocEditorPanelController implements Initializable {
     
     @FXML
     private void addConvert(ActionEvent e){
-        System.out.println("addConvert method");
+        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            DocManager dm = new ConversionManager();
+            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
+            EditorPanelable newMonthly = dd.getResult();
+            if (newMonthly != null){
+                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newMonthly);
+                if (!newDocsFromDB.isEmpty()){
+                    newDocsFromDB.stream().forEach((doc) -> {
+                        tableData.add(doc);
+                    });
+                }
+            }
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+        }
     }
     
     @FXML
