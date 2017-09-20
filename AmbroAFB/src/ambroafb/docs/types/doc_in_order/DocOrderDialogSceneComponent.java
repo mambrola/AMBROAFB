@@ -12,17 +12,15 @@ import ambroafb.accounts.AccountComboBox;
 import ambroafb.currencies.IsoComboBox;
 import ambroafb.docs.Doc;
 import ambroafb.docs.DocCodeComboBox;
-import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations;
-import authclient.db.ConditionBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -32,7 +30,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.json.JSONObject;
 
 /**
  *
@@ -96,6 +93,10 @@ public class DocOrderDialogSceneComponent extends VBox {
      */
     private void componentsInit(){
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(this);
+        
+        debits.fillComboBox();
+        credits.fillComboBox();
+        
         spaceFiller = new VBox();
         spaceFiller.getStyleClass().add("couple");
         spaceFillerLabel = new Label("");
@@ -107,16 +108,26 @@ public class DocOrderDialogSceneComponent extends VBox {
      */
     private void addComponentFeatures(){
         currency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            resetAccounts(newValue);
+            resetAccount(debits, newValue);
+            resetAccount(credits, newValue);
         });
         
         Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
     }
     
-    private void resetAccounts(String newValue){
-        new Thread(new FetchAccountsFromDB(newValue)).start();
+    /**
+     * The method filters accounts comboBox by ISO and set value if account exists on ISO.
+     * @param accounts Accounts ComboBox
+     * @param iso Currency value.
+     */
+    private void resetAccount(AccountComboBox accounts, String iso){
+        Account old = accounts.getValue();
+        accounts.filterBy(iso);
+        if (old != null){
+            Optional<Account> opt = accounts.getItems().stream().filter((acc) -> acc.getAccount() == old.getAccount()).findFirst();
+            accounts.setValue(opt.isPresent() ? opt.get() : null);
+        }
     }
-    
     
     /**
      * The method removes docDate whole pane  (with top label)  from scene.
@@ -218,43 +229,4 @@ public class DocOrderDialogSceneComponent extends VBox {
         });
     }
     
-    /**
-     * The Runnable class provides  to fetch data from server.
-     */
-    private class FetchAccountsFromDB implements Runnable {
-
-        private final String iso;
-        private final String DB_TABLE_NAME = "accounts";
-        
-        public FetchAccountsFromDB(String iso) {
-            this.iso = iso;
-        }
-
-        @Override
-        public void run() {
-            JSONObject params = new ConditionBuilder().where().and("iso", "=", iso).condition().build();
-            ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_TABLE_NAME, params);
-            accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
-            Platform.runLater(() -> {
-                fillItemsToList(debits, accountFromDB);
-                fillItemsToList(credits, accountFromDB);
-            });
-        }
-        
-        private void fillItemsToList(AccountComboBox accBox, ArrayList<Account> accounts){
-            long oldAccNum = 0;
-                if (accBox.getValue() != null){
-                    oldAccNum = accBox.getValue().getAccount();
-                }
-                accBox.getItems().clear();
-                accBox.getItems().addAll(accounts); // not use setAll method because by this method "debits" and "credits" components will has the same list object.
-                for (Account account : accounts) {
-                    if (account.getAccount() == oldAccNum){
-                        accBox.setValue(account);
-                        break;
-                    }
-                }
-                
-        }
-    }
 }
