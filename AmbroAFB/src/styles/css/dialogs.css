@@ -36,7 +36,7 @@
   -fx-spacing: 35;
 }
 .okayCancelPane {
-  -fx-padding: 60 0 0 0;
+  -fx-padding: 30 0 0 0;
 }
 .button {
   -fx-font-weight: bold;

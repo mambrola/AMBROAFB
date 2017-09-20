@@ -15,7 +15,7 @@
             styleClass="vContainer"
             alignment="CENTER" 
             xmlns:fx="http://javafx.com/fxml/1" 
-            stylesheets="/styles/css/doclistdialog.css" >
+            stylesheets="/styles/css/docinordercomponent.css" >
     <children>
         <HBox styleClass="oneThirds">
                 <children>

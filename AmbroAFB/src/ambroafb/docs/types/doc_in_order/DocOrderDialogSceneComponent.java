@@ -69,8 +69,8 @@ public class DocOrderDialogSceneComponent extends VBox {
     private VBox spaceFiller;
     private Label spaceFillerLabel;
     
-    private final String withoutBorderStylesheetPath = "/styles/css/doclistdialog.css";
-    private final String dottedBorderStylesheetPath = "/styles/css/doclistdialogdotted.css";
+    private final String withoutBorderStylesheetPath = "/styles/css/docinordercomponent.css";
+    private final String dottedBorderStylesheetPath = "/styles/css/docinordercomponentdotted.css";
     
     public DocOrderDialogSceneComponent(){
         super();

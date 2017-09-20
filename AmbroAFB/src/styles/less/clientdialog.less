@@ -1,14 +1,13 @@
 @import url("/styles/css/core.css");
-@import url("/styles/css/dialogs.css");
-@import url("/dialogs.less");
-@import url("/variables.less");
+@import url("/styles/css/dialogs.css"); // for styleClass rules
+@import url("/dialogs.less");           // for functins
 
 @formWidth          : 800;
 
 .setFormPaneRules(@formWidth);
 
 .okayCancelPane {
-    -fx-padding: 10*@gap 0 0 0;
+    -fx-padding: 6*@gap 0 0 0;
 }
 
 #imageGalleryPane {
