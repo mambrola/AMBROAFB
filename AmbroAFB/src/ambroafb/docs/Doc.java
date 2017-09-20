@@ -114,13 +114,13 @@ public class Doc extends EditorPanelable {
         creditObj.get().setIso(isoDefaultValue);
     }
     
-    private String convertDateToString(LocalDate date){
-        String dateStr = "";
-        if (date != null){
-            dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(date);
-        }
-        return dateStr;
-    }
+//    private String convertDateToString(LocalDate date){
+//        String dateStr = "";
+//        if (date != null){
+//            dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(date);
+//        }
+//        return dateStr;
+//    }
     
     // DB methods:
     /**
