@@ -17,7 +17,6 @@
                               fx:controller="ambroafb.docs.types.custom.dialog.CustomDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer">
         <children>
-            
             <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
                 <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
             </HBox>

@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -68,10 +69,14 @@ public class DocListDialogSceneComponent extends VBox {
     private VBox spaceFiller;
     private Label spaceFillerLabel;
     
+    private final String withoutBorderStylesheetPath = "/styles/css/doclistdialog.css";
+    private final String dottedBorderStylesheetPath = "/styles/css/doclistdialogdotted.css";
+    
     public DocListDialogSceneComponent(){
         super();
         assignLoader();
         componentsInit();
+        addComponentFeatures();
     }
     
     private void assignLoader(){
@@ -86,27 +91,39 @@ public class DocListDialogSceneComponent extends VBox {
         }
     }
     
+    /**
+     * Initialize scene components.
+     */
     private void componentsInit(){
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(this);
-        currency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            resetAccounts(newValue);
-        });
         spaceFiller = new VBox();
         spaceFiller.getStyleClass().add("couple");
         spaceFillerLabel = new Label("");
         spaceFiller.getChildren().add(spaceFillerLabel);
     }
     
+    /**
+     * The method adds components  extra features.
+     */
+    private void addComponentFeatures(){
+        currency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            resetAccounts(newValue);
+        });
+        
+        Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
+    }
+    
     private void resetAccounts(String newValue){
         new Thread(new FetchAccountsFromDB(newValue)).start();
     }
+    
     
     /**
      * The method removes docDate whole pane  (with top label)  from scene.
      */
     public void removeDocDateComponent(){
         HBox firstRow = (HBox)getChildren().get(0);
-        if (existsDocDatePane()){
+        if (!isDocDateRemoved){
             firstRow.getChildren().remove(0);
             isDocDateRemoved = true;
             setHelperVBox(true);
@@ -146,13 +163,34 @@ public class DocListDialogSceneComponent extends VBox {
      */
     public void addDocDateComponent(){
         HBox firstRow = (HBox)getChildren().get(0);
-        if (!existsDocDatePane()){
+        if (isDocDateRemoved){
             firstRow.getChildren().add(0, docDatePane);
             isDocDateRemoved = false;
             setHelperVBox(false);
         }
     }
     
+    /**
+     * The method remove or add dotted border from scene. 
+     * @param flag If flag parameter is 'r', then dotted border remove from scene (if it exists).
+     *                          If flag parameter is 'a', then dotted border add on scene (if not exists).
+     */
+    public void setDottedBorder(char flag){
+        ObservableList<String> stylesheetsFilePathes = this.getStylesheets();
+        if (flag == 'r' && stylesheetsFilePathes.contains(this.dottedBorderStylesheetPath)){
+            stylesheetsFilePathes.remove(dottedBorderStylesheetPath);
+            stylesheetsFilePathes.add(withoutBorderStylesheetPath);
+        }
+        if (flag == 'a' && !stylesheetsFilePathes.contains(this.dottedBorderStylesheetPath)){
+            stylesheetsFilePathes.remove(withoutBorderStylesheetPath);
+            stylesheetsFilePathes.add(dottedBorderStylesheetPath);
+        }
+    }
+    
+    /**
+     * The method binds (bidirectional) doc object to scene components.
+     * @param doc Object from that must be show on scene.
+     */
     public void binTo(Doc doc){
         if (doc != null){
             if (!isDocDateRemoved){
@@ -180,6 +218,9 @@ public class DocListDialogSceneComponent extends VBox {
         });
     }
     
+    /**
+     * The Runnable class provides  to fetch data from server.
+     */
     private class FetchAccountsFromDB implements Runnable {
 
         private final String iso;

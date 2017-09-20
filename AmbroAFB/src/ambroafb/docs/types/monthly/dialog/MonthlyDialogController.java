@@ -77,6 +77,7 @@ public class MonthlyDialogController implements Initializable {
                 lsComp.removeDocDateComponent();
                 lsComp.binTo(doc);
                 lsComp.setDiableComponents(buttonType);
+                lsComp.setDottedBorder('a');
                 listVBox.getChildren().add(lsComp);
             });
         }

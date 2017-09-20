@@ -29,21 +29,6 @@ public class CustomDialogController implements Initializable {
     @FXML
     private VBox formPane;
     
-//    @FXML
-//    private ADatePicker docDate, docInDocDate;
-//    
-//    @FXML @ContentNotEmpty
-//    private AccountComboBox debits, credits;
-//    
-//    @FXML
-//    private DocCodeComboBox docCodes;
-//    
-//    @FXML @ContentNotEmpty
-//    private TextField amount, descrip;
-//    
-//    @FXML
-//    private IsoComboBox currency;
-    
     @FXML
     private DialogOkayCancelController okayCancelController;
     
@@ -61,30 +46,10 @@ public class CustomDialogController implements Initializable {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         permissionToClose = true;
         
-//        Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
-        
-//        currency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-//            resetAccounts(newValue);
-//        });
     }
     
-//    private void resetAccounts(String newValue){
-//        new Thread(new FetchAccountsFromDB(newValue)).start();
-//    }
-
     public void bindDoc(Doc doc) {
         this.doc = doc;
-        if (doc != null){
-//            docDate.valueProperty().bindBidirectional(doc.docDateProperty());
-//            docInDocDate.valueProperty().bindBidirectional(doc.docInDocDateProperty());
-//            debits.valueProperty().bindBidirectional(doc.debitProperty());
-//            credits.valueProperty().bindBidirectional(doc.creditProperty());
-//            amount.textProperty().bindBidirectional(doc.amountProperty());
-//            currency.valueProperty().bindBidirectional(doc.isoProperty());
-//            docCodes.valueProperty().bindBidirectional(doc.docCodeProperty());
-//            descrip.textProperty().bindBidirectional(doc.descripProperty());
-            
-        }
     }
 
     public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
@@ -129,41 +94,4 @@ public class CustomDialogController implements Initializable {
         return okayCancelController;
     }
 
-//    private class FetchAccountsFromDB implements Runnable {
-//
-//        private final String iso;
-//        private final String DB_TABLE_NAME = "accounts";
-//        
-//        public FetchAccountsFromDB(String iso) {
-//            this.iso = iso;
-//        }
-//
-//        @Override
-//        public void run() {
-//            JSONObject params = new ConditionBuilder().where().and("iso", "=", iso).condition().build();
-//            ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_TABLE_NAME, params);
-//            accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
-//            Platform.runLater(() -> {
-//                fillItemsToList(debits, accountFromDB);
-//                fillItemsToList(credits, accountFromDB);
-//            });
-//        }
-//        
-//        private void fillItemsToList(AccountComboBox accBox, ArrayList<Account> accounts){
-//            long oldAccNum = 0;
-//                if (accBox.getValue() != null){
-//                    oldAccNum = accBox.getValue().getAccount();
-//                }
-//                accBox.getItems().clear();
-//                accBox.getItems().addAll(accounts); // not use setAll method because by this method "debits" and "credits" components will has the same list object.
-//                for (Account account : accounts) {
-//                    if (account.getAccount() == oldAccNum){
-//                        accBox.setValue(account);
-//                        break;
-//                    }
-//                }
-//                
-//        }
-//    }
-    
 }
