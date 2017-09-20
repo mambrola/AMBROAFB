@@ -7,7 +7,6 @@ package ambroafb.docs.types.doc_in_order;
 
 import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
-import ambroafb.accounts.Account;
 import ambroafb.accounts.AccountComboBox;
 import ambroafb.currencies.IsoComboBox;
 import ambroafb.docs.Doc;
@@ -18,7 +17,6 @@ import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -108,25 +106,11 @@ public class DocOrderDialogSceneComponent extends VBox {
      */
     private void addComponentFeatures(){
         currency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            resetAccount(debits, newValue);
-            resetAccount(credits, newValue);
+            debits.filterBy(newValue);
+            credits.filterBy(newValue);
         });
         
         Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
-    }
-    
-    /**
-     * The method filters accounts comboBox by ISO and set value if account exists on ISO.
-     * @param accounts Accounts ComboBox
-     * @param iso Currency value.
-     */
-    private void resetAccount(AccountComboBox accounts, String iso){
-        Account old = accounts.getValue();
-        accounts.filterBy(iso);
-        if (old != null){
-            Optional<Account> opt = accounts.getItems().stream().filter((acc) -> acc.getAccount() == old.getAccount()).findFirst();
-            accounts.setValue(opt.isPresent() ? opt.get() : null);
-        }
     }
     
     /**

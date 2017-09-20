@@ -8,6 +8,7 @@ package ambroafb.accounts;
 import ambroafb.general.DBUtils;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
+import java.util.Optional;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,8 +22,8 @@ import org.json.JSONObject;
  */
 public class AccountComboBox extends ComboBox<Account> {
     
-    private ObservableList<Account> accounts = FXCollections.observableArrayList();
-    private FilteredList<Account> filteredList = new FilteredList(accounts);
+    private final ObservableList<Account> accounts = FXCollections.observableArrayList();
+    private final FilteredList<Account> filteredList = new FilteredList(accounts);
     
     public AccountComboBox(){
         super();
@@ -36,26 +37,30 @@ public class AccountComboBox extends ComboBox<Account> {
      * So the list will not be change from other class.
      */
     public void fillComboBox(){
-        new Thread(new FetchDataFromDB(this.getItems())).start();
+        new Thread(new FetchDataFromDB()).start();
     }
     
+    /**
+     *  The method filters  comboBox by ISO and set value if account exists on ISO.
+     * @param iso 
+     */
     public void filterBy(String iso){
         if (iso != null){
+            Account old = getValue();
             filteredList.setPredicate((Account acc) -> {
                 if (iso.isEmpty()) return true;
                 return acc.getIso().equals(iso);
             });
+            if (old != null){
+                Optional<Account> opt = filteredList.stream().filter((acc) -> acc.getAccount() == old.getAccount()).findFirst();
+                setValue((opt.isPresent()) ? opt.get() : null);
+            }
         }
     }
     
     private class FetchDataFromDB implements Runnable {
 
         private final String DB_TABLE_NAME = "accounts";
-//        private final ObservableList<Account> accounts;
-        
-        public FetchDataFromDB(ObservableList<Account> accounts){
-//            this.accounts = accounts;
-        }
         
         @Override
         public void run() {
