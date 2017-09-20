@@ -12,6 +12,7 @@ import ambroafb.docs.types.utilities.charge.ChargeUtility;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations;
+import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
@@ -34,7 +35,7 @@ public class ChargeUtilityDialogController implements Initializable {
     @FXML
     private VBox formPane;
     
-    @FXML @Annotations.ContentNotEmpty
+    @FXML @ContentNotEmpty
     private DocMerchandiseComboBox utilities;
     
     @FXML

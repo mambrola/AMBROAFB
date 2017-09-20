@@ -76,7 +76,7 @@
                     </graphic>
                 </MenuItem>
                 <SeparatorMenuItem />
-                <MenuItem fx:id="addConvert" onAction="#addConvert" mnemonicParsing="false">
+                <MenuItem fx:id="addConvert" onAction="#addConversion" mnemonicParsing="false">
                     <graphic>
                         <Label text="%doc_convert">
                             <tooltip>

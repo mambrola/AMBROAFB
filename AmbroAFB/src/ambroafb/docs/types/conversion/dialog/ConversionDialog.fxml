@@ -21,6 +21,22 @@
                     <VBox styleClass="couple" >
                         <children>
                             <Label text="%currency" />
+                            <ADatePicker fx:id="docDate" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label text="%currency" />
+                            <ADatePicker fx:id="docInDocDate" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneThirds" >
+                <children>
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label text="%currency" />
                             <IsoComboBox fx:id="currencyFromAccount" />
                         </children>
                     </VBox>
@@ -56,7 +72,7 @@
                 <children>
                     <VBox styleClass="coupleTwoThird" >
                         <children>
-                            <Label text="%account_from" styleClass="validationMessage" />
+                            <Label text="%account_to" styleClass="validationMessage" />
                             <AccountComboBox fx:id="toAccount" />
                         </children>
                     </VBox>

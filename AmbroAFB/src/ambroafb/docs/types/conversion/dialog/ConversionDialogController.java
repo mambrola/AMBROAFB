@@ -5,6 +5,7 @@
  */
 package ambroafb.docs.types.conversion.dialog;
 
+import ambro.ADatePicker;
 import ambroafb.accounts.AccountComboBox;
 import ambroafb.currencies.IsoComboBox;
 import ambroafb.docs.types.conversion.Conversion;
@@ -31,6 +32,9 @@ public class ConversionDialogController implements Initializable {
 
     @FXML
     private VBox formPane;
+    
+    @FXML
+    private ADatePicker docDate, docInDocDate;
     
     @FXML
     private IsoComboBox currencyFromAccount;
@@ -71,6 +75,8 @@ public class ConversionDialogController implements Initializable {
     public void bindObject(Conversion conversion) {
         this.conversion = conversion;
         if(conversion != null){
+            docDate.valueProperty().bindBidirectional(conversion.docDateProperty());
+            docInDocDate.valueProperty().bindBidirectional(conversion.docInDocDateProperty());
             currencyFromAccount.valueProperty().bindBidirectional(conversion.currencyFromAccountProperty());
             currencyToAccount.valueProperty().bindBidirectional(conversion.currencyToAccountProperty());
             fromAccount.valueProperty().bindBidirectional(conversion.accountFromProperty());

@@ -7,6 +7,7 @@ package ambroafb.general;
 
 import ambroafb.clients.Client;
 import ambroafb.docs.Doc;
+import ambroafb.docs.types.conversion.Conversion;
 import ambroafb.docs.types.utilities.charge.ChargeUtility;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
 import ambroafb.invoices.Invoice;
@@ -372,6 +373,30 @@ public class DBUtils {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public static ArrayList<Doc> saveConversionDoc(Conversion conversion){
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        Integer id = (conversion.getRecId() == 0) ? null : conversion.getRecId();
+        try {
+            JSONArray data = dbClient.callProcedureAndGetAsJson("doc_conversion_insert_update",
+                                                            dbClient.getLang(),
+                                                            id,
+                                                            conversion.docDateProperty().get(),
+                                                            conversion.docInDocDateProperty().get(),
+                                                            conversion.getAccountFrom().getIso(),
+                                                            conversion.getAccountFrom().getRecId(),
+                                                            conversion.getAmountFromAccount(),
+                                                            conversion.getAccountTo().getIso(),
+                                                            conversion.getAccountTo().getRecId(),
+                                                            conversion.getAmountToAccount(),
+                                                            -1);
+            System.out.println("save Conversion data from DB: " + data);
+            return Utils.getListFromJSONArray(Doc.class, data);
+        } catch (IOException | AuthServerException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList();
     }
     
     public static Doc savePaymentUtility(PaymentUtility paymentUtility){

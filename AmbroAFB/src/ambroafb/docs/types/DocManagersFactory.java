@@ -6,6 +6,7 @@
 package ambroafb.docs.types;
 
 import ambroafb.docs.Doc;
+import ambroafb.docs.types.conversion.ConversionManager;
 import ambroafb.docs.types.custom.CustomManager;
 import ambroafb.docs.types.monthly.MonthlyManager;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
@@ -29,6 +30,9 @@ public class DocManagersFactory {
         else if (doc.isParentDoc()){
             if (doc.getDocType() == 12){
                 return new ChargeUtilityManager();
+            }
+            else if (doc.getDocType() == 60){
+                return new ConversionManager();
             }
             else {
                 return new MonthlyManager();

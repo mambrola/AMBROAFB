@@ -6,7 +6,9 @@
 package ambroafb.docs.types.conversion;
 
 import ambroafb.accounts.Account;
+import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
+import java.time.LocalDate;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,11 +20,15 @@ import javafx.beans.property.StringProperty;
  */
 public class Conversion extends EditorPanelable {
 
+    private final ObjectProperty<LocalDate> docDate, docInDocDate;
     private final StringProperty currencyFromAccount, currencyToAccount;
     private final ObjectProperty<Account> accountFrom, accountTo;
     private final StringProperty amountFromAccount, amountToAccount;
     
     public Conversion(){
+        docDate = new SimpleObjectProperty<>(LocalDate.now());
+        docInDocDate = new SimpleObjectProperty<>(LocalDate.now());
+        
         currencyFromAccount = new SimpleStringProperty("");
         currencyToAccount = new SimpleStringProperty("");
         
@@ -31,6 +37,14 @@ public class Conversion extends EditorPanelable {
         
         amountFromAccount = new SimpleStringProperty("");
         amountToAccount = new SimpleStringProperty("");
+    }
+    
+    public ObjectProperty<LocalDate> docDateProperty(){
+        return docDate;
+    }
+    
+    public ObjectProperty<LocalDate> docInDocDateProperty(){
+        return docInDocDate;
     }
     
     public StringProperty currencyFromAccountProperty(){
@@ -59,6 +73,14 @@ public class Conversion extends EditorPanelable {
     
     
     // Getters:
+    public String getDocDate(){
+        return (docDate.get() == null) ? "" : docDate.get().toString();
+    }
+    
+    public String getDocInDocDate(){
+        return (docInDocDate.get() == null) ? "" : docInDocDate.get().toString();
+    }
+    
     public String getCurrencyFromAccount(){
         return currencyFromAccount.get();
     }
@@ -85,6 +107,14 @@ public class Conversion extends EditorPanelable {
     
     
     // Setters:
+    public void setDocDate(String date) {
+        this.docDate.set(DateConverter.getInstance().parseDate(date));
+    }
+
+    public void setDocInDocDate(String date) {
+        this.docInDocDate.set(DateConverter.getInstance().parseDate(date));
+    }
+    
     public void setCurrencyFromAccount(String iso){
         this.currencyFromAccount.set(iso);
     }
@@ -127,6 +157,8 @@ public class Conversion extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         Conversion otherConversion = (Conversion)other;
+        setDocDate(otherConversion.getDocDate());
+        setDocInDocDate(otherConversion.getDocInDocDate());
         setCurrencyFromAccount(otherConversion.getCurrencyFromAccount());
         setCurrencyToAccount(otherConversion.getCurrencyToAccount());
         setAccountFrom(otherConversion.getAccountFrom().cloneWithoutID());
@@ -138,7 +170,9 @@ public class Conversion extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Conversion other = (Conversion)backup;
-        return  getCurrencyFromAccount().equals(other.getCurrencyFromAccount()) &&
+        return  docDate.get().equals(other.docDateProperty().get()) &&
+                docInDocDate.get().equals(other.docInDocDateProperty().get()) &&
+                getCurrencyFromAccount().equals(other.getCurrencyFromAccount()) &&
                 getCurrencyToAccount().equals(other.getCurrencyToAccount()) &&
                 getAccountFrom().compares(other.getAccountFrom()) &&
                 getAccountTo().compares(other.getAccountTo()) &&

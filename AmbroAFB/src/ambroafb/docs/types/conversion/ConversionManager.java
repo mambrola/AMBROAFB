@@ -8,6 +8,7 @@ package ambroafb.docs.types.conversion;
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.conversion.dialog.ConversionDialog;
+import ambroafb.general.DBUtils;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -20,6 +21,8 @@ import javafx.stage.Stage;
  */
 public class ConversionManager implements DocManager {
 
+    private final String DB_DELETE_PROCEDURE_NAME = "doc_delete";
+    
     @Override
     public EditorPanelable getOneFromDB(int id) {
         return new Conversion();
@@ -27,13 +30,12 @@ public class ConversionManager implements DocManager {
 
     @Override
     public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent) {
-        ArrayList<Doc> docs = new ArrayList<>();
-        return docs;
+        return DBUtils.saveConversionDoc((Conversion)newDocComponent);
     }
 
     @Override
     public boolean deleteOneFromDB(int id) {
-        return false;
+        return DBUtils.deleteObjectFromDB(DB_DELETE_PROCEDURE_NAME, id);
     }
 
     @Override

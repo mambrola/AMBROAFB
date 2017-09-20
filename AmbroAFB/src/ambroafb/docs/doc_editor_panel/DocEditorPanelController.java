@@ -233,7 +233,7 @@ public class DocEditorPanelController implements Initializable {
     }
     
     @FXML
-    private void addConvert(ActionEvent e){
+    private void addConversion(ActionEvent e){
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){

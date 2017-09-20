@@ -152,6 +152,7 @@ public class ChargeUtility extends EditorPanelable {
         return vat.get().isEmpty() ? vatDefaultValue : Float.parseFloat(vat.get());
     }
 
+    
     // Setters:
     public void setDocDate(String date) {
         this.docDate.set(DateConverter.getInstance().parseDate(date));
