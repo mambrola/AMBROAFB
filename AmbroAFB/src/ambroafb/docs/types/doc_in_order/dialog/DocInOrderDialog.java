@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.docs.types.monthly.dialog;
+package ambroafb.docs.types.doc_in_order.dialog;
 
-import ambroafb.docs.types.monthly.Monthly;
+import ambroafb.docs.types.doc_in_order.DocInOrder;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
@@ -20,28 +20,28 @@ import javafx.stage.WindowEvent;
  *
  * @author dkobuladze
  */
-public class MonthlyDialog extends UserInteractiveStage implements Dialogable{
+public class DocInOrderDialog extends UserInteractiveStage implements Dialogable{
 
-    private Monthly monthly, monthlyBackup;
+    private DocInOrder docInOrder, docInOrderBackup;
     
-    private MonthlyDialogController dialogController;
+    private DocInOrderDialogController dialogController;
     
-    public MonthlyDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+    public DocInOrderDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         super(owner, Names.LEVEL_FOR_PATH, "charge_utility_dialog_title", "/images/dialog.png");
         
         if (object == null){
-            monthly = new Monthly();
+            docInOrder = new DocInOrder();
         }
         else {
-            monthly = (Monthly) object;
+            docInOrder = (DocInOrder) object;
         }
-        monthlyBackup = (Monthly) monthly.cloneWithID();
+        docInOrderBackup = (DocInOrder) docInOrder.cloneWithID();
         
-        Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/monthly/dialog/MonthlyDialog.fxml", null);
-        dialogController = (MonthlyDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindMonthly(this.monthly); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
+        Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/doc_in_order/dialog/DocInOrderDialog.fxml", null);
+        dialogController = (DocInOrderDialogController) currentScene.getProperties().get("controller");
+        dialogController.bindMonthly(this.docInOrder); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
         dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupCharge(this.monthlyBackup);
+        dialogController.setBackupCharge(this.docInOrderBackup);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -53,12 +53,12 @@ public class MonthlyDialog extends UserInteractiveStage implements Dialogable{
     @Override
     public EditorPanelable getResult() {
         showAndWait();
-        return monthly;
+        return docInOrder;
     }
 
     @Override
     public void operationCanceled() {
-        monthly = null;
+        docInOrder = null;
     }
     
 }

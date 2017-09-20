@@ -7,10 +7,10 @@
 <?import javafx.scene.layout.*?>
 <?import ambro.*?>
 
-<ambroafb.general.DialogPanel stylesheets="/styles/css/monthlydialog.css" 
+<ambroafb.general.DialogPanel stylesheets="/styles/css/docinorderdialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 
                               xmlns="http://javafx.com/javafx/8"
-                              fx:controller="ambroafb.docs.types.monthly.dialog.MonthlyDialogController" >
+                              fx:controller="ambroafb.docs.types.doc_in_order.dialog.DocInOrderDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer">
         <children>
             <HBox styleClass="oneThirds">

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.docs.types.monthly;
+package ambroafb.docs.types.doc_in_order;
 
 import ambroafb.docs.Doc;
 import ambroafb.general.DateConverter;
@@ -20,12 +20,12 @@ import javafx.beans.property.SimpleObjectProperty;
  *
  * @author dkobuladze
  */
-public class Monthly extends EditorPanelable {
+public class DocInOrder extends EditorPanelable {
 
     private final ObjectProperty<LocalDate> docDate;
     private List<Doc> docs;
     
-    public Monthly(){
+    public DocInOrder(){
         docDate = new SimpleObjectProperty<>(LocalDate.now());
         docs = new ArrayList<>();
     }
@@ -57,22 +57,22 @@ public class Monthly extends EditorPanelable {
     
     
     @Override
-    public Monthly cloneWithoutID() {
-        Monthly clone = new Monthly();
+    public DocInOrder cloneWithoutID() {
+        DocInOrder clone = new DocInOrder();
         clone.copyFrom(this);
         return clone;
     }
 
     @Override
-    public Monthly cloneWithID() {
-        Monthly clone = cloneWithoutID();
+    public DocInOrder cloneWithID() {
+        DocInOrder clone = cloneWithoutID();
         clone.setRecId(this.getRecId());
         return clone;
     }
 
     @Override
     public void copyFrom(EditorPanelable other) {
-        Monthly otherMonthly = (Monthly) other;
+        DocInOrder otherMonthly = (DocInOrder) other;
         setDocDate(otherMonthly.getDocDate());
         docs.clear();
         otherMonthly.getDocs().forEach((othersDoc) -> {
@@ -82,7 +82,7 @@ public class Monthly extends EditorPanelable {
 
     @Override
     public boolean compares(EditorPanelable backup) {
-        Monthly other = (Monthly) backup;
+        DocInOrder other = (DocInOrder) backup;
         return  docDate.get().equals(other.docDateProperty().get()) &&
                 Utils.compareDocs(docs, other.getDocs());
     }

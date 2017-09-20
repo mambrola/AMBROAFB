@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.docs.types.monthly;
+package ambroafb.docs.types.doc_in_order;
 
 import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
@@ -38,7 +38,7 @@ import org.json.JSONObject;
  *
  * @author dkobuladze
  */
-public class DocListDialogSceneComponent extends VBox {
+public class DocOrderDialogSceneComponent extends VBox {
     
     @FXML
     private VBox docDatePane;
@@ -72,7 +72,7 @@ public class DocListDialogSceneComponent extends VBox {
     private final String withoutBorderStylesheetPath = "/styles/css/doclistdialog.css";
     private final String dottedBorderStylesheetPath = "/styles/css/doclistdialogdotted.css";
     
-    public DocListDialogSceneComponent(){
+    public DocOrderDialogSceneComponent(){
         super();
         assignLoader();
         componentsInit();
@@ -80,14 +80,14 @@ public class DocListDialogSceneComponent extends VBox {
     }
     
     private void assignLoader(){
-        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/docs/types/monthly/DocListDialogSceneComponent.fxml"));
+        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/docs/types/doc_in_order/DocOrderDialogSceneComponent.fxml"));
         loader.setResources(GeneralConfig.getInstance().getBundle());
         loader.setRoot(this);
         loader.setController(this);
         try {
             loader.load();
         } catch (IOException ex) {
-            Logger.getLogger(DocListDialogSceneComponent.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DocOrderDialogSceneComponent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

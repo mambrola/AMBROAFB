@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.docs.types.monthly.dialog;
+package ambroafb.docs.types.doc_in_order.dialog;
 
 import ambro.ADatePicker;
-import ambroafb.docs.types.monthly.DocListDialogSceneComponent;
-import ambroafb.docs.types.monthly.Monthly;
+import ambroafb.docs.types.doc_in_order.DocInOrder;
+import ambroafb.docs.types.doc_in_order.DocOrderDialogSceneComponent;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -26,7 +26,7 @@ import javafx.scene.layout.VBox;
  *
  * @author dkobuladze
  */
-public class MonthlyDialogController implements Initializable {
+public class DocInOrderDialogController implements Initializable {
 
     @FXML
     private VBox formPane;
@@ -42,7 +42,7 @@ public class MonthlyDialogController implements Initializable {
     @FXML
     private VBox listVBox;
     
-    private  Monthly monthly, monthlyBackup;
+    private  DocInOrder docInOrder, docInOrderBackup;
     private ArrayList<Node> focusTraversableNodes;
     private boolean permissionToClose;
     
@@ -57,10 +57,10 @@ public class MonthlyDialogController implements Initializable {
         permissionToClose = true;
     }    
 
-    public void bindMonthly(Monthly monthly) {
-        this.monthly = monthly;
-        if (monthly != null){
-            docDate.valueProperty().bindBidirectional(monthly.docDateProperty());
+    public void bindMonthly(DocInOrder docInOrder) {
+        this.docInOrder = docInOrder;
+        if (docInOrder != null){
+            docDate.valueProperty().bindBidirectional(docInOrder.docDateProperty());
         }
     }
 
@@ -72,8 +72,8 @@ public class MonthlyDialogController implements Initializable {
             formPane.getChildren().remove(1);
         }
         else {
-            monthly.getDocs().stream().forEach((doc) -> {
-                DocListDialogSceneComponent lsComp = new DocListDialogSceneComponent();
+            docInOrder.getDocs().stream().forEach((doc) -> {
+                DocOrderDialogSceneComponent lsComp = new DocOrderDialogSceneComponent();
                 lsComp.removeDocDateComponent();
                 lsComp.binTo(doc);
                 lsComp.setDiableComponents(buttonType);
@@ -90,12 +90,12 @@ public class MonthlyDialogController implements Initializable {
         });
     }
 
-    public void setBackupCharge(Monthly monthlyBackup) {
-        this.monthlyBackup = monthlyBackup;
+    public void setBackupCharge(DocInOrder docInOrderBackup) {
+        this.docInOrderBackup = docInOrderBackup;
     }
     
     public boolean anyComponentChanged(){
-        return !monthly.compares(monthlyBackup);
+        return !docInOrder.compares(docInOrderBackup);
     }
     
     public void changePermissionForClose(boolean value){

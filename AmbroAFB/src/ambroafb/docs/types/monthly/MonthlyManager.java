@@ -7,7 +7,8 @@ package ambroafb.docs.types.monthly;
 
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.DocManager;
-import ambroafb.docs.types.monthly.dialog.MonthlyDialog;
+import ambroafb.docs.types.doc_in_order.DocInOrder;
+import ambroafb.docs.types.doc_in_order.dialog.DocInOrderDialog;
 import ambroafb.general.DBUtils;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
@@ -31,15 +32,15 @@ public class MonthlyManager implements DocManager {
     public EditorPanelable getOneFromDB(int id) {
         JSONObject params = new ConditionBuilder().where().orGroup().or("rec_id", "=", id).or("parent_rec_id", "=", id).closeGroup().condition().build();
         ArrayList<Doc> docsFromDB = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
-        Monthly monthly = new Monthly();
-        monthly.setDocs(docsFromDB);
-        return monthly;
+        DocInOrder docInOrder = new DocInOrder();
+        docInOrder.setDocs(docsFromDB);
+        return docInOrder;
     }
     
 
     @Override
     public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent) {
-        Monthly newComponent = (Monthly) newDocComponent;
+        DocInOrder newComponent = (DocInOrder) newDocComponent;
         return DBUtils.getObjectsListFromDBProcedure(Doc.class, DB_PROCEDURE_NAME, newComponent.docDateProperty().get(), -1);
     }
 
@@ -55,7 +56,7 @@ public class MonthlyManager implements DocManager {
 
     @Override
     public Dialogable getDocDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
-        MonthlyDialog dialog = new MonthlyDialog(object, type, owner);
+        DocInOrderDialog dialog = new DocInOrderDialog(object, type, owner);
         return dialog;
     }
     
