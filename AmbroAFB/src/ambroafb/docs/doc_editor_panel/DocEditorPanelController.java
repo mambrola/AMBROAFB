@@ -267,7 +267,19 @@ public class DocEditorPanelController implements Initializable {
                 ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newMonthly);
                 if (!newDocsFromDB.isEmpty()){
                     newDocsFromDB.stream().forEach((doc) -> {
-                        tableData.add(doc);
+                        int status = getDocStatus(doc);
+                        if (status == 0){
+                            tableData.add(doc);
+                        }
+                        else {
+                            Doc docFromTable = getAppropriateDocFromTable(doc.getRecId());
+                            if (docFromTable != null){
+                                if (status == 1)
+                                    docFromTable.copyFrom(doc);
+                                else
+                                    tableData.remove(docFromTable);
+                            }
+                        }
                     });
                 }
             }
@@ -276,6 +288,26 @@ public class DocEditorPanelController implements Initializable {
             dialogStage.requestFocus();
             StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
         }
+    }
+    
+    /**
+     * The method returns doc status. Doc may be inserted, updated or deleted.
+     * @param doc Interested Doc object.
+     * @return 0 - if doc is inserted.
+     *                  1 - if doc is updated.
+     *                  2 - if doc is deleted.
+     */
+    private int getDocStatus(Doc doc){
+        int result = (int)tableData.stream().filter((docInTable) -> docInTable.getRecId() == doc.getRecId()).count();
+        if (result != 0){
+            result = (doc.getDescrip() != null && !doc.getDescrip().isEmpty()) ? 1 : 2;
+        }
+        return result;
+    }
+    
+    private Doc getAppropriateDocFromTable(int recId){
+        Optional<Doc> opt = tableData.stream().filter((docInTable) -> docInTable.getRecId() == recId).findFirst();
+        return (opt.isPresent()) ? opt.get() : null;
     }
     
     @FXML

@@ -25,7 +25,6 @@ import org.json.JSONObject;
 public class MonthlyManager implements DocManager {
     
     private final String DB_VIEW_NAME = "docs_whole";
-    private final String DB_PROCEDURE_NAME = "doc_kfz_soft_invoices_monthly_accrual";
     private final String DB_DELETE_PROCEDURE_NAME = "doc_delete";
 
     @Override
@@ -34,6 +33,9 @@ public class MonthlyManager implements DocManager {
         ArrayList<Doc> docsFromDB = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
         DocInOrder docInOrder = new DocInOrder();
         docInOrder.setDocs(docsFromDB);
+        if (!docsFromDB.isEmpty()){
+            docInOrder.setDocDate(docsFromDB.get(0).getDocDate()); // DocDate will be the same for all doc in docsFromDB.
+        }
         return docInOrder;
     }
     
@@ -41,7 +43,7 @@ public class MonthlyManager implements DocManager {
     @Override
     public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent) {
         DocInOrder newComponent = (DocInOrder) newDocComponent;
-        return DBUtils.getObjectsListFromDBProcedure(Doc.class, DB_PROCEDURE_NAME, newComponent.docDateProperty().get(), -1);
+        return DBUtils.saveMonthlyAccrual(newComponent.docDateProperty().get());
     }
 
     @Override

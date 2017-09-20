@@ -116,6 +116,55 @@ public class DBUtils {
         return new ArrayList<>();
     }
     
+    public static ArrayList<Doc> saveMonthlyAccrual(LocalDate date){
+        ArrayList<Doc> docs = new ArrayList();
+        try {
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            String procedureName = "doc_kfz_soft_invoices_monthly_accrual";
+            JSONArray data = dbClient.callProcedureAndGetAsJson(procedureName, dbClient.getLang(), date, -1);
+            
+            System.out.println(procedureName + " data from DB: " + data.toString());
+            if (data.length() != 0){
+                if (data.get(0) instanceof JSONObject){
+                    System.out.println("--------- json object -------------");
+                    docs = Utils.getListFromJSONArray(Doc.class, data);
+                }
+                else {
+                    System.out.println("--------- json array -------------");
+                    int updatedDocsIndex = data.length() % 3;
+                    int deletedDocsIndex = updatedDocsIndex + 1;
+                    int insertedDocsIndex = updatedDocsIndex + 2;
+
+                    ArrayList<Doc> insertedDocs = new ArrayList();
+                    if (data.length() == 4){
+                        insertedDocs = Utils.getListFromJSONArray(Doc.class, data.getJSONArray(0));
+                    }
+                    ArrayList<Doc> updatedDocs = Utils.getListFromJSONArray(Doc.class, data.getJSONArray(updatedDocsIndex));
+                    ArrayList<Doc> deletedDocsByRate = Utils.getListFromJSONArray(Doc.class, data.getJSONArray(deletedDocsIndex));
+                    ArrayList<Doc> insertedDocsbyRate = Utils.getListFromJSONArray(Doc.class, data.getJSONArray(insertedDocsIndex));
+
+                    appendArrayLists(docs, insertedDocs);
+                    appendArrayLists(docs, updatedDocs);
+                    appendArrayLists(docs, deletedDocsByRate);
+                    appendArrayLists(docs, insertedDocsbyRate);
+                }
+            }
+        } catch (IOException | AuthServerException | JSONException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return docs;
+    }
+    
+    /**
+     * The method appends docs ArrayList and adds null doc into dest ArrayList.
+     * @param dest Destination arrayList, where must be src elements.
+     * @param src Elements source ArrayList.
+     */
+    private static void appendArrayLists(ArrayList<Doc> dest, ArrayList<Doc> src){
+        src.stream().forEach((doc) -> dest.add(doc));
+//        dest.add(null);
+    }
+    
     
     public static ParamGeneralDBResponse getParamsGeneral(String procedureName, JSONObject params){
         ParamGeneralDBResponse response = new ParamGeneralDBResponse();
