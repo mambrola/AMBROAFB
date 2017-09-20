@@ -17,6 +17,7 @@ import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -70,6 +71,14 @@ public class ConversionDialogController implements Initializable {
         
         fromAccount.fillComboBox();
         toAccount.fillComboBox();
+        
+        currencyFromAccount.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            fromAccount.filterBy(newValue);
+            currencyToAccount.filterBy(newValue);
+        });
+        currencyToAccount.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            toAccount.filterBy(newValue);
+        });
     }    
 
     public void bindObject(Conversion conversion) {

@@ -30,6 +30,12 @@
                             <ADatePicker fx:id="docInDocDate" />
                         </children>
                     </VBox>
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label text="%rate" />
+                            <TextField fx:id="currentRate" disable="true" />
+                        </children>
+                    </VBox>
                 </children>
             </HBox>
             <HBox styleClass="oneThirds" >

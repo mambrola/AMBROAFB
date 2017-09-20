@@ -5,6 +5,8 @@
  */
 package ambroafb.currencies;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
@@ -15,12 +17,21 @@ import javafx.util.StringConverter;
  */
 public class IsoComboBox extends ComboBox<String> {
     
+    private final ObservableList<String> isoes = FXCollections.observableArrayList();
+    private final FilteredList<String> filteredList = new FilteredList<>(isoes);
     private final String GEL_ISO = "GEL";
     
     public IsoComboBox(){
         super();
-        this.getItems().setAll(Currency.getAllIsoFromDB());
+        isoes.setAll(Currency.getAllIsoFromDB());
+        this.setItems(filteredList);
         this.setConverter(new CustomIsoConverter());
+    }
+    
+    public void filterBy(String iso){
+        if (iso != null){
+            filteredList.setPredicate((String boxIso) -> !boxIso.equals(iso));
+        }
     }
     
     public void setValueToGEL(){

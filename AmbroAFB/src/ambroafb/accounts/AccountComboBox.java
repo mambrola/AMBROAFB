@@ -9,7 +9,9 @@ import ambroafb.general.DBUtils;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
 import org.json.JSONObject;
 
@@ -19,9 +21,12 @@ import org.json.JSONObject;
  */
 public class AccountComboBox extends ComboBox<Account> {
     
+    private ObservableList<Account> accounts = FXCollections.observableArrayList();
+    private FilteredList<Account> filteredList = new FilteredList(accounts);
+    
     public AccountComboBox(){
         super();
-        
+        this.setItems(filteredList);
     }
     
     /**
@@ -34,13 +39,22 @@ public class AccountComboBox extends ComboBox<Account> {
         new Thread(new FetchDataFromDB(this.getItems())).start();
     }
     
+    public void filterBy(String iso){
+        if (iso != null){
+            filteredList.setPredicate((Account acc) -> {
+                if (iso.isEmpty()) return true;
+                return acc.getIso().equals(iso);
+            });
+        }
+    }
+    
     private class FetchDataFromDB implements Runnable {
 
         private final String DB_TABLE_NAME = "accounts";
-        private final ObservableList<Account> accounts;
+//        private final ObservableList<Account> accounts;
         
         public FetchDataFromDB(ObservableList<Account> accounts){
-            this.accounts = accounts;
+//            this.accounts = accounts;
         }
         
         @Override
