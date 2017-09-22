@@ -45,16 +45,17 @@ public class AccountComboBox extends ComboBox<Account> {
      * @param iso 
      */
     public void filterBy(String iso){
-        if (iso != null){
-            Account old = getValue();
-            filteredList.setPredicate((Account acc) -> {
-                if (iso.isEmpty()) return true;
-                return acc.getIso().equals(iso);
-            });
-            if (old != null){
-                Optional<Account> opt = filteredList.stream().filter((acc) -> acc.getAccount() == old.getAccount()).findFirst();
-                setValue((opt.isPresent()) ? opt.get() : null);
-            }
+        Account old = getValue();
+        filteredList.setPredicate((Account acc) -> {
+            if (iso == null || iso.isEmpty()) return true;
+            return acc.getIso().equals(iso);
+        });
+        if (old != null){
+            Optional<Account> opt = filteredList.stream().filter((acc) -> acc.getAccount() == old.getAccount()).findFirst();
+            setValue((opt.isPresent()) ? opt.get() : null);
+        }
+        if (iso == null) {
+            setValue(null);
         }
     }
     

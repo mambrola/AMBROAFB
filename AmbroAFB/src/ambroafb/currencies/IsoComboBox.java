@@ -31,6 +31,9 @@ public class IsoComboBox extends ComboBox<String> {
     public void filterBy(String iso){
         if (iso != null){
             filteredList.setPredicate((String boxIso) -> !boxIso.equals(iso));
+            if (getValue() != null && getValue().equals(iso)){
+                setValue(null);
+            }
         }
     }
     

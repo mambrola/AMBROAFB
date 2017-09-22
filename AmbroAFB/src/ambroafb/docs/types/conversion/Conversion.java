@@ -7,6 +7,7 @@ package ambroafb.docs.types.conversion;
 
 import ambroafb.accounts.Account;
 import ambroafb.general.DateConverter;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.time.LocalDate;
 import javafx.beans.property.ObjectProperty;
@@ -180,9 +181,9 @@ public class Conversion extends EditorPanelable {
         return  docDate.get().equals(other.docDateProperty().get()) &&
                 docInDocDate.get().equals(other.docInDocDateProperty().get()) &&
                 getSellCurrency().equals(other.getSellCurrency()) &&
-                getBuyingCurrency().equals(other.getBuyingCurrency()) &&
+                Utils.avoidNullAndReturnString(getBuyingCurrency()).equals(other.getBuyingCurrency()) &&
                 getSellAccount().compares(other.getSellAccount()) &&
-                getBuyingAccount().compares(other.getBuyingAccount()) &&
+                Utils.avoidNullAndReturnEmpty(getBuyingAccount()).compares(other.getBuyingAccount()) &&
                 getSellAmount() == other.getSellAmount() &&
                 getBuyingAmount() == other.getBuyingAmount();
     }
