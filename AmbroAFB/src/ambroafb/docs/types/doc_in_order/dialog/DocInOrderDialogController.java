@@ -77,6 +77,10 @@ public class DocInOrderDialogController implements Initializable {
                 lsComp.removeDocDateComponent();
                 lsComp.binTo(doc);
                 lsComp.setDiableComponents(buttonType);
+                if ((buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.EDIT)) 
+                    && !doc.isParentDoc()){
+                    lsComp.setDiableComponents(Names.EDITOR_BUTTON_TYPE.VIEW);
+                }
                 lsComp.setDottedBorder('a');
                 listVBox.getChildren().add(lsComp);
             });
