@@ -5,7 +5,6 @@
  */
 package ambroafb.docs.types.conversion;
 
-import ambroafb.accounts.Account;
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.conversion.dialog.ConversionDialog;
@@ -55,13 +54,6 @@ public class ConversionManager implements DocManager {
         return result;
     }
     
-    private Account makeAccountFrom(Doc doc, boolean isDebit){
-        Account account = new Account();
-        account.setRecId((isDebit) ? doc.getDebitId() : doc.getCreditId());
-//        account.setAccount((isDebit) ? doc.ge : doc.getCreditId());
-        return account;
-    }
-
     @Override
     public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent) {
         return DBUtils.saveConversionDoc((Conversion)newDocComponent);

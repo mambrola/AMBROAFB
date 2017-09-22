@@ -59,7 +59,7 @@ public class DBUtils {
             
             return Utils.getListFromJSONArray(listElementClass, data);
         } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            processDBException(ex);
         }
         return new ArrayList<>();
     }
@@ -75,7 +75,7 @@ public class DBUtils {
             
             return Utils.getListFromJSONArray(listElementClass, data);
         } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            processDBException(ex);
         }
         return new ArrayList<>();
     }
@@ -112,7 +112,7 @@ public class DBUtils {
             
             return Utils.getListFromJSONArray(listElementClass, data);
         } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            processDBException(ex);
         }
         return new ArrayList<>();
     }
@@ -151,7 +151,7 @@ public class DBUtils {
                 }
             }
         } catch (IOException | AuthServerException | JSONException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            processDBException(ex);
         }
         return docs;
     }
@@ -394,10 +394,25 @@ public class DBUtils {
             System.out.println("save Conversion data from DB: " + data);
             return Utils.getListFromJSONArray(Doc.class, data);
         } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            processDBException(ex);
         }
         return new ArrayList();
     }
+    
+    private static void processDBException(Exception ex){
+        String docDBErorTitle = GeneralConfig.getInstance().getTitleFor("doc_db_error");
+        String message = ex.getLocalizedMessage();
+        if (ex instanceof AuthServerException){
+            try {
+                JSONObject errorInfo = new JSONObject(ex.getMessage());
+                message = errorInfo.optString("message");
+            } catch (JSONException ex1) {
+                Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        new AlertMessage(Alert.AlertType.ERROR, ex, message, docDBErorTitle).showAlert();
+    }
+    
     
     public static Doc savePaymentUtility(PaymentUtility paymentUtility){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
