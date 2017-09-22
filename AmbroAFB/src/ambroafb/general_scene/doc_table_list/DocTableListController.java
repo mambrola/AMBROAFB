@@ -83,6 +83,12 @@ public class DocTableListController implements Initializable {
         containerPane.getChildren().add(0, aview);
     }
     
+    public void setSelected(int selectedIndex){
+        if (selectedIndex >= 0) {
+            aview.getSelectionModel().select(selectedIndex);
+        }
+    }
+    
     public DocEditorPanelController getDocEditorPanelController(){
         return docEditorPanelController;
     }
