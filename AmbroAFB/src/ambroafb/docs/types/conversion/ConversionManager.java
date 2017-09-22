@@ -42,15 +42,16 @@ public class ConversionManager implements DocManager {
         result.setRecId(firstDoc.getRecId());
         result.setDocDate(firstDoc.getDocDate());
         result.setDocInDocDate(firstDoc.getDocInDocDate());
+        result.descripProperty().set(firstDoc.getDescrip());
+       
         
+        result.setSellCurrency(firstDoc.getIso());
+        result.setSellAccount(firstDoc.debitProperty().get());
+        result.setSellAmount(firstDoc.getAmount());
         
-        result.setCurrencyFromAccount(firstDoc.getIso());
-        result.setAccountFrom(firstDoc.debitProperty().get());
-        result.setAmountFromAccount(firstDoc.getAmount());
-        
-        result.setCurrencyToAccount(secondDoc.getIso());
-        result.setAccountTo(secondDoc.creditProperty().get());
-        result.setAmountToAccount(secondDoc.getAmount());
+        result.setBuyingCurrency(secondDoc.getIso());
+        result.setBuyingAccount(secondDoc.creditProperty().get());
+        result.setBuyingAmount(secondDoc.getAmount());
         return result;
     }
     

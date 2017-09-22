@@ -38,18 +38,20 @@ public class ConversionDialogController implements Initializable {
     private ADatePicker docDate, docInDocDate;
     
     @FXML
-    private IsoComboBox currencyFromAccount;
+    private IsoComboBox sellCurrency;
     @FXML @ContentNotEmpty
-    private AccountComboBox fromAccount;
+    private AccountComboBox sellAccount;
     @FXML @ContentNotEmpty
-    private TextField amountFromAccount;
+    private TextField sellAmount;
     
     @FXML
-    private IsoComboBox currencyToAccount;
+    private IsoComboBox buyingCurrency;
     @FXML @ContentNotEmpty
-    private AccountComboBox toAccount;
+    private AccountComboBox buyingAccount;
     @FXML @ContentNotEmpty
-    private TextField amountToAccount;
+    private TextField buyingAmount;
+    @FXML
+    private TextField currentRate;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -69,15 +71,15 @@ public class ConversionDialogController implements Initializable {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         permissionToClose = true;
         
-        fromAccount.fillComboBox();
-        toAccount.fillComboBox();
+        sellAccount.fillComboBox();
+        buyingAccount.fillComboBox();
         
-        currencyFromAccount.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            fromAccount.filterBy(newValue);
-            currencyToAccount.filterBy(newValue);
+        sellCurrency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            sellAccount.filterBy(newValue);
+            buyingCurrency.filterBy(newValue);
         });
-        currencyToAccount.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            toAccount.filterBy(newValue);
+        buyingCurrency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            buyingAccount.filterBy(newValue);
         });
     }    
 
@@ -86,12 +88,13 @@ public class ConversionDialogController implements Initializable {
         if(conversion != null){
             docDate.valueProperty().bindBidirectional(conversion.docDateProperty());
             docInDocDate.valueProperty().bindBidirectional(conversion.docInDocDateProperty());
-            currencyFromAccount.valueProperty().bindBidirectional(conversion.currencyFromAccountProperty());
-            currencyToAccount.valueProperty().bindBidirectional(conversion.currencyToAccountProperty());
-            fromAccount.valueProperty().bindBidirectional(conversion.accountFromProperty());
-            toAccount.valueProperty().bindBidirectional(conversion.accountToProperty());
-            amountFromAccount.textProperty().bindBidirectional(conversion.amountFromAccountProperty());
-            amountToAccount.textProperty().bindBidirectional(conversion.amountToAccountProperty());
+            sellCurrency.valueProperty().bindBidirectional(conversion.sellCurrencyProperty());
+            buyingCurrency.valueProperty().bindBidirectional(conversion.buyingCurrencyProperty());
+            sellAccount.valueProperty().bindBidirectional(conversion.sellAccountProperty());
+            buyingAccount.valueProperty().bindBidirectional(conversion.buyingAccountProperty());
+            sellAmount.textProperty().bindBidirectional(conversion.sellAmountProperty());
+            buyingAmount.textProperty().bindBidirectional(conversion.buyingAmountProperty());
+            currentRate.textProperty().bindBidirectional(conversion.descripProperty());
         }
     }
 

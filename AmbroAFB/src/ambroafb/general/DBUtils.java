@@ -384,12 +384,12 @@ public class DBUtils {
                                                             id,
                                                             conversion.docDateProperty().get(),
                                                             conversion.docInDocDateProperty().get(),
-                                                            conversion.getAccountFrom().getIso(),
-                                                            conversion.getAccountFrom().getRecId(),
-                                                            conversion.getAmountFromAccount(),
-                                                            conversion.getAccountTo().getIso(),
-                                                            conversion.getAccountTo().getRecId(),
-                                                            conversion.getAmountToAccount(),
+                                                            conversion.getSellAccount().getIso(),
+                                                            conversion.getSellAccount().getRecId(),
+                                                            conversion.getSellAmount(),
+                                                            conversion.getBuyingAccount().getIso(),
+                                                            conversion.getBuyingAccount().getRecId(),
+                                                            conversion.getBuyingAmount(),
                                                             -1);
             System.out.println("save Conversion data from DB: " + data);
             return Utils.getListFromJSONArray(Doc.class, data);

@@ -21,22 +21,24 @@ import javafx.beans.property.StringProperty;
 public class Conversion extends EditorPanelable {
 
     private final ObjectProperty<LocalDate> docDate, docInDocDate;
-    private final StringProperty currencyFromAccount, currencyToAccount;
-    private final ObjectProperty<Account> accountFrom, accountTo;
-    private final StringProperty amountFromAccount, amountToAccount;
+    private final StringProperty sellCurrency, byingCurrency;
+    private final ObjectProperty<Account> sellAccount, buyingAccount;
+    private final StringProperty sellAmount, buyingAmount, descrip;
     
     public Conversion(){
         docDate = new SimpleObjectProperty<>(LocalDate.now());
         docInDocDate = new SimpleObjectProperty<>(LocalDate.now());
         
-        currencyFromAccount = new SimpleStringProperty("");
-        currencyToAccount = new SimpleStringProperty("");
+        sellCurrency = new SimpleStringProperty("");
+        byingCurrency = new SimpleStringProperty("");
         
-        accountFrom = new SimpleObjectProperty<>(new Account());
-        accountTo = new SimpleObjectProperty<>(new Account());
+        sellAccount = new SimpleObjectProperty<>(new Account());
+        buyingAccount = new SimpleObjectProperty<>(new Account());
         
-        amountFromAccount = new SimpleStringProperty("");
-        amountToAccount = new SimpleStringProperty("");
+        sellAmount = new SimpleStringProperty("");
+        buyingAmount = new SimpleStringProperty("");
+        
+        descrip = new SimpleStringProperty("");
     }
     
     public ObjectProperty<LocalDate> docDateProperty(){
@@ -47,28 +49,32 @@ public class Conversion extends EditorPanelable {
         return docInDocDate;
     }
     
-    public StringProperty currencyFromAccountProperty(){
-        return currencyFromAccount;
+    public StringProperty sellCurrencyProperty(){
+        return sellCurrency;
     }
     
-    public StringProperty currencyToAccountProperty(){
-        return currencyToAccount;
+    public StringProperty buyingCurrencyProperty(){
+        return byingCurrency;
     }
     
-    public ObjectProperty<Account> accountFromProperty(){
-        return accountFrom;
+    public ObjectProperty<Account> sellAccountProperty(){
+        return sellAccount;
     }
 
-    public ObjectProperty<Account> accountToProperty(){
-        return accountTo;
+    public ObjectProperty<Account> buyingAccountProperty(){
+        return buyingAccount;
     }
     
-    public StringProperty amountFromAccountProperty(){
-        return amountFromAccount;
+    public StringProperty sellAmountProperty(){
+        return sellAmount;
     }
     
-    public StringProperty amountToAccountProperty(){
-        return amountToAccount;
+    public StringProperty buyingAmountProperty(){
+        return buyingAmount;
+    }
+    
+    public StringProperty descripProperty(){
+        return descrip;
     }
     
     
@@ -81,28 +87,28 @@ public class Conversion extends EditorPanelable {
         return (docInDocDate.get() == null) ? "" : docInDocDate.get().toString();
     }
     
-    public String getCurrencyFromAccount(){
-        return currencyFromAccount.get();
+    public String getSellCurrency(){
+        return sellCurrency.get();
     }
     
-    public String getCurrencyToAccount(){
-        return currencyToAccount.get();
+    public String getBuyingCurrency(){
+        return byingCurrency.get();
     }
     
-    public Account getAccountFrom(){
-        return accountFrom.get();
+    public Account getSellAccount(){
+        return sellAccount.get();
     }
     
-    public Account getAccountTo(){
-        return accountTo.get();
+    public Account getBuyingAccount(){
+        return buyingAccount.get();
     }
     
-    public float getAmountFromAccount(){
-        return (amountFromAccount.get().isEmpty()) ? 0 : Float.parseFloat(amountFromAccount.get());
+    public float getSellAmount(){
+        return (sellAmount.get().isEmpty()) ? 0 : Float.parseFloat(sellAmount.get());
     }
     
-    public float getAmountToAccount(){
-        return (amountToAccount.get().isEmpty()) ? 0 : Float.parseFloat(amountToAccount.get());
+    public float getBuyingAmount(){
+        return (buyingAmount.get().isEmpty()) ? 0 : Float.parseFloat(buyingAmount.get());
     }
     
     
@@ -115,28 +121,28 @@ public class Conversion extends EditorPanelable {
         this.docInDocDate.set(DateConverter.getInstance().parseDate(date));
     }
     
-    public void setCurrencyFromAccount(String iso){
-        this.currencyFromAccount.set(iso);
+    public void setSellCurrency(String iso){
+        this.sellCurrency.set(iso);
     }
     
-    public void setCurrencyToAccount(String iso){
-        this.currencyToAccount.set(iso);
+    public void setBuyingCurrency(String iso){
+        this.byingCurrency.set(iso);
     }
     
-    public void setAccountFrom(Account account){
-        this.accountFrom.set(account);
+    public void setSellAccount(Account account){
+        this.sellAccount.set(account);
     }
     
-    public void setAccountTo(Account account){
-        this.accountTo.set(account);
+    public void setBuyingAccount(Account account){
+        this.buyingAccount.set(account);
     }
     
-    public void setAmountFromAccount(float amount){
-        this.amountFromAccount.set("" + amount);
+    public void setSellAmount(float amount){
+        this.sellAmount.set("" + amount);
     }
     
-    public void setAmountToAccount(float amount){
-        this.amountToAccount.set("" + amount);
+    public void setBuyingAmount(float amount){
+        this.buyingAmount.set("" + amount);
     }
     
     
@@ -159,12 +165,13 @@ public class Conversion extends EditorPanelable {
         Conversion otherConversion = (Conversion)other;
         setDocDate(otherConversion.getDocDate());
         setDocInDocDate(otherConversion.getDocInDocDate());
-        setCurrencyFromAccount(otherConversion.getCurrencyFromAccount());
-        setCurrencyToAccount(otherConversion.getCurrencyToAccount());
-        setAccountFrom(otherConversion.getAccountFrom().cloneWithoutID());
-        setAccountTo(otherConversion.getAccountTo().cloneWithoutID());
-        setAmountFromAccount(otherConversion.getAmountFromAccount());
-        setAmountToAccount(otherConversion.getAmountToAccount());
+        setSellCurrency(otherConversion.getSellCurrency());
+        setBuyingCurrency(otherConversion.getBuyingCurrency());
+        setSellAccount(otherConversion.getSellAccount().cloneWithoutID());
+        setBuyingAccount(otherConversion.getBuyingAccount().cloneWithoutID());
+        setSellAmount(otherConversion.getSellAmount());
+        setBuyingAmount(otherConversion.getBuyingAmount());
+        // descrip property not change on scene, so need not copy.
     }
 
     @Override
@@ -172,12 +179,12 @@ public class Conversion extends EditorPanelable {
         Conversion other = (Conversion)backup;
         return  docDate.get().equals(other.docDateProperty().get()) &&
                 docInDocDate.get().equals(other.docInDocDateProperty().get()) &&
-                getCurrencyFromAccount().equals(other.getCurrencyFromAccount()) &&
-                getCurrencyToAccount().equals(other.getCurrencyToAccount()) &&
-                getAccountFrom().compares(other.getAccountFrom()) &&
-                getAccountTo().compares(other.getAccountTo()) &&
-                getAmountFromAccount() == other.getAmountFromAccount() &&
-                getAmountToAccount() == other.getAmountToAccount();
+                getSellCurrency().equals(other.getSellCurrency()) &&
+                getBuyingCurrency().equals(other.getBuyingCurrency()) &&
+                getSellAccount().compares(other.getSellAccount()) &&
+                getBuyingAccount().compares(other.getBuyingAccount()) &&
+                getSellAmount() == other.getSellAmount() &&
+                getBuyingAmount() == other.getBuyingAmount();
     }
 
     @Override

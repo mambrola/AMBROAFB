@@ -20,72 +20,72 @@
                 <children>
                     <VBox styleClass="couple" >
                         <children>
-                            <Label text="%currency" />
+                            <Label text="%doc_date" />
                             <ADatePicker fx:id="docDate" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple" >
                         <children>
-                            <Label text="%currency" />
+                            <Label text="%doc_in_doc_date" />
                             <ADatePicker fx:id="docInDocDate" />
                         </children>
                     </VBox>
-                    <VBox styleClass="couple" >
-                        <children>
-                            <Label text="%rate" />
-                            <TextField fx:id="currentRate" disable="true" />
-                        </children>
-                    </VBox>
-                </children>
-            </HBox>
-            <HBox styleClass="oneThirds" >
-                <children>
-                    <VBox styleClass="couple" >
-                        <children>
-                            <Label text="%currency" />
-                            <IsoComboBox fx:id="currencyFromAccount" />
-                        </children>
-                    </VBox>
                 </children>
             </HBox>
             <HBox styleClass="twoThirds" >
                 <children>
-                    <VBox styleClass="coupleTwoThird" >
-                        <children>
-                            <Label text="%account_from" styleClass="validationMessage" />
-                            <AccountComboBox fx:id="fromAccount" />
-                        </children>
-                    </VBox>
                     <VBox styleClass="coupleOneThird" >
                         <children>
-                            <Label text="%amount" styleClass="validationMessage" />
-                            <TextField fx:id="amountFromAccount" />
+                            <Label text="%sell_currency" />
+                            <IsoComboBox fx:id="sellCurrency" />
                         </children>
                     </VBox>
-                </children>
-            </HBox>
-            <HBox styleClass="oneThirds" >
-                <children>
-                    <VBox styleClass="couple" >
-                        <children>
-                            <Label text="%currency" />
-                            <IsoComboBox fx:id="currencyToAccount" />
-                        </children>
-                    </VBox>
-                </children>
-            </HBox>
-            <HBox styleClass="twoThirds" >
-                <children>
                     <VBox styleClass="coupleTwoThird" >
                         <children>
                             <Label text="%account_to" styleClass="validationMessage" />
-                            <AccountComboBox fx:id="toAccount" />
+                            <AccountComboBox fx:id="sellAccount" />
                         </children>
                     </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneThirds" >
+                <children>
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label text="%sell_amount" styleClass="validationMessage" />
+                            <TextField fx:id="sellAmount" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="twoThirds" >
+                <children>
                     <VBox styleClass="coupleOneThird" >
                         <children>
-                            <Label text="%amount" styleClass="validationMessage" />
-                            <TextField fx:id="amountToAccount" />
+                            <Label text="%buying_currency" />
+                            <IsoComboBox fx:id="buyingCurrency" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="coupleTwoThird" >
+                        <children>
+                            <Label text="%account_to" styleClass="validationMessage" />
+                            <AccountComboBox fx:id="buyingAccount" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneThirds" >
+                <children>
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label text="%buying_amount" styleClass="validationMessage" />
+                            <TextField fx:id="buyingAmount" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="couple" >
+                        <children>
+                            <Label text="%purchase_rate" />
+                            <TextField fx:id="currentRate" disable="true" />
                         </children>
                     </VBox>
                 </children>
