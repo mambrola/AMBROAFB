@@ -59,7 +59,7 @@ public class DBUtils {
             
             return Utils.getListFromJSONArray(listElementClass, data);
         } catch (IOException | AuthServerException ex) {
-            processDBException(ex);
+            analyzeDBException(ex);
         }
         return new ArrayList<>();
     }
@@ -75,7 +75,7 @@ public class DBUtils {
             
             return Utils.getListFromJSONArray(listElementClass, data);
         } catch (IOException | AuthServerException ex) {
-            processDBException(ex);
+            analyzeDBException(ex);
         }
         return new ArrayList<>();
     }
@@ -112,7 +112,7 @@ public class DBUtils {
             
             return Utils.getListFromJSONArray(listElementClass, data);
         } catch (IOException | AuthServerException ex) {
-            processDBException(ex);
+            analyzeDBException(ex);
         }
         return new ArrayList<>();
     }
@@ -151,7 +151,7 @@ public class DBUtils {
                 }
             }
         } catch (IOException | AuthServerException | JSONException ex) {
-            processDBException(ex);
+            analyzeDBException(ex);
         }
         return docs;
     }
@@ -394,12 +394,16 @@ public class DBUtils {
             System.out.println("save Conversion data from DB: " + data);
             return Utils.getListFromJSONArray(Doc.class, data);
         } catch (IOException | AuthServerException ex) {
-            processDBException(ex);
+            analyzeDBException(ex);
         }
         return new ArrayList();
     }
     
-    private static void processDBException(Exception ex){
+    /**
+     * The method analyzes DB exception and show message on alert.
+     * @param ex 
+     */
+    private static void analyzeDBException(Exception ex){
         String docDBErorTitle = GeneralConfig.getInstance().getTitleFor("doc_db_error");
         String message = ex.getLocalizedMessage();
         if (ex instanceof AuthServerException){
@@ -428,7 +432,7 @@ public class DBUtils {
             System.out.println("save PaymentUtility data from DB: " + data);
             return Utils.getClassFromJSON(Doc.class, data.getJSONObject(0));
         } catch (IOException | AuthServerException | JSONException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            analyzeDBException(ex);
         }
         return null;
     }
@@ -447,7 +451,7 @@ public class DBUtils {
             System.out.println("save ChangeUtility data from DB: " + data);
             return Utils.getListFromJSONArray(Doc.class, data);
         } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            analyzeDBException(ex);
         }
       return new ArrayList();
     }
@@ -473,7 +477,7 @@ public class DBUtils {
                                                             doc.getOwnerId());
             return Utils.getClassFromJSON(Doc.class, data.getJSONObject(0));
         } catch (IOException | AuthServerException | JSONException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            analyzeDBException(ex);
         }
         return null;
     }
