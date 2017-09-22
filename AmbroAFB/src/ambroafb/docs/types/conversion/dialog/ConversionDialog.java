@@ -27,7 +27,7 @@ public class ConversionDialog extends UserInteractiveStage implements Dialogable
     private ConversionDialogController dialogController;
     
     public ConversionDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, Names.LEVEL_FOR_PATH, "conversion_dialog_title", "/images/dialog.png");
+        super(owner, Names.LEVEL_FOR_PATH, "doc_conversion_dialog_title", "/images/dialog.png");
         
         if (object == null){
             conversion = new Conversion();

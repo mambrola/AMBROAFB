@@ -365,7 +365,7 @@ public class MainController implements Initializable {
     }
     
     @FXML private void currencyRates(ActionEvent event) {
-        String stageTitle = "currencyrates";
+        String stageTitle = "currency_rates";
         Stage currencyRatesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(currencyRatesStage == null || !currencyRatesStage.isShowing()){
             TableList currencyRates = new TableList(AmbroAFB.mainStage, CurrencyRate.class, stageTitle);
@@ -391,7 +391,7 @@ public class MainController implements Initializable {
     }
     
     @FXML private void discountsOnCount(ActionEvent event) {
-        String stageTitle = "discountoncounts";
+        String stageTitle = "discounts";
         Stage discountOnCountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if (discountOnCountsStage == null || !discountOnCountsStage.isShowing()){
             TableList discountOnCounts = new TableList(AmbroAFB.mainStage, DiscountOnCount.class, stageTitle);

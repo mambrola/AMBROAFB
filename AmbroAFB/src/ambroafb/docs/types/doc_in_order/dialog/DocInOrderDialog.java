@@ -27,7 +27,7 @@ public class DocInOrderDialog extends UserInteractiveStage implements Dialogable
     private DocInOrderDialogController dialogController;
     
     public DocInOrderDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, Names.LEVEL_FOR_PATH, "charge_utility_dialog_title", "/images/dialog.png");
+        super(owner, Names.LEVEL_FOR_PATH, "doc_order_dialog_title", "/images/dialog.png");
         
         if (object == null){
             docInOrder = new DocInOrder();

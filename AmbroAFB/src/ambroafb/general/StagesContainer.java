@@ -43,6 +43,7 @@ public class StagesContainer {
      * @param child The child stage
      */
     public static void registerStageByOwner(Stage owner, String childName, Stage child){
+        if (childName == null || childName.isEmpty()) return;
         String path = childName;
         if (owner != null && bidmap.containsValue(owner)){
             path = getPathForStage(owner) + pathDelimiter + childName;

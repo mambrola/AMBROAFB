@@ -10,6 +10,9 @@ import ambroafb.currencies.Currency;
 import ambroafb.currencies.IsoComboBox;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
+import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.Annotations.ContentPattern;
+import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,8 +22,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import ambroafb.general.interfaces.Annotations.*;
-import ambroafb.general.interfaces.Dialogable;
 
 /**
  * FXML Controller class
@@ -55,7 +56,6 @@ public class CurrencyDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContentListener(symbol, "\\p{Sc}");
-        iso.getItems().setAll(Currency.getAllIsoFromDB());
         permissionToClose = true;
     }    
 

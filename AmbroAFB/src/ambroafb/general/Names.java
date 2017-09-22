@@ -19,13 +19,14 @@ public class Names {
     public static final String MONITORING_URL_FOR_TEST = "http://192.168.0.30:8080/Monitoring/webapi";
     
     public static String APP_NAME = "AmbroAFB";
+    public static String LOGIN_STAGE = "login_stage";
     
     public static final String MAIN_FXML = "/ambroafb/Main.fxml"; // "/ambroafb/clients/Clients.fxml"; //"ambroafb/clients/filter/ClientFilter.fxml"; //
     public static final String MAIN_TITLE = "title_main";
     public static final String MAIN_LOGO = "/images/mainabfor2a.png";
     
     public static final String CONFIGURATION_FXML = "/ambroafb/configuration/Configuration.fxml";
-    public static final String CONFIGURATION_TITLE = "title_configuration";
+    public static final String CONFIGURATION = "configuration";
     public static final String CONFIGURATION_LOGO = "/images/innerLogo.png";
     
     public static final String CAR_FINES_FXML = "/ambroafb/car_fines/CarFines.fxml";

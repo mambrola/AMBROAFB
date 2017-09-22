@@ -8,7 +8,6 @@ package ambroafb;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
-import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.login.LoginController;
@@ -64,10 +63,7 @@ public class AmbroAFB extends Application {
     }
 
     private boolean promptLogin() {
-        LoginController login = new LoginController();
-        login.initOwner(mainStage);
-        StageUtils.centerChildOf(mainStage, login);
-        StageUtils.followChildTo(mainStage, login);
+        LoginController login = new LoginController(mainStage);
         return login.prompt();
     }
 

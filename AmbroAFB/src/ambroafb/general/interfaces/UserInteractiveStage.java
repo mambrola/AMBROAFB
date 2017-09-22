@@ -44,4 +44,8 @@ public abstract class UserInteractiveStage extends Stage {
         StageUtils.followChildTo(owner, (Stage)this);
     }
     
+    public UserInteractiveStage(Stage owner, String stageTitleBundleKey, String iconPath){
+        this(owner, "", stageTitleBundleKey, iconPath);
+    }
+    
 }

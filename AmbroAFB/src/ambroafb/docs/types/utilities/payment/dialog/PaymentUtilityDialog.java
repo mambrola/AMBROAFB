@@ -27,7 +27,7 @@ public class PaymentUtilityDialog extends UserInteractiveStage implements Dialog
     private PaymentUtilityDialogController dialogController;
     
     public PaymentUtilityDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner,  Names.LEVEL_FOR_PATH, "payment_utility_dialog_title", "/images/dialog.png");
+        super(owner,  Names.LEVEL_FOR_PATH, "doc_payment_utility_dialog_title", "/images/dialog.png");
 
         if (object == null){
             paymentUtility = new PaymentUtility();

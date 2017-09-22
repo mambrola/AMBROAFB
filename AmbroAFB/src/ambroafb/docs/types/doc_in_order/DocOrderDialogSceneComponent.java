@@ -36,7 +36,7 @@ import javafx.scene.layout.VBox;
 public class DocOrderDialogSceneComponent extends VBox {
     
     @FXML
-    private VBox docDatePane;
+    private HBox docDatePane;
     
     @FXML
     private ADatePicker docDate, docInDocDate;
@@ -117,51 +117,9 @@ public class DocOrderDialogSceneComponent extends VBox {
      * The method removes docDate whole pane  (with top label)  from scene.
      */
     public void removeDocDateComponent(){
-        HBox firstRow = (HBox)getChildren().get(0);
         if (!isDocDateRemoved){
-            firstRow.getChildren().remove(0);
+            getChildren().remove(0);
             isDocDateRemoved = true;
-            setHelperVBox(true);
-        }
-    }
-    
-    /**
-     * The method adds helper component (empty label VBox) into scene first row. , Scene components had disordered after  remove docDatePane.
-     * @param flag remove or add helper component. True - add. False - remove.
-     */
-    private void setHelperVBox(boolean flag){
-        HBox firstRow = (HBox)getChildren().get(0);
-        if (flag){
-            firstRow.getChildren().add(spaceFiller);
-        }
-        else {
-            firstRow.getChildren().remove(2);
-        }
-    }
-    
-    /**
-     * The method finds docDate VBox id in scene parent node.
-     * @return True, if this id is found. Otherwise - false.
-     */
-    private boolean existsDocDatePane(){
-        HBox firstRow = (HBox)getChildren().get(0);
-        return firstRow.getChildren().stream().filter((Node node) -> {
-            if (node.getId() != null)
-                return node.getId().equals(docDatePaneID);
-            else
-                return false;
-            }).count() != 0;
-    }
-    
-    /**
-     * The method adds docDate whole pane (with top label)  on scene.
-     */
-    public void addDocDateComponent(){
-        HBox firstRow = (HBox)getChildren().get(0);
-        if (isDocDateRemoved){
-            firstRow.getChildren().add(0, docDatePane);
-            isDocDateRemoved = false;
-            setHelperVBox(false);
         }
     }
     

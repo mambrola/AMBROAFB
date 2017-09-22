@@ -9,6 +9,7 @@ import ambroafb.AmbroAFB;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.UserInteractiveStage;
 import authclient.AuthServerException;
 import java.io.IOException;
 import java.net.URL;
@@ -36,7 +37,7 @@ import org.controlsfx.control.MaskerPane;
  *
  * @author tabramishvili
  */
-public class LoginController extends Stage implements Initializable {
+public class LoginController extends UserInteractiveStage implements Initializable {
 
     private static final String PREFS_USERNAME = "kfz_saved_username";
 
@@ -54,13 +55,12 @@ public class LoginController extends Stage implements Initializable {
     private boolean loggedIn;
     private final Preferences prefs;
 
-    public LoginController() {
-        super();
-
+    public LoginController(Stage owner) {
+        super(owner, "login_dialog", "/images/autorization.png");
+        
         prefs = Preferences.userNodeForPackage(AmbroAFB.class);
         Scene scene = SceneUtils.createScene("/ambroafb/login/Login.fxml", (Object)this);
         this.setScene(scene);
-        setResizable(false);
         login.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
             if (event.getCode().equals(KeyCode.ENTER))
                 login();

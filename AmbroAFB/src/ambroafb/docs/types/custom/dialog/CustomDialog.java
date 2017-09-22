@@ -27,7 +27,7 @@ public class CustomDialog extends UserInteractiveStage implements Dialogable {
     private CustomDialogController dialogController;
     
     public CustomDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, Names.LEVEL_FOR_PATH, "doc_dialog_title", "/images/dialog.png");
+        super(owner, Names.LEVEL_FOR_PATH, "doc_custom_dialog_title", "/images/dialog.png");
         
         if (object == null){
             doc = new Doc();

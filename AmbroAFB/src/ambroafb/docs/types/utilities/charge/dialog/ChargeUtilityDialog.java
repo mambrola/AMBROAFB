@@ -27,7 +27,7 @@ public class ChargeUtilityDialog extends UserInteractiveStage implements Dialoga
     private ChargeUtilityDialogController dialogController;
     
     public ChargeUtilityDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "charge_utility_dialog_title", "/images/dialog.png");
+        super(owner, Names.LEVEL_FOR_PATH, "doc_charge_utility_dialog_title", "/images/dialog.png");
         
         if (object == null){
             chargeUtility = new ChargeUtility();
