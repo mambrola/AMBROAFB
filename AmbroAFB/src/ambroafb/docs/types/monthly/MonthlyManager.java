@@ -42,8 +42,17 @@ public class MonthlyManager implements DocManager {
 
     @Override
     public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent) {
+        ArrayList<Doc> result = new ArrayList<>();
         DocInOrder newComponent = (DocInOrder) newDocComponent;
-        return DBUtils.saveMonthlyAccrual(newComponent.docDateProperty().get());
+        if (newComponent.getDocs().isEmpty()){
+            result = DBUtils.saveMonthlyAccrual(newComponent.docDateProperty().get());
+        }
+        else {
+            Doc parentDoc = newComponent.getDocs().stream().filter((doc) -> doc.isParentDoc()).findFirst().get();
+            Doc newDocFromDB = DBUtils.saveCustomDoc(parentDoc);
+            result.add(newDocFromDB);
+        }
+        return result;
     }
 
     @Override
