@@ -9,6 +9,7 @@ import ambro.AView;
 import ambroafb.accounts.Account;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
+import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
@@ -114,13 +115,6 @@ public class Doc extends EditorPanelable {
         creditObj.get().setIso(isoDefaultValue);
     }
     
-//    private String convertDateToString(LocalDate date){
-//        String dateStr = "";
-//        if (date != null){
-//            dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(date);
-//        }
-//        return dateStr;
-//    }
     
     // DB methods:
     /**
@@ -297,8 +291,8 @@ public class Doc extends EditorPanelable {
         creditObj.get().setIso(iso);
     }
     
-    public void setAmount(Float amount){
-        this.amount.set("" + amount);
+    public void setAmount(float amount){
+        this.amount.set(NumberConverter.makeTwoDigitFraction(amount));
     }
     
     public void setDocCode(String docCode){
@@ -432,6 +426,5 @@ public class Doc extends EditorPanelable {
             };
             return cell;
         }
-        
     }
 }

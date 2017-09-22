@@ -461,10 +461,7 @@ public class DBUtils {
         Integer id = (doc.getRecId() == 0) ? null : doc.getRecId();
         try {
             JSONArray data = dbClient.callProcedureAndGetAsJson("doc_memorial_insert_update", 
-                                                            dbClient.getLang(), 
                                                             id,
-                                                            doc.getParentRecId(),
-                                                            doc.getProcessId(),
                                                             doc.docDateProperty().get(),
                                                             doc.docInDocDateProperty().get(),
                                                             doc.getIso(),
@@ -473,8 +470,8 @@ public class DBUtils {
                                                             doc.getAmount(),
                                                             doc.getDocCode(),
                                                             doc.getDescrip(),
-                                                            doc.getDocType(),
                                                             doc.getOwnerId());
+            System.out.println("doc_memorial_insert_update data from DB: " + data);
             return Utils.getClassFromJSON(Doc.class, data.getJSONObject(0));
         } catch (IOException | AuthServerException | JSONException ex) {
             analyzeDBException(ex);
