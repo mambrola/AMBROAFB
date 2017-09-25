@@ -23,6 +23,7 @@ import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general_scene.doc_table_list.DocTableListController;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -194,6 +195,7 @@ public class DocEditorPanelController implements Initializable {
                 if (!newDocsFromDB.isEmpty()){
                     tableData.add(newDocsFromDB.get(0));
                 }
+                ((DocTableListController)outerController).setSelected(tableData.size()-1);
             }
         }
         else {
@@ -223,6 +225,7 @@ public class DocEditorPanelController implements Initializable {
                     newDocsFromDB.stream().forEach((doc) -> {
                         tableData.add(doc);
                     });
+                    ((DocTableListController)outerController).setSelected(tableData.size()-1);
                 }
             }
         }
@@ -246,6 +249,7 @@ public class DocEditorPanelController implements Initializable {
                     newDocsFromDB.stream().forEach((doc) -> {
                         tableData.add(doc);
                     });
+                    ((DocTableListController)outerController).setSelected(tableData.size()-1);
                 }
             }
         }
@@ -266,21 +270,42 @@ public class DocEditorPanelController implements Initializable {
             if (newMonthly != null){
                 ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newMonthly);
                 if (!newDocsFromDB.isEmpty()){
-                    newDocsFromDB.stream().forEach((doc) -> {
+                    int selectedIndex = 0;
+                    int insertCount = 0;
+                    int removedIndex = 0;
+                    int updatedIndex = 0;
+                    for (Doc doc : newDocsFromDB) {
                         int status = getDocStatus(doc);
                         if (status == 0){
                             tableData.add(doc);
+                            insertCount++;
                         }
                         else {
                             Doc docFromTable = getAppropriateDocFromTable(doc.getRecId());
                             if (docFromTable != null){
-                                if (status == 1)
+                                if (status == 1){
                                     docFromTable.copyFrom(doc);
-                                else
+                                    updatedIndex = tableData.indexOf(docFromTable);
+                                } else {
                                     tableData.remove(docFromTable);
+                                    removedIndex = tableData.indexOf(docFromTable);
+                                }
                             }
                         }
-                    });
+                    }
+                    // select table entry:
+                    if (insertCount != 0){
+                        selectedIndex = tableData.size() - 1;
+                    }
+                    else {
+                        if (updatedIndex != 0){
+                            selectedIndex = updatedIndex;
+                        }
+                        else if(removedIndex != 0){
+                            selectedIndex = (removedIndex > tableData.size() - 1) ? tableData.size()-1 : removedIndex;
+                        }
+                    }
+                    ((DocTableListController)outerController).setSelected(selectedIndex);
                 }
             }
         }
@@ -333,6 +358,7 @@ public class DocEditorPanelController implements Initializable {
                     newDocsFromDB.stream().forEach((doc) -> {
                         tableData.add(doc);
                     });
+                    ((DocTableListController)outerController).setSelected(tableData.size()-1);
                 }
             }
         }
@@ -360,6 +386,7 @@ public class DocEditorPanelController implements Initializable {
                     newDocsFromDB.stream().forEach((doc) -> {
                         tableData.add(doc);
                     });
+                    ((DocTableListController)outerController).setSelected(tableData.size()-1);
                 }
             }
         }

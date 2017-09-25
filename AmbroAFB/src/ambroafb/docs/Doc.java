@@ -340,9 +340,9 @@ public class Doc extends EditorPanelable {
         setDocDate(otherDoc.getDocDate());
         setDocInDocDate(otherDoc.getDocInDocDate());
         setIso(otherDoc.getIso());
-        debitObj.get().copyFrom(otherDoc.debitProperty().get());
+        debitObj.set(otherDoc.debitProperty().get().cloneWithID());
         debitDescrip.set(otherDoc.debitProperty().get().getDescrip());
-        creditObj.get().copyFrom(otherDoc.creditProperty().get());
+        creditObj.set(otherDoc.creditProperty().get().cloneWithID());
         creditDescrip.set(otherDoc.creditProperty().get().getDescrip());
         setAmount(otherDoc.getAmount());
         setDocCode(otherDoc.getDocCode());

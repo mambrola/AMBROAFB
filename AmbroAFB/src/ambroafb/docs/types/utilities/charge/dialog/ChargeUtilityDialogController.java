@@ -74,10 +74,12 @@ public class ChargeUtilityDialogController implements Initializable {
         
         amount.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (oldValue != null && oldValue && !newValue){
-                float amountValue = Float.parseFloat(amount.getText());
-                if (utilities.getValue() != null){
-                    float vatRate = utilities.getValue().getVatRate();
-                    vat.setText("" + (amountValue * vatRate / 100));
+                if (!amount.getText().isEmpty()){
+                    float amountValue = Float.parseFloat(amount.getText());
+                    if (utilities.getValue() != null){
+                        float vatRate = utilities.getValue().getVatRate();
+                        vat.setText("" + (amountValue * vatRate / 100));
+                    }
                 }
             }
         });
