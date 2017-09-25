@@ -100,15 +100,20 @@ public class DocEditorPanelController implements Initializable {
             if (result != null){
                 boolean isDeleted = dm.deleteOneFromDB(docFromDB.getRecId());
                 if (isDeleted){
+                    int selectedIndex = 0;
+                    int removedIndex = tableData.indexOf(selected);
                     tableData.remove(selected);
                     if (selected.isParentDoc()){
                         List<Doc> childrenDocs = tableData.stream().
                                                             filter((doc) -> doc.getParentRecId() == selected.getRecId()).
                                                         collect(Collectors.toList());
+                        removedIndex += childrenDocs.size();
                         childrenDocs.forEach((childrenDoc) -> {
                             tableData.remove(childrenDoc);
                         });
                     }
+                    selectedIndex = (removedIndex > tableData.size() - 1) ? tableData.size() - 1 : removedIndex;
+                    ((DocTableListController)outerController).setSelected(selectedIndex);
                 }
             }
         }
