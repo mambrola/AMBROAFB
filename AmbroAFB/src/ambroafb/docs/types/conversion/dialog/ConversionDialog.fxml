@@ -53,7 +53,7 @@
                     <VBox styleClass="couple" >
                         <children>
                             <Label text="%sell_amount" styleClass="validationMessage" />
-                            <TextField fx:id="sellAmount" />
+                            <TextField fx:id="sellAmount" alignment="BASELINE_RIGHT" />
                         </children>
                     </VBox>
                 </children>
@@ -79,7 +79,7 @@
                     <VBox styleClass="couple" >
                         <children>
                             <Label text="%buying_amount" styleClass="validationMessage" />
-                            <TextField fx:id="buyingAmount" />
+                            <TextField fx:id="buyingAmount" alignment="BASELINE_RIGHT"  />
                         </children>
                     </VBox>
                     <VBox styleClass="couple" >

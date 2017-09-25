@@ -81,7 +81,25 @@ public class ConversionDialogController implements Initializable {
         buyingCurrency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             buyingAccount.filterBy(newValue);
         });
-    }    
+        
+        sellAmount.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            changeRateText(newValue, buyingAmount.getText());
+        });
+        
+        buyingAmount.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            changeRateText(sellAmount.getText(), newValue);
+        });
+    }
+    
+    private void changeRateText(String sellAmountValue, String buyingAmountValue){
+        if (sellAmountValue != null && !sellAmountValue.isEmpty() && buyingAmountValue != null && !buyingAmountValue.isEmpty()){
+            float sellAmountFloat = Float.parseFloat(sellAmountValue);
+            float buyingAmountFloat = Float.parseFloat(buyingAmountValue);
+            if (sellAmountFloat > 0){
+                currentRate.setText("" + (buyingAmountFloat / sellAmountFloat));
+            }
+        }
+    }
 
     public void bindObject(Conversion conversion) {
         this.conversion = conversion;
