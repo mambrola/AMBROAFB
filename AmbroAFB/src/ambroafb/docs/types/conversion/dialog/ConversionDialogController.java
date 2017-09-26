@@ -13,8 +13,8 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
+import ambroafb.general.amount_textfield.AmountField;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
@@ -27,7 +27,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 /**
@@ -47,15 +46,15 @@ public class ConversionDialogController implements Initializable {
     private IsoComboBox sellCurrency;
     @FXML @ContentNotEmpty
     private AccountComboBox sellAccount;
-    @FXML @ContentNotEmpty @ContentPattern(value = "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?", explain = "Amount text is incorrect")
-    private TextField sellAmount;
+    @FXML @ContentNotEmpty
+    private AmountField sellAmount;
     
     @FXML
     private IsoComboBox buyingCurrency;
     @FXML @ContentNotEmpty
     private AccountComboBox buyingAccount;
-    @FXML @ContentNotEmpty @ContentPattern(value = "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?", explain = "Amount text is incorrect")
-    private TextField buyingAmount;
+    @FXML @ContentNotEmpty
+    private AmountField buyingAmount;
     @FXML
     private Label currentRateTitle;
     @FXML
@@ -84,9 +83,6 @@ public class ConversionDialogController implements Initializable {
         
         sellAccount.fillComboBox();
         buyingAccount.fillComboBox();
-        
-        Utils.validateAmountField(sellAmount);
-        Utils.validateAmountField(buyingAmount);
         
         sellCurrency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             sellAccount.filterBy(newValue);

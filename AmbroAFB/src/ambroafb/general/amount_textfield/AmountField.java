@@ -21,6 +21,8 @@ import javafx.scene.control.TextField;
  */
 public class AmountField extends TextField {
     
+//    @Annotations.ContentPattern(value = "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?", explain = "Amount text is incorrect")
+    
     public AmountField(){
         super();
         assignLoader();
@@ -39,10 +41,7 @@ public class AmountField extends TextField {
         }
     }
     
-    /**
-     * The method adds components  extra features.
-     */
     private void addComponentFeatures(){
-       Utils.validateAmountField(this);
+       Utils.validateTextFieldContentListener(this, "(0|[1-9]\\d*)(\\.|\\.\\d+)?");
     }
 }

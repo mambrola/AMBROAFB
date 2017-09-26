@@ -9,6 +9,7 @@
 <?import ambroafb.currencies.*?>
 <?import ambroafb.docs.*?>
 <?import ambroafb.accounts.*?>
+<?import ambroafb.general.amount_textfield.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/conversiondialog.css"
                               xmlns:fx="http://javafx.com/fxml/1" 
@@ -49,7 +50,7 @@
                     <VBox styleClass="coupleOneSixth" >
                         <children>
                             <Label text="%sell_amount" styleClass="validationMessage" />
-                            <TextField fx:id="sellAmount" alignment="BASELINE_RIGHT" />
+                            <AmountField fx:id="sellAmount" />
                         </children>
                     </VBox>
                 </children>
@@ -71,7 +72,7 @@
                     <VBox styleClass="coupleOneSixth" >
                         <children>
                             <Label text="%buying_amount" styleClass="validationMessage" />
-                            <TextField fx:id="buyingAmount" alignment="BASELINE_RIGHT"  />
+                            <AmountField fx:id="buyingAmount" />
                         </children>
                     </VBox>
                 </children>

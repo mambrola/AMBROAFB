@@ -11,6 +11,7 @@ import ambroafb.accounts.Account;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.docs.Doc;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.amount_textfield.AmountField;
 import ambroafb.general.countcombobox.CountComboBox;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.image_gallery.ImageGalleryController;
@@ -680,7 +681,7 @@ public class Utils {
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
 
-            if (field.getType().equals(TextField.class)) {
+            if (field.getType().equals(TextField.class) || field.getType().equals(AmountField.class)) {
                 TextField textField = (TextField) field.get(ownerClassObject);
                 results[0] = textField;
                 results[1] = textField.getText();
