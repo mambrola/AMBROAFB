@@ -16,20 +16,15 @@
                               fx:controller="ambroafb.docs.types.conversion.dialog.ConversionDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer">
         <children>
-            <HBox styleClass="twoThirds" >
+            <HBox styleClass="oneThirds" >
                 <children>
-                    <VBox styleClass="coupleOneSixth" >
-                        <children>
-                            <Label text="" />
-                        </children>
-                    </VBox>
-                    <VBox styleClass="coupleOneThird" >
+                    <VBox styleClass="couple" >
                         <children>
                             <Label text="%doc_date" />
                             <ADatePicker fx:id="docDate" />
                         </children>
                     </VBox>
-                    <VBox styleClass="coupleOneThird" >
+                    <VBox styleClass="couple" >
                         <children>
                             <Label text="%doc_in_doc_date" />
                             <ADatePicker fx:id="docInDocDate" />
@@ -81,12 +76,12 @@
                     </VBox>
                 </children>
             </HBox>
-            <HBox styleClass="oneThirds" >
+            <HBox styleClass="oneSixthes" alignment="CENTER_RIGHT" >
                 <children>
                     <VBox styleClass="couple" >
                         <children>
                             <Label text="%purchase_rate" />
-                            <TextField fx:id="currentRate" disable="true" />
+                            <Button fx:id="currentRate" onAction="#changeRateDirection" alignment="BASELINE_CENTER" />
                         </children>
                     </VBox>
                 </children>

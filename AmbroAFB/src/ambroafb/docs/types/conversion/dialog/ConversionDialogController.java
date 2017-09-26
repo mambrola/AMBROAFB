@@ -10,6 +10,7 @@ import ambroafb.accounts.AccountComboBox;
 import ambroafb.currencies.IsoComboBox;
 import ambroafb.docs.types.conversion.Conversion;
 import ambroafb.general.Names;
+import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
@@ -19,9 +20,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -52,7 +55,7 @@ public class ConversionDialogController implements Initializable {
     @FXML @ContentNotEmpty @ContentPattern(value = "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?", explain = "Amount text is incorrect")
     private TextField buyingAmount;
     @FXML
-    private TextField currentRate;
+    private Button currentRate;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -61,6 +64,9 @@ public class ConversionDialogController implements Initializable {
     private boolean permissionToClose;
     private Conversion conversion, conversionBackup;
     
+    private boolean rateTopToBottomDirection = true;
+    private final String topToBottomArrow = "\u2193";
+    private final String bottomToTopArrow = "\u2191";
     
     /**
      * Initializes the controller class.
@@ -95,13 +101,23 @@ public class ConversionDialogController implements Initializable {
         });
     }
     
+    @FXML
+    private void changeRateDirection(ActionEvent event){
+        rateTopToBottomDirection = !rateTopToBottomDirection;
+        changeRateText(sellAmount.getText(), buyingAmount.getText());
+    }
+    
     private void changeRateText(String sellAmountValue, String buyingAmountValue){
         if (sellAmountValue != null && !sellAmountValue.isEmpty() && buyingAmountValue != null && !buyingAmountValue.isEmpty()){
             float sellAmountFloat = Float.parseFloat(sellAmountValue);
             float buyingAmountFloat = Float.parseFloat(buyingAmountValue);
-            if (sellAmountFloat > 0){
-                currentRate.setText("" + (buyingAmountFloat / sellAmountFloat));
+            String rateResult = "";
+            String arrowSymbol = (rateTopToBottomDirection) ? topToBottomArrow : bottomToTopArrow;
+            if (sellAmountFloat > 0 && buyingAmountFloat > 0){
+                float amountsRate = (rateTopToBottomDirection) ? buyingAmountFloat / sellAmountFloat : sellAmountFloat / buyingAmountFloat;
+                rateResult = NumberConverter.makeFloatSpecificFraction(amountsRate, 4);
             }
+            currentRate.setText(arrowSymbol + "  " + rateResult);
         }
     }
 
