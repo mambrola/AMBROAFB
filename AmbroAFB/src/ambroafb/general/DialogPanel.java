@@ -23,16 +23,16 @@ public class DialogPanel extends StackPane {
     public final Object BACKUP_VALUE_KEY = new Object();
 
     public DialogPanel() {
-        // გადასაკეთებელია login Controller_ისთვის
-//        this.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-//            if (event.getCode().equals(KeyCode.ENTER)) {
-//                Node focusedNode = this.getScene().getFocusOwner();
-////                if (nodeParentNotEqual(focusedNode, "okayCancel")){
-//                    focusedNode.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.TAB, false, false, false, false));
-//                    event.consume();
-////                }
-//            }
-//        });
+        // The element that has focus and at the time press enter, action will be as tab action.
+        this.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                Node focusedNode = this.getScene().getFocusOwner();
+                if (hasNotStyleClassFor(focusedNode, "allowEnterAction")){ // "allowEnterAction" styleClasss components will not fire tab event on enter key.
+                    focusedNode.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.TAB, false, false, false, false));
+                    event.consume();
+                }
+            }
+        });
         
         getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
             customizeChildren();
@@ -46,12 +46,12 @@ public class DialogPanel extends StackPane {
                 .forEach(this::customize);
     }
     
-    private boolean nodeParentNotEqual(Node node, String parentId){
-        return node.getParent().getId() == null || !node.getParent().getId().equals(parentId);
+    private boolean hasNotStyleClassFor(Node node, String styleCLass){
+        return !node.getStyleClass().contains(styleCLass);
     }
 
     private void customize(Node node) {
-        if (nodeParentNotEqual(node, "okayCancel")){
+        if (hasNotStyleClassFor(node, "allowEnterAction")){
             node.getProperties().put(MARKED_NODE_KEY, null);
             if (node.getClass().equals(TextField.class)) {
                 TextField field = (TextField) node;
@@ -80,11 +80,11 @@ public class DialogPanel extends StackPane {
                     }
                 });
             }
-            node.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-                if (event.getCode().equals(KeyCode.ENTER)) {
-                    node.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.TAB, false, false, false, false));
-                }
-            });
+//            node.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+//                if (event.getCode().equals(KeyCode.ENTER)) {
+//                    node.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.TAB, false, false, false, false));
+//                }
+//            });
         }
         else {
             node.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
