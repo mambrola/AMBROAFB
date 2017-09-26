@@ -89,7 +89,9 @@ public class DialogPanel extends StackPane {
         else {
             node.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
                 if (event.getCode().equals(KeyCode.ENTER)) {
-                    ((Button)node).getOnAction().handle(null);
+                    if (node instanceof Button){
+                        ((Button)node).getOnAction().handle(null);
+                    }
                 }
             });
         }
