@@ -12,6 +12,7 @@ import ambroafb.docs.types.conversion.Conversion;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
@@ -41,14 +42,14 @@ public class ConversionDialogController implements Initializable {
     private IsoComboBox sellCurrency;
     @FXML @ContentNotEmpty
     private AccountComboBox sellAccount;
-    @FXML @ContentNotEmpty
+    @FXML @ContentNotEmpty @ContentPattern(value = "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?", explain = "Amount text is incorrect")
     private TextField sellAmount;
     
     @FXML
     private IsoComboBox buyingCurrency;
     @FXML @ContentNotEmpty
     private AccountComboBox buyingAccount;
-    @FXML @ContentNotEmpty
+    @FXML @ContentNotEmpty @ContentPattern(value = "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?", explain = "Amount text is incorrect")
     private TextField buyingAmount;
     @FXML
     private TextField currentRate;
@@ -73,6 +74,9 @@ public class ConversionDialogController implements Initializable {
         
         sellAccount.fillComboBox();
         buyingAccount.fillComboBox();
+        
+        Utils.validateTextFieldContentListener(sellAmount, "(0|[1-9]\\d*)(\\.|\\.\\d+)?");
+        Utils.validateTextFieldContentListener(buyingAmount, "(0|[1-9]\\d*)(\\.|\\.\\d+)?");
         
         sellCurrency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             sellAccount.filterBy(newValue);
