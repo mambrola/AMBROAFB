@@ -47,8 +47,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Menu;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -238,7 +241,7 @@ public class MainController implements Initializable {
     
     
     
-    @FXML private void accounts(ActionEvent event) {}
+    @FXML private void accounts(ActionEvent event) { System.out.println("cleack works!");}
     
     @FXML private void docs(ActionEvent event){
         String stageTitle = "docs";
@@ -423,8 +426,8 @@ public class MainController implements Initializable {
         }
     }
     
-    @FXML private void balances(ActionEvent event) {}
-    @FXML private void account_statments(ActionEvent event) {}
+    @FXML private void balance(ActionEvent event) {}
+    @FXML private void incom_statement(ActionEvent event) {}
     @FXML private void other(ActionEvent event) {}
     
     

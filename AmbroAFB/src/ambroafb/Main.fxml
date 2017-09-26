@@ -31,9 +31,13 @@
                                 <MenuItem onAction="#clients" text="%clients" />
                             </items>
                         </Menu>
+                        <Menu fx:id="docs" onAction="#docs" text="%docs">
+                            <items>
+                                <MenuItem onAction="#docs" text="%list" />
+                            </items>                                                                       
+                        </Menu>
                         <Menu text="%books">
                             <items>
-                                <MenuItem onAction="#docs" text="%docs" />
                                 <MenuItem onAction="#licenses" text="%licenses" />
                                 <MenuItem onAction="#invoices" text="%invoices" />
                                 <SeparatorMenuItem />
@@ -42,15 +46,16 @@
                         </Menu>
                         <Menu text="%reports">
                             <items>
-                                <MenuItem onAction="#balances" text="%balances" />
-                                <MenuItem onAction="#account_statments" text="%account_statments" />
+                                <MenuItem onAction="#balance" text="%balance" />
+                                <MenuItem onAction="#incom_statement" text="%incom_statement" />
                             </items>
                         </Menu>
                         <Menu text="%directories">
                             <items>
                                 <MenuItem onAction="#currencyRates" text="%currency_rates" />
-                                <MenuItem onAction="#discountsOnCount" text="%discounts_on_count" />
+                                <SeparatorMenuItem />
                                 <MenuItem onAction="#products" text="%products" />
+                                <MenuItem onAction="#discountsOnCount" text="%discounts_on_count" />
                                 <SeparatorMenuItem />
                                 <MenuItem onAction="#currencies" text="%currencies" />
                                 <MenuItem onAction="#balAccounts" text="%bal_accounts" />
@@ -59,7 +64,8 @@
                         </Menu>
                         <Menu text="%processes">
                             <items>
-                                <MenuItem onAction="#tm" text="%process_list" />
+                                <MenuItem onAction="#tm" text="%list" />
+                                <SeparatorMenuItem />
                                 <Menu text="%types">
                                     <items>
                                         <MenuItem onAction="#attitudes" text="%attitudes" />
