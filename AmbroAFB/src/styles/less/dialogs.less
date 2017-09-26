@@ -39,15 +39,22 @@
 .twoThirds>.coupleOneThird, .twoThirds>.coupleOneThird>*{
     -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
 }
- .twoThirds>.coupleTwoThird, .twoThirds>.coupleTwoThird>* {
+.twoThirds>.coupleTwoThird, .twoThirds>.coupleTwoThird>* {
     -fx-pref-width: 2*((@formWidth - 2*@spaceWidth)/3) + @spaceWidth;
+}
+.twoThirds>.coupleOneSixth, .twoThirds>.coupleOneSixth>* {
+    -fx-pref-width: (@formWidth - 5*@spaceWidth)/6;
+}
+
+.fiveSixthes>.coupleFiveSixth, .fiveSixthes>.coupleFiveSixth>* {
+    -fx-pref-width: 5*((@formWidth - 5*@spaceWidth)/6) + 4*@spaceWidth;
 }
 
 .oneThirds {
     -fx-pref-width: 2*(@formWidth - 2*@spaceWidth)/3 + @spaceWidth;
 }
 
-.oneHalf, .oneThirds, .twoThirds {
+.oneHalf, .oneThirds, .twoThirds, fiveSixthes {
     -fx-spacing: @spaceWidth;
 }
 

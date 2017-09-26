@@ -16,15 +16,20 @@
                               fx:controller="ambroafb.docs.types.conversion.dialog.ConversionDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer">
         <children>
-            <HBox styleClass="oneThirds" >
+            <HBox styleClass="twoThirds" >
                 <children>
-                    <VBox styleClass="couple" >
+                    <VBox styleClass="coupleOneSixth" >
+                        <children>
+                            <Label text="" />
+                        </children>
+                    </VBox>
+                    <VBox styleClass="coupleOneThird" >
                         <children>
                             <Label text="%doc_date" />
                             <ADatePicker fx:id="docDate" />
                         </children>
                     </VBox>
-                    <VBox styleClass="couple" >
+                    <VBox styleClass="coupleOneThird" >
                         <children>
                             <Label text="%doc_in_doc_date" />
                             <ADatePicker fx:id="docInDocDate" />
@@ -34,7 +39,7 @@
             </HBox>
             <HBox styleClass="twoThirds" >
                 <children>
-                    <VBox styleClass="coupleOneThird" >
+                    <VBox styleClass="coupleOneSixth" >
                         <children>
                             <Label text="%sell_currency" />
                             <IsoComboBox fx:id="sellCurrency" />
@@ -46,11 +51,7 @@
                             <AccountComboBox fx:id="sellAccount" />
                         </children>
                     </VBox>
-                </children>
-            </HBox>
-            <HBox styleClass="oneThirds" >
-                <children>
-                    <VBox styleClass="couple" >
+                    <VBox styleClass="coupleOneSixth" >
                         <children>
                             <Label text="%sell_amount" styleClass="validationMessage" />
                             <TextField fx:id="sellAmount" alignment="BASELINE_RIGHT" />
@@ -60,7 +61,7 @@
             </HBox>
             <HBox styleClass="twoThirds" >
                 <children>
-                    <VBox styleClass="coupleOneThird" >
+                    <VBox styleClass="coupleOneSixth" >
                         <children>
                             <Label text="%buying_currency" />
                             <IsoComboBox fx:id="buyingCurrency" />
@@ -72,16 +73,16 @@
                             <AccountComboBox fx:id="buyingAccount" />
                         </children>
                     </VBox>
-                </children>
-            </HBox>
-            <HBox styleClass="oneThirds" >
-                <children>
-                    <VBox styleClass="couple" >
+                    <VBox styleClass="coupleOneSixth" >
                         <children>
                             <Label text="%buying_amount" styleClass="validationMessage" />
                             <TextField fx:id="buyingAmount" alignment="BASELINE_RIGHT"  />
                         </children>
                     </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="oneThirds" >
+                <children>
                     <VBox styleClass="couple" >
                         <children>
                             <Label text="%purchase_rate" />

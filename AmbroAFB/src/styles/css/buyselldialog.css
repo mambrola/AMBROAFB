@@ -29,12 +29,21 @@
 .twoThirds > .coupleTwoThird > * {
   -fx-pref-width: 188.33333333;
 }
+.twoThirds > .coupleOneSixth,
+.twoThirds > .coupleOneSixth > * {
+  -fx-pref-width: 20.83333333;
+}
+.fiveSixthes > .coupleFiveSixth,
+.fiveSixthes > .coupleFiveSixth > * {
+  -fx-pref-width: 244.16666667;
+}
 .oneThirds {
   -fx-pref-width: 188.33333333;
 }
 .oneHalf,
 .oneThirds,
-.twoThirds {
+.twoThirds,
+fiveSixthes {
   -fx-spacing: 35;
 }
 .okayCancelPane {
