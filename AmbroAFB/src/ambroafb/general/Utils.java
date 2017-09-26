@@ -512,6 +512,15 @@ public class Utils {
             }
         });
     }
+    
+    /**
+     * The method validates amount textFields content.
+     *  If content new value does not match to pattern, then content become old value.
+     * @param amountField 
+     */
+    public static void validateAmountField(TextField amountField){
+        validateTextFieldContentListener(amountField, "(0|[1-9]\\d*)(\\.|\\.\\d+)?");
+    }
 
     public static boolean everyFieldContentIsValidFor(Object currentClassObject, EDITOR_BUTTON_TYPE type) {
         boolean result = true;
