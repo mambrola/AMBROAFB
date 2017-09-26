@@ -75,8 +75,8 @@ public class ConversionDialogController implements Initializable {
         sellAccount.fillComboBox();
         buyingAccount.fillComboBox();
         
-        Utils.validateTextFieldContentListener(sellAmount, "(0|[1-9]\\d*)(\\.|\\.\\d+)?");
-        Utils.validateTextFieldContentListener(buyingAmount, "(0|[1-9]\\d*)(\\.|\\.\\d+)?");
+        Utils.validateAmountField(sellAmount);
+        Utils.validateAmountField(buyingAmount);
         
         sellCurrency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             sellAccount.filterBy(newValue);
