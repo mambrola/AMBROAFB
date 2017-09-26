@@ -25,29 +25,10 @@
                                 <MenuItem onAction="#mainExit" text="%exit" />
                             </items>
                         </Menu>
-                        <Menu text="%proceses">
+                       <Menu text="%catalogs">
                             <items>
-                                <Menu text="%disposable_sells">
-                                    <items>
-                                        <MenuItem onAction="#tm" text="%of_service" />
-                                        <MenuItem onAction="#tm" text="%of_thing" />
-                                        <MenuItem onAction="#tm" text="%of_fixed_assets" />
-                                    </items>
-                                </Menu>
-                                <Menu text="%permanent_buys">
-                                    <items>
-                                        <MenuItem onAction="#tm" text="%of_service" />
-                                        <MenuItem onAction="#tm" text="%of_thing" />
-                                        <MenuItem onAction="#tm" text="%of_fixed_assets" />
-                                    </items>
-                                </Menu>
-                                <Menu text="%disposable_buys">
-                                    <items>
-                                        <MenuItem onAction="#tm" text="%of_service" />
-                                        <MenuItem onAction="#tm" text="%of_thing" />
-                                        <MenuItem onAction="#tm" text="%of_fixed_assets" />
-                                    </items>
-                                </Menu>
+                                <MenuItem onAction="#accounts" text="%accounts" />
+                                <MenuItem onAction="#clients" text="%clients" />
                             </items>
                         </Menu>
                         <Menu text="%books">
@@ -56,9 +37,7 @@
                                 <MenuItem onAction="#licenses" text="%licenses" />
                                 <MenuItem onAction="#invoices" text="%invoices" />
                                 <SeparatorMenuItem />
-                                <MenuItem onAction="#clients" text="%clients" />
                                 <MenuItem onAction="#loggings" text="%loggings" />
-                                <MenuItem onAction="#accounts" text="%accounts" />
                             </items>
                         </Menu>
                         <Menu text="%reports">
