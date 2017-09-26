@@ -81,7 +81,7 @@
                     <VBox styleClass="couple" >
                         <children>
                             <Label text="%purchase_rate" />
-                            <Button fx:id="currentRate" onAction="#changeRateDirection" alignment="BASELINE_CENTER" />
+                            <Button fx:id="currentRate" onAction="#changeRateDirection" alignment="BASELINE_RIGHT" />
                         </children>
                     </VBox>
                 </children>

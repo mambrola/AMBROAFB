@@ -108,17 +108,17 @@ public class ConversionDialogController implements Initializable {
     }
     
     private void changeRateText(String sellAmountValue, String buyingAmountValue){
+        String rateResult = "";
+        String arrowSymbol = (rateTopToBottomDirection) ? topToBottomArrow : bottomToTopArrow;
         if (sellAmountValue != null && !sellAmountValue.isEmpty() && buyingAmountValue != null && !buyingAmountValue.isEmpty()){
             float sellAmountFloat = Float.parseFloat(sellAmountValue);
             float buyingAmountFloat = Float.parseFloat(buyingAmountValue);
-            String rateResult = "";
-            String arrowSymbol = (rateTopToBottomDirection) ? topToBottomArrow : bottomToTopArrow;
             if (sellAmountFloat > 0 && buyingAmountFloat > 0){
                 float amountsRate = (rateTopToBottomDirection) ? buyingAmountFloat / sellAmountFloat : sellAmountFloat / buyingAmountFloat;
                 rateResult = NumberConverter.makeFloatSpecificFraction(amountsRate, 4);
             }
-            currentRate.setText(arrowSymbol + "  " + rateResult);
         }
+        currentRate.setText(arrowSymbol + "  " + rateResult);
     }
 
     public void bindObject(Conversion conversion) {
