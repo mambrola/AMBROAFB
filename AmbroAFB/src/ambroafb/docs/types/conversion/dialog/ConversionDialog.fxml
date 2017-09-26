@@ -9,6 +9,7 @@
 <?import ambroafb.currencies.*?>
 <?import ambroafb.docs.*?>
 <?import ambroafb.accounts.*?>
+<?import ambroafb.general.amount_textfield.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/conversiondialog.css"
                               xmlns:fx="http://javafx.com/fxml/1" 
@@ -16,20 +17,15 @@
                               fx:controller="ambroafb.docs.types.conversion.dialog.ConversionDialogController" >
     <VBox fx:id="formPane" styleClass="vContainer">
         <children>
-            <HBox styleClass="twoThirds" >
+            <HBox styleClass="oneThirds" >
                 <children>
-                    <VBox styleClass="coupleOneSixth" >
-                        <children>
-                            <Label text="" />
-                        </children>
-                    </VBox>
-                    <VBox styleClass="coupleOneThird" >
+                    <VBox styleClass="couple" >
                         <children>
                             <Label text="%doc_date" />
                             <ADatePicker fx:id="docDate" />
                         </children>
                     </VBox>
-                    <VBox styleClass="coupleOneThird" >
+                    <VBox styleClass="couple" >
                         <children>
                             <Label text="%doc_in_doc_date" />
                             <ADatePicker fx:id="docInDocDate" />
@@ -54,7 +50,7 @@
                     <VBox styleClass="coupleOneSixth" >
                         <children>
                             <Label text="%sell_amount" styleClass="validationMessage" />
-                            <TextField fx:id="sellAmount" alignment="BASELINE_RIGHT" />
+                            <AmountField fx:id="sellAmount" />
                         </children>
                     </VBox>
                 </children>
@@ -76,17 +72,17 @@
                     <VBox styleClass="coupleOneSixth" >
                         <children>
                             <Label text="%buying_amount" styleClass="validationMessage" />
-                            <TextField fx:id="buyingAmount" alignment="BASELINE_RIGHT"  />
+                            <AmountField fx:id="buyingAmount" />
                         </children>
                     </VBox>
                 </children>
             </HBox>
-            <HBox styleClass="oneThirds" >
+            <HBox styleClass="oneSixthes" alignment="CENTER_RIGHT" >
                 <children>
                     <VBox styleClass="couple" >
                         <children>
-                            <Label text="%purchase_rate" />
-                            <TextField fx:id="currentRate" disable="true" />
+                            <Label fx:id="currentRateTitle" text="%purchase_rate" />
+                            <Button fx:id="currentRate" onAction="#changeRateDirection" alignment="BASELINE_RIGHT" />
                         </children>
                     </VBox>
                 </children>

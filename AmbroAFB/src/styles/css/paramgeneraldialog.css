@@ -21,6 +21,10 @@
 .oneThirds > .couple > .innerCouple > * {
   -fx-pref-width: 110;
 }
+.oneSixthes > .couple,
+.oneSixthes > .couple > * {
+  -fx-pref-width: 37.5;
+}
 .twoThirds > .coupleOneThird,
 .twoThirds > .coupleOneThird > * {
   -fx-pref-width: 110;
@@ -42,6 +46,7 @@
 }
 .oneHalf,
 .oneThirds,
+.oneSixthes,
 .twoThirds,
 fiveSixthes {
   -fx-spacing: 35;

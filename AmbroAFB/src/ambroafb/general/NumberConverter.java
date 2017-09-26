@@ -13,10 +13,16 @@ import java.text.NumberFormat;
  */
 public class NumberConverter {
     
-    public static String makeTwoDigitFraction(float number){
+    /**
+     * The method make float number that has fractionDigitCount quantity number after point.
+     * @param number The float number that must be change.
+     * @param fractionDigitCount The quantity of digits after point.
+     * @return 
+     */
+    public static String makeFloatSpecificFraction(float number, int fractionDigitCount){
         NumberFormat nf = NumberFormat.getNumberInstance();
-        nf.setMaximumFractionDigits(2);
-        nf.setMinimumFractionDigits(2);
+        nf.setMaximumFractionDigits(fractionDigitCount);
+        nf.setMinimumFractionDigits(fractionDigitCount);
         return nf.format(number);
     }
     

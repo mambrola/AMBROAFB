@@ -292,7 +292,7 @@ public class Doc extends EditorPanelable {
     }
     
     public void setAmount(float amount){
-        this.amount.set(NumberConverter.makeTwoDigitFraction(amount));
+        this.amount.set(NumberConverter.makeFloatSpecificFraction(amount, 2));
     }
     
     public void setDocCode(String docCode){

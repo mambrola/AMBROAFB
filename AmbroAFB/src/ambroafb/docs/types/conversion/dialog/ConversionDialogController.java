@@ -9,20 +9,24 @@ import ambro.ADatePicker;
 import ambroafb.accounts.AccountComboBox;
 import ambroafb.currencies.IsoComboBox;
 import ambroafb.docs.types.conversion.Conversion;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
+import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
+import ambroafb.general.amount_textfield.AmountField;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 /**
@@ -42,17 +46,19 @@ public class ConversionDialogController implements Initializable {
     private IsoComboBox sellCurrency;
     @FXML @ContentNotEmpty
     private AccountComboBox sellAccount;
-    @FXML @ContentNotEmpty @ContentPattern(value = "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?", explain = "Amount text is incorrect")
-    private TextField sellAmount;
+    @FXML @ContentNotEmpty
+    private AmountField sellAmount;
     
     @FXML
     private IsoComboBox buyingCurrency;
     @FXML @ContentNotEmpty
     private AccountComboBox buyingAccount;
-    @FXML @ContentNotEmpty @ContentPattern(value = "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?", explain = "Amount text is incorrect")
-    private TextField buyingAmount;
+    @FXML @ContentNotEmpty
+    private AmountField buyingAmount;
     @FXML
-    private TextField currentRate;
+    private Label currentRateTitle;
+    @FXML
+    private Button currentRate;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -61,6 +67,9 @@ public class ConversionDialogController implements Initializable {
     private boolean permissionToClose;
     private Conversion conversion, conversionBackup;
     
+    private boolean rateTopToBottomDirection = true;
+    private final String purchaseRateTitle = GeneralConfig.getInstance().getTitleFor("purchase_rate");
+    private final String inverseRateTitle = GeneralConfig.getInstance().getTitleFor("inverse_rate");
     
     /**
      * Initializes the controller class.
@@ -74,9 +83,6 @@ public class ConversionDialogController implements Initializable {
         
         sellAccount.fillComboBox();
         buyingAccount.fillComboBox();
-        
-        Utils.validateAmountField(sellAmount);
-        Utils.validateAmountField(buyingAmount);
         
         sellCurrency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             sellAccount.filterBy(newValue);
@@ -95,14 +101,25 @@ public class ConversionDialogController implements Initializable {
         });
     }
     
+    @FXML
+    private void changeRateDirection(ActionEvent event){
+        rateTopToBottomDirection = !rateTopToBottomDirection;
+        changeRateText(sellAmount.getText(), buyingAmount.getText());
+    }
+    
     private void changeRateText(String sellAmountValue, String buyingAmountValue){
+        String rateResult = "";
         if (sellAmountValue != null && !sellAmountValue.isEmpty() && buyingAmountValue != null && !buyingAmountValue.isEmpty()){
             float sellAmountFloat = Float.parseFloat(sellAmountValue);
             float buyingAmountFloat = Float.parseFloat(buyingAmountValue);
-            if (sellAmountFloat > 0){
-                currentRate.setText("" + (buyingAmountFloat / sellAmountFloat));
+            if (sellAmountFloat > 0 && buyingAmountFloat > 0){
+                float amountsRate = (rateTopToBottomDirection) ? buyingAmountFloat / sellAmountFloat : sellAmountFloat / buyingAmountFloat;
+                rateResult = NumberConverter.makeFloatSpecificFraction(amountsRate, 4);
             }
         }
+        String rateTitle = (rateTopToBottomDirection) ? purchaseRateTitle : inverseRateTitle;
+        currentRateTitle.setText(rateTitle);
+        currentRate.setText(rateResult);
     }
 
     public void bindObject(Conversion conversion) {
