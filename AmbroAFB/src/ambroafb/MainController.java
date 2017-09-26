@@ -427,7 +427,7 @@ public class MainController implements Initializable {
     }
     
     @FXML private void balance(ActionEvent event) {}
-    @FXML private void incom_statement(ActionEvent event) {}
+    @FXML private void income_statement(ActionEvent event) {}
     @FXML private void other(ActionEvent event) {}
     
     

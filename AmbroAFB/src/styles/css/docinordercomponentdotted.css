@@ -1,7 +1,7 @@
 @import url("/styles/css/core.css");
 @import url("/styles/css/dialogs.css");
 .vContainer {
-  -fx-spacing: 10px;
+  -fx-spacing: 15;
 }
 .label {
   -fx-font-weight: bold;
@@ -10,35 +10,49 @@
 }
 .one > .couple,
 .one > .couple > * {
-  -fx-pref-width: 780;
+  -fx-pref-width: 820;
 }
 .oneHalf > .couple,
 .oneHalf > .couple > * {
-  -fx-pref-width: 372.5;
+  -fx-pref-width: 392.5;
 }
 .oneThirds > .couple,
 .oneThirds > .couple > *,
 .oneThirds > .couple > .innerCouple > * {
-  -fx-pref-width: 236.66666667;
+  -fx-pref-width: 250;
+}
+.oneSixthes > .couple,
+.oneSixthes > .couple > * {
+  -fx-pref-width: 107.5;
 }
 .twoThirds > .coupleOneThird,
 .twoThirds > .coupleOneThird > * {
-  -fx-pref-width: 236.66666667;
+  -fx-pref-width: 250;
 }
 .twoThirds > .coupleTwoThird,
 .twoThirds > .coupleTwoThird > * {
-  -fx-pref-width: 508.33333333;
+  -fx-pref-width: 535;
+}
+.twoThirds > .coupleOneSixth,
+.twoThirds > .coupleOneSixth > * {
+  -fx-pref-width: 107.5;
+}
+.fiveSixthes > .coupleFiveSixth,
+.fiveSixthes > .coupleFiveSixth > * {
+  -fx-pref-width: 677.5;
 }
 .oneThirds {
-  -fx-pref-width: 508.33333333;
+  -fx-pref-width: 535;
 }
 .oneHalf,
 .oneThirds,
-.twoThirds {
+.oneSixthes,
+.twoThirds,
+fiveSixthes {
   -fx-spacing: 35;
 }
 .okayCancelPane {
-  -fx-padding: 40px 0 0 0;
+  -fx-padding: 30 0 0 0;
 }
 .button {
   -fx-font-weight: bold;
@@ -46,14 +60,18 @@
 *:disabled {
   -fx-opacity: 0.9;
 }
-#formPaneInner {
-  -fx-min-width: 800px;
-  -fx-max-width: 800px;
-  -fx-padding: 10px;
+#formPane {
+  -fx-min-width: 850;
+  -fx-max-width: 850;
+  -fx-padding: 15;
+}
+#listVBox {
+  -fx-min-height: 450;
+  -fx-max-height: 450;
 }
 #formPaneInner {
   -fx-border-color: black;
-  -fx-border-style: dashed;
-  -fx-border-width: 2;
+  -fx-border-style: solid;
+  -fx-border-width: 1 0 1 0;
   -fx-border-insets: 2;
 }
