@@ -1,5 +1,14 @@
 @import url("/styles/css/core.css");
 @import url("/styles/css/dialogs.css");
+/*.setFormPaneRules(@width) {
+    @formWidth:     @width;
+    
+    #formPane {
+        -fx-min-width: @formWidth + 2*@gap;
+        -fx-max-width: @formWidth + 2*@gap;
+        -fx-padding: @gap;
+    }
+}*/
 .vContainer {
   -fx-spacing: 15;
 }
@@ -10,39 +19,39 @@
 }
 .one > .couple,
 .one > .couple > * {
-  -fx-pref-width: 820;
+  -fx-pref-width: 800;
 }
 .oneHalf > .couple,
 .oneHalf > .couple > * {
-  -fx-pref-width: 392.5;
+  -fx-pref-width: 382.5;
 }
 .oneThirds > .couple,
 .oneThirds > .couple > *,
 .oneThirds > .couple > .innerCouple > * {
-  -fx-pref-width: 250;
+  -fx-pref-width: 243.33333333;
 }
 .oneSixthes > .couple,
 .oneSixthes > .couple > * {
-  -fx-pref-width: 107.5;
+  -fx-pref-width: 104.16666667;
 }
 .twoThirds > .coupleOneThird,
 .twoThirds > .coupleOneThird > * {
-  -fx-pref-width: 250;
+  -fx-pref-width: 243.33333333;
 }
 .twoThirds > .coupleTwoThird,
 .twoThirds > .coupleTwoThird > * {
-  -fx-pref-width: 535;
+  -fx-pref-width: 521.66666667;
 }
 .twoThirds > .coupleOneSixth,
 .twoThirds > .coupleOneSixth > * {
-  -fx-pref-width: 107.5;
+  -fx-pref-width: 104.16666667;
 }
 .fiveSixthes > .coupleFiveSixth,
 .fiveSixthes > .coupleFiveSixth > * {
-  -fx-pref-width: 677.5;
+  -fx-pref-width: 660.83333333;
 }
 .oneThirds {
-  -fx-pref-width: 535;
+  -fx-pref-width: 521.66666667;
 }
 .oneHalf,
 .oneThirds,
@@ -61,11 +70,12 @@ fiveSixthes {
   -fx-opacity: 0.9;
 }
 #formPane {
-  -fx-min-width: 850;
-  -fx-max-width: 850;
   -fx-padding: 15;
 }
+#scrollPane {
+  -fx-min-height: 470;
+  -fx-max-height: 470;
+}
 #listVBox {
-  -fx-min-height: 450;
-  -fx-max-height: 450;
+  -fx-spacing: 15;
 }

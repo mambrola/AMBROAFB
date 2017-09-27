@@ -33,7 +33,7 @@ import javafx.scene.layout.VBox;
  *
  * @author dkobuladze
  */
-public class DocOrderDialogSceneComponent extends VBox {
+public class DocOrderComponent extends VBox {
     
     @FXML
     private HBox docDatePane;
@@ -67,7 +67,7 @@ public class DocOrderDialogSceneComponent extends VBox {
     private final String withoutBorderStylesheetPath = "/styles/css/docinordercomponent.css";
     private final String dottedBorderStylesheetPath = "/styles/css/docinordercomponentdotted.css";
     
-    public DocOrderDialogSceneComponent(){
+    public DocOrderComponent(){
         super();
         assignLoader();
         componentsInit();
@@ -75,14 +75,14 @@ public class DocOrderDialogSceneComponent extends VBox {
     }
     
     private void assignLoader(){
-        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/docs/types/doc_in_order/DocOrderDialogSceneComponent.fxml"));
+        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/docs/types/doc_in_order/DocOrderComponent.fxml"));
         loader.setResources(GeneralConfig.getInstance().getBundle());
         loader.setRoot(this);
         loader.setController(this);
         try {
             loader.load();
         } catch (IOException ex) {
-            Logger.getLogger(DocOrderDialogSceneComponent.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DocOrderComponent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

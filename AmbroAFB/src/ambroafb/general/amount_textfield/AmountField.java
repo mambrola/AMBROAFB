@@ -6,7 +6,7 @@
 package ambroafb.general.amount_textfield;
 
 import ambroafb.AmbroAFB;
-import ambroafb.docs.types.doc_in_order.DocOrderDialogSceneComponent;
+import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class AmountField extends TextField {
         try {
             loader.load();
         } catch (IOException ex) {
-            Logger.getLogger(DocOrderDialogSceneComponent.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DocOrderComponent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

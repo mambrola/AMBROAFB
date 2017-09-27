@@ -7,7 +7,7 @@ package ambroafb.docs.types.doc_in_order.dialog;
 
 import ambro.ADatePicker;
 import ambroafb.docs.types.doc_in_order.DocInOrder;
-import ambroafb.docs.types.doc_in_order.DocOrderDialogSceneComponent;
+import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -18,7 +18,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
 /**
@@ -37,8 +36,6 @@ public class DocInOrderDialogController implements Initializable {
     @FXML
     private DialogOkayCancelController okayCancelController;
     
-    @FXML
-    private ScrollPane scrollPane;
     @FXML
     private VBox listVBox;
     
@@ -73,7 +70,7 @@ public class DocInOrderDialogController implements Initializable {
         }
         else {
             docInOrder.getDocs().stream().forEach((doc) -> {
-                DocOrderDialogSceneComponent lsComp = new DocOrderDialogSceneComponent();
+                DocOrderComponent lsComp = new DocOrderComponent();
                 lsComp.removeDocDateComponent();
                 lsComp.binTo(doc);
                 lsComp.setDiableComponents(buttonType);

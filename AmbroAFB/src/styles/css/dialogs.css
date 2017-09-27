@@ -1,3 +1,12 @@
+/*.setFormPaneRules(@width) {
+    @formWidth:     @width;
+    
+    #formPane {
+        -fx-min-width: @formWidth + 2*@gap;
+        -fx-max-width: @formWidth + 2*@gap;
+        -fx-padding: @gap;
+    }
+}*/
 .vContainer {
   -fx-spacing: 15;
 }
