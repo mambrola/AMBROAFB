@@ -254,7 +254,7 @@ public class DocEditorPanelController implements Initializable {
                     newDocsFromDB.stream().forEach((doc) -> {
                         tableData.add(doc);
                     });
-                    ((DocTableListController)outerController).setSelected(tableData.size()-1);
+                    ((DocTableListController)outerController).setSelected(tableData.size()-newDocsFromDB.size());
                 }
             }
         }
@@ -391,7 +391,7 @@ public class DocEditorPanelController implements Initializable {
                     newDocsFromDB.stream().forEach((doc) -> {
                         tableData.add(doc);
                     });
-                    ((DocTableListController)outerController).setSelected(tableData.size()-1);
+                    ((DocTableListController)outerController).setSelected(tableData.size()-newDocsFromDB.size());
                 }
             }
         }
