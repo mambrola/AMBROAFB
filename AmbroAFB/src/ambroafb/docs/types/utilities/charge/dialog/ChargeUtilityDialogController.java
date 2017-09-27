@@ -11,8 +11,9 @@ import ambroafb.docs.DocMerchandiseComboBox;
 import ambroafb.docs.types.utilities.charge.ChargeUtility;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
-import ambroafb.general.interfaces.Annotations;
+import ambroafb.general.amount_textfield.AmountField;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
@@ -44,8 +45,12 @@ public class ChargeUtilityDialogController implements Initializable {
     @FXML
     private TextField currency;
     
-    @FXML @Annotations.ContentNotEmpty @Annotations.ContentPattern(value = "\\d+(\\.\\d+)?", explain = "Amount Pattern is incorrct.")
-    private TextField amount, vat;
+    @FXML @ContentNotEmpty
+    private AmountField amount;
+    
+    @FXML @ContentNotEmpty @ContentPattern(value = "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?", explain = "Vat text is incorrect")
+    private TextField vat;
+    
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -80,12 +85,12 @@ public class ChargeUtilityDialogController implements Initializable {
     
     private void changeVatFieldValue(String amount){
         if (amount != null && !amount.isEmpty()){
-                float amountValue = Float.parseFloat(amount);
-                if (utilities.getValue() != null){
-                    float vatRate = utilities.getValue().getVatRate();
-                    vat.setText("" + (amountValue * vatRate / 100));
-                }
+            float amountValue = Float.parseFloat(amount);
+            if (utilities.getValue() != null){
+                float vatRate = utilities.getValue().getVatRate();
+                vat.setText("" + (amountValue * vatRate / 100));
             }
+        }
     }
 
     public void bindUtility(ChargeUtility chargeUtility) {
