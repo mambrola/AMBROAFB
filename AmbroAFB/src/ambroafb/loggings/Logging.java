@@ -10,14 +10,13 @@ import ambroafb.clients.Client;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.FilterModel;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.loggings.filter.LoggingFilterModel;
 import authclient.db.ConditionBuilder;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.IntegerProperty;
@@ -47,7 +46,7 @@ public class Logging extends EditorPanelable {
     @JsonIgnore
     private final StringProperty loginDateDescrip;
     @JsonIgnore
-    private final ObjectProperty<LocalDate> loginDateObj;
+    private final ObjectProperty<LocalDateTime> loginDateObj;
     
     @AView.Column(title = "%mac_address", width = TableColumnWidths.MAC_ADDRESS, styleClass = "textCenter")
     private final StringProperty macAddress;
@@ -107,7 +106,7 @@ public class Logging extends EditorPanelable {
         return clientObj;
     }
     
-    public ObjectProperty<LocalDate> loginDateProperty(){
+    public ObjectProperty<LocalDateTime> loginDateProperty(){
         return loginDateObj;
     }
     
@@ -178,7 +177,7 @@ public class Logging extends EditorPanelable {
     }
     
     public void setLoginTime(String logginTime){
-        loginDateObj.set(DateConverter.getInstance().parseDate(logginTime));
+        loginDateObj.set(DateConverter.getInstance().parseDateTime(logginTime));
         loginDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(loginDateObj.get()));
     }
     
@@ -232,7 +231,8 @@ public class Logging extends EditorPanelable {
         Logging logingBackup = (Logging) backup;
         return  getLicenseNumber().equals(logingBackup.getLicenseNumber()) &&
                 clientObj.get().equals(logingBackup.clientProperty().get()) &&
-                Utils.dateEquals(loginDateProperty().get(), logingBackup.loginDateProperty().get()) &&
+                loginDateObj.get().equals(logingBackup.loginDateProperty().get()) &&
+//                Utils.dateEquals(loginDateProperty().get(), logingBackup.loginDateProperty().get()) &&
 //                getLoginTime().equals(loggingBackup.getLoginTime()) &&
                 getMacAddress().equals(logingBackup.getMacAddress()) &&
                 getResponseCode().equals(logingBackup.getResponseCode());
