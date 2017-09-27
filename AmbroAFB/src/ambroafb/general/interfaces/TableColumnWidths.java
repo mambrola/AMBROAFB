@@ -12,6 +12,6 @@ package ambroafb.general.interfaces;
 public interface TableColumnWidths {
     
     public static final String ISO = "50";
-    public static final String DATE = "100";
+    public static final String DATE = "80";
     
 }

@@ -65,7 +65,7 @@ public class Client extends EditorPanelable{
 
     private final SimpleStringProperty firstName, lastName;
 
-    @AView.Column(title = "%descrip", width = "152")
+    @AView.Column(title = "%descrip", width = "180")
     @JsonIgnore
     private final StringExpression descrip;
 
@@ -73,16 +73,16 @@ public class Client extends EditorPanelable{
     @JsonProperty("passNumber")
     private final SimpleStringProperty IDNumber;
 
-    @AView.Column(title = "%email", width = "170")
+    @AView.Column(title = "%email", width = "200")
     private final SimpleStringProperty email;
 
-    @AView.Column(title = "%phones", width = "128")
+    @AView.Column(title = "%phones", width = "110")
     @JsonIgnore
     private final SimpleStringProperty phoneNumbers;
 
     private final ObservableList<Phone> phones;
     
-    @AView.Column(title = "%client_status", width = "110", styleClass = "textCenter")
+    @AView.Column(title = "%client_status", width = "100")
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private final StringProperty statusDescrip;
     @JsonIgnore
@@ -101,10 +101,10 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private final ObjectProperty<Country> country;
 
-    @AView.Column(title = "%fax", width = "80")
+    @AView.Column(title = "%fax", width = "110")
     private final SimpleStringProperty fax;
     
-    @AView.Column(title = "%www_address", width = "128")
+    @AView.Column(title = "%www_address", width = "140")
     private final SimpleStringProperty www;
     
     private final SimpleStringProperty remark;

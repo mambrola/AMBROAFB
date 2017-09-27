@@ -12,6 +12,7 @@ import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TableColumnWidths;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -43,30 +44,30 @@ public class Doc extends EditorPanelable {
     private final IntegerProperty parentRecId;
     private final IntegerProperty processId;
     
-    @AView.Column(title = "%doc_date", width = "120", styleClass = "textCenter")
+    @AView.Column(title = "%doc_date", width = TableColumnWidths.DATE)
     private final ObjectProperty<LocalDate> docDateObj;
 
-    @AView.Column(title = "%doc_in_doc_date", width = "100", styleClass = "textCenter")
+    @AView.Column(title = "%doc_in_doc_date", width = TableColumnWidths.DATE)
     private final ObjectProperty<LocalDate> docInDocDateObj;
     
-    @AView.Column(title = "%debit", width = "230")
+    @AView.Column(title = "%debit", width = "260")
     private final StringProperty debitDescrip;
     private final ObjectProperty<Account> debitObj;
     
-    @AView.Column(title = "%credit", width = "230")
+    @AView.Column(title = "%credit", width = "260")
     private final StringProperty creditDescrip;
     private final ObjectProperty<Account> creditObj;
     
-    @AView.Column(title = "%iso", width = "50", styleClass = "textCenter")
+    @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
     private final StringProperty iso;
     
     @AView.Column(title = "%amount", width = "80", styleClass = "textRight")
     private final StringProperty amount;
     
-    @AView.Column(title = "%doc_code", width = "130")
+    @AView.Column(title = "%doc_code", width = "90")
     private final ObjectProperty<DocCode> docCode;
     
-    @AView.Column(title = "%doc_descrip", width = "270")
+    @AView.Column(title = "%doc_descrip", width = "380")
     private final StringProperty descrip;
     private final IntegerProperty ownerId;
     

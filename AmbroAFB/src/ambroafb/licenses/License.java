@@ -45,13 +45,13 @@ public class License extends EditorPanelable {
 
     public String password;
     
-    @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textRight")
     private final StringProperty createdDate;
     
-    @AView.Column(title = "%license_N", width = "100", styleClass = "textRight")
+    @AView.Column(title = "%license_N", width = "90", styleClass = "textRight")
     private final IntegerProperty licenseNumber;
     
-    @AView.Column(title = "%client", width = "150", styleClass = "textCenter")
+    @AView.Column(title = "%client", width = "300")
     @JsonIgnore
     private final StringExpression clientDescrip;
     @JsonIgnore
@@ -74,7 +74,7 @@ public class License extends EditorPanelable {
     private final IntegerProperty cfCurrentInvoiceId;
     private final IntegerProperty cfFutureInvoiceId;
     
-    @AView.Column(title = "%license_statuses", width = "128")
+    @AView.Column(title = "%license_statuses", width = "160")
     private final StringProperty statusDescrip;
     @JsonIgnore
     private final ObjectProperty<LicenseStatus> statusObj;
@@ -82,14 +82,14 @@ public class License extends EditorPanelable {
     
     private final StringProperty remark;
     
-    @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE, styleClass = "textRight")
     @JsonIgnore
     private final StringProperty firstDateDescrip;
     @JsonIgnore
     private final ObjectProperty<LocalDate> firstDateObj;
     private String firstDate; // for object mapper (case: class to json)
     
-    @AView.Column(title = "%end_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @AView.Column(title = "%end_date", width = TableColumnWidths.DATE, styleClass = "textRight")
     @JsonIgnore
     private final StringProperty lastDateDescrip;
     @JsonIgnore
