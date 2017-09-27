@@ -58,7 +58,7 @@ import org.json.JSONObject;
  */
 public class Invoice extends EditorPanelable { 
 
-    @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textRight")
     private final StringProperty createdDate;
     
     @AView.Column(title = "%invoice_N", width = "100")
@@ -67,30 +67,30 @@ public class Invoice extends EditorPanelable {
     
     private final ObjectProperty<InvoiceStatusClarify> clarifyObj;
     
-    @AView.Column(title = "%licenses", width = "100")
+    @AView.Column(title = "%licenses", width = TableColumnWidths.LICENSE)
     @JsonIgnore
     private final StringProperty licensesDescript;
     private final ObservableList<LicenseShortData> licenses;
     
-    @AView.Column(title = "%clients", width = "250")
+    @AView.Column(title = "%clients", width = TableColumnWidths.CLIENT_MAIL)
     @JsonIgnore
     private final StringExpression clientDescrip;
     @JsonIgnore
     private final ObjectProperty<Client> clientObj;
     
-    @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE, styleClass = "textRight")
     @JsonIgnore
     private final StringProperty beginDateDescrip;
     @JsonIgnore
     private final ObjectProperty<LocalDate> beginDateObj;
 
-    @AView.Column(title = "%end_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @AView.Column(title = "%end_date", width = TableColumnWidths.DATE, styleClass = "textRight")
     @JsonIgnore
     private final StringProperty endDateDescrip;
     @JsonIgnore
     private final ObjectProperty<LocalDate> endDateObj;
     
-    @AView.Column(title = "%revoked_date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @AView.Column(title = "%revoked_date", width = TableColumnWidths.DATE, styleClass = "textRight")
     @JsonIgnore
     private final StringProperty revokedDateDescrip;
     @JsonIgnore
@@ -98,17 +98,17 @@ public class Invoice extends EditorPanelable {
     @JsonIgnore
     private final BooleanProperty isRevoked;
     
-    @AView.Column(title = "%extra_discount", width = "100", styleClass = "textRight")
+//    @AView.Column(title = "%extra_discount", width = "100", styleClass = "textRight")
     private final StringProperty additionalDiscRate;
     
-    @AView.Column(title = "%money_to_pay", width = "70", styleClass = "textRight" )
+    @AView.Column(title = "%to_pay", width = TableColumnWidths.MONEY, styleClass = "textRight" )
     private final StringProperty moneyToPay;
     
     
-    @AView.Column(title = "%vat", width = "70", styleClass = "textRight")
+    @AView.Column(title = "%vat", width = TableColumnWidths.MONEY, styleClass = "textRight")
     private final StringProperty vat;
     
-    @AView.Column(title = "%money_paid", width = "70", styleClass = "textRight")
+    @AView.Column(title = "%paid", width = TableColumnWidths.MONEY, styleClass = "textRight")
     private final StringProperty moneyPaid;
     
     

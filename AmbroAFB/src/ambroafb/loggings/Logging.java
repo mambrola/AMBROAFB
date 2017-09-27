@@ -34,25 +34,25 @@ import org.json.JSONObject;
  */
 public class Logging extends EditorPanelable {
 
-    @AView.Column(title = "%license_N", width = "100", styleClass = "textCenter")
+    @AView.Column(title = "%license_N", width = TableColumnWidths.LICENSE, styleClass = "textCenter")
     private final StringProperty licenseNumber;
 
-    @AView.Column(title = "%clients", width = "150")
+    @AView.Column(title = "%clients", width = TableColumnWidths.MAIL)
     @JsonIgnore
     private final StringExpression clientDescrip;
     @JsonIgnore
     private final ObjectProperty<Client> clientObj;
     
-    @AView.Column(title = "%login_time", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @AView.Column(title = "%login_time", width = TableColumnWidths.DATETIME, styleClass = "textRight")
     @JsonIgnore
     private final StringProperty loginDateDescrip;
     @JsonIgnore
     private final ObjectProperty<LocalDate> loginDateObj;
     
-    @AView.Column(title = "%mac_address", width = "120", styleClass = "textCenter")
+    @AView.Column(title = "%mac_address", width = TableColumnWidths.MAC_ADDRESS, styleClass = "textCenter")
     private final StringProperty macAddress;
     
-    @AView.Column(title = "%login_response", width = "100", styleClass = "textCenter")
+    @AView.Column(title = "%login_response", width = "150")
     private final StringProperty response;
     
     private final IntegerProperty licenseId;
@@ -80,7 +80,7 @@ public class Logging extends EditorPanelable {
         WhereBuilder whereBuilder = new ConditionBuilder().where()
                                         .and("login_time", ">=", logingFilterModel.getFromDateForDB())
                                         .and("login_time", "<=", logingFilterModel.getToDateForDB());
-        if (!logingFilterModel.isSelectedConcreteClient()){
+        if (logingFilterModel.isSelectedConcreteClient()){
             Client client = logingFilterModel.getSelectedClient();
             whereBuilder.and("first_name", "=", client.getFirstName())
                         .and("last_name", "=", client.getLastName())

@@ -48,10 +48,10 @@ public class License extends EditorPanelable {
     @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textRight")
     private final StringProperty createdDate;
     
-    @AView.Column(title = "%license_N", width = "90", styleClass = "textRight")
+    @AView.Column(title = "%license_N", width = TableColumnWidths.LICENSE, styleClass = "textRight")
     private final IntegerProperty licenseNumber;
     
-    @AView.Column(title = "%client", width = "300")
+    @AView.Column(title = "%client", width = TableColumnWidths.CLIENT_MAIL)
     @JsonIgnore
     private final StringExpression clientDescrip;
     @JsonIgnore
@@ -59,7 +59,7 @@ public class License extends EditorPanelable {
     private int clientId; // for object mapper (case: class to json)
     private String firstName, lastName, email;
     
-    @AView.Column(title = "%product", width = "70", styleClass = "textCenter")
+    @AView.Column(title = "%product", width = TableColumnWidths.PRODUCT, styleClass = "textCenter")
     @JsonIgnore
     private final StringExpression productDescrip;
     @JsonIgnore
@@ -67,7 +67,7 @@ public class License extends EditorPanelable {
     private int productId; // for object mapper (case: class to json)
     private String abbreviation, former;
     
-    @AView.Column(title = "%last_invoice", width = "100")
+    @AView.Column(title = "%last_invoice", width = TableColumnWidths.INVOICE)
     private final StringProperty invoiceNumber;
 //    @JsonIgnore
 //    private final ObjectProperty<Invoice> invoiceObj;

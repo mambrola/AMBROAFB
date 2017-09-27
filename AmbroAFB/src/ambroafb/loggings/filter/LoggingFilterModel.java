@@ -97,6 +97,9 @@ public class LoggingFilterModel extends FilterModel {
     }
 
     public boolean isSelectedConcreteClient() {
+        
+        System.out.println("selectedClient.getRecId(): " + selectedClient.getRecId());
+        
         return selectedClient != null && selectedClient.getRecId() > 0;
     }
 }
