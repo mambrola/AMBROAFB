@@ -45,10 +45,12 @@ public class Doc extends EditorPanelable {
     private final IntegerProperty processId;
     
     @AView.Column(title = "%doc_date", width = TableColumnWidths.DATE)
+    private final StringProperty docDateDescrip;
     private final ObjectProperty<LocalDate> docDateObj;
 
     @AView.Column(title = "%doc_in_doc_date", width = TableColumnWidths.DATE)
     private final ObjectProperty<LocalDate> docInDocDateObj;
+    private final StringProperty docInDocDateDescrip;
     
     @AView.Column(title = "%debit", width = "260")
     private final StringProperty debitDescrip;
@@ -85,7 +87,9 @@ public class Doc extends EditorPanelable {
         marker = new SimpleIntegerProperty(markerDefaultValue);
         parentRecId = new SimpleIntegerProperty(parentRecIdDefaultValue);
         processId = new SimpleIntegerProperty();
+        docDateDescrip = new SimpleStringProperty("");
         docDateObj = new SimpleObjectProperty<>(LocalDate.now());
+        docInDocDateDescrip = new SimpleStringProperty("");
         docInDocDateObj = new SimpleObjectProperty<>(LocalDate.now());
         
         debitDescrip = new SimpleStringProperty("");
@@ -188,11 +192,11 @@ public class Doc extends EditorPanelable {
     }
     
     public String getDocDate(){
-        return docDateObj.get().toString();
+        return (docDateObj.isNull().get()) ? "" : docDateObj.get().toString();
     }
     
     public String getDocInDocDate(){
-        return docInDocDateObj.get().toString();
+        return (docInDocDateObj.isNull().get()) ? "" : docInDocDateObj.get().toString();
     }
     
     public String getIso(){
@@ -254,10 +258,13 @@ public class Doc extends EditorPanelable {
     
     public void setDocDate(String docDate){
         docDateObj.set(DateConverter.getInstance().parseDate(docDate));
+        docDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(docDateObj.get()));
     }
     
     public void setDocInDocDate(String docInDocDate){
         docInDocDateObj.set(DateConverter.getInstance().parseDate(docInDocDate));
+        System.out.println("?????????????????????: " + DateConverter.getInstance().getDayMonthnameYearBySpace(docInDocDateObj.get()));
+//        docInDocDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(docInDocDateObj.get()));
     }
     
     public void setDebitId(int debitId){
