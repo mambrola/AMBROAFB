@@ -49,8 +49,8 @@ public class Doc extends EditorPanelable {
     private final ObjectProperty<LocalDate> docDateObj;
 
     @AView.Column(title = "%doc_in_doc_date", width = TableColumnWidths.DATE)
-    private final ObjectProperty<LocalDate> docInDocDateObj;
     private final StringProperty docInDocDateDescrip;
+    private final ObjectProperty<LocalDate> docInDocDateObj;
     
     @AView.Column(title = "%debit", width = "260")
     private final StringProperty debitDescrip;
@@ -263,8 +263,7 @@ public class Doc extends EditorPanelable {
     
     public void setDocInDocDate(String docInDocDate){
         docInDocDateObj.set(DateConverter.getInstance().parseDate(docInDocDate));
-        System.out.println("?????????????????????: " + DateConverter.getInstance().getDayMonthnameYearBySpace(docInDocDateObj.get()));
-//        docInDocDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(docInDocDateObj.get()));
+        docInDocDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(docInDocDateObj.get()));
     }
     
     public void setDebitId(int debitId){
