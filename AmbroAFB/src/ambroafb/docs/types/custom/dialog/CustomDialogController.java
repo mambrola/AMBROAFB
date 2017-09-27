@@ -6,7 +6,7 @@
 package ambroafb.docs.types.custom.dialog;
 
 import ambroafb.docs.Doc;
-import ambroafb.docs.types.doc_in_order.DocOrderDialogSceneComponent;
+import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
@@ -56,7 +56,7 @@ public class CustomDialogController implements Initializable {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
-        DocOrderDialogSceneComponent lsComp = new DocOrderDialogSceneComponent();
+        DocOrderComponent lsComp = new DocOrderComponent();
         lsComp.binTo(doc);
         lsComp.setDiableComponents(buttonType);
         formPane.getChildren().add(0, lsComp);

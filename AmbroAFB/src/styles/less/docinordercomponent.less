@@ -1,12 +1,11 @@
 @import url("/styles/css/core.css");
 @import url("/styles/css/dialogs.css");
 @import url("/dialogs.less");
-@import url("/variables.less");
 
-@formWidth          : 780; // monthly.less-ში გაწერილ formWidth-ზე უნდა იყოს 20-ით ნაკლები, რადგან  სიგრძის გამოთვლებში (ქვემოთ) ემატება 20 (2*@gap)
+@formWidth          : 800;
 
 #formPaneInner {
-    -fx-min-width: @formWidth + 2*@gap; // @gap წერია როგორც dialogs.less ისე variables. რადგან variables.less ბოლოს Import-დება იღებს მის მნიშვნელობას.
-    -fx-max-width: @formWidth + 2*@gap;
-    -fx-padding: @gap;
+    -fx-min-width: @formWidth;
+    -fx-max-width: @formWidth;
+    -fx-padding: 0 0 @gap 0;
 }

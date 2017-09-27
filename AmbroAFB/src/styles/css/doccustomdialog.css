@@ -61,7 +61,6 @@ fiveSixthes {
   -fx-opacity: 0.9;
 }
 #formPane {
-  -fx-min-width: 830;
-  -fx-max-width: 830;
   -fx-padding: 15;
+  -fx-spacing: 35;
 }

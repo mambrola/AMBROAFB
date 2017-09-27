@@ -10,12 +10,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox   
-         alignment="CENTER_RIGHT" 
-         spacing="50.0" 
-         stylesheets="/styles/css/okaycancel.css" 
-         xmlns:fx="http://javafx.com/fxml/1" 
-         fx:controller="ambroafb.general.okay_cancel.DialogOkayCancelController">
+<HBox   fx:id="formNode"
+
+        stylesheets="/styles/css/okaycancel.css" 
+        xmlns:fx="http://javafx.com/fxml/1" 
+        fx:controller="ambroafb.general.okay_cancel.DialogOkayCancelController">
     <children>
         <Button fx:id="okay" styleClass="middle, allowEnterAction" text="OK" >
             <tooltip>

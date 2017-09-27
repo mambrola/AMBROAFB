@@ -1,13 +1,12 @@
 @import url("/styles/css/core.css");
-@import url("/styles/css/dialogs.css"); // for styleClass rules
-@import url("/dialogs.less");           // for functins
+@import url("/styles/css/dialogs.css");
+@import url("/dialogs.less");
 
-@formWidth          : 820;
-
-.setFormPaneRules(@formWidth);
-
+#formPane {
+    -fx-padding: @gap;
+}
 
 #listVBox {
-    -fx-min-height: 450;
+    -fx-min-height: 450; // variablshi gavitanot
     -fx-max-height: 450;
 }

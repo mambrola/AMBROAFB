@@ -11,7 +11,7 @@
                               xmlns:fx="http://javafx.com/fxml/1" 
                               xmlns="http://javafx.com/javafx/8"
                               fx:controller="ambroafb.docs.types.doc_in_order.dialog.DocInOrderDialogController" >
-    <VBox fx:id="formPane" styleClass="vContainer">
+    <VBox fx:id="formPane" styleClass="vContainer" >
         <children>
             <HBox styleClass="oneThirds">
                 <children>
@@ -22,7 +22,7 @@
                 </children> 
             </HBox>
             <ScrollPane fx:id="scrollPane" hbarPolicy="never" vbarPolicy="always" pannable="true" >
-                <VBox fx:id="listVBox" >
+                <VBox fx:id="listVBox" alignment="CENTER" >
                     <children>
                     </children>
                 </VBox>
