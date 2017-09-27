@@ -18,10 +18,6 @@
             <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
-                        <Label text="%utilities" styleClass="validationMessage" /> 
-                        <DocMerchandiseComboBox fx:id="utilities" />
-                    </VBox>
-                    <VBox styleClass="couple">
                         <Label text="%doc_date" /> 
                         <ADatePicker fx:id="docDate" />
                     </VBox>
@@ -34,6 +30,10 @@
             <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
+                        <Label text="%utilities" styleClass="validationMessage" /> 
+                        <DocMerchandiseComboBox fx:id="utilities" />
+                    </VBox>
+                    <VBox styleClass="couple">
                         <Label text="%currency" />
                         <TextField fx:id="currency" disable="true"/>
                     </VBox>
@@ -41,11 +41,15 @@
                         <Label text="%amount" styleClass="validationMessage" /> 
                         <TextField fx:id="amount" alignment="BASELINE_RIGHT" />
                     </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="oneThirds" alignment="BASELINE_RIGHT" >
+                <children>
                     <VBox styleClass="couple">
                         <Label text="%vat" styleClass="validationMessage" /> 
                         <TextField fx:id="vat" />
                     </VBox>
-                </children> 
+                </children>
             </HBox>
             <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
                 <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>

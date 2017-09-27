@@ -53,7 +53,7 @@ public class DocMerchandise {
     }
 
     public float getVatRate() {
-        return Float.parseFloat(vatRate.get());
+        return (vatRate.get().isEmpty()) ? 0 : Float.parseFloat(vatRate.get());
     }
 
     

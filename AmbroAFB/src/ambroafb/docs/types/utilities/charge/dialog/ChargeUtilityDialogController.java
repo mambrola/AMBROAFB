@@ -67,23 +67,26 @@ public class ChargeUtilityDialogController implements Initializable {
         // Value change of utility also changes iso:
         utilities.valueProperty().addListener((ObservableValue<? extends DocMerchandise> observable, DocMerchandise oldValue, DocMerchandise newValue) -> {
             currency.setText(newValue.getIso());
+            changeVatFieldValue(amount.getText());
         });
         
         Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
         Utils.validateTextFieldContentListener(vat, "\\d+|\\d+\\.|\\d+\\.\\d*");
         
-        amount.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (oldValue != null && oldValue && !newValue){
-                if (!amount.getText().isEmpty()){
-                    float amountValue = Float.parseFloat(amount.getText());
-                    if (utilities.getValue() != null){
-                        float vatRate = utilities.getValue().getVatRate();
-                        vat.setText("" + (amountValue * vatRate / 100));
-                    }
-                }
-            }
+        amount.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            changeVatFieldValue(newValue);
         });
     }    
+    
+    private void changeVatFieldValue(String amount){
+        if (amount != null && !amount.isEmpty()){
+                float amountValue = Float.parseFloat(amount);
+                if (utilities.getValue() != null){
+                    float vatRate = utilities.getValue().getVatRate();
+                    vat.setText("" + (amountValue * vatRate / 100));
+                }
+            }
+    }
 
     public void bindUtility(ChargeUtility chargeUtility) {
         this.chargeUtility = chargeUtility;
