@@ -2,11 +2,17 @@
 @import url("/styles/css/dialogs.css");
 @import url("/dialogs.less");
 
+@defaultHeight   : 470;
+
 #formPane {
     -fx-padding: @gap;
 }
 
+#scrollPane {
+    -fx-min-height: @defaultHeight;
+    -fx-max-height: @defaultHeight;
+}
+
 #listVBox {
-    -fx-min-height: 450; // variablshi gavitanot
-    -fx-max-height: 450;
+    -fx-spacing: @gap;
 }
