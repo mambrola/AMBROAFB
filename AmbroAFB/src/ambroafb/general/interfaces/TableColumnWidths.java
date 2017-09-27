@@ -13,5 +13,14 @@ public interface TableColumnWidths {
     
     public static final String ISO = "50";
     public static final String DATE = "80";
-    
+    public static final String DATETIME = "180";
+    public static final String CLIENT = "180";
+    public static final String MAIL = "200";
+    public static final String CLIENT_MAIL = "300";
+    public static final String INVOICE = "100";
+    public static final String LICENSE = "90";
+    public static final String PRODUCT = "70";
+    public static final String PHONE = "110";
+    public static final String MONEY = "80";
+    public static final String MAC_ADDRESS = "120";
 }

@@ -16,6 +16,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.phones.Phone;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
@@ -65,7 +66,7 @@ public class Client extends EditorPanelable{
 
     private final SimpleStringProperty firstName, lastName;
 
-    @AView.Column(title = "%descrip", width = "180")
+    @AView.Column(title = "%descrip", width = TableColumnWidths.CLIENT)
     @JsonIgnore
     private final StringExpression descrip;
 
@@ -73,10 +74,10 @@ public class Client extends EditorPanelable{
     @JsonProperty("passNumber")
     private final SimpleStringProperty IDNumber;
 
-    @AView.Column(title = "%email", width = "200")
+    @AView.Column(title = "%email", width = TableColumnWidths.MAIL)
     private final SimpleStringProperty email;
 
-    @AView.Column(title = "%phones", width = "110")
+    @AView.Column(title = "%phones", width = TableColumnWidths.PHONE)
     @JsonIgnore
     private final SimpleStringProperty phoneNumbers;
 
@@ -101,7 +102,7 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private final ObjectProperty<Country> country;
 
-    @AView.Column(title = "%fax", width = "110")
+    @AView.Column(title = "%fax", width = TableColumnWidths.PHONE)
     private final SimpleStringProperty fax;
     
     @AView.Column(title = "%www_address", width = "140")
