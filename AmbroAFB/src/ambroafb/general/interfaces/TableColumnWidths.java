@@ -13,7 +13,7 @@ public interface TableColumnWidths {
     
     public static final String ISO = "50";
     public static final String DATE = "80";
-    public static final String DATETIME = "180";
+    public static final String DATETIME = "150";
     public static final String CLIENT = "180";
     public static final String MAIL = "200";
     public static final String CLIENT_MAIL = "300";

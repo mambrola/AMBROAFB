@@ -52,7 +52,7 @@ public class Logging extends EditorPanelable {
     @AView.Column(title = "%mac_address", width = TableColumnWidths.MAC_ADDRESS, styleClass = "textCenter")
     private final StringProperty macAddress;
     
-    @AView.Column(title = "%login_response", width = "100")
+    @AView.Column(title = "%login_response", width = "150")
     private final StringProperty response;
     
     private final IntegerProperty licenseId;

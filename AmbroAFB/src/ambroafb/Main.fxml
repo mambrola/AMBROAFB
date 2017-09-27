@@ -36,7 +36,7 @@
                                 <MenuItem onAction="#docs" text="%list" />
                             </items>                                                                       
                         </Menu>
-                        <Menu text="%books">
+                        <Menu text="%business_books">
                             <items>
                                 <MenuItem onAction="#licenses" text="%licenses" />
                                 <MenuItem onAction="#invoices" text="%invoices" />
