@@ -6,13 +6,14 @@
 package ambroafb.loggings.filter;
 
 import ambro.ADatePicker;
+import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.general.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
-import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
@@ -59,6 +60,7 @@ public class LoggingFilter extends UserInteractiveStage implements Initializable
     @Override
     public void setResult(boolean isOk) {
         if (!isOk){
+            System.out.println("------------ Cancel ------------");
             loggingFilterModel.changeModelAsEmpty();
         }
         else {
@@ -67,8 +69,10 @@ public class LoggingFilter extends UserInteractiveStage implements Initializable
             
             loggingFilterModel.setFromDate(dateBigger.getValue());
             loggingFilterModel.setToDate(dateLess.getValue());
-            loggingFilterModel.setSelectedClient(clients.getValue());
-            loggingFilterModel.setSelectedClientIndex(clients.getSelectionModel().getSelectedIndex());
+            Client selectedclient = (clients.getValue() == null) ? clients.getClientWithDescripALL() : clients.getValue();
+            loggingFilterModel.setSelectedClient(selectedclient);
+            int selectedClientIndex = clients.getSelectionModel().getSelectedIndex();
+            loggingFilterModel.setSelectedClientIndex((selectedClientIndex >= 0) ? selectedClientIndex : 0);
         }
     }
     

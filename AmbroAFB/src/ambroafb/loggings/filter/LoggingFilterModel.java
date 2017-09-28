@@ -84,7 +84,6 @@ public class LoggingFilterModel extends FilterModel {
         if (toDate == null){
             toDate = DateConverter.getInstance().parseDate(DATE_LESS);
         }
-        System.out.println("toDate: " + toDate);
         return toDate;
     }
     
@@ -97,9 +96,6 @@ public class LoggingFilterModel extends FilterModel {
     }
 
     public boolean isSelectedConcreteClient() {
-        
-        System.out.println("selectedClient.getRecId(): " + selectedClient.getRecId());
-        
         return selectedClient != null && selectedClient.getRecId() > 0;
     }
 }

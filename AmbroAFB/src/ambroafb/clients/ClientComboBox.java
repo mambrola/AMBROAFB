@@ -111,6 +111,14 @@ public class ClientComboBox extends AnchorPane {
         });
     }
     
+    public Client getClientWithDescripALL(){
+        Client result = null;
+        if (!getItems().isEmpty() && getItems().get(0).getRecId() == 0){
+            result = items.get(0);
+        }
+        return result;
+    }
+    
     public void showCategoryALL(boolean show){
         if (!show && (!getItems().isEmpty() && getItems().get(0).getRecId() == 0)){
             getItems().remove(0);

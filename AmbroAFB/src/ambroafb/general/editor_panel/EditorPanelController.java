@@ -221,12 +221,13 @@ public class EditorPanelController implements Initializable {
             Filterable filter = (className != null) ? (Filterable)Utils.getInstanceOfClass(className, new Class[]{Stage.class}, (Stage) exit.getScene().getWindow()) : null;
             
             FilterModel model = (filter != null) ? filter.getResult() : null;
-            Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
-            
-            Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
-            Supplier<List<EditorPanelable>> fetchData = makeAppropSupplier(objectClass, model);
-            
-            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{Supplier.class}, outerController, fetchData);
+            if (model != null && !model.isCanceled()){
+                Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+                Supplier<List<EditorPanelable>> fetchData = makeAppropSupplier(objectClass, model);
+
+                Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
+                Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{Supplier.class}, outerController, fetchData);
+            }
         }
         else {
             filterStage.requestFocus();
