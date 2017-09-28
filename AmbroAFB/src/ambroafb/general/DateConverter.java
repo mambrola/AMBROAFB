@@ -15,10 +15,14 @@ import java.time.format.DateTimeFormatter;
  */
 public class DateConverter {
     
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+    // Patterns for parser: String to LocalDate.
     private static final DateTimeFormatter parserWithoutTime = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter parserWithTimeWithoutMilisec = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter parserWithTimeWithMilisec = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+    
+    // patterns for formatter: LocalDate to String representation.
+    private static final DateTimeFormatter formatterWithoutTime = DateTimeFormatter.ofPattern("dd MMM yyyy");
+    private static final DateTimeFormatter formatterWithTimeWithoutMilisec = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss");
     
     
     private static DateConverter converterWithoutTime;
@@ -27,6 +31,10 @@ public class DateConverter {
     
     private DateConverter(){ }
     
+    /**
+     * The method create and returns DateConverter instance.
+     * @return DateConverter instance.
+     */
     public static DateConverter getInstance(){
         if (converterWithoutTime == null){
             converterWithoutTime = new DateConverter();
@@ -37,7 +45,7 @@ public class DateConverter {
             converterWithoutTime.setFormatter(parserWithoutTime);
             converterWithTimeAndWithoutMilis.setFormatter(parserWithTimeWithoutMilisec);
             converterWithTimeAndWithMilis.setFormatter(parserWithTimeWithMilisec);
-            converterLastStep.setFormatter(formatter);
+            converterLastStep.setFormatter(formatterWithoutTime);
 
             converterWithoutTime.setNext(converterWithTimeAndWithoutMilis);
             converterWithTimeAndWithoutMilis.setNext(converterWithTimeAndWithMilis);
@@ -46,14 +54,30 @@ public class DateConverter {
         return converterWithoutTime;
     }
     
+    /**
+     * The method converts localDate object to specific formated String.
+     * @param date LocalDate object.
+     * @return String where day number is on the first place; month name is on the second place and year number is on the third place.
+     */
     public String getDayMonthnameYearBySpace(LocalDate date){
-        return (date == null) ? "" : formatter.format(date);
+        return (date == null) ? "" : formatterWithoutTime.format(date);
     }
     
+    /**
+     *  The method converts localDateTime object to specific formated String.
+     * @param date LocalDateTime object.
+     * @return String where day number is on the first place; month name is on the second place and year number is on the third place.
+     * There is time order after date.
+     */
     public String getDayMonthnameYearBySpace(LocalDateTime date){
-        return (date == null) ? "" : parserWithTimeWithoutMilisec.format(date);
+        return (date == null) ? "" : formatterWithTimeWithoutMilisec.format(date);
     }
     
+    /**
+     * The method converts String to LocalDate object. 
+     * @param date Date object as String.
+     * @return  If class contains appropriate (one to one relation) parser, then create localDate object, otherwise returns null.
+     */
     public LocalDate parseDate(String date){
         LocalDate localDate = getResult(date, dateFormatter);
         if (localDate == null){
@@ -62,6 +86,11 @@ public class DateConverter {
         return localDate;
     }
     
+    /**
+     * The method converts String to LocalDateTime object. 
+     * @param date DateTime object as String.
+     * @return  If class contains appropriate (one to one relation) parser, then create localDateTime object, otherwise returns null.
+     */
     public LocalDateTime parseDateTime(String date){
         LocalDateTime localDateTime = getResultForDateTime(date, dateFormatter);
         if (localDateTime == null){
