@@ -114,7 +114,7 @@ public class ConversionDialogController implements Initializable {
             float buyingAmountFloat = Float.parseFloat(buyingAmountValue);
             if (sellAmountFloat > 0 && buyingAmountFloat > 0){
                 float amountsRate = (rateTopToBottomDirection) ? buyingAmountFloat / sellAmountFloat : sellAmountFloat / buyingAmountFloat;
-                rateResult = NumberConverter.makeFloatSpecificFraction(amountsRate, 4);
+                rateResult = NumberConverter.makeFloatStringBySpecificFraction(amountsRate, 4);
             }
         }
         String rateTitle = (rateTopToBottomDirection) ? purchaseRateTitle : inverseRateTitle;

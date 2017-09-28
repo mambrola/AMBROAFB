@@ -7,6 +7,7 @@ package ambroafb.docs.types.utilities.charge;
 
 import ambroafb.docs.DocMerchandise;
 import ambroafb.general.DateConverter;
+import ambroafb.general.NumberConverter;
 import ambroafb.general.interfaces.EditorPanelable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -106,7 +107,7 @@ public class ChargeUtility extends EditorPanelable {
     }
 
     public float getAmount() {
-        return amount.get().isEmpty() ? amountDefaultValue : Float.parseFloat(amount.get());
+        return NumberConverter.stringToFloat(amount.get(), 2, amountDefaultValue);
     }
 
     public String getDocCode() {
@@ -149,7 +150,7 @@ public class ChargeUtility extends EditorPanelable {
     }
 
     public float getVat() {
-        return vat.get().isEmpty() ? vatDefaultValue : Float.parseFloat(vat.get());
+        return NumberConverter.stringToFloat(amount.get(), 2, vatDefaultValue);
     }
 
     
@@ -167,7 +168,7 @@ public class ChargeUtility extends EditorPanelable {
     }
 
     public void setAmount(float amount) {
-        this.amount.set("" + amount);
+        this.amount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
     }
 
     public void setDocCode(String docCode) {
@@ -210,7 +211,7 @@ public class ChargeUtility extends EditorPanelable {
     }
 
     public void setVat(float vat) {
-        this.vat.set("" + vat);
+        this.vat.set(NumberConverter.makeFloatStringBySpecificFraction(vat, 2));
     }
 
     @Override

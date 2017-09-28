@@ -14,7 +14,8 @@ import ambroafb.docs.DocCodeComboBox;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
-import ambroafb.general.interfaces.Annotations;
+import ambroafb.general.amount_textfield.AmountField;
+import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -44,16 +45,16 @@ public class DocOrderComponent extends VBox {
     @FXML
     private IsoComboBox currency;
     
-    @FXML @Annotations.ContentNotEmpty
+    @FXML @ContentNotEmpty
     private AccountComboBox debits, credits;
     
-    @FXML @Annotations.ContentNotEmpty
-    private TextField amount;
+    @FXML @ContentNotEmpty
+    private AmountField amount;
     
     @FXML
     private DocCodeComboBox docCodes;
     
-    @FXML @Annotations.ContentNotEmpty
+    @FXML @ContentNotEmpty
     private TextField descrip;
 
     private ArrayList<Node> focusTraversableNodes;
@@ -109,8 +110,6 @@ public class DocOrderComponent extends VBox {
             debits.filterBy(newValue);
             credits.filterBy(newValue);
         });
-        
-        Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
     }
     
     /**

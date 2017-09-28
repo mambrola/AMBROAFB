@@ -6,6 +6,7 @@
 package ambroafb.general;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
 
 /**
  *
@@ -19,11 +20,40 @@ public class NumberConverter {
      * @param fractionDigitCount The quantity of digits after point.
      * @return 
      */
-    public static String makeFloatSpecificFraction(float number, int fractionDigitCount){
-        NumberFormat nf = NumberFormat.getNumberInstance();
+    public static String makeFloatStringBySpecificFraction(float number, int fractionDigitCount){
+        NumberFormat nf = NumberFormat.getNumberInstance(); // It is not static variable, because it is ... on fractionDigitCount parameter. Is Static variable change this value, change result also in every place where it is used.
         nf.setMaximumFractionDigits(fractionDigitCount);
         nf.setMinimumFractionDigits(fractionDigitCount);
         return nf.format(number);
     }
     
+    /**
+     * The method converts formated string to float.
+     * @param floatStr The string that contains numbers, comma and point.
+     * @param fractionDigitCount The quantity of digits after point.
+     * @return Null if string can not convert to float.
+     */
+    public static Float stringToFloat(String floatStr, int fractionDigitCount){
+        NumberFormat nf = NumberFormat.getNumberInstance(); // It is not static variable, because it is ... on fractionDigitCount parameter. Is Static variable change this value, change result also in every place where it is used.
+        nf.setMaximumFractionDigits(fractionDigitCount);
+        nf.setMinimumFractionDigits(fractionDigitCount);
+        Float result = null;
+        try {
+            result = nf.parse(floatStr).floatValue();
+        } catch (ParseException ex) {
+        }
+        return result;
+    }
+    
+    /**
+     * The method converts formated string to float. If converted is impossible,then  returns defaultValue parameter.
+     * @param floatStr The string that contains numbers, comma and point.
+     * @param fractionDigitCount The quantity of digits after point.
+     * @param defaultValue Default value if converting throw error.
+     * @return Float value by string.
+     */
+    public static Float stringToFloat(String floatStr, int fractionDigitCount, Float defaultValue){
+        Float result = stringToFloat(floatStr, fractionDigitCount);
+        return (result == null) ? defaultValue : result;
+    }
 }

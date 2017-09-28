@@ -75,8 +75,7 @@ public class ChargeUtilityDialogController implements Initializable {
             changeVatFieldValue(amount.getText());
         });
         
-        Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
-        Utils.validateTextFieldContentListener(vat, "\\d+|\\d+\\.|\\d+\\.\\d*");
+        Utils.validateTextFieldContentListener(vat, "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?");
         
         amount.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             changeVatFieldValue(newValue);

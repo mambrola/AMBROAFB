@@ -11,8 +11,8 @@ import ambroafb.docs.DocMerchandiseComboBox;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
+import ambroafb.general.amount_textfield.AmountField;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
@@ -44,8 +44,8 @@ public class PaymentUtilityDialogController implements Initializable {
     @FXML
     private TextField currency;
     
-    @FXML @ContentNotEmpty @ContentPattern(value = "\\d+(\\.\\d+)?", explain = "Amount Pattern is incorrct.")
-    private TextField amount;
+    @FXML @ContentNotEmpty
+    private AmountField amount;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -69,8 +69,6 @@ public class PaymentUtilityDialogController implements Initializable {
         utilities.valueProperty().addListener((ObservableValue<? extends DocMerchandise> observable, DocMerchandise oldValue, DocMerchandise newValue) -> {
             currency.setText(newValue.getIso());
         });
-        
-        Utils.validateTextFieldContentListener(amount, "\\d+|\\d+\\.|\\d+\\.\\d*");
     }    
 
     public void bindUtility(PaymentUtility paymentUtility) {

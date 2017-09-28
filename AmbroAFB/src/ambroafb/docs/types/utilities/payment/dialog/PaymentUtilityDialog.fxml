@@ -8,6 +8,7 @@
 <?import ambro.* ?>
 <?import ambroafb.currencies.*?>
 <?import ambroafb.docs.*?>
+<?import ambroafb.general.amount_textfield.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/paymentutilitydialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 
@@ -39,7 +40,7 @@
                     </VBox>
                     <VBox styleClass="couple">
                         <Label text="%amount" styleClass="validationMessage" /> 
-                        <TextField fx:id="amount" alignment="BASELINE_RIGHT" />
+                        <AmountField fx:id="amount" />
                     </VBox>
                 </children> 
             </HBox>

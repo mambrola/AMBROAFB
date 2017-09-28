@@ -7,6 +7,7 @@ package ambroafb.docs.types.conversion;
 
 import ambroafb.accounts.Account;
 import ambroafb.general.DateConverter;
+import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.time.LocalDate;
@@ -26,6 +27,8 @@ public class Conversion extends EditorPanelable {
     private final ObjectProperty<Account> sellAccount, buyingAccount;
     private final StringProperty sellAmount, buyingAmount, descrip;
     
+    private final float amountDefaultValue = -1;
+    
     public Conversion(){
         docDate = new SimpleObjectProperty<>(LocalDate.now());
         docInDocDate = new SimpleObjectProperty<>(LocalDate.now());
@@ -36,8 +39,8 @@ public class Conversion extends EditorPanelable {
         sellAccount = new SimpleObjectProperty<>(new Account());
         buyingAccount = new SimpleObjectProperty<>(new Account());
         
-        sellAmount = new SimpleStringProperty("");
-        buyingAmount = new SimpleStringProperty("");
+        sellAmount = new SimpleStringProperty("" + amountDefaultValue);
+        buyingAmount = new SimpleStringProperty("" + amountDefaultValue);
         
         descrip = new SimpleStringProperty("");
     }
@@ -105,11 +108,11 @@ public class Conversion extends EditorPanelable {
     }
     
     public float getSellAmount(){
-        return (sellAmount.get().isEmpty()) ? 0 : Float.parseFloat(sellAmount.get());
+        return NumberConverter.stringToFloat(sellAmount.get(), 2);
     }
     
     public float getBuyingAmount(){
-        return (buyingAmount.get().isEmpty()) ? 0 : Float.parseFloat(buyingAmount.get());
+        return NumberConverter.stringToFloat(buyingAmount.get(), 2);
     }
     
     
@@ -139,11 +142,11 @@ public class Conversion extends EditorPanelable {
     }
     
     public void setSellAmount(float amount){
-        this.sellAmount.set("" + amount);
+        this.sellAmount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
     }
     
     public void setBuyingAmount(float amount){
-        this.buyingAmount.set("" + amount);
+        this.buyingAmount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
     }
     
     

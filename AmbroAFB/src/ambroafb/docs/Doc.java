@@ -212,7 +212,7 @@ public class Doc extends EditorPanelable {
     }
     
     public Float getAmount(){
-        return amount.get().isEmpty() ? amountDefaultValue : Float.valueOf(amount.get());
+        return NumberConverter.stringToFloat(amount.get(), 2, amountDefaultValue);
     }
     
     public String getDocCode(){
@@ -299,7 +299,7 @@ public class Doc extends EditorPanelable {
     }
     
     public void setAmount(float amount){
-        this.amount.set(NumberConverter.makeFloatSpecificFraction(amount, 2));
+        this.amount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
     }
     
     public void setDocCode(String docCode){

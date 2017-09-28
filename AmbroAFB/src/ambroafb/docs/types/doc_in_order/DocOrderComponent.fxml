@@ -9,6 +9,7 @@
 <?import ambroafb.currencies.*?>
 <?import ambroafb.docs.*?>
 <?import ambroafb.accounts.*?>
+<?import ambroafb.general.amount_textfield.*?>
 
 <fx:root    type="javafx.scene.layout.VBox"
             fx:id="formPaneInner"
@@ -56,7 +57,7 @@
                 </VBox>
                 <VBox styleClass="coupleOneThird">
                     <Label text="%amount" styleClass="validationMessage" /> 
-                    <TextField fx:id="amount" alignment="BASELINE_RIGHT" />
+                    <AmountField fx:id="amount" />
                 </VBox>
             </children> 
         </HBox>
