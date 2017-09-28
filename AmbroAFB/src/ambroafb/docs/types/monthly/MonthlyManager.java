@@ -68,6 +68,9 @@ public class MonthlyManager implements DocManager {
     @Override
     public Dialogable getDocDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         DocInOrderDialog dialog = new DocInOrderDialog(object, type, owner);
+        if (object == null){
+            dialog = new DocInOrderDialog(object, type, owner, "doc_monthly_accrual");
+        }
         return dialog;
     }
     

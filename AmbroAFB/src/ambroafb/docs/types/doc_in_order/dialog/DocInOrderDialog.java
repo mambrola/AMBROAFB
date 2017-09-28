@@ -26,8 +26,8 @@ public class DocInOrderDialog extends UserInteractiveStage implements Dialogable
     
     private DocInOrderDialogController dialogController;
     
-    public DocInOrderDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, Names.LEVEL_FOR_PATH, "doc_order_dialog_title", "/images/dialog.png");
+    public DocInOrderDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner, String stageTitleBundleKey) {
+        super(owner, Names.LEVEL_FOR_PATH, stageTitleBundleKey, "/images/dialog.png");
         
         if (object == null){
             docInOrder = new DocInOrder();
@@ -48,6 +48,10 @@ public class DocInOrderDialog extends UserInteractiveStage implements Dialogable
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
+    }
+    
+    public DocInOrderDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+        this(object, buttonType, owner, "doc_order_dialog_title");
     }
 
     @Override
