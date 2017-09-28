@@ -36,7 +36,7 @@ public class Logging extends EditorPanelable {
     @AView.Column(title = "%license_N", width = TableColumnWidths.LICENSE, styleClass = "textCenter")
     private final StringProperty licenseNumber;
 
-    @AView.Column(title = "%clients", width = TableColumnWidths.MAIL)
+    @AView.Column(title = "%clients", width = TableColumnWidths.CLIENT_MAIL)
     @JsonIgnore
     private final StringExpression clientDescrip;
     @JsonIgnore
@@ -81,9 +81,7 @@ public class Logging extends EditorPanelable {
                                         .and("login_time", "<=", logingFilterModel.getToDateForDB());
         if (logingFilterModel.isSelectedConcreteClient()){
             Client client = logingFilterModel.getSelectedClient();
-            whereBuilder.and("first_name", "=", client.getFirstName())
-                        .and("last_name", "=", client.getLastName())
-                        .and("email", "=", client.getEmail());
+            whereBuilder.and("client_id", "=", client.getRecId());
         }
         
         JSONObject params = whereBuilder.condition().build();
@@ -119,6 +117,10 @@ public class Logging extends EditorPanelable {
     // Getters:
     public String getLicenseNumber(){
         return licenseNumber.get();
+    }
+    
+    public int getClientId(){
+        return clientObj.get().getRecId();
     }
     
     public String getFirstName(){
@@ -158,6 +160,10 @@ public class Logging extends EditorPanelable {
     // Setters:
     public void setLicenseNumber(String licenseNumber){
         this.licenseNumber.set(licenseNumber);
+    }
+    
+    public void setClientId(int recId){
+        this.clientObj.get().setRecId(recId);
     }
     
     public void setFirstName(String name){
@@ -212,6 +218,7 @@ public class Logging extends EditorPanelable {
     public void copyFrom(EditorPanelable other) {
         Logging logging = (Logging)other;
         setLicenseNumber(logging.getLicenseNumber());
+        setClientId(logging.getClientId());
         setFirstName(logging.getFirstName());
         setLastName(logging.getLastName());
         setEmail(logging.getEmail());
