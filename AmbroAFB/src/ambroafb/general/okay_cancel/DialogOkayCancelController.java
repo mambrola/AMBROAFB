@@ -6,6 +6,7 @@
 package ambroafb.general.okay_cancel;
 
 import ambroafb.general.AlertMessage;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import java.net.URL;
@@ -52,7 +53,7 @@ public class DialogOkayCancelController implements Initializable {
         cancel.setDisable(false);
         switch (type) {
             case DELETE:
-                okay.setText("Delete");
+                okay.setText(GeneralConfig.getInstance().getTitleFor("delete"));
                 alertText = "You Realy want Delete this item?";
                 okay.setOnAction((ActionEvent event) -> {
                     String stageName = ((Stage)okay.getScene().getWindow()).getTitle();
@@ -67,7 +68,7 @@ public class DialogOkayCancelController implements Initializable {
                 break;
             case EDIT:
             case ADD:
-                okay.setText(type.equals(EDITOR_BUTTON_TYPE.ADD) ? "Add" : "Save");
+                okay.setText(GeneralConfig.getInstance().getTitleFor(type.equals(EDITOR_BUTTON_TYPE.ADD) ? "add" : "save"));
                 okay.setOnAction((ActionEvent event) -> {
                     Scene currScene = okay.getScene();
                     Object controller = currScene.getProperties().get("controller");
