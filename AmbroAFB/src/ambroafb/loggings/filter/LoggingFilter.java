@@ -8,7 +8,7 @@ package ambroafb.loggings.filter;
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;
@@ -60,7 +60,6 @@ public class LoggingFilter extends UserInteractiveStage implements Initializable
     @Override
     public void setResult(boolean isOk) {
         if (!isOk){
-            System.out.println("------------ Cancel ------------");
             loggingFilterModel.changeModelAsEmpty();
         }
         else {

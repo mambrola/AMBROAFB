@@ -9,7 +9,7 @@ import ambro.AFilterableTableView;
 import ambro.AFilterableTreeTableView;
 import ambro.ATableView;
 import ambro.AView;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.StageUtils;

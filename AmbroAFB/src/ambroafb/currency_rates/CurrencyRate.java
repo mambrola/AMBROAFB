@@ -10,7 +10,7 @@ import ambroafb.currencies.Currency;
 import ambroafb.currency_rates.filter.CurrencyRateFilterModel;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;

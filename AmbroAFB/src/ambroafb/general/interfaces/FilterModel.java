@@ -3,13 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.general;
+package ambroafb.general.interfaces;
+
+import ambroafb.general.GeneralConfig;
 
 /**
  *
  * @author dato
  */
 public abstract class FilterModel {
+    
+    protected static final String DATE_BIGGER = "1970-01-01";
+    protected static final String DATE_LESS = "9999-01-01";
+    
+    protected static final String EXTRA_TIME_BIGGER = "00:00:00";
+    protected static final String EXTRA_TIME_LESS = "23:59:59";
     
     private boolean modelCanceled;
     
@@ -36,6 +44,7 @@ public abstract class FilterModel {
     public void saveIntoPref(String key, boolean value){
         GeneralConfig.prefs.putBoolean(key, value);
     }
+    
     
     
     public String getStringFromPref(String key){
@@ -65,4 +74,5 @@ public abstract class FilterModel {
     public boolean getBooleanFromPref(String key){
         return GeneralConfig.prefs.getBoolean(key, false);
     }
+    
 }

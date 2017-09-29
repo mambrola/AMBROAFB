@@ -8,7 +8,7 @@ package ambroafb.invoices.filter;
 import ambroafb.clients.Client;
 import ambroafb.clients.filter.ClientFilterModel;
 import ambroafb.general.DateConverter;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatusClarify;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -36,9 +36,6 @@ public class InvoiceFilterModel extends FilterModel {
     private static final String PREF_END_DATE_TO_KEY = "invoices/filter/end_date_to";
     private static final String PREF_CHECKED_REISSUING_INDEXES_KEY = "invoices/filter/checked_invoice_reissuing_indexes";
     private static final String PREF_CHECKED_CLARIFY_INDEXES_KEY = "invoices/filter/checked_invoice_clarifies_indexes";
-    
-    public static final String DATE_BIGGER = "1970-01-01";
-    public static final String DATE_LESS = "9999-01-01";
     
     public InvoiceFilterModel(){
         

@@ -8,7 +8,7 @@ package ambroafb.clients.filter;
 import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.Country;
 import ambroafb.general.DateConverter;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.DateTimeFilterModel;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -22,10 +22,7 @@ import javafx.collections.ObservableList;
  *
  * @author dato
  */
-public class ClientFilterModel extends FilterModel {
-    
-    private static final String DEFAULT_DATE_FROM = "1970-01-01";
-    private static final String DEFAULT_DATE_LESS = "9999-01-01";
+public class ClientFilterModel extends DateTimeFilterModel {
     
     private static final String PREF_FROM_DATE_KEY = "clients/filter/from_date";
     private static final String PREF_TO_DATE_KEY = "clients/filter/to_date";
@@ -90,30 +87,16 @@ public class ClientFilterModel extends FilterModel {
     }
     
     
+    @Override
     public LocalDate getFromDate(){
         String date = getStringFromPref(PREF_FROM_DATE_KEY);
         return DateConverter.getInstance().parseDate(date);
     }
     
-    public LocalDate getFromDateForDB(){
-        LocalDate date = getFromDate();
-        if (date == null){
-            date = DateConverter.getInstance().parseDate(DEFAULT_DATE_FROM);
-        }
-        return date;
-    }
-    
+    @Override
     public LocalDate getToDate(){
         String date = getStringFromPref(PREF_TO_DATE_KEY);
         return DateConverter.getInstance().parseDate(date);
-    }
-    
-    public LocalDate getToDateForDB(){
-        LocalDate date = getToDate();
-        if (date == null){
-            date = DateConverter.getInstance().parseDate(DEFAULT_DATE_LESS);
-        }
-        return date;
     }
     
     public boolean isJuridicalIndeterminate(){

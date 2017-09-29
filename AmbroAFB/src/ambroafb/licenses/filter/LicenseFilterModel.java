@@ -6,7 +6,7 @@
 package ambroafb.licenses.filter;
 
 import ambroafb.clients.Client;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.licenses.helper.LicenseStatus;
 import ambroafb.products.Product;
 import com.fasterxml.jackson.core.type.TypeReference;

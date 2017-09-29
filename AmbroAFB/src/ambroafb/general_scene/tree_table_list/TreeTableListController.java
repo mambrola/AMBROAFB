@@ -7,7 +7,7 @@ package ambroafb.general_scene.tree_table_list;
 
 import ambroafb.balance_accounts.*;
 import ambro.AFilterableTreeTableView;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;

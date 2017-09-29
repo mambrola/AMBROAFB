@@ -59,7 +59,8 @@ public class DBUtils {
             
             return Utils.getListFromJSONArray(listElementClass, data);
         } catch (IOException | AuthServerException ex) {
-            analyzeDBException(ex);
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+//            analyzeDBException(ex);
         }
         return new ArrayList<>();
     }

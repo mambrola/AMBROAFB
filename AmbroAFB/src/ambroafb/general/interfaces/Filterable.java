@@ -5,8 +5,6 @@
  */
 package ambroafb.general.interfaces;
 
-import ambroafb.general.FilterModel;
-
 /**
  *
  * @author mambroladze

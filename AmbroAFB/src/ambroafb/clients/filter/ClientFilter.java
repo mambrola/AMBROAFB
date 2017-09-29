@@ -9,7 +9,7 @@ import ambro.ADatePicker;
 import ambroafb.clients.Client;
 import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.CountryComboBox;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;

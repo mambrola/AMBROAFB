@@ -5,23 +5,24 @@
  */
 package ambroafb.licenses;
 
-import ambroafb.licenses.helper.LicenseStatus;
 import ambro.AView;
 import ambroafb.clients.Client;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
-import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.licenses.filter.LicenseFilterModel;
+import ambroafb.licenses.helper.LicenseStatus;
 import ambroafb.products.Product;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
@@ -45,8 +46,9 @@ public class License extends EditorPanelable {
 
     public String password;
     
-    @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textRight")
-    private final StringProperty createdDate;
+    @AView.Column(title = "%created_date", width = TableColumnWidths.DATETIME, styleClass = "textRight")
+    private final StringProperty createdTime;
+    private final ObjectProperty<LocalDateTime> createdTimeObj;
     
     @AView.Column(title = "%license_N", width = TableColumnWidths.LICENSE, styleClass = "textRight")
     private final IntegerProperty licenseNumber;
@@ -112,7 +114,8 @@ public class License extends EditorPanelable {
     private static final String DB_STATUSES_TABLE_NAME = "license_status_descrips";
     
     public License(){
-        createdDate = new SimpleStringProperty("");
+        createdTime = new SimpleStringProperty("");
+        createdTimeObj = new SimpleObjectProperty<>(LocalDateTime.now());
         clientObj = new SimpleObjectProperty<>(new Client());
         clientDescrip = clientObj.get().getShortDescrip(", ");
         productObj = new SimpleObjectProperty<>(new Product());
@@ -190,7 +193,9 @@ public class License extends EditorPanelable {
         
         JSONObject params = whereBuilder.condition().build();
         ArrayList<License> licenses = DBUtils.getObjectsListFromDB(License.class, DB_VIEW_NAME, params);
-        licenses.sort((License lic1, License lic2) -> lic2.getCreatedDate().compareTo(lic1.getCreatedDate()));
+        licenses.sort((License lic1, License lic2) -> {
+            return lic2.compareTo(lic1);
+        });
         return licenses;
     }
 
@@ -224,6 +229,10 @@ public class License extends EditorPanelable {
     
     
     // properties:
+    public ObjectProperty<LocalDateTime> createdTimeProperty(){
+        return createdTimeObj;
+    }
+    
     public ObjectProperty<Client> clientProperty(){
         return clientObj;
     }
@@ -282,12 +291,9 @@ public class License extends EditorPanelable {
     
     
     // Getters:
+    @JsonIgnore
     public String getCreatedDateStr(){
-        return createdDate.get();
-    }
-    
-    public LocalDate getCreatedDate(){
-        return DateConverter.getInstance().parseDate(createdDate.get());
+        return createdTime.get();
     }
     
     public int getClientId(){
@@ -368,9 +374,10 @@ public class License extends EditorPanelable {
     
     // Setters:
     // This method must not show in other class to avoid createdDate changing.
-    private void setCreatedDate(String createdDate){
-        LocalDate localDate = DateConverter.getInstance().parseDate(createdDate);
-        this.createdDate.set(DateConverter.getInstance().getDayMonthnameYearBySpace(localDate));
+    private void setCreatedTime(String createdTime){
+        this.createdTimeObj.set(DateConverter.getInstance().parseDateTime(createdTime));
+        this.createdTime.set(DateConverter.getInstance().getDayMonthnameYearBySpace(createdTimeObj.get()));
+        
     }
     
     public void setClientId(int clienId){
@@ -449,6 +456,15 @@ public class License extends EditorPanelable {
     // ask DB the new license info, licenses finances and invoice finances.
     public void setIsNew(int isNew){
         this.isNew.set(isNew == 1);
+    }
+    
+    /**
+     *  The metho compares to licenses created time parameters.
+     * @param other Other license object.
+     * @return Negative number if this object is less, positive number if this object is greater. If they are equals -  0.
+     */
+    public int compareTo(License other){
+        return createdTimeObj.get().compareTo(other.createdTimeProperty().get());
     }
     
     

@@ -7,7 +7,7 @@ package ambroafb.currency_rates.filter;
 
 import ambro.ADatePicker;
 import ambroafb.currencies.CurrencyComboBox;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;

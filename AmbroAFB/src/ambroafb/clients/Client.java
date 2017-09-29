@@ -11,11 +11,11 @@ import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.Country;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
-import ambroafb.general.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.phones.Phone;
 import authclient.db.ConditionBuilder;
@@ -221,11 +221,11 @@ public class Client extends EditorPanelable{
         return DBUtils.getObjectsListFromDB(ClientStatus.class, DB_STATUS_TABLE, params);
     }
     
-    public static ArrayList<Client> getFilteredFromDB(FilterModel model) { // JSONObject filter
+    public static ArrayList<Client> getFilteredFromDB(FilterModel model) {
         final ClientFilterModel clientFilterModel = (ClientFilterModel) model;
         WhereBuilder whereBuilder = new ConditionBuilder().where()
-                                                .and("created_date", ">=", clientFilterModel.getFromDateForDB())
-                                                .and("created_date", "<=", clientFilterModel.getToDateForDB());
+                                                .and("created_time", ">=", clientFilterModel.getFromDateForDB())
+                                                .and("created_time", "<=", clientFilterModel.getToDateForDB());
         if (!clientFilterModel.isJuridicalIndeterminate()) {
             whereBuilder.and("is_jur", "=", clientFilterModel.isJuridicalSelected() ? 1 : 0);
         }
@@ -479,7 +479,7 @@ public class Client extends EditorPanelable{
     
 
      // Setters:
-    private void setCreatedDate(String date){
+    private void setCreatedTime(String date){
         this.createdDate.set(date);
     }
     

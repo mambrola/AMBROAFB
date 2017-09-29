@@ -16,7 +16,7 @@ import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCount;
 import ambroafb.docs.Doc;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.StageUtils;

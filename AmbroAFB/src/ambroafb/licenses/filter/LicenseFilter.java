@@ -6,7 +6,7 @@
 package ambroafb.licenses.filter;
 
 import ambroafb.clients.ClientComboBox;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Filterable;

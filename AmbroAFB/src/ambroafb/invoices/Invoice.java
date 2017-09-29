@@ -10,7 +10,7 @@ import ambroafb.clients.Client;
 import ambroafb.currencies.Currency;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
-import ambroafb.general.FilterModel;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBoxItem;
