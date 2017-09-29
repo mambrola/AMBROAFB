@@ -38,7 +38,7 @@ import org.json.JSONObject;
  */
 public class Doc extends EditorPanelable {
     
-    @AView.Column(width = "24", cellFactory = MarkerCellFactory.class)
+    @AView.Column(width = "24", cellFactory = MarkerCellFactory.class, styleClass = "textCenter")
     private final IntegerProperty marker;
     
     private final IntegerProperty parentRecId;
@@ -421,7 +421,7 @@ public class Doc extends EditorPanelable {
                                 imgPath = "\u29ED"; // "\u25BC", "\u2A00"; 
                                 break;
                             case 1:
-                                imgPath = "\u26AA"; //"\u29CA"
+                                imgPath = "\u25B4"; //"\u26AA" "\u29CA" 
                                 break;
                             default:
                                 break;
