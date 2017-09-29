@@ -15,8 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -38,15 +36,6 @@ public class FilterOkayCancelController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        okay.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-            if (event.getCode().equals(KeyCode.ENTER))
-                okay.getOnAction().handle(null);
-        });
-        cancel.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-            if (event.getCode().equals(KeyCode.ENTER))
-                cancel.getOnAction().handle(null);
-        });
-        
         okay.disableProperty().bind(disableProperty);
     }    
     
