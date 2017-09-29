@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert;
@@ -42,14 +43,30 @@ public class DBUtils {
     
     /**
      * The static function gets a ArrayList of specified class elements from DB.
+     *  If exception returns from DB, the method uses {@link ambroafb.general.AfBConsumersManager#getStandardConsumerForDBException()  getStandardConsumerForDBException} method.
      * @param <T>
      * @param listElementClass The class of elements which must be in list.
      * @param dbTableOrViewName The table or view name where entries are in DB.
      * @param params The parameter JSON for filter DB select.
      *                  It could be empty JSON, if user wants every column values from DB table or view.
-     * @return 
+     * @return Empty ArrayList if becomes exception. Otherwise - Full of specific objects.
      */
     public static <T> ArrayList<T> getObjectsListFromDB(Class<?> listElementClass, String dbTableOrViewName, JSONObject params){
+        return getObjectsListFromDB(listElementClass, dbTableOrViewName, params, AfBConsumersManager.getStandardConsumerForDBException());
+    }
+    
+    /**
+     *  The static function gets a ArrayList of specified class elements from DB.
+     * If exception returns from DB, the method uses errorAction Consumer.
+     * @param <T>
+     * @param listElementClass The class of elements which must be in list.
+     * @param dbTableOrViewName The table or view name where entries are in DB.
+     * @param params The parameter JSON for filter DB select.
+     *                  It could be empty JSON, if user wants every column values from DB table or view.
+     * @param errorAction Consumer that accepts if becomes DB error.
+     * @return Empty ArrayList if becomes exception. Otherwise - Full of specific objects.
+     */
+    public static <T> ArrayList<T> getObjectsListFromDB(Class<?> listElementClass, String dbTableOrViewName, JSONObject params, Consumer<Exception> errorAction){
         try {
             System.out.println(dbTableOrViewName + " params For DB: " + params);
             
@@ -59,8 +76,7 @@ public class DBUtils {
             
             return Utils.getListFromJSONArray(listElementClass, data);
         } catch (IOException | AuthServerException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-//            analyzeDBException(ex);
+            errorAction.accept(ex);
         }
         return new ArrayList<>();
     }

@@ -5,6 +5,7 @@
  */
 package ambroafb.accounts;
 
+import ambroafb.general.AfBConsumersManager;
 import ambroafb.general.DBUtils;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class AccountComboBox extends ComboBox<Account> {
         @Override
         public void run() {
             JSONObject params = new ConditionBuilder().build();
-            ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_TABLE_NAME, params);
+            ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_TABLE_NAME, params, AfBConsumersManager.getStandardConsumerForDBException());
             accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
             Platform.runLater(() -> {
                 accounts.setAll(accountFromDB);
