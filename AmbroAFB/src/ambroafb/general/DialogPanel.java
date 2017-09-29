@@ -28,7 +28,6 @@ public class DialogPanel extends StackPane {
         // The element that has focus and at the time press enter, action will be as tab action.
         this.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
             if (event.getCode().equals(KeyCode.ENTER)) {
-                System.out.println("---------- DialogPanel enter ----------");
                 Node focusedNode = this.getScene().getFocusOwner();
                 // If node is not specific node (styleClass = "allowEnterAction"), then enter action must be tab action and "enter event" be consumed. Otherwise - enter action reaches to target.
                 if (hasNotStyleClassFor(focusedNode, enterActionableNodesClass)){ // "allowEnterAction" styleClasss components will not fire tab event on enter key.
