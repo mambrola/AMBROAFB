@@ -27,8 +27,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.controlsfx.control.MaskerPane;
 
@@ -61,10 +59,6 @@ public class LoginController extends UserInteractiveStage implements Initializab
         prefs = Preferences.userNodeForPackage(AmbroAFB.class);
         Scene scene = SceneUtils.createScene("/ambroafb/login/Login.fxml", (Object)this);
         this.setScene(scene);
-        login.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-            if (event.getCode().equals(KeyCode.ENTER))
-                login();
-        });
         login.setOnAction((ActionEvent event) -> {
             login();
         });

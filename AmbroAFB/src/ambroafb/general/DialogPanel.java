@@ -21,13 +21,16 @@ public class DialogPanel extends StackPane {
 
     public final Object MARKED_NODE_KEY = new Object();
     public final Object BACKUP_VALUE_KEY = new Object();
+    
+    private final String enterActionableNodesClass = "allowEnterAction";
 
     public DialogPanel() {
         // The element that has focus and at the time press enter, action will be as tab action.
         this.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
             if (event.getCode().equals(KeyCode.ENTER)) {
+                System.out.println("---------- DialogPanel enter ----------");
                 Node focusedNode = this.getScene().getFocusOwner();
-                if (hasNotStyleClassFor(focusedNode, "allowEnterAction")){ // "allowEnterAction" styleClasss components will not fire tab event on enter key.
+                if (hasNotStyleClassFor(focusedNode, enterActionableNodesClass)){ // "allowEnterAction" styleClasss components will not fire tab event on enter key.
                     focusedNode.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.TAB, false, false, false, false));
                     event.consume();
                 }
@@ -51,7 +54,7 @@ public class DialogPanel extends StackPane {
     }
 
     private void customize(Node node) {
-        if (hasNotStyleClassFor(node, "allowEnterAction")){
+        if (hasNotStyleClassFor(node, enterActionableNodesClass)){
             node.getProperties().put(MARKED_NODE_KEY, null);
             if (node.getClass().equals(TextField.class)) {
                 TextField field = (TextField) node;
