@@ -76,18 +76,14 @@ public class DialogPanel extends StackPane {
                         }
                     }
                 });
-            } else if (node.getClass().equals(Button.class)) {
-                node.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-                    if (event.getCode().equals(KeyCode.SPACE)) {
-                        event.consume();
-                    }
-                });
-            }
-//            node.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-//                if (event.getCode().equals(KeyCode.ENTER)) {
-//                    node.fireEvent(new KeyEvent(null, null, KeyEvent.KEY_PRESSED, "", "\t", KeyCode.TAB, false, false, false, false));
-//                }
-//            });
+            } 
+//            else if (node.getClass().equals(Button.class)) {
+//                node.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+//                    if (event.getCode().equals(KeyCode.SPACE)) {
+//                        event.consume();
+//                    }
+//                });
+//            }
         }
         else {
             node.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
