@@ -9,6 +9,7 @@
 <?import ambroafb.general.mapeditor.*?>
 <?import ambroafb.currencies.*?>
 <?import ambroafb.products.*?>
+<?import ambroafb.general.scene_components.number_fields.amount_field.*?>
 
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/productdialog.css" 
@@ -50,7 +51,7 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%monthly_price" styleClass="validationMessage" />
-                            <TextField fx:id="price" />
+                            <AmountField fx:id="price" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple">

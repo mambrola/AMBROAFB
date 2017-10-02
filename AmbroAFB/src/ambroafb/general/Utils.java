@@ -11,7 +11,7 @@ import ambroafb.accounts.Account;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.docs.Doc;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import ambroafb.general.amount_textfield.AmountField;
+import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.general.countcombobox.CountComboBox;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.image_gallery.ImageGalleryController;

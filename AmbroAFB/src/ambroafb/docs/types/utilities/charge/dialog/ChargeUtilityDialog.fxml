@@ -8,7 +8,7 @@
 <?import ambro.* ?>
 <?import ambroafb.currencies.*?>
 <?import ambroafb.docs.*?>
-<?import ambroafb.general.amount_textfield.*?>
+<?import ambroafb.general.scene_components.number_fields.amount_field.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/chargeutilitydialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 

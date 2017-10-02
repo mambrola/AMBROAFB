@@ -9,7 +9,7 @@
 <?import ambroafb.currencies.*?>
 <?import ambroafb.docs.*?>
 <?import ambroafb.accounts.*?>
-<?import ambroafb.general.amount_textfield.*?>
+<?import ambroafb.general.scene_components.number_fields.amount_field.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/conversiondialog.css"
                               xmlns:fx="http://javafx.com/fxml/1" 

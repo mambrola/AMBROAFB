@@ -11,7 +11,7 @@ import ambroafb.docs.DocMerchandiseComboBox;
 import ambroafb.docs.types.utilities.charge.ChargeUtility;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
-import ambroafb.general.amount_textfield.AmountField;
+import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;

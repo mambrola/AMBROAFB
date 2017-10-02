@@ -13,7 +13,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
-import ambroafb.general.amount_textfield.AmountField;
+import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;

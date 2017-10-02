@@ -6,11 +6,13 @@
 package ambroafb.discounts_on_count.dialog;
 
 import ambroafb.discounts_on_count.DiscountOnCount;
-import ambroafb.general.Names.*;
+import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
-import ambroafb.general.interfaces.Annotations.*;
+import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
+import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -33,8 +35,8 @@ public class DiscountOnCountDialogController implements Initializable {
     @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]+", explain = "Only Integers")
     private TextField licenseCount;
     @FXML @ContentNotEmpty 
-    @ContentPattern(value = "(^0|[1-9][0-9]*)?([.]|[.][0-9]{1,2})?", explain = "Pattern is incorrect (ex:  10.5)") // "(^0|[1-9][0-9]*)([.][0-9]{1,2})?"
-    private TextField discountRate;
+    @ContentPattern(value = AmountField.FINALY_CONTENT_PATTERN, explain = "Pattern is incorrect (ex:  10.5)")
+    private AmountField discountRate;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
@@ -52,7 +54,8 @@ public class DiscountOnCountDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContentListener(licenseCount, "(^[1-9][0-9]*)?");
-        Utils.validateTextFieldContentListener(discountRate, "(^0|[1-9][0-9]*)?([.]|[.][0-9]{1,2})?");
+        
+//        Utils.validateTextFieldContentListener(discountRate, "(^0|[1-9][0-9]*)?([.]|[.][0-9]{1,2})?");
         permissionToClose = true;
     }    
 

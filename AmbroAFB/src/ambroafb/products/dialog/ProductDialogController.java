@@ -14,6 +14,7 @@ import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.mapeditor.MapEditor;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
+import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.products.Product;
 import ambroafb.products.ProductsSpecificsComboBox;
 import java.net.URL;
@@ -43,8 +44,8 @@ public class ProductDialogController implements Initializable {
     private TextField descrip;
     @FXML @ContentNotEmpty
     private ProductsSpecificsComboBox specifics;
-    @FXML @ContentNotEmpty @ContentPattern(value = "(^0|[1-9][0-9]*)([.][0-9]{1,2})?", explain = "The price content is incorect. Exp: 1.25")
-    private TextField price;
+    @FXML @ContentNotEmpty @ContentPattern(value = AmountField.FINALY_CONTENT_PATTERN, explain = "The price content is incorect. Exp: 1.25")
+    private AmountField price;
     @FXML @ContentNotEmpty
     private CurrencyComboBox currency;
     @FXML @ContentMapEditor(explainKey = "Left number must be days counter.", explainValue = "Right number must be discount percent. Exp: 4.25")
@@ -72,7 +73,6 @@ public class ProductDialogController implements Initializable {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContentListener(former, "[0-9]{1,2}");
         Utils.validateTextFieldContentListener(testingDays, "[1-9][0-9]*");
-        Utils.validateTextFieldContentListener(price, "(^0|[1-9][0-9]*)?([.]|[.][0-9]{1,2})?");
         currency.setShowCategoryALL(false);
         permissionToClose = true;
     }
