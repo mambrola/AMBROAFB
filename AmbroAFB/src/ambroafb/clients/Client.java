@@ -232,6 +232,10 @@ public class Client extends EditorPanelable{
         if (!clientFilterModel.isRezidentIndeterminate()) {
             whereBuilder.and("is_rezident", "=", clientFilterModel.isRezidentSelected() ? 1 : 0);
         }
+        if (!clientFilterModel.isTypeIndeterminate()){
+            String relation = (clientFilterModel.isTypeSelected()) ? "is not null" : "is null";
+            whereBuilder.and("email", relation, "");
+        }
         if (clientFilterModel.isSelectedConcreteCountry()){
             whereBuilder.and("country_code", "=", clientFilterModel.getSelectedCountry().getCode());
         }
@@ -245,16 +249,7 @@ public class Client extends EditorPanelable{
         
         JSONObject params = whereBuilder.condition().build();
         System.out.println("filter params: " + params);
-        ArrayList<Client> clientsFromDB = DBUtils.getObjectsListFromDB(Client.class, DB_VIEW_NAME, params);
-        clientsFromDB.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
-        if (clientFilterModel.isTypeIndeterminate()){
-            return clientsFromDB;
-        }
-        // else filter only clients or only partners:
-        return (ArrayList<Client>) clientsFromDB.stream().filter((Client c) -> {
-            boolean partner = c.getEmail() == null || c.getEmail().isEmpty();
-            return (clientFilterModel.isTypeSelected()) ? !partner : partner;
-        }).collect(Collectors.toList());
+        return DBUtils.getObjectsListFromDB(Client.class, DB_VIEW_NAME, params);
     }
     
     public static Client getOneFromDB(int id) {
