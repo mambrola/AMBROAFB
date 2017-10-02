@@ -10,6 +10,7 @@
 <?import ambroafb.currencies.*?>
 <?import ambroafb.products.*?>
 <?import ambroafb.general.scene_components.number_fields.amount_field.*?>
+<?import ambroafb.general.scene_components.number_fields.integer_field.*?>
 
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/productdialog.css" 
@@ -73,13 +74,13 @@
                     <VBox styleClass="couple" >
                         <children>
                             <Label text="%max_count" />
-                            <TextField fx:id="maxCount" />
+                            <IntegerField fx:id="maxCount" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple" >
                         <children>
                             <Label text="%testing_days" styleClass="validationMessage" />
-                            <TextField fx:id="testingDays" />
+                            <IntegerField fx:id="testingDays" />
                         </children>
                     </VBox>
                 </children> 

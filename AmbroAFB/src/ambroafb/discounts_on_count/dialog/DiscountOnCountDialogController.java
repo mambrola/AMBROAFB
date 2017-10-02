@@ -13,13 +13,13 @@ import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
+import ambroafb.general.scene_components.number_fields.integer_field.IntegerField;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 /**
@@ -32,8 +32,8 @@ public class DiscountOnCountDialogController implements Initializable {
     @FXML
     private VBox formPane;
     
-    @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]+", explain = "Only Integers")
-    private TextField licenseCount;
+    @FXML @ContentNotEmpty
+    private IntegerField licenseCount;
     @FXML @ContentNotEmpty 
     @ContentPattern(value = AmountField.FINALY_CONTENT_PATTERN, explain = "Pattern is incorrect (ex:  10.5)")
     private AmountField discountRate;
@@ -53,8 +53,7 @@ public class DiscountOnCountDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        Utils.validateTextFieldContentListener(licenseCount, "(^[1-9][0-9]*)?");
-        
+//        Utils.validateTextFieldContentListener(licenseCount, "(^[1-9][0-9]*)?");
 //        Utils.validateTextFieldContentListener(discountRate, "(^0|[1-9][0-9]*)?([.]|[.][0-9]{1,2})?");
         permissionToClose = true;
     }    

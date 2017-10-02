@@ -15,6 +15,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.mapeditor.MapEditor;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
+import ambroafb.general.scene_components.number_fields.integer_field.IntegerField;
 import ambroafb.products.Product;
 import ambroafb.products.ProductsSpecificsComboBox;
 import java.net.URL;
@@ -53,7 +54,7 @@ public class ProductDialogController implements Initializable {
     @FXML
     private CheckBox isAlive;
     @FXML
-    private TextField maxCount, testingDays;
+    private IntegerField maxCount, testingDays;
     
     
     @FXML
@@ -72,7 +73,6 @@ public class ProductDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContentListener(former, "[0-9]{1,2}");
-        Utils.validateTextFieldContentListener(testingDays, "[1-9][0-9]*");
         currency.setShowCategoryALL(false);
         permissionToClose = true;
     }

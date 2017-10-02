@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import ambroafb.general.scene_components.number_fields.amount_field.*?>
+<?import ambroafb.general.scene_components.number_fields.integer_field.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/discountoncountdialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 
@@ -17,7 +18,7 @@
                 <children>
                     <VBox styleClass="couple" alignment="CENTER_LEFT" >
                         <Label text="%licenses_count" styleClass="validationMessage" />
-                        <TextField fx:id="licenseCount" />
+                        <IntegerField fx:id="licenseCount" />
                     </VBox>
                     <VBox styleClass="couple" alignment="CENTER_LEFT" >
                         <Label text="%sales_percent" styleClass="validationMessage" />
