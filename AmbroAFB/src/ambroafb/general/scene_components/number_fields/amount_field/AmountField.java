@@ -13,7 +13,7 @@ import ambroafb.general.scene_components.number_fields.NumberField;
  */
 public class AmountField extends NumberField {
     
-    public static final String FINALY_CONTENT_PATTERN = "(0|[1-9]\\d{0,14})(\\.\\d{2})?";
+    public static final String FINALY_CONTENT_PATTERN = "(0|[1-9]\\d{0,10})(\\.\\d{2})?";
     public static final String FINALY_CONTENT_DESCRIP = "Amount field content is incorrect"; // must be bundle key
     
     public AmountField(){
@@ -22,7 +22,7 @@ public class AmountField extends NumberField {
     }
     
     private void addComponentFeatures(){
-       String contentRuntimePattern = "(0|[1-9]\\d{0,14})(\\.|\\.\\d|\\.\\d\\d?)?";
+       String contentRuntimePattern = "(0|[1-9]\\d{0,10})(\\.|\\.\\d|\\.\\d\\d?)?";
        contentRuntimePatternListener(contentRuntimePattern);
     }
     

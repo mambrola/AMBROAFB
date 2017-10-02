@@ -44,7 +44,7 @@ public class ProductDialogController implements Initializable {
     private TextField descrip;
     @FXML @ContentNotEmpty
     private ProductsSpecificsComboBox specifics;
-    @FXML @ContentNotEmpty @ContentPattern(value = AmountField.FINALY_CONTENT_PATTERN, explain = "The price content is incorect. Exp: 1.25")
+    @FXML @ContentNotEmpty
     private AmountField price;
     @FXML @ContentNotEmpty
     private CurrencyComboBox currency;

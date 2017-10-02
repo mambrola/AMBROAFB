@@ -48,7 +48,7 @@
                 <children>
                     <VBox styleClass="couple">
                         <Label text="%vat" styleClass="validationMessage" /> 
-                        <TextField fx:id="vat" />
+                        <AmountField fx:id="vat" />
                     </VBox>
                 </children>
             </HBox>

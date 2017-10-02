@@ -10,12 +10,12 @@ import ambroafb.docs.DocMerchandise;
 import ambroafb.docs.DocMerchandiseComboBox;
 import ambroafb.docs.types.utilities.charge.ChargeUtility;
 import ambroafb.general.Names;
+import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
-import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
+import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -48,8 +48,8 @@ public class ChargeUtilityDialogController implements Initializable {
     @FXML @ContentNotEmpty
     private AmountField amount;
     
-    @FXML @ContentNotEmpty @ContentPattern(value = "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?", explain = "Vat text is incorrect")
-    private TextField vat;
+    @FXML @ContentNotEmpty
+    private AmountField vat;
     
     
     @FXML
@@ -75,21 +75,22 @@ public class ChargeUtilityDialogController implements Initializable {
             changeVatFieldValue(amount.getText());
         });
         
-        Utils.validateTextFieldContentListener(vat, "0\\.\\d*[1-9]\\d*|[1-9]\\d*(\\.\\d+)?");
-        
         amount.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             changeVatFieldValue(newValue);
         });
     }    
     
     private void changeVatFieldValue(String amount){
+        String vatValue = "";
         if (amount != null && !amount.isEmpty()){
             float amountValue = Float.parseFloat(amount);
             if (utilities.getValue() != null){
                 float vatRate = utilities.getValue().getVatRate();
-                vat.setText("" + (amountValue * vatRate / 100));
+                float percentResult = (amountValue * vatRate / 100);
+                vatValue = NumberConverter.makeFloatStringBySpecificFraction(percentResult, 2);
             }
         }
+        vat.setText(vatValue);
     }
 
     public void bindUtility(ChargeUtility chargeUtility) {
