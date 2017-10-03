@@ -167,7 +167,7 @@ public class ChargeUtility extends EditorPanelable {
         this.iso.set(iso);
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(Float amount) {
         this.amount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
     }
 

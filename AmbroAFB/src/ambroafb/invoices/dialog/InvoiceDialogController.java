@@ -15,13 +15,12 @@ import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBox;
 import ambroafb.general.countcombobox.CountComboBoxItem;
-import ambroafb.general.interfaces.Annotations.*;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.monthcountercombobox.MonthCounterComboBox;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
+import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceFinaces;
 import ambroafb.invoices.helper.InvoiceReissuing;
@@ -72,8 +71,8 @@ public class InvoiceDialogController implements Initializable {
     private ADatePicker beginDate;
     @FXML @ContentNotEmpty
     private MonthCounterComboBox monthCounter;
-    @FXML @ContentPattern(value = "^$|(([1-9]\\d*)?\\d)(\\.\\d\\d)?$", explain = "The discount syntax is incorrect. like: 0.35, 3.25 ...")
-    private TextField additionalDiscount;
+    @FXML
+    private AmountField additionalDiscount;
     // end order
     
     
@@ -369,10 +368,11 @@ public class InvoiceDialogController implements Initializable {
                 invoiceId = invoice.getRecId();
             }
             
-            String discount = invoice.getAdditionalDiscountRate();
-            if (discount == null || discount.isEmpty()) {
-                discount = null;
-            }
+            Float discount = invoice.getAdditionalDiscountRate();
+//            String discount = invoice.getAdditionalDiscountRate();
+//            if (discount == null || discount.isEmpty()) {
+//                discount = null;
+//            }
             
             JSONArray licensesIds = new JSONArray();
             invoice.getLicenses().forEach((licenseShortData) -> {

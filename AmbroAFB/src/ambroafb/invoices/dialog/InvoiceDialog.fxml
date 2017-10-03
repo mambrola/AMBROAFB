@@ -15,6 +15,7 @@
 <?import ambroafb.clients.*?>
 <?import ambroafb.general.countcombobox.*?>
 <?import org.controlsfx.control.*?>
+<?import ambroafb.general.scene_components.number_fields.amount_field.*?>
 
 <ambroafb.general.DialogPanel   stylesheets="/styles/css/invoicedialog.css" 
                                 xmlns:fx="http://javafx.com/fxml/1" 
@@ -74,7 +75,7 @@
                 <children>
                     <VBox styleClass="coupleOneThird">
                         <Label text="%extra_discount" styleClass="validationMessage" />
-                        <TextField fx:id="additionalDiscount" />
+                        <AmountField fx:id="additionalDiscount" />
                     </VBox>
                     <VBox styleClass="coupleTwoThird">
                         <Label text="%licenses" />

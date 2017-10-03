@@ -527,7 +527,7 @@ public class DBUtils {
     private static JSONArray licensesFinaces;
     private static JSONArray invoicesFinaces;
     
-    public static void callInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, String additionalDiscount, JSONArray licensesIds) throws AuthServerException{
+    public static void callInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, Float additionalDiscount, JSONArray licensesIds) throws AuthServerException{
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         try {
             JSONArray licensesArray = dbClient.callProcedureAndGetAsJson("invoice_get_suited_licenses",

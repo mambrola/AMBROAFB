@@ -298,7 +298,7 @@ public class Doc extends EditorPanelable {
         creditObj.get().setIso(iso);
     }
     
-    public void setAmount(float amount){
+    public void setAmount(Float amount){
         this.amount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
     }
     

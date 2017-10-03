@@ -10,11 +10,12 @@ import ambroafb.clients.Client;
 import ambroafb.currencies.Currency;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
-import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.invoices.filter.InvoiceFilterModel;
@@ -139,6 +140,8 @@ public class Invoice extends EditorPanelable {
     private final Map<CountComboBoxItem, Integer> productsCounter = new HashMap<>();
     private static int clarifyStatus;
     private BooleanProperty isAllowToModify;
+    
+    private final float additionalDiscRateDefaultValue = -1;
     
     public Invoice(){
         invoiceNumber = new SimpleStringProperty("");
@@ -419,8 +422,8 @@ public class Invoice extends EditorPanelable {
         return (revokedDateObj.isNull().get()) ? "" : revokedDateObj.get().toString();
     }
     
-    public String getAdditionalDiscountRate(){
-        return (Utils.getDoubleValueFor(additionalDiscRate.get()) <= 0) ? "" : additionalDiscRate.get();
+    public Float getAdditionalDiscountRate(){
+        return NumberConverter.stringToFloat(additionalDiscRate.get(), 2, additionalDiscRateDefaultValue);
     }
     
     @JsonIgnore
@@ -567,8 +570,8 @@ public class Invoice extends EditorPanelable {
     }
     
     @JsonProperty
-    public void setAdditionalDiscountRate(String additDisc){
-        additionalDiscRate.set(additDisc);
+    public void setAdditionalDiscountRate(Float additDisc){
+        additionalDiscRate.set(NumberConverter.makeFloatStringBySpecificFraction(additDisc, 2));
     }
     
     @JsonProperty // Setter must be available from DB but getter not available to DB
