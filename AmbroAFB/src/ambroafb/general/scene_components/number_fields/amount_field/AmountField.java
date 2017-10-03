@@ -13,11 +13,12 @@ import ambroafb.general.scene_components.number_fields.NumberField;
  */
 public class AmountField extends NumberField {
     
-    public static final String FINALY_CONTENT_PATTERN = "(0|[1-9]\\d{0,10})(\\.\\d{2})?";
+    public static final String FINALY_CONTENT_PATTERN = "(0|[1-9]\\d*)(\\.\\d{2})?";
     public static final String FINALY_CONTENT_DESCRIP = "Amount field content is incorrect"; // must be bundle key
     
     private final String extraIntegerValueLength = "{0,9}"; // default max length is 10, but 0 or [1-9] any digit on the first place - decrease this count by 1.
-    private final String contentRuntimePattern = "(0|[1-9]\\d" + extraIntegerValueLength + ")(\\.|\\.\\d|\\.\\d\\d?)?";
+    private final String integerPart = "(0|[1-9]\\d" + extraIntegerValueLength + ")";
+    private final String fractinoalPart = "(\\.|\\.\\d|\\.\\d\\d?)?";
     
     public AmountField(){
         super();
@@ -25,7 +26,7 @@ public class AmountField extends NumberField {
     }
     
     private void addComponentFeatures(){
-       contentRuntimePatternListener(contentRuntimePattern);
+       contentRuntimePatternListener(integerPart + fractinoalPart);
     }
     
     /**
@@ -37,7 +38,7 @@ public class AmountField extends NumberField {
     public void setIntegerPartLength(int minLength, int maxLength){
         if (minLength < 1 || maxLength < 1 || minLength > maxLength) return;
         String newLength = "{" + (minLength - 1) + "," + (maxLength - 1) + "}"; // On the first place must be 0 or [1-9] any digit, so length count decrease by 1 on both sides.
-        String newPattern = contentRuntimePattern.replace(extraIntegerValueLength, newLength);
+        String newPattern = integerPart.replace(extraIntegerValueLength, newLength) + fractinoalPart;
         contentRuntimePatternListener(newPattern);
     }
 }
