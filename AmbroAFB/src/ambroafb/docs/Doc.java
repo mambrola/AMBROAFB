@@ -99,7 +99,7 @@ public class Doc extends EditorPanelable {
         creditObj = new SimpleObjectProperty<>(new Account());
         
         iso = new SimpleStringProperty(isoDefaultValue);
-        amount = new SimpleStringProperty("" + amountDefaultValue);
+        amount = new SimpleStringProperty("");
         docCode = new SimpleObjectProperty<>(new DocCode());
         descrip = new SimpleStringProperty("");
         ownerId = new SimpleIntegerProperty(ownerIdDefaultValue);

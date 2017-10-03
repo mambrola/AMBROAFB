@@ -45,10 +45,10 @@ public class ChargeUtility extends EditorPanelable {
 
         utility = new SimpleObjectProperty<>(new DocMerchandise());
         iso = new SimpleStringProperty("");
-        amount = new SimpleStringProperty("" + amountDefaultValue); // when ADD form is open and amount is empty, then getAmount method throw exception when objects cloning.
+        amount = new SimpleStringProperty("");
         docCode = new SimpleStringProperty(docCodeValue); // when ADD form is open.
         descrip = new SimpleStringProperty("");
-        vat = new SimpleStringProperty("" + vatDefaultValue);
+        vat = new SimpleStringProperty("");
     }
 
     private LocalDate getLastDateOfMonth() {
@@ -106,7 +106,7 @@ public class ChargeUtility extends EditorPanelable {
         return iso.get();
     }
 
-    public float getAmount() {
+    public Float getAmount() {
         return NumberConverter.stringToFloat(amount.get(), 2, amountDefaultValue);
     }
 
@@ -149,7 +149,7 @@ public class ChargeUtility extends EditorPanelable {
         return ownerId;
     }
 
-    public float getVat() {
+    public Float getVat() {
         return NumberConverter.stringToFloat(amount.get(), 2, vatDefaultValue);
     }
 
@@ -258,12 +258,12 @@ public class ChargeUtility extends EditorPanelable {
                 && getDebitId() == other.getDebitId()
                 && getCreditId() == other.getCreditId()
                 && getIso().equals(other.getIso())
-                && getAmount() == other.getAmount()
+                && getAmount().equals(other.getAmount())
                 && getDocCode().equals(other.getDocCode())
                 && getDescrip().equals(other.getDescrip())
                 && getDocType() == other.getDocType()
                 && getOwnerId() == other.getOwnerId()
-                && getVat() == other.getVat();
+                && getVat().equals(other.getVat());
     }
 
     @Override

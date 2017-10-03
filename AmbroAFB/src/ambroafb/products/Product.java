@@ -10,6 +10,7 @@ import ambro.AView;
 import ambroafb.currencies.Currency;
 import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -63,7 +64,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @JsonIgnore
     private final ObjectProperty<ProductSpecific> productSpecific;
     
-    @AView.Column(title = "%monthly_price", width = "64", styleClass = "textRight")
+    @AView.Column(title = "%monthly_price", width = "90", styleClass = "textRight")
     private final SimpleStringProperty price;
     
     @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
@@ -71,7 +72,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @JsonIgnore
     private final ObjectProperty<Currency> currency;
     
-    @AView.Column(title = "%discounts", width = "80", cellFactory = DiscountCellFactory.class)
+    @AView.Column(title = "%discounts", width = "90", cellFactory = DiscountCellFactory.class)
     private final ObservableList<ProductDiscount> discounts;
     private final ObservableList<MapEditorElement> discountsForMapEditor;
     
@@ -95,6 +96,8 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     
     public static final int ABREVIATION_LENGTH = 2;
     public static final int FORMER_LENGTH = 2;
+    
+    private final float priceDefaultValue = -1;
     
     public Product(){
         abbreviation = new SimpleStringProperty("");
@@ -257,8 +260,8 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return productSpecific.get().getDescrip();
     }
     
-    public double getPrice() {
-        return Utils.getDoubleValueFor(price.get());
+    public Float getPrice() {
+        return NumberConverter.stringToFloat(price.get(), 2, priceDefaultValue);
     }
     
     public String getIso(){
@@ -401,15 +404,15 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @Override
     public boolean compares(EditorPanelable backup) {
         Product productBackup = (Product) backup;
-        return  this.getAbbreviation().equals(productBackup.getAbbreviation()) &&
-                this.getFormer() == productBackup.getFormer() &&
-                this.getDescrip().equals(productBackup.getDescrip()) &&
-                this.specificProperty().get().compares(productBackup.specificProperty().get()) &&
-                this.getPrice() == productBackup.getPrice() &&
-                this.getIso().equals(productBackup.getIso()) &&
-                this.getIsActive() == productBackup.getIsActive() &&
-                this.getNotJurMaxCount() == productBackup.getNotJurMaxCount() &&
-                this.getTestingDays() == productBackup.getTestingDays() &&
+        return  getAbbreviation().equals(productBackup.getAbbreviation()) &&
+                getFormer() == productBackup.getFormer() &&
+                getDescrip().equals(productBackup.getDescrip()) &&
+                specificProperty().get().compares(productBackup.specificProperty().get()) &&
+                getPrice().equals(productBackup.getPrice()) &&
+                getIso().equals(productBackup.getIso()) &&
+                getIsActive() == productBackup.getIsActive() &&
+                getNotJurMaxCount() == productBackup.getNotJurMaxCount() &&
+                getTestingDays() == productBackup.getTestingDays() &&
                 Utils.compareListsByElemOrder(getDiscounts(), productBackup.getDiscounts());
     }
 

@@ -20,7 +20,7 @@ public class NumberConverter {
      * @param fractionDigitCount The quantity of digits after point.
      * @return 
      */
-    public static String makeFloatStringBySpecificFraction(float number, int fractionDigitCount){
+    public static String makeFloatStringBySpecificFraction(Float number, int fractionDigitCount){
         NumberFormat nf = NumberFormat.getNumberInstance(); // It is not static variable, because it is ... on fractionDigitCount parameter. Is Static variable change this value, change result also in every place where it is used.
         nf.setMaximumFractionDigits(fractionDigitCount);
         nf.setMinimumFractionDigits(fractionDigitCount);

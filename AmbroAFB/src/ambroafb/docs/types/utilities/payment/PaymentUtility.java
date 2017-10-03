@@ -40,7 +40,7 @@ public class PaymentUtility extends EditorPanelable {
         
         utility = new SimpleObjectProperty<>(new DocMerchandise());
         iso = new SimpleStringProperty("");
-        amount = new SimpleStringProperty("" + amountDefaultValue); // when ADD form is open and amount is empty, then getAmount method throw exception when objects cloning.
+        amount = new SimpleStringProperty("");
         docCode = new SimpleStringProperty(docCodeValue); // when ADD form is open.
         descrip = new SimpleStringProperty("");
     }
@@ -87,7 +87,7 @@ public class PaymentUtility extends EditorPanelable {
         return iso.get();
     }
     
-    public float getAmount(){
+    public Float getAmount(){
         return NumberConverter.stringToFloat(amount.get(), 2, amountDefaultValue);
     }
     
@@ -231,7 +231,7 @@ public class PaymentUtility extends EditorPanelable {
                 getIso().equals(other.getIso()) &&
                 getDebitId() == other.getDebitId() &&
                 getCreditId() == other.getCreditId() &&
-                getAmount() == other.getAmount() &&
+                getAmount().equals(other.getAmount()) &&
                 getDescrip().equals(other.getDescrip()) &&
                 getDocCode().equals(other.getDocCode()) &&
                 getDocType() == other.getDocType() &&

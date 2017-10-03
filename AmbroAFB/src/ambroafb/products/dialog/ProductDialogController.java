@@ -75,6 +75,8 @@ public class ProductDialogController implements Initializable {
         Utils.validateTextFieldContentListener(former, "[0-9]{1,2}");
         currency.setShowCategoryALL(false);
         permissionToClose = true;
+        
+        price.setIntegerPartLength(1, 8);
     }
 
     public void bindProduct(Product product) {

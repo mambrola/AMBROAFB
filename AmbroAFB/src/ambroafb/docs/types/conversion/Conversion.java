@@ -107,12 +107,12 @@ public class Conversion extends EditorPanelable {
         return buyingAccount.get();
     }
     
-    public float getSellAmount(){
-        return NumberConverter.stringToFloat(sellAmount.get(), 2);
+    public Float getSellAmount(){
+        return NumberConverter.stringToFloat(sellAmount.get(), 2, amountDefaultValue);
     }
     
-    public float getBuyingAmount(){
-        return NumberConverter.stringToFloat(buyingAmount.get(), 2);
+    public Float getBuyingAmount(){
+        return NumberConverter.stringToFloat(buyingAmount.get(), 2, amountDefaultValue);
     }
     
     
@@ -141,11 +141,11 @@ public class Conversion extends EditorPanelable {
         this.buyingAccount.set(account);
     }
     
-    public void setSellAmount(float amount){
+    public void setSellAmount(Float amount){
         this.sellAmount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
     }
     
-    public void setBuyingAmount(float amount){
+    public void setBuyingAmount(Float amount){
         this.buyingAmount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
     }
     
@@ -187,8 +187,8 @@ public class Conversion extends EditorPanelable {
                 Utils.avoidNullAndReturnString(getBuyingCurrency()).equals(other.getBuyingCurrency()) &&
                 getSellAccount().compares(other.getSellAccount()) &&
                 Utils.avoidNullAndReturnEmpty(getBuyingAccount()).compares(other.getBuyingAccount()) &&
-                getSellAmount() == other.getSellAmount() &&
-                getBuyingAmount() == other.getBuyingAmount();
+                getSellAmount().equals(other.getSellAmount()) &&
+                getBuyingAmount().equals(other.getBuyingAmount());
     }
 
     @Override
