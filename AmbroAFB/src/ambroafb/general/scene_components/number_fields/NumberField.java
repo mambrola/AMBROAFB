@@ -47,14 +47,16 @@ public class NumberField extends TextField {
     }
     
     /**
-     *  The method adds text change listener on field and matches content to given pattern.  ??????????????????????????????????????????
+     *  The method sets content pattern on field for valid text.
      * @param pattern The allowed text pattern.
      */
     protected final void contentRuntimePatternListener(String pattern){
         fcl.setPattern(pattern);
     }
     
-    
+    /**
+     *  The class provides to sets pattern, listen text change and match it to pattern. If text is valid for pattern, field sets the text.
+     */
     private class FieldContentListener implements ChangeListener<String> {
 
         private String pattern;
@@ -70,7 +72,6 @@ public class NumberField extends TextField {
         @Override
         public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
             if (newValue != null && !newValue.isEmpty()){
-                System.out.println("pattern: " + pattern);
                 if (!Pattern.matches(pattern, newValue))
                     setText(oldValue);
             }

@@ -76,7 +76,7 @@ public class ProductDialogController implements Initializable {
         currency.setShowCategoryALL(false);
         permissionToClose = true;
         
-        price.setIntegerPartLength(1, 8);
+        price.setIntegerPartLength(8);
     }
 
     public void bindProduct(Product product) {

@@ -6,10 +6,15 @@
 package ambroafb.currency_rates.dialog;
 
 import ambro.ADatePicker;
-import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.currencies.CurrencyComboBox;
+import ambroafb.currency_rates.CurrencyRate;
+import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
+import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.Annotations.ContentPattern;
+import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
+import ambroafb.general.scene_components.number_fields.rate_field.RateField;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -18,9 +23,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import ambroafb.general.Names.*;
-import ambroafb.general.interfaces.Annotations.*;
-import ambroafb.general.interfaces.Dialogable;
 
 /**
  * FXML Controller class
@@ -38,11 +40,12 @@ public class CurrencyRateDialogController implements Initializable {
     @FXML @ContentNotEmpty
     private CurrencyComboBox currencies;
     
-    @FXML @ContentNotEmpty @ContentPattern(value = "[1][0]*", explain = "Count must be 1 or 10 or 100 and so on.")
+    @ContentNotEmpty @ContentPattern(value = "[1][0]*", explain = "Count must be 1 or 10 or 100 and so on.")
+    @FXML 
     private TextField count;
     
-    @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]{1}([.][0-9]{4}){1}", explain = "Rate must contains \".\" and exactly 5 digits." )
-    private TextField rate;
+    @FXML @ContentNotEmpty @ContentPattern(value = RateField.FINALY_CONTENT_PATTERN, explain = RateField.FINALY_CONTENT_DESCRIP)
+    private RateField rate;
     
     @FXML
     private DialogOkayCancelController okayCancelController;

@@ -30,14 +30,14 @@ public class AmountField extends NumberField {
     }
     
     /**
-     *  The method changes minimum and maximum lengths of float number integer part.
-     * If minLength less then 1 or maxLength less then 1 or minLength greater than maxLength, the change will not be apply.
-     * @param minLength The minimum length of float number integer part.
+     *  The method changes  maximum lengths of float number integer part.
+     * If maxLength less then 1, the change will not be apply. Note that, there is not possible to set range of length. 
+     * The runtime pattern uses in text listener, so field must allow to press from 0 to maxLength digits.
      * @param maxLength The maximum length of float number integer part..
      */
-    public void setIntegerPartLength(int minLength, int maxLength){
-        if (minLength < 1 || maxLength < 1 || minLength > maxLength) return;
-        String newLength = "{" + (minLength - 1) + "," + (maxLength - 1) + "}"; // On the first place must be 0 or [1-9] any digit, so length count decrease by 1 on both sides.
+    public void setIntegerPartLength(int maxLength){
+        if (maxLength < 1) return;
+        String newLength = "{0," + (maxLength - 1) + "}"; //  For numberField content on the first place must be 0 or [1-9] any digit, so max length count decrease by 1.
         String newPattern = integerPart.replace(extraIntegerValueLength, newLength) + fractinoalPart;
         contentRuntimePatternListener(newPattern);
     }

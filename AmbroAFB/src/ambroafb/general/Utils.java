@@ -11,7 +11,6 @@ import ambroafb.accounts.Account;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.docs.Doc;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.general.countcombobox.CountComboBox;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.image_gallery.ImageGalleryController;
@@ -22,6 +21,7 @@ import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Annotations.ContentTreeItem;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.mapeditor.MapEditor;
+import ambroafb.general.scene_components.number_fields.NumberField;
 import ambroafb.invoices.Invoice;
 import ambroafb.products.Product;
 import authclient.AuthServerException;
@@ -681,7 +681,7 @@ public class Utils {
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
 
-            if (field.getType().equals(TextField.class) || field.getType().equals(AmountField.class)) {
+            if (field.getType().equals(TextField.class) || field.getType().getSuperclass().equals(NumberField.class)) {
                 TextField textField = (TextField) field.get(ownerClassObject);
                 results[0] = textField;
                 results[1] = textField.getText();

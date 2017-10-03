@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import ambro.*?>
 <?import ambroafb.currencies.*?>
+<?import ambroafb.general.scene_components.number_fields.rate_field.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/currencyratedialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 
@@ -41,7 +42,7 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%rate" styleClass="validationMessage" />
-                            <TextField fx:id="rate" />
+                            <RateField fx:id="rate" />
                         </children>
                     </VBox>
                 </children>
