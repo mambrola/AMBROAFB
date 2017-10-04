@@ -135,12 +135,12 @@ public class ClientDialogController implements Initializable {
     private void changeSceneVisualAsFirm(String delimiter){
         first_name.setText(conf.getTitleFor("firm_name"));
             
-            setStylesForNamesPaneElements("twoThirds", "coupleTwoThird", "coupleOneThird");
-            namesRootPane.getChildren().remove(1); // remove lastName VBox
-            
-            String firmDescrip = firstName.getText() + delimiter + lastName.getText();
-            firstName.setText(firmDescrip.trim());
-            lastName.setText(null);
+        setStylesForNamesPaneElements("twoThirds", "coupleTwoThird", "coupleOneThird");
+        namesRootPane.getChildren().remove(1); // remove lastName VBox
+
+        String firmDescrip = firstName.getText() + delimiter + lastName.getText();
+        firstName.setText(firmDescrip.trim());
+        lastName.setText(null);
     }
     
     private void changeSceneVisualAsPerson(String delimiter){

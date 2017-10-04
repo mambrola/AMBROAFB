@@ -150,7 +150,7 @@ public class ChargeUtility extends EditorPanelable {
     }
 
     public Float getVat() {
-        return NumberConverter.stringToFloat(amount.get(), 2, vatDefaultValue);
+        return NumberConverter.stringToFloat(vat.get(), 2, vatDefaultValue);
     }
 
     

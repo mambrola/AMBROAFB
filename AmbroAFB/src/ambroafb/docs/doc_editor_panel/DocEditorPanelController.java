@@ -100,19 +100,17 @@ public class DocEditorPanelController implements Initializable {
             if (result != null){
                 boolean isDeleted = dm.deleteOneFromDB(docFromDB.getRecId());
                 if (isDeleted){
-                    int selectedIndex = 0;
-                    int removedIndex = tableData.indexOf(selected);
+                    int selectedIndex = tableData.indexOf(selected);
                     tableData.remove(selected);
                     if (selected.isParentDoc()){
                         List<Doc> childrenDocs = tableData.stream().
                                                             filter((doc) -> doc.getParentRecId() == selected.getRecId()).
                                                         collect(Collectors.toList());
-                        removedIndex += childrenDocs.size();
-                        childrenDocs.forEach((childrenDoc) -> {
-                            tableData.remove(childrenDoc);
-                        });
+                        tableData.removeAll(childrenDocs);
                     }
-                    selectedIndex = (removedIndex > tableData.size() - 1) ? tableData.size() - 1 : removedIndex;
+                    if (selectedIndex > tableData.size() - 1){
+                        selectedIndex = tableData.size() - 1;
+                    }
                     ((DocTableListController)outerController).setSelected(selectedIndex);
                 }
             }
@@ -198,9 +196,9 @@ public class DocEditorPanelController implements Initializable {
             if (result != null){
                 ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(result);
                 if (!newDocsFromDB.isEmpty()){
-                    tableData.add(newDocsFromDB.get(0));
+                    tableData.addAll(0, newDocsFromDB);
+                    ((DocTableListController)outerController).setSelected(0);
                 }
-                ((DocTableListController)outerController).setSelected(tableData.size()-1);
             }
         }
         else {
@@ -227,10 +225,8 @@ public class DocEditorPanelController implements Initializable {
             if (newFromDialog != null){
                 ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newFromDialog);
                 if (!newDocsFromDB.isEmpty()){
-                    newDocsFromDB.stream().forEach((doc) -> {
-                        tableData.add(doc);
-                    });
-                    ((DocTableListController)outerController).setSelected(tableData.size()-1);
+                    tableData.addAll(0, newDocsFromDB);
+                    ((DocTableListController)outerController).setSelected(0);
                 }
             }
         }
@@ -251,10 +247,8 @@ public class DocEditorPanelController implements Initializable {
             if (newMonthly != null){
                 ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newMonthly);
                 if (!newDocsFromDB.isEmpty()){
-                    newDocsFromDB.stream().forEach((doc) -> {
-                        tableData.add(doc);
-                    });
-                    ((DocTableListController)outerController).setSelected(tableData.size()-newDocsFromDB.size());
+                    tableData.addAll(0, newDocsFromDB);
+                    ((DocTableListController)outerController).setSelected(0);
                 }
             }
         }
@@ -276,14 +270,13 @@ public class DocEditorPanelController implements Initializable {
                 ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newMonthly);
                 if (!newDocsFromDB.isEmpty()){
                     int selectedIndex = 0;
-                    int insertCount = 0;
-                    int removedIndex = 0;
                     int updatedIndex = 0;
+                    List<Doc> insertedDocs = new ArrayList<>();
+                    List<Doc> removedDocs = new ArrayList<>();
                     for (Doc doc : newDocsFromDB) {
                         int status = getDocStatus(doc);
                         if (status == 0){
-                            tableData.add(doc);
-                            insertCount++;
+                            insertedDocs.add(doc);
                         }
                         else {
                             Doc docFromTable = getAppropriateDocFromTable(doc.getRecId());
@@ -292,22 +285,27 @@ public class DocEditorPanelController implements Initializable {
                                     docFromTable.copyFrom(doc);
                                     updatedIndex = tableData.indexOf(docFromTable);
                                 } else {
-                                    tableData.remove(docFromTable);
-                                    removedIndex = tableData.indexOf(docFromTable);
+                                    removedDocs.add(doc);
                                 }
                             }
                         }
                     }
-                    // select table entry:
-                    if (insertCount != 0){
-                        selectedIndex = tableData.size() - 1;
+                    
+                    if (!insertedDocs.isEmpty()){
+                        tableData.addAll(0, insertedDocs);
+                        selectedIndex = 0;
                     }
                     else {
+                        if (!removedDocs.isEmpty()) {
+                            int firstRmDocIndex = tableData.indexOf(removedDocs.get(0)); 
+                            tableData.removeAll(removedDocs);
+                            if (firstRmDocIndex > tableData.size() - 1){
+                                firstRmDocIndex = tableData.size() - 1;
+                            }
+                            selectedIndex = firstRmDocIndex;
+                        }
                         if (updatedIndex != 0){
                             selectedIndex = updatedIndex;
-                        }
-                        else if(removedIndex != 0){
-                            selectedIndex = (removedIndex > tableData.size() - 1) ? tableData.size()-1 : removedIndex;
                         }
                     }
                     ((DocTableListController)outerController).setSelected(selectedIndex);
@@ -360,10 +358,8 @@ public class DocEditorPanelController implements Initializable {
             if (newPaymentUtility != null){
                 ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newPaymentUtility);
                 if (!newDocsFromDB.isEmpty()){
-                    newDocsFromDB.stream().forEach((doc) -> {
-                        tableData.add(doc);
-                    });
-                    ((DocTableListController)outerController).setSelected(tableData.size()-1);
+                    tableData.addAll(0, newDocsFromDB);
+                    ((DocTableListController)outerController).setSelected(0);
                 }
             }
         }
@@ -388,10 +384,8 @@ public class DocEditorPanelController implements Initializable {
             if (newChargeUtility != null){
                 ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newChargeUtility);
                 if (!newDocsFromDB.isEmpty()){
-                    newDocsFromDB.stream().forEach((doc) -> {
-                        tableData.add(doc);
-                    });
-                    ((DocTableListController)outerController).setSelected(tableData.size()-newDocsFromDB.size());
+                    tableData.addAll(0, newDocsFromDB);
+                    ((DocTableListController)outerController).setSelected(0);
                 }
             }
         }
