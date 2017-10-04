@@ -10,11 +10,13 @@ import ambroafb.currencies.Currency;
 import ambroafb.currency_rates.filter.CurrencyRateFilterModel;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
-import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
+import ambroafb.general.interfaces.TableColumnWidths;
 import authclient.db.ConditionBuilder;
 import authclient.db.WhereBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javafx.beans.property.ObjectProperty;
@@ -23,8 +25,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import org.json.JSONObject;
-import ambroafb.general.interfaces.TableColumnWidths;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 /**

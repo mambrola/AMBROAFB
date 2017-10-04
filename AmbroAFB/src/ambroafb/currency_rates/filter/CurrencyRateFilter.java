@@ -7,12 +7,12 @@ package ambroafb.currency_rates.filter;
 
 import ambro.ADatePicker;
 import ambroafb.currencies.CurrencyComboBox;
-import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
-import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
@@ -84,6 +84,7 @@ public class CurrencyRateFilter extends UserInteractiveStage implements Filterab
     public void initialize(URL url, ResourceBundle rb) {
         dateBigger.setValue(currencyRateFilterModel.getFromDate());
         dateLess.setValue(currencyRateFilterModel.getToDate());
+        currencies.fillComboBoxWithALLAndWithoutRatesBasicIso(null);
     }    
     
 }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.*?>
+<?import ambro.*?>
+<?import ambroafb.clients.*?>
+<?import ambroafb.accounts.*?>
+<?import ambroafb.currencies.*?>
+<?import ambroafb.docs.*?>
+
+<ambroafb.general.DialogPanel   stylesheets="/styles/css/invoicefilter.css" 
+                                xmlns:fx="http://javafx.com/fxml/1">
+    <VBox fx:id="formPane" >
+        <children>
+            <HBox styleClass="w2">
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%doc_date_from" />
+                            <ADatePicker fx:id="docDateFrom" />
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label text="%doc_date_to" />
+                            <ADatePicker fx:id="docDateTo" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w2">
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%doc_in_doc_date_from" />
+                            <ADatePicker fx:id="docInDocDateFrom" />
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label text="%doc_in_doc_date_to" />
+                            <ADatePicker fx:id="docInDocDateTo" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w1" >
+                <children>
+                    <VBox>
+                        <children>
+                            <Label text="%accounts" />
+                            <AccountComboBox fx:id="accounts" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="w2" >
+                <children>
+                    <VBox >
+                        <children>
+                            <Label text="%currency" />
+                            <CurrencyComboBox fx:id="currencies" />
+                        </children>
+                    </VBox>
+                    <VBox >
+                        <children>
+                            <Label text="%doc_code" />
+                            <DocCodeComboBox fx:id="docCodes" />
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

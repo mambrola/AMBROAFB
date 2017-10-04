@@ -14,8 +14,8 @@ import ambroafb.docs.DocCodeComboBox;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
-import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -93,13 +93,15 @@ public class DocOrderComponent extends VBox {
     private void componentsInit(){
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(this);
         
-        debits.fillComboBox();
-        credits.fillComboBox();
+        debits.fillComboBox(null);
+        credits.fillComboBox(null);
         
         spaceFiller = new VBox();
         spaceFiller.getStyleClass().add("couple");
         spaceFillerLabel = new Label("");
         spaceFiller.getChildren().add(spaceFillerLabel);
+        
+        docCodes.fillComboBox(null);
     }
     
     /**

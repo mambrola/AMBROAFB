@@ -8,6 +8,8 @@ package ambroafb.docs;
 import ambroafb.general.DBUtils;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -25,14 +27,25 @@ public class DocCodeComboBox extends ComboBox<DocCode> {
         
         this.setEditable(true);
         this.setConverter(new customStringConverter());
-        new Thread(new FetchDataFromDB(this.getItems())).start();
+    }
+    
+    /**
+     * The method fills comboBox by docCodes and then calls consumer.
+     * @param consumer The extra action on comboBox filling. If there is no extra action exists, gives null value. 
+     */
+    public void fillComboBox(Consumer<List<DocCode>> consumer){
+        new Thread(new FetchDataFromDB(consumer, this.getItems())).start();
     }
     
     private class customStringConverter extends StringConverter<DocCode> {
 
         @Override
         public String toString(DocCode object) {
-            return object.getDocCode();
+            String value = "";
+            if (object != null){
+                value = object.getDocCode();
+            }
+            return value;
         }
 
         @Override
@@ -47,9 +60,11 @@ public class DocCodeComboBox extends ComboBox<DocCode> {
     private class FetchDataFromDB implements Runnable {
 
         private final String DB_VIEW_NAME = "doc_codes";
+        private final Consumer<List<DocCode>> consumer;
         private final ObservableList<DocCode> items;
         
-        public FetchDataFromDB(ObservableList<DocCode> items) {
+        public FetchDataFromDB(Consumer<List<DocCode>> consumer, ObservableList<DocCode> items) {
+            this.consumer = consumer;
             this.items = items;
         }
 
@@ -59,6 +74,9 @@ public class DocCodeComboBox extends ComboBox<DocCode> {
             ArrayList<DocCode> itemsFromDB = DBUtils.getObjectsListFromDB(DocCode.class, DB_VIEW_NAME, params);
             Platform.runLater(() -> {
                 items.setAll(itemsFromDB);
+                if (consumer != null){
+                    consumer.accept(itemsFromDB);
+                }
             });
         }
     }

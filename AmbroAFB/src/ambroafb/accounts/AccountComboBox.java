@@ -5,11 +5,12 @@
  */
 package ambroafb.accounts;
 
-import ambroafb.general.AfBConsumersManager;
 import ambroafb.general.DBUtils;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,9 +37,10 @@ public class AccountComboBox extends ComboBox<Account> {
      * Note: method starts thread and fetch data in it. If this method call in AccountComboBox  constructor, they may cause problem
      * for other class, where this comboBox use -  it will become that other class fetch thread execute first and after execute this fetch.
      * So the list will not be change from other class.
+     * @param consumer The extra action on comboBox filling. If there is no extra action exists, gives null value. 
      */
-    public void fillComboBox(){
-        new Thread(new FetchDataFromDB()).start();
+    public void fillComboBox(Consumer<List<Account>> consumer){
+        new Thread(new FetchDataFromDB(consumer)).start();
     }
     
     /**
@@ -60,17 +62,41 @@ public class AccountComboBox extends ComboBox<Account> {
         }
     }
     
+    /**
+     * The method uses to set items in comboBox.
+     * @param accounts 
+     */
+    public void setAccounts(List<Account> accounts){
+        this.accounts.setAll(accounts);
+    }
+    
+    /**
+     * The method uses to get items from comboBox.
+     * @return 
+     */
+    public ObservableList<Account> getAccounts(){
+        return accounts;
+    }
+    
     private class FetchDataFromDB implements Runnable {
 
         private final String DB_TABLE_NAME = "accounts";
+        private final Consumer<List<Account>> consumer;
+        
+        public FetchDataFromDB(Consumer<List<Account>> consumer){
+            this.consumer = consumer;
+        }
         
         @Override
         public void run() {
             JSONObject params = new ConditionBuilder().build();
-            ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_TABLE_NAME, params, AfBConsumersManager.getStandardConsumerForDBException());
+            ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_TABLE_NAME, params);
             accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
             Platform.runLater(() -> {
                 accounts.setAll(accountFromDB);
+                if (consumer != null){
+                    consumer.accept(accountFromDB);
+                }
             });
         }
         

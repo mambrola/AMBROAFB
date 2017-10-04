@@ -43,7 +43,7 @@ public class IsoComboBox extends ComboBox<String> {
             setValue(list.get(0));
         }
     }
-    
+
     private class CustomIsoConverter extends StringConverter<String> {
 
         @Override

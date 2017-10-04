@@ -48,7 +48,7 @@ public class ProductDialogController implements Initializable {
     @FXML @ContentNotEmpty
     private AmountField price;
     @FXML @ContentNotEmpty
-    private CurrencyComboBox currency;
+    private CurrencyComboBox currencies;
     @FXML @ContentMapEditor(explainKey = "Left number must be days counter.", explainValue = "Right number must be discount percent. Exp: 4.25")
     private MapEditor discounts;
     @FXML
@@ -73,7 +73,8 @@ public class ProductDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         Utils.validateTextFieldContentListener(former, "[0-9]{1,2}");
-        currency.setShowCategoryALL(false);
+        currencies.fillComboBoxWithoutALLAndWithoutRatesBasicIso(null);
+//        currencies.setShowCategoryALL(false);
         permissionToClose = true;
         
         price.setIntegerPartLength(8);
@@ -87,7 +88,7 @@ public class ProductDialogController implements Initializable {
             descrip.textProperty().bindBidirectional(product.descriptionProperty());
             specifics.valueProperty().bindBidirectional(product.specificProperty());
             price.textProperty().bindBidirectional(product.priceProperty());
-            currency.valueProperty().bindBidirectional(product.currencyProperty());
+            currencies.valueProperty().bindBidirectional(product.currencyProperty());
             discounts.setItems(product.getDiscountsForMapEditor());
             maxCount.textProperty().bindBidirectional(product.notJurMaxCountProperty());
             isAlive.selectedProperty().bindBidirectional(product.isAliveProperty());

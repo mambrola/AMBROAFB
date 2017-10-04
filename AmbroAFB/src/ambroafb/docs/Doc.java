@@ -7,13 +7,16 @@ package ambroafb.docs;
 
 import ambro.AView;
 import ambroafb.accounts.Account;
+import ambroafb.docs.filter.DocFilterModel;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
 import authclient.db.ConditionBuilder;
+import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
@@ -128,6 +131,28 @@ public class Doc extends EditorPanelable {
      */
     public static ArrayList<Doc> getAllFromDB() {
         JSONObject params = new ConditionBuilder().build();
+        ArrayList<Doc> docs = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
+        return docs;
+    }
+    
+    public static ArrayList<Doc> getFilteredFromDB(FilterModel model) {
+        DocFilterModel docFilterModel = (DocFilterModel) model;
+        WhereBuilder whereBuilder = new ConditionBuilder().where().
+                        and("doc_date", ">=", docFilterModel.getDocDateForDB(true)).
+                        and("doc_date", "<=", docFilterModel.getDocDateForDB(false)).
+                        and("doc_in_doc_date", ">=", docFilterModel.getDocInDocDateForDB(true)).
+                        and("doc_in_doc_date", "<=", docFilterModel.getDocInDocDateForDB(false));
+        if (docFilterModel.isSelectedAccount()){
+            whereBuilder.andGroup().or("debit_id", "=", docFilterModel.getSelectedAccountId()).
+                                    or("credit_id", "=", docFilterModel.getSelectedAccountId()).closeGroup();
+        }
+        if (docFilterModel.isSelectedCurrency()){
+            whereBuilder.and("iso", "=", docFilterModel.getSelectedCurrency());
+        }
+        if (docFilterModel.isSelectedDocCode()){
+            whereBuilder.and("doc_code", "=", docFilterModel.getSelectedDocCode());
+        }
+        JSONObject params = whereBuilder.condition().build();
         ArrayList<Doc> docs = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
         return docs;
     }
@@ -382,8 +407,7 @@ public class Doc extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return  getDocDate() + " " + getDocInDocDate() + " " + debitProperty().get().getDescrip() + " "  + 
-                creditProperty().get().getDescrip() + " " + getIso() + " " + getDocCode() + " " + getDescrip();
+        return  debitProperty().get().getDescrip() + " " + creditProperty().get().getDescrip() + " " + getDescrip();
     }
 
     @Override

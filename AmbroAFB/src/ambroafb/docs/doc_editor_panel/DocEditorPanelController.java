@@ -10,6 +10,7 @@ import ambro.AFilterableTreeTableView;
 import ambro.ATableView;
 import ambro.AView;
 import ambroafb.docs.Doc;
+import ambroafb.docs.filter.DocFilter;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.DocManagersFactory;
 import ambroafb.docs.types.conversion.ConversionManager;
@@ -23,6 +24,8 @@ import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
+import ambroafb.general.interfaces.Filterable;
 import ambroafb.general_scene.doc_table_list.DocTableListController;
 import java.net.URL;
 import java.util.ArrayList;
@@ -405,10 +408,14 @@ public class DocEditorPanelController implements Initializable {
         Stage filterStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (filterStage == null || !filterStage.isShowing()){
             Class controllerClass = getClassByName("ambroafb.general_scene.doc_table_list.DocTableListController");
-            Supplier<ArrayList<Doc>> fetchData = () -> {
-                                                        return new ArrayList(Doc.getAllFromDB());
-                                                    };
-            Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{Supplier.class}, outerController, fetchData);
+            Filterable filter = new DocFilter(editorPanelSceneStage);
+            FilterModel model = filter.getResult();
+            if (model != null && !model.isCanceled()){
+                Supplier<ArrayList<Doc>> fetchData = () -> {
+                                                            return new ArrayList(Doc.getFilteredFromDB(model));
+                                                        };
+                Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{Supplier.class}, outerController, fetchData);
+            }
         }
         else {
             filterStage.requestFocus();

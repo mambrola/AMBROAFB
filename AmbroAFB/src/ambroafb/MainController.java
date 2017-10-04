@@ -16,6 +16,7 @@ import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCount;
 import ambroafb.docs.Doc;
+import ambroafb.docs.filter.DocFilter;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
@@ -23,6 +24,7 @@ import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
+import ambroafb.general.interfaces.Filterable;
 import ambroafb.general_scene.doc_table_list.DocTableList;
 import ambroafb.general_scene.table_list.TableList;
 import ambroafb.invoices.Invoice;
@@ -246,10 +248,18 @@ public class MainController implements Initializable {
         if(docsStage == null || !docsStage.isShowing()){
             DocTableList docs = new DocTableList(AmbroAFB.mainStage, Doc.class, stageTitle);
             docs.show();
-            Supplier<ArrayList<Doc>> fetchData = () -> {
-                                                        return new ArrayList(Doc.getAllFromDB());
-                                                    };
-            docs.getController().reAssignTable(fetchData);
+            
+            Filterable filter = new DocFilter(docs);
+            FilterModel model = filter.getResult();
+            if (model.isCanceled()){
+                docs.close();
+            }
+            else {
+                Supplier<ArrayList<Doc>> fetchData = () -> {
+                                                            return new ArrayList(Doc.getFilteredFromDB(model));
+                                                        };
+                docs.getController().reAssignTable(fetchData);
+            }
         }
         else {
             docsStage.requestFocus();

@@ -6,12 +6,12 @@
 package ambroafb.licenses.filter;
 
 import ambroafb.clients.ClientComboBox;
-import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
-import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseStatus;
 import ambroafb.products.ProductComboBox;
@@ -94,7 +94,7 @@ public class LicenseFilter extends UserInteractiveStage implements Filterable, I
             statuses.getCheckModel().check(index);
         });
         
-        // The order of these bellow command are importent.
+        // The order of these bellow command is importent.
         extraDays.setSelected(filterModel.onlyExtraDays());
         extraDays.setIndeterminate(filterModel.withAndWithoutExtraDays());
         
