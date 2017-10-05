@@ -93,15 +93,15 @@ public class DocOrderComponent extends VBox {
     private void componentsInit(){
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(this);
         
-        debits.fillComboBox(null);
-        credits.fillComboBox(null);
+        debits.fillComboBoxWithALL(null);
+        credits.fillComboBoxWithALL(null);
         
         spaceFiller = new VBox();
         spaceFiller.getStyleClass().add("couple");
         spaceFillerLabel = new Label("");
         spaceFiller.getChildren().add(spaceFillerLabel);
         
-        docCodes.fillComboBox(null);
+        docCodes.fillComboBoxWithALL(null);
     }
     
     /**

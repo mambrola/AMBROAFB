@@ -8,6 +8,7 @@ package ambroafb.docs.filter;
 import ambro.ADatePicker;
 import ambroafb.accounts.Account;
 import ambroafb.accounts.AccountComboBox;
+import ambroafb.currencies.Currency;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.docs.DocCode;
 import ambroafb.docs.DocCodeComboBox;
@@ -18,10 +19,10 @@ import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.UserInteractiveStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -84,7 +85,7 @@ public class DocFilter extends UserInteractiveStage implements Filterable, Initi
             docFilterModel.setDocInDocDate(true, docInDocDateFrom.getValue());
             docFilterModel.setDocInDocDate(false, docInDocDateTo.getValue());
             docFilterModel.setSelectedAccount(accounts.getValue());
-            docFilterModel.setSelectedCurrency(currencies.getValue().getDescrip());
+            docFilterModel.setSelectedCurrency(currencies.getValue());
             docFilterModel.setSelectedDocCode(docCodes.getValue());
         }
     }
@@ -96,25 +97,32 @@ public class DocFilter extends UserInteractiveStage implements Filterable, Initi
         docInDocDateFrom.setValue(docFilterModel.getDocInDocDate(true));
         docInDocDateTo.setValue(docFilterModel.getDocInDocDate(false));
         
-        Consumer<List<Account>> accountConsumer = (accountList) -> {
+        Consumer<ObservableList<Account>> accountConsumer = (accountList) -> {
             int accId = docFilterModel.getSelectedAccountId();
             Optional<Account> optAccount = accountList.stream().filter((acc) -> acc.getRecId() == accId).findFirst();
             if (optAccount.isPresent()){
                 accounts.setValue(optAccount.get());
             }
         };
-        accounts.fillComboBox(accountConsumer);
+        accounts.fillComboBoxWithALL(accountConsumer);
         
-        currencies.fillComboBoxWithALL(null);
+        Consumer<ObservableList<Currency>> currencyConsumer = (accountList) -> {
+            String currencyIso = docFilterModel.getSelectedCurrencyIso();
+            Optional<Currency> optCurrency = accountList.stream().filter((currency) -> currency.getIso().equals(currencyIso)).findFirst();
+            if (optCurrency.isPresent()){
+                currencies.setValue(optCurrency.get());
+            }
+        };
+        currencies.fillComboBoxWithALL(currencyConsumer);
         
-        Consumer<List<DocCode>> docCodeConsumer = (accountList) -> {
+        Consumer<ObservableList<DocCode>> docCodeConsumer = (accountList) -> {
             String selectedDocCode = docFilterModel.getSelectedDocCode();
             Optional<DocCode> optAccount = accountList.stream().filter((dc) -> dc.getDocCode().equals(selectedDocCode)).findFirst();
             if (optAccount.isPresent()){
                 docCodes.setValue(optAccount.get());
             }
         };
-        docCodes.fillComboBox(docCodeConsumer);
+        docCodes.fillComboBoxWithALL(docCodeConsumer);
         
     }
     

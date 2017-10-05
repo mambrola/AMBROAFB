@@ -6,13 +6,16 @@
 package ambroafb.docs.filter;
 
 import ambroafb.accounts.Account;
+import ambroafb.currencies.Currency;
+import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.docs.DocCode;
+import ambroafb.docs.DocCodeComboBox;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.FilterModel;
 import java.time.LocalDate;
 
 /**
- *
+ * Logic: Save scene components values which are needed for sending to DB.
  * @author dkobuladze
  */
 public class DocFilterModel extends FilterModel {
@@ -29,11 +32,21 @@ public class DocFilterModel extends FilterModel {
         
     }
     
+    /**
+     * The method saves docDate datePicker value.
+     * @param isFromDate True if value is DateFrom component. False if value is DateTo component.
+     * @param date The value of datePicker.
+     */
     public void setDocDate(boolean isFromDate, LocalDate date){
         String key = (isFromDate) ? PREF_DOC_DATE_FROM_KEY : PREF_DOC_DATE_TO_KEY;
         saveDateForKey(key, date);
     }
     
+    /**
+     * The method saves docInDocDate datePicker value.
+     * @param isFromDate True if value is DateFrom component. False if value is DateTo component.
+     * @param date The value of datePicker.
+     */
     public void setDocInDocDate(boolean isFromDate, LocalDate date){
         String key = (isFromDate) ? PREF_DOC_IN_DOC_DATE_FROM_KEY : PREF_DOC_IN_DOC_DATE_TO_KEY;
         saveDateForKey(key, date);
@@ -43,30 +56,51 @@ public class DocFilterModel extends FilterModel {
         saveIntoPref(key, (date == null) ? "" : date.toString());
     }
     
+    /**
+     * The method saves account id if account is not null.
+     * @param account The account that is chosen from filter dialog.
+     */
     public void setSelectedAccount(Account account){
         if (account != null){
             saveIntoPref(PREF_ACCOUNT_ID_KEY, account.getRecId());
         }
     }
     
-    public void setSelectedCurrency(String currency){
+    /**
+     * The method saves currency iso if currency is not null.
+     * @param currency The currency that is chosen from filter dialog.
+     */
+    public void setSelectedCurrency(Currency currency){
         if (currency != null){
-            saveIntoPref(PREF_CURRENCY_KEY, currency);
+            saveIntoPref(PREF_CURRENCY_KEY, currency.getIso());
         }
     }
     
+    /**
+     * The method saves docCode description if docCode is not null.
+     * @param docCode The docCode that is chosen from filter dialog.
+     */
     public void setSelectedDocCode(DocCode docCode){
-        System.out.println("----------------- doccode: " + docCode);
         if (docCode != null){
             saveIntoPref(PREF_DOC_CODE_KEY, docCode.getDocCode());
         }
     }
     
-    public LocalDate getDocDate(boolean isFromdate){
-        return getDateForKey((isFromdate) ? PREF_DOC_DATE_FROM_KEY : PREF_DOC_DATE_TO_KEY);
+    
+    /**
+     *  The method gets saving docDate value.
+     * @param isFromDate True if interests dateFrom value. False if interests dateTo value.
+     * @return 
+     */
+    public LocalDate getDocDate(boolean isFromDate){
+        return getDateForKey((isFromDate) ? PREF_DOC_DATE_FROM_KEY : PREF_DOC_DATE_TO_KEY);
     }
     
-    // If date from pref is empty, datebase will give default localDate min value.
+    /**
+     * If dateFrom saving value is empty, method return  default localDate value.
+     * @param isFromDate True if interests dateFrom value (default min). False if interests dateTo value (default max).
+     * @return 
+     */
     public LocalDate getDocDateForDB(boolean isFromDate){
         LocalDate date = getDocDate(isFromDate);
         if (date == null){
@@ -75,11 +109,20 @@ public class DocFilterModel extends FilterModel {
         return date;
     }
     
+    /**
+     *  The method gets saving docInDocDate value.
+     * @param isFromDate True if interests dateFrom value. False if interests dateTo value.
+     * @return 
+     */
     public LocalDate getDocInDocDate(boolean isFromDate){
         return getDateForKey((isFromDate) ? PREF_DOC_IN_DOC_DATE_FROM_KEY : PREF_DOC_IN_DOC_DATE_TO_KEY);
     }
     
-    // If date from pref is empty, datebase will give default localDate min value.
+    /**
+     * If dateFrom saving value is empty, method return  default localDate value.
+     * @param isFromDate True if interests dateFrom value (default min). False if interests dateTo value (default max).
+     * @return 
+     */
     public LocalDate getDocInDocDateForDB(boolean isFromDate){
         LocalDate date = getDocInDocDate(isFromDate);
         if (date == null){
@@ -93,64 +136,54 @@ public class DocFilterModel extends FilterModel {
         return DateConverter.getInstance().parseDate(dateStr);
     }
     
-    
+    /**
+     * Returns saving account id. Zero - if no value is saving.
+     * @return 
+     */
     public int getSelectedAccountId(){
         return getIntFromPref(PREF_ACCOUNT_ID_KEY);
     }
     
-    public String getSelectedCurrency(){
+    /**
+     * Returns saving currency iso. Null if nothing is saving.
+     * @return 
+     */
+    public String getSelectedCurrencyIso(){
         return getStringFromPref(PREF_CURRENCY_KEY);
     }
     
+    /**
+     * Returns saving docCode description. Null if nothing is saving.
+     * @return 
+     */
     public String getSelectedDocCode(){
         return getStringFromPref(PREF_DOC_CODE_KEY);
     }
     
-//    /**
-//     * The method fetches accounts and gives them to consumer when done.
-//     * @param accounts Accounts comboBox object. It will be filled be account data.
-//     * @param consumer The consumer for fetched result  (accounts list). 
-//     * The consumer accept method will call in {@link javafx.application.Platform#runLater(java.lang.Runnable)  Platform.runLater}
-//     */
-//    public void fetchAccounts(AccountComboBox accounts, Consumer<List<Account>> consumer){
-//        new Thread(new FetchDataFromDB(accounts, consumer)).start();
-//    }
-
-    public boolean isSelectedAccount() {
+    /**
+     * Checks is selected concrete or ALL category.
+     * @return True - if selected concrete value. False - if selected ALL category.
+     */
+    public boolean isSelectedConcreteAccount() {
         return getSelectedAccountId() > 0;
     }
 
-    public boolean isSelectedCurrency() {
-        String currency = getSelectedCurrency();
-        return currency != null && !currency.isEmpty();
+    /**
+     * Checks is selected concrete or ALL category.
+     * @return True - if selected concrete value. False - if selected ALL category.
+     */
+    public boolean isSelectedConcreteCurrency() {
+        String isoFromPrefs = getSelectedCurrencyIso();
+        return isoFromPrefs != null && !isoFromPrefs.equals(CurrencyComboBox.categoryALL);
     }
 
-    public boolean isSelectedDocCode() {
-        return getSelectedDocCode() != null;
+    /**
+     * Checks is selected concrete or ALL category.
+     * @return True - if selected concrete value. False - if selected ALL category.
+     */
+    public boolean isSelectedConcreteDocCode() {
+        String docCodeFromPref = getSelectedDocCode();
+        return docCodeFromPref != null && !docCodeFromPref.equals(DocCodeComboBox.categoryALL);
     }
-    
-    
-//    private class FetchDataFromDB implements Runnable {
-//
-//        private final String DB_TABLE_NAME = "accounts";
-//        private final AccountComboBox accounts;
-//        private final Consumer<List<Account>> consumer;
-//        
-//        public FetchDataFromDB(AccountComboBox accounts, Consumer<List<Account>> consumer){
-//            this.accounts = accounts;
-//            this.consumer = consumer;
-//        }
-//        
-//        @Override
-//        public void run() {
-//            JSONObject params = new ConditionBuilder().build();
-//            ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_TABLE_NAME, params, AfBConsumersManager.getStandardConsumerForDBException());
-//            accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
-//            Platform.runLater(() -> {
-//                accounts.setAccounts(accountFromDB);
-//                consumer.accept(accountFromDB);
-//            });
-//        }
-//    }
     
 }

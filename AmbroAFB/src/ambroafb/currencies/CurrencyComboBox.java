@@ -28,6 +28,7 @@ import org.json.JSONObject;
  */
 public class CurrencyComboBox extends ComboBox<Currency>{
     
+    public static final String categoryALL = "ALL";
     private final ObservableList<Currency> items = FXCollections.observableArrayList();
     private final FilteredList<Currency> filteredList = new FilteredList<>(items);
     private final Currency currencyALL = new Currency();
@@ -35,7 +36,7 @@ public class CurrencyComboBox extends ComboBox<Currency>{
     public CurrencyComboBox(){
         super();
         this.setItems(filteredList);
-        currencyALL.setIso(Currency.ALL);
+        currencyALL.setIso(categoryALL);
     }
     
     public void fillComboBoxWithALL(Consumer<ObservableList<Currency>> extraAction){

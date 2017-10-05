@@ -45,9 +45,6 @@ public class Currency extends EditorPanelable {
     @AView.Column(width = "20")
     private final StringProperty symbol;
     
-    @JsonIgnore
-    public static final String ALL = "ALL";
-    @JsonIgnore
     private static final String DB_TABLE_NAME = "currencies";
     
     public Currency(){

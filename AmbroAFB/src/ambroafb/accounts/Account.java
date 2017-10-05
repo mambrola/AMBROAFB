@@ -9,6 +9,9 @@ import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -183,11 +186,16 @@ public class Account extends EditorPanelable {
 
     @Override
     public String toString() {
-        String toString = "";
-        if (!accountNumber.get().isEmpty() && !descrip.get().isEmpty())
-            toString = getSpaces(accountNumber.get().length()) + 
-                        accountNumber.get() + " / " + iso.get() + " - " + descrip.get();
-        return toString;
+        return getShortDescrip(" / ", " - ").get();
+    }
+    
+    public StringExpression getShortDescrip(String numberIsoDlmt, String isoDescripDlmt){
+        StringBinding isoDescripBinding =  Bindings.when(iso.isEmpty()).
+                                                        then(descrip.get()).
+                                                    otherwise(iso.get()+ isoDescripDlmt + descrip.get());
+        return Bindings.when(accountNumber.isEmpty()).
+                            then(isoDescripBinding).
+                        otherwise(accountNumber.get() + numberIsoDlmt + isoDescripBinding.get());
     }
     
     private final int max_account_num_length = 10;

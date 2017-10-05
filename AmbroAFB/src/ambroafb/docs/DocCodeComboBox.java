@@ -8,9 +8,9 @@ package ambroafb.docs;
 import ambroafb.general.DBUtils;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
@@ -22,19 +22,34 @@ import org.json.JSONObject;
  */
 public class DocCodeComboBox extends ComboBox<DocCode> {
     
+    public static final String categoryALL = "ALL";
+    private final DocCode docCodeALL = new DocCode();
+    private final  ObservableList<DocCode> items = FXCollections.observableArrayList();
+    
     public DocCodeComboBox(){
         super();
-        
+        setItems(items);
         this.setEditable(true);
         this.setConverter(new customStringConverter());
+        
+        docCodeALL.setDocCode(categoryALL);
     }
     
     /**
-     * The method fills comboBox by docCodes and then calls consumer.
-     * @param consumer The extra action on comboBox filling. If there is no extra action exists, gives null value. 
+     * The method fills comboBox by docCodes, ALL category item and then calls consumer.
+     * @param extraAction The extra action on comboBox filling. If consumer is null, no extra action execute.
      */
-    public void fillComboBox(Consumer<List<DocCode>> consumer){
-        new Thread(new FetchDataFromDB(consumer, this.getItems())).start();
+    public void fillComboBoxWithALL(Consumer<ObservableList<DocCode>> extraAction){
+        Consumer<ObservableList<DocCode>> addCategoryALL = (docCodes) -> {
+            docCodes.add(0, docCodeALL);
+            setValue(docCodeALL);
+        };
+        Consumer<ObservableList<DocCode>> consumer = (extraAction == null) ? addCategoryALL : addCategoryALL.andThen(extraAction);
+        new Thread(new FetchDataFromDB(consumer)).start();
+    }
+    
+    public void fillComboBoxWithoutALL(Consumer<ObservableList<DocCode>> extraAction){
+        new Thread(new FetchDataFromDB(extraAction)).start();
     }
     
     private class customStringConverter extends StringConverter<DocCode> {
@@ -60,12 +75,10 @@ public class DocCodeComboBox extends ComboBox<DocCode> {
     private class FetchDataFromDB implements Runnable {
 
         private final String DB_VIEW_NAME = "doc_codes";
-        private final Consumer<List<DocCode>> consumer;
-        private final ObservableList<DocCode> items;
+        private final Consumer<ObservableList<DocCode>> consumer;
         
-        public FetchDataFromDB(Consumer<List<DocCode>> consumer, ObservableList<DocCode> items) {
+        public FetchDataFromDB(Consumer<ObservableList<DocCode>> consumer) {
             this.consumer = consumer;
-            this.items = items;
         }
 
         @Override
@@ -75,7 +88,7 @@ public class DocCodeComboBox extends ComboBox<DocCode> {
             Platform.runLater(() -> {
                 items.setAll(itemsFromDB);
                 if (consumer != null){
-                    consumer.accept(itemsFromDB);
+                    consumer.accept(items);
                 }
             });
         }

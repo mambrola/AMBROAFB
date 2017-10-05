@@ -142,14 +142,14 @@ public class Doc extends EditorPanelable {
                         and("doc_date", "<=", docFilterModel.getDocDateForDB(false)).
                         and("doc_in_doc_date", ">=", docFilterModel.getDocInDocDateForDB(true)).
                         and("doc_in_doc_date", "<=", docFilterModel.getDocInDocDateForDB(false));
-        if (docFilterModel.isSelectedAccount()){
+        if (docFilterModel.isSelectedConcreteAccount()){
             whereBuilder.andGroup().or("debit_id", "=", docFilterModel.getSelectedAccountId()).
                                     or("credit_id", "=", docFilterModel.getSelectedAccountId()).closeGroup();
         }
-        if (docFilterModel.isSelectedCurrency()){
-            whereBuilder.and("iso", "=", docFilterModel.getSelectedCurrency());
+        if (docFilterModel.isSelectedConcreteCurrency()){
+            whereBuilder.and("iso", "=", docFilterModel.getSelectedCurrencyIso());
         }
-        if (docFilterModel.isSelectedDocCode()){
+        if (docFilterModel.isSelectedConcreteDocCode()){
             whereBuilder.and("doc_code", "=", docFilterModel.getSelectedDocCode());
         }
         JSONObject params = whereBuilder.condition().build();

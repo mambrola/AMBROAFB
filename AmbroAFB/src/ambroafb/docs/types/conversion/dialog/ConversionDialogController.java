@@ -81,8 +81,8 @@ public class ConversionDialogController implements Initializable {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         permissionToClose = true;
         
-        sellAccount.fillComboBox(null);
-        buyingAccount.fillComboBox(null);
+        sellAccount.fillComboBoxWithALL(null);
+        buyingAccount.fillComboBoxWithALL(null);
         
         sellCurrency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             sellAccount.filterBy(newValue);
