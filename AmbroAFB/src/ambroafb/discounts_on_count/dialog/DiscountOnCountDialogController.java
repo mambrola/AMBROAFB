@@ -35,7 +35,7 @@ public class DiscountOnCountDialogController implements Initializable {
     @FXML @ContentNotEmpty
     private IntegerField licenseCount;
     @FXML @ContentNotEmpty 
-    @ContentPattern(value = AmountField.FINALY_CONTENT_PATTERN, explain = "Pattern is incorrect (ex:  10.5)")
+    @ContentPattern(value = AmountField.AMOUNT_PATTERN, explain = AmountField.INCORRECT_CONTENT_EXPLAIN)
     private AmountField discountRate;
     
     @FXML

@@ -13,6 +13,7 @@ import ambroafb.general.Names;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
@@ -45,10 +46,10 @@ public class ChargeUtilityDialogController implements Initializable {
     @FXML
     private TextField currency;
     
-    @FXML @ContentNotEmpty
+    @FXML @ContentNotEmpty @ContentPattern(value = AmountField.AMOUNT_PATTERN, explain = AmountField.INCORRECT_CONTENT_EXPLAIN)
     private AmountField amount;
     
-    @FXML @ContentNotEmpty
+    @FXML @ContentNotEmpty @ContentPattern(value = AmountField.AMOUNT_PATTERN, explain = AmountField.INCORRECT_CONTENT_EXPLAIN)
     private AmountField vat;
     
     

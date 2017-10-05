@@ -514,15 +514,6 @@ public class Utils {
         });
     }
     
-    /**
-     * The method validates amount textFields content.
-     *  If content new value does not match to pattern, then content become old value.
-     * @param amountField 
-     */
-    public static void validateAmountField(TextField amountField){
-        validateTextFieldContentListener(amountField, "(0|[1-9]\\d*)(\\.|\\.\\d+)?");
-    }
-
     public static boolean everyFieldContentIsValidFor(Object currentClassObject, EDITOR_BUTTON_TYPE type) {
         boolean result = true;
         Field[] fields = currentClassObject.getClass().getDeclaredFields();
@@ -730,11 +721,11 @@ public class Utils {
 
     private static final Map<Label, Paint> default_colors_map = new HashMap<>();
 
-    private static void changeNodeTitleLabelVisual(Node node, String text) {
+    private static void changeNodeTitleLabelVisual(Node node, String explain) {
         Parent parent = node.getParent();
         Label nodeTitleLabel = (Label) parent.lookup(".validationMessage");
 
-        if (text.isEmpty()) {
+        if (explain.isEmpty()) {
             if (default_colors_map.containsKey(nodeTitleLabel)) {// This order of 'if' statements is correct!
                 nodeTitleLabel.setTextFill(default_colors_map.get(nodeTitleLabel));
                 default_colors_map.remove(nodeTitleLabel);
@@ -742,7 +733,7 @@ public class Utils {
             }
         } else {
             node.requestFocus();
-            toolTip.setText(text);
+            toolTip.setText(GeneralConfig.getInstance().getTitleFor(explain));
             toolTip.setStyle("-fx-background-color: gray; -fx-font-size: 8pt;");
             Tooltip.install(nodeTitleLabel, toolTip);
             default_colors_map.putIfAbsent(nodeTitleLabel, nodeTitleLabel.getTextFill());

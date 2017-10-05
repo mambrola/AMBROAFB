@@ -45,7 +45,7 @@ public class ProductDialogController implements Initializable {
     private TextField descrip;
     @FXML @ContentNotEmpty
     private ProductsSpecificsComboBox specifics;
-    @FXML @ContentNotEmpty
+    @FXML @ContentNotEmpty @ContentPattern(value = AmountField.PRODUCT_PRICE_PATTERN, explain = AmountField.INCORRECT_CONTENT_EXPLAIN)
     private AmountField price;
     @FXML @ContentNotEmpty
     private CurrencyComboBox currencies;
@@ -76,8 +76,6 @@ public class ProductDialogController implements Initializable {
         currencies.fillComboBoxWithoutALLAndWithoutRatesBasicIso(null);
 //        currencies.setShowCategoryALL(false);
         permissionToClose = true;
-        
-        price.setIntegerPartLength(8);
     }
 
     public void bindProduct(Product product) {

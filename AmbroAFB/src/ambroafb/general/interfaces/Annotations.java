@@ -5,10 +5,10 @@
  */
 package ambroafb.general.interfaces;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
 
 
 /**
@@ -20,7 +20,7 @@ public class Annotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface ContentNotEmpty {
-        String explain() default "This is required.";
+        String explain() default "required_field"; // bundle key
         Class predicate() default DEFAULT.class;
         public static class DEFAULT {
         }

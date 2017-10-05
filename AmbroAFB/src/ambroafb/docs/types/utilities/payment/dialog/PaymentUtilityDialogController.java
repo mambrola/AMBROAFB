@@ -11,10 +11,11 @@ import ambroafb.docs.DocMerchandiseComboBox;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
-import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
+import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -44,7 +45,7 @@ public class PaymentUtilityDialogController implements Initializable {
     @FXML
     private TextField currency;
     
-    @FXML @ContentNotEmpty
+    @FXML @ContentNotEmpty @ContentPattern(value = AmountField.AMOUNT_PATTERN, explain = AmountField.INCORRECT_CONTENT_EXPLAIN)
     private AmountField amount;
     
     @FXML
