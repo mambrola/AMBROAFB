@@ -12,6 +12,7 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
+import ambroafb.general.interfaces.Annotations.ContentRate;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.rate_field.RateField;
@@ -44,7 +45,7 @@ public class CurrencyRateDialogController implements Initializable {
     @FXML 
     private TextField count;
     
-    @FXML @ContentNotEmpty @ContentPattern(value = RateField.FINALY_CONTENT_PATTERN, explain = RateField.FINALY_CONTENT_DESCRIP)
+    @FXML @ContentNotEmpty @ContentRate
     private RateField rate;
     
     @FXML
@@ -64,8 +65,6 @@ public class CurrencyRateDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        Utils.validateTextFieldContentListener(count, "(^[1][0]*)?");
-        Utils.validateTextFieldContentListener(rate, "(^0|[1-9][0-9]*)?([.]|[.][0-9]{1,4})?");
         currencies.fillComboBoxWithoutALLAndWithoutRatesBasicIso(null);
         permissionToClose = true;
     }

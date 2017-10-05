@@ -56,6 +56,19 @@ public class Annotations {
     
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    public @interface ContentRate {
+        String valueForIntegerPart() default "^[0-9]\\..*";
+        String explainForIntegerPart() default "rate_field_int_part_incorrect_explain";
+        
+        String valueForFactionalPart() default ".*\\.\\d{4}$"; // [a-zA-Z_0-9]
+        String explainForFactionalPart() default "rate_field_frac_part_incorrect_explain";
+        
+        String valueForWhole() default "^([0-9]\\.\\d{4})$";
+        String explainForWhole() default "rate_field_whole_incorrect_explain";
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
     public @interface ContentMapEditor {
         String key() default "\\d"; // [0-9] {1}  for default
         String value() default "\\d";

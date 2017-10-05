@@ -18,6 +18,7 @@ import ambroafb.general.interfaces.Annotations.ContentMail;
 import ambroafb.general.interfaces.Annotations.ContentMapEditor;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
+import ambroafb.general.interfaces.Annotations.ContentRate;
 import ambroafb.general.interfaces.Annotations.ContentTreeItem;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.mapeditor.MapEditor;
@@ -534,6 +535,9 @@ public class Utils {
             if (field.isAnnotationPresent(ContentMapEditor.class)){
                 result = result && checkValidationForContentMapEditorAnnotation(field, currentClassObject);
             }
+            if (field.isAnnotationPresent(ContentRate.class)){
+                result = result && checkValidationForContentRateAnnotation(field, currentClassObject);
+            }
         }
         return result;
     }
@@ -662,6 +666,29 @@ public class Utils {
             result = false;
         } else {
             changeNodeTitleLabelVisual(mapEditorComboBox, "");
+        }
+        return result;
+    }
+    
+    private static boolean checkValidationForContentRateAnnotation(Field field, Object currSceneController){
+        boolean result = true;
+        ContentRate annotation = field.getAnnotation(ContentRate.class);
+        Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
+
+        if (!Pattern.matches(annotation.valueForIntegerPart(), (String) typeAndContent[1])){
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForIntegerPart());
+            result = false;
+        }
+        else if (!Pattern.matches(annotation.valueForFactionalPart(), (String) typeAndContent[1])){
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForFactionalPart());
+            result = false;
+        }
+        else if (!Pattern.matches(annotation.valueForWhole(), (String) typeAndContent[1])){
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForWhole());
+            result = false;
+        }
+        else {
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
         }
         return result;
     }

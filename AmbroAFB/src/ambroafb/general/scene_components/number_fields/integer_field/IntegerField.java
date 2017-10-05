@@ -13,14 +13,15 @@ import ambroafb.general.scene_components.number_fields.NumberField;
  */
 public class IntegerField extends NumberField {
     
+    private final String runtimePattern = "[\\d]*";
+    
     public IntegerField(){
         super();
         addComponentFeatures();
     }
     
     private void addComponentFeatures(){
-       String contentRuntimePattern = "0|([1-9]\\d*)";
-       contentRuntimePatternListener(contentRuntimePattern);
+       contentRuntimePatternListener(runtimePattern);
     }
     
 }

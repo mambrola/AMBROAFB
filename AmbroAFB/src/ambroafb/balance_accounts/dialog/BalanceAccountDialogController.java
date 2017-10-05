@@ -9,6 +9,8 @@ import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.*;
+import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.Annotations.ContentTreeItem;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -61,7 +63,7 @@ public class BalanceAccountDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        Utils.validateTextFieldContentListener(balAccountCode, "[1-9][0-9]*");
+//        Utils.validateTextFieldContentListener(balAccountCode, "[1-9][0-9]*");
         permissionToClose = true;
     }    
 

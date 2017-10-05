@@ -72,9 +72,8 @@ public class ProductDialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        Utils.validateTextFieldContentListener(former, "[0-9]{1,2}");
+//        Utils.validateTextFieldContentListener(former, "[0-9]{1,2}");
         currencies.fillComboBoxWithoutALLAndWithoutRatesBasicIso(null);
-//        currencies.setShowCategoryALL(false);
         permissionToClose = true;
     }
 

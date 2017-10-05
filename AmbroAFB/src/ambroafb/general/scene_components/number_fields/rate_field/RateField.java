@@ -13,8 +13,10 @@ import ambroafb.general.scene_components.number_fields.NumberField;
  */
 public class RateField extends NumberField {
     
-    public static final String FINALY_CONTENT_PATTERN = "[1-9]\\.\\d{4}";
-    public static final String FINALY_CONTENT_DESCRIP = "Rate text is incorrect (ex: 2.1234)";
+//    public static final String FINALY_CONTENT_PATTERN = "[1-9]\\.\\d{4}";
+//    public static final String FINALY_CONTENT_DESCRIP = "rate_field_incorrect_explain";
+    
+    private final String runtimePattern = "[\\d\\.]*";
     
     public RateField(){
         super();
@@ -22,9 +24,7 @@ public class RateField extends NumberField {
     }
     
     private void addComponentFeatures(){
-       String pattern = "[1-9](|\\.\\d{0,4})";
-//       String pattern = "[1-9](|\\.)";
-       contentRuntimePatternListener(pattern);
+       contentRuntimePatternListener(runtimePattern);
     }
     
 }
