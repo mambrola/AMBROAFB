@@ -35,6 +35,10 @@
 .twoThirds > .coupleOneSixth > * {
   -fx-pref-width: 104.16666667;
 }
+.fiveSixthes > .coupleOneSixth,
+.fiveSixthes > .coupleOneSixth > * {
+  -fx-pref-width: 104.16666667;
+}
 .fiveSixthes > .coupleFiveSixth,
 .fiveSixthes > .coupleFiveSixth > * {
   -fx-pref-width: 660.83333333;

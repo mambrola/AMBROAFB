@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import ambro.* ?>
+<?import ambroafb.general.okay_cancel.* ?>
+<?import ambroafb.general.*?>
+<?import ambroafb.countries.* ?>
+<?import javafx.scene.image.*?>
+<?import ambroafb.clients.*?>
+<?import ambroafb.currencies.*?>
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/accountdialog.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" 
+                              xmlns="http://javafx.com/javafx/8"
+                              fx:controller="ambroafb.accounts.dialog.AccountDialogController" >
+    <VBox fx:id="formPane" styleClass="vContainer">
+        <children>
+            <HBox styleClass="oneThirds">
+                <children>
+                    <VBox styleClass="couple">
+                        <Label text="%opened_date" /> 
+                        <ADatePicker fx:id="openDate" />
+                    </VBox>
+                </children> 
+            </HBox>
+            <HBox styleClass="fiveSixthes" >
+                <children>
+                    <VBox styleClass="coupleOneSixth">
+                        <Label text="%currency" styleClass="validationMessage" /> 
+                        <IsoComboBox fx:id="currencies" />
+                    </VBox>
+                    <VBox styleClass="coupleFiveSixth" >
+                        <Label text="%bal_accounts" styleClass="validationMessage" /> 
+                        <ComboBox fx:id="balAccounts" />
+                    </VBox >
+                </children>
+            </HBox>
+            <HBox  styleClass="twoThirds" >
+                <children>
+                    <VBox styleClass="coupleTwoThird" >
+                        <Label text="%clients" styleClass="validationMessage" /> 
+                        <ClientComboBox fx:id="clients" />
+                    </VBox  >
+                    <VBox styleClass="coupleOneThird" >
+                        <Label text="%account_number" /> 
+                        <TextField fx:id="accounNumber" />
+                    </VBox >
+                </children>
+            </HBox>
+            <HBox  styleClass="oneThirds" >
+                <children>
+                    <VBox styleClass="couple" >
+                        <Label text="%descrip" /> 
+                        <TextField fx:id="descrip" />
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <VBox styleClass="couple" >
+                        <Label text="%closed_date" /> 
+                        <ADatePicker fx:id="closeDate" />
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox  styleClass="one" >
+                <children>
+                    <VBox styleClass="couple" >
+                        <Label text="%note" /> 
+                        <TextField fx:id="note" />
+                    </VBox>
+                </children>
+            </HBox>
+            <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >
+                <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/DialogOkayCancel.fxml"/>
+            </HBox>
+        </children>
+    </VBox>
+</ambroafb.general.DialogPanel>

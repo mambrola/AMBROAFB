@@ -52,7 +52,7 @@
                 <children>
                     <VBox>
                         <children>
-                            <Label text="%accounts" />
+                            <Label text="%account" />
                             <AccountComboBox fx:id="accounts" />
                         </children>
                     </VBox>
