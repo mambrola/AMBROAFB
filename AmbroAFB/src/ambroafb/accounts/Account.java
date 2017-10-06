@@ -5,10 +5,14 @@
  */
 package ambroafb.accounts;
 
+import ambroafb.clients.Client;
+import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
+import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.binding.StringExpression;
@@ -16,6 +20,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.json.JSONObject;
 
 /**
  *
@@ -23,17 +28,21 @@ import javafx.beans.property.StringProperty;
  */
 public class Account extends EditorPanelable {
 
-    private final StringProperty accountNumber, iso, balAcc, descrip;
-    private int clientId;
-    private final ObjectProperty<LocalDate> opened;
-    private Object remark, flag;
+    private final StringProperty accountNumber, iso, balAccount, descrip;
+    private final ObjectProperty<Client> clientObj;
+    private final ObjectProperty<LocalDate> dateOpenedObj, dateClosedObj;
+    private Object remark;
+    
+    private static final String DB_VEIW_NAME = "accounts_whole";
     
     public Account(){
+        dateOpenedObj = new SimpleObjectProperty<>(LocalDate.now());
         accountNumber = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
-        balAcc = new SimpleStringProperty("");
+        balAccount = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
-        opened = new SimpleObjectProperty<>(LocalDate.now());
+        clientObj = new SimpleObjectProperty<>(new Client());
+        dateClosedObj = new SimpleObjectProperty<>(LocalDate.now());
     }
     
     public StringProperty accountNumberProperty(){
@@ -45,7 +54,7 @@ public class Account extends EditorPanelable {
     }
     
     public StringProperty balAccProperty(){
-        return balAcc;
+        return balAccount;
     }
     
     public StringProperty descripProperty(){
@@ -53,7 +62,19 @@ public class Account extends EditorPanelable {
     }
     
     public ObjectProperty<LocalDate> openedProperty(){
-        return opened;
+        return dateOpenedObj;
+    }
+    
+    public ObjectProperty<LocalDate> closedProperty(){
+        return dateClosedObj;
+    }
+    
+    
+    public static ArrayList<Account> getAllFromDB(){
+        JSONObject params = new ConditionBuilder().build();
+        ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_VEIW_NAME, params);
+        accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
+        return accountFromDB;
     }
     
     
@@ -66,8 +87,8 @@ public class Account extends EditorPanelable {
         return iso.get();
     }
     
-    public int getBalAcc(){
-        return (balAcc.get().isEmpty()) ? -1 : Integer.parseInt(balAcc.get());
+    public int getbalAccount(){
+        return (balAccount.get().isEmpty()) ? -1 : Integer.parseInt(balAccount.get());
     }
     
     public String getDescrip(){
@@ -75,19 +96,23 @@ public class Account extends EditorPanelable {
     }
     
     public int getClientId(){
-        return clientId;
+        return clientObj.get().getRecId();
+    }
+    
+    public String getClientDescrip(){
+        return clientObj.get().getFirstName();
     }
     
     public String getDateOpen(){
-        return opened.get().toString();
+        return dateOpenedObj.get().toString();
     }
     
     public Object getRemark(){
         return remark;
     }
     
-    public Object getFlag(){
-        return flag;
+    public String getDateClose(){
+        return dateClosedObj.get().toString();
     }
     
     
@@ -100,8 +125,8 @@ public class Account extends EditorPanelable {
         this.iso.set(iso);
     }
     
-    public void setBalAcc(int balAcc){
-        this.balAcc.set("" + balAcc);
+    public void setbalAccount(int balAcc){
+        this.balAccount.set("" + balAcc);
     }
     
     public void setDescrip(String descrip){
@@ -109,19 +134,23 @@ public class Account extends EditorPanelable {
     }
     
     public void setClientId(int clientId){
-        this.clientId = clientId;
+        clientObj.get().setRecId(recId);
+    }
+    
+    public void setClientDescrip(String descrip){
+        clientObj.get().setFirstName(descrip);
     }
     
     public void setDateOpen(String date){
-        this.opened.set(DateConverter.getInstance().parseDate(date));
+        this.dateOpenedObj.set(DateConverter.getInstance().parseDate(date));
     }
     
     public void setRemark(Object remark){
         this.remark = remark;
     }
     
-    public void setFlag(Object flag){
-        this.flag = flag;
+    public void setDateclose(String date){
+        this.dateClosedObj.set(DateConverter.getInstance().parseDate(date));
     }
     
     
@@ -145,12 +174,12 @@ public class Account extends EditorPanelable {
         Account otherAccount = (Account)other;
         setAccount(otherAccount.getAccount());
         setIso(otherAccount.getIso());
-        setBalAcc(otherAccount.getBalAcc());
+        setbalAccount(otherAccount.getbalAccount());
         setDescrip(otherAccount.getDescrip());
         setClientId(otherAccount.getClientId());
         setDateOpen(otherAccount.getDateOpen());
 //        setRemark(otherAccount.getRemark());
-//        setFlag(otherAccount.getFlag());
+//        setDateclose(otherAccount.getFlag());
     }
     
     /**
@@ -171,7 +200,7 @@ public class Account extends EditorPanelable {
         
         return  getAccount() == other.getAccount() &&
                 getIso().equals(other.getIso()) &&
-                getBalAcc() == other.getBalAcc() &&
+                getbalAccount() == other.getbalAccount() &&
                 getDescrip().equals(other.getDescrip()) &&
                 getClientId() == other.getClientId() &&
                 openedProperty().get().equals(other.openedProperty().get());

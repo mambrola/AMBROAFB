@@ -9,7 +9,6 @@ import ambro.AFilterableTableView;
 import ambro.AFilterableTreeTableView;
 import ambro.ATableView;
 import ambro.AView;
-import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.StageUtils;
@@ -17,6 +16,7 @@ import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
 import java.util.List;
@@ -164,7 +164,7 @@ public class EditorPanelController implements Initializable {
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
             Dialogable dialog = (Dialogable)Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, null, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
             
-            EditorPanelable result = (EditorPanelable)dialog.getResult();
+            EditorPanelable result = dialog.getResult();
             if (result != null) {
                 Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
                 EditorPanelable newInstanceWithId = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result);
@@ -198,7 +198,7 @@ public class EditorPanelController implements Initializable {
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
             Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, cloneOfSelected, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
             
-            EditorPanelable result = (EditorPanelable) dialog.getResult();
+            EditorPanelable result = dialog.getResult();
             if (result != null) {
                 EditorPanelable newInstanceWithId = (EditorPanelable) Utils.getInvokedClassMethod(objectClass, "saveOneToDB", new Class[]{objectClass}, null, result); 
                 if (newInstanceWithId != null){ // result != null

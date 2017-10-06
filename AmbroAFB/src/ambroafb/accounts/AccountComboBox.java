@@ -5,8 +5,6 @@
  */
 package ambroafb.accounts;
 
-import ambroafb.general.DBUtils;
-import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +14,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
-import org.json.JSONObject;
 
 /**
  *
@@ -96,7 +93,6 @@ public class AccountComboBox extends ComboBox<Account> {
     
     private class FetchDataFromDB implements Runnable {
 
-        private final String DB_TABLE_NAME = "accounts";
         private final Consumer<ObservableList<Account>> consumer;
         
         public FetchDataFromDB(Consumer<ObservableList<Account>> consumer){
@@ -105,9 +101,7 @@ public class AccountComboBox extends ComboBox<Account> {
         
         @Override
         public void run() {
-            JSONObject params = new ConditionBuilder().build();
-            ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_TABLE_NAME, params);
-            accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
+            ArrayList<Account> accountFromDB = Account.getAllFromDB();
             Platform.runLater(() -> {
                 items.setAll(accountFromDB);
                 if (consumer != null){
