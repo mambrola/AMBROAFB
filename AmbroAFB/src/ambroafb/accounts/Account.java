@@ -109,6 +109,22 @@ public class Account extends EditorPanelable {
         return accountFromDB;
     }
     
+    public static Account getOneFromDB(int id){
+        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
+        return DBUtils.getObjectFromDB(Account.class, DB_VEIW_NAME, params);
+    }
+    
+    public static Account saveOneToDB(Account account){
+        System.out.println("account save method...");
+        return null;
+    }
+    
+    public static boolean deleteOneFromDB(int id){
+//        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
+//        return DBUtils.deleteObjectFromDB(DB_VEIW_NAME, params);
+        System.out.println("account delete method...");
+        return false;
+    }
     
     // Getters:
     public long getAccount(){
@@ -230,7 +246,7 @@ public class Account extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
-        
+        System.out.println("----- Accounts Compares -----");
         return  getAccount() == other.getAccount() &&
                 getIso().equals(other.getIso()) &&
                 getbalAccount() == other.getbalAccount() &&

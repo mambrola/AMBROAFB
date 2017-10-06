@@ -5,6 +5,7 @@
  */
 package ambroafb.general;
 
+import ambroafb.accounts.dialog.AccountDialog;
 import static ambroafb.general.Utils.getInvokedClassMethod;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.Filterable;
@@ -208,8 +209,15 @@ public class StagesContainer {
         if (childrenPath.isEmpty()) {
             if (currStage instanceof Dialogable) {
                 callStageCloseRequest(currStage);
-                Object controller = currStage.getScene().getProperties().get("controller");
-                closePermission = (Boolean) getInvokedClassMethod(controller.getClass(), "getPermissionToClose", null, controller);
+                // ------------------- for test:
+                String stageTitle = currStage.getTitle();
+                if (stageTitle.equals(GeneralConfig.getInstance().getTitleFor("account_dialog_title"))){
+                    ((AccountDialog)currStage).getPermissionToClose();
+                }
+                else {
+                    Object controller = currStage.getScene().getProperties().get("controller");
+                    closePermission = (Boolean) getInvokedClassMethod(controller.getClass(), "getPermissionToClose", null, controller);
+                }
             } 
             else if (currStage instanceof Filterable){
                 callStageCloseRequest(currStage);

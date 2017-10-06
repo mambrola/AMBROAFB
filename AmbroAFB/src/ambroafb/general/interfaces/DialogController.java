@@ -52,4 +52,8 @@ public abstract class DialogController implements Initializable {
     protected abstract void bindObjectToSceneComonents(EditorPanelable object);
     
     protected abstract void makeSceneFor(EDITOR_BUTTON_TYPE buttonType);
+    
+    public boolean anySceneComponentChanged() {
+        return sceneObj.compares(backupObj);
+    }
 }

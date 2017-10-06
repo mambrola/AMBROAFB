@@ -25,7 +25,7 @@
             <HBox styleClass="oneThirds">
                 <children>
                     <VBox styleClass="couple">
-                        <Label text="%opened_date" /> 
+                        <Label text="%open_date" /> 
                         <ADatePicker fx:id="openDate" />
                     </VBox>
                 </children> 
@@ -62,7 +62,7 @@
                     </VBox>
                     <Region HBox.hgrow="ALWAYS" />
                     <VBox styleClass="couple" >
-                        <Label text="%closed_date" /> 
+                        <Label text="%close_date" /> 
                         <ADatePicker fx:id="closeDate" />
                     </VBox>
                 </children>
