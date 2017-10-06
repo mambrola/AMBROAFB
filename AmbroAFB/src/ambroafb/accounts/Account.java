@@ -272,7 +272,7 @@ public class Account extends EditorPanelable {
                                                         then(descrip.get()).
                                                     otherwise(iso.get()+ isoDescripDlmt + descrip.get());
         return Bindings.when(accountNumber.isEmpty()).
-                            then(isoDescripBinding).
+                            then(descrip.get()).
                         otherwise(accountNumber.get() + numberIsoDlmt + isoDescripBinding.get());
     }
     
