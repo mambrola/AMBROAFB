@@ -5,6 +5,7 @@
  */
 package ambroafb;
 
+import ambroafb.accounts.Account;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Client;
@@ -104,6 +105,42 @@ public class MainController implements Initializable {
 //            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CAR_FINES_SCENE_START, "Car Fines");
 //            alert.showAlert();
 //        }
+    }
+    
+    @FXML private void accounts(ActionEvent event) { 
+        String stageTitle = "accounts";
+        Stage accountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        if(accountsStage == null || !accountsStage.isShowing()){
+            TableList accounts = new TableList(AmbroAFB.mainStage, Account.class, stageTitle);
+            
+            
+            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                    return new ArrayList(Account.getAllFromDB());
+                                                };
+            accounts.getController().reAssignTable(fetchData);
+            
+            accounts.show();
+            
+//            ClientFilter filter = new ClientFilter(accounts);
+//            FilterModel model = filter.getResult();
+//            
+//            if (model.isCanceled()){
+//                accounts.close();
+//            }
+//            else {
+//                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+//                                            ArrayList<Client> clientsList = Client.getFilteredFromDB(model);
+//                                            clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
+//                                            return new ArrayList(clientsList);
+//                                        };
+//                
+//                accounts.getController().reAssignTable(fetchData);
+//            }
+        }
+        else {
+            accountsStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, accountsStage);
+        }
     }
     
     @FXML
@@ -238,9 +275,6 @@ public class MainController implements Initializable {
         
     }
     
-    
-    
-    @FXML private void accounts(ActionEvent event) { System.out.println("cleack works!");}
     
     @FXML private void docs(ActionEvent event){
         String stageTitle = "docs";

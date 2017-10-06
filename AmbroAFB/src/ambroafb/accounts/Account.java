@@ -5,10 +5,12 @@
  */
 package ambroafb.accounts;
 
+import ambro.AView;
 import ambroafb.clients.Client;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TableColumnWidths;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
@@ -20,6 +22,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import org.json.JSONObject;
 
 /**
@@ -28,12 +31,27 @@ import org.json.JSONObject;
  */
 public class Account extends EditorPanelable {
 
-    private final StringProperty accountNumber, iso, balAccount, descrip;
+    @AView.Column(title = "%account_number", width = "120", styleClass = "textRight")
+    private final StringProperty accountNumber;
+    
+    @AView.Column(title = "%iso", width = TableColumnWidths.ISO)
+    private final StringProperty iso;
+    
+    @AView.Column(title = "%descrip", width = "360")
+    private final StringProperty descrip;
+    
+    @AView.Column(title = "%bal_accounts", width = "150", styleClass = "textRight")
+    private final StringProperty balAccount;
+    
+    @AView.Column(title = "%id_number", width = "20", styleClass = "textRight")
+    private final StringProperty clientId;
     private final ObjectProperty<Client> clientObj;
+    
     private final ObjectProperty<LocalDate> dateOpenedObj, dateClosedObj;
     private Object remark;
     
     private static final String DB_VEIW_NAME = "accounts_whole";
+    private final int clientIdDefaultValue = 0;
     
     public Account(){
         dateOpenedObj = new SimpleObjectProperty<>(LocalDate.now());
@@ -41,8 +59,18 @@ public class Account extends EditorPanelable {
         iso = new SimpleStringProperty("");
         balAccount = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
+        clientId = new SimpleStringProperty("");
         clientObj = new SimpleObjectProperty<>(new Client());
         dateClosedObj = new SimpleObjectProperty<>(LocalDate.now());
+        
+        clientObj.addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
+            if (newValue == null){
+                clientId.set("" + clientIdDefaultValue);
+            }
+            else {
+                clientId.set("" + newValue.getRecId());
+            }
+        });
     }
     
     public StringProperty accountNumberProperty(){
@@ -59,6 +87,10 @@ public class Account extends EditorPanelable {
     
     public StringProperty descripProperty(){
         return descrip;
+    }
+    
+    public ObjectProperty<Client> clientProperty(){
+        return clientObj;
     }
     
     public ObjectProperty<LocalDate> openedProperty(){
@@ -96,11 +128,11 @@ public class Account extends EditorPanelable {
     }
     
     public int getClientId(){
-        return clientObj.get().getRecId();
+        return (clientObj.isNull().get()) ? clientIdDefaultValue : clientObj.get().getRecId();
     }
     
     public String getClientDescrip(){
-        return clientObj.get().getFirstName();
+        return (clientObj.isNull().get()) ? "" : clientObj.get().getFirstName();
     }
     
     public String getDateOpen(){
@@ -134,7 +166,8 @@ public class Account extends EditorPanelable {
     }
     
     public void setClientId(int clientId){
-        clientObj.get().setRecId(recId);
+        this.clientId.set("" + clientId);
+        clientObj.get().setRecId(clientId);
     }
     
     public void setClientDescrip(String descrip){
