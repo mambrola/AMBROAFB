@@ -6,6 +6,7 @@
 package ambroafb;
 
 import ambroafb.accounts.Account;
+import ambroafb.accounts.filter.AccountFilter;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Client;
@@ -112,30 +113,18 @@ public class MainController implements Initializable {
         Stage accountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
         if(accountsStage == null || !accountsStage.isShowing()){
             TableList accounts = new TableList(AmbroAFB.mainStage, Account.class, stageTitle);
-            
-            
-            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
-                                                    return new ArrayList(Account.getAllFromDB());
-                                                };
-            accounts.getController().reAssignTable(fetchData);
-            
             accounts.show();
             
-//            ClientFilter filter = new ClientFilter(accounts);
-//            FilterModel model = filter.getResult();
-//            
-//            if (model.isCanceled()){
-//                accounts.close();
-//            }
-//            else {
-//                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
-//                                            ArrayList<Client> clientsList = Client.getFilteredFromDB(model);
-//                                            clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
-//                                            return new ArrayList(clientsList);
-//                                        };
-//                
-//                accounts.getController().reAssignTable(fetchData);
-//            }
+            AccountFilter filter = new AccountFilter(accounts);
+            FilterModel filterModel = filter.getResult();
+            if (filterModel.isCanceled()){
+                accounts.close();
+            } else {
+                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                                                        return new ArrayList(Account.getFilteredFromDB(filterModel));
+                                                    };
+                accounts.getController().reAssignTable(fetchData);
+            }
         }
         else {
             accountsStage.requestFocus();

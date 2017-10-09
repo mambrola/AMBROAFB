@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.*?>
+<?import ambroafb.clients.*?>
+<?import ambroafb.countries.*?>
+<?import ambroafb.currencies.*?>
+<?import ambroafb.balance_accounts.*?>
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/accountfilter.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" >
+    <VBox   fx:id="formPane" >
+        <HBox styleClass="w2_3" >
+            <children>
+                <VBox styleClass="coupleOneThird" >
+                    <children>
+                        <Label text="%currency" /> 
+                        <CurrencyComboBox fx:id="currencies" />
+                    </children>
+                </VBox>
+                <VBox styleClass="coupleTwoThird" >
+                    <children>
+                        <Label text="%bal_account" /> 
+                        <BalanceAccountTreeComboBox fx:id="balAccounts" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox styleClass="w2_3" >
+            <children>
+                <VBox styleClass="coupleOneThird" >
+                    <children>
+                        <Label text="%client" /> 
+                        <ClientComboBox fx:id="clients" />
+                    </children>
+                </VBox>
+                <VBox styleClass="coupleTwoThird" >
+                    <children>
+                        <Label text="" /> 
+                        <CheckBox fx:id="accountType" allowIndeterminate="true" text="%opened" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" >
+            <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
+        </HBox>
+    </VBox>
+</ambroafb.general.DialogPanel>

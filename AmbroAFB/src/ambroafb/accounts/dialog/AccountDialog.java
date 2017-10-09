@@ -37,7 +37,7 @@ public class AccountDialog extends UserInteractiveStage implements Dialogable {
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/accounts/dialog/AccountDialog.fxml", null);
         dialogController = (AccountDialogController) currentScene.getProperties().get("controller");
-        dialogController.setSceneData(object, buttonType);
+        dialogController.setSceneData(object, accountBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {

@@ -6,12 +6,15 @@
 package ambroafb.accounts;
 
 import ambro.AView;
+import ambroafb.accounts.filter.AccountFilterModel;
 import ambroafb.clients.Client;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
 import authclient.db.ConditionBuilder;
+import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -107,6 +110,27 @@ public class Account extends EditorPanelable {
         ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_VEIW_NAME, params);
         accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
         return accountFromDB;
+    }
+    
+    public static ArrayList<Account> getFilteredFromDB(FilterModel filterModel){
+        AccountFilterModel accountFiletModel = (AccountFilterModel) filterModel;
+        WhereBuilder whereBuilder = new ConditionBuilder().where();
+        
+        if (accountFiletModel.isSelectedConcreteCurrency()){
+            whereBuilder.and("iso", "=", accountFiletModel.getCurrencyIso());
+        }
+        if (accountFiletModel.isSelectedConcreteBalAccount()){
+            whereBuilder.and("bal_account", "=", accountFiletModel.getBalAccountNumber());
+        }
+        if (accountFiletModel.isSelectedConcreteClient()){
+            whereBuilder.and("client_id", "=", accountFiletModel.getClientId());
+        }
+        if (!accountFiletModel.getTypeIntdeterminate()){
+            String relation = (accountFiletModel.isTypeSelected()) ? "is null" : "is not null";
+            whereBuilder.and("date_close", relation, "");
+        }
+        JSONObject params = whereBuilder.condition().build();
+        return DBUtils.getObjectsListFromDB(Account.class, DB_VEIW_NAME, params);
     }
     
     public static Account getOneFromDB(int id){
@@ -259,7 +283,7 @@ public class Account extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return getAccount() + " " + getIso() + " " + getDescrip();
+        return getDescrip() + " " + getClientDescrip();
     }
 
     @Override

@@ -6,6 +6,7 @@
 package ambroafb.general.interfaces;
 
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import javafx.scene.image.Image;
@@ -48,4 +49,13 @@ public abstract class UserInteractiveStage extends Stage {
         this(owner, "", stageTitleBundleKey, iconPath);
     }
     
+    /**
+     * The constructor creates stage for filter or dialog scene.
+     * @param owner The owner stage or this.
+     * @param stageTitleBundleKey The bindle key for stage title.
+     * @param isFilter The flag for stage will use filter or dialog. True - for filter stage, False - for dialog stage.
+     */
+    public UserInteractiveStage(Stage owner, String stageTitleBundleKey, boolean isFilter) {
+        this(owner, Names.LEVEL_FOR_PATH, stageTitleBundleKey, isFilter ? "/images/filter.png" : "/images/dialog.png");
+    }
 }

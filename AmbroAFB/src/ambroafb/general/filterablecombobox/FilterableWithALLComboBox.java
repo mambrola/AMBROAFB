@@ -40,7 +40,7 @@ public class FilterableWithALLComboBox<T> extends AFilterableTableViewComboBox<T
         return items;
     }
     
-    public void setColunWidthes(JSONObject json) {
+    public void setColumnWidthes(JSONObject json) {
         super.setColumnsWidth(json);
     }
     

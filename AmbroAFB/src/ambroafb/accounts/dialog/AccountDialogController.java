@@ -6,6 +6,7 @@
 package ambroafb.accounts.dialog;
 
 import ambro.ADatePicker;
+import ambroafb.balance_accounts.BalanceAccountTreeComboBox;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.currencies.IsoComboBox;
 import ambroafb.general.Names;
@@ -16,7 +17,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -35,7 +35,7 @@ public class AccountDialogController extends DialogController {
     @FXML
     private IsoComboBox currencies;
     @FXML
-    private ComboBox<String> balAccounts; // ???
+    private BalanceAccountTreeComboBox balAccounts;
     @FXML
     private ClientComboBox clients;
     @FXML
@@ -65,7 +65,9 @@ public class AccountDialogController extends DialogController {
 
     @Override
     protected void bindObjectToSceneComonents(EditorPanelable object) {
-        System.out.println("<<<< bindObjectToSceneComonents >>>>");
+        if (object != null){
+            
+        }
     }
 
     @Override

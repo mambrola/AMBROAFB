@@ -18,8 +18,17 @@
 .w3 .date-picker {
   -fx-pref-width: 140;
 }
+.w2_3 > .coupleOneThird,
+.w2_3 > .coupleOneThird > * {
+  -fx-pref-width: 140;
+}
+.w2_3 > .coupleTwoThird,
+.w2_3 > .coupleTwoThird > * {
+  -fx-pref-width: 310;
+}
 .w2,
-.w3 {
+.w3,
+.w2_3 {
   -fx-spacing: 30;
 }
 .button {

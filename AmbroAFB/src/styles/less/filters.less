@@ -29,8 +29,15 @@
 .w3 .text-field, .w3 .combo-box, .w3 .date-picker {
     -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
 }
+.w2_3>.coupleOneThird, .w2_3>.coupleOneThird>* {
+    -fx-pref-width: (@formWidth - 2*@spaceWidth)/3;
+}
+.w2_3>.coupleTwoThird, .w2_3>.coupleTwoThird>* {
+    -fx-pref-width: 2*((@formWidth - 2*@spaceWidth)/3)+@spaceWidth;
+}
 
- .w2, .w3 {
+
+ .w2, .w3, .w2_3 {
     -fx-spacing: @spaceWidth;
 }
 

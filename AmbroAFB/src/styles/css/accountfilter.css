@@ -40,7 +40,7 @@
   -fx-opacity: 0.9;
 }
 #formPane {
-  -fx-pref-width: 480;
+  -fx-pref-width: 400;
   -fx-padding: 10;
   -fx-spacing: 20;
 }
