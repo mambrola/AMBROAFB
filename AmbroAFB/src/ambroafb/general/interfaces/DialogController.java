@@ -23,7 +23,7 @@ public abstract class DialogController implements Initializable {
     
     private ArrayList<Node> focusTraversableNodes;
     
-    private EditorPanelable sceneObj, backupObj;
+    protected EditorPanelable sceneObj, backupObj;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -39,20 +39,22 @@ public abstract class DialogController implements Initializable {
         this.sceneObj = sceneObject;
         this.backupObj = backupObject;
         
+        bindObjectToSceneComponents(sceneObject);
+        makeSceneFor(buttonType);
+    }
+    
+    private void makeSceneFor(EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
             focusTraversableNodes.forEach((Node t) -> { t.setDisable(true); });
         }
         getOkayCancelController().setButtonsFeatures(buttonType);
-
-        bindObjectToSceneComonents(sceneObject);
-        makeSceneFor(buttonType);
+        makeExtraActions(sceneObj, buttonType);
     }
     
+    protected abstract void bindObjectToSceneComponents(EditorPanelable object);
+    protected abstract void makeExtraActions(EditorPanelable sceneObject, EDITOR_BUTTON_TYPE buttonType);
+    
     public abstract DialogOkayCancelController getOkayCancelController();
-    
-    protected abstract void bindObjectToSceneComonents(EditorPanelable object);
-    
-    protected abstract void makeSceneFor(EDITOR_BUTTON_TYPE buttonType);
     
     public boolean anySceneComponentChanged() {
         return sceneObj.compares(backupObj);

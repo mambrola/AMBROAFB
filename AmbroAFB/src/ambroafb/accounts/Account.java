@@ -7,6 +7,7 @@ package ambroafb.accounts;
 
 import ambro.AView;
 import ambroafb.accounts.filter.AccountFilterModel;
+import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.clients.Client;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
@@ -45,13 +46,14 @@ public class Account extends EditorPanelable {
     
     @AView.Column(title = "%bal_accounts", width = "150", styleClass = "textRight")
     private final StringProperty balAccount;
+    private final ObjectProperty<BalanceAccount> balAccountObj;
     
     @AView.Column(title = "%id_number", width = "20", styleClass = "textRight")
     private final StringProperty clientId;
     private final ObjectProperty<Client> clientObj;
     
     private final ObjectProperty<LocalDate> dateOpenedObj, dateClosedObj;
-    private Object remark;
+    private final StringProperty remark;
     
     private static final String DB_VEIW_NAME = "accounts_whole";
     private final int clientIdDefaultValue = 0;
@@ -61,10 +63,12 @@ public class Account extends EditorPanelable {
         accountNumber = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
         balAccount = new SimpleStringProperty("");
+        balAccountObj = new SimpleObjectProperty<>(new BalanceAccount());
         descrip = new SimpleStringProperty("");
         clientId = new SimpleStringProperty("");
         clientObj = new SimpleObjectProperty<>(new Client());
         dateClosedObj = new SimpleObjectProperty<>(LocalDate.now());
+        remark = new SimpleStringProperty("");
         
         clientObj.addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
             if (newValue == null){
@@ -84,12 +88,16 @@ public class Account extends EditorPanelable {
         return iso;
     }
     
-    public StringProperty balAccProperty(){
-        return balAccount;
+    public ObjectProperty<BalanceAccount> balAccProperty(){
+        return balAccountObj;
     }
     
     public StringProperty descripProperty(){
         return descrip;
+    }
+    
+    public StringProperty remarkProperty(){
+        return remark;
     }
     
     public ObjectProperty<Client> clientProperty(){
@@ -160,7 +168,7 @@ public class Account extends EditorPanelable {
     }
     
     public int getbalAccount(){
-        return (balAccount.get().isEmpty()) ? -1 : Integer.parseInt(balAccount.get());
+        return (balAccountObj.isNull().get()) ? -1 : balAccountObj.get().getBalAcc();
     }
     
     public String getDescrip(){
@@ -179,8 +187,8 @@ public class Account extends EditorPanelable {
         return dateOpenedObj.get().toString();
     }
     
-    public Object getRemark(){
-        return remark;
+    public String getRemark(){
+        return remark.get();
     }
     
     public String getDateClose(){
@@ -199,6 +207,7 @@ public class Account extends EditorPanelable {
     
     public void setbalAccount(int balAcc){
         this.balAccount.set("" + balAcc);
+        this.balAccountObj.get().setBalAcc(balAcc);
     }
     
     public void setDescrip(String descrip){
@@ -218,8 +227,8 @@ public class Account extends EditorPanelable {
         this.dateOpenedObj.set(DateConverter.getInstance().parseDate(date));
     }
     
-    public void setRemark(Object remark){
-        this.remark = remark;
+    public void setRemark(String remark){
+        this.remark.set(remark);
     }
     
     public void setDateclose(String date){
@@ -251,8 +260,8 @@ public class Account extends EditorPanelable {
         setDescrip(otherAccount.getDescrip());
         setClientId(otherAccount.getClientId());
         setDateOpen(otherAccount.getDateOpen());
-//        setRemark(otherAccount.getRemark());
-//        setDateclose(otherAccount.getFlag());
+        setRemark(otherAccount.getRemark());
+        setDateclose(otherAccount.getDateClose());
     }
     
     /**
@@ -270,15 +279,14 @@ public class Account extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
-        System.out.println("----- Accounts Compares -----");
         return  getAccount() == other.getAccount() &&
                 getIso().equals(other.getIso()) &&
                 getbalAccount() == other.getbalAccount() &&
                 getDescrip().equals(other.getDescrip()) &&
                 getClientId() == other.getClientId() &&
-                openedProperty().get().equals(other.openedProperty().get());
-//                getRemark().equals(other.getRemark()) &&
-//                getFlag().equals(other.getFlag());
+                openedProperty().get().equals(other.openedProperty().get()) &&
+                getRemark().equals(other.getRemark()) &&
+                closedProperty().get().equals(other.closedProperty().get());
     }
 
     @Override

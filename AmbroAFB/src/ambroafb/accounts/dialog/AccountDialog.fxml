@@ -71,8 +71,8 @@
             <HBox  styleClass="one" >
                 <children>
                     <VBox styleClass="couple" >
-                        <Label text="%note" /> 
-                        <TextField fx:id="note" />
+                        <Label text="%remark" /> 
+                        <TextField fx:id="remark" />
                     </VBox>
                 </children>
             </HBox>
