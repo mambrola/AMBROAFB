@@ -16,31 +16,31 @@
     <VBox   fx:id="formPane" >
         <HBox styleClass="w2_3" >
             <children>
-                <VBox styleClass="coupleOneThird" >
-                    <children>
-                        <Label text="%currency" /> 
-                        <CurrencyComboBox fx:id="currencies" />
-                    </children>
-                </VBox>
                 <VBox styleClass="coupleTwoThird" >
                     <children>
                         <Label text="%bal_account" /> 
                         <BalanceAccountTreeComboBox fx:id="balAccounts" />
                     </children>
                 </VBox>
+                <VBox styleClass="coupleOneThird" >
+                    <children>
+                        <Label text="%currency" /> 
+                        <CurrencyComboBox fx:id="currencies" />
+                    </children>
+                </VBox>
             </children>
         </HBox>
         <HBox styleClass="w2_3" >
             <children>
-                <VBox styleClass="coupleOneThird" >
+                <VBox styleClass="coupleTwoThird" >
                     <children>
                         <Label text="%client" /> 
                         <ClientComboBox fx:id="clients" />
                     </children>
                 </VBox>
-                <VBox styleClass="coupleTwoThird" >
+                <VBox styleClass="coupleOneThird" >
                     <children>
-                        <Label text="" /> 
+                        <Label text="" />
                         <CheckBox fx:id="accountType" allowIndeterminate="true" text="%opened" />
                     </children>
                 </VBox>

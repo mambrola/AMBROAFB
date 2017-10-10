@@ -45,24 +45,23 @@
             </HBox>
             <HBox  styleClass="twoThirds" >
                 <children>
-                    <VBox styleClass="coupleTwoThird" >
-                        <Label text="%clients" styleClass="validationMessage" /> 
-                        <ClientComboBox fx:id="clients" />
-                    </VBox  >
                     <VBox styleClass="coupleOneThird" >
                         <Label text="%account_number" /> 
                         <TextField fx:id="accounNumber" />
                     </VBox >
+                    <VBox styleClass="coupleTwoThird" >
+                        <Label text="%clients" styleClass="validationMessage" /> 
+                        <ClientComboBox fx:id="clients" />
+                    </VBox  >
                 </children>
             </HBox>
-            <HBox  styleClass="oneThirds" >
+            <HBox  styleClass="twoThirds" >
                 <children>
-                    <VBox styleClass="couple" >
+                    <VBox styleClass="coupleTwoThird"  >
                         <Label text="%descrip" /> 
                         <TextField fx:id="descrip" />
                     </VBox>
-                    <Region HBox.hgrow="ALWAYS" />
-                    <VBox styleClass="couple" >
+                    <VBox styleClass="coupleOneThird" >
                         <Label text="%close_date" /> 
                         <ADatePicker fx:id="closeDate" />
                     </VBox>

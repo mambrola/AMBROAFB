@@ -10,43 +10,43 @@
 }
 .one > .couple,
 .one > .couple > * {
-  -fx-pref-width: 800;
+  -fx-pref-width: 600;
 }
 .oneHalf > .couple,
 .oneHalf > .couple > * {
-  -fx-pref-width: 382.5;
+  -fx-pref-width: 282.5;
 }
 .oneThirds > .couple,
 .oneThirds > .couple > *,
 .oneThirds > .couple > .innerCouple > * {
-  -fx-pref-width: 243.33333333;
+  -fx-pref-width: 176.66666667;
 }
 .oneSixthes > .couple,
 .oneSixthes > .couple > * {
-  -fx-pref-width: 104.16666667;
+  -fx-pref-width: 70.83333333;
 }
 .twoThirds > .coupleOneThird,
 .twoThirds > .coupleOneThird > * {
-  -fx-pref-width: 243.33333333;
+  -fx-pref-width: 176.66666667;
 }
 .twoThirds > .coupleTwoThird,
 .twoThirds > .coupleTwoThird > * {
-  -fx-pref-width: 521.66666667;
+  -fx-pref-width: 388.33333333;
 }
 .twoThirds > .coupleOneSixth,
 .twoThirds > .coupleOneSixth > * {
-  -fx-pref-width: 104.16666667;
+  -fx-pref-width: 70.83333333;
 }
 .fiveSixthes > .coupleOneSixth,
 .fiveSixthes > .coupleOneSixth > * {
-  -fx-pref-width: 104.16666667;
+  -fx-pref-width: 70.83333333;
 }
 .fiveSixthes > .coupleFiveSixth,
 .fiveSixthes > .coupleFiveSixth > * {
-  -fx-pref-width: 660.83333333;
+  -fx-pref-width: 494.16666667;
 }
 .oneThirds {
-  -fx-pref-width: 521.66666667;
+  -fx-pref-width: 388.33333333;
 }
 .oneHalf,
 .oneThirds,
@@ -65,7 +65,7 @@
   -fx-opacity: 0.9;
 }
 #formPane {
-  -fx-min-width: 830;
-  -fx-max-width: 830;
+  -fx-min-width: 630;
+  -fx-max-width: 630;
   -fx-padding: 15;
 }

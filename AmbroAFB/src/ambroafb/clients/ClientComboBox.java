@@ -48,9 +48,9 @@ public class ClientComboBox extends AnchorPane {
         setFeatures();
 
         // Field width must be equals to comboBox editor width:
-        clientsBox.getEditor().widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            searchField.setPrefWidth(newValue.doubleValue());
-        });
+//        clientsBox.getEditor().widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+//            searchField.setPrefWidth(newValue.doubleValue());
+//        });
         
         searchField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
 //            System.out.println("1   field.textProperty oldValue, newValue: " + oldValue + ", " + newValue);
@@ -92,20 +92,12 @@ public class ClientComboBox extends AnchorPane {
         });
         
         clientALL.setFirstName(categoryALL);
-//        clientALL.setRecId(0);
-//        items.add(clientALL);
-//        List<Client> clientsList = Client.getAllFromDB().stream().filter((Client c) -> c.getEmail() != null && !c.getEmail().isEmpty())
-//                                                    .collect(Collectors.toList());
-//        clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
-//        items.addAll(clientsList);
-//        setItems(items, (Client c) -> c.getShortDescrip(separator).get());
         setItems(items);
         
         addCategoryALL = (clientsList) -> {
             clientsList.add(0, clientALL);
             clientsBox.setValue(clientALL);
         };
-//        clientsBox.setValue(clientALL);
     }
     
     private void addSceneComponentsToAnchorPane(){
@@ -199,14 +191,12 @@ public class ClientComboBox extends AnchorPane {
         clientsBox.setEditable(true);
         searchField.setPromptText("Search"); 
         
-        comboBoxEditor.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+        widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             searchField.setMinWidth(newValue.doubleValue());
             searchField.setMaxWidth(newValue.doubleValue());
-        });
-        
-        comboBoxEditor.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            searchField.setMinHeight(newValue.doubleValue());
-            searchField.setMaxHeight(newValue.doubleValue());
+            
+            clientsBox.setMinWidth(newValue.doubleValue());
+            clientsBox.setMaxWidth(newValue.doubleValue());
         });
         
         clientsBox.setConverter(new CustomConverter());
@@ -283,9 +273,22 @@ public class ClientComboBox extends AnchorPane {
                 if (consumer != null){
                     consumer.accept(items);
                 }
+                decreasePopUpWidth();
             });
         }
     
+        /**
+         * The method sets anchorPane width to popUp listView width. If user clicks on the comboBox arrow  and shows popUp, this width is not equal for size by this method.
+         * Because of at this time popUp width calculate again and becomes equal to the longest item width.
+         */
+        private void decreasePopUpWidth(){
+            System.out.println("clientsBox.getWidth(): " + getWidth());
+            String popCss = ".combo-box-popup > .list-view {"
+                                    + " -fx-min-width: " + getWidth() + ";"
+                                    + " -fx-max-width: " + getWidth() + ";"
+                                + "}";
+            clientsBox.setStyle(popCss);
+        }
     
     }
 }
