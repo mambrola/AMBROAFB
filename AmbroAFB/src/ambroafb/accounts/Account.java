@@ -143,7 +143,9 @@ public class Account extends EditorPanelable {
     
     public static Account getOneFromDB(int id){
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-        return DBUtils.getObjectFromDB(Account.class, DB_VEIW_NAME, params);
+        Account res = DBUtils.getObjectFromDB(Account.class, DB_VEIW_NAME, params);
+        System.out.println("res account: " + res);
+        return res;
     }
     
     public static Account saveOneToDB(Account account){
@@ -216,11 +218,15 @@ public class Account extends EditorPanelable {
     
     public void setClientId(int clientId){
         this.clientId.set("" + clientId);
-        clientObj.get().setRecId(clientId);
+        if (clientObj.isNotNull().get()){
+            clientObj.get().setRecId(clientId);
+        }
     }
     
     public void setClientDescrip(String descrip){
-        clientObj.get().setFirstName(descrip);
+        if (clientObj.isNotNull().get()){
+            clientObj.get().setFirstName(descrip);
+        }
     }
     
     public void setDateOpen(String date){
@@ -231,7 +237,7 @@ public class Account extends EditorPanelable {
         this.remark.set(remark);
     }
     
-    public void setDateclose(String date){
+    public void setDateClose(String date){
         this.dateClosedObj.set(DateConverter.getInstance().parseDate(date));
     }
     
@@ -253,15 +259,18 @@ public class Account extends EditorPanelable {
 
     @Override
     public void copyFrom(EditorPanelable other) {
+        System.out.println("----------- copyFrom -------------");
+        
         Account otherAccount = (Account)other;
         setAccount(otherAccount.getAccount());
         setIso(otherAccount.getIso());
         setbalAccount(otherAccount.getbalAccount());
         setDescrip(otherAccount.getDescrip());
         setClientId(otherAccount.getClientId());
+        setClientDescrip(otherAccount.getClientDescrip());
         setDateOpen(otherAccount.getDateOpen());
         setRemark(otherAccount.getRemark());
-        setDateclose(otherAccount.getDateClose());
+        setDateClose(otherAccount.getDateClose());
     }
     
     /**
@@ -279,6 +288,11 @@ public class Account extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
+        
+        System.out.println("getbalAccount() == other.getbalAccount(): " + (getbalAccount() == other.getbalAccount()));
+        System.out.println("getbalAccount(): " + getbalAccount());
+        System.out.println("other.getbalAccount(): " + other.getbalAccount());
+        
         return  getAccount() == other.getAccount() &&
                 getIso().equals(other.getIso()) &&
                 getbalAccount() == other.getbalAccount() &&

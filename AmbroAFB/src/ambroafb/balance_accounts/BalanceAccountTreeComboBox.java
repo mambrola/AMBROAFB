@@ -20,7 +20,7 @@ import javafx.scene.control.ComboBox;
 public class BalanceAccountTreeComboBox extends ComboBox<BalanceAccount> {
     
     private final String categoryALL = "ALL";
-    private final BalanceAccount accountALL = new BalanceAccount();
+    private final BalanceAccount balAccountALL = new BalanceAccount();
     private final ObservableList<BalanceAccount> items = FXCollections.observableArrayList();
     private final FilteredList<BalanceAccount> filteredList = new FilteredList<>(items);
     
@@ -28,14 +28,14 @@ public class BalanceAccountTreeComboBox extends ComboBox<BalanceAccount> {
         super();
         setItems(items);
         
-        accountALL.setDescrip(categoryALL);
+        balAccountALL.setDescrip(categoryALL);
     }
     
     public void fillComboBoxWithALL(Consumer<ObservableList<BalanceAccount>> extraAction){
         Consumer<ObservableList<BalanceAccount>> addCategoryALL = (balAccList) -> {
-            if (!balAccList.contains(accountALL)){
-                balAccList.add(0, accountALL);
-                setValue(accountALL);
+            if (!balAccList.contains(balAccountALL)){
+                balAccList.add(0, balAccountALL);
+                setValue(balAccountALL);
             }
         };
         Consumer<ObservableList<BalanceAccount>> consumer = (extraAction == null) ? addCategoryALL : addCategoryALL.andThen(extraAction);
@@ -49,7 +49,7 @@ public class BalanceAccountTreeComboBox extends ComboBox<BalanceAccount> {
     
     private class FetchDataFromDB implements Runnable {
 
-        private Consumer<ObservableList<BalanceAccount>> consumer;
+        private final Consumer<ObservableList<BalanceAccount>> consumer;
         
         public FetchDataFromDB(Consumer<ObservableList<BalanceAccount>> consumer){
             this.consumer = consumer;
@@ -65,6 +65,5 @@ public class BalanceAccountTreeComboBox extends ComboBox<BalanceAccount> {
                 }
             });
         }
-        
     }
 }

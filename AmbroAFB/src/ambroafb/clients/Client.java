@@ -115,7 +115,7 @@ public class Client extends EditorPanelable{
     private ImageGalleryController clientImageGallery;
     
     @JsonIgnore
-    private static final String DB_TABLE_NAME = "clients", DB_VIEW_NAME = "clients_whole", DB_STATUS_TABLE = "client_status_descrips";;
+    public static final String DB_TABLE_NAME = "clients", DB_VIEW_NAME = "clients_whole", DB_STATUS_TABLE = "client_status_descrips";;
     
     @JsonIgnore
     private static final String IMAGE_OFFICE_URL = "/images/office.png", IMAGE_PERSON_URL = "/images/person.png";

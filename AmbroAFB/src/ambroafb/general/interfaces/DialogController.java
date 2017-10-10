@@ -57,6 +57,6 @@ public abstract class DialogController implements Initializable {
     public abstract DialogOkayCancelController getOkayCancelController();
     
     public boolean anySceneComponentChanged() {
-        return sceneObj.compares(backupObj);
+        return !sceneObj.compares(backupObj);
     }
 }

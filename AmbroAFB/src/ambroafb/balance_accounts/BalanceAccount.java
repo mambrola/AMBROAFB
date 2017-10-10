@@ -59,6 +59,7 @@ public class BalanceAccount extends EditorPanelable {
     @JsonIgnore
     public static final String DB_TABLE_NAME = "bal_accounts";
     public static final String DB_DELETE_PROC_NAME = "general_delete";
+    public static final String DESCRIP_DELIMITER = " - ";
     
     @JsonIgnore 
     private static final int ACT = 1, PAS = 2, INDETERMINATE = 3;
@@ -187,9 +188,15 @@ public class BalanceAccount extends EditorPanelable {
     
     @Override
     public String toString(){
-        return getDescrip();
+        return getShortDescirp(DESCRIP_DELIMITER).get();
     }
 
+    public StringExpression getShortDescirp(String delimiter){
+        return Bindings.when(balAccProperty().isEmpty()).
+                            then(getDescrip()).
+                            otherwise(getBalAcc() + delimiter + getDescrip());
+    }
+    
     /**
      *
      * @param backup
@@ -201,6 +208,15 @@ public class BalanceAccount extends EditorPanelable {
         return  getBalAcc() == balAccountBackup.getBalAcc() && 
                 getActPas() == balAccountBackup.getActPas() &&
                 getDescrip().equals(balAccountBackup.getDescrip());
+    }
+    
+    @Override
+    public boolean equals(Object other){
+        if (other == null) return false;
+        BalanceAccount otherBalAcc = (BalanceAccount)other;
+        return  getRecId() == otherBalAcc.getRecId();
+//                || 
+//                getBalAcc() == otherBalAcc.getBalAcc();
     }
 
 }

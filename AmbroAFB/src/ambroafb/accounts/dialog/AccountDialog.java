@@ -35,6 +35,9 @@ public class AccountDialog extends UserInteractiveStage implements Dialogable {
             account = (Account) object;
         accountBackup = account.cloneWithID();
         
+        System.out.println("client id: " + account.getClientId());
+        System.out.println("client id in backup: " + accountBackup.getClientId());
+        
         Scene currentScene = SceneUtils.createScene("/ambroafb/accounts/dialog/AccountDialog.fxml", null);
         dialogController = (AccountDialogController) currentScene.getProperties().get("controller");
         dialogController.setSceneData(object, accountBackup, buttonType);

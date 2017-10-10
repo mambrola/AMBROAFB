@@ -98,10 +98,13 @@ public class AccountFilter extends UserInteractiveStage implements Filterable, I
         };
         balAccounts.fillComboBoxWithALL(balAccountConsumer);
 
-        Optional<Client> optClient = clients.getItems().stream().filter((client) -> client.getRecId() == model.getClientId()).findFirst();
-        if (optClient.isPresent()){
-            clients.getSelectionModel().select(optClient.get());
-        }
+        Consumer<ObservableList<Client>> clientConsumer = (clientList) -> {
+            Optional<Client> optClient = clientList.stream().filter((client) -> client.getRecId() == model.getClientId()).findFirst();
+            if (optClient.isPresent()){
+                clients.getSelectionModel().select(optClient.get());
+            }
+        };
+        clients.fillComboBoxWithClientsAndPartnersWithALL(clientConsumer);
 
         accountType.setSelected(model.isTypeSelected());
         accountType.setIndeterminate(model.getTypeIntdeterminate());

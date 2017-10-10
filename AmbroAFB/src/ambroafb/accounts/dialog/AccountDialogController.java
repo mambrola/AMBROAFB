@@ -7,6 +7,7 @@ package ambroafb.accounts.dialog;
 
 import ambro.ADatePicker;
 import ambroafb.accounts.Account;
+import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.balance_accounts.BalanceAccountTreeComboBox;
 import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
@@ -18,6 +19,8 @@ import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.TextField;
@@ -58,8 +61,6 @@ public class AccountDialogController extends DialogController {
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        balAccounts.fillComboBoxWithoutALL(null);
-        clients.showCategoryALL(false);
     }
 
     @Override
@@ -84,15 +85,24 @@ public class AccountDialogController extends DialogController {
 
     @Override
     protected void makeExtraActions(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType) {
-        int clientId = ((Account)object).getClientId();
-        Optional<Client> optclient = clients.getItems().stream().filter((client) -> client.getRecId() == clientId).findFirst();
-        if (optclient.isPresent()){
-            System.out.println("optclient.get(): " + optclient.get().getRecId());
-            clients.getSelectionModel().select(optclient.get());
-        }
-        else {
-            System.out.println("---------------- else ---------------");
-        }
+        Consumer<ObservableList<Client>> setClientbyId = (clientsList) -> {
+            int clientId = ((Account)object).getClientId();
+            Optional<Client> optClient = clientsList.stream().filter((client) -> client.getRecId() == clientId).findFirst();
+            if (optClient.isPresent()){
+                clients.valueProperty().set(optClient.get());
+//                clients.getSelectionModel().select(optClient.get());
+            }
+        };
+        clients.fillComboBoxWithClientsAndPartners(setClientbyId);
+        
+        Consumer<ObservableList<BalanceAccount>> setBalAccByNumber = (balAccList) -> {
+            int balAccountNumber = ((Account)object).getbalAccount();
+            Optional<BalanceAccount> optBalAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == balAccountNumber).findFirst();
+            if (optBalAcc.isPresent()){
+                balAccounts.setValue(optBalAcc.get());
+            }
+        };
+        balAccounts.fillComboBoxWithoutALL(setBalAccByNumber);
     }
     
 }

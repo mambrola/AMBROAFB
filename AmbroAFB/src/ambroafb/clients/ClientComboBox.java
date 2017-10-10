@@ -5,7 +5,10 @@
  */
 package ambroafb.clients;
 
-import java.util.List;
+import ambroafb.general.DBUtils;
+import authclient.db.ConditionBuilder;
+import java.util.ArrayList;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -18,12 +21,14 @@ import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
+import org.json.JSONObject;
 
 /**
  * @author dato
  */
 public class ClientComboBox extends AnchorPane {
     
+    private final String categoryALL = "ALL";
     private final Client clientALL = new Client();
     private final String separator = ", ";
     
@@ -35,6 +40,8 @@ public class ClientComboBox extends AnchorPane {
     private int movedInField = 0;
     private ObservableList<Client> items = FXCollections.observableArrayList();
     private FilteredList<Client> filteredList;
+    
+    private Consumer<ObservableList<Client>> addCategoryALL;
     
     public ClientComboBox(){
         addSceneComponentsToAnchorPane();
@@ -51,7 +58,7 @@ public class ClientComboBox extends AnchorPane {
         });
         
         clientsBox.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
-//            System.out.println("2   box.valueProperty oldValue, newValue: " + oldValue + ", " + newValue);
+            System.out.println("2   box.valueProperty oldValue, newValue: " + oldValue + ", " + newValue);
             valueSelected = 1;
             movedInField = 0;
             if (newValue != null) {
@@ -64,9 +71,9 @@ public class ClientComboBox extends AnchorPane {
         });
         
         clientsBox.getEditor().textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-//            System.out.println("3   box.getEditor().textProperty oldValue, newValue: " + oldValue + ", " + newValue);
+            System.out.println("3   box.getEditor().textProperty oldValue, newValue: " + oldValue + ", " + newValue);
             if (valueSelected != 1 && movedInField != 1) {
-//                System.out.println("ვწერ");
+                System.out.println("ვწერ");
 
                 Platform.runLater(() -> {
                     int currCaret = clientsBox.getEditor().getCaretPosition();
@@ -84,16 +91,21 @@ public class ClientComboBox extends AnchorPane {
             valueSelected = 0;
         });
         
-        clientALL.setFirstName("ALL");
-        clientALL.setRecId(0);
-        items.add(clientALL);
-        List<Client> clientsList = Client.getAllFromDB().stream().filter((Client c) -> c.getEmail() != null && !c.getEmail().isEmpty())
-                                                    .collect(Collectors.toList());
-        clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
-        items.addAll(clientsList);
+        clientALL.setFirstName(categoryALL);
+//        clientALL.setRecId(0);
+//        items.add(clientALL);
+//        List<Client> clientsList = Client.getAllFromDB().stream().filter((Client c) -> c.getEmail() != null && !c.getEmail().isEmpty())
+//                                                    .collect(Collectors.toList());
+//        clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
+//        items.addAll(clientsList);
 //        setItems(items, (Client c) -> c.getShortDescrip(separator).get());
         setItems(items);
-        clientsBox.setValue(clientALL);
+        
+        addCategoryALL = (clientsList) -> {
+            clientsList.add(0, clientALL);
+            clientsBox.setValue(clientALL);
+        };
+//        clientsBox.setValue(clientALL);
     }
     
     private void addSceneComponentsToAnchorPane(){
@@ -109,6 +121,59 @@ public class ClientComboBox extends AnchorPane {
             clientsBox.hide();
             clientsBox.show();
         });
+    }
+    
+    /**
+     * The method fills comboBox only clients data, without ALL category and partners data.
+     * @param extraAction The action that will execute after filling the comboBox. If there is no extra action exists, gives null value. 
+     */
+    public void fillComboBoxOnlyClients(Consumer<ObservableList<Client>> extraAction){
+        JSONObject params = new ConditionBuilder().where().and("email", "is not null", "").condition().build();
+        new Thread(new FetchDataFromDB(extraAction, params)).start();
+    }
+    
+    /**
+     * The method fills comboBox with clients data and ALL category, but without partners data.
+     * @param extraAction The action that will execute after filling the comboBox. If there is no extra action exists, gives null value. 
+     */
+    public void fillComboBoxOnlyClientsWithALL(Consumer<ObservableList<Client>> extraAction){
+        Consumer<ObservableList<Client>> consumer = (extraAction == null) ? addCategoryALL : addCategoryALL.andThen(extraAction);
+        fillComboBoxOnlyClients(consumer);
+    }
+    
+    /**
+     * The method fills comboBox only partners data, without ALL category and clients data.
+     * @param extraAction The action that will execute after filling the comboBox. If there is no extra action exists, gives null value. 
+     */
+    public void fillComboBoxOnlyPartners(Consumer<ObservableList<Client>> extraAction){
+        JSONObject params = new ConditionBuilder().where().and("email", "is null", "").condition().build();
+        new Thread(new FetchDataFromDB(extraAction, params)).start();
+    }
+    
+    /**
+     * The method fills comboBox with partners data and ALL category, but without clients data.
+     * @param extraAction The action that will execute after filling the comboBox. If there is no extra action exists, gives null value. 
+     */
+    public void fillComboBoxOnlyPartnersWithALL(Consumer<ObservableList<Client>> extraAction){
+        Consumer<ObservableList<Client>> consumer = (extraAction == null) ? addCategoryALL : addCategoryALL.andThen(extraAction);
+        fillComboBoxOnlyPartners(consumer);
+    }
+    
+    /**
+     * The method fills comboBox with clients and partners, but without category ALL.
+     * @param extraAction The action that will execute after filling the comboBox. If there is no extra action exists, gives null value. 
+     */
+    public void fillComboBoxWithClientsAndPartners(Consumer<ObservableList<Client>> extraAction){
+        new Thread(new FetchDataFromDB(extraAction)).start();
+    }
+    
+    /**
+     * The method fills comboBox with clients, partners and  category ALL.
+     * @param extraAction The action that will execute after filling the comboBox. If there is no extra action exists, gives null value. 
+     */
+    public void fillComboBoxWithClientsAndPartnersWithALL(Consumer<ObservableList<Client>> extraAction){
+        Consumer<ObservableList<Client>> consumer = (extraAction == null) ? addCategoryALL : addCategoryALL.andThen(extraAction);
+        fillComboBoxWithClientsAndPartners(consumer);
     }
     
     public Client getClientWithDescripALL(){
@@ -193,5 +258,34 @@ public class ClientComboBox extends AnchorPane {
             return getItems().stream().filter((Client c) -> c.getFirstName().equals(name) && c.getLastName().equals(lastName) && c.getEmail().equals(email)).collect(Collectors.toList()).get(0);
         }
         
+    }
+    
+    private class FetchDataFromDB implements Runnable {
+
+        private final Consumer<ObservableList<Client>> consumer;
+        private final JSONObject params;
+        
+        public FetchDataFromDB(Consumer<ObservableList<Client>> consumer){
+            this(consumer, new ConditionBuilder().build());
+        }
+        
+        public FetchDataFromDB(Consumer<ObservableList<Client>> consumer, JSONObject params){
+            this.consumer = consumer;
+            this.params = params;
+        }
+        
+        @Override
+        public void run() {
+            ArrayList<Client> clientsList = DBUtils.getObjectsListFromDB(Client.class, Client.DB_VIEW_NAME, params);
+            clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
+            Platform.runLater(() -> {
+                items.setAll(clientsList);
+                if (consumer != null){
+                    consumer.accept(items);
+                }
+            });
+        }
+    
+    
     }
 }
