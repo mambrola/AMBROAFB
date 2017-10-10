@@ -82,21 +82,21 @@ public class AccountFilter extends UserInteractiveStage implements Filterable, I
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Consumer<ObservableList<Currency>> currencyCosumer = (currencyList) -> {
+        Consumer<ObservableList<Currency>> currencyConsumer = (currencyList) -> {
             Optional<Currency> optCurrency = currencyList.stream().filter((curr) -> curr.getIso().equals(model.getCurrencyIso())).findFirst();
             if (optCurrency.isPresent()){
                 currencies.setValue(optCurrency.get());
             }
         };
-        currencies.fillComboBoxWithALL(currencyCosumer);
+        currencies.fillComboBoxWithALL(currencyConsumer);
         
-        Consumer<ObservableList<BalanceAccount>> balAccountCosumer = (balAccList) -> {
+        Consumer<ObservableList<BalanceAccount>> balAccountConsumer = (balAccList) -> {
             Optional<BalanceAccount> optBallAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == model.getBalAccountNumber()).findFirst();
             if (optBallAcc.isPresent()){
                 balAccounts.setValue(optBallAcc.get());
             }
         };
-        balAccounts.fillComboBoxWithALL(balAccountCosumer);
+        balAccounts.fillComboBoxWithALL(balAccountConsumer);
 
         Optional<Client> optClient = clients.getItems().stream().filter((client) -> client.getRecId() == model.getClientId()).findFirst();
         if (optClient.isPresent()){
