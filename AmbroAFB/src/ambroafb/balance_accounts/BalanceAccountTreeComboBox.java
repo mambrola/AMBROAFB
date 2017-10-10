@@ -44,6 +44,7 @@ public class BalanceAccountTreeComboBox extends ComboBox<BalanceAccount> {
     
     public void fillComboBoxWithoutALL(Consumer<ObservableList<BalanceAccount>> extraAction){
         new Thread(new FetchDataFromDB(extraAction)).start();
+//        items.setAll(BalanceAccount.getAllFromDB());
     }
     
     

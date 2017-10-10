@@ -288,11 +288,6 @@ public class Account extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
-        
-        System.out.println("getbalAccount() == other.getbalAccount(): " + (getbalAccount() == other.getbalAccount()));
-        System.out.println("getbalAccount(): " + getbalAccount());
-        System.out.println("other.getbalAccount(): " + other.getbalAccount());
-        
         return  getAccount() == other.getAccount() &&
                 getIso().equals(other.getIso()) &&
                 getbalAccount() == other.getbalAccount() &&

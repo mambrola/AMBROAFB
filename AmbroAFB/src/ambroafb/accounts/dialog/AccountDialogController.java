@@ -89,6 +89,7 @@ public class AccountDialogController extends DialogController {
             int balAccountNumber = ((Account)object).getbalAccount();
             Optional<BalanceAccount> optBalAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == balAccountNumber).findFirst();
             if (optBalAcc.isPresent()){
+                balAccounts.setValue(null); // რადგან balAccount_ებისთვის მხოლოდ Number მოდის ბაზიდან buttonCell-ში ჩნდება მარტო Number. ამიტომ ვაკეთებთ ამ ერთგვარ "refresh"-ს.
                 balAccounts.setValue(optBalAcc.get());
             }
         };
@@ -98,8 +99,8 @@ public class AccountDialogController extends DialogController {
             int clientId = ((Account)object).getClientId();
             Optional<Client> optClient = clientsList.stream().filter((client) -> client.getRecId() == clientId).findFirst();
             if (optClient.isPresent()){
+                clients.valueProperty().set(null);
                 clients.valueProperty().set(optClient.get());
-//                clients.getSelectionModel().select(optClient.get());
             }
         };
         clients.fillComboBoxWithClientsAndPartners(setClientbyId);

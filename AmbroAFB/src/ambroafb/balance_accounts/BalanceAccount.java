@@ -197,6 +197,14 @@ public class BalanceAccount extends EditorPanelable {
                             otherwise(getBalAcc() + delimiter + getDescrip());
     }
     
+    @Override
+    public boolean equals(Object other){
+        if (other == null) return false;
+        BalanceAccount otherBalAcc = (BalanceAccount)other;
+        return  getRecId() == otherBalAcc.getRecId() || 
+                getBalAcc() == otherBalAcc.getBalAcc();
+    }
+    
     /**
      *
      * @param backup
@@ -208,15 +216,6 @@ public class BalanceAccount extends EditorPanelable {
         return  getBalAcc() == balAccountBackup.getBalAcc() && 
                 getActPas() == balAccountBackup.getActPas() &&
                 getDescrip().equals(balAccountBackup.getDescrip());
-    }
-    
-    @Override
-    public boolean equals(Object other){
-        if (other == null) return false;
-        BalanceAccount otherBalAcc = (BalanceAccount)other;
-        return  getRecId() == otherBalAcc.getRecId()
-                || 
-                getBalAcc() == otherBalAcc.getBalAcc();
     }
 
 }

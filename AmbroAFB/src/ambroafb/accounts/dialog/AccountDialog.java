@@ -57,13 +57,11 @@ public class AccountDialog extends UserInteractiveStage implements Dialogable {
 
     @Override
     public void operationCanceled() {
-        System.out.println("----------- AccountDialog operationCanceled -----------");
         account = null;
     }
     
     // შევიდეს Dialogable-ში.
     public boolean anyComponentChanged(){
-        System.out.println("----------- AccountDialog anyComponentChanged -----------");
         return dialogController.anySceneComponentChanged();
     }
     
@@ -71,13 +69,11 @@ public class AccountDialog extends UserInteractiveStage implements Dialogable {
     
     // შევიდეს Dialogable-ში.
     public void changePermissionForClose(boolean value){
-        System.out.println("----------- AccountDialog changePermissionForClose -----------");
         permissionToClose = value;
     }
     
     // შევიდეს Dialogable-ში.
     public boolean getPermissionToClose(){
-        System.out.println("----------- AccountDialog getPermissionToClose -----------");
         return permissionToClose;
     }
 }
