@@ -214,9 +214,9 @@ public class BalanceAccount extends EditorPanelable {
     public boolean equals(Object other){
         if (other == null) return false;
         BalanceAccount otherBalAcc = (BalanceAccount)other;
-        return  getRecId() == otherBalAcc.getRecId();
-//                || 
-//                getBalAcc() == otherBalAcc.getBalAcc();
+        return  getRecId() == otherBalAcc.getRecId()
+                || 
+                getBalAcc() == otherBalAcc.getBalAcc();
     }
 
 }

@@ -58,7 +58,7 @@ public class ClientComboBox extends AnchorPane {
         });
         
         clientsBox.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
-            System.out.println("2   box.valueProperty oldValue, newValue: " + oldValue + ", " + newValue);
+//            System.out.println("2   box.valueProperty oldValue, newValue: " + oldValue + ", " + newValue);
             valueSelected = 1;
             movedInField = 0;
             if (newValue != null) {
@@ -71,9 +71,9 @@ public class ClientComboBox extends AnchorPane {
         });
         
         clientsBox.getEditor().textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            System.out.println("3   box.getEditor().textProperty oldValue, newValue: " + oldValue + ", " + newValue);
+//            System.out.println("3   box.getEditor().textProperty oldValue, newValue: " + oldValue + ", " + newValue);
             if (valueSelected != 1 && movedInField != 1) {
-                System.out.println("ვწერ");
+//                System.out.println("ვწერ");
 
                 Platform.runLater(() -> {
                     int currCaret = clientsBox.getEditor().getCaretPosition();

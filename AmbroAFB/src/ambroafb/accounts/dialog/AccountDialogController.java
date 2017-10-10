@@ -85,6 +85,15 @@ public class AccountDialogController extends DialogController {
 
     @Override
     protected void makeExtraActions(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType) {
+        Consumer<ObservableList<BalanceAccount>> setBalAccByNumber = (balAccList) -> {
+            int balAccountNumber = ((Account)object).getbalAccount();
+            Optional<BalanceAccount> optBalAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == balAccountNumber).findFirst();
+            if (optBalAcc.isPresent()){
+                balAccounts.setValue(optBalAcc.get());
+            }
+        };
+        balAccounts.fillComboBoxWithoutALL(setBalAccByNumber);
+        
         Consumer<ObservableList<Client>> setClientbyId = (clientsList) -> {
             int clientId = ((Account)object).getClientId();
             Optional<Client> optClient = clientsList.stream().filter((client) -> client.getRecId() == clientId).findFirst();
@@ -94,15 +103,6 @@ public class AccountDialogController extends DialogController {
             }
         };
         clients.fillComboBoxWithClientsAndPartners(setClientbyId);
-        
-        Consumer<ObservableList<BalanceAccount>> setBalAccByNumber = (balAccList) -> {
-            int balAccountNumber = ((Account)object).getbalAccount();
-            Optional<BalanceAccount> optBalAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == balAccountNumber).findFirst();
-            if (optBalAcc.isPresent()){
-                balAccounts.setValue(optBalAcc.get());
-            }
-        };
-        balAccounts.fillComboBoxWithoutALL(setBalAccByNumber);
     }
     
 }
