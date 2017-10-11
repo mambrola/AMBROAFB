@@ -199,7 +199,8 @@ public class Currency extends EditorPanelable {
     public boolean equals(Object other){
         if (other == null) return false;
         Currency otherCurrency = (Currency) other;
-        return  this.getIso().equals(otherCurrency.getIso());
+        return  getRecId() == otherCurrency.getRecId() ||
+                getIso().equals(otherCurrency.getIso());
     }
     
     /**

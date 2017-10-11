@@ -78,7 +78,7 @@ public class DocMerchandise {
     }
     
     public int compares(DocMerchandise other){
-        return recId - other.getRecId();
+        return getRecId() - other.getRecId();
     }
 
     @Override
@@ -86,4 +86,12 @@ public class DocMerchandise {
         return descrip.get();
     }
     
+    
+    @Override
+    public boolean equals(Object other){
+        if (other == null) return false;
+        DocMerchandise otherDocMerchandise = (DocMerchandise)other;
+        return  getRecId() == otherDocMerchandise.getRecId() ||
+                getDescrip().equals(otherDocMerchandise.getDescrip());
+    }
 }

@@ -147,7 +147,8 @@ public class Country extends EditorPanelable{
     public boolean equals(Object other){
         if (other == null) return false;
         Country otherCountry = (Country) other;
-        return getCode().equals(otherCountry.getCode());
+        return  getRecId() == otherCountry.getRecId() ||
+                getCode().equals(otherCountry.getCode());
     }
 
 }

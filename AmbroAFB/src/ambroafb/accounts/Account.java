@@ -259,8 +259,6 @@ public class Account extends EditorPanelable {
 
     @Override
     public void copyFrom(EditorPanelable other) {
-        System.out.println("----------- copyFrom -------------");
-        
         Account otherAccount = (Account)other;
         setAccount(otherAccount.getAccount());
         setIso(otherAccount.getIso());
@@ -285,6 +283,14 @@ public class Account extends EditorPanelable {
                 getIso().equals(other.getIso());
     }
 
+    @Override
+    public boolean equals(Object other){
+        if (other == null) return false;
+        Account otherAccount = (Account)other;
+        return  getRecId() == otherAccount.getRecId() ||
+                getAccount() == otherAccount.getAccount();
+    }
+    
     @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
