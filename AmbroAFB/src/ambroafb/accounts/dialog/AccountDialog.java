@@ -10,7 +10,7 @@ import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,23 +20,20 @@ import javafx.stage.WindowEvent;
  *
  * @author dkobuladze
  */
-public class AccountDialog extends UserInteractiveStage implements Dialogable {
+public class AccountDialog extends UserInteractiveDialogStage implements Dialogable {
 
     private Account account, accountBackup;
     
     private AccountDialogController dialogController;
     
     public AccountDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, Names.LEVEL_FOR_PATH, "account_dialog_title", "/images/dialog.png");
+        super(owner, "account_dialog_title");
     
         if (object == null)
             account = new Account();
         else 
             account = (Account) object;
         accountBackup = account.cloneWithID();
-        
-        System.out.println("client id: " + account.getClientId());
-        System.out.println("client id in backup: " + accountBackup.getClientId());
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/accounts/dialog/AccountDialog.fxml", null);
         dialogController = (AccountDialogController) currentScene.getProperties().get("controller");
@@ -65,15 +62,15 @@ public class AccountDialog extends UserInteractiveStage implements Dialogable {
         return dialogController.anySceneComponentChanged();
     }
     
-    private boolean permissionToClose = true;
-    
-    // შევიდეს Dialogable-ში.
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
-    
-    // შევიდეს Dialogable-ში.
-    public boolean getPermissionToClose(){
-        return permissionToClose;
-    }
+//    private boolean permissionToClose = true;
+//    
+//    // შევიდეს Dialogable-ში.
+//    public void changePermissionForClose(boolean value){
+//        permissionToClose = value;
+//    }
+//    
+//    // შევიდეს Dialogable-ში.
+//    public boolean getPermissionToClose(){
+//        return permissionToClose;
+//    }
 }
