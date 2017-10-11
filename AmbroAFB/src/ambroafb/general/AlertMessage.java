@@ -43,7 +43,7 @@ public class AlertMessage extends Alert {
             getClass().getResource("/styles/css/core.css").toExternalForm());
         
         ((Stage)getDialogPane().getScene().getWindow()).initOwner(AmbroAFB.mainStage);
-        if (titleForAlertType.equals(Names.ALERT_ERROR_WINDOW_TITLE))
+        if (titleForAlertType.equals(Names.ALERT_ERROR_WINDOW_TITLE) && ex != null)
             Utils.log(message, ex);
     }
     

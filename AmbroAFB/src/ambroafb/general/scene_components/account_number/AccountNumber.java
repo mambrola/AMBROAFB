@@ -5,8 +5,10 @@
  */
 package ambroafb.general.scene_components.account_number;
 
+import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import java.io.IOException;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -14,6 +16,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -44,6 +47,9 @@ public class AccountNumber extends HBox {
     private final String keyButtonSymbol = "\uD83D\uDD11";
     private final String nextButtonSymbol = "\u21D2";
     
+    private final Consumer<String> successFn;
+    private final Consumer<Exception> errorFn;
+    
     public AccountNumber(){
         super();
         assignLoader();
@@ -57,6 +63,13 @@ public class AccountNumber extends HBox {
         
         key.setOnAction(this::keyAction);
         next.setOnAction(this::nextAction);
+        
+        successFn = (String accNum) -> {
+            accountNumber.setText(accNum);
+        };
+        errorFn = (Exception ex) -> {
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "").showAlert();
+        };
     }
     
     private void assignLoader(){
@@ -98,8 +111,7 @@ public class AccountNumber extends HBox {
      */
     private void keyAction(ActionEvent event){
         if (numberGeneratorManager != null){
-            String numberWithKey = numberGeneratorManager.getNumberWithKey(accountNumber.getText());
-            accountNumber.setText(numberWithKey);
+            numberGeneratorManager.generateKeyWith(accountNumber.getText(), successFn, errorFn);
         }
     }
     
@@ -109,7 +121,7 @@ public class AccountNumber extends HBox {
      */
     private void nextAction(ActionEvent event){
         if (numberGeneratorManager != null){
-            accountNumber.setText(numberGeneratorManager.getNewNumber());
+            numberGeneratorManager.generateNewNumber(successFn, errorFn);
         }
     }
     

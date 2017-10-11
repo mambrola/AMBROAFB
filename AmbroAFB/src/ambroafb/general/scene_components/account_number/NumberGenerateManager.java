@@ -5,13 +5,28 @@
  */
 package ambroafb.general.scene_components.account_number;
 
+import java.util.function.Consumer;
+
 /**
  *
  * @author dkobuladze
  */
 public interface NumberGenerateManager {
     
-    public String getNumberWithKey(String accNum);
-    public String getNewNumber();
+    /**
+     * The method generates key for account number.
+     * @param accNum The account number without key.
+     * @param success The action if generated was success.
+     * @param error The actin if generated was problematic.
+     */
+    public void generateKeyWith(String accNum, Consumer<String> success, Consumer<Exception> error);
+    
+    
+    /**
+     * The method generates new account number.
+     * @param success The action if generated was success.
+     * @param error The action if generated was problematic.
+     */
+    public void generateNewNumber(Consumer<String> success, Consumer<Exception> error);
     
 }
