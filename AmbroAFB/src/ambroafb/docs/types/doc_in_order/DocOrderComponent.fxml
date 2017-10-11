@@ -44,9 +44,6 @@
                     <Label text="%debit" styleClass="validationMessage" /> 
                     <AccountComboBox fx:id="debits" />
                 </VBox>
-                <VBox styleClass="coupleOneThird">
-                    <Label text="" /> 
-                </VBox>
             </children> 
         </HBox>
         <HBox styleClass="twoThirds">
@@ -59,7 +56,7 @@
                     <Label text="%amount" styleClass="validationMessage" /> 
                     <AmountField fx:id="amount" />
                 </VBox>
-            </children> 
+            </children>
         </HBox>
         <HBox styleClass="twoThirds">
             <children>
