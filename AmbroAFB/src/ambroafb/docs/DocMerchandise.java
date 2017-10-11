@@ -5,6 +5,7 @@
  */
 package ambroafb.docs;
 
+import ambroafb.general.NumberConverter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -16,6 +17,8 @@ public class DocMerchandise {
     
     private int recId, merchandise;
     private final StringProperty descrip, iso, vatRate;
+    
+    private final float vatPercentDefaultValue = 0;
     
     public DocMerchandise(){
         descrip = new SimpleStringProperty("");
@@ -52,8 +55,8 @@ public class DocMerchandise {
         return iso.get();
     }
 
-    public float getVatRate() {
-        return (vatRate.get().isEmpty()) ? 0 : Float.parseFloat(vatRate.get());
+    public Float getVatRate() {
+        return NumberConverter.stringToFloat(vatRate.get(), 2, vatPercentDefaultValue);
     }
 
     

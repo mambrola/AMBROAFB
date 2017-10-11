@@ -84,8 +84,8 @@ public class ChargeUtilityDialogController implements Initializable {
     private void changeVatFieldValue(String amount){
         String vatValue = "";
         if (amount != null && !amount.isEmpty()){
-            float amountValue = Float.parseFloat(amount);
-            if (utilities.getValue() != null){
+            Float amountValue = NumberConverter.stringToFloat(amount, 2);
+            if (utilities.getValue() != null && amountValue != null){
                 float vatRate = utilities.getValue().getVatRate();
                 float percentResult = (amountValue * vatRate / 100);
                 vatValue = NumberConverter.makeFloatStringBySpecificFraction(percentResult, 2);

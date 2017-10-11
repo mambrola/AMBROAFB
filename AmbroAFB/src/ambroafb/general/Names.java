@@ -78,7 +78,7 @@ public class Names {
     public static final String BAL_ACCOUNT_PAS = "Pas";
     
     public static enum EDITOR_BUTTON_TYPE {
-        DELETE, EDIT, VIEW, ADD
+        DELETE, EDIT, VIEW, ADD, ADD_SAMPLE
     } 
     
     public static enum DOC_EDITOR_BUTTON_TYPE {

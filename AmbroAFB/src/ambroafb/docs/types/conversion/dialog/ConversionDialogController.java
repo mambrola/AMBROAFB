@@ -111,10 +111,11 @@ public class ConversionDialogController implements Initializable {
     private void changeRateText(String sellAmountValue, String buyingAmountValue){
         String rateResult = "";
         if (sellAmountValue != null && !sellAmountValue.isEmpty() && buyingAmountValue != null && !buyingAmountValue.isEmpty()){
-            float sellAmountFloat = Float.parseFloat(sellAmountValue);
-            float buyingAmountFloat = Float.parseFloat(buyingAmountValue);
-            if (sellAmountFloat > 0 && buyingAmountFloat > 0){
-                float amountsRate = (rateTopToBottomDirection) ? buyingAmountFloat / sellAmountFloat : sellAmountFloat / buyingAmountFloat;
+            Float sellAmountFloat = NumberConverter.stringToFloat(sellAmountValue, 2);
+            Float buyingAmountFloat = NumberConverter.stringToFloat(buyingAmountValue, 2);
+            if (sellAmountFloat != null && buyingAmountFloat != null && 
+                sellAmountFloat > 0 && buyingAmountFloat > 0){
+                Float amountsRate = (rateTopToBottomDirection) ? buyingAmountFloat / sellAmountFloat : sellAmountFloat / buyingAmountFloat;
                 rateResult = NumberConverter.makeFloatStringBySpecificFraction(amountsRate, 4);
             }
         }
@@ -142,6 +143,13 @@ public class ConversionDialogController implements Initializable {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
+//        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+//            conversion.setDocDate(LocalDate.now().toString());
+//            conversion.setDocInDocDate(LocalDate.now().toString());
+//            conversion.setSellAmount(0f);
+//            conversion.setBuyingAmount(0f);
+//            conversionBackup.copyFrom(conversion.cloneWithID());
+//        }
         okayCancelController.setButtonsFeatures(buttonType);
     }
 

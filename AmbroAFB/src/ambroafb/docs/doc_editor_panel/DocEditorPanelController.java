@@ -223,7 +223,7 @@ public class DocEditorPanelController implements Initializable {
             DocManager dm = DocManagersFactory.getDocManager(selected);
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
             EditorPanelable cloneFromReal = docFromDB.cloneWithoutID(); // Without this coping, program make "edit" action.
-            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, cloneFromReal);
+            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE, cloneFromReal);
             EditorPanelable newFromDialog =  dialog.getResult();
             if (newFromDialog != null){
                 ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newFromDialog);

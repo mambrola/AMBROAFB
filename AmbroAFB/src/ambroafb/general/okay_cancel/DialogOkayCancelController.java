@@ -70,6 +70,7 @@ public class DialogOkayCancelController implements Initializable {
                 break;
             case EDIT:
             case ADD:
+            case ADD_SAMPLE:
                 okay.setText(GeneralConfig.getInstance().getTitleFor(type.equals(EDITOR_BUTTON_TYPE.ADD) ? "add" : "save"));
                 okay.setOnAction((ActionEvent event) -> {
                     Scene currScene = okay.getScene();
