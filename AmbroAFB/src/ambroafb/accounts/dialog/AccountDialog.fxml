@@ -33,14 +33,14 @@
             </HBox>
             <HBox styleClass="fiveSixthes" >
                 <children>
-                    <VBox styleClass="coupleOneSixth">
-                        <Label text="%currency" styleClass="validationMessage" /> 
-                        <IsoComboBox fx:id="currencies" />
-                    </VBox>
                     <VBox styleClass="coupleFiveSixth" >
                         <Label text="%bal_accounts" styleClass="validationMessage" /> 
                         <BalanceAccountTreeComboBox fx:id="balAccounts" />
                     </VBox >
+                    <VBox styleClass="coupleOneSixth">
+                        <Label text="%currency" styleClass="validationMessage" /> 
+                        <IsoComboBox fx:id="currencies" />
+                    </VBox>
                 </children>
             </HBox>
             <HBox  styleClass="twoThirds" >

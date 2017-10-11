@@ -48,7 +48,7 @@ public class Account extends EditorPanelable {
     private final StringProperty balAccount;
     private final ObjectProperty<BalanceAccount> balAccountObj;
     
-    @AView.Column(title = "%id_number", width = "20", styleClass = "textRight")
+    @AView.Column(title = "%client", width = "60", styleClass = "textRight")
     private final StringProperty clientId;
     private final ObjectProperty<Client> clientObj;
     
