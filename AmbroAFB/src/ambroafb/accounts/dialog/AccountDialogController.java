@@ -16,6 +16,7 @@ import ambroafb.general.Names;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
+import ambroafb.general.scene_components.account_number.AccountNumber;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -43,9 +44,11 @@ public class AccountDialogController extends DialogController {
     @FXML
     private BalanceAccountTreeComboBox balAccounts;
     @FXML
+    private AccountNumber accountNumber;
+    @FXML
     private ClientComboBox clients;
     @FXML
-    private TextField accountNumber, descrip, remark;
+    private TextField descrip, remark;
     @FXML
     private ADatePicker closeDate;
     
@@ -76,7 +79,7 @@ public class AccountDialogController extends DialogController {
             currencies.valueProperty().bindBidirectional(account.isoProperty());
             balAccounts.valueProperty().bindBidirectional(account.balAccProperty());
             clients.valueProperty().bindBidirectional(account.clientProperty());
-//            accountNumber
+            accountNumber.valueProperty().bindBidirectional(account.accountNumberProperty());
             descrip.textProperty().bindBidirectional(account.descripProperty());
             closeDate.valueProperty().bindBidirectional(account.closedProperty());
             remark.textProperty().bindBidirectional(account.remarkProperty());

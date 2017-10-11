@@ -10,6 +10,7 @@
 <?import javafx.geometry.*?>
 <?import ambro.* ?>
 <?import ambroafb.general.okay_cancel.* ?>
+<?import ambroafb.general.scene_components.account_number.*?>
 <?import ambroafb.general.*?>
 <?import ambroafb.countries.* ?>
 <?import javafx.scene.image.*?>
@@ -47,7 +48,7 @@
                 <children>
                     <VBox styleClass="coupleOneThird" >
                         <Label text="%account_number" /> 
-                        <TextField fx:id="accounNumber" />
+                        <AccountNumber fx:id="accountNumber" />
                     </VBox >
                     <VBox styleClass="coupleTwoThird" >
                         <Label text="%clients" styleClass="validationMessage" /> 
