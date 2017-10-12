@@ -17,6 +17,7 @@ import ambroafb.general.interfaces.TableColumnWidths;
 import authclient.db.ConditionBuilder;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
@@ -71,12 +72,12 @@ public class Account extends EditorPanelable {
         remark = new SimpleStringProperty("");
         
         clientObj.addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
-            if (newValue == null){
-                clientId.set("" + clientIdDefaultValue);
+            String newClientId = "";
+            if (newValue != null){
+                newClientId = "" + newValue.getRecId();
             }
-            else {
-                clientId.set("" + newValue.getRecId());
-            }
+            System.out.println("------------------ newClientId: " + newClientId);
+            clientId.set(newClientId);
         });
     }
     
@@ -181,6 +182,7 @@ public class Account extends EditorPanelable {
         return (clientObj.isNull().get()) ? clientIdDefaultValue : clientObj.get().getRecId();
     }
     
+    @JsonIgnore
     public String getClientDescrip(){
         return (clientObj.isNull().get()) ? "" : clientObj.get().getFirstName();
     }
@@ -209,7 +211,9 @@ public class Account extends EditorPanelable {
     
     public void setbalAccount(int balAcc){
         this.balAccount.set("" + balAcc);
-        this.balAccountObj.get().setBalAcc(balAcc);
+        if (balAccountObj.isNotNull().get()){
+            this.balAccountObj.get().setBalAcc(balAcc);
+        }
     }
     
     public void setDescrip(String descrip){
@@ -217,12 +221,13 @@ public class Account extends EditorPanelable {
     }
     
     public void setClientId(int clientId){
-        this.clientId.set("" + clientId);
+        this.clientId.set((clientId == 0) ? "" : "" + clientId);
         if (clientObj.isNotNull().get()){
             clientObj.get().setRecId(clientId);
         }
     }
     
+    @JsonProperty
     public void setClientDescrip(String descrip){
         if (clientObj.isNotNull().get()){
             clientObj.get().setFirstName(descrip);

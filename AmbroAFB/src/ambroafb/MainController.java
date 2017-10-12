@@ -149,7 +149,6 @@ public class MainController implements Initializable {
             else {
                 Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
                                             ArrayList<Client> clientsList = Client.getFilteredFromDB(model);
-                                            clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
                                             return new ArrayList(clientsList);
                                         };
                 

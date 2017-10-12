@@ -267,7 +267,6 @@ public class ClientComboBox extends AnchorPane {
         @Override
         public void run() {
             ArrayList<Client> clientsList = DBUtils.getObjectsListFromDB(Client.class, Client.DB_VIEW_NAME, params);
-            clientsList.sort((Client c1, Client c2) -> c1.getRecId() - c2.getRecId());
             Platform.runLater(() -> {
                 items.setAll(clientsList);
                 if (consumer != null){
