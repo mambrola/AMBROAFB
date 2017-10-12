@@ -12,7 +12,7 @@ import javafx.stage.Stage;
  *
  * @author dkobuladze
  */
-public class UserInteractiveDialogStage extends UserInteractiveStage {
+public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     
     private boolean permissionToClose = true;
     

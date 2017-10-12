@@ -9,12 +9,11 @@ import ambro.ADatePicker;
 import ambroafb.clients.Client;
 import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.CountryComboBox;
-import ambroafb.general.interfaces.FilterModel;
-import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
+import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
-import ambroafb.general.interfaces.UserInteractiveStage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -31,7 +30,7 @@ import org.controlsfx.control.CheckComboBox;
  *
  * @author mambroladze
  */
-public class ClientFilter  extends UserInteractiveStage implements Filterable, Initializable {
+public class ClientFilter  extends UserInteractiveFilterStage implements Filterable, Initializable {
     @FXML
     private ADatePicker dateBigger, dateLess;
     @FXML
@@ -46,7 +45,7 @@ public class ClientFilter  extends UserInteractiveStage implements Filterable, I
     private final ClientFilterModel clientFilterModel = new ClientFilterModel();
     
     public ClientFilter(Stage owner) {
-        super(owner, Names.LEVEL_FOR_PATH, "clients", "/images/filter.png");
+        super(owner, "clients");
         
         Scene scene = SceneUtils.createScene("/ambroafb/clients/filter/ClientFilter.fxml", (ClientFilter)this);
         this.setScene(scene);

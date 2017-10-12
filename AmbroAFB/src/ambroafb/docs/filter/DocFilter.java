@@ -12,11 +12,10 @@ import ambroafb.currencies.Currency;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.docs.DocCode;
 import ambroafb.docs.DocCodeComboBox;
-import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
 import java.util.Optional;
@@ -34,7 +33,7 @@ import javafx.stage.WindowEvent;
  *
  * @author dkobuladze
  */
-public class DocFilter extends UserInteractiveStage implements Filterable, Initializable {
+public class DocFilter extends UserInteractiveFilterStage implements Filterable, Initializable {
 
     @FXML
     private ADatePicker docDateFrom, docDateTo, docInDocDateFrom, docInDocDateTo;
@@ -53,7 +52,7 @@ public class DocFilter extends UserInteractiveStage implements Filterable, Initi
     public static final String DATE_LESS = "9999-01-01";
     
     public DocFilter(Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "docs", "/images/filter.png");
+        super(owner, "docs");
         Scene scene = SceneUtils.createScene("/ambroafb/docs/filter/DocFilter.fxml", (DocFilter)this);
         this.setScene(scene);
         

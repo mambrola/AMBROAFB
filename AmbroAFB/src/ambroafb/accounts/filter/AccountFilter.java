@@ -14,7 +14,7 @@ import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
 import java.util.Optional;
@@ -33,7 +33,7 @@ import javafx.stage.WindowEvent;
  *
  * @author dkobuladze
  */
-public class AccountFilter extends UserInteractiveStage implements Filterable, Initializable {
+public class AccountFilter extends UserInteractiveFilterStage implements Filterable, Initializable {
 
     @FXML
     private CurrencyComboBox currencies;
@@ -49,7 +49,7 @@ public class AccountFilter extends UserInteractiveStage implements Filterable, I
     private final AccountFilterModel model = new AccountFilterModel();
     
     public AccountFilter(Stage owner){
-        super(owner, "accounts", true);
+        super(owner, "accounts");
         
         Scene scene = SceneUtils.createScene("/ambroafb/accounts/filter/AccountFilter.fxml", (AccountFilter)this);
         this.setScene(scene);

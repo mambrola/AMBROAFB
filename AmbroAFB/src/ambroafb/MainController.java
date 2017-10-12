@@ -72,7 +72,7 @@ public class MainController implements Initializable {
     
     @FXML
     private void mainConfig(ActionEvent event) {
-        Stage configStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Configuration.class.getSimpleName());
+        Stage configStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Names.CONFIGURATION);
         
         if (configStage == null  || !configStage.isShowing()){
             Configuration configuration = new Configuration(AmbroAFB.mainStage);
@@ -110,7 +110,7 @@ public class MainController implements Initializable {
     
     @FXML private void accounts(ActionEvent event) { 
         String stageTitle = "accounts";
-        Stage accountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage accountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Account.class.getSimpleName());
         if(accountsStage == null || !accountsStage.isShowing()){
             TableList accounts = new TableList(AmbroAFB.mainStage, Account.class, stageTitle);
             accounts.show();
@@ -135,7 +135,7 @@ public class MainController implements Initializable {
     @FXML
     private void clients(ActionEvent event) {
         String stageTitle = "clients";
-        Stage clientsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage clientsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Client.class.getSimpleName());
         if(clientsStage == null || !clientsStage.isShowing()){
             TableList clients = new TableList(AmbroAFB.mainStage, Client.class, stageTitle);
             clients.show();
@@ -165,7 +165,7 @@ public class MainController implements Initializable {
     @FXML
     private void loggings(ActionEvent event){
         String stageTitle = "loggings";
-        Stage loggingsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage loggingsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Logging.class.getSimpleName());
         if(loggingsStage == null || !loggingsStage.isShowing()){
             TableList loggings = new TableList(AmbroAFB.mainStage, Logging.class, stageTitle);
             loggings.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
@@ -193,7 +193,7 @@ public class MainController implements Initializable {
     @FXML 
     private void invoices(ActionEvent event) {
         String stageTitle = "invoices";
-        Stage invoicesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage invoicesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Invoice.class.getSimpleName());
         if(invoicesStage == null || !invoicesStage.isShowing()){
             TableList invoices = new TableList(AmbroAFB.mainStage, Invoice.class, stageTitle);
             invoices.show();
@@ -220,7 +220,7 @@ public class MainController implements Initializable {
     @FXML 
     private void products(ActionEvent event) {
         String stageTitle = "products";
-        Stage productsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage productsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Product.class.getSimpleName());
         if (productsStage == null || !productsStage.isShowing()){
             TableList products = new TableList(AmbroAFB.mainStage, Product.class, stageTitle);
             Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
@@ -238,7 +238,7 @@ public class MainController implements Initializable {
     @FXML 
     private void countries(ActionEvent event) {
         String stageTitle = "countries";
-        Stage countriesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage countriesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Country.class.getSimpleName());
         if (countriesStage == null || !countriesStage.isShowing()){
             TableList countries = new TableList(AmbroAFB.mainStage, Country.class, stageTitle);
             countries.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
@@ -267,7 +267,7 @@ public class MainController implements Initializable {
     
     @FXML private void docs(ActionEvent event){
         String stageTitle = "docs";
-        Stage docsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage docsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Doc.class.getSimpleName());
         if(docsStage == null || !docsStage.isShowing()){
             DocTableList docs = new DocTableList(AmbroAFB.mainStage, Doc.class, stageTitle);
             docs.show();
@@ -292,7 +292,7 @@ public class MainController implements Initializable {
     
     @FXML private void licenses(ActionEvent event) {
         String stageTitle = "licenses";
-        Stage licensesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage licensesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, License.class.getSimpleName());
         if(licensesStage == null || !licensesStage.isShowing()){
             TableList licenses = new TableList(AmbroAFB.mainStage, License.class, stageTitle);
             licenses.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
@@ -327,7 +327,7 @@ public class MainController implements Initializable {
     @FXML
     private void attitudes(ActionEvent event){
         String stageTitle = "attitudes";
-        Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Attitude.class.getSimpleName());
         if(miniTablesStage == null || !miniTablesStage.isShowing()){
             TableList attitudes = new TableList(AmbroAFB.mainStage, Attitude.class, stageTitle);
             Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
@@ -347,7 +347,7 @@ public class MainController implements Initializable {
     @FXML
     private void merchandises(ActionEvent event){
         String stageTitle = "merchandises";
-        Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Merchandise.class.getSimpleName());
         if(miniTablesStage == null || !miniTablesStage.isShowing()){
             TableList merchandises = new TableList(AmbroAFB.mainStage, Merchandise.class, stageTitle);
             Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
@@ -381,7 +381,7 @@ public class MainController implements Initializable {
         
     @FXML private void currencies(ActionEvent event) {
         String stageTitle = "currencies";
-        Stage currenciesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage currenciesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Currency.class.getSimpleName());
         if(currenciesStage == null || !currenciesStage.isShowing()){
             TableList currencies = new TableList(AmbroAFB.mainStage, Currency.class, stageTitle);
             currencies.getController().removeElementsFromEditorPanel("#search");
@@ -399,7 +399,7 @@ public class MainController implements Initializable {
     
     @FXML private void currencyRates(ActionEvent event) {
         String stageTitle = "currency_rates";
-        Stage currencyRatesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage currencyRatesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, CurrencyRate.class.getSimpleName());
         if(currencyRatesStage == null || !currencyRatesStage.isShowing()){
             TableList currencyRates = new TableList(AmbroAFB.mainStage, CurrencyRate.class, stageTitle);
             currencyRates.show();
@@ -425,7 +425,7 @@ public class MainController implements Initializable {
     
     @FXML private void discountsOnCount(ActionEvent event) {
         String stageTitle = "discounts";
-        Stage discountOnCountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage discountOnCountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, DiscountOnCount.class.getSimpleName());
         if (discountOnCountsStage == null || !discountOnCountsStage.isShowing()){
             TableList discountOnCounts = new TableList(AmbroAFB.mainStage, DiscountOnCount.class, stageTitle);
             Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
@@ -443,7 +443,7 @@ public class MainController implements Initializable {
     
     @FXML private void balAccounts(ActionEvent event) {
         String stageTitle = "balanceaccounts";
-        Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, stageTitle);
+        Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BalanceAccount.class.getSimpleName());
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
             BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage);
             Supplier<ArrayList<EditorPanelable>> fetchData = () -> new ArrayList(BalanceAccount.getAllFromDB());

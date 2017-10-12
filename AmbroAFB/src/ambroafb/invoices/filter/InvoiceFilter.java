@@ -7,12 +7,11 @@ package ambroafb.invoices.filter;
 
 import ambro.ADatePicker;
 import ambroafb.clients.ClientComboBox;
-import ambroafb.general.interfaces.FilterModel;
-import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
+import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
-import ambroafb.general.interfaces.UserInteractiveStage;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatusClarify;
@@ -31,7 +30,7 @@ import org.controlsfx.control.CheckComboBox;
  *
  * @author dato
  */
-public class InvoiceFilter extends UserInteractiveStage implements Filterable, Initializable {
+public class InvoiceFilter extends UserInteractiveFilterStage implements Filterable, Initializable {
 
     
     @FXML
@@ -51,7 +50,7 @@ public class InvoiceFilter extends UserInteractiveStage implements Filterable, I
     public static final String DATE_LESS = "9999-01-01";
     
     public InvoiceFilter(Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "invoices", "/images/filter.png");
+        super(owner, "invoices");
         
         Scene scene = SceneUtils.createScene("/ambroafb/invoices/filter/InvoiceFilter.fxml", (InvoiceFilter)this);
         this.setScene(scene);

@@ -7,11 +7,10 @@ package ambroafb.currency_rates.filter;
 
 import ambro.ADatePicker;
 import ambroafb.currencies.CurrencyComboBox;
-import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,7 +26,7 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class CurrencyRateFilter extends UserInteractiveStage implements Filterable, Initializable {
+public class CurrencyRateFilter extends UserInteractiveFilterStage implements Filterable, Initializable {
 
     @FXML
     private ADatePicker dateBigger, dateLess;
@@ -39,7 +38,7 @@ public class CurrencyRateFilter extends UserInteractiveStage implements Filterab
     private final CurrencyRateFilterModel currencyRateFilterModel = new CurrencyRateFilterModel();
     
     public CurrencyRateFilter(Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "currency_rates", "/images/filter.png");
+        super(owner, "currency_rates");
         
         Scene scene = SceneUtils.createScene("/ambroafb/currency_rates/filter/CurrencyRateFilter.fxml", (CurrencyRateFilter)this);
         this.setScene(scene);

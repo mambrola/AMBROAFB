@@ -8,11 +8,10 @@ package ambroafb.loggings.filter;
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
-import ambroafb.general.interfaces.FilterModel;
-import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,7 +26,7 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class LoggingFilter extends UserInteractiveStage implements Initializable, Filterable {
+public class LoggingFilter extends UserInteractiveFilterStage implements Initializable, Filterable {
 
     @FXML
     private ADatePicker dateBigger, dateLess;
@@ -39,7 +38,7 @@ public class LoggingFilter extends UserInteractiveStage implements Initializable
     private final LoggingFilterModel loggingFilterModel = new LoggingFilterModel();
     
     public LoggingFilter(Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "loggings", "/images/filter.png");
+        super(owner, "loggings");
         
         Scene scene = SceneUtils.createScene("/ambroafb/loggings/filter/LoggingFilter.fxml", (LoggingFilter)this);
         this.setScene(scene);

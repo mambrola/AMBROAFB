@@ -6,11 +6,10 @@
 package ambroafb.licenses.filter;
 
 import ambroafb.clients.ClientComboBox;
-import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseStatus;
@@ -31,7 +30,7 @@ import org.controlsfx.control.CheckComboBox;
  *
  * @author Dato
  */
-public class LicenseFilter extends UserInteractiveStage implements Filterable, Initializable {
+public class LicenseFilter extends UserInteractiveFilterStage implements Filterable, Initializable {
     
     @FXML
     private ClientComboBox clients;
@@ -47,7 +46,7 @@ public class LicenseFilter extends UserInteractiveStage implements Filterable, I
     private final LicenseFilterModel filterModel = new LicenseFilterModel();
     
     public LicenseFilter(Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "licenses", "/images/filter.png");
+        super(owner, "licenses");
         
         Scene scene = SceneUtils.createScene("/ambroafb/licenses/filter/LicenseFilter.fxml", (LicenseFilter)this);
         this.setScene(scene);

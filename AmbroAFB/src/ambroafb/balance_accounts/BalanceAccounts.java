@@ -21,7 +21,7 @@ public class BalanceAccounts extends ListingStage {
     private BalanceAccountsController balanceAccountsController;
     
     public BalanceAccounts(Stage owner){
-        super(owner, BalanceAccounts.class.getSimpleName(),  "balances");
+        super(owner, BalanceAccount.class.getSimpleName(),  "bal_accounts");
         
         Scene scene = SceneUtils.createScene("/ambroafb/balance_accounts/BalanceAccounts.fxml", null);
         balanceAccountsController = (BalanceAccountsController) scene.getProperties().get("controller");
