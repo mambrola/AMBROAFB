@@ -46,10 +46,6 @@
             </HBox>
             <HBox  styleClass="twoThirds" >
                 <children>
-                    <VBox styleClass="coupleOneThird" >
-                        <Label text="%account_number" /> 
-                        <AccountNumber fx:id="accountNumber" />
-                    </VBox >
                     <VBox styleClass="coupleTwoThird" >
                         <Label text="%clients" styleClass="validationMessage" /> 
                         <ClientComboBox fx:id="clients" />
@@ -58,19 +54,23 @@
             </HBox>
             <HBox  styleClass="twoThirds" >
                 <children>
+                    <VBox styleClass="coupleOneThird" >
+                        <Label text="%account_number" /> 
+                        <AccountNumber fx:id="accountNumber" />
+                    </VBox >
                     <VBox styleClass="coupleTwoThird"  >
                         <Label text="%descrip" /> 
                         <TextField fx:id="descrip" />
                     </VBox>
+                </children>
+            </HBox>
+            <HBox  styleClass="twoThirds" >
+                <children>
                     <VBox styleClass="coupleOneThird" >
                         <Label text="%close_date" /> 
                         <ADatePicker fx:id="closeDate" />
                     </VBox>
-                </children>
-            </HBox>
-            <HBox  styleClass="one" >
-                <children>
-                    <VBox styleClass="couple" >
+                    <VBox styleClass="coupleTwoThird" >
                         <Label text="%remark" /> 
                         <TextField fx:id="remark" />
                     </VBox>
