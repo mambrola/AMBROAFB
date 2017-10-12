@@ -481,7 +481,7 @@ public class ImageGalleryController implements Initializable {
 
             try {
                 HttpURLConnection con = GeneralConfig.getInstance().getDBClient().createConnection(serviceURLPrefix + fullName);
-                Viewer newViewer = new Viewer(con.getInputStream(), fullName.endsWith(".pdf"));
+                Viewer newViewer = new Viewer(con.getInputStream(), fullName.toLowerCase().endsWith(".pdf"));
 
                 Object lock = lockObjectsMap.get(index);
                 synchronized (lock) {
