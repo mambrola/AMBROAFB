@@ -68,12 +68,12 @@ public class Invoice extends EditorPanelable {
     
     private final ObjectProperty<InvoiceStatusClarify> clarifyObj;
     
-    @AView.Column(title = "%licenses", width = TableColumnWidths.LICENSE)
+    @AView.Column(title = "%license", width = TableColumnWidths.LICENSE)
     @JsonIgnore
     private final StringProperty licensesDescript;
     private final ObservableList<LicenseShortData> licenses;
     
-    @AView.Column(title = "%clients", width = TableColumnWidths.CLIENT_MAIL)
+    @AView.Column(title = "%client", width = TableColumnWidths.CLIENT_MAIL)
     @JsonIgnore
     private final StringExpression clientDescrip;
     @JsonIgnore
@@ -113,7 +113,7 @@ public class Invoice extends EditorPanelable {
     private final StringProperty moneyPaid;
     
     
-    @AView.Column(title = "%invoice_reissuings", width = "100")
+    @AView.Column(title = "%invoice_reissuings_min", width = "100")
     @JsonIgnore
     private final ObjectProperty<InvoiceReissuing> reissuingObj;
     

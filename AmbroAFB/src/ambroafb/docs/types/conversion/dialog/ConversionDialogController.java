@@ -135,7 +135,6 @@ public class ConversionDialogController implements Initializable {
             buyingAccount.valueProperty().bindBidirectional(conversion.buyingAccountProperty());
             sellAmount.textProperty().bindBidirectional(conversion.sellAmountProperty());
             buyingAmount.textProperty().bindBidirectional(conversion.buyingAmountProperty());
-            currentRate.textProperty().bindBidirectional(conversion.descripProperty());
         }
     }
 

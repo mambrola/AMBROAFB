@@ -22,7 +22,7 @@ import javafx.beans.property.StringProperty;
  */
 public class DiscountOnCount extends EditorPanelable {
 
-    @AView.Column(title = "%licenses_count", width = "200", styleClass = "textRight")
+    @AView.Column(title = "%licenses_count_min", width = "120", styleClass = "textRight")
     private final StringProperty licenseCount;
     
     @AView.Column(title = "%sales_percent", width = "100", styleClass = "textRight")

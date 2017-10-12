@@ -65,7 +65,7 @@
                 <children>
                     <VBox >
                         <children>
-                            <Label text="%clients" />
+                            <Label text="%client" />
                             <ClientComboBox fx:id="clients" />
                         </children>
                     </VBox>

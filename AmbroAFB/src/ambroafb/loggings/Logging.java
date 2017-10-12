@@ -36,7 +36,7 @@ public class Logging extends EditorPanelable {
     @AView.Column(title = "%license_N", width = TableColumnWidths.LICENSE, styleClass = "textCenter")
     private final StringProperty licenseNumber;
 
-    @AView.Column(title = "%clients", width = TableColumnWidths.CLIENT_MAIL)
+    @AView.Column(title = "%client", width = TableColumnWidths.CLIENT_MAIL)
     @JsonIgnore
     private final StringExpression clientDescrip;
     @JsonIgnore

@@ -18,7 +18,7 @@
                 <children>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="bal_account_code" styleClass="validationMessage" />
+                            <Label text="%bal_account_code" styleClass="validationMessage" />
                             <TextField fx:id="balAccountCode" />
                         </children>
                     </VBox>
@@ -34,7 +34,7 @@
                 <children>
                     <VBox styleClass="couple">
                         <children>
-                            <Label text="bal_account_name" styleClass="validationMessage" />
+                            <Label text="%bal_account_name" styleClass="validationMessage" />
                             <TextField fx:id="balAccountName" />
                         </children>
                     </VBox>

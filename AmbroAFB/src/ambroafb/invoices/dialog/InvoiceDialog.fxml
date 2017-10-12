@@ -43,13 +43,13 @@
                 <children>
                     <VBox styleClass="coupleOneThird">
                         <children>
-                            <Label text="%clients" styleClass="validationMessage" />
+                            <Label text="%client" styleClass="validationMessage" />
                             <ClientComboBox fx:id="clients" styleClass="unicode" />
                         </children>
                     </VBox>
                     <VBox styleClass="coupleTwoThird">
                         <children>
-                            <Label text="%products" styleClass="validationMessage" />
+                            <Label text="%product" styleClass="validationMessage" />
                             <CountComboBox fx:id="products" />
                         </children>
                     </VBox>

@@ -35,7 +35,7 @@
             <HBox styleClass="fiveSixthes" >
                 <children>
                     <VBox styleClass="coupleFiveSixth" >
-                        <Label text="%bal_accounts" styleClass="validationMessage" /> 
+                        <Label text="%bal_account" styleClass="validationMessage" /> 
                         <BalanceAccountTreeComboBox fx:id="balAccounts" />
                     </VBox >
                     <VBox styleClass="coupleOneSixth">
@@ -47,7 +47,7 @@
             <HBox  styleClass="twoThirds" >
                 <children>
                     <VBox styleClass="coupleTwoThird" >
-                        <Label text="%clients" styleClass="validationMessage" /> 
+                        <Label text="%client" styleClass="validationMessage" /> 
                         <ClientComboBox fx:id="clients" />
                     </VBox  >
                 </children>

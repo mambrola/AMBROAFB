@@ -76,7 +76,7 @@ public class License extends EditorPanelable {
     private final IntegerProperty cfCurrentInvoiceId;
     private final IntegerProperty cfFutureInvoiceId;
     
-    @AView.Column(title = "%license_statuses", width = "160")
+    @AView.Column(title = "%license_status", width = "120")
     private final StringProperty statusDescrip;
     @JsonIgnore
     private final ObjectProperty<LicenseStatus> statusObj;

@@ -35,7 +35,7 @@ import org.json.JSONObject;
  */
 public class Account extends EditorPanelable {
 
-    @AView.Column(title = "%account_number", width = "120", styleClass = "textRight")
+    @AView.Column(title = "%account_number", width = "80", styleClass = "textRight")
     private final StringProperty accountNumber;
     
     @AView.Column(title = "%iso", width = TableColumnWidths.ISO)
@@ -44,7 +44,7 @@ public class Account extends EditorPanelable {
     @AView.Column(title = "%descrip", width = "360")
     private final StringProperty descrip;
     
-    @AView.Column(title = "%bal_accounts", width = "150", styleClass = "textRight")
+    @AView.Column(title = "%bal_accounts_min", width = "70", styleClass = "textRight")
     private final StringProperty balAccount;
     private final ObjectProperty<BalanceAccount> balAccountObj;
     

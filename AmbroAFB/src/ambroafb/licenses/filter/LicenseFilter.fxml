@@ -17,13 +17,13 @@
                 <children>
                     <VBox >
                         <children>
-                            <Label text="%clients" />
+                            <Label text="%client" />
                             <ClientComboBox fx:id="clients" /> 
                         </children>
                     </VBox>
                     <VBox >
                         <children>
-                            <Label text="%products" />
+                            <Label text="%product" />
                             <ProductComboBox fx:id="products" /> 
                         </children>
                     </VBox>
@@ -33,7 +33,7 @@
                 <children>
                     <VBox >
                         <children>
-                            <Label text="%license_statuses" />
+                            <Label text="%license_status" />
                             <CheckComboBox fx:id="statuses" /> 
                         </children>
                     </VBox>
