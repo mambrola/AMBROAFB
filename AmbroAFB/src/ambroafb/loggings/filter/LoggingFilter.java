@@ -78,8 +78,7 @@ public class LoggingFilter extends UserInteractiveFilterStage implements Initial
     public void initialize(URL location, ResourceBundle resources) {
         dateBigger.setValue(loggingFilterModel.getFromDate());
         dateLess.setValue(loggingFilterModel.getToDate());
-//        Consumer<>
 //        clients.getSelectionModel().select(loggingFilterModel.getSelectedClientIndex());
-//        clients.fillComboBoxOnlyClientsWithALL(clientsConsumer);
+        clients.fillComboBoxOnlyClientsWithALL(null);
     }
 }

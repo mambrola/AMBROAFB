@@ -118,6 +118,8 @@ public class InvoiceFilter extends UserInteractiveFilterStage implements Filtera
         invoiceFilterModel.getCheckedReissuingsIndexes().stream().forEach((index) -> {
             invoiceReissuings.getCheckModel().check(index);
         });
+        
+        clients.fillComboBoxOnlyClientsWithALL(null);
     }
     
     private void printClarifiesIDsList(ArrayList<InvoiceStatusClarify> clarifies){

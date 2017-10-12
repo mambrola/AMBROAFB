@@ -108,7 +108,7 @@ public class InvoiceDialogController implements Initializable {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
         
-        clients.showCategoryALL(false);
+        clients.fillComboBoxOnlyClients(null);
         products.getItems().addAll(Product.getAllFromDB());
         permissionToClose = true;
 

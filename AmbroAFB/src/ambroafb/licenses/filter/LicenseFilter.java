@@ -85,6 +85,8 @@ public class LicenseFilter extends UserInteractiveFilterStage implements Filtera
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        clients.fillComboBoxOnlyClientsWithALL(null);
+        
         ArrayList<LicenseStatus> licenseStatuses = License.getAllLicenseStatusFromDB();
         licenseStatuses.sort((LicenseStatus status1, LicenseStatus status2) -> status1.getRecId() - status2.getRecId());
         statuses.getItems().setAll(licenseStatuses);
