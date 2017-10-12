@@ -12,6 +12,7 @@ import ambroafb.general.Names;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -46,6 +47,7 @@ public class BalanceAccount extends EditorPanelable {
     private final BooleanProperty indeterminateProperty;
     @JsonIgnore
     private final BooleanProperty activeProperty;
+    private final IntegerProperty levelProperty;
     
     
     @AFilterableTreeTableView.Children
@@ -70,6 +72,7 @@ public class BalanceAccount extends EditorPanelable {
         actPas = new SimpleIntegerProperty(0);
         indeterminateProperty = new SimpleBooleanProperty();
         activeProperty = new SimpleBooleanProperty();
+        levelProperty = new SimpleIntegerProperty();
         
         actPasExpression = Bindings.when(indeterminateProperty).then(Names.BAL_ACCOUNT_ACT_PAS).
                             otherwise(Bindings.when(activeProperty).then(Names.BAL_ACCOUNT_ACT)
@@ -125,6 +128,10 @@ public class BalanceAccount extends EditorPanelable {
         return activeProperty;
     }
     
+    public IntegerProperty levelProperty(){
+        return levelProperty;
+    }
+    
 
     // Getters:
     public int getActPas() {
@@ -137,6 +144,11 @@ public class BalanceAccount extends EditorPanelable {
     
     public String getDescrip(){
         return descrip.get();
+    }
+    
+    @JsonIgnore
+    public int getLevel(){
+        return levelProperty.get();
     }
     
     
@@ -157,6 +169,11 @@ public class BalanceAccount extends EditorPanelable {
     
     public void setDescrip(String descrip){
         this.descrip.set(descrip);
+    }
+    
+    @JsonProperty
+    public void setLevel(int level){
+        levelProperty.set(level);
     }
     
     @Override
@@ -217,5 +234,12 @@ public class BalanceAccount extends EditorPanelable {
                 getActPas() == balAccountBackup.getActPas() &&
                 getDescrip().equals(balAccountBackup.getDescrip());
     }
+    
+    
+    @JsonIgnore
+    public boolean isLeaf(){
+        return getLevel() == 0;
+    }
+    
 
 }

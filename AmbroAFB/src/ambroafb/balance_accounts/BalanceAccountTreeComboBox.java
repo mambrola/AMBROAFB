@@ -12,6 +12,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 
 /**
  *
@@ -27,6 +31,7 @@ public class BalanceAccountTreeComboBox extends ComboBox<BalanceAccount> {
     public BalanceAccountTreeComboBox(){
         super();
         setItems(items);
+        setCellFactory(new CustomCellFactory());
         
         balAccountALL.setDescrip(categoryALL);
     }
@@ -44,7 +49,6 @@ public class BalanceAccountTreeComboBox extends ComboBox<BalanceAccount> {
     
     public void fillComboBoxWithoutALL(Consumer<ObservableList<BalanceAccount>> extraAction){
         new Thread(new FetchDataFromDB(extraAction)).start();
-//        items.setAll(BalanceAccount.getAllFromDB());
     }
     
     
@@ -66,5 +70,38 @@ public class BalanceAccountTreeComboBox extends ComboBox<BalanceAccount> {
                 }
             });
         }
+    }
+    
+    /**
+     * The class provides to disable non leaf items in list.
+     * If item is null or empty cell - do nothing;
+     * If item is not leaf disabled;
+     * If item is leaf set text color to BLACK;
+     * Use  BalanceAccount toString method for show item name;
+     */
+    public class CustomCellFactory implements Callback<ListView<BalanceAccount>, ListCell<BalanceAccount>> {
+
+        @Override
+        public ListCell<BalanceAccount> call(ListView<BalanceAccount> param) {
+            final ListCell<BalanceAccount> cell = new ListCell<BalanceAccount>() {
+                    
+                    @Override 
+                    public void updateItem(BalanceAccount item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty){
+                            return;
+                        }
+                        if (!item.isLeaf()){
+                            setDisable(true);
+                        }
+                        else {
+                            setTextFill(Color.BLACK);
+                        }
+                        setText(item.toString());
+                    }
+            };
+            return cell;
+        }
+    
     }
 }
