@@ -17,13 +17,11 @@ import ambroafb.products.ProductComboBox;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.controlsfx.control.CheckComboBox;
 
 /**
@@ -50,12 +48,6 @@ public class LicenseFilter extends UserInteractiveFilterStage implements Filtera
         
         Scene scene = SceneUtils.createScene("/ambroafb/licenses/filter/LicenseFilter.fxml", (LicenseFilter)this);
         this.setScene(scene);
-
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            okayCancelController.cancel(null);
-            if(event != null) event.consume();
-        });
-        
     }
 
     @Override
@@ -99,6 +91,11 @@ public class LicenseFilter extends UserInteractiveFilterStage implements Filtera
         extraDays.setSelected(filterModel.onlyExtraDays());
         extraDays.setIndeterminate(filterModel.withAndWithoutExtraDays());
         
+    }
+
+    @Override
+    protected FilterOkayCancelController getOkayCancelController() {
+        return okayCancelController;
     }
     
 }

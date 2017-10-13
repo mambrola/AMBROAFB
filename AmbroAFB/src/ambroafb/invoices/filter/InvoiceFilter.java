@@ -18,12 +18,10 @@ import ambroafb.invoices.helper.InvoiceStatusClarify;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.controlsfx.control.CheckComboBox;
 
 /**
@@ -54,11 +52,6 @@ public class InvoiceFilter extends UserInteractiveFilterStage implements Filtera
         
         Scene scene = SceneUtils.createScene("/ambroafb/invoices/filter/InvoiceFilter.fxml", (InvoiceFilter)this);
         this.setScene(scene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            okayCancelController.cancel(null);
-            if (event != null) event.consume();
-        });
     }
 
     @Override
@@ -127,5 +120,10 @@ public class InvoiceFilter extends UserInteractiveFilterStage implements Filtera
             System.out.print(cl.getRecId() + " ");
         });
         System.out.println("");
+    }
+
+    @Override
+    protected FilterOkayCancelController getOkayCancelController() {
+        return okayCancelController;
     }
 }

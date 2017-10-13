@@ -21,13 +21,11 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -53,11 +51,6 @@ public class AccountFilter extends UserInteractiveFilterStage implements Filtera
         
         Scene scene = SceneUtils.createScene("/ambroafb/accounts/filter/AccountFilter.fxml", (AccountFilter)this);
         this.setScene(scene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            okayCancelController.cancel(null);
-            if (event != null) event.consume();
-        });
     }
     
     @Override
@@ -108,6 +101,11 @@ public class AccountFilter extends UserInteractiveFilterStage implements Filtera
 
         accountType.setSelected(model.isTypeSelected());
         accountType.setIndeterminate(model.getTypeIntdeterminate());
+    }
+
+    @Override
+    protected FilterOkayCancelController getOkayCancelController() {
+        return okayCancelController;
     }
     
 }

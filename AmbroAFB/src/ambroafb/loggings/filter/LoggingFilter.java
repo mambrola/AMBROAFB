@@ -15,12 +15,10 @@ import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -42,12 +40,6 @@ public class LoggingFilter extends UserInteractiveFilterStage implements Initial
         
         Scene scene = SceneUtils.createScene("/ambroafb/loggings/filter/LoggingFilter.fxml", (LoggingFilter)this);
         this.setScene(scene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            okayCancelController.cancel(null);
-            if(event != null) event.consume();
-        });
-        
     }
     
     @Override
@@ -80,5 +72,10 @@ public class LoggingFilter extends UserInteractiveFilterStage implements Initial
         dateLess.setValue(loggingFilterModel.getToDate());
 //        clients.getSelectionModel().select(loggingFilterModel.getSelectedClientIndex());
         clients.fillComboBoxOnlyClientsWithALL(null);
+    }
+
+    @Override
+    protected FilterOkayCancelController getOkayCancelController() {
+        return okayCancelController;
     }
 }

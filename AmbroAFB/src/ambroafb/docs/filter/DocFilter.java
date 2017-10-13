@@ -22,12 +22,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -53,13 +51,9 @@ public class DocFilter extends UserInteractiveFilterStage implements Filterable,
     
     public DocFilter(Stage owner){
         super(owner, "docs");
+        
         Scene scene = SceneUtils.createScene("/ambroafb/docs/filter/DocFilter.fxml", (DocFilter)this);
         this.setScene(scene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            okayCancelController.cancel(null);
-            if (event != null) event.consume();
-        });
     }
     
     @Override
@@ -123,6 +117,11 @@ public class DocFilter extends UserInteractiveFilterStage implements Filterable,
         };
         docCodes.fillComboBoxWithALL(docCodeConsumer);
         
+    }
+
+    @Override
+    protected FilterOkayCancelController getOkayCancelController() {
+        return okayCancelController;
     }
     
 }
