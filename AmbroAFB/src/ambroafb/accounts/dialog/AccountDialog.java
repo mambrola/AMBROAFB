@@ -58,6 +58,7 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
     }
     
     // შევიდეს Dialogable-ში.
+    @Override
     public boolean anyComponentChanged(){
         return dialogController.anySceneComponentChanged();
     }

@@ -7,9 +7,10 @@ package ambroafb.params_general.dialog;
 
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.params_general.ParamGeneral;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -20,15 +21,15 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class ParamGeneralDialog extends UserInteractiveStage implements Dialogable {
+public class ParamGeneralDialog extends UserInteractiveDialogStage implements Dialogable {
     
     private ParamGeneral paramGeneral;
     private final ParamGeneral paramGeneralBackup;
     
-    private ParamGeneralDialogController dialogController;
+    private DialogController dialogController;
     
     public ParamGeneralDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "param_general_dialog_title", "/images/dialog.png");
+        super(owner, "param_general_dialog_title");
         
         ParamGeneral param;
         if (object == null)
@@ -41,9 +42,7 @@ public class ParamGeneralDialog extends UserInteractiveStage implements Dialogab
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/params_general/dialog/ParamGeneralDialog.fxml", null);
         dialogController = (ParamGeneralDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindParamGeneral(this.paramGeneral);
-        dialogController.setBackupParamGeneral(this.paramGeneralBackup);
-        dialogController.setNextVisibleAndActionParameters(buttonType);
+        dialogController.setSceneData(paramGeneral, paramGeneralBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -62,6 +61,11 @@ public class ParamGeneralDialog extends UserInteractiveStage implements Dialogab
     @Override
     public void operationCanceled() {
         paramGeneral = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
     
 }

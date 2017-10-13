@@ -8,15 +8,13 @@ package ambroafb.docs.types.custom.dialog;
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
-import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.DialogController;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
 
 /**
@@ -24,72 +22,36 @@ import javafx.scene.layout.VBox;
  *
  * @author dkobuladze
  */
-public class CustomDialogController implements Initializable {
+public class CustomDialogController extends DialogController {
 
     @FXML
     private VBox formPane;
     
     @FXML
     private DialogOkayCancelController okayCancelController;
-    
-    private ArrayList<Node> focusTraversableNodes;
-    private boolean permissionToClose;
-    private Doc doc, docBackup;
-    
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        permissionToClose = true;
-        
-    }
-    
-    public void bindDoc(Doc doc) {
-        this.doc = doc;
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
     }
 
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
-            setDisableComponents();
-        }
+    @Override
+    protected Parent getSceneRoot() {
+        return formPane;
+    }
+
+    @Override
+    protected void bindObjectToSceneComponents(EditorPanelable object) {
+    }
+
+    @Override
+    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
         DocOrderComponent lsComp = new DocOrderComponent();
-        lsComp.binTo(doc);
+        lsComp.binTo((Doc)sceneObject);
         lsComp.setDiableComponents(buttonType);
         formPane.getChildren().add(0, lsComp);
-        
-        okayCancelController.setButtonsFeatures(buttonType);
     }
     
-    private void setDisableComponents(){
-        focusTraversableNodes.forEach((Node t) -> {
-            t.setDisable(true);
-        });
-    }
-
-    public void setBackupDoc(Doc docBackup) {
-        this.docBackup = docBackup;
-    }
-    
-    public boolean anyComponentChanged(){
-        return !doc.compares(docBackup);
-    }
-    
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
-    
-    public boolean getPermissionToClose(){
-        return permissionToClose;
-    }
-    
-    public void operationCanceled(){
-        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
-    }
-    
+    @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }

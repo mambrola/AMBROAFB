@@ -6,18 +6,16 @@
 package ambroafb.params_general.dialog;
 
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
-import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.DialogController;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.minitables.attitudes.AttitudeComboBox;
 import ambroafb.minitables.merchandises.MerchandiseComboBox;
 import ambroafb.params_general.ParamGeneral;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -26,7 +24,7 @@ import javafx.scene.layout.VBox;
  *
  * @author dato
  */
-public class ParamGeneralDialogController implements Initializable {
+public class ParamGeneralDialogController extends DialogController {
 
     @FXML
     private VBox formPane;
@@ -40,30 +38,21 @@ public class ParamGeneralDialogController implements Initializable {
     private TextField param;
     @FXML
     private DialogOkayCancelController okayCancelController;
-    
-    private ArrayList<Node> focusTraversableNodes;
-    private ParamGeneral paramGeneral, paramGeneralBackup;
-    private boolean permissionToClose;
-    
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        permissionToClose = true;
-    }    
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
 
-
-    public boolean anyComponentChanged(){
-        return !paramGeneral.compares(paramGeneralBackup);
     }
 
-    void bindParamGeneral(ParamGeneral paramGeneral) {
-        this.paramGeneral = paramGeneral;
-        if (paramGeneral != null){
+    @Override
+    protected Parent getSceneRoot() {
+        return formPane;
+    }
+
+    @Override
+    protected void bindObjectToSceneComponents(EditorPanelable object) {
+        if (object != null){
+            ParamGeneral paramGeneral = (ParamGeneral)object;
             attitudes.valueProperty().bindBidirectional(paramGeneral.attitudeProperty());
             merchandises.valueProperty().bindBidirectional(paramGeneral.merchandiseProperty());
             paramType.textProperty().bindBidirectional(paramGeneral.paramTypeProperty());
@@ -71,37 +60,14 @@ public class ParamGeneralDialogController implements Initializable {
         }
     }
 
-    void setBackupParamGeneral(ParamGeneral paramGeneralBackup) {
-        this.paramGeneralBackup = paramGeneralBackup;
+    @Override
+    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
+        
     }
     
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
-            setDisableComponents();
-        }
-        okayCancelController.setButtonsFeatures(buttonType);
-    }
-
+    @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }
-
-    private void setDisableComponents() {
-        focusTraversableNodes.forEach((Node t) -> {
-            t.setDisable(true);
-        });
-    }
-    
-    public void operationCanceled(){
-        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
-    }
-    
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
-    
-    public boolean getPermissionToClose(){
-        return permissionToClose;
-    }  
     
 }

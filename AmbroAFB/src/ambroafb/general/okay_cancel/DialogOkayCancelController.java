@@ -5,12 +5,12 @@
  */
 package ambroafb.general.okay_cancel;
 
-import ambroafb.accounts.dialog.AccountDialog;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -83,19 +83,7 @@ public class DialogOkayCancelController implements Initializable {
                 });
                 alertText = "Close without saving changes?";    
                 cancel.setOnAction((ActionEvent event) -> {
-                    boolean anyFieldWasChanged;
-
-                    // ------------------- for test:
-                    String stageTitle = ((Stage)cancel.getScene().getWindow()).getTitle();
-                    if (stageTitle.equals(GeneralConfig.getInstance().getTitleFor("account_dialog_title"))){
-                        anyFieldWasChanged = ((AccountDialog)cancel.getScene().getWindow()).anyComponentChanged();
-                    }
-                    else {
-                        Object ownerObject = cancel.getScene().getProperties().get("controller");
-                        anyFieldWasChanged = (Boolean) Utils.getInvokedClassMethod(ownerObject.getClass(), "anyComponentChanged", null, ownerObject);
-                    }
-                    // ------------------------- 
-                    
+                    boolean anyFieldWasChanged = ((Dialogable)cancel.getScene().getWindow()).anyComponentChanged();;
                     if (anyFieldWasChanged) {
                         String stageName = ((Stage)okay.getScene().getWindow()).getTitle();
                         AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, stageName);
@@ -131,22 +119,10 @@ public class DialogOkayCancelController implements Initializable {
     
     private void operationCanceled(){
         ((Dialogable)cancel.getScene().getWindow()).operationCanceled();
-//        Object controller = cancel.getScene().getProperties().get("controller");
-//        Utils.getInvokedClassMethod(controller.getClass(), "operationCanceled", null, controller);
     }
 
     private void changeClosePermissionForStage(boolean value) {
-        // ------------------- for test:
-        String stageTitle = ((Stage)cancel.getScene().getWindow()).getTitle();
-        if (stageTitle.equals(GeneralConfig.getInstance().getTitleFor("account_dialog_title"))){
-            ((AccountDialog)cancel.getScene().getWindow()).changePermissionForClose(value);
-        }
-        else {
-            Stage stage = ((Stage) okay.getScene().getWindow());
-            Object controller = stage.getScene().getProperties().get("controller");
-            Utils.getInvokedClassMethod(controller.getClass(), "changePermissionForClose", new Class[]{boolean.class}, controller, value);
-        }
-        // ------------------- 
+        ((UserInteractiveDialogStage)cancel.getScene().getWindow()).changePermissionForClose(value);
     }
     
 }

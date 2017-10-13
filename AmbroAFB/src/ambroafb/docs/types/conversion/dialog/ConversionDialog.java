@@ -8,9 +8,10 @@ package ambroafb.docs.types.conversion.dialog;
 import ambroafb.docs.types.conversion.Conversion;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,14 +21,14 @@ import javafx.stage.WindowEvent;
  *
  * @author dkobuladze
  */
-public class ConversionDialog extends UserInteractiveStage implements Dialogable {
+public class ConversionDialog extends UserInteractiveDialogStage implements Dialogable {
 
     private Conversion conversion, conversionBackup;
     
-    private ConversionDialogController dialogController;
+    private DialogController dialogController;
     
     public ConversionDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, Names.LEVEL_FOR_PATH, "doc_conversion_dialog_title", "/images/dialog.png");
+        super(owner, "doc_conversion_dialog_title");
         
         if (object == null){
             conversion = new Conversion();
@@ -39,9 +40,7 @@ public class ConversionDialog extends UserInteractiveStage implements Dialogable
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/conversion/dialog/ConversionDialog.fxml", null);
         dialogController = (ConversionDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindObject(this.conversion); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
-        dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupDoc(this.conversionBackup);
+        dialogController.setSceneData(conversion, conversionBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -59,6 +58,11 @@ public class ConversionDialog extends UserInteractiveStage implements Dialogable
     @Override
     public void operationCanceled() {
         conversion = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
     
 }

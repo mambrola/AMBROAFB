@@ -7,9 +7,10 @@ package ambroafb.minitables.attitudes.dialog;
 
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.minitables.attitudes.Attitude;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -20,15 +21,15 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class AttitudeDialog extends UserInteractiveStage implements Dialogable {
+public class AttitudeDialog extends UserInteractiveDialogStage implements Dialogable {
 
     private Attitude attitude;
     private final Attitude attitudeBackup;
     
-    private AttitudeDialogController dialogController;
+    private DialogController dialogController;
     
     public AttitudeDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "attitude", "/images/dialog.png");
+        super(owner, "attitude");
         
         if (object == null)
             this.attitude = new Attitude();
@@ -38,9 +39,7 @@ public class AttitudeDialog extends UserInteractiveStage implements Dialogable {
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/minitables/attitudes/dialog/AttitudeDialog.fxml", null);
         dialogController = (AttitudeDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindAttitude(this.attitude);
-        dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupAttitude(this.attitudeBackup);
+        dialogController.setSceneData(attitude, attitudeBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -59,6 +58,11 @@ public class AttitudeDialog extends UserInteractiveStage implements Dialogable {
     @Override
     public void operationCanceled() {
         attitude = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
     
 }

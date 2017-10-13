@@ -6,12 +6,12 @@
 package ambroafb.clients.dialog;
 
 import ambroafb.clients.Client;
-import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,15 +21,15 @@ import javafx.stage.WindowEvent;
  *
  * @author tabramishvili
  */
-public class ClientDialog extends UserInteractiveStage implements Dialogable {
+public class ClientDialog extends UserInteractiveDialogStage implements Dialogable {
     
     public Client client;
     public final Client clientBackup;
     
-    private ClientDialogController dialogController;
+    private DialogController dialogController;
     
     public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner,  Names.LEVEL_FOR_PATH, "client_dialog_title", "/images/dialog.png");
+        super(owner, "client_dialog_title");
         
         if (object == null)
             client = new Client();
@@ -40,9 +40,7 @@ public class ClientDialog extends UserInteractiveStage implements Dialogable {
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml", null);
         dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindClient(this.client); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
-        dialogController.setNextVisibleAndActionParameters(buttonType, "/clients/passport/", client.getIsJur());
-        dialogController.setBackupClient(this.clientBackup);
+        dialogController.setSceneData(client, clientBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -60,6 +58,11 @@ public class ClientDialog extends UserInteractiveStage implements Dialogable {
     @Override
     public void operationCanceled(){
         client = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged() || client.getClientImageGallery().anyViewerChanged();
     }
 
 }

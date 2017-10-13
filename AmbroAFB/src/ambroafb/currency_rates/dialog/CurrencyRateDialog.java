@@ -8,9 +8,10 @@ package ambroafb.currency_rates.dialog;
 import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,15 +21,15 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class CurrencyRateDialog extends UserInteractiveStage implements Dialogable {
+public class CurrencyRateDialog extends UserInteractiveDialogStage implements Dialogable {
     
     private CurrencyRate currRate;
     private final CurrencyRate currRateBackup;
     
-    private CurrencyRateDialogController dialogController;
+    private DialogController dialogController;
     
     public CurrencyRateDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "currency_rate_dialog_title", "/images/dialog.png");
+        super(owner, "currency_rate_dialog_title");
         
         if (object == null)
             currRate = new CurrencyRate();
@@ -38,9 +39,7 @@ public class CurrencyRateDialog extends UserInteractiveStage implements Dialogab
         
         Scene scene = SceneUtils.createScene("/ambroafb/currency_rates/dialog/CurrencyRateDialog.fxml", null);
         dialogController = (CurrencyRateDialogController) scene.getProperties().get("controller");
-        dialogController.bindCurrencyRate(this.currRate);
-        dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupCurrencyRate(this.currRateBackup);
+        dialogController.setSceneData(currRate, currRateBackup, buttonType);
         this.setScene(scene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -59,6 +58,11 @@ public class CurrencyRateDialog extends UserInteractiveStage implements Dialogab
     @Override
     public void operationCanceled() {
         currRate = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
     
     

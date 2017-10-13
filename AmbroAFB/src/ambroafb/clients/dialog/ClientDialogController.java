@@ -11,11 +11,11 @@ import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.*;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import ambroafb.general.Utils;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.Annotations.ContentMail;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.DialogController;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.phones.PhoneComboBox;
 import authclient.AuthServerException;
@@ -34,8 +34,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -55,7 +54,7 @@ import org.json.JSONException;
  *
  * @author mambroladze
  */
-public class ClientDialogController implements Initializable {
+public class ClientDialogController extends DialogController {
     @FXML
     private VBox formPane, phonesContainer;
     @FXML
@@ -94,22 +93,14 @@ public class ClientDialogController implements Initializable {
     @FXML
     private HBox namesRootPane;
     
-    private ArrayList<Node> focusTraversableNodes;
     private final GeneralConfig conf = GeneralConfig.getInstance();
-    private Client client;
-    private Client clientBackup;
-    private boolean permissionToClose;
     
     private static final ObjectProperty<ClientStatus> statusProperty = new SimpleObjectProperty<>();
     
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
+    private final String serviceURLPrefix = "/clients/passport/";
+    
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
         juridical.setOnAction(this::switchJuridical);
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
@@ -120,9 +111,8 @@ public class ClientDialogController implements Initializable {
         });
         country.showCategoryAll(false);
         statuses.getItems().setAll(Client.getAllStatusFromDB());
-        permissionToClose = true;
     }
-    
+
     private void switchJuridical(ActionEvent e) {
         String delimiter = " ";
         if (((CheckBox) e.getSource()).isSelected()) {
@@ -170,10 +160,16 @@ public class ClientDialogController implements Initializable {
         ((VBox)idNumber.getParent()).getStyleClass().clear();
         ((VBox)idNumber.getParent()).getStyleClass().add(idNumberVBoxNewStyleClass);
     }
-    
-    public void bindClient(Client client) {
-        this.client = client;
-        if (client != null) {
+
+    @Override
+    protected Parent getSceneRoot() {
+        return formPane;
+    }
+
+    @Override
+    protected void bindObjectToSceneComponents(EditorPanelable object) {
+        if (object != null) {
+            Client client = (Client)object;
             openDate.setValue(client.getCreatedDateObj());
             juridical.selectedProperty().bindBidirectional(client.isJurProperty());
             rezident. selectedProperty().bindBidirectional(client.isRezProperty());
@@ -188,73 +184,40 @@ public class ClientDialogController implements Initializable {
             city.         textProperty().bindBidirectional(client.cityProperty());
             country.     valueProperty().bindBidirectional(client.countryProperty());
             statuses.      valueProperty().bindBidirectional(client.statusProperty());
-//            imageGalleryController = client.getClientImageGallery();
         }
     }
     
-    public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType, String serviceURLPrefix, boolean isJuridical) {
+    @Override
+    protected void makeExtraActions(EditorPanelable sceneObject, EDITOR_BUTTON_TYPE buttonType) {
         openDate.setDisable(true);
         boolean editable = true;
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
-            setDisableComponents();
             editable = false;
         }
+        Client client = (Client)sceneObj;
         if (client != null){
             PhoneComboBox phonesCombobox = new PhoneComboBox(client.getPhones(), editable);
             phonesContainer.getChildren().add(phonesCombobox);
-        }
-        if (!buttonType.equals(EDITOR_BUTTON_TYPE.ADD) && (client.getEmail() == null || client.getEmail().isEmpty())){
-            email.setDisable(true);
-        }
-        if (isJuridical){
-            changeSceneVisualAsFirm(" ");
-        }
-//        if (client.getStatus() == Client.SPECIFIC_STATUS){
-//            Utils.changeContentNotEmptyAnnotationValue(this, false);
-//        }
+            if (!buttonType.equals(EDITOR_BUTTON_TYPE.ADD) && (client.getEmail() == null || client.getEmail().isEmpty())){
+                email.setDisable(true);
+            }
+            if (client.getIsJur()){
+                changeSceneVisualAsFirm(" ");
+            }
+            imageGalleryController.setURLData(serviceURLPrefix, client.getRecId() + "/", client.getRecId() + "/all");
+            List<String> imageNames = client.getDocuments().stream().map((Client.Document doc) -> doc.path).collect(Collectors.toList());
+            imageGalleryController.downloadData(imageNames);
 
-        okayCancelController.setButtonsFeatures(buttonType);
-        imageGalleryController.setURLData(serviceURLPrefix, client.getRecId() + "/", client.getRecId() + "/all");
-        List<String> imageNames = client.getDocuments().stream().map((Client.Document doc) -> doc.path).collect(Collectors.toList());
-        imageGalleryController.downloadData(imageNames);
-        
-        this.client.setClientImageGallery(imageGalleryController);
-        statusProperty.bind(client.statusProperty());
-    }
-    
-    /**
-     * Disables all fields on Dialog stage.
-     */
-    private void setDisableComponents(){
-        focusTraversableNodes.forEach((Node t) -> {
-            t.setDisable(true);
-        });
-    }
-    
-    public void setBackupClient(Client backupClient){
-        this.clientBackup = backupClient;
-    }
-    
-    public boolean anyComponentChanged(){
-        return !client.compares(clientBackup) || imageGalleryController.anyViewerChanged();
-    }
-    
-    
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
-    
-    public boolean getPermissionToClose(){
-        return permissionToClose;
-    }
-    
-    public void operationCanceled(){
-        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
+            client.setClientImageGallery(imageGalleryController);
+            statusProperty.bind(client.statusProperty()); // static variable ???????????????
+        }
     }
 
+    @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }
+    
     
     private class BackgroundAccessToDB implements Runnable {
 
@@ -319,17 +282,17 @@ public class ClientDialogController implements Initializable {
 
         @Override
         public Predicate<String> and(Predicate<? super String> other) {
-            return Predicate.super.and(other); //To change body of generated methods, choose Tools | Templates.
+            return Predicate.super.and(other);
         }
 
         @Override
         public Predicate<String> negate() {
-            return Predicate.super.negate(); //To change body of generated methods, choose Tools | Templates.
+            return Predicate.super.negate();
         }
 
         @Override
         public Predicate<String> or(Predicate<? super String> other) {
-            return Predicate.super.or(other); //To change body of generated methods, choose Tools | Templates.
+            return Predicate.super.or(other);
         }
         
     }

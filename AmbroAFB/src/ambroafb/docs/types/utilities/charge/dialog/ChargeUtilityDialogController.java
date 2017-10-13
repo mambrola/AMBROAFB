@@ -11,19 +11,17 @@ import ambroafb.docs.DocMerchandiseComboBox;
 import ambroafb.docs.types.utilities.charge.ChargeUtility;
 import ambroafb.general.Names;
 import ambroafb.general.NumberConverter;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
-import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.DialogController;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -32,7 +30,7 @@ import javafx.scene.layout.VBox;
  *
  * @author dkobuladze
  */
-public class ChargeUtilityDialogController implements Initializable {
+public class ChargeUtilityDialogController extends DialogController {
 
     @FXML
     private VBox formPane;
@@ -56,20 +54,8 @@ public class ChargeUtilityDialogController implements Initializable {
     @FXML
     private DialogOkayCancelController okayCancelController;
     
-    private ArrayList<Node> focusTraversableNodes;
-    private ChargeUtility chargeUtility, chargeUtilityBackup;
-    private boolean permissionToClose;
-    
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        permissionToClose = true;
-        
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
         // Value change of utility also changes iso:
         utilities.valueProperty().addListener((ObservableValue<? extends DocMerchandise> observable, DocMerchandise oldValue, DocMerchandise newValue) -> {
             currency.setText(newValue.getIso());
@@ -79,7 +65,7 @@ public class ChargeUtilityDialogController implements Initializable {
         amount.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             changeVatFieldValue(newValue);
         });
-    }    
+    }
     
     private void changeVatFieldValue(String amount){
         String vatValue = "";
@@ -94,9 +80,15 @@ public class ChargeUtilityDialogController implements Initializable {
         vat.setText(vatValue);
     }
 
-    public void bindUtility(ChargeUtility chargeUtility) {
-        this.chargeUtility = chargeUtility;
-        if (chargeUtility != null){
+    @Override
+    protected Parent getSceneRoot() {
+        return formPane;
+    }
+
+    @Override
+    protected void bindObjectToSceneComponents(EditorPanelable object) {
+        if (object != null){
+            ChargeUtility chargeUtility = (ChargeUtility)object;
             utilities.valueProperty().bindBidirectional(chargeUtility.merchandiseProperty());
             docDate.valueProperty().bindBidirectional(chargeUtility.docDateProperty());
             docInDocDate.valueProperty().bindBidirectional(chargeUtility.docInDocDateProperty());
@@ -106,40 +98,12 @@ public class ChargeUtilityDialogController implements Initializable {
         }
     }
 
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
-            setDisableComponents();
-        }
-        okayCancelController.setButtonsFeatures(buttonType);
-    }
-    
-    private void setDisableComponents(){
-        focusTraversableNodes.forEach((Node t) -> {
-            t.setDisable(true);
-        });
+    @Override
+    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
+        
     }
 
-    public void setBackupCharge(ChargeUtility chargeUtilityBackup) {
-        this.chargeUtilityBackup = chargeUtilityBackup;
-    }
-    
-    
-    public boolean anyComponentChanged(){
-        return !chargeUtility.compares(chargeUtilityBackup);
-    }
-    
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
-    
-    public boolean getPermissionToClose(){
-        return permissionToClose;
-    }
-    
-    public void operationCanceled(){
-        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
-    }
-    
+    @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }

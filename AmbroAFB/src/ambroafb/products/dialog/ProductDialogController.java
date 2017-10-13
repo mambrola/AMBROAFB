@@ -7,11 +7,11 @@ package ambroafb.products.dialog;
 
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.ContentMapEditor;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
-import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.DialogController;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.mapeditor.MapEditor;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
@@ -19,11 +19,9 @@ import ambroafb.general.scene_components.number_fields.integer_field.IntegerFiel
 import ambroafb.products.Product;
 import ambroafb.products.ProductsSpecificsComboBox;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -33,7 +31,7 @@ import javafx.scene.layout.VBox;
  *
  * @author dato
  */
-public class ProductDialogController implements Initializable {
+public class ProductDialogController extends DialogController {
 
     @FXML
     private VBox formPane;
@@ -59,27 +57,21 @@ public class ProductDialogController implements Initializable {
     
     @FXML
     private DialogOkayCancelController okayCancelController;
-    
-    private ArrayList<Node> focusTraversableNodes;
-    private Product product, productBackup;
-    private boolean permissionToClose;
-    
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-//        Utils.validateTextFieldContentListener(former, "[0-9]{1,2}");
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
         currencies.fillComboBoxWithoutALLAndWithoutRatesBasicIso(null);
-        permissionToClose = true;
     }
 
-    public void bindProduct(Product product) {
-        this.product = product;
-        if (product != null){
+    @Override
+    protected Parent getSceneRoot() {
+        return formPane;
+    }
+
+    @Override
+    protected void bindObjectToSceneComponents(EditorPanelable object) {
+        if (object != null){
+            Product product = (Product) object;
             abbreviation.textProperty().bindBidirectional(product.abbreviationProperty());
             former.textProperty().bindBidirectional(product.formerProperty());
             descrip.textProperty().bindBidirectional(product.descriptionProperty());
@@ -92,43 +84,17 @@ public class ProductDialogController implements Initializable {
             testingDays.textProperty().bindBidirectional(product.testingDaysProperty());
         }
     }
-    
-    public boolean anyComponentChanged(){
-        return !product.compares(productBackup);
-    }
 
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
+    @Override
+    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
-            setDisableComponents();
             discounts.changeState(true);
         }
-        okayCancelController.setButtonsFeatures(buttonType);
     }
 
-    public void setBackupProduct(Product productBackup) {
-        this.productBackup = productBackup;
-    }
-
+    @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
-    }
-
-    private void setDisableComponents() {
-        focusTraversableNodes.forEach((Node t) -> {
-            t.setDisable(true);
-        });
-    }
-    
-    public void operationCanceled(){
-        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
-    }
-    
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
-    
-    public boolean getPermissionToClose(){
-        return permissionToClose;
     }
     
 }

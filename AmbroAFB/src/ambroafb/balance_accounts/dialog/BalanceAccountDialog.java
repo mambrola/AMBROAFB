@@ -8,9 +8,10 @@ package ambroafb.balance_accounts.dialog;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,15 +21,15 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class BalanceAccountDialog extends UserInteractiveStage implements Dialogable {
+public class BalanceAccountDialog extends UserInteractiveDialogStage implements Dialogable {
     
     private BalanceAccount balAccount;
     private final BalanceAccount balAccountBackup;
     
-    private BalanceAccountDialogController dialogController;
+    private DialogController dialogController;
     
     public BalanceAccountDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "balaccount_dialog_title", "/images/dialog.png");
+        super(owner, "balaccount_dialog_title");
         
         BalanceAccount balAccountObject;
         if (object == null)
@@ -41,9 +42,7 @@ public class BalanceAccountDialog extends UserInteractiveStage implements Dialog
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/balance_accounts/dialog/BalanceAccountDialog.fxml", null);
         dialogController = (BalanceAccountDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindBalAccount(this.balAccount);
-        dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupBalAccount(this.balAccountBackup);
+        dialogController.setSceneData(balAccount, balAccountBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -62,5 +61,10 @@ public class BalanceAccountDialog extends UserInteractiveStage implements Dialog
     @Override
     public void operationCanceled() {
         balAccount = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
 }

@@ -9,19 +9,17 @@ import ambro.ADatePicker;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Annotations.ContentRate;
-import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.DialogController;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.rate_field.RateField;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -30,7 +28,7 @@ import javafx.scene.layout.VBox;
  *
  * @author dato
  */
-public class CurrencyRateDialogController implements Initializable {
+public class CurrencyRateDialogController extends DialogController {
 
     @FXML
     private VBox formPane;
@@ -51,27 +49,21 @@ public class CurrencyRateDialogController implements Initializable {
     @FXML
     private DialogOkayCancelController okayCancelController;
     
-    private ArrayList<Node> focusTraversableNodes;
-    
-    private CurrencyRate currencyRate;
-    private CurrencyRate currencyRateBackup;
-    private boolean permissionToClose;
-    
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
         currencies.fillComboBoxWithoutALLAndWithoutRatesBasicIso(null);
-        permissionToClose = true;
+    }
+    
+    @Override
+    protected Parent getSceneRoot() {
+        return formPane;
     }
 
-    public void bindCurrencyRate(CurrencyRate currRate) {
-        this.currencyRate = currRate;
-        if (currRate != null){
+    @Override
+    protected void bindObjectToSceneComponents(EditorPanelable object) {
+        if (object != null){
+            CurrencyRate currRate = (CurrencyRate)object;
             currRateDate.valueProperty().bindBidirectional(currRate.dateProperty());
             currencies.valueProperty().bindBidirectional(currRate.currencyProperty());
             count.textProperty().bindBidirectional(currRate.countProperty());
@@ -79,43 +71,13 @@ public class CurrencyRateDialogController implements Initializable {
         }
     }
 
-    public void setNextVisibleAndActionParameters(EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
-            setDisableComponents();
-        }
-        okayCancelController.setButtonsFeatures(buttonType);
+    @Override
+    protected void makeExtraActions(EditorPanelable sceneObject, EDITOR_BUTTON_TYPE buttonType) {
+
     }
 
-    /**
-     * Disables all fields on Dialog stage.
-     */
-    private void setDisableComponents(){
-        focusTraversableNodes.forEach((Node t) -> {
-            t.setDisable(true);
-        });
-    }
-    
-    public void setBackupCurrencyRate(CurrencyRate currRateBackup) {
-        this.currencyRateBackup = currRateBackup;
-    }
-
+    @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
-    }
-    
-    public boolean anyComponentChanged(){
-        return !currencyRate.compares(currencyRateBackup);
-    }
-    
-    public void operationCanceled(){
-        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
-    }
-    
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
-    
-    public boolean getPermissionToClose(){
-        return permissionToClose;
     }
 }

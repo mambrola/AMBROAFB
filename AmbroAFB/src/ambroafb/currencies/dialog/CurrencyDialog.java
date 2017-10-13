@@ -8,9 +8,10 @@ package ambroafb.currencies.dialog;
 import ambroafb.currencies.Currency;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,15 +21,15 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class CurrencyDialog extends UserInteractiveStage implements Dialogable {
+public class CurrencyDialog extends UserInteractiveDialogStage implements Dialogable {
 
     private Currency currency;
     private final Currency currencyBackup;
     
-    private CurrencyDialogController dialogController;
+    private DialogController dialogController;
     
     public CurrencyDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "currency_dialog_title", "/images/dialog.png");
+        super(owner, "currency_dialog_title");
         
         if (object == null)
             this.currency = new Currency();
@@ -38,9 +39,7 @@ public class CurrencyDialog extends UserInteractiveStage implements Dialogable {
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/currencies/dialog/CurrencyDialog.fxml", null);
         dialogController = (CurrencyDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindCurrency(this.currency);
-        dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupCurrency(this.currencyBackup);
+        dialogController.setSceneData(currency, currencyBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -59,6 +58,11 @@ public class CurrencyDialog extends UserInteractiveStage implements Dialogable {
     @Override
     public void operationCanceled() {
         currency = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
     
 }

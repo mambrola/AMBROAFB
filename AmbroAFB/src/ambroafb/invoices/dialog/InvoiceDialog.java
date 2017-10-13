@@ -7,9 +7,10 @@ package ambroafb.invoices.dialog;
 
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.invoices.Invoice;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -20,15 +21,15 @@ import javafx.stage.WindowEvent;
  *
  * @author tabramishvili
  */
-public class InvoiceDialog extends UserInteractiveStage implements Dialogable {
+public class InvoiceDialog extends UserInteractiveDialogStage implements Dialogable {
 
     private Invoice invoice;
     private final Invoice invoiceBackup;
     
-    private InvoiceDialogController dialogController;
+    private DialogController dialogController;
     
     public InvoiceDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "invoice_dialog_title", "/images/dialog.png");
+        super(owner, "invoice_dialog_title");
         
         Invoice invoiceObject;
         if (object == null)
@@ -41,9 +42,7 @@ public class InvoiceDialog extends UserInteractiveStage implements Dialogable {
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/invoices/dialog/InvoiceDialog.fxml", null);
         dialogController = (InvoiceDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindInvoice(this.invoice);
-        dialogController.setBackupInvoice(this.invoiceBackup);
-        dialogController.setNextVisibleAndActionParameters(buttonType);
+        dialogController.setSceneData(invoice, invoiceBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -62,6 +61,11 @@ public class InvoiceDialog extends UserInteractiveStage implements Dialogable {
     @Override
     public void operationCanceled() {
         invoice = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
 
 }

@@ -9,17 +9,15 @@ import ambro.ADatePicker;
 import ambroafb.currencies.Currency;
 import ambroafb.currencies.IsoComboBox;
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
-import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.DialogController;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -28,7 +26,7 @@ import javafx.scene.layout.VBox;
  *
  * @author dato
  */
-public class CurrencyDialogController implements Initializable {
+public class CurrencyDialogController extends DialogController {
 
     @FXML
     private VBox formPane;
@@ -42,27 +40,20 @@ public class CurrencyDialogController implements Initializable {
     private TextField symbol;
     @FXML
     private DialogOkayCancelController okayCancelController;
-    
-    private ArrayList<Node> focusTraversableNodes;
-    private Currency currency, currencyBackup;
-    private boolean permissionToClose;
-    
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-//        Utils.validateTextFieldContentListener(symbol, "\\p{Sc}");
-        permissionToClose = true;
-    }    
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
+    }
 
-
-    public void bindCurrency(Currency currency) {
-        this.currency = currency;
-        if (currency != null){
+    @Override
+    protected Parent getSceneRoot() {
+        return formPane;
+    }
+    
+    @Override
+    protected void bindObjectToSceneComponents(EditorPanelable object) {
+        if (object != null){
+            Currency currency = (Currency)object;
             openDate.valueProperty().bindBidirectional(currency.dateProperty());
             iso.valueProperty().bindBidirectional(currency.isoProperty());
             descrip.textProperty().bindBidirectional(currency.descripProperty());
@@ -70,44 +61,16 @@ public class CurrencyDialogController implements Initializable {
         }
     }
 
-    public boolean anyComponentChanged(){
-        return !currency.compares(currencyBackup);
-    }
-
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
+    @Override
+    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
         openDate.setDisable(true);
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
-            setDisableComponents();
-        }
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
             iso.setEditable(true);
         }
-        okayCancelController.setButtonsFeatures(buttonType);
     }
 
-    public void setBackupCurrency(Currency currencyBackup) {
-        this.currencyBackup = currencyBackup;
-    }
-
+    @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
-    }
-
-    private void setDisableComponents() {
-        focusTraversableNodes.forEach((Node t) -> {
-            t.setDisable(true);
-        });
-    }
-    
-    public void operationCanceled(){
-        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
-    }
-    
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
-    
-    public boolean getPermissionToClose(){
-        return permissionToClose;
     }
 }

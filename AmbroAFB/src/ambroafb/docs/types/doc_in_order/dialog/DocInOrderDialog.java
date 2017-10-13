@@ -8,9 +8,10 @@ package ambroafb.docs.types.doc_in_order.dialog;
 import ambroafb.docs.types.doc_in_order.DocInOrder;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,14 +21,14 @@ import javafx.stage.WindowEvent;
  *
  * @author dkobuladze
  */
-public class DocInOrderDialog extends UserInteractiveStage implements Dialogable{
+public class DocInOrderDialog extends UserInteractiveDialogStage implements Dialogable{
 
     private DocInOrder docInOrder, docInOrderBackup;
     
-    private DocInOrderDialogController dialogController;
+    private DialogController dialogController;
     
     public DocInOrderDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner, String stageTitleBundleKey) {
-        super(owner, Names.LEVEL_FOR_PATH, stageTitleBundleKey, "/images/dialog.png");
+        super(owner, stageTitleBundleKey);
         
         if (object == null){
             docInOrder = new DocInOrder();
@@ -39,9 +40,7 @@ public class DocInOrderDialog extends UserInteractiveStage implements Dialogable
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/doc_in_order/dialog/DocInOrderDialog.fxml", null);
         dialogController = (DocInOrderDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindMonthly(this.docInOrder); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
-        dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupCharge(this.docInOrderBackup);
+        dialogController.setSceneData(docInOrder, docInOrderBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -63,6 +62,11 @@ public class DocInOrderDialog extends UserInteractiveStage implements Dialogable
     @Override
     public void operationCanceled() {
         docInOrder = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
     
 }

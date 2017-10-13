@@ -8,9 +8,10 @@ package ambroafb.docs.types.utilities.payment.dialog;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,14 +21,14 @@ import javafx.stage.WindowEvent;
  *
  * @author dkobuladze
  */
-public class PaymentUtilityDialog extends UserInteractiveStage implements Dialogable {
+public class PaymentUtilityDialog extends UserInteractiveDialogStage implements Dialogable {
 
     private PaymentUtility paymentUtility, paymentUtilityBackup;
     
-    private PaymentUtilityDialogController dialogController;
+    private DialogController dialogController;
     
     public PaymentUtilityDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner,  Names.LEVEL_FOR_PATH, "doc_payment_utility_dialog_title", "/images/dialog.png");
+        super(owner, "doc_payment_utility_dialog_title");
 
         if (object == null){
             paymentUtility = new PaymentUtility();
@@ -39,9 +40,7 @@ public class PaymentUtilityDialog extends UserInteractiveStage implements Dialog
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/utilities/payment/dialog/PaymentUtilityDialog.fxml", null);
         dialogController = (PaymentUtilityDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindUtility(this.paymentUtility); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
-        dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupPayment(this.paymentUtilityBackup);
+        dialogController.setSceneData(paymentUtility, paymentUtilityBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -59,5 +58,10 @@ public class PaymentUtilityDialog extends UserInteractiveStage implements Dialog
     @Override
     public void operationCanceled(){
         paymentUtility = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
 }

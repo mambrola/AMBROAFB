@@ -17,7 +17,8 @@ import ambroafb.general.countcombobox.CountComboBox;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
-import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.DialogController;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.monthcountercombobox.MonthCounterComboBox;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -44,8 +45,7 @@ import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -60,7 +60,7 @@ import org.json.JSONObject;
  *
  * @author dato
  */
-public class InvoiceDialogController implements Initializable {
+public class InvoiceDialogController extends DialogController {
 
     // The order is needed for required components show ordering on scene:
     // start order:
@@ -94,23 +94,19 @@ public class InvoiceDialogController implements Initializable {
                     netoText, netoNumber, vatText, vatNumber, payText, payNumber;
     
     
-    private ArrayList<Node> focusTraversableNodes;
-    private Invoice invoice;
-    private Invoice invoiceBackup;
-    private boolean permissionToClose;
     private String colonDelimiter = ":";
     private String percentDelimiter = "%";
     private Names.EDITOR_BUTTON_TYPE editorPanelButtonType;
     private Runnable financesFromSuitedLicense;
-    
+
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
+//        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
         
         clients.fillComboBoxOnlyClients(null);
         products.getItems().addAll(Product.getAllFromDB());
-        permissionToClose = true;
+//        permissionToClose = true;
 
         financesFromSuitedLicense = new RecalcFinancesInBackground();
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
@@ -120,7 +116,7 @@ public class InvoiceDialogController implements Initializable {
             }
         });
         products.showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (oldValue != null && !newValue && !Utils.compareProductsCounter(invoice.getProductsWithCounts(), invoiceBackup.getProductsWithCounts())) {
+            if (oldValue != null && !newValue && !Utils.compareProductsCounter(((Invoice)sceneObj).getProductsWithCounts(), ((Invoice)backupObj).getProductsWithCounts())) {
                 System.out.println("rebindFinance from products");
                 rebindFinanceData();
             }
@@ -146,7 +142,6 @@ public class InvoiceDialogController implements Initializable {
         });
         
         setFinanceDataToDefaultText();
-        
     }
     
     private void setFinanceDataToDefaultText(){
@@ -203,9 +198,20 @@ public class InvoiceDialogController implements Initializable {
                 monthCounter.getValue() != null;
     }
 
-    public void bindInvoice(Invoice invoice) {
-        this.invoice = invoice;
-        if (invoice != null){
+    public CountComboBox getProductsComboBox(){
+        return products;
+    }
+
+    @Override
+    protected Parent getSceneRoot() {
+        return formPane;
+    }
+    
+
+    @Override
+    protected void bindObjectToSceneComponents(EditorPanelable object) {
+        if (object != null){
+            Invoice invoice = (Invoice)object;
             createdDate.setValue(invoice.getCreatedDateObj());
             invoiceNumber.textProperty().bindBidirectional(invoice.invoiceNumberProperty());
             status.textProperty().bindBidirectional(invoice.getInvoiceStatus().descripProperty());
@@ -226,19 +232,16 @@ public class InvoiceDialogController implements Initializable {
             processFinanceData(invoice.getInvoiceFinances());
         }
     }
-    
-    public CountComboBox getProductsComboBox(){
-        return products;
-    }
-    
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
+
+    @Override
+    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
         editorPanelButtonType = buttonType;
         
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
-            setDisableComponents();
             products.changeState(true);
         }
         
+        Invoice invoice = (Invoice)sceneObject;
         // This is Dialog "new" and not add by simple, which EDITOR_BUTTON_TYPE is also NEW.
         if (invoice != null && invoice.getInvoiceFinances().isEmpty()){
             setShowFinanceData(true, false);
@@ -248,11 +251,11 @@ public class InvoiceDialogController implements Initializable {
             // Note: We changed objects field but is also change scene field values because of bidirectional binding.
             invoice.beginDateProperty().set(null); // It is needed for beginDate valuePropety listener, that it does not go to DB for finances.
             invoice.beginDateProperty().set(LocalDate.now());
-            invoiceBackup.beginDateProperty().set(LocalDate.now());
+            ((Invoice)backupObj).beginDateProperty().set(LocalDate.now());
             
             InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
             invoice.reissuingProperty().set(defaultReissuing);
-            invoiceBackup.reissuingProperty().set(defaultReissuing);
+            ((Invoice)backupObj).reissuingProperty().set(defaultReissuing);
             
             if (clients.getValue() != null){ // add by simple
                 invoice.setInvoiceNumber("");
@@ -260,7 +263,7 @@ public class InvoiceDialogController implements Initializable {
                 invoice.getLicenses().clear();
                 
                 Consumer<Invoice> updateInvoiceBackup = (Invoice inv) -> {
-                    invoiceBackup.copyFrom(inv);
+                    ((Invoice)backupObj).copyFrom(inv);
                 };
                 if (isEveryNessesaryFieldValid()){
                     // we need new license numbers:
@@ -268,40 +271,9 @@ public class InvoiceDialogController implements Initializable {
                 }
             }
         }
-        
-        okayCancelController.setButtonsFeatures(buttonType);
     }
     
-    /**
-     * Disables all fields on Dialog stage.
-     */
-    private void setDisableComponents(){
-        focusTraversableNodes.forEach((Node t) -> {
-            t.setDisable(true);
-        });
-    }
-    
-    public void setBackupInvoice(Invoice invoiceBackup) {
-        this.invoiceBackup = invoiceBackup;
-    }
-
-    public boolean anyComponentChanged(){
-        return !invoice.compares(invoiceBackup);
-    }
-
-    
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
-    
-    public boolean getPermissionToClose(){
-        return permissionToClose;
-    }
-    
-    public void operationCanceled(){
-        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
-    }
-
+    @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }
@@ -341,7 +313,7 @@ public class InvoiceDialogController implements Initializable {
                 calculateFinaceData();
                 
                 Platform.runLater(() -> {
-                    processFinanceData(invoice.getInvoiceFinances());
+                    processFinanceData(((Invoice)sceneObj).getInvoiceFinances());
                     masker.setVisible(false);
                 });
                 semLock.release();
@@ -365,24 +337,24 @@ public class InvoiceDialogController implements Initializable {
 //            System.out.println("rebindFinanceData -> productsArray minda: " + productsArray);
 
             Integer invoiceId = null;
-            if (invoice.getRecId() != 0 && !editorPanelButtonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
-                invoiceId = invoice.getRecId();
+            if (((Invoice)sceneObj).getRecId() != 0 && !editorPanelButtonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
+                invoiceId = ((Invoice)sceneObj).getRecId();
             }
             
-            Float discount = invoice.getAdditionalDiscountRate();
+            Float discount = ((Invoice)sceneObj).getAdditionalDiscountRate();
 //            String discount = invoice.getAdditionalDiscountRate();
 //            if (discount == null || discount.isEmpty()) {
 //                discount = null;
 //            }
             
             JSONArray licensesIds = new JSONArray();
-            invoice.getLicenses().forEach((licenseShortData) -> {
+            ((Invoice)sceneObj).getLicenses().forEach((licenseShortData) -> {
                 licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
             });
 //            System.out.println("maqvs  license_ids: " + licensesIds);
 
             try {
-                DBUtils.callInvoiceSuitedLicenses(invoiceId, invoice.getClientId(), invoice.beginDateProperty().get(), invoice.endDateProperty().get(), productsArray, discount, licensesIds);
+                DBUtils.callInvoiceSuitedLicenses(invoiceId, ((Invoice)sceneObj).getClientId(), ((Invoice)sceneObj).beginDateProperty().get(), ((Invoice)sceneObj).endDateProperty().get(), productsArray, discount, licensesIds);
             } catch (AuthServerException ex) {
                 JSONObject json = Utils.getJsonFrom(ex.getMessage());
                 if (json == null) return;
@@ -403,8 +375,8 @@ public class InvoiceDialogController implements Initializable {
             ArrayList<LicenseFinaces> licenseFinances = DBUtils.getLicensesFinaces();
             ArrayList<InvoiceFinaces> invoiceFinances = DBUtils.getInvoicesFinaces();
 
-            invoice.setLicenseFinances(licenseFinances);
-            invoice.setInvoiceFinances(invoiceFinances);
+            ((Invoice)sceneObj).setLicenseFinances(licenseFinances);
+            ((Invoice)sceneObj).setInvoiceFinances(invoiceFinances);
             List<Invoice.LicenseShortData> wholeLicenses = invoiceLicenses.stream().map((license) -> {
                 Invoice.LicenseShortData shortData = new Invoice.LicenseShortData();
                 shortData.setLicenseId(license.recId);
@@ -415,12 +387,12 @@ public class InvoiceDialogController implements Initializable {
                 return shortData;
             }).collect(Collectors.toList());
             
-            invoice.setLicenses(wholeLicenses);
+            ((Invoice)sceneObj).setLicenses(wholeLicenses);
             
 //            System.out.println("invoice new licenses: " + invoice.getLicenses().toString());
             
             if (callBack != null){
-                callBack.accept(invoice);
+                callBack.accept(((Invoice)sceneObj));
             }
         }
         
@@ -432,7 +404,7 @@ public class InvoiceDialogController implements Initializable {
                 String prodId = StringUtils.substringBetween(currErrorText, "product:", "count:").trim();
                 String prodCurrCount = StringUtils.substringBetween(currErrorText, "count:", "max:").trim();
                 String prodMaxCount = StringUtils.substringAfter(currErrorText, "max:").trim();
-                Product appProduct = (Product)invoice.getProductsWithCounts().keySet().stream().filter((CountComboBoxItem p) -> ((Product)p).getRecId() == Integer.parseInt(prodId)).collect(Collectors.toList()).get(0);
+                Product appProduct = (Product)((Invoice)sceneObj).getProductsWithCounts().keySet().stream().filter((CountComboBoxItem p) -> ((Product)p).getRecId() == Integer.parseInt(prodId)).collect(Collectors.toList()).get(0);
                 if (appProduct != null) {
                     msg += appProduct.getDescrip() + " -> " + GeneralConfig.getInstance().getTitleFor("max_count") + ": " + prodMaxCount + "\n";
                 }

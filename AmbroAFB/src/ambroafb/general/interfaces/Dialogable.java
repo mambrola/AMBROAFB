@@ -35,9 +35,9 @@ public interface Dialogable {
      */
     public void operationCanceled();
     
-//    /**
-//     * The method checks changed or not any field on dialog scene.
-//     * @return True - if any field changed. False - otherwise.
-//     */
-//    public boolean anyComponentChanged();
+    /**
+     * The method checks changed or not any field on dialog scene.
+     * @return True - if any field changed. False - otherwise.
+     */
+    public boolean anyComponentChanged();
 }

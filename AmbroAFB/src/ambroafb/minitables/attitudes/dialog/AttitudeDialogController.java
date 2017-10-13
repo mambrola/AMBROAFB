@@ -6,16 +6,14 @@
 package ambroafb.minitables.attitudes.dialog;
 
 import ambroafb.general.Names;
-import ambroafb.general.Utils;
-import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.DialogController;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.minitables.attitudes.Attitude;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -24,75 +22,40 @@ import javafx.scene.layout.VBox;
  *
  * @author dato
  */
-public class AttitudeDialogController implements Initializable {
+public class AttitudeDialogController extends DialogController {
 
     @FXML
     private VBox formPane;
     @FXML
     private TextField descrip;
     
-    private Attitude attitude;
-    private Attitude attitudeBackup;
-    
-    private ArrayList<Node> focusTraversableNodes;
-    private boolean permissionToClose;
-    
     @FXML
     private DialogOkayCancelController okayCancelController;
-    
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        permissionToClose = true;
-    }    
 
-    public void bindAttitude(Attitude attitude) {
-        this.attitude = attitude;
-        if (attitude != null){
+    @Override
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
+    }
+    
+    @Override
+    protected Parent getSceneRoot() {
+        return formPane;
+    }
+
+    @Override
+    protected void bindObjectToSceneComponents(EditorPanelable object) {
+        if (object != null){
+            Attitude attitude = (Attitude)object;
             descrip.textProperty().bindBidirectional(attitude.descripProperty());
         }
     }
 
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
-            setDisableComponents();
-        }
-        okayCancelController.setButtonsFeatures(buttonType);
+    @Override
+    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
+        
     }
 
-    private void setDisableComponents() {
-        focusTraversableNodes.forEach((Node t) -> {
-            t.setDisable(true);
-        });
-    }
-    
-    public void setBackupAttitude(Attitude attitudeBackup) {
-        this.attitudeBackup = attitudeBackup;
-    }
-
+    @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
-    }
-    
-    
-    public void operationCanceled(){
-        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
-    }
-    
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
-    
-    public boolean getPermissionToClose(){
-        return permissionToClose;
-    }
-    
-    public boolean anyComponentChanged(){
-        return !attitude.compares(attitudeBackup);
     }
 }

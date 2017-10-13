@@ -12,20 +12,18 @@ import ambroafb.docs.types.conversion.Conversion;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.NumberConverter;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
-import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.DialogController;
+import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -35,7 +33,7 @@ import javafx.scene.layout.VBox;
  *
  * @author dkobuladze
  */
-public class ConversionDialogController implements Initializable {
+public class ConversionDialogController extends DialogController {
 
     @FXML
     private VBox formPane;
@@ -64,26 +62,14 @@ public class ConversionDialogController implements Initializable {
     @FXML
     private DialogOkayCancelController okayCancelController;
     
-    private ArrayList<Node> focusTraversableNodes;
-    private boolean permissionToClose;
-    private Conversion conversion, conversionBackup;
-    
     private boolean rateTopToBottomDirection = true;
     private final String purchaseRateTitle = GeneralConfig.getInstance().getTitleFor("purchase_rate");
     private final String inverseRateTitle = GeneralConfig.getInstance().getTitleFor("inverse_rate");
-    
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
-        permissionToClose = true;
-        
-        sellAccount.fillComboBoxWithoutALL(null);
-        buyingAccount.fillComboBoxWithoutALL(null);
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
+//        sellAccount.fillComboBoxWithoutALL(null);
+//        buyingAccount.fillComboBoxWithoutALL(null);
         
         sellCurrency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             sellAccount.filterBy(newValue);
@@ -100,6 +86,26 @@ public class ConversionDialogController implements Initializable {
         buyingAmount.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             changeRateText(sellAmount.getText(), newValue);
         });
+    }
+
+    @Override
+    protected Parent getSceneRoot() {
+        return formPane;
+    }
+
+    @Override
+    protected void bindObjectToSceneComponents(EditorPanelable object) {
+        if(object != null){
+            Conversion conversion = (Conversion)object;
+            docDate.valueProperty().bindBidirectional(conversion.docDateProperty());
+            docInDocDate.valueProperty().bindBidirectional(conversion.docInDocDateProperty());
+            sellCurrency.valueProperty().bindBidirectional(conversion.sellCurrencyProperty());
+            buyingCurrency.valueProperty().bindBidirectional(conversion.buyingCurrencyProperty());
+            sellAccount.valueProperty().bindBidirectional(conversion.sellAccountProperty());
+            buyingAccount.valueProperty().bindBidirectional(conversion.buyingAccountProperty());
+            sellAmount.textProperty().bindBidirectional(conversion.sellAmountProperty());
+            buyingAmount.textProperty().bindBidirectional(conversion.buyingAmountProperty());
+        }
     }
     
     @FXML
@@ -124,24 +130,12 @@ public class ConversionDialogController implements Initializable {
         currentRate.setText(rateResult);
     }
 
-    public void bindObject(Conversion conversion) {
-        this.conversion = conversion;
-        if(conversion != null){
-            docDate.valueProperty().bindBidirectional(conversion.docDateProperty());
-            docInDocDate.valueProperty().bindBidirectional(conversion.docInDocDateProperty());
-            sellCurrency.valueProperty().bindBidirectional(conversion.sellCurrencyProperty());
-            buyingCurrency.valueProperty().bindBidirectional(conversion.buyingCurrencyProperty());
-            sellAccount.valueProperty().bindBidirectional(conversion.sellAccountProperty());
-            buyingAccount.valueProperty().bindBidirectional(conversion.buyingAccountProperty());
-            sellAmount.textProperty().bindBidirectional(conversion.sellAmountProperty());
-            buyingAmount.textProperty().bindBidirectional(conversion.buyingAmountProperty());
-        }
-    }
-
-    public void setNextVisibleAndActionParameters(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
-            setDisableComponents();
-        }
+    @Override
+    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
+        // consumers
+        sellAccount.fillComboBoxWithoutALL(null);
+        buyingAccount.fillComboBoxWithoutALL(null);
+        
 //        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
 //            conversion.setDocDate(LocalDate.now().toString());
 //            conversion.setDocInDocDate(LocalDate.now().toString());
@@ -149,35 +143,9 @@ public class ConversionDialogController implements Initializable {
 //            conversion.setBuyingAmount(0f);
 //            conversionBackup.copyFrom(conversion.cloneWithID());
 //        }
-        okayCancelController.setButtonsFeatures(buttonType);
     }
 
-    private void setDisableComponents(){
-        focusTraversableNodes.forEach((Node t) -> {
-            t.setDisable(true);
-        });
-    }
-    
-    public void setBackupDoc(Conversion conversionBackup) {
-        this.conversionBackup = conversionBackup;
-    }
-    
-    public boolean anyComponentChanged(){
-        return !conversion.compares(conversionBackup);
-    }
-    
-    public void changePermissionForClose(boolean value){
-        permissionToClose = value;
-    }
-    
-    public boolean getPermissionToClose(){
-        return permissionToClose;
-    }
-    
-    public void operationCanceled(){
-        ((Dialogable)formPane.getScene().getWindow()).operationCanceled();
-    }
-
+    @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }

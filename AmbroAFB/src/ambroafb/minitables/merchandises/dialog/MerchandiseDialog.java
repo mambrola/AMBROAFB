@@ -7,9 +7,10 @@ package ambroafb.minitables.merchandises.dialog;
 
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.minitables.merchandises.Merchandise;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -20,15 +21,15 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class MerchandiseDialog extends UserInteractiveStage implements Dialogable {
+public class MerchandiseDialog extends UserInteractiveDialogStage implements Dialogable {
     
     private Merchandise merchandise;
     private final Merchandise merchandiseBackup;
     
-    private MerchandiseDialogController dialogController;
+    private DialogController dialogController;
     
     public MerchandiseDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, Names.LEVEL_FOR_PATH, "merchandise", "/images/dialog.png");
+        super(owner, "merchandise");
         
         if (object == null)
             this.merchandise = new Merchandise();
@@ -38,9 +39,7 @@ public class MerchandiseDialog extends UserInteractiveStage implements Dialogabl
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/minitables/merchandises/dialog/MerchandiseDialog.fxml", null);
         dialogController = (MerchandiseDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindMerchandise(this.merchandise);
-        dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupMerchandise(this.merchandiseBackup);
+        dialogController.setSceneData(merchandise, merchandiseBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -59,6 +58,11 @@ public class MerchandiseDialog extends UserInteractiveStage implements Dialogabl
     @Override
     public void operationCanceled() {
         merchandise = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
     
 }

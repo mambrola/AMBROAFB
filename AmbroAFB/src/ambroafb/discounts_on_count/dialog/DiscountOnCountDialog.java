@@ -6,12 +6,12 @@
 package ambroafb.discounts_on_count.dialog;
 
 import ambroafb.discounts_on_count.DiscountOnCount;
-import ambroafb.general.Names.*;
-import ambroafb.general.Names;
+import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,15 +21,15 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class DiscountOnCountDialog extends UserInteractiveStage implements Dialogable {
+public class DiscountOnCountDialog extends UserInteractiveDialogStage implements Dialogable {
     
     public DiscountOnCount discountOnCount;
     public final DiscountOnCount discountOnCountBackup;
     
-    private DiscountOnCountDialogController dialogController;
+    private DialogController dialogController;
     
     public DiscountOnCountDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, Names.LEVEL_FOR_PATH, "discounts_on_count", "/images/dialog.png");
+        super(owner, "discounts_on_count");
         
         if (object == null)
             discountOnCount = new DiscountOnCount();
@@ -40,9 +40,7 @@ public class DiscountOnCountDialog extends UserInteractiveStage implements Dialo
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/discounts_on_count/dialog/DiscountOnCountDialog.fxml", null);
         dialogController = (DiscountOnCountDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindDiscountOnCount(this.discountOnCount); // this must be before of setNextVisibleAndActionParameters() method, because of sets items in phonelist.
-        dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackupDiscountOnCount(this.discountOnCountBackup);
+        dialogController.setSceneData(discountOnCount, discountOnCountBackup, buttonType);
         this.setScene(currentScene);
 
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -61,5 +59,10 @@ public class DiscountOnCountDialog extends UserInteractiveStage implements Dialo
     @Override
     public void operationCanceled(){
         discountOnCount = null;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
 }

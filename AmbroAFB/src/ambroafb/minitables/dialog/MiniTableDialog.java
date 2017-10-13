@@ -7,9 +7,10 @@ package ambroafb.minitables.dialog;
 
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.UserInteractiveStage;
+import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.minitables.MiniTable;
 import ambroafb.minitables.attitudes.Attitude;
 import ambroafb.minitables.merchandises.Merchandise;
@@ -22,15 +23,15 @@ import javafx.stage.WindowEvent;
  *
  * @author dato
  */
-public class MiniTableDialog extends UserInteractiveStage implements Dialogable {
+public class MiniTableDialog extends UserInteractiveDialogStage implements Dialogable {
 
     private MiniTable miniTable;
     private final MiniTable miniTableBackup;
     
-    private MiniTableDialogController dialogController;
+    private DialogController dialogController;
     
     public MiniTableDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, Names.LEVEL_FOR_PATH, "", "/images/dialog.png");
+        super(owner, "");
         
         if (object == null)
             this.miniTable = getConcreteMinitableFrom(object);
@@ -40,9 +41,7 @@ public class MiniTableDialog extends UserInteractiveStage implements Dialogable 
         
         Scene currentScene = SceneUtils.createScene("/ambroafb/minitables/dialog/MiniTableDialog.fxml", null);
         dialogController = (MiniTableDialogController) currentScene.getProperties().get("controller");
-        dialogController.bindSceneContentTo(this.miniTable);
-        dialogController.setNextVisibleAndActionParameters(buttonType);
-        dialogController.setBackup(this.miniTableBackup);
+        dialogController.setSceneData(miniTable, miniTableBackup, buttonType);
         this.setScene(currentScene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
@@ -63,7 +62,7 @@ public class MiniTableDialog extends UserInteractiveStage implements Dialogable 
     }
     
     public MiniTableDialogController getDialogController(){
-        return dialogController;
+        return (MiniTableDialogController)dialogController;
     }
     
     private MiniTable getConcreteMinitableFrom(EditorPanelable object) {
@@ -72,5 +71,10 @@ public class MiniTableDialog extends UserInteractiveStage implements Dialogable 
             result = new Merchandise();
         }
         return result;
+    }
+
+    @Override
+    public boolean anyComponentChanged() {
+        return dialogController.anySceneComponentChanged();
     }
 }
