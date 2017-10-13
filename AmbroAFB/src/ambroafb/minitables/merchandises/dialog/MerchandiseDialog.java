@@ -6,16 +6,11 @@
 package ambroafb.minitables.merchandises.dialog;
 
 import ambroafb.general.Names;
-import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.minitables.merchandises.Merchandise;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -26,27 +21,16 @@ public class MerchandiseDialog extends UserInteractiveDialogStage implements Dia
     private Merchandise merchandise;
     private final Merchandise merchandiseBackup;
     
-    private DialogController dialogController;
-    
     public MerchandiseDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "merchandise");
+        super(owner, "/ambroafb/minitables/merchandises/dialog/MerchandiseDialog.fxml", "merchandise");
         
         if (object == null)
-            this.merchandise = new Merchandise();
+            merchandise = new Merchandise();
         else
-            this.merchandise = (Merchandise) object;
-        this.merchandiseBackup = merchandise.cloneWithID();
+            merchandise = (Merchandise) object;
+        merchandiseBackup = merchandise.cloneWithID();
         
-        Scene currentScene = SceneUtils.createScene("/ambroafb/minitables/merchandises/dialog/MerchandiseDialog.fxml", null);
-        dialogController = (MerchandiseDialogController) currentScene.getProperties().get("controller");
         dialogController.setSceneData(merchandise, merchandiseBackup, buttonType);
-        this.setScene(currentScene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            if (event != null) event.consume();
-        });
-        
     }
     
     @Override

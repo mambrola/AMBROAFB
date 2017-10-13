@@ -6,16 +6,11 @@
 package ambroafb.minitables.attitudes.dialog;
 
 import ambroafb.general.Names;
-import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.minitables.attitudes.Attitude;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -26,27 +21,16 @@ public class AttitudeDialog extends UserInteractiveDialogStage implements Dialog
     private Attitude attitude;
     private final Attitude attitudeBackup;
     
-    private DialogController dialogController;
-    
     public AttitudeDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "attitude");
+        super(owner, "/ambroafb/minitables/attitudes/dialog/AttitudeDialog.fxml", "attitude");
         
         if (object == null)
-            this.attitude = new Attitude();
+            attitude = new Attitude();
         else
-            this.attitude = (Attitude) object;
-        this.attitudeBackup = attitude.cloneWithID();
+            attitude = (Attitude) object;
+        attitudeBackup = attitude.cloneWithID();
         
-        Scene currentScene = SceneUtils.createScene("/ambroafb/minitables/attitudes/dialog/AttitudeDialog.fxml", null);
-        dialogController = (AttitudeDialogController) currentScene.getProperties().get("controller");
         dialogController.setSceneData(attitude, attitudeBackup, buttonType);
-        this.setScene(currentScene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            if (event != null) event.consume();
-        });
-        
     }
     
     @Override

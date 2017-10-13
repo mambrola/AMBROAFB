@@ -7,15 +7,10 @@ package ambroafb.docs.types.utilities.charge.dialog;
 
 import ambroafb.docs.types.utilities.charge.ChargeUtility;
 import ambroafb.general.Names;
-import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -23,30 +18,19 @@ import javafx.stage.WindowEvent;
  */
 public class ChargeUtilityDialog extends UserInteractiveDialogStage implements Dialogable {
 
-    private ChargeUtility chargeUtility, chargeUtilityBackup;
-    
-    private DialogController dialogController;
+    private ChargeUtility chargeUtility;
+    private final ChargeUtility chargeUtilityBackup;
     
     public ChargeUtilityDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "doc_charge_utility_dialog_title");
+        super(owner, "/ambroafb/docs/types/utilities/charge/dialog/ChargeUtilityDialog.fxml", "doc_charge_utility_dialog_title");
         
-        if (object == null){
+        if (object == null)
             chargeUtility = new ChargeUtility();
-        }
-        else {
+        else
             chargeUtility = (ChargeUtility) object;
-        }
         chargeUtilityBackup = chargeUtility.cloneWithID();
         
-        Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/utilities/charge/dialog/ChargeUtilityDialog.fxml", null);
-        dialogController = (ChargeUtilityDialogController) currentScene.getProperties().get("controller");
         dialogController.setSceneData(chargeUtility, chargeUtilityBackup, buttonType);
-        this.setScene(currentScene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            if (event != null) event.consume();
-        });
     }
     
     @Override

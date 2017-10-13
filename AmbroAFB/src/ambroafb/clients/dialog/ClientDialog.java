@@ -7,15 +7,10 @@ package ambroafb.clients.dialog;
 
 import ambroafb.clients.Client;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -26,27 +21,16 @@ public class ClientDialog extends UserInteractiveDialogStage implements Dialogab
     public Client client;
     public final Client clientBackup;
     
-    private DialogController dialogController;
-    
     public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, "client_dialog_title");
+        super(owner, "/ambroafb/clients/dialog/ClientDialog.fxml", "client_dialog_title");
         
         if (object == null)
             client = new Client();
         else
             client = (Client) object;
+        clientBackup = client.cloneWithID();
         
-        this.clientBackup = client.cloneWithID();
-        
-        Scene currentScene = SceneUtils.createScene("/ambroafb/clients/dialog/ClientDialog.fxml", null);
-        dialogController = (ClientDialogController) currentScene.getProperties().get("controller");
         dialogController.setSceneData(client, clientBackup, buttonType);
-        this.setScene(currentScene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            if (event != null) event.consume();
-        });
     }
     
     @Override

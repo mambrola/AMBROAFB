@@ -6,16 +6,11 @@
 package ambroafb.invoices.dialog;
 
 import ambroafb.general.Names;
-import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.invoices.Invoice;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -26,30 +21,16 @@ public class InvoiceDialog extends UserInteractiveDialogStage implements Dialoga
     private Invoice invoice;
     private final Invoice invoiceBackup;
     
-    private DialogController dialogController;
-    
     public InvoiceDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "invoice_dialog_title");
+        super(owner, "/ambroafb/invoices/dialog/InvoiceDialog.fxml", "invoice_dialog_title");
         
-        Invoice invoiceObject;
         if (object == null)
-            invoiceObject = new Invoice();
+            invoice = new Invoice();
         else
-            invoiceObject = (Invoice) object;
+            invoice = (Invoice) object;
+        invoiceBackup = invoice.cloneWithID();
         
-        this.invoice = invoiceObject;
-        this.invoiceBackup = invoiceObject.cloneWithID();
-        
-        Scene currentScene = SceneUtils.createScene("/ambroafb/invoices/dialog/InvoiceDialog.fxml", null);
-        dialogController = (InvoiceDialogController) currentScene.getProperties().get("controller");
         dialogController.setSceneData(invoice, invoiceBackup, buttonType);
-        this.setScene(currentScene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            if (event != null) event.consume();
-        });
-        
     }
 
     @Override

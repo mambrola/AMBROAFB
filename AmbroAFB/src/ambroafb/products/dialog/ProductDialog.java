@@ -6,16 +6,11 @@
 package ambroafb.products.dialog;
 
 import ambroafb.general.Names;
-import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.products.Product;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -26,27 +21,16 @@ public class ProductDialog extends UserInteractiveDialogStage implements Dialoga
     private Product product;
     private final Product productBackup;
     
-    private DialogController dialogController;
-    
     public ProductDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "product_dialog_title");
+        super(owner, "/ambroafb/products/dialog/ProductDialog.fxml", "product_dialog_title");
         
         if (object == null)
-            this.product = new Product();
+            product = new Product();
         else
-            this.product = (Product) object;
-        this.productBackup = product.cloneWithID();
+            product = (Product) object;
+        productBackup = product.cloneWithID();
         
-        Scene currentScene = SceneUtils.createScene("/ambroafb/products/dialog/ProductDialog.fxml", null);
-        dialogController = (ProductDialogController) currentScene.getProperties().get("controller");
         dialogController.setSceneData(product, productBackup, buttonType);
-        this.setScene(currentScene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            if (event != null) event.consume();
-        });
-        
     }
 
     @Override

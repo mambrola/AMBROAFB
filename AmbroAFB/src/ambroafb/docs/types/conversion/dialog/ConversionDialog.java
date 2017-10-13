@@ -7,15 +7,10 @@ package ambroafb.docs.types.conversion.dialog;
 
 import ambroafb.docs.types.conversion.Conversion;
 import ambroafb.general.Names;
-import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -23,30 +18,19 @@ import javafx.stage.WindowEvent;
  */
 public class ConversionDialog extends UserInteractiveDialogStage implements Dialogable {
 
-    private Conversion conversion, conversionBackup;
-    
-    private DialogController dialogController;
+    private Conversion conversion;
+    private final Conversion conversionBackup;
     
     public ConversionDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, "doc_conversion_dialog_title");
+        super(owner, "/ambroafb/docs/types/conversion/dialog/ConversionDialog.fxml", "doc_conversion_dialog_title");
         
-        if (object == null){
+        if (object == null)
             conversion = new Conversion();
-        }
-        else {
+        else 
             conversion = (Conversion)object;
-        }
         conversionBackup = conversion.cloneWithID();
         
-        Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/conversion/dialog/ConversionDialog.fxml", null);
-        dialogController = (ConversionDialogController) currentScene.getProperties().get("controller");
         dialogController.setSceneData(conversion, conversionBackup, buttonType);
-        this.setScene(currentScene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            if (event != null) event.consume();
-        });
     }
 
     @Override

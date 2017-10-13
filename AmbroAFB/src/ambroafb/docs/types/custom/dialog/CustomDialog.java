@@ -7,15 +7,10 @@ package ambroafb.docs.types.custom.dialog;
 
 import ambroafb.docs.Doc;
 import ambroafb.general.Names;
-import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -23,30 +18,19 @@ import javafx.stage.WindowEvent;
  */
 public class CustomDialog extends UserInteractiveDialogStage implements Dialogable {
 
-    private Doc doc, docBackup;
-    
-    private DialogController dialogController;
+    private Doc doc;
+    private final Doc docBackup;
     
     public CustomDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, "doc_custom_dialog_title");
+        super(owner, "/ambroafb/docs/types/custom/dialog/CustomDialog.fxml", "doc_custom_dialog_title");
         
-        if (object == null){
+        if (object == null)
             doc = new Doc();
-        }
-        else {
+        else
             doc = (Doc) object;
-        }
         docBackup = doc.cloneWithID();
         
-        Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/custom/dialog/CustomDialog.fxml", null);
-        dialogController = (CustomDialogController) currentScene.getProperties().get("controller");
         dialogController.setSceneData(doc, docBackup, buttonType);
-        this.setScene(currentScene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            if (event != null) event.consume();
-        });
     }
 
     @Override

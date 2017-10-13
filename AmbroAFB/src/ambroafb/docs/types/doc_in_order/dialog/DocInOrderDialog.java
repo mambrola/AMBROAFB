@@ -7,15 +7,10 @@ package ambroafb.docs.types.doc_in_order.dialog;
 
 import ambroafb.docs.types.doc_in_order.DocInOrder;
 import ambroafb.general.Names;
-import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -23,30 +18,19 @@ import javafx.stage.WindowEvent;
  */
 public class DocInOrderDialog extends UserInteractiveDialogStage implements Dialogable{
 
-    private DocInOrder docInOrder, docInOrderBackup;
-    
-    private DialogController dialogController;
+    private DocInOrder docInOrder;
+    private final DocInOrder docInOrderBackup;
     
     public DocInOrderDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner, String stageTitleBundleKey) {
-        super(owner, stageTitleBundleKey);
+        super(owner, "/ambroafb/docs/types/doc_in_order/dialog/DocInOrderDialog.fxml", stageTitleBundleKey);
         
-        if (object == null){
+        if (object == null)
             docInOrder = new DocInOrder();
-        }
-        else {
+        else
             docInOrder = (DocInOrder) object;
-        }
         docInOrderBackup = (DocInOrder) docInOrder.cloneWithID();
         
-        Scene currentScene = SceneUtils.createScene("/ambroafb/docs/types/doc_in_order/dialog/DocInOrderDialog.fxml", null);
-        dialogController = (DocInOrderDialogController) currentScene.getProperties().get("controller");
         dialogController.setSceneData(docInOrder, docInOrderBackup, buttonType);
-        this.setScene(currentScene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            if (event != null) event.consume();
-        });
     }
     
     public DocInOrderDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {

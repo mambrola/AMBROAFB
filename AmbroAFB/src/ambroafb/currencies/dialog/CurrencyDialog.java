@@ -7,15 +7,10 @@ package ambroafb.currencies.dialog;
 
 import ambroafb.currencies.Currency;
 import ambroafb.general.Names;
-import ambroafb.general.SceneUtils;
-import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -26,27 +21,16 @@ public class CurrencyDialog extends UserInteractiveDialogStage implements Dialog
     private Currency currency;
     private final Currency currencyBackup;
     
-    private DialogController dialogController;
-    
     public CurrencyDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "currency_dialog_title");
+        super(owner, "/ambroafb/currencies/dialog/CurrencyDialog.fxml", "currency_dialog_title");
         
         if (object == null)
-            this.currency = new Currency();
+            currency = new Currency();
         else
-            this.currency = (Currency) object;
-        this.currencyBackup = currency.cloneWithID();
+            currency = (Currency) object;
+        currencyBackup = currency.cloneWithID();
         
-        Scene currentScene = SceneUtils.createScene("/ambroafb/currencies/dialog/CurrencyDialog.fxml", null);
-        dialogController = (CurrencyDialogController) currentScene.getProperties().get("controller");
         dialogController.setSceneData(currency, currencyBackup, buttonType);
-        this.setScene(currentScene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
-            if (event != null) event.consume();
-        });
-        
     }
     
     @Override

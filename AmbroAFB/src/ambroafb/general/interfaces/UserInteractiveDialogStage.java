@@ -6,7 +6,11 @@
 package ambroafb.general.interfaces;
 
 import ambroafb.general.Names;
+import ambroafb.general.SceneUtils;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -14,10 +18,21 @@ import javafx.stage.Stage;
  */
 public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     
+    protected DialogController dialogController;
+
     private boolean permissionToClose = true;
     
-    public UserInteractiveDialogStage(Stage owner, String stageTitleBundleKey){
+    public UserInteractiveDialogStage(Stage owner, String sceneFXMLFilePath, String stageTitleBundleKey){
         super(owner, Names.LEVEL_FOR_PATH, stageTitleBundleKey, "/images/dialog.png");
+        
+        Scene currentScene = SceneUtils.createScene(sceneFXMLFilePath, null);
+        setScene(currentScene);
+        dialogController = (DialogController) currentScene.getProperties().get("controller");
+        
+        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
+            dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
+            if (event != null) event.consume();
+        });
     }
     
     public void changePermissionForClose(boolean value){
