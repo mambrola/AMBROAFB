@@ -57,21 +57,9 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
         account = null;
     }
     
-    // შევიდეს Dialogable-ში.
     @Override
     public boolean anyComponentChanged(){
         return dialogController.anySceneComponentChanged();
     }
     
-//    private boolean permissionToClose = true;
-//    
-//    // შევიდეს Dialogable-ში.
-//    public void changePermissionForClose(boolean value){
-//        permissionToClose = value;
-//    }
-//    
-//    // შევიდეს Dialogable-ში.
-//    public boolean getPermissionToClose(){
-//        return permissionToClose;
-//    }
 }
