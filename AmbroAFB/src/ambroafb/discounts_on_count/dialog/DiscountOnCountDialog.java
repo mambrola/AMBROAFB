@@ -44,8 +44,4 @@ public class DiscountOnCountDialog extends UserInteractiveDialogStage implements
         discountOnCount = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
 }

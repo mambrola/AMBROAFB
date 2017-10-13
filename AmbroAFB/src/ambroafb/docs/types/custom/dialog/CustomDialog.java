@@ -44,9 +44,4 @@ public class CustomDialog extends UserInteractiveDialogStage implements Dialogab
         doc = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
-    
 }

@@ -44,9 +44,4 @@ public class ParamGeneralDialog extends UserInteractiveDialogStage implements Di
         paramGeneral = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
-    
 }

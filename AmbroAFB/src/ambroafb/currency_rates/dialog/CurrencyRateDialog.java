@@ -43,11 +43,5 @@ public class CurrencyRateDialog extends UserInteractiveDialogStage implements Di
     public void operationCanceled() {
         currRate = null;
     }
-
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
-    
     
 }

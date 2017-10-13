@@ -58,8 +58,4 @@ public class MiniTableDialog extends UserInteractiveDialogStage implements Dialo
         return result;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
 }

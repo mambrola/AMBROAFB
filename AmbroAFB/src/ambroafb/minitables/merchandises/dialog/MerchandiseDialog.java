@@ -44,9 +44,4 @@ public class MerchandiseDialog extends UserInteractiveDialogStage implements Dia
         merchandise = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
-    
 }

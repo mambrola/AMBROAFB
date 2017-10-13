@@ -44,9 +44,4 @@ public class ClientDialog extends UserInteractiveDialogStage implements Dialogab
         client = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged() || client.getClientImageGallery().anyViewerChanged();
-    }
-
 }

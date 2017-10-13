@@ -44,8 +44,4 @@ public class BalanceAccountDialog extends UserInteractiveDialogStage implements 
         balAccount = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
 }

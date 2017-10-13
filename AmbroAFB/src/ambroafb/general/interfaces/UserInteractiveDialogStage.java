@@ -42,4 +42,8 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     public boolean getPermissionToClose(){
         return permissionToClose;
     }
+    
+    public boolean anyComponentChanged(){
+        return dialogController.anySceneComponentChanged();
+    }
 }

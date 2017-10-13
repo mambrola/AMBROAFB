@@ -83,7 +83,7 @@ public class DialogOkayCancelController implements Initializable {
                 });
                 alertText = "Close without saving changes?";    
                 cancel.setOnAction((ActionEvent event) -> {
-                    boolean anyFieldWasChanged = ((Dialogable)cancel.getScene().getWindow()).anyComponentChanged();;
+                    boolean anyFieldWasChanged = ((UserInteractiveDialogStage)cancel.getScene().getWindow()).anyComponentChanged();
                     if (anyFieldWasChanged) {
                         String stageName = ((Stage)okay.getScene().getWindow()).getTitle();
                         AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, stageName);

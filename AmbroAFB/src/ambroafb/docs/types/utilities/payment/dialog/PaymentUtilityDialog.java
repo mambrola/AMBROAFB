@@ -44,8 +44,4 @@ public class PaymentUtilityDialog extends UserInteractiveDialogStage implements 
         paymentUtility = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
 }

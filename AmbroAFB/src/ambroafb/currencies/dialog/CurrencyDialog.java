@@ -43,10 +43,5 @@ public class CurrencyDialog extends UserInteractiveDialogStage implements Dialog
     public void operationCanceled() {
         currency = null;
     }
-
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
     
 }

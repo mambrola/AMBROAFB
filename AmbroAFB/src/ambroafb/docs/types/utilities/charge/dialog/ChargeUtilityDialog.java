@@ -44,9 +44,4 @@ public class ChargeUtilityDialog extends UserInteractiveDialogStage implements D
         chargeUtility = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
-    
 }

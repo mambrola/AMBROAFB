@@ -44,8 +44,4 @@ public class ProductDialog extends UserInteractiveDialogStage implements Dialoga
         product = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
 }

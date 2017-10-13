@@ -44,9 +44,4 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
         account = null;
     }
     
-    @Override
-    public boolean anyComponentChanged(){
-        return dialogController.anySceneComponentChanged();
-    }
-    
 }

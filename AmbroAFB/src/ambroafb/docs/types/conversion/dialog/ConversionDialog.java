@@ -44,9 +44,4 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
         conversion = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
-    
 }

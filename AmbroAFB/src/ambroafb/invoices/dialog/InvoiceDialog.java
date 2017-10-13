@@ -44,9 +44,4 @@ public class InvoiceDialog extends UserInteractiveDialogStage implements Dialoga
         invoice = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
-
 }

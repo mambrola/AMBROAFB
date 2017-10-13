@@ -44,9 +44,4 @@ public class AttitudeDialog extends UserInteractiveDialogStage implements Dialog
         attitude = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
-    
 }

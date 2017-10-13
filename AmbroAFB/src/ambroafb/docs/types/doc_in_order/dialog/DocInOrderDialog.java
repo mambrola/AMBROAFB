@@ -48,9 +48,4 @@ public class DocInOrderDialog extends UserInteractiveDialogStage implements Dial
         docInOrder = null;
     }
 
-    @Override
-    public boolean anyComponentChanged() {
-        return dialogController.anySceneComponentChanged();
-    }
-    
 }
