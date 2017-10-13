@@ -34,11 +34,11 @@ public class AccountComboBox extends ComboBox<Account> {
     }
     
     /**
-     * The method fills comboBox by items from DB.
+     * The method fills comboBox by accounts and category ALL.
      * Note: method starts thread and fetch data in it. If this method call in AccountComboBox  constructor, they may cause problem
      * for other class, where this comboBox use -  it will become that other class fetch thread execute first and after execute this fetch.
      * So the list will not be change from other class.
-     * @param extraAction The extra action on comboBox filling. If there is no extra action exists, gives null value. 
+     * @param extraAction The extra action on comboBox filling. If there is no extra action exists, gives null value.
      */
     public void fillComboBoxWithALL(Consumer<ObservableList<Account>> extraAction){
         Consumer<ObservableList<Account>> addCategoryALL = (accounts) -> {
@@ -49,7 +49,10 @@ public class AccountComboBox extends ComboBox<Account> {
         new Thread(new FetchDataFromDB(consumer)).start();
     }
     
-    
+    /**
+     * The method fills comboBox by accounts.
+     * @param extraAction The extra action on comboBox filling. If there is no extra action exists, gives null value.
+     */
     public void fillComboBoxWithoutALL(Consumer<ObservableList<Account>> extraAction){
         new Thread(new FetchDataFromDB(extraAction)).start();
     }

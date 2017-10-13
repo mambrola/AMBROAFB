@@ -8,6 +8,7 @@ package ambroafb.clients.filter;
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
 import ambroafb.clients.helper.ClientStatus;
+import ambroafb.countries.Country;
 import ambroafb.countries.CountryComboBox;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.FilterModel;
@@ -16,7 +17,10 @@ import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -95,6 +99,14 @@ public class ClientFilter  extends UserInteractiveFilterStage implements Filtera
         clientFilterModel.getSelectedStatusesIndexes().stream().forEach((index) -> {
             statuses.getCheckModel().check(index);
         });
+        
+        Consumer<ObservableList<Country>> countryConsumer = (countryList) -> {
+            Optional<Country> optCountry = countryList.stream().filter((c) -> c.getCode().equals(clientFilterModel.getSelectedCountryCode())).findFirst();
+            if (optCountry.isPresent()){
+                countries.setValue(optCountry.get());
+            }
+        };
+        countries.fillComboBoxWithALL(countryConsumer);
     }
 
     @Override

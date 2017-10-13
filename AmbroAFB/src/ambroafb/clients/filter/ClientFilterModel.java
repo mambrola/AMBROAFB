@@ -26,13 +26,14 @@ public class ClientFilterModel extends DateTimeFilterModel {
     
     private static final String PREF_FROM_DATE_KEY = "clients/filter/from_date";
     private static final String PREF_TO_DATE_KEY = "clients/filter/to_date";
+    private static final String PREF_TO_COUNTRY_KEY = "clients/filter/country";
     private static final String PREF_SELECTED_STATUSES_KEY = "clients/filter/statuses_indexes";
     private static final String PREF_JURIDICAL_KEY = "clients/filter/juridical";
     private static final String PREF_JURIDICAL_INDETERMINATE_KEY = "clients/filter/juridical_indeterminate";
     private static final String PREF_REZIDENT_KEY = "clients/filter/rezident";
     private static final String PREF_REZIDENT_INDETERMINATE_KEY = "clients/filter/rezident_indeterminate";
-    private static final String PREF_TYPE_INDETERMINATE_KEY = "clients/filter/type_indeterminate";
     private static final String PREF_TYPE_KEY = "clients/filter/type";
+    private static final String PREF_TYPE_INDETERMINATE_KEY = "clients/filter/type_indeterminate";
     
     
     private Country selectedCountry;
@@ -59,7 +60,10 @@ public class ClientFilterModel extends DateTimeFilterModel {
     }
 
     public void setSelectedCountry(Country value) {
-        selectedCountry = value;
+        if (value != null){
+            selectedCountry = value;
+            saveIntoPref(PREF_TO_COUNTRY_KEY, value.getCode());
+        }
     }
 
     public void setRezidentSelected(boolean selected) {
@@ -125,6 +129,10 @@ public class ClientFilterModel extends DateTimeFilterModel {
     
     public Country getSelectedCountry(){
         return selectedCountry;
+    }
+    
+    public String getSelectedCountryCode(){
+        return getStringFromPref(PREF_TO_COUNTRY_KEY);
     }
     
     public ArrayList<Integer> getSelectedStatusesIndexes(){

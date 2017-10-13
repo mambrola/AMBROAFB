@@ -43,7 +43,7 @@ public class CurrencyComboBox extends ComboBox<Currency>{
         Consumer<ObservableList<Currency>> addALLCategory = (currencies) -> {
             if (!currencies.contains(currencyALL)){
                 currencies.add(0, currencyALL);
-                changeValue(currencyALL.getIso());
+                setValue(currencyALL);
             }
         };
         Consumer<ObservableList<Currency>> consumer = (extraAction == null) ? addALLCategory : addALLCategory.andThen(extraAction);

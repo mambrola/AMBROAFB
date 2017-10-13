@@ -109,7 +109,7 @@ public class ClientDialogController extends DialogController {
                 rezident.setSelected(newValue.getDescrip().equals("Georgia"));
             }
         });
-        country.showCategoryAll(false);
+        country.fillComboBoxWithouyALL(null);
         statuses.getItems().setAll(Client.getAllStatusFromDB());
     }
 

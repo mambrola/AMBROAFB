@@ -6,6 +6,8 @@
 package ambroafb.countries;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -17,15 +19,16 @@ import javafx.util.StringConverter;
  */
 public class CountryComboBox extends ComboBox<Country> {
     
+    private final String categoryALL = "ALL";
     private final ObservableList<Country> items = FXCollections.observableArrayList();
-    private final Country all = new Country();
+    private final Country countryALL = new Country();
     
     public CountryComboBox(){
+        super();
         this.setItems(items);
-        all.setRecId(0);
-        all.setCode("ALL");
-        all.setDescrip("");
-        items.add(all);
+        countryALL.setRecId(0);
+        countryALL.setCode(categoryALL);
+        countryALL.setDescrip("");
 
         this.setConverter(new StringConverter<Country>() {
             @Override
@@ -37,10 +40,28 @@ public class CountryComboBox extends ComboBox<Country> {
                 return null;
             }
         });
-        ArrayList<Country> countriesList = Country.getAllFromDB();
-        countriesList.sort((Country c1, Country c2) -> c1.getCode().compareTo(c2.getCode()));
-        items.addAll(countriesList);
-        this.setValue(all);
+    }
+    
+    
+    /**
+     *  The method fills comboBox by countries and category ALL.
+     * @param extraAction The action that executes after comboBox filling. If there is no extra action exists, gives null value. 
+     */
+    public void fillComboBoxWithALL(Consumer<ObservableList<Country>> extraAction){
+        Consumer<ObservableList<Country>> addCategoryALL = (countriesList) -> {
+            countriesList.add(0, countryALL);
+            setValue(countryALL);
+        };
+        Consumer<ObservableList<Country>> consumer = (extraAction == null) ? addCategoryALL : addCategoryALL.andThen(extraAction);
+        fillComboBoxWithouyALL(consumer);
+    }
+    
+    /**
+     *  The method fills comboBox by countries.
+     * @param extraAction The action that executes after comboBox filling. If there is no extra action exists, gives null value. 
+     */
+    public void fillComboBoxWithouyALL(Consumer<ObservableList<Country>> extraAction){
+        new Thread(new FetchDataFromDB(extraAction)).start();
     }
     
     public void selectItem(Country country){
@@ -49,14 +70,35 @@ public class CountryComboBox extends ComboBox<Country> {
 
     public void showCategoryAll(boolean show){
         if (!show){
-            if (getItems().contains(all)){
+            if (getItems().contains(countryALL)){
                 getItems().remove(0);
             }
         }
         else {
-            if (!getItems().contains(all)){
-                getItems().add(all);
+            if (!getItems().contains(countryALL)){
+                getItems().add(countryALL);
             }
         }
+    }
+    
+    private class FetchDataFromDB implements Runnable {
+
+        private final Consumer<ObservableList<Country>> consumer;
+        
+        public FetchDataFromDB(Consumer<ObservableList<Country>> consumer){
+            this.consumer = consumer;
+        }
+        
+        @Override
+        public void run() {
+            ArrayList<Country> countries = Country.getAllFromDB();
+            Platform.runLater(() -> {
+                items.setAll(countries);
+                if (consumer != null){
+                    consumer.accept(items);
+                }
+            });
+        }
+        
     }
 }
