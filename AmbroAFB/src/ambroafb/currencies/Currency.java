@@ -11,7 +11,6 @@ import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import authclient.db.ConditionBuilder;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,6 @@ public class Currency extends EditorPanelable {
     
     @AView.Column(title = "%date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty createdDate;
-    @JsonIgnore
     private final ObjectProperty<LocalDate> dateProperty;
     
     @AView.Column(title = "%currency_name", width = TableColumnWidths.ISO, styleClass = "textCenter")
@@ -63,7 +61,7 @@ public class Currency extends EditorPanelable {
         });
         
     }
-    
+
     
     // DB methods:
     public static ArrayList<Currency> getAllFromDB(){

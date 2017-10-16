@@ -15,7 +15,6 @@ import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.loggings.filter.LoggingFilterModel;
 import authclient.db.ConditionBuilder;
 import authclient.db.WhereBuilder;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javafx.beans.binding.StringExpression;
@@ -37,15 +36,11 @@ public class Logging extends EditorPanelable {
     private final StringProperty licenseNumber;
 
     @AView.Column(title = "%client", width = TableColumnWidths.CLIENT_MAIL)
-    @JsonIgnore
     private final StringExpression clientDescrip;
-    @JsonIgnore
     private final ObjectProperty<Client> clientObj;
     
     @AView.Column(title = "%login_time", width = TableColumnWidths.DATETIME, styleClass = "textRight")
-    @JsonIgnore
     private final StringProperty loginDateDescrip;
-    @JsonIgnore
     private final ObjectProperty<LocalDateTime> loginDateObj;
     
     @AView.Column(title = "%mac_address", width = TableColumnWidths.MAC_ADDRESS, styleClass = "textCenter")
@@ -57,7 +52,6 @@ public class Logging extends EditorPanelable {
     private final IntegerProperty licenseId;
     private final IntegerProperty invoiceId;
     
-    @JsonIgnore
     private static final String DB_LOGIN_VIEW = "logins_by_license_whole";
     
     

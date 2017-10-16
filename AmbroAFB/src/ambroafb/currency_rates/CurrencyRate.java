@@ -35,19 +35,18 @@ public class CurrencyRate extends EditorPanelable {
     
     @AView.Column(title = "%date", width = TableColumnWidths.DATE, styleClass = "textCenter")
     private final StringProperty dateForColumn;
-    @JsonIgnore
     private final ObjectProperty<LocalDate> dateProperty;
     
     @AView.Column(title = "%count", width = "50", styleClass = "textCenter")
     private final StringProperty count;
+    
     @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
     private final StringProperty iso;
-    @JsonIgnore
     private final ObjectProperty<Currency> currency;
+    
     @AView.Column(title = "%rate", width = "80", styleClass = "textRight")
     private final StringProperty rate;
     
-    @JsonIgnore
     private static final String DB_TABLE_NAME = "rates", DB_VIEW_NAME = "rates_whole";
     
     

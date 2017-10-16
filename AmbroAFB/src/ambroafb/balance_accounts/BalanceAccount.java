@@ -40,12 +40,9 @@ public class BalanceAccount extends EditorPanelable {
     private final StringProperty descrip;
     
     @AView.Column(width = "60")
-    @JsonIgnore
     private final StringExpression actPasExpression;
     
-    @JsonIgnore
     private final BooleanProperty indeterminateProperty;
-    @JsonIgnore
     private final BooleanProperty activeProperty;
     private final IntegerProperty levelProperty;
     
@@ -63,7 +60,6 @@ public class BalanceAccount extends EditorPanelable {
     public static final String DB_DELETE_PROC_NAME = "general_delete";
     public static final String DESCRIP_DELIMITER = " - ";
     
-    @JsonIgnore 
     private static final int ACT = 1, PAS = 2, INDETERMINATE = 3;
     
     public BalanceAccount(){

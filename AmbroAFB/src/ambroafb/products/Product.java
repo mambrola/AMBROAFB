@@ -61,7 +61,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @AView.Column(title = "%product_specific", width = "200")
     private final SimpleStringProperty specificDescrip;
     private final IntegerProperty specific;
-    @JsonIgnore
     private final ObjectProperty<ProductSpecific> productSpecific;
     
     @AView.Column(title = "%monthly_price", width = "90", styleClass = "textRight")
@@ -69,7 +68,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     
     @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
     private final SimpleStringProperty iso;
-    @JsonIgnore
     private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%discounts", width = "90", cellFactory = DiscountCellFactory.class)
@@ -85,13 +83,9 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @AView.Column(title = "%testing_days", width = "100", styleClass = "textRight")
     private final StringProperty testingDays;
     
-    @JsonIgnore
     private static final String DB_VIEW_NAME = "products_whole";
-    @JsonIgnore
     private static final String DB_SPECIFIC_TABLE_NAME = "product_specific_descrips";
-    @JsonIgnore
     private static final String DB_TABLE_NAME = "products";
-    @JsonIgnore
     private static final String DB_DELETE_PROCEDURE_NAME = "general_delete";
     
     public static final int ABREVIATION_LENGTH = 2;

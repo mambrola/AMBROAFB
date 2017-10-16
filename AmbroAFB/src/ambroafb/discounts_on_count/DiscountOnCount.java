@@ -10,11 +10,10 @@ import ambroafb.general.DBUtils;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
- import org.json.JSONObject;
+import org.json.JSONObject;
 
 /**
  *
@@ -28,7 +27,6 @@ public class DiscountOnCount extends EditorPanelable {
     @AView.Column(title = "%sales_percent", width = "100", styleClass = "textRight")
     private final StringProperty discountRate;
     
-    @JsonIgnore
     private static final String DB_TABLE_NAME = "discounts_on_licenses_count";
     
     public DiscountOnCount(){

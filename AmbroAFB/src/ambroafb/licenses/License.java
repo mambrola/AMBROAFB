@@ -54,17 +54,13 @@ public class License extends EditorPanelable {
     private final IntegerProperty licenseNumber;
     
     @AView.Column(title = "%client", width = TableColumnWidths.CLIENT_MAIL)
-    @JsonIgnore
     private final StringExpression clientDescrip;
-    @JsonIgnore
     private final ObjectProperty<Client> clientObj;
     private int clientId; // for object mapper (case: class to json)
     private String firstName, lastName, email;
     
     @AView.Column(title = "%product", width = TableColumnWidths.PRODUCT, styleClass = "textCenter")
-    @JsonIgnore
     private final StringExpression productDescrip;
-    @JsonIgnore
     private final ObjectProperty<Product> productObj;
     private int productId; // for object mapper (case: class to json)
     private String abbreviation, former;
@@ -78,23 +74,18 @@ public class License extends EditorPanelable {
     
     @AView.Column(title = "%license_status", width = "120")
     private final StringProperty statusDescrip;
-    @JsonIgnore
     private final ObjectProperty<LicenseStatus> statusObj;
     private final IntegerProperty status; // for object mapper (case: class to json)
     
     private final StringProperty remark;
     
     @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE, styleClass = "textRight")
-    @JsonIgnore
     private final StringProperty firstDateDescrip;
-    @JsonIgnore
     private final ObjectProperty<LocalDate> firstDateObj;
     private String firstDate; // for object mapper (case: class to json)
     
     @AView.Column(title = "%end_date", width = TableColumnWidths.DATE, styleClass = "textRight")
-    @JsonIgnore
     private final StringProperty lastDateDescrip;
-    @JsonIgnore
     private final ObjectProperty<LocalDate> lastDateObj;
     private String lastDate; // for object mapper (case: class to json)
     
@@ -106,11 +97,8 @@ public class License extends EditorPanelable {
     
     private final BooleanProperty isNew;
     
-    @JsonIgnore
     private static final String DB_VIEW_NAME = "licenses_whole";
-    @JsonIgnore
     private static final String DB_TABLE_NAME = "licenses";
-    @JsonIgnore
     private static final String DB_STATUSES_TABLE_NAME = "license_status_descrips";
     
     public License(){

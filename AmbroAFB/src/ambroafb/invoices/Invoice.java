@@ -69,34 +69,24 @@ public class Invoice extends EditorPanelable {
     private final ObjectProperty<InvoiceStatusClarify> clarifyObj;
     
     @AView.Column(title = "%license", width = TableColumnWidths.LICENSE)
-    @JsonIgnore
     private final StringProperty licensesDescript;
     private final ObservableList<LicenseShortData> licenses;
     
     @AView.Column(title = "%client", width = TableColumnWidths.CLIENT_MAIL)
-    @JsonIgnore
     private final StringExpression clientDescrip;
-    @JsonIgnore
     private final ObjectProperty<Client> clientObj;
     
     @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE, styleClass = "textRight")
-    @JsonIgnore
     private final StringProperty beginDateDescrip;
-    @JsonIgnore
     private final ObjectProperty<LocalDate> beginDateObj;
 
     @AView.Column(title = "%end_date", width = TableColumnWidths.DATE, styleClass = "textRight")
-    @JsonIgnore
     private final StringProperty endDateDescrip;
-    @JsonIgnore
     private final ObjectProperty<LocalDate> endDateObj;
     
     @AView.Column(title = "%revoked_date", width = TableColumnWidths.DATE, styleClass = "textRight")
-    @JsonIgnore
     private final StringProperty revokedDateDescrip;
-    @JsonIgnore
     private final ObjectProperty<LocalDate> revokedDateObj;
-    @JsonIgnore
     private final BooleanProperty isRevoked;
     
 //    @AView.Column(title = "%extra_discount", width = "100", styleClass = "textRight")
@@ -114,21 +104,16 @@ public class Invoice extends EditorPanelable {
     
     
     @AView.Column(title = "%invoice_reissuings_min", width = "100")
-    @JsonIgnore
     private final ObjectProperty<InvoiceReissuing> reissuingObj;
     
     @AView.Column(title = "%invoice_status", width = "100")
-    @JsonIgnore
     private final ObjectProperty<InvoiceStatus> statusObj;
     
     private final ObjectProperty<MonthCounterItem> months;
     private final BooleanProperty isLogined, isPaid;
     
-    @JsonIgnore
     private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
-    @JsonIgnore
     private static final String DB_CLARIFIES_TABLE = "invoice_status_clarify_descrips";
-    @JsonIgnore
     private static final String DB_INVOICES_VIEW = "invoices_whole";
     
     @JsonIgnore
@@ -136,7 +121,6 @@ public class Invoice extends EditorPanelable {
     @JsonIgnore
     public ArrayList<InvoiceFinaces> invoiceFinaceses = new ArrayList<>();
     
-    @JsonIgnore
     private final Map<CountComboBoxItem, Integer> productsCounter = new HashMap<>();
     private static int clarifyStatus;
     private BooleanProperty isAllowToModify;
