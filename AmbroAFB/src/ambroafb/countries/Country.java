@@ -54,7 +54,7 @@ public class Country extends EditorPanelable{
     public static ArrayList<Country> getAllFromDB() {
         JSONObject params =  new ConditionBuilder().build();
         ArrayList<Country> countries = DBUtils.getObjectsListFromDB(Country.class, DB_TABLE_NAME, params);
-        countries.sort((Country c1, Country c2) -> c1.getDescrip().compareTo(c2.getDescrip()));
+        countries.sort((Country c1, Country c2) -> c1.compareByDescrip(c2));
         return countries;
     }
     
@@ -151,4 +151,13 @@ public class Country extends EditorPanelable{
                 getCode().equals(otherCountry.getCode());
     }
 
+    /**
+     *  The method compares two countries by description.
+     * @param other Other object that is not null.
+     * @return
+     * @see ambroafb.general.interfaces.EditorPanelable#compareById(ambroafb.general.interfaces.EditorPanelable)  EditorPanelable method "compareById"
+     */
+    public int compareByDescrip(Country other){
+        return getDescrip().compareTo(other.getDescrip());
+    }
 }

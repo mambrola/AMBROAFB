@@ -40,7 +40,7 @@ public class ProductComboBox extends ComboBox<Product> {
         productALL.setRecId(0);
         ArrayList<Product> productList = Product.getAllFromDB();
         productList.add(productALL);
-        productList.sort((Product p1, Product p2) -> p1.getRecId() - p2.getRecId());
+        productList.sort((Product p1, Product p2) -> p1.compareById(p2));
         
         this.getItems().addAll(productList);
         this.setValue(productALL);

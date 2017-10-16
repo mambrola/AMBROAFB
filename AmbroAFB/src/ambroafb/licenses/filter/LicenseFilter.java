@@ -80,7 +80,7 @@ public class LicenseFilter extends UserInteractiveFilterStage implements Filtera
         clients.fillComboBoxOnlyClientsWithALL(null);
         
         ArrayList<LicenseStatus> licenseStatuses = License.getAllLicenseStatusFromDB();
-        licenseStatuses.sort((LicenseStatus status1, LicenseStatus status2) -> status1.getRecId() - status2.getRecId());
+        licenseStatuses.sort((LicenseStatus status1, LicenseStatus status2) -> status1.compareById(status2));
         statuses.getItems().setAll(licenseStatuses);
         
         filterModel.getSelectedStatusIndexes().stream().forEach((index) -> {

@@ -89,4 +89,14 @@ public class LicenseStatus {
         return  getLicenseStatusId() == other.getLicenseStatusId() &&
                 getDescrip().equals(other.getDescrip());
     }
+    
+    /**
+     * The method compares two LicenseStatus objects.
+     * @param other Other object that is not null.
+     * @return 
+     * @see ambroafb.general.interfaces.EditorPanelable#compareById(ambroafb.general.interfaces.EditorPanelable)  EditorPanelable method "compareById"
+     */
+    public int compareById(LicenseStatus other){
+        return getRecId() - other.getRecId();
+    }
 }

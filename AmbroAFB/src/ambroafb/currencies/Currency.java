@@ -69,7 +69,7 @@ public class Currency extends EditorPanelable {
     public static ArrayList<Currency> getAllFromDB(){
         JSONObject params = new ConditionBuilder().build();
         ArrayList<Currency> currencies = DBUtils.getObjectsListFromDB(Currency.class, DB_TABLE_NAME, params);
-        currencies.sort((Currency c1, Currency c2) -> c1.getIso().compareTo(c2.getIso()));
+        currencies.sort((Currency c1, Currency c2) -> c1.compareByIso(c2));
         return currencies;
     }
     
@@ -214,5 +214,15 @@ public class Currency extends EditorPanelable {
         return  this.getIso().equals(currencyBackup.getIso()) &&
                 this.getDescrip().equals(currencyBackup.getDescrip()) &&
                 this.getSymbol().equals(currencyBackup.getSymbol());
+    }
+    
+    /**
+     * The method compares two Currencies.
+     * @param other Other object that is not null.
+     * @return 
+     * @see ambroafb.general.interfaces.EditorPanelable#compareById(ambroafb.general.interfaces.EditorPanelable)  EditorPanelable method "compareById"
+     */
+    public int compareByIso(Currency other){
+        return getIso().compareTo(other.getIso());
     }
 }

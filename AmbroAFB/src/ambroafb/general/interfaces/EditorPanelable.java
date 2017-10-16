@@ -42,4 +42,16 @@ public abstract class EditorPanelable {
     public BooleanProperty isAllowToModify(){
         return new SimpleBooleanProperty(true);
     }
+    
+    /**
+     *  The method compares two EditorPanelables by id.
+     * @param other Other object that is not null. 
+     * @return      If this id is greater than other id, return positive number.
+     *                       If this id is equal to other id, returns 0.
+     *                       If this id is less than other id, returns negative number.
+     */
+    @JsonIgnore
+    public int compareById(EditorPanelable other){
+        return getRecId() - other.getRecId();
+    }
 }

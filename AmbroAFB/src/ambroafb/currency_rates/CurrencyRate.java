@@ -90,11 +90,7 @@ public class CurrencyRate extends EditorPanelable {
         }
         JSONObject params = whereBuilder.condition().build();
         ArrayList<CurrencyRate> currencyRates = DBUtils.getObjectsListFromDB(CurrencyRate.class, DB_VIEW_NAME, params);
-        currencyRates.sort((CurrencyRate c1, CurrencyRate c2) -> {
-                    int dateCmp = c2.dateProperty().get().compareTo(c1.dateProperty().get());
-                    if (dateCmp == 0) return c1.getIso().compareTo(c2.getIso());
-                    return dateCmp;
-                });
+        currencyRates.sort((CurrencyRate c1, CurrencyRate c2) -> c1.compareTo(c2));
         return currencyRates;
     }
 
@@ -215,4 +211,16 @@ public class CurrencyRate extends EditorPanelable {
                 getRate() == currencyRateBackup.getRate();
     }
     
+    /**
+     * The method compares two CurrencyRates.
+     * @param other Other object, that is not null.
+     * @return 
+     * @see ambroafb.general.interfaces.EditorPanelable#compareById(ambroafb.general.interfaces.EditorPanelable)  EditorPanelable method "compareById"
+     */
+    public int compareTo(CurrencyRate other){
+        int result = other.dateProperty().get().compareTo(dateProperty().get());
+        if (result == 0) 
+            result = getIso().compareTo(other.getIso());
+        return result;
+    }
 }

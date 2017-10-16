@@ -90,7 +90,7 @@ public class InvoiceFilter extends UserInteractiveFilterStage implements Filtera
 //        System.out.println("Before sort");
 //        printClarifiesIDsList(clarifies);
         
-        clarifies.sort((InvoiceStatusClarify clarify1, InvoiceStatusClarify clarify2) -> clarify1.getRecId() - clarify2.getRecId());
+        clarifies.sort((InvoiceStatusClarify clarify1, InvoiceStatusClarify clarify2) -> clarify1.compareById(clarify2));
         
 //        System.out.println("After sort");
 //        printClarifiesIDsList(clarifies);

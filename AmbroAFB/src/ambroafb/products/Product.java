@@ -168,7 +168,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     public static ArrayList<Product> getAllFromDB (){
         JSONObject params = new ConditionBuilder().build();
         ArrayList<Product> products = DBUtils.getObjectsListFromDB(Product.class, DB_VIEW_NAME, params);
-        products.sort((Product p1, Product p2) -> p2.getRecId() - p1.getRecId());
+        products.sort((Product p1, Product p2) -> p2.compareById(p1));
         return products;
     }
     

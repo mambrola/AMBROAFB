@@ -95,4 +95,14 @@ public class ClientStatus {
             setLanguage(other.getLanguage());
         }
     }
+    
+    /**
+     * The method compares ClientStatuses by id.
+     * @param other Other object that is not null. 
+     * @return  
+     * @see ambroafb.general.interfaces.EditorPanelable#compareById(ambroafb.general.interfaces.EditorPanelable)  EditorPanelable method "compareById"
+     */
+    public int compateById(ClientStatus other){
+        return getRecId() - other.getRecId();
+    }
 }

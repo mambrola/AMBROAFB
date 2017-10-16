@@ -80,7 +80,13 @@ public class DocMerchandise {
         this.vatRate.set("" + vatRate);
     }
     
-    public int compares(DocMerchandise other){
+    /**
+     * The method compares two InvoiceStatusClarify objects.
+     * @param other Other object that is not null.
+     * @return 
+     * @see ambroafb.general.interfaces.EditorPanelable#compareById(ambroafb.general.interfaces.EditorPanelable)  EditorPanelable method "compareById"
+     */
+    public int compareById(DocMerchandise other){
         return getRecId() - other.getRecId();
     }
 

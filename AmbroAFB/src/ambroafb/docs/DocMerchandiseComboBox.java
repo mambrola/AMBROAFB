@@ -35,7 +35,7 @@ public class DocMerchandiseComboBox extends ComboBox<DocMerchandise> {
         @Override
         public void run() {
             ArrayList<DocMerchandise> merchandises = DBUtils.getObjectsListFromDBProcedure(DocMerchandise.class, procedureName);
-            merchandises.sort((DocMerchandise m1, DocMerchandise m2) -> m1.compares(m2));
+            merchandises.sort((DocMerchandise m1, DocMerchandise m2) -> m1.compareById(m2));
             Platform.runLater(() -> {
                 items.setAll(merchandises);
             });

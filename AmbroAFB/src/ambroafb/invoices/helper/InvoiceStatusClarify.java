@@ -83,4 +83,14 @@ public class InvoiceStatusClarify {
         return  this.getInvoiceStatusClarifyId() == other.getInvoiceStatusClarifyId() &&
                 this.getDescrip().equals(other.getDescrip());
     }
+    
+    /**
+     * The method compares two InvoiceStatusClarify objects.
+     * @param other Other object that is not null.
+     * @return 
+     * @see ambroafb.general.interfaces.EditorPanelable#compareById(ambroafb.general.interfaces.EditorPanelable)  EditorPanelable method "compareById"
+     */
+    public int compareById(InvoiceStatusClarify other){
+        return getRecId() - other.getRecId();
+    }
 }

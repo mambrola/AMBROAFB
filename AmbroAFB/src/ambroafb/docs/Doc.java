@@ -344,12 +344,6 @@ public class Doc extends EditorPanelable {
         this.marker.set(marker);
     }
     
-    
-    @JsonIgnore
-    public int compareWith(Doc other){
-        return getRecId() - other.getRecId();
-    }
-    
     @Override
     public Doc cloneWithoutID() {
         Doc clone = new Doc();

@@ -115,7 +115,7 @@ public class ParamGeneral extends EditorPanelable {
         ParamGeneralDBResponse paramsGeneralResponse = DBUtils.getParamsGeneral(DB_SELECT_PROC_NAME, json);
 //        DBUtils.getObjectsListFromDBProcedure(ParamGeneral.class, DB_SELECT_PROC_NAME, lang, json) ;// 
         ArrayList<ParamGeneral> paramsGeneral = paramsGeneralResponse.getParamGenerals();
-        paramsGeneral.sort((ParamGeneral p1, ParamGeneral p2) -> p1.getRecId() - p2.getRecId());
+        paramsGeneral.sort((ParamGeneral p1, ParamGeneral p2) -> p1.compareById(p2));
         return paramsGeneral;
     }
     

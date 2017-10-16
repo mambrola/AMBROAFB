@@ -117,7 +117,7 @@ public class Account extends EditorPanelable {
     public static ArrayList<Account> getAllFromDB(){
         JSONObject params = new ConditionBuilder().build();
         ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_VEIW_NAME, params);
-        accountFromDB.sort((Account ac1, Account ac2) -> ac1.getRecId() - ac2.getRecId());
+        accountFromDB.sort((Account ac1, Account ac2) -> ac1.compareById(ac2));
         return accountFromDB;
     }
     
@@ -308,7 +308,7 @@ public class Account extends EditorPanelable {
                 getRemark().equals(other.getRemark()) &&
                 closedProperty().get().equals(other.closedProperty().get());
     }
-
+    
     @Override
     public String toStringForSearch() {
         return getDescrip() + " " + getClientDescrip();

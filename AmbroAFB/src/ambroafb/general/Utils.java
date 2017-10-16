@@ -377,8 +377,8 @@ public class Utils {
         if (docs1.size() != docs2.size()){
             return false;
         }
-        docs1.sort((Doc d1, Doc d2) -> d1.compareWith(d2));
-        docs2.sort((Doc d1, Doc d2) -> d1.compareWith(d2));
+        docs1.sort((Doc d1, Doc d2) -> d1.compareById(d2));
+        docs2.sort((Doc d1, Doc d2) -> d1.compareById(d2));
         for (int i = 0; i < docs1.size(); i++) {
             if (!docs1.get(i).compares(docs2.get(i))){
                 return false;

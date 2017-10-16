@@ -10,6 +10,15 @@ package ambroafb.general.interfaces;
  * @author mambroladze
  */
 public interface Filterable {
+    
+    /**
+     * @return FilterModel that access user selected scene parameters.
+     */
     public FilterModel getResult();
+   
+    /**
+     *  The method makes action according to dialog buttons.
+     * @param isOk The boolean value is true if user select OK dialog button. False, if user select  Cancel dialog button.
+     */
     public void setResult(boolean isOk);
 }

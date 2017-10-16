@@ -86,7 +86,7 @@ public class Logging extends EditorPanelable {
         
         JSONObject params = whereBuilder.condition().build();
         ArrayList<Logging> loggings = DBUtils.getObjectsListFromDB(Logging.class, DB_LOGIN_VIEW, params);
-        loggings.sort((Logging log1, Logging log2) -> log2.getRecId() - log1.getRecId());
+        loggings.sort((Logging log1, Logging log2) -> log2.compareById(log1));
         return loggings;
     }
     
