@@ -111,7 +111,7 @@ public class AccountNumber extends HBox {
      */
     private void keyAction(ActionEvent event){
         if (numberGeneratorManager != null){
-            numberGeneratorManager.generateKeyWith(accountNumber.getText(), successFn, errorFn);
+            numberGeneratorManager.generateKeyFor(successFn, errorFn);
         }
     }
     

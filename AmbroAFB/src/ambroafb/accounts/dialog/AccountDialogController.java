@@ -12,11 +12,16 @@ import ambroafb.balance_accounts.BalanceAccountTreeComboBox;
 import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.currencies.IsoComboBox;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.account_number.AccountNumber;
+import ambroafb.general.scene_components.account_number.NumberGenerateManager;
+import authclient.AuthServerException;
+import authclient.db.DBClient;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -26,6 +31,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * FXML Controller class
@@ -64,6 +71,7 @@ public class AccountDialogController extends DialogController {
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
+        accountNumber.setNumberGenerateManager(new CustomNumberGenerator());
     }
 
     @Override
@@ -109,4 +117,49 @@ public class AccountDialogController extends DialogController {
         clients.fillComboBoxWithClientsAndPartners(setClientbyId);
     }
     
+    
+    private class CustomNumberGenerator implements NumberGenerateManager {
+
+        private final String procedureNameForKey = "account_set_key";
+        private final String procedureNameForNew = "account_get_fit_account";
+        private final String responseKey = "account";
+        private final DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        private final String emptyServerResponse = "No account number";
+        
+        @Override
+        public void generateKeyFor(Consumer<String> success, Consumer<Exception> error) {
+            if (!accountNumber.getText().isEmpty()){
+                try {
+                    String accNum = getAccountNumber(procedureNameForKey, Integer.parseInt(accountNumber.getText()));
+                    success.accept(accNum);
+                } catch (IOException | AuthServerException | JSONException ex) {
+                    error.accept(ex);
+                }
+            }
+        }
+
+        @Override
+        public void generateNewNumber(Consumer<String> success, Consumer<Exception> error) {
+            System.out.println("clients.valueProperty().isNotNull().get(): " + clients.valueProperty().isNotNull().get());
+            if (clients.valueProperty().isNotNull().get() && balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
+                try {
+                    String accNum = getAccountNumber(procedureNameForNew, clients.valueProperty().get().getRecId(), balAccounts.getValue().getBalAcc(), currencies.getValue());
+                    success.accept(accNum);
+                } catch (IOException | AuthServerException | JSONException ex) {
+                    error.accept(ex);
+                }
+            }
+            else {
+                success.accept("");
+            }
+        }
+        
+        private String getAccountNumber(String procedureName, Object... params) throws IOException, AuthServerException, JSONException{
+            String resposne = dbClient.callProcedure(procedureName, params).getDataAsString();
+            JSONArray accountsNumber = new JSONArray(resposne);
+            return (!accountsNumber.isNull(0)) 
+                                    ? accountsNumber.getJSONObject(0).optString(responseKey) 
+                                    : emptyServerResponse;
+        }
+    }
 }

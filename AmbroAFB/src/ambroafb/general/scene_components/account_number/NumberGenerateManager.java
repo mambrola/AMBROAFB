@@ -19,7 +19,7 @@ public interface NumberGenerateManager {
      * @param success The action if generated was success.
      * @param error The actin if generated was problematic.
      */
-    public void generateKeyWith(String accNum, Consumer<String> success, Consumer<Exception> error);
+    public void generateKeyFor(Consumer<String> success, Consumer<Exception> error);
     
     
     /**
