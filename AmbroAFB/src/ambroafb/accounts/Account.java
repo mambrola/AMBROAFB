@@ -76,7 +76,6 @@ public class Account extends EditorPanelable {
             if (newValue != null){
                 newClientId = "" + newValue.getRecId();
             }
-            System.out.println("------------------ newClientId: " + newClientId);
             clientId.set(newClientId);
         });
     }

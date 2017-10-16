@@ -140,8 +140,7 @@ public class AccountDialogController extends DialogController {
 
         @Override
         public void generateNewNumber(Consumer<String> success, Consumer<Exception> error) {
-            System.out.println("clients.valueProperty().isNotNull().get(): " + clients.valueProperty().isNotNull().get());
-            if (clients.valueProperty().isNotNull().get() && balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
+            if (clients.getSelectionModel().getSelectedIndex() >= 0 && balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
                 try {
                     String accNum = getAccountNumber(procedureNameForNew, clients.valueProperty().get().getRecId(), balAccounts.getValue().getBalAcc(), currencies.getValue());
                     success.accept(accNum);
