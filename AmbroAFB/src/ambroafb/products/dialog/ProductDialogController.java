@@ -7,6 +7,7 @@ package ambroafb.products.dialog;
 
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.Names;
+import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentMapEditor;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
@@ -37,17 +38,17 @@ public class ProductDialogController extends DialogController {
     private VBox formPane;
     @FXML @ContentNotEmpty
     private TextField abbreviation;
-    @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]{2}", explain = "The content length must be 2.")
+    @FXML @ContentNotEmpty @ContentPattern(value = "[0-9]{2}", explain = "anot_former_exp")
     private TextField former;
     @FXML @ContentNotEmpty
     private TextField descrip;
     @FXML @ContentNotEmpty
     private ProductsSpecificsComboBox specifics;
-    @FXML @ContentNotEmpty @ContentPattern(value = AmountField.PRODUCT_PRICE_PATTERN, explain = AmountField.INCORRECT_CONTENT_EXPLAIN)
+    @FXML @ContentNotEmpty @ContentAmount(integerPartMaxLen = 8)
     private AmountField price;
     @FXML @ContentNotEmpty
     private CurrencyComboBox currencies;
-    @FXML @ContentMapEditor(explainKey = "Left number must be days counter.", explainValue = "Right number must be discount percent. Exp: 4.25")
+    @FXML @ContentMapEditor
     private MapEditor discounts;
     @FXML
     private CheckBox isAlive;

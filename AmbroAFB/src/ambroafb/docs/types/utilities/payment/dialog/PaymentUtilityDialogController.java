@@ -10,8 +10,8 @@ import ambroafb.docs.DocMerchandise;
 import ambroafb.docs.DocMerchandiseComboBox;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
 import ambroafb.general.Names;
+import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -43,7 +43,7 @@ public class PaymentUtilityDialogController extends DialogController {
     @FXML
     private TextField currency;
     
-    @FXML @ContentNotEmpty @ContentPattern(value = AmountField.AMOUNT_PATTERN, explain = AmountField.INCORRECT_CONTENT_EXPLAIN)
+    @FXML @ContentNotEmpty @ContentAmount
     private AmountField amount;
     
     @FXML

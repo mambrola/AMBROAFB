@@ -14,6 +14,8 @@ import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.countcombobox.CountComboBox;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.image_gallery.ImageGalleryController;
+import ambroafb.general.interfaces.Annotations.ContentAmount;
+import ambroafb.general.interfaces.Annotations.ContentISO;
 import ambroafb.general.interfaces.Annotations.ContentMail;
 import ambroafb.general.interfaces.Annotations.ContentMapEditor;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
@@ -529,21 +531,27 @@ public class Utils {
             if (field.isAnnotationPresent(ContentTreeItem.class)){
                 result = result && checkValidationForContentTreeItemAnnotation(field, currentClassObject, type);
             }
+            if (field.isAnnotationPresent(ContentRate.class)){
+                result = result && checkValidationForContentRateAnnotation(field, currentClassObject);
+            }
+            if (field.isAnnotationPresent(ContentAmount.class)){
+                result = result && checkValidationForContentAmountAnnotation(field, currentClassObject);
+            }
+            if (field.isAnnotationPresent(ContentISO.class)){
+                result = result && checkValidationForContentISOAnnotation(field, currentClassObject);
+            }
             if (field.isAnnotationPresent(ContentPattern.class)){
                 result = result && checkValidationForContentPatternAnnotation(field, currentClassObject);
             }
             if (field.isAnnotationPresent(ContentMapEditor.class)){
                 result = result && checkValidationForContentMapEditorAnnotation(field, currentClassObject);
             }
-            if (field.isAnnotationPresent(ContentRate.class)){
-                result = result && checkValidationForContentRateAnnotation(field, currentClassObject);
-            }
         }
         return result;
     }
 
     private static boolean checkValidationForIsNotEmptyAnnotation(Field field, Object classObject) {
-        boolean result = true;
+        boolean contentIsCorrect = false;
         ContentNotEmpty annotation = field.getAnnotation(ContentNotEmpty.class);
 
         Object[] typeAndContent = getNodesTypeAndContent(field, classObject);
@@ -554,15 +562,15 @@ public class Utils {
         // case of comboBoxes value may contains tab or spaces so we need to trim the value.
         if (predicateValue && (value == null || value.toString().trim().isEmpty())) {
             changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
-            result = false;
         } else {
             changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
+            contentIsCorrect = true;
         }
-        return result;
+        return contentIsCorrect;
     }
     
     private static boolean checkValidationForContentMailAnnotation(Field field, Object currSceneController) {
-        boolean result = true;
+        boolean contentIsCorrect = false;
         ContentMail annotation = field.getAnnotation(ContentMail.class);
 
         Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
@@ -572,14 +580,13 @@ public class Utils {
         boolean predicateValue = getPredicateValue(annotation.predicate(), field.getName());
         if (predicateValue && !validSyntax) { // otherwise email check label may stay a red color
             changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explainForSyntax());
-            result = false;
         } else if (predicateValue && !validAlphabet) { // otherwise email check label may stay a red color
             changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explainForAlphabet());
-            result = false;
         } else {
             changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
+            contentIsCorrect = true;
         }
-        return result;
+        return contentIsCorrect;
     }
     
     private static boolean getPredicateValue(Class predicateClass, String fieldName){
@@ -595,18 +602,16 @@ public class Utils {
     }
 
     private static boolean checkValidationForContentTreeItemAnnotation(Field field, Object currSceneController, EDITOR_BUTTON_TYPE  type){
-        boolean result = true;
+        boolean contentIsCorrect = false;
         ContentTreeItem annotation = field.getAnnotation(ContentTreeItem.class);
         Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
         String content = (String)typeAndContent[1];
         
         if (content.length() != Integer.parseInt(annotation.valueForLength())){
             changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForLength() + annotation.valueForLength());
-            result = false;
         }
         else if (!Pattern.matches(annotation.valueForSyntax(), content)){
             changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForSyntax());
-            result = false;
         }
         else {
             EditorPanelable newPanelableObject = (EditorPanelable) getInvokedClassMethod(currSceneController.getClass(), "getNewEditorPanelable", null, currSceneController);
@@ -614,37 +619,36 @@ public class Utils {
             // already exist this item for this code:
             if ((Boolean)getInvokedClassMethod(contr.getClass(), "accountAlreadyExistForCode", new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class}, contr, newPanelableObject, type)){
                 changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForExists());
-                result = false;
             }
             // item has not a parent:
             else if (!(Boolean)getInvokedClassMethod(contr.getClass(), "accountHasParent", new Class[]{String.class}, contr, content)){
                 changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForHasNotParent());
-                result = false;
             }
             else {
                 changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
+                contentIsCorrect = true;
             }
         }
-        return result;
+        return contentIsCorrect;
     }
     
     private static boolean checkValidationForContentPatternAnnotation(Field field, Object currSceneController){
-        boolean result = true;
+        boolean contentIsCorrect = false;
         ContentPattern annotation = field.getAnnotation(ContentPattern.class);
         
         Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
         
         if (!Pattern.matches(annotation.value(), (String)typeAndContent[1])){
             changeNodeTitleLabelVisual((Node) typeAndContent[0], annotation.explain());
-            result = false;
         } else {
             changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
+            contentIsCorrect = true;
         }
-        return result;
+        return contentIsCorrect;
     }
     
     private static boolean checkValidationForContentMapEditorAnnotation(Field field, Object currSceneController){
-        boolean result = true;
+        boolean contentIsCorrect = false;
         ContentMapEditor annotation = field.getAnnotation(ContentMapEditor.class);
         Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
         MapEditor mapEditorComboBox = (MapEditor) typeAndContent[0];
@@ -658,41 +662,91 @@ public class Utils {
         if (!keyMatch || !valueMatch){
             explain = (!keyMatch) ? annotation.explainKey() : annotation.explainValue();
             changeNodeTitleLabelVisual(mapEditorComboBox, explain);
-            result = false;
         }
         else if ((keyPart.isEmpty() && !valuePart.isEmpty()) || (!keyPart.isEmpty() && valuePart.isEmpty())){
             explain = annotation.explainEmpty();
             changeNodeTitleLabelVisual(mapEditorComboBox, explain);
-            result = false;
         } else {
             changeNodeTitleLabelVisual(mapEditorComboBox, "");
+            contentIsCorrect = true;
         }
-        return result;
+        return contentIsCorrect;
     }
     
     private static boolean checkValidationForContentRateAnnotation(Field field, Object currSceneController){
-        boolean result = true;
+        boolean contentIsCorrect = false;
         ContentRate annotation = field.getAnnotation(ContentRate.class);
         Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
 
         if (!Pattern.matches(annotation.valueForIntegerPart(), (String) typeAndContent[1])){
-            changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForIntegerPart());
-            result = false;
+            String explainFromBundle = GeneralConfig.getInstance().getTitleFor(annotation.explainForIntegerPart());
+            String integerPartExp = explainFromBundle.replaceFirst("#", "" + ContentRate.integerPartLen);
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], integerPartExp);
         }
-        else if (!Pattern.matches(annotation.valueForFactionalPart(), (String) typeAndContent[1])){
-            changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForFactionalPart());
-            result = false;
+        else if (!Pattern.matches(annotation.valueForFractionalPart(), (String) typeAndContent[1])){
+            String explainFromBundle = GeneralConfig.getInstance().getTitleFor(annotation.explainForFractionalPart());
+            String fractionalPartExp = explainFromBundle.replaceFirst("#", "" + ContentRate.fractionalPartLen);
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], fractionalPartExp);
         }
         else if (!Pattern.matches(annotation.valueForWhole(), (String) typeAndContent[1])){
             changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForWhole());
-            result = false;
         }
         else {
             changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
+            contentIsCorrect = true;
         }
-        return result;
+        return contentIsCorrect;
     }
+    
+    private static boolean checkValidationForContentAmountAnnotation (Field field, Object currSceneController){
+        boolean contentIsCorrect = false;
+        ContentAmount annotation = field.getAnnotation(ContentAmount.class);
+        Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
 
+        String integerPartPattern = annotation.valueForIntegerPart();
+        int outerIntegerPartMaxLen = annotation.integerPartMaxLen();
+        if (outerIntegerPartMaxLen > 0){
+            integerPartPattern = annotation.valueForIntegerPart().replaceFirst("" + (ContentAmount.integerPartMaxLen-1), "" + annotation.integerPartMaxLen());
+        }
+        
+        if (!Pattern.matches(integerPartPattern, (String) typeAndContent[1])){
+            String integerPartExplain = (outerIntegerPartMaxLen > 0) ? "" + outerIntegerPartMaxLen : "" + ContentAmount.integerPartMaxLen;
+            String explainFromBundle = GeneralConfig.getInstance().getTitleFor(annotation.explainForIntegerPart());
+            String integerPartExp = explainFromBundle.replaceFirst("#", integerPartExplain);
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], integerPartExp);
+        }
+        else if (!Pattern.matches(annotation.valueForFractionalPart(), (String) typeAndContent[1])){
+            String explainFromBundle = GeneralConfig.getInstance().getTitleFor(annotation.explainForFractionalPart());
+            String fractionalPartExp = explainFromBundle.replaceFirst("#", "" + ContentAmount.fractionalPartLen);
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], fractionalPartExp);
+        }
+        else if (!Pattern.matches(annotation.valueForWhole(), (String) typeAndContent[1])){
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForWhole());
+        }
+        else {
+            changeNodeTitleLabelVisual((Node) typeAndContent[0], "");
+            contentIsCorrect = true;
+        }
+        return contentIsCorrect;
+    }
+    
+    private static boolean checkValidationForContentISOAnnotation(Field field, Object currSceneController){
+        boolean contentIsCorrect = false;
+        ContentISO annotation = field.getAnnotation(ContentISO.class);
+        Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
+        
+        if (!Pattern.matches(annotation.value(), (String)typeAndContent[1])){
+            String explainFromBundle = GeneralConfig.getInstance().getTitleFor(annotation.explain());
+            String explain = explainFromBundle.replaceFirst("#", "" + ContentISO.isoLen);
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], explain);
+        }
+        else {
+            changeNodeTitleLabelVisual((Node)typeAndContent[0], "");
+            contentIsCorrect = true;
+        }
+        return contentIsCorrect;
+    }
+    
     private static Object[] getNodesTypeAndContent(Field field, Object ownerClassObject) {
         Object[] results = new Object[2];
         try {

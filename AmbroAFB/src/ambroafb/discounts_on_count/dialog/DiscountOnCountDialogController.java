@@ -7,8 +7,8 @@ package ambroafb.discounts_on_count.dialog;
 
 import ambroafb.discounts_on_count.DiscountOnCount;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -32,8 +32,7 @@ public class DiscountOnCountDialogController extends DialogController {
     
     @FXML @ContentNotEmpty
     private IntegerField licenseCount;
-    @FXML @ContentNotEmpty 
-    @ContentPattern(value = AmountField.AMOUNT_PATTERN, explain = AmountField.INCORRECT_CONTENT_EXPLAIN)
+    @FXML @ContentNotEmpty @ContentAmount
     private AmountField discountRate;
     
     @FXML

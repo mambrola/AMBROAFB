@@ -9,6 +9,7 @@ import ambro.ADatePicker;
 import ambroafb.currencies.Currency;
 import ambroafb.currencies.IsoComboBox;
 import ambroafb.general.Names;
+import ambroafb.general.interfaces.Annotations.ContentISO;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.DialogController;
@@ -32,11 +33,11 @@ public class CurrencyDialogController extends DialogController {
     private VBox formPane;
     @FXML
     private ADatePicker openDate;
-    @FXML @ContentNotEmpty @ContentPattern(value = "[a-zA-Z]{3}", explain = "The length must be 3")
+    @FXML @ContentNotEmpty @ContentISO
     private IsoComboBox iso;
     @FXML @ContentNotEmpty
     private TextField descrip;
-    @FXML @ContentNotEmpty @ContentPattern(value = "\\p{Sc}", explain = "Only one symbol of currency.")
+    @FXML @ContentNotEmpty @ContentPattern(value = "\\p{Sc}", explain = "anot_currency_exp")
     private TextField symbol;
     @FXML
     private DialogOkayCancelController okayCancelController;

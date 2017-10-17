@@ -39,7 +39,7 @@ public class CurrencyRateDialogController extends DialogController {
     @FXML @ContentNotEmpty
     private CurrencyComboBox currencies;
     
-    @ContentNotEmpty @ContentPattern(value = "[1][0]*", explain = "Count must be 1 or 10 or 100 and so on.")
+    @ContentNotEmpty @ContentPattern(value = "[1][0]*", explain = "anot_rate_unit_exp")
     @FXML 
     private TextField count;
     

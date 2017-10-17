@@ -12,8 +12,8 @@ import ambroafb.docs.types.conversion.Conversion;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.NumberConverter;
+import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -45,14 +45,14 @@ public class ConversionDialogController extends DialogController {
     private IsoComboBox sellCurrency;
     @FXML @ContentNotEmpty
     private AccountComboBox sellAccount;
-    @FXML @ContentNotEmpty @ContentPattern(value = AmountField.AMOUNT_PATTERN, explain = AmountField.INCORRECT_CONTENT_EXPLAIN)
+    @FXML @ContentNotEmpty @ContentAmount
     private AmountField sellAmount;
     
     @FXML
     private IsoComboBox buyingCurrency;
     @FXML @ContentNotEmpty
     private AccountComboBox buyingAccount;
-    @FXML @ContentNotEmpty @ContentPattern(value = AmountField.AMOUNT_PATTERN, explain = AmountField.INCORRECT_CONTENT_EXPLAIN)
+    @FXML @ContentNotEmpty @ContentAmount
     private AmountField buyingAmount;
     @FXML
     private Label currentRateTitle;

@@ -15,8 +15,8 @@ import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBox;
 import ambroafb.general.countcombobox.CountComboBoxItem;
+import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.monthcountercombobox.MonthCounterComboBox;
@@ -72,7 +72,7 @@ public class InvoiceDialogController extends DialogController {
     private ADatePicker beginDate;
     @FXML @ContentNotEmpty
     private MonthCounterComboBox monthCounter;
-    @FXML @ContentPattern(value = AmountField.AMOUNT_PATTERN, explain = AmountField.INCORRECT_CONTENT_EXPLAIN)
+    @FXML @ContentAmount
     private AmountField additionalDiscount;
     // end order
     
