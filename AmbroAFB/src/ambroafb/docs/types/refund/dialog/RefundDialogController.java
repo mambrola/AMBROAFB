@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.docs.types.doc_in_order.dialog;
+package ambroafb.docs.types.refund.dialog;
 
-import ambro.ADatePicker;
-import ambroafb.docs.types.doc_in_order.DocInOrder;
+import ambroafb.docs.Doc;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.DialogController;
@@ -23,23 +22,19 @@ import javafx.scene.layout.VBox;
  *
  * @author dkobuladze
  */
-public class DocInOrderDialogController extends DialogController {
+public class RefundDialogController extends DialogController {
 
     @FXML
     private VBox formPane;
     
     @FXML
-    private ADatePicker docDate;
-    
-    @FXML
     private DialogOkayCancelController okayCancelController;
-    
-    @FXML
-    private VBox listVBox;
 
+    private final String docCodeComponentFxId = "docCodes";
+    private final String docCodeRefundType = "Refund";
+    
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-
     }
 
     @Override
@@ -49,36 +44,21 @@ public class DocInOrderDialogController extends DialogController {
 
     @Override
     protected void bindObjectToSceneComponents(EditorPanelable object) {
-        if (object != null){
-            DocInOrder docInOrder = (DocInOrder)object;
-            docDate.valueProperty().bindBidirectional(docInOrder.docDateProperty());
-        }
     }
 
     @Override
     protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
-            formPane.getChildren().remove(1);
-        }
-        else {
-            ((DocInOrder)sceneObject).getDocs().stream().forEach((doc) -> {
-                DocOrderComponent lsComp = new DocOrderComponent();
-                lsComp.removeDocDateComponent();
-                lsComp.binTo(doc);
-                lsComp.setDialogType(buttonType);
-                if ((buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.EDIT)) 
-                    && !doc.isParentDoc()){
-                    lsComp.setDialogType(Names.EDITOR_BUTTON_TYPE.VIEW);
-                }
-                lsComp.setDottedBorder('a');
-                listVBox.getChildren().add(lsComp);
-            });
-        }
+        ((Doc)sceneObject).setDocCode(docCodeRefundType);
+        DocOrderComponent lsComp = new DocOrderComponent();
+        lsComp.binTo((Doc)sceneObject);
+        lsComp.setDialogType(buttonType);
+        lsComp.disabledComponents(docCodeComponentFxId);
+        formPane.getChildren().add(0, lsComp);
     }
     
     @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }
-    
+
 }

@@ -47,7 +47,7 @@ public class CustomDialogController extends DialogController {
     protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
         DocOrderComponent lsComp = new DocOrderComponent();
         lsComp.binTo((Doc)sceneObject);
-        lsComp.setDiableComponents(buttonType);
+        lsComp.setDialogType(buttonType);
         formPane.getChildren().add(0, lsComp);
     }
     

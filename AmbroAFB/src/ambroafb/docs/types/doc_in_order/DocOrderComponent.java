@@ -19,6 +19,7 @@ import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -161,7 +162,7 @@ public class DocOrderComponent extends VBox {
         }
     }
 
-    public void setDiableComponents(Names.EDITOR_BUTTON_TYPE buttonType) {
+    public void setDialogType(Names.EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
@@ -173,4 +174,16 @@ public class DocOrderComponent extends VBox {
         });
     }
     
+    /**
+     * The method provides to disabled components by fx:id.
+     * @param fxIds The disabled components fx:id array.
+     */
+    public void disabledComponents(String... fxIds){
+        for (String id : fxIds){
+            Optional<Node> optNode = focusTraversableNodes.stream().filter((node) -> node.getId().equals(id)).findFirst();
+            if (optNode.isPresent()){
+                optNode.get().setDisable(true);
+            }
+        }
+    }
 }
