@@ -292,7 +292,7 @@ public class Account extends EditorPanelable {
         if (other == null) return false;
         Account otherAccount = (Account)other;
         return  getRecId() == otherAccount.getRecId() ||
-                getAccount() == otherAccount.getAccount();
+                (getAccount() == otherAccount.getAccount() && getIso().equals(otherAccount.getIso()));
     }
     
     @Override
