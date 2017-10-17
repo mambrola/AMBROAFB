@@ -5,6 +5,7 @@
  */
 package ambroafb.licenses.filter;
 
+import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.FilterModel;
@@ -13,10 +14,14 @@ import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseStatus;
+import ambroafb.products.Product;
 import ambroafb.products.ProductComboBox;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -77,7 +82,21 @@ public class LicenseFilter extends UserInteractiveFilterStage implements Filtera
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        clients.fillComboBoxOnlyClientsWithALL(null);
+        Consumer<ObservableList<Client>> clientConsumer = (clientList) -> {
+            Optional<Client> optClient = clientList.stream().filter((client) -> client.getRecId() == filterModel.getSelectedClientId()).findFirst();
+            if (optClient.isPresent()){
+                clients.valueProperty().set(optClient.get());
+            }
+        };
+        clients.fillComboBoxOnlyClientsWithALL(clientConsumer);
+        
+        Consumer<ObservableList<Product>> productConsumer = (productList) -> {
+            Optional<Product> optProduct = productList.stream().filter((product) -> product.getRecId() == filterModel.getSelectedProductId()).findFirst();
+            if (optProduct.isPresent()){
+                products.valueProperty().set(optProduct.get());
+            }
+        };
+        products.fillComboBoxWithALL(productConsumer);
         
         ArrayList<LicenseStatus> licenseStatuses = License.getAllLicenseStatusFromDB();
         licenseStatuses.sort((LicenseStatus status1, LicenseStatus status2) -> status1.compareById(status2));

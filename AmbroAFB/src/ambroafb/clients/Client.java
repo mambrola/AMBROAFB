@@ -236,7 +236,7 @@ public class Client extends EditorPanelable{
             whereBuilder.and("email", relation, "");
         }
         if (clientFilterModel.isSelectedConcreteCountry()){
-            whereBuilder.and("country_code", "=", clientFilterModel.getSelectedCountry().getCode());
+            whereBuilder.and("country_code", "=", clientFilterModel.getSelectedCountryCode());
         }
         if (clientFilterModel.hasSelectedStatuses()){
             whereBuilder = whereBuilder.andGroup();

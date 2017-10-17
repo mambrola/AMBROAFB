@@ -6,6 +6,7 @@
 package ambroafb.currency_rates.filter;
 
 import ambroafb.currencies.Currency;
+import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.DateFilterModel;
 import java.time.LocalDate;
@@ -18,9 +19,8 @@ public class CurrencyRateFilterModel extends DateFilterModel {
     
     private static final String PREF_BIGGER_DATE_KEY = "currency_rate/filter/dateBigger";
     private static final String PREF_LESS_DATE_KEY = "currency_rate/filter/dateLess";
+    private static final String PREF_CURRENCY_KEY = "currency_rate/filter/currency";
     
-    private Currency selectedCurrency;
-            
     public CurrencyRateFilterModel(){
         
     }
@@ -34,7 +34,9 @@ public class CurrencyRateFilterModel extends DateFilterModel {
     }
     
     public void setSelectedCurrency(Currency currency) {
-        selectedCurrency = currency;
+        if (currency != null){
+            saveIntoPref(PREF_CURRENCY_KEY, currency.getIso());
+        }
     }
     
     /**
@@ -55,11 +57,16 @@ public class CurrencyRateFilterModel extends DateFilterModel {
         return DateConverter.getInstance().parseDate(date);
     }
     
-    public Currency getSelectedCurrency(){
-        return selectedCurrency;
+//    public Currency getSelectedCurrency(){
+//        return selectedCurrency;
+//    }
+    
+    public String getSelectedCurrencyIso(){
+        return getStringFromPref(PREF_CURRENCY_KEY);
     }
 
     public boolean isSelectedConcreteCurrency() {
-        return selectedCurrency != null && selectedCurrency.getRecId() > 0;
+        String selectedIso = getStringFromPref(PREF_CURRENCY_KEY);
+        return selectedIso != null && !selectedIso.equals(CurrencyComboBox.categoryALL);
     }
 }

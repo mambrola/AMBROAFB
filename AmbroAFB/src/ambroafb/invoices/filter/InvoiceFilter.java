@@ -6,6 +6,7 @@
 package ambroafb.invoices.filter;
 
 import ambro.ADatePicker;
+import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.FilterModel;
@@ -17,7 +18,10 @@ import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatusClarify;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -112,7 +116,13 @@ public class InvoiceFilter extends UserInteractiveFilterStage implements Filtera
             invoiceReissuings.getCheckModel().check(index);
         });
         
-        clients.fillComboBoxOnlyClientsWithALL(null);
+        Consumer<ObservableList<Client>> clientConsumer = (clientList) -> {
+            Optional<Client> optClient = clientList.stream().filter((client) -> client.getRecId() == invoiceFilterModel.getSelectedClientId()).findFirst();
+            if (optClient.isPresent()){
+                clients.valueProperty().set(optClient.get());
+            }
+        };
+        clients.fillComboBoxOnlyClientsWithALL(clientConsumer);
     }
     
     private void printClarifiesIDsList(ArrayList<InvoiceStatusClarify> clarifies){

@@ -6,6 +6,7 @@
 package ambroafb.currency_rates.filter;
 
 import ambro.ADatePicker;
+import ambroafb.currencies.Currency;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.FilterModel;
@@ -13,7 +14,10 @@ import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -75,7 +79,13 @@ public class CurrencyRateFilter extends UserInteractiveFilterStage implements Fi
     public void initialize(URL url, ResourceBundle rb) {
         dateBigger.setValue(currencyRateFilterModel.getFromDate());
         dateLess.setValue(currencyRateFilterModel.getToDate());
-        currencies.fillComboBoxWithALLAndWithoutRatesBasicIso(null);
+        Consumer<ObservableList<Currency>> currencyConsumer = (currencyList) -> {
+            Optional<Currency> optCurrency = currencyList.stream().filter((curr) -> curr.getIso().equals(currencyRateFilterModel.getSelectedCurrencyIso())).findFirst();
+            if (optCurrency.isPresent()){
+                currencies.setValue(optCurrency.get());
+            }
+        };
+        currencies.fillComboBoxWithALLAndWithoutRatesBasicIso(currencyConsumer);
     }    
 
     @Override

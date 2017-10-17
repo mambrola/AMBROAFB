@@ -18,9 +18,7 @@ public class LoggingFilterModel extends DateTimeFilterModel {
 
     private static final String PREF_BIGGER_DATE_KEY = "logging/filter/dateBigger";
     private static final String PREF_LESS_DATE_KEY = "logging/filter/dateLess";
-    private static final String PREF_CLIENT_KEY = "logging/filter/selected_client_index";
-    
-    private Client selectedClient;
+    private static final String PREF_CLIENT_KEY = "logging/filter/client_id";
     
     public LoggingFilterModel(){
         
@@ -35,13 +33,11 @@ public class LoggingFilterModel extends DateTimeFilterModel {
     }
     
     public void setSelectedClient(Client client) {
-        selectedClient = client;
+        if (client != null){
+            saveIntoPref(PREF_CLIENT_KEY, client.getRecId());
+        }
     }
 
-    public void setSelectedClientIndex(int selectedIndex) {
-        saveIntoPref(PREF_CLIENT_KEY, selectedIndex);
-    }
-    
     
     /**
      * @return The method return date object that user selected on datePicker.
@@ -61,15 +57,11 @@ public class LoggingFilterModel extends DateTimeFilterModel {
         return DateConverter.getInstance().parseDate(date);
     }
     
-    public int getSelectedClientIndex(){
+    public int getSelectedClientId(){
         return getIntFromPref(PREF_CLIENT_KEY);
-    }
-    
-    public Client getSelectedClient(){
-        return selectedClient;
     }
 
     public boolean isSelectedConcreteClient() {
-        return selectedClient != null && selectedClient.getRecId() > 0;
+        return getSelectedClientId() > 0;
     }
 }

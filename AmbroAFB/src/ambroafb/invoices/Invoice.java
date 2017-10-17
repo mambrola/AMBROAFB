@@ -210,7 +210,7 @@ public class Invoice extends EditorPanelable {
                     .and("end_date", "<=", invoiseFilterModel.getEndDateForDB(false));
         
         if (invoiseFilterModel.isSelectedConcreteClient()){
-            whereBuilder.and("client_id", "=", invoiseFilterModel.getSelectedClient().getRecId());
+            whereBuilder.and("client_id", "=", invoiseFilterModel.getSelectedClientId());
         }
         if (invoiseFilterModel.hasSelectedClarifies()){
             whereBuilder = whereBuilder.andGroup();

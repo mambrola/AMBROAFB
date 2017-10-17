@@ -14,7 +14,10 @@ import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -61,8 +64,6 @@ public class LoggingFilter extends UserInteractiveFilterStage implements Initial
             loggingFilterModel.setToDate(dateLess.getValue());
             Client selectedclient = (clients.getValue() == null) ? clients.getClientWithDescripALL() : clients.getValue();
             loggingFilterModel.setSelectedClient(selectedclient);
-            int selectedClientIndex = clients.getSelectionModel().getSelectedIndex();
-            loggingFilterModel.setSelectedClientIndex((selectedClientIndex >= 0) ? selectedClientIndex : 0);
         }
     }
     
@@ -70,8 +71,14 @@ public class LoggingFilter extends UserInteractiveFilterStage implements Initial
     public void initialize(URL location, ResourceBundle resources) {
         dateBigger.setValue(loggingFilterModel.getFromDate());
         dateLess.setValue(loggingFilterModel.getToDate());
-//        clients.getSelectionModel().select(loggingFilterModel.getSelectedClientIndex());
-        clients.fillComboBoxOnlyClientsWithALL(null);
+
+        Consumer<ObservableList<Client>> clientConsumer = (clientList) -> {
+            Optional<Client> optClient = clientList.stream().filter((client) -> client.getRecId() == loggingFilterModel.getSelectedClientId()).findFirst();
+            if (optClient.isPresent()){
+                clients.valueProperty().set(optClient.get());
+            }
+        };
+        clients.fillComboBoxOnlyClientsWithALL(clientConsumer);
     }
 
     @Override

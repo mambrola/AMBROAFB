@@ -7,6 +7,7 @@ package ambroafb.clients.filter;
 
 import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.Country;
+import ambroafb.countries.CountryComboBox;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.DateTimeFilterModel;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -36,7 +37,6 @@ public class ClientFilterModel extends DateTimeFilterModel {
     private static final String PREF_TYPE_INDETERMINATE_KEY = "clients/filter/type_indeterminate";
     
     
-    private Country selectedCountry;
     private ObservableList<ClientStatus> selectedStatuses;
     
     public ClientFilterModel(){
@@ -61,7 +61,6 @@ public class ClientFilterModel extends DateTimeFilterModel {
 
     public void setSelectedCountry(Country value) {
         if (value != null){
-            selectedCountry = value;
             saveIntoPref(PREF_TO_COUNTRY_KEY, value.getCode());
         }
     }
@@ -127,10 +126,6 @@ public class ClientFilterModel extends DateTimeFilterModel {
         return getBooleanFromPref(PREF_TYPE_KEY);
     }
     
-    public Country getSelectedCountry(){
-        return selectedCountry;
-    }
-    
     public String getSelectedCountryCode(){
         return getStringFromPref(PREF_TO_COUNTRY_KEY);
     }
@@ -153,7 +148,8 @@ public class ClientFilterModel extends DateTimeFilterModel {
     }
 
     public boolean isSelectedConcreteCountry() {
-        return selectedCountry != null && selectedCountry.getRecId() > 0;
+        String selectedCountryCode = getSelectedCountryCode();
+        return selectedCountryCode != null && !selectedCountryCode.equals(CountryComboBox.categoryALL);
     }
     
     public boolean hasSelectedStatuses(){

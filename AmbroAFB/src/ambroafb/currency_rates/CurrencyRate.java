@@ -85,7 +85,7 @@ public class CurrencyRate extends EditorPanelable {
                 .and("date", ">=", currencyRateFilterModel.getFromDateForDB())
                 .and("date", "<=", currencyRateFilterModel.getToDateForDB());
         if (currencyRateFilterModel.isSelectedConcreteCurrency()) {
-            whereBuilder.and("iso", "=", currencyRateFilterModel.getSelectedCurrency().getIso());
+            whereBuilder.and("iso", "=", currencyRateFilterModel.getSelectedCurrencyIso());
         }
         JSONObject params = whereBuilder.condition().build();
         ArrayList<CurrencyRate> currencyRates = DBUtils.getObjectsListFromDB(CurrencyRate.class, DB_VIEW_NAME, params);

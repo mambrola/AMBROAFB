@@ -74,8 +74,7 @@ public class Logging extends EditorPanelable {
                                         .and("login_time", ">=", logingFilterModel.getFromDateForDB())
                                         .and("login_time", "<=", logingFilterModel.getToDateForDB());
         if (logingFilterModel.isSelectedConcreteClient()){
-            Client client = logingFilterModel.getSelectedClient();
-            whereBuilder.and("client_id", "=", client.getRecId());
+            whereBuilder.and("client_id", "=", logingFilterModel.getSelectedClientId());
         }
         
         JSONObject params = whereBuilder.condition().build();

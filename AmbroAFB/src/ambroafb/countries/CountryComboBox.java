@@ -19,7 +19,7 @@ import javafx.util.StringConverter;
  */
 public class CountryComboBox extends ComboBox<Country> {
     
-    private final String categoryALL = "ALL";
+    public static final String categoryALL = "ALL";
     private final ObservableList<Country> items = FXCollections.observableArrayList();
     private final Country countryALL = new Country();
     

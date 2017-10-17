@@ -25,12 +25,12 @@ import javafx.collections.ObservableList;
  */
 public class LicenseFilterModel extends FilterModel {
 
+    private static final String PREF_CLIENT_KEY = "licenses/filter/client_id";
+    private static final String PREF_PRODUCT_KEY = "licenses/filter/product_id";
     private static final String PREF_STATUS_KEY = "licenses/filter/status_ids";
     private static final String PREF_EXTRA_DAYS_KEY = "licenses/filter/extraDays";
 
     private ObservableList<LicenseStatus> checkedStatuses;
-    private Client selectedClient;
-    private Product selectedProduct;
     
     private final int indeterminate = 2;
     private final int isSelectedExtraDays = 1;
@@ -41,11 +41,15 @@ public class LicenseFilterModel extends FilterModel {
     }
 
     public void setSelectedClient(Client selectedItem) {
-        selectedClient = selectedItem;
+        if (selectedItem != null){
+            saveIntoPref(PREF_CLIENT_KEY, selectedItem.getRecId());
+        }
     }
 
     public void setSelectedProduct(Product selectedItem){
-        selectedProduct = selectedItem;
+        if (selectedItem != null){
+            saveIntoPref(PREF_PRODUCT_KEY, selectedItem.getRecId());
+        }
     }
 
     public void setSelectedStatuses(ObservableList<LicenseStatus> statuses) {
@@ -68,12 +72,12 @@ public class LicenseFilterModel extends FilterModel {
         saveIntoPref(PREF_EXTRA_DAYS_KEY, indeterminate);
     }
 
-    public Client getSelectedClient(){
-        return selectedClient;
+    public int getSelectedClientId(){
+        return getIntFromPref(PREF_CLIENT_KEY);
     }
     
-    public Product getSelectedProduct(){
-        return selectedProduct;
+    public int getSelectedProductId(){
+        return getIntFromPref(PREF_PRODUCT_KEY);
     }
 
     /**
@@ -109,10 +113,10 @@ public class LicenseFilterModel extends FilterModel {
     }
     
     public boolean isSelectedConcreteClient(){
-        return selectedClient != null && selectedClient.getRecId() > 0;
+        return getSelectedClientId() > 0;
     }
     
     public boolean isSelectedConcreteProduct(){
-        return selectedProduct != null && selectedProduct.getRecId() > 0;
+        return getSelectedProductId() > 0;
     }
 }

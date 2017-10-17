@@ -156,10 +156,10 @@ public class License extends EditorPanelable {
         LicenseFilterModel licenseFilterModel = (LicenseFilterModel) model;
         
         if (licenseFilterModel.isSelectedConcreteClient()){
-            whereBuilder = whereBuilder.and("client_id", "=", licenseFilterModel.getSelectedClient().getRecId());
+            whereBuilder = whereBuilder.and("client_id", "=", licenseFilterModel.getSelectedClientId());
         }
         if (licenseFilterModel.isSelectedConcreteProduct()){
-            whereBuilder = whereBuilder.and("product_id", "=", licenseFilterModel.getSelectedProduct().getRecId());
+            whereBuilder = whereBuilder.and("product_id", "=", licenseFilterModel.getSelectedProductId());
         }
         ObservableList<LicenseStatus> statuses = licenseFilterModel.getSelectedStatuses();
         if (!statuses.isEmpty()){

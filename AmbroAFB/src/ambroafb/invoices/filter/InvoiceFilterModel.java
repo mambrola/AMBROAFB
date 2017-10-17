@@ -26,7 +26,6 @@ import javafx.collections.ObservableList;
  */
 public class InvoiceFilterModel extends FilterModel {
     
-    private Client selectedClient;
     private ObservableList<InvoiceReissuing> selectedReissuings;
     private ObservableList<InvoiceStatusClarify> selectedClarifies;
     
@@ -36,6 +35,7 @@ public class InvoiceFilterModel extends FilterModel {
     private static final String PREF_END_DATE_TO_KEY = "invoices/filter/end_date_to";
     private static final String PREF_CHECKED_REISSUING_INDEXES_KEY = "invoices/filter/checked_invoice_reissuing_indexes";
     private static final String PREF_CHECKED_CLARIFY_INDEXES_KEY = "invoices/filter/checked_invoice_clarifies_indexes";
+    private static final String PREF_CLIENT_KEY = "invoices/filter/client_id";
     
     public InvoiceFilterModel(){
         
@@ -58,7 +58,9 @@ public class InvoiceFilterModel extends FilterModel {
     }
     
     public void setSelectedClient(Client client){
-        selectedClient = client;
+        if (client != null){
+            saveIntoPref(PREF_CLIENT_KEY, client.getRecId());
+        }
     }
     
     public void setCheckedReissuingsIndexes(ObservableList<Integer> checkedIndexes){
@@ -106,8 +108,8 @@ public class InvoiceFilterModel extends FilterModel {
         return date;
     }
     
-    public Client getSelectedClient(){
-        return selectedClient;
+    public int getSelectedClientId(){
+        return getIntFromPref(PREF_CLIENT_KEY);
     }
     
     public ArrayList<Integer> getCheckedReissuingsIndexes(){
@@ -141,7 +143,7 @@ public class InvoiceFilterModel extends FilterModel {
     }
 
     public boolean isSelectedConcreteClient() {
-        return selectedClient != null && selectedClient.getRecId() > 0;
+        return getSelectedClientId() > 0;
     }
     
     public boolean hasSelectedReissuings(){
