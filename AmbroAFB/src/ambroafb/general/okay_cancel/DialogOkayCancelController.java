@@ -6,9 +6,9 @@
 package ambroafb.general.okay_cancel;
 
 import ambroafb.general.AlertMessage;
+import ambroafb.general.AnnotiationUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import java.net.URL;
@@ -75,7 +75,7 @@ public class DialogOkayCancelController implements Initializable {
                 okay.setOnAction((ActionEvent event) -> {
                     Scene currScene = okay.getScene();
                     Object controller = currScene.getProperties().get("controller");
-                    boolean allRequiredFieldsAreValid = Utils.everyFieldContentIsValidFor(controller, type);
+                    boolean allRequiredFieldsAreValid = AnnotiationUtils.everyFieldContentIsValidFor(controller, type);
                     if (allRequiredFieldsAreValid){
                         changeClosePermissionForStage(true);
                         ((Stage) okay.getScene().getWindow()).close();
