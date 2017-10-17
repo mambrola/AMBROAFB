@@ -28,14 +28,13 @@ public class DocManagersFactory {
             return new CustomManager();
         }
         else if (doc.isParentDoc()){
-            if (doc.getDocType() == 12){
-                return new ChargeUtilityManager();
-            }
-            else if (doc.getDocType() == 60){
-                return new ConversionManager();
-            }
-            else {
-                return new MonthlyManager();
+            switch (doc.getDocType()) {
+                case 12:
+                    return new ChargeUtilityManager();
+                case 60:
+                    return new ConversionManager();
+                default:
+                    return new MonthlyManager();
             }
         }
         else { // Doc has not children
