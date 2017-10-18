@@ -110,23 +110,6 @@
                         </Label> 
                     </graphic>
                 </MenuItem>
-                <MenuItem fx:id="addRefund" onAction="#addRefund" mnemonicParsing="false">
-                    <graphic>
-                        <Label text="%doc_refund">
-                            <tooltip>
-                                <Tooltip text="%new" />
-                            </tooltip>
-                            <graphic>
-                                <HBox  spacing="4" >
-                                    <ImageView fitHeight="22.0" fitWidth="22.0"  pickOnBounds="true" preserveRatio="true" >
-                                        <Image url="/images/new.png" />
-                                    </ImageView>
-                                    <Separator orientation="VERTICAL" />
-                                </HBox>
-                            </graphic>
-                        </Label> 
-                    </graphic>
-                </MenuItem>
                 <Menu>
                     <graphic>
                         <Label text="%doc_utility">

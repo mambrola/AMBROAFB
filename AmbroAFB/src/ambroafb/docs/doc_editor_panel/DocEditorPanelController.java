@@ -16,7 +16,6 @@ import ambroafb.docs.types.DocManagersFactory;
 import ambroafb.docs.types.conversion.ConversionManager;
 import ambroafb.docs.types.custom.CustomManager;
 import ambroafb.docs.types.monthly.MonthlyManager;
-import ambroafb.docs.types.refund.RefundManager;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
 import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 import ambroafb.general.Names;
@@ -340,28 +339,6 @@ public class DocEditorPanelController implements Initializable {
     private Doc getAppropriateDocFromTable(int recId){
         Optional<Doc> opt = tableData.stream().filter((docInTable) -> docInTable.getRecId() == recId).findFirst();
         return (opt.isPresent()) ? opt.get() : null;
-    }
-    
-    @FXML
-    private void addRefund(ActionEvent e){
-        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
-        if(dialogStage == null || !dialogStage.isShowing()){
-            DocManager dm = new RefundManager();
-            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
-            EditorPanelable newRefund = dd.getResult();
-            if (newRefund != null){
-                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newRefund);
-                if (!newDocsFromDB.isEmpty()){
-                    tableData.addAll(0, newDocsFromDB);
-                    ((DocTableListController)outerController).setSelected(0);
-                }
-            }
-        }
-        else {
-            dialogStage.requestFocus();
-            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
-        }
     }
     
     /**
