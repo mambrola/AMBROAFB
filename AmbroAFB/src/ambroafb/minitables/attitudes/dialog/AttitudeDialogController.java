@@ -50,7 +50,7 @@ public class AttitudeDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
+    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
         
     }
 

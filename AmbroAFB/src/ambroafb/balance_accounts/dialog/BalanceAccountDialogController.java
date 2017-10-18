@@ -68,8 +68,8 @@ public class BalanceAccountDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.EDIT) && !((BalanceAccount)sceneObject).childrenAccounts.isEmpty()){
+    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.EDIT) && !((BalanceAccount)sceneObj).childrenAccounts.isEmpty()){
             balAccountCode.setDisable(true);
         }
     }

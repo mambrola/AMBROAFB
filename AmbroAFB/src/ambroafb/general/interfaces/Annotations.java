@@ -74,7 +74,7 @@ public class Annotations {
     public @interface ContentAmount {
         int integerPartMaxLen() default 0;
         static int integerPartMaxLen = 10;
-        String valueForIntegerPart() default "(0|[1-9]\\d{0,"  + (integerPartMaxLen-1) + "})\\.\\d*";
+        String valueForIntegerPart() default "(0|[1-9]\\d{0,"  + (integerPartMaxLen-1) + "})(\\.\\d*)?";
         String explainForIntegerPart() default "anot_amount_integer_part_exp";
         
         static int fractionalPartLen = 2;

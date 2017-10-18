@@ -56,12 +56,12 @@ public class DocInOrderDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
+    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
-            formPane.getChildren().remove(1);
+            formPane.getChildren().remove(1); // remove scrollpane.
         }
         else {
-            ((DocInOrder)sceneObject).getDocs().stream().forEach((doc) -> {
+            ((DocInOrder)sceneObj).getDocs().stream().forEach((doc) -> {
                 DocOrderComponent lsComp = new DocOrderComponent();
                 lsComp.removeDocDateComponent();
                 lsComp.binTo(doc);

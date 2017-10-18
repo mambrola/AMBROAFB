@@ -18,6 +18,7 @@ import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -99,8 +100,13 @@ public class ChargeUtilityDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
-        
+    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+            ((ChargeUtility)sceneObj).setDocDate(LocalDate.now().toString());
+            ((ChargeUtility)sceneObj).setDocInDocDate(LocalDate.now().toString());
+            ((ChargeUtility)sceneObj).amountProperty().set("");
+            backupObj.copyFrom(sceneObj);
+        }
     }
 
     @Override

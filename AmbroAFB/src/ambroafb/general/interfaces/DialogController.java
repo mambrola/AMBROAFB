@@ -48,11 +48,11 @@ public abstract class DialogController implements Initializable {
             focusTraversableNodes.forEach((Node t) -> { t.setDisable(true); });
         }
         getOkayCancelController().setButtonsFeatures(buttonType);
-        makeExtraActions(sceneObj, buttonType);
+        makeExtraActions(buttonType);
     }
     
     protected abstract void bindObjectToSceneComponents(EditorPanelable object);
-    protected abstract void makeExtraActions(EditorPanelable sceneObject, EDITOR_BUTTON_TYPE buttonType);
+    protected abstract void makeExtraActions(EDITOR_BUTTON_TYPE buttonType);
     
     public abstract DialogOkayCancelController getOkayCancelController();
     

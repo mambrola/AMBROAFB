@@ -12,6 +12,7 @@ import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -47,13 +48,20 @@ public class RefundDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
-        ((Doc)sceneObject).setDocCode(docCodeRefundType);
+    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
+        ((Doc)sceneObj).setDocCode(docCodeRefundType);
         DocOrderComponent lsComp = new DocOrderComponent();
-        lsComp.binTo((Doc)sceneObject);
+        lsComp.binTo((Doc)sceneObj);
         lsComp.setDialogType(buttonType);
         lsComp.disabledComponents(docCodeComponentFxId);
         formPane.getChildren().add(0, lsComp);
+        
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+            ((Doc)sceneObj).setDocDate(LocalDate.now().toString());
+            ((Doc)sceneObj).setDocInDocDate(LocalDate.now().toString());
+            ((Doc)sceneObj).amountProperty().set(""); // for empty amount field.
+            backupObj.copyFrom(sceneObj);
+        }
     }
     
     @Override

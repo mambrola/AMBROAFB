@@ -19,6 +19,7 @@ import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -68,8 +69,8 @@ public class ConversionDialogController extends DialogController {
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-//        sellAccount.fillComboBoxWithoutALL(null);
-//        buyingAccount.fillComboBoxWithoutALL(null);
+        sellAccount.fillComboBoxWithoutALL(null);
+        buyingAccount.fillComboBoxWithoutALL(null);
         
         sellCurrency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             sellAccount.filterBy(newValue);
@@ -131,18 +132,14 @@ public class ConversionDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(EditorPanelable sceneObject, Names.EDITOR_BUTTON_TYPE buttonType) {
-        // consumers
-        sellAccount.fillComboBoxWithoutALL(null);
-        buyingAccount.fillComboBoxWithoutALL(null);
-        
-//        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
-//            conversion.setDocDate(LocalDate.now().toString());
-//            conversion.setDocInDocDate(LocalDate.now().toString());
-//            conversion.setSellAmount(0f);
-//            conversion.setBuyingAmount(0f);
-//            conversionBackup.copyFrom(conversion.cloneWithID());
-//        }
+    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+            ((Conversion)sceneObj).setDocDate(LocalDate.now().toString());
+            ((Conversion)sceneObj).setDocInDocDate(LocalDate.now().toString());
+            ((Conversion)sceneObj).sellAmountProperty().set(""); // for empty amount field.
+            ((Conversion)sceneObj).buyingAmountProperty().set("");
+            backupObj.copyFrom(sceneObj);
+        }
     }
 
     @Override

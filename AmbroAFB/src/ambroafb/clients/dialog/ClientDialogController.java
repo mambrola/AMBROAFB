@@ -188,7 +188,7 @@ public class ClientDialogController extends DialogController {
     }
     
     @Override
-    protected void makeExtraActions(EditorPanelable sceneObject, EDITOR_BUTTON_TYPE buttonType) {
+    protected void makeExtraActions(EDITOR_BUTTON_TYPE buttonType) {
         openDate.setDisable(true);
         boolean editable = true;
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){

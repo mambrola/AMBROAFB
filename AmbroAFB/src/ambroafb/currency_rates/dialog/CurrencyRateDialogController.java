@@ -72,7 +72,7 @@ public class CurrencyRateDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(EditorPanelable sceneObject, EDITOR_BUTTON_TYPE buttonType) {
+    protected void makeExtraActions(EDITOR_BUTTON_TYPE buttonType) {
 
     }
 
