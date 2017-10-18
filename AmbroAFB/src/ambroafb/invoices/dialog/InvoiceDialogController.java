@@ -243,7 +243,7 @@ public class InvoiceDialogController extends DialogController {
         
         Invoice invoice = (Invoice)sceneObj;
         // This is Dialog "new" and not add by simple, which EDITOR_BUTTON_TYPE is also NEW.
-        if (invoice != null && invoice.getInvoiceFinances().isEmpty()){
+        if (invoice.getInvoiceFinances().isEmpty()){
             setShowFinanceData(true, false);
         }
         

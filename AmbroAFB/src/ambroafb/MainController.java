@@ -138,6 +138,7 @@ public class MainController implements Initializable {
         Stage clientsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Client.class.getSimpleName());
         if(clientsStage == null || !clientsStage.isShowing()){
             TableList clients = new TableList(AmbroAFB.mainStage, Client.class, stageTitle);
+            clients.getController().getEditorPanelController().turnOffAddBySample();
             clients.show();
             
             ClientFilter filter = new ClientFilter(clients);
@@ -384,6 +385,7 @@ public class MainController implements Initializable {
         if(currenciesStage == null || !currenciesStage.isShowing()){
             TableList currencies = new TableList(AmbroAFB.mainStage, Currency.class, stageTitle);
             currencies.getController().removeElementsFromEditorPanel("#search");
+            currencies.getController().getEditorPanelController().turnOffAddBySample();
             Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Currency.getAllFromDB());
                                                 };

@@ -9,6 +9,7 @@ import ambro.AFilterableTableView;
 import ambro.AFilterableTreeTableView;
 import ambro.ATableView;
 import ambro.AView;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.StageUtils;
@@ -33,6 +34,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -256,6 +260,20 @@ public class EditorPanelController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
     }
     
+    /**
+     * The method creates  add button without addBySample functionality.
+     */
+    private Button buildAddWithoutSample(){
+        Button addB = new Button();
+        addB.setTooltip(new Tooltip(GeneralConfig.getInstance().getTitleFor("new")));
+        ImageView imgView = new ImageView(new Image("/images/new.png"));
+        imgView.setFitHeight(18);
+        imgView.setFitWidth(18);
+        addB.setGraphic(imgView);
+        addB.setOnAction(this::add);
+        return addB;
+    }
+    
     public double getPanelMinWidth(){
         return formNode.getWidth() - region.getWidth();
     }
@@ -328,6 +346,15 @@ public class EditorPanelController implements Initializable {
         for (String fxId : fxIds) {
             formNode.getChildren().remove(formNode.lookup(fxId));
         }
+    }
+    
+    /**
+     * The method turns off addBySample functionality.
+     */
+    public void turnOffAddBySample(){
+        int addBySimpleIndex = formNode.getChildren().indexOf(add);
+        Button addButton = buildAddWithoutSample();
+        formNode.getChildren().set(addBySimpleIndex, addButton);
     }
     
     private String getClassName(CLASS_TYPE type){

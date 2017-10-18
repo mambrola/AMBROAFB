@@ -120,8 +120,8 @@ public class AccountDialogController extends DialogController {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
             ((Account)sceneObj).setDateOpen(LocalDate.now().toString());
             ((Account)sceneObj).setDateClose("");
-            ((Account)sceneObj).setIso("");
             ((Account)sceneObj).accountNumberProperty().set("");
+            ((Account)sceneObj).setRemark("");
             backupObj.copyFrom(sceneObj);
         }
     }
