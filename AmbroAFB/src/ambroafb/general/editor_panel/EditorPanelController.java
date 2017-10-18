@@ -196,7 +196,7 @@ public class EditorPanelController implements Initializable {
             }
             
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
-            Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, cloneOfSelected, EDITOR_BUTTON_TYPE.ADD, (Stage) exit.getScene().getWindow());
+            Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, cloneOfSelected, EDITOR_BUTTON_TYPE.ADD_SAMPLE, (Stage) exit.getScene().getWindow());
             
             EditorPanelable result = dialog.getResult();
             if (result != null) {

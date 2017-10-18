@@ -11,6 +11,7 @@ import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.clients.Client;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
@@ -187,7 +188,7 @@ public class Account extends EditorPanelable {
     }
     
     public String getDateOpen(){
-        return dateOpenedObj.get().toString();
+        return (dateOpenedObj.isNull().get()) ? "" : dateOpenedObj.get().toString();
     }
     
     public String getRemark(){
@@ -195,7 +196,7 @@ public class Account extends EditorPanelable {
     }
     
     public String getDateClose(){
-        return dateClosedObj.get().toString();
+        return (dateClosedObj.isNull().get()) ? "" : dateClosedObj.get().toString();
     }
     
     
@@ -303,9 +304,9 @@ public class Account extends EditorPanelable {
                 getbalAccount() == other.getbalAccount() &&
                 getDescrip().equals(other.getDescrip()) &&
                 getClientId() == other.getClientId() &&
-                openedProperty().get().equals(other.openedProperty().get()) &&
+                Utils.avoidNull(openedProperty().get()).equals(other.openedProperty().get()) &&
                 getRemark().equals(other.getRemark()) &&
-                closedProperty().get().equals(other.closedProperty().get());
+                Utils.avoidNull(closedProperty().get()).equals(Utils.avoidNull(other.closedProperty().get()));
     }
     
     @Override

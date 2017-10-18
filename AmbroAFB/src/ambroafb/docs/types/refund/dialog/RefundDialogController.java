@@ -49,7 +49,10 @@ public class RefundDialogController extends DialogController {
 
     @Override
     protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
-        ((Doc)sceneObj).setDocCode(docCodeRefundType);
+//        DocCode dc = new DocCode();
+//        dc.setDocCode(docCodeRefundType);
+//        ((Doc)sceneObj).docCodeProperty().set(dc);
+        
         DocOrderComponent lsComp = new DocOrderComponent();
         lsComp.binTo((Doc)sceneObj);
         lsComp.setDialogType(buttonType);

@@ -23,6 +23,7 @@ import authclient.AuthServerException;
 import authclient.db.DBClient;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -115,6 +116,14 @@ public class AccountDialogController extends DialogController {
             }
         };
         clients.fillComboBoxWithClientsAndPartners(setClientbyId);
+        
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+            ((Account)sceneObj).setDateOpen(LocalDate.now().toString());
+            ((Account)sceneObj).setDateClose("");
+            ((Account)sceneObj).setIso("");
+            ((Account)sceneObj).accountNumberProperty().set("");
+            backupObj.copyFrom(sceneObj);
+        }
     }
     
     

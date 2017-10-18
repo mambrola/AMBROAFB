@@ -10,6 +10,7 @@ import ambroafb.clients.Client;
 import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.*;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.Annotations.ContentMail;
@@ -210,6 +211,10 @@ public class ClientDialogController extends DialogController {
 
             client.setClientImageGallery(imageGalleryController);
             statusProperty.bind(client.statusProperty()); // static variable ???????????????
+        }
+        
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+            
         }
     }
 

@@ -236,6 +236,15 @@ public class Utils {
         return Bindings.when(prop.isNull()).then("").otherwise(prop);
     }
     
+    /**
+     * The method checks date value on null.
+     * @param date The interested date.
+     * @return LocalDate.now() if date is null. Otherwise, returns  'date'  again.
+     */
+    public static LocalDate avoidNull(LocalDate date){
+        return (date == null) ? LocalDate.now() : date;
+    }
+    
     /** Returns JSON object for given key and value. 
      * If jsonIbject parameter is null creates new object and returns it, otherwise uses old itself
      * for put new pair (key -> value).
