@@ -13,6 +13,7 @@ import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Utils;
+import ambroafb.general.countcombobox.Basket;
 import ambroafb.general.countcombobox.CountComboBox;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.Annotations.ContentAmount;
@@ -33,17 +34,20 @@ import authclient.AuthServerException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -104,7 +108,7 @@ public class InvoiceDialogController extends DialogController {
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
         
         clients.fillComboBoxOnlyClients(null);
-        products.getItems().addAll(Product.getAllFromDB());
+//        products.getItems().addAll(Product.getAllFromDB());
 
         financesFromSuitedLicense = new RecalcFinancesInBackground();
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
@@ -192,7 +196,7 @@ public class InvoiceDialogController extends DialogController {
     private boolean isEveryNessesaryFieldValid(){
         System.out.println("");
         return  clients.valueProperty().get() != null && 
-                !products.nothingIsSelected() && 
+                !products.getBasket().isEmpty() && 
                 beginDate.getValue() != null && 
                 monthCounter.getValue() != null;
     }
@@ -216,7 +220,8 @@ public class InvoiceDialogController extends DialogController {
             status.textProperty().bindBidirectional(invoice.getInvoiceStatus().descripProperty());
             
             clients.valueProperty().bindBidirectional(invoice.clientProperty());
-            products.setData(invoice.getProductsWithCounts());
+            
+//            products.setData(invoice.getProductsWithCounts()); // --- წასაშლელია. მოაგვარა consumer-მა extraAction-ში.
             
             beginDate.valueProperty().bindBidirectional(invoice.beginDateProperty());
             monthCounter.valueProperty().bindBidirectional(invoice.monthsProperty());
@@ -231,9 +236,23 @@ public class InvoiceDialogController extends DialogController {
             processFinanceData(invoice.getInvoiceFinances());
         }
     }
-
+    
     @Override
     protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
+        Supplier<List<CountComboBoxItem>> productsGenerator = () -> new ArrayList<>(Product.getAllFromDB());
+        Consumer<ObservableList<CountComboBoxItem>> productsConsumer = (itemsList) -> {
+            products.setBasket(convertMapToBasket(((Invoice)sceneObj).getProductsWithCounts()));
+        };
+        products.fillcomboBox(productsGenerator, productsConsumer);
+
+
+        try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(InvoiceDialogController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        
         editorPanelButtonType = buttonType;
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             products.changeState(true);
@@ -246,15 +265,25 @@ public class InvoiceDialogController extends DialogController {
         }
     }
     
+    private Basket convertMapToBasket(Map<CountComboBoxItem, Integer> data){
+        Basket basket = new Basket();
+        data.keySet().stream().forEach((boxItem) -> {
+            basket.add(boxItem.getUniqueIdentifier(), data.get(boxItem));
+        });
+        return basket;
+    }
+    
     private void makeActionasForDialogTypeADD(){
         // Note: We changed objects field but is also change scene field values because of bidirectional binding.
         ((Invoice)sceneObj).beginDateProperty().set(null); // It is needed for beginDate valuePropety listener, that it does not go to DB for finances.
         ((Invoice)sceneObj).beginDateProperty().set(LocalDate.now());
-
+        
         InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
         ((Invoice)sceneObj).reissuingProperty().set(defaultReissuing);
         backupObj.copyFrom(sceneObj);
         
+//        products.setBasket(convertMapToBasket(((Invoice)sceneObj).getProductsWithCounts()));
+
 //        setShowFinanceData(true, false);
         setShowFinanceData(true, true); //  ------------------------------------
     }
@@ -263,6 +292,7 @@ public class InvoiceDialogController extends DialogController {
         makeActionasForDialogTypeADD();
         ((Invoice)sceneObj).setInvoiceNumber("");
         ((Invoice)sceneObj).getInvoiceStatus().setDescrip(""); // set empty status
+        ((Invoice)sceneObj).setLicenseFinances(new ArrayList<>()); // empty list cause clear the products map.
 //        ((Invoice)sceneObj).getProductsWithCounts().clear();
 //        products.setData(((Invoice)sceneObj).getProductsWithCounts());
 //        ((Invoice)sceneObj).getLicenses().clear();
@@ -328,16 +358,23 @@ public class InvoiceDialogController extends DialogController {
         
         private void calculateFinaceData() {
             setShowFinanceData(true, true);
-            Map<CountComboBoxItem, Integer> productsMap = products.getData();
+//            Map<CountComboBoxItem, Integer> productsMap = products.getData();
+            Basket basket = products.getBasket();
             
 //            System.out.println("calculateFinaceData -> productsMap: " + productsMap);
 
             JSONArray productsArray = new JSONArray();
-            productsMap.keySet().stream().forEach((item) -> {
-                Product product = (Product)item;
-                JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
-                productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
-            });
+            Iterator<String> itr = basket.getIterator();
+            while(itr.hasNext()){
+                String uniqueId = itr.next();
+                JSONObject json = Utils.getJsonFrom(null, "product_id", uniqueId);
+                productsArray.put(Utils.getJsonFrom(json, "count", basket.getCountFor(uniqueId)));
+            }
+//            productsMap.keySet().stream().forEach((item) -> {
+//                Product product = (Product)item;
+//                JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
+//                productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
+//            });
 //            System.out.println("rebindFinanceData -> productsArray minda: " + productsArray);
 
             Integer invoiceId = null;

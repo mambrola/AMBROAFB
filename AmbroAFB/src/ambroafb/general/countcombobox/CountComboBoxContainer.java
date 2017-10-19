@@ -6,6 +6,7 @@
 package ambroafb.general.countcombobox;
 
 import java.io.IOException;
+import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
@@ -14,6 +15,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -25,7 +27,7 @@ import javafx.scene.layout.HBox;
  *
  * @author dato
  */
-public class CountComboBoxDrawItem extends HBox {
+public class CountComboBoxContainer extends HBox {
 
     @FXML
     private Label numberLabel, itemName, up, down;
@@ -41,23 +43,25 @@ public class CountComboBoxDrawItem extends HBox {
     private StringProperty itemNameProperty = new SimpleStringProperty("");
     private IntegerProperty numberProperty = new SimpleIntegerProperty(0);
     private final StringExpression nameExpression;
-    private boolean isViewableState = false;
+    private boolean isDisableState = false;
+    private BiConsumer<String, Integer> numberChangeAction;
     
-    public CountComboBoxDrawItem(String stringForItemLabel){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ambroafb/general/countcombobox/CountComboBoxDrawItem.fxml"));
+    public CountComboBoxContainer(CountComboBoxItem item){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ambroafb/general/countcombobox/CountComboBoxContainer.fxml"));
         assignLoader(loader);
         
+        String stringForItemLabel = (item.getDrawableName() == null) ? "" : item.getDrawableName();
         itemName.setText(stringForItemLabel);
         numberLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             return "" + numberProperty.get();
         }, numberProperty));
         
         up.setOnMousePressed((MouseEvent event) -> {
-            if (numberProperty.get() < upDelimiter && !isViewableState)
+            if (numberProperty.get() < upDelimiter && !isDisableState)
                 numberProperty.set(numberProperty.get() + 1);
         });
         down.setOnMousePressed((MouseEvent event) -> {
-            if (numberProperty.get() > downDelimiter && !isViewableState)
+            if (numberProperty.get() > downDelimiter && !isDisableState)
                 numberProperty.set(numberProperty.get() - 1);
         });
         
@@ -73,6 +77,12 @@ public class CountComboBoxDrawItem extends HBox {
                                     return numberProperty.get() + "-" + stringForItemLabel;
                                 }, numberProperty))
                             .otherwise("");
+        
+        numberProperty.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if (numberChangeAction != null){
+                numberChangeAction.accept(item.getUniqueIdentifier(), newValue.intValue());
+            }
+        });
     }
     
     private void assignLoader(FXMLLoader loader) {
@@ -81,7 +91,7 @@ public class CountComboBoxDrawItem extends HBox {
         try {
             loader.load();
         } catch (IOException ex) {
-            Logger.getLogger(CountComboBoxDrawItem.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CountComboBoxContainer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -100,7 +110,7 @@ public class CountComboBoxDrawItem extends HBox {
     }
     
     public void setViewableState(boolean isViewavleState){
-        this.isViewableState = isViewavleState;
+        this.isDisableState = isViewavleState;
     }
     
     
@@ -119,5 +129,9 @@ public class CountComboBoxDrawItem extends HBox {
     
     public StringExpression nameExpression(){
         return nameExpression;
+    }
+    
+    public void setAction(BiConsumer<String, Integer> numberChangeAction) {
+        this.numberChangeAction = numberChangeAction;
     }
 }

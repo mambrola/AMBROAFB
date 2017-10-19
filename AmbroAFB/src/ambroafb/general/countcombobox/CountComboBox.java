@@ -7,17 +7,21 @@ package ambroafb.general.countcombobox;
 
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import javafx.beans.value.ObservableValue;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -28,11 +32,17 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
     
     private static final int defaultWidth = 500;
     
-    private Map<CountComboBoxItem, Integer> data = new HashMap<>();
-    private final Map<String, CountComboBoxDrawItem> drawItems = new HashMap<>();
-    private boolean isViewableState = false;
+//    private Map<CountComboBoxItem, Integer> data = new HashMap<>();
+//    private final Map<String, CountComboBoxContainer> drawItems = new HashMap<>();
+    private boolean isDisableState = false;
     private String viewableCSSFile = "/styles/css/countcomboboxviewable.css";
     private final Tooltip tooltip = new Tooltip();;
+    
+    private final int counter = 1;
+    private final ObservableList<CountComboBoxItem> items = FXCollections.observableArrayList();
+    private Map<String, CountComboBoxContainer> containers = new HashMap<>();
+    private Basket basket = new Basket();
+    private final BiConsumer<String, Integer> numberChangeAction;
     
     public CountComboBox(){
         this.setPrefWidth(defaultWidth);
@@ -49,7 +59,23 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
             }
         });
         
+        this.setItems(items);
+        numberChangeAction = (uniqueId, newNumber) -> {
+                    if (newNumber <= 0){
+                        basket.remove(uniqueId);
+                    }
+                    else {
+                        basket.add(uniqueId, newNumber);
+                    }
+                    refreshButtonCell();
+                };
+        
         addKeyListeners();
+    }
+    
+    // +++
+    public void fillcomboBox(Supplier<List<CountComboBoxItem>> itemsGenerator, Consumer<ObservableList<CountComboBoxItem>> extraAction){
+        new Thread(new FetchDataFromDB(itemsGenerator, extraAction)).start();
     }
     
     private void addKeyListeners(){
@@ -59,38 +85,61 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
             KeyCode eventKey = event.getCode();
             CountComboBoxItem selectedItem = getSelectionModel().getSelectedItem();
             if (selectedItem == null) return;
-            CountComboBoxDrawItem selectedDrawItem = drawItems.get(selectedItem.getUniqueIdentifier());
+            CountComboBoxContainer selectedDrawItem = containers.get(selectedItem.getUniqueIdentifier());
             
             if (eventKey.equals(plus)){
-                selectedDrawItem.increaseNumberBy(1);
+                selectedDrawItem.increaseNumberBy(counter);
             }
             else if (eventKey.equals(minus)){
-                selectedDrawItem.decreaseNumberBy(1);
+                selectedDrawItem.decreaseNumberBy(counter);
             }
             refreshButtonCell();
         });
     }
     
-    public void setData(Map<CountComboBoxItem, Integer> data){
-        this.data = data;
-        
-        data.keySet().forEach((item) -> {
-            CountComboBoxDrawItem drawItem = convertIntoDrawItem(item);
-            drawItem.numberProperty().set(data.get(item));
-            drawItems.put(item.getUniqueIdentifier(), drawItem);
-        });
-        
-        // ComboBox button cell text will show after any item select in comboBox. 
-        // So we select every item. The last selected item will be zero indexed (only for visually effect).
-        for (int i = getItems().size() - 1; i >= 0; i--){
-            getSelectionModel().select(i);
-        }
-    }
+//    public void setData(Map<CountComboBoxItem, Integer> data){
+////        this.data = data;
+//
+//        
+//        System.out.println("--------------------------------- aaa ---------------------------");
+//        data.keySet().forEach((item) -> {
+//            // ამ დროს item-ს არ მოყვება დასახელება. ხოლო თუ მაშინ შვქმნით container-ს როცა სია მოგვივიდა ანუ fetchDataFromDB-ში, მაშინ სრული ინფორმაცია გვაქსვ Item-ბზე.
+//            System.out.println(item.getDrawableName());
+//            
+////            CountComboBoxContainer drawItem = convertIntoDrawItem(item);
+////            drawItem.numberProperty().set(data.get(item));
+////            drawItems.put(item.getUniqueIdentifier(), drawItem);
+//        });
+//        
+//        // ComboBox button cell text will show after any item select in comboBox. 
+//        // So we select every item. The last selected item will be zero indexed (only for visually effect).
+//        for (int i = getItems().size() - 1; i >= 0; i--){
+//            getSelectionModel().select(i);
+//        }
+//    }
     
-    private CountComboBoxDrawItem convertIntoDrawItem(CountComboBoxItem item) {
-        String name = item.getDrawableName();
-        CountComboBoxDrawItem drawItem = new CountComboBoxDrawItem(name);
-        return drawItem;
+    public void setBasket(Basket b){
+        if (b == null || b.isEmpty()){
+            containers.keySet().stream().forEach((key) -> containers.get(key).numberProperty().set(0));
+        }
+        else {
+            Iterator<String> itr = b.getIterator();
+            String uniqueId = "";
+            while (itr.hasNext()){
+                uniqueId = itr.next();
+                if (containers.containsKey(uniqueId)){
+                    int count = b.getCountFor(uniqueId);
+                    containers.get(uniqueId).numberProperty().set(count);
+                }
+            }
+            // ComboBox button cell text will show after any item select in comboBox.  So select item index that is last in iterator:
+            for (CountComboBoxItem item : items) {
+                if (item.getUniqueIdentifier().equals(uniqueId)){
+                    getSelectionModel().select(items.indexOf(item));
+                    break;
+                }
+            }
+        }
     }
     
     private void refreshButtonCell() {
@@ -104,13 +153,13 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
         }
     }
     
-    public Map<CountComboBoxItem, Integer> getData(){
-        return data;
+    public Basket getBasket(){
+        return basket;
     }
     
-    public void changeState(boolean isViewable){
-        isViewableState = isViewable;
-        if (isViewable){
+    public void changeState(boolean isDisableState){
+        this.isDisableState = isDisableState;
+        if (isDisableState){
             getStylesheets().add(viewableCSSFile);
         }
         else {
@@ -118,17 +167,10 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
         }
     }
     
-    public boolean nothingIsSelected(){
-        return data.isEmpty();
-    }
+//    public boolean nothingIsSelected(){
+//        return data.isEmpty();
+//    }
     
-    
-    private void printData() {
-        data.keySet().stream().forEach((itm) -> {
-            System.out.println("name: " + itm.getDrawableName());
-        });
-        System.out.println("");
-    }
     
     // Private class
     private class CustomCell extends ListCell<CountComboBoxItem> {
@@ -140,34 +182,14 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
         @Override
         public void updateItem(CountComboBoxItem item, boolean empty) {
             super.updateItem(item, empty);
-            if (item != null) {
-                // make all draw items newly (to avoid difference width for draw items):
-                CountComboBoxDrawItem drawItem = convertIntoDrawItem(item);
-                if (drawItems.containsKey(item.getUniqueIdentifier())){
-                    int itemCounter = drawItems.get(item.getUniqueIdentifier()).numberProperty().get();
-                    drawItem.numberProperty().set(itemCounter);
-                }
-                drawItem.setViewableState(isViewableState);
-                drawItems.put(item.getUniqueIdentifier(), drawItem);
-                
-                drawItem.numberProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-                    List<CountComboBoxItem> itemsInData = data.keySet().stream().filter((CountComboBoxItem itm) -> itm.getUniqueIdentifier().equals(item.getUniqueIdentifier())).collect(Collectors.toList());
-                    // Note that 'item' and 'currItem' is not the same instance. 'item' is from comboBoxItems list and 'currItem' is from users data.
-                    CountComboBoxItem currItem = (itemsInData.isEmpty()) ? item : itemsInData.get(0);
-                    
-                    if (newValue.intValue() <= 0){
-                        data.remove(currItem);
-                    }
-                    else {
-                        data.put(currItem, newValue.intValue());
-                    }
-                });
-                
-                // This is need for immediately change button cell when counter is changed:
-                drawItem.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-                    refreshButtonCell();
-                });
-                setGraphic(drawItem);
+            if (item == null || empty){
+                setGraphic(null);
+            }
+            else {
+                CountComboBoxContainer container = containers.get(item.getUniqueIdentifier());
+                container.setViewableState(isDisableState);
+
+                setGraphic(container);
             }
         }
         
@@ -186,12 +208,15 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
         @Override
         public void updateItem(CountComboBoxItem item, boolean empty) {
             super.updateItem(item, empty);
-            if (item != null) {
+            if (item == null || empty){ //  +++
+                setText(null);
+            }
+            else {
                 String title = "";
                 for (CountComboBoxItem boxItem : getItems()) {
                     String identifier = boxItem.getUniqueIdentifier();
-                    if (drawItems.containsKey(identifier)) {
-                        CountComboBoxDrawItem boxDrawItem = drawItems.get(identifier);
+                    if (containers.containsKey(identifier)) { // +++
+                        CountComboBoxContainer boxDrawItem = containers.get(identifier); // ++
                         title = title.concat(boxDrawItem.nameExpression().getValueSafe());
                         if (!boxDrawItem.nameExpression().getValueSafe().isEmpty()){
                             title = title.concat(delimiter);
@@ -201,6 +226,37 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
                 title = StringUtils.substringBeforeLast(title, delimiter);
                 setText(title);
                 tooltip.setText(title);
+            }
+        }
+    }
+    
+    
+    
+    private class FetchDataFromDB implements Runnable {
+        
+        private final Supplier<List<CountComboBoxItem>> itemsGenerator;
+        private final Consumer<ObservableList<CountComboBoxItem>> consumer;
+        
+        public FetchDataFromDB(Supplier<List<CountComboBoxItem>> itemsGenerator, Consumer<ObservableList<CountComboBoxItem>> consumer){
+            this.itemsGenerator = itemsGenerator;
+            this.consumer = consumer;
+        }
+        
+        @Override
+        public void run() {
+            if (itemsGenerator != null){
+                List<CountComboBoxItem> itemsList = itemsGenerator.get();
+                itemsList.forEach((item) -> {
+                    CountComboBoxContainer itemContainer = new CountComboBoxContainer(item);
+                    itemContainer.setAction(numberChangeAction);
+                    containers.put(item.getUniqueIdentifier(), itemContainer);
+                });
+                Platform.runLater(() -> {
+                    items.setAll(itemsList);
+                    if (consumer != null){
+                        consumer.accept(items);
+                    }
+                });
             }
         }
     }
