@@ -104,7 +104,6 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
         }
     }
     
-    // Returns items that count != 0.
     public Map<CountComboBoxItem, Integer> getData(){
         return data;
     }

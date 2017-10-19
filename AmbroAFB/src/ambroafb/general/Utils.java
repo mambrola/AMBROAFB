@@ -172,7 +172,7 @@ public class Utils {
         if (date1 == null && date2 == null) return true;
         else if (date1 == null && date2 != null) return false;
         else if (date1 != null && date2 == null) return false;
-        return date2.equals(date1);
+        return date1.equals(date2);
     }
     
     

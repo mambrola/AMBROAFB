@@ -101,12 +101,10 @@ public class InvoiceDialogController extends DialogController {
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-//        focusTraversableNodes = Utils.getFocusTraversableBottomChildren(formPane);
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
         
         clients.fillComboBoxOnlyClients(null);
         products.getItems().addAll(Product.getAllFromDB());
-//        permissionToClose = true;
 
         financesFromSuitedLicense = new RecalcFinancesInBackground();
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
@@ -192,6 +190,7 @@ public class InvoiceDialogController extends DialogController {
     }
     
     private boolean isEveryNessesaryFieldValid(){
+        System.out.println("");
         return  clients.valueProperty().get() != null && 
                 !products.nothingIsSelected() && 
                 beginDate.getValue() != null && 
@@ -236,40 +235,45 @@ public class InvoiceDialogController extends DialogController {
     @Override
     protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
         editorPanelButtonType = buttonType;
-        
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             products.changeState(true);
         }
-        
-        Invoice invoice = (Invoice)sceneObj;
-        // This is Dialog "new" and not add by simple, which EDITOR_BUTTON_TYPE is also NEW.
-        if (invoice.getInvoiceFinances().isEmpty()){
-            setShowFinanceData(true, false);
-        }
-        
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
-            // Note: We changed objects field but is also change scene field values because of bidirectional binding.
-            invoice.beginDateProperty().set(null); // It is needed for beginDate valuePropety listener, that it does not go to DB for finances.
-            invoice.beginDateProperty().set(LocalDate.now());
-            ((Invoice)backupObj).beginDateProperty().set(LocalDate.now());
-            
-            InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
-            invoice.reissuingProperty().set(defaultReissuing);
-            ((Invoice)backupObj).reissuingProperty().set(defaultReissuing);
-            
-            if (clients.getValue() != null){ // add by simple
-                invoice.setInvoiceNumber("");
-                invoice.getInvoiceStatus().setDescrip(""); // set empty status
-                invoice.getLicenses().clear();
-                
-                Consumer<Invoice> updateInvoiceBackup = (Invoice inv) -> {
-                    ((Invoice)backupObj).copyFrom(inv);
-                };
-                if (isEveryNessesaryFieldValid()){
-                    // we need new license numbers:
-                    new Thread(new RecalcFinancesInBackground(updateInvoiceBackup)).start();
-                }
-            }
+            makeActionasForDialogTypeADD();
+        }
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+            makeActionsForDialogTypeAddBySample();
+        }
+    }
+    
+    private void makeActionasForDialogTypeADD(){
+        // Note: We changed objects field but is also change scene field values because of bidirectional binding.
+        ((Invoice)sceneObj).beginDateProperty().set(null); // It is needed for beginDate valuePropety listener, that it does not go to DB for finances.
+        ((Invoice)sceneObj).beginDateProperty().set(LocalDate.now());
+
+        InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
+        ((Invoice)sceneObj).reissuingProperty().set(defaultReissuing);
+        backupObj.copyFrom(sceneObj);
+        
+//        setShowFinanceData(true, false);
+        setShowFinanceData(true, true); //  ------------------------------------
+    }
+    
+    private void makeActionsForDialogTypeAddBySample(){
+        makeActionasForDialogTypeADD();
+        ((Invoice)sceneObj).setInvoiceNumber("");
+        ((Invoice)sceneObj).getInvoiceStatus().setDescrip(""); // set empty status
+//        ((Invoice)sceneObj).getProductsWithCounts().clear();
+//        products.setData(((Invoice)sceneObj).getProductsWithCounts());
+//        ((Invoice)sceneObj).getLicenses().clear();
+        ((Invoice)sceneObj).setRevokedDate("");
+
+        Consumer<Invoice> updateInvoiceBackup = (Invoice inv) -> {
+            backupObj.copyFrom(inv);
+        };
+        if (isEveryNessesaryFieldValid()){
+            // we need new license numbers:
+            new Thread(new RecalcFinancesInBackground(updateInvoiceBackup)).start();
         }
     }
     
@@ -388,8 +392,6 @@ public class InvoiceDialogController extends DialogController {
             }).collect(Collectors.toList());
             
             ((Invoice)sceneObj).setLicenses(wholeLicenses);
-            
-//            System.out.println("invoice new licenses: " + invoice.getLicenses().toString());
             
             if (callBack != null){
                 callBack.accept(((Invoice)sceneObj));

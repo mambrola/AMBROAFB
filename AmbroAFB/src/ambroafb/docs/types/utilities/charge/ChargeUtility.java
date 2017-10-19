@@ -210,7 +210,7 @@ public class ChargeUtility extends EditorPanelable {
         this.ownerId = ownerId;
     }
 
-    public void setVat(float vat) {
+    public void setVat(Float vat) {
         this.vat.set(NumberConverter.makeFloatStringBySpecificFraction(vat, 2));
     }
 
