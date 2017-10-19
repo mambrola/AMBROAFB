@@ -73,6 +73,16 @@ public class Basket {
         return (products.containsKey(uniqueId)) ? products.get(uniqueId) : defaultValue;
     }
     
+    
+    /**
+     *  The method checks basket contains uniqueId or not.
+     * @param uniqueId The unique identifier of object.
+     * @return True - if contains. False - otherwise.
+     */
+    public boolean contains(String uniqueId){
+        return products.containsKey(uniqueId);
+    }
+    
     @Override
     public String toString(){
         String result = "";
@@ -82,5 +92,39 @@ public class Basket {
             result += "(" + uniqueId + " : " + products.get(uniqueId) + ")" + "\n";
         }
         return result;
+    }
+    
+    public int size(){
+        return products.size();
+    }
+
+    /** 
+     * The method clears basket and fills same data as other basket.
+    * @param other Other basket object.
+     */
+    public void clearAndCopy(Basket other) {
+        products.clear();
+        Iterator<String> itr = other.getIterator();
+        while(itr.hasNext()){
+            String uniqueId = itr.next();
+            add(uniqueId, other.getCountFor(uniqueId));
+        }
+    }
+    
+    @Override
+    public boolean equals(Object other){
+        Basket otherBasket = (Basket) other;
+        boolean equals = (size() == otherBasket.size());
+        if (equals){
+            Iterator<String> itr = getIterator();
+            while(itr.hasNext()){
+                String uniqueId = itr.next();
+                int count = products.get(uniqueId);
+
+                equals = otherBasket.contains(uniqueId) && count == otherBasket.getCountFor(uniqueId);
+                if (!equals) break;
+            }
+        }
+        return equals;
     }
 }

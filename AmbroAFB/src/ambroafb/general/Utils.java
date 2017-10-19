@@ -383,6 +383,8 @@ public class Utils {
     public static boolean compareListsByElemOrder(List<?> first, List<?> second) {
         if (first.size() != second.size()) return false;
         for (int i = 0; i < first.size(); i++) {
+//            System.out.println(first.get(i));
+//            System.out.println(second.get(i));
             if (!first.get(i).equals(second.get(i))) return false;
         }
         return true;

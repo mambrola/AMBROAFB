@@ -108,7 +108,6 @@ public class InvoiceDialogController extends DialogController {
         invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
         
         clients.fillComboBoxOnlyClients(null);
-//        products.getItems().addAll(Product.getAllFromDB());
 
         financesFromSuitedLicense = new RecalcFinancesInBackground();
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
@@ -117,10 +116,22 @@ public class InvoiceDialogController extends DialogController {
                 rebindFinanceData();
             }
         });
+        Basket prevBasket = new Basket();
         products.showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (oldValue != null && !newValue && !Utils.compareProductsCounter(((Invoice)sceneObj).getProductsWithCounts(), ((Invoice)backupObj).getProductsWithCounts())) {
+            if (newValue){
+                prevBasket.clearAndCopy(products.getBasket());
+                System.out.println("prevBasket:");
+                System.out.println(prevBasket);
+                
+                System.out.println("products basket:");
+                System.out.println(products.getBasket());
+            }
+            else if (!prevBasket.equals(products.getBasket())) {
                 System.out.println("rebindFinance from products");
                 rebindFinanceData();
+            }
+            else {
+                System.out.println("ar wavidaaaaa");
             }
         });
         beginDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
@@ -194,7 +205,6 @@ public class InvoiceDialogController extends DialogController {
     }
     
     private boolean isEveryNessesaryFieldValid(){
-        System.out.println("");
         return  clients.valueProperty().get() != null && 
                 !products.getBasket().isEmpty() && 
                 beginDate.getValue() != null && 
@@ -245,14 +255,6 @@ public class InvoiceDialogController extends DialogController {
         };
         products.fillcomboBox(productsGenerator, productsConsumer);
 
-
-        try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(InvoiceDialogController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        
         editorPanelButtonType = buttonType;
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             products.changeState(true);
@@ -282,8 +284,6 @@ public class InvoiceDialogController extends DialogController {
         ((Invoice)sceneObj).reissuingProperty().set(defaultReissuing);
         backupObj.copyFrom(sceneObj);
         
-//        products.setBasket(convertMapToBasket(((Invoice)sceneObj).getProductsWithCounts()));
-
 //        setShowFinanceData(true, false);
         setShowFinanceData(true, true); //  ------------------------------------
     }
@@ -293,18 +293,20 @@ public class InvoiceDialogController extends DialogController {
         ((Invoice)sceneObj).setInvoiceNumber("");
         ((Invoice)sceneObj).getInvoiceStatus().setDescrip(""); // set empty status
         ((Invoice)sceneObj).setLicenseFinances(new ArrayList<>()); // empty list cause clear the products map.
-//        ((Invoice)sceneObj).getProductsWithCounts().clear();
-//        products.setData(((Invoice)sceneObj).getProductsWithCounts());
-//        ((Invoice)sceneObj).getLicenses().clear();
+        products.setBasket(convertMapToBasket(((Invoice)sceneObj).getProductsWithCounts()));
+        System.out.println("-------------- size:");
+        System.out.println(((Invoice)sceneObj).getLicenses().size());
+        ((Invoice)sceneObj).getLicenses().clear();
         ((Invoice)sceneObj).setRevokedDate("");
-
-        Consumer<Invoice> updateInvoiceBackup = (Invoice inv) -> {
-            backupObj.copyFrom(inv);
-        };
-        if (isEveryNessesaryFieldValid()){
-            // we need new license numbers:
-            new Thread(new RecalcFinancesInBackground(updateInvoiceBackup)).start();
-        }
+        backupObj.copyFrom(sceneObj);
+        
+//        Consumer<Invoice> updateInvoiceBackup = (Invoice inv) -> {
+//            backupObj.createClone(inv);
+//        };
+//        if (isEveryNessesaryFieldValid()){
+//            // we need new license numbers:
+//            new Thread(new RecalcFinancesInBackground(updateInvoiceBackup)).start();
+//        }
     }
     
     @Override

@@ -299,7 +299,7 @@ public class AnnotiationUtils {
             else if (field.getType().equals(CountComboBox.class)){
                 CountComboBox countComboBox = (CountComboBox) field.get(ownerClassObject);
                 results[0] = countComboBox;
-                results[1] = (countComboBox.nothingIsSelected()) ? null : countComboBox.getValue();
+                results[1] = (countComboBox.getBasket().isEmpty()) ? null : countComboBox.getValue();
             }
             // Note: ClientComboBox is not ComboBox extened, so this case specific case:
             else if (field.getType().equals(ClientComboBox.class)){
