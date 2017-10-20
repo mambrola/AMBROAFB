@@ -7,6 +7,7 @@ package ambroafb.docs.types.monthly;
 
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.DocManager;
+import ambroafb.docs.types.custom.dialog.CustomDialog;
 import ambroafb.docs.types.doc_in_order.DocInOrder;
 import ambroafb.docs.types.doc_in_order.dialog.DocInOrderDialog;
 import ambroafb.general.DBUtils;
@@ -15,6 +16,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
+import java.util.Optional;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
@@ -67,9 +69,14 @@ public class MonthlyManager implements DocManager {
 
     @Override
     public Dialogable getDocDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
-        DocInOrderDialog dialog = new DocInOrderDialog(object, type, owner);
+        Dialogable dialog = new DocInOrderDialog(object, type, owner);
+        String StageTitleBundleKey = "doc_monthly_accrual";
         if (object == null){
-            dialog = new DocInOrderDialog(object, type, owner, "doc_monthly_accrual");
+            dialog = new DocInOrderDialog(object, type, owner, StageTitleBundleKey);
+        }
+        else if (type.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+            Optional<Doc> optDoc = ((DocInOrder)object).getDocs().stream().filter((doc) -> doc.isParentDoc()).findFirst();
+            dialog = (optDoc.isPresent()) ? new CustomDialog(optDoc.get(), type, owner) : new DocInOrderDialog(object, type, owner, StageTitleBundleKey);
         }
         return dialog;
     }
