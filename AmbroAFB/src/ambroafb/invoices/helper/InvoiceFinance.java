@@ -9,11 +9,11 @@ package ambroafb.invoices.helper;
  *
  * @author dato
  */
-public class InvoiceFinaces {
+public class InvoiceFinance {
     
     public String sum, additionalDiscountRate, additionalDiscountSum, nettoSum, vatRate, vat, paySum, isoTotal, symbolTotal;
     
-    public void copyFrom(InvoiceFinaces other){
+    public void copyFrom(InvoiceFinance other){
         sum = other.sum;
         additionalDiscountRate = other.additionalDiscountRate;
         additionalDiscountSum = other.additionalDiscountSum;
@@ -36,5 +36,14 @@ public class InvoiceFinaces {
                 "PaySum: " + paySum + "\n" +
                 "isoTotal: " + isoTotal + "\n" +
                 "symbolTotal: " + symbolTotal + "\n";
+    }
+    
+    public boolean dataIsEmpty(){
+        return  isNullOrEmpty(sum) && isNullOrEmpty(additionalDiscountSum) && 
+                isNullOrEmpty(nettoSum) && isNullOrEmpty(vat) && isNullOrEmpty(paySum);
+    }
+    
+    private boolean isNullOrEmpty(String variable){
+        return variable == null || variable.isEmpty();
     }
 }

@@ -10,11 +10,12 @@ import ambroafb.docs.Doc;
 import ambroafb.docs.types.conversion.Conversion;
 import ambroafb.docs.types.utilities.charge.ChargeUtility;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
+import ambroafb.general.countcombobox.Basket;
 import ambroafb.invoices.Invoice;
-import ambroafb.invoices.helper.InvoiceFinaces;
+import ambroafb.invoices.helper.InvoiceFinance;
 import ambroafb.invoices.helper.PartOfLicense;
 import ambroafb.licenses.License;
-import ambroafb.licenses.helper.LicenseFinaces;
+import ambroafb.licenses.helper.LicenseFinance;
 import ambroafb.params_general.ParamGeneral;
 import ambroafb.params_general.helper.ParamGeneralDBResponse;
 import authclient.AuthServerException;
@@ -22,11 +23,12 @@ import authclient.Response;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -523,71 +525,79 @@ public class DBUtils {
         return result;
     }
     
-    private static JSONArray licenses;
-    private static JSONArray licensesFinaces;
-    private static JSONArray invoicesFinaces;
-    
-    public static void callInvoiceSuitedLicenses(Integer invoiceId, Integer clientId, LocalDate beginDate, LocalDate endDate, JSONArray products, Float additionalDiscount, JSONArray licensesIds) throws AuthServerException{
-        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        try {
-            JSONArray licensesArray = dbClient.callProcedureAndGetAsJson("invoice_get_suited_licenses",
-                                                                            dbClient.getLang(),
-                                                                            invoiceId, clientId,
-                                                                            beginDate, endDate,
-                                                                            products, additionalDiscount, licensesIds);
-            System.out.println("licenses array from DB: " + licensesArray);
-            licenses = licensesArray.getJSONArray(0);
-            licensesFinaces = licensesArray.getJSONArray(1);
-            invoicesFinaces = licensesArray.getJSONArray(2);
-        } catch (IOException | JSONException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public static void callInvoiceExistedLicenses(int invoiceId){
+    public static void callInvoiceExistedLicenses(int invoiceId, 
+                                                    Consumer<List<PartOfLicense>> licensesCnsm,
+                                                    Consumer<List<LicenseFinance>> licenseFinancesCnsm,
+                                                    Consumer<InvoiceFinance> invoiceFinanceDataCnsm,
+                                                    Consumer<Client> clientCnsm) {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         try {
             JSONArray financesData = dbClient.callProcedureAndGetAsJson("invoice_get_existed_licenses", invoiceId, dbClient.getLang());
             System.out.println("invoice finances: " + financesData);
             
-            licenses = financesData.getJSONArray(0);
-            licensesFinaces = financesData.getJSONArray(1);
-            invoicesFinaces = financesData.getJSONArray(2);
+            if (licensesCnsm != null){
+                licensesCnsm.accept(Utils.getListFromJSONArray(PartOfLicense.class, financesData.getJSONArray(0)));
+            }
+            if (licenseFinancesCnsm != null){
+                licenseFinancesCnsm.accept(Utils.getListFromJSONArray(LicenseFinance.class, financesData.getJSONArray(1)));
+            }
+            if (invoiceFinanceDataCnsm != null){
+                ArrayList<InvoiceFinance> invFinance = Utils.getListFromJSONArray(InvoiceFinance.class, financesData.getJSONArray(2));
+                invoiceFinanceDataCnsm.accept(invFinance.get(0)); // There is always one entry in it.
+            }
+            if (clientCnsm != null){
+                ArrayList<Client> clients = Utils.getListFromJSONArray(Client.class, financesData.getJSONArray(3));
+                clientCnsm.accept(clients.get(0)); // There is always one entry in it.
+            }
+            
         } catch (IOException | AuthServerException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public static ArrayList<PartOfLicense> getLicenses(){
+    public static void callInvoiceSuitedLicenses(Invoice invoice, Basket basket,
+                                                    Consumer<List<PartOfLicense>> licensesCnsm,
+                                                    Consumer<List<LicenseFinance>> licenseFinancesCnsm,
+                                                    Consumer<InvoiceFinance> invoiceFinanceDataCnsm) throws AuthServerException{
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         try {
-            String licensesAsString = licenses.toString();
-            licenses = null; // free static variable
-            return new ObjectMapper().readValue(licensesAsString, new TypeReference<ArrayList<PartOfLicense>>(){});
-        } catch (IOException ex) {
+            Integer invoiceId = (invoice.getRecId() == 0) ? null : invoice.getRecId();
+            
+            JSONArray productsArray = new JSONArray();
+            Iterator<String> itr = basket.getIterator();
+            while(itr.hasNext()){
+                String uniqueId = itr.next();
+                JSONObject json = Utils.getJsonFrom(null, "product_id", uniqueId);
+                productsArray.put(Utils.getJsonFrom(json, "count", basket.getCountFor(uniqueId)));
+            }
+            
+            JSONArray licensesIds = new JSONArray();
+            invoice.getLicenses().forEach((licenseShortData) -> {
+                licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
+            });
+            
+            JSONArray licensesArray = dbClient.callProcedureAndGetAsJson("invoice_get_suited_licenses",
+                                                                            dbClient.getLang(),
+                                                                            invoiceId, invoice.getClientId(),
+                                                                            invoice.beginDateProperty().get(),
+                                                                            invoice.endDateProperty().get(),
+                                                                            productsArray, invoice.getAdditionalDiscountRate(),
+                                                                            licensesIds);
+            System.out.println("licenses array from DB: " + licensesArray);
+            
+            if (licensesCnsm != null){
+                licensesCnsm.accept(Utils.getListFromJSONArray(PartOfLicense.class, licensesArray.getJSONArray(0)));
+            }
+            if (licenseFinancesCnsm != null){
+                licenseFinancesCnsm.accept(Utils.getListFromJSONArray(LicenseFinance.class, licensesArray.getJSONArray(1)));
+            }
+            if (invoiceFinanceDataCnsm != null){
+                ArrayList<InvoiceFinance> invFinances = Utils.getListFromJSONArray(InvoiceFinance.class, licensesArray.getJSONArray(2));
+                invoiceFinanceDataCnsm.accept(invFinances.get(0)); // There is always one entry in it.
+            }
+            
+        } catch (IOException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return new ArrayList<>();
-    }
-    
-    public static ArrayList<LicenseFinaces> getLicensesFinaces(){
-        try {
-            String licensesFinacesAsString = licensesFinaces.toString();
-            licensesFinaces = null; // free static variable
-            return new ObjectMapper().readValue(licensesFinacesAsString, new TypeReference<ArrayList<LicenseFinaces>>(){});
-        } catch (IOException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
-    }
-    
-    public static ArrayList<InvoiceFinaces> getInvoicesFinaces(){
-        try {
-            String invoicesFinacesAsString = invoicesFinaces.toString();
-            invoicesFinaces = null; // free static variable
-            return new ObjectMapper().readValue(invoicesFinacesAsString, new TypeReference<ArrayList<InvoiceFinaces>>(){});
-        } catch (IOException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new ArrayList<>();
     }
 }

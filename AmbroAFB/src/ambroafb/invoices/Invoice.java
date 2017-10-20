@@ -19,11 +19,11 @@ import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.invoices.filter.InvoiceFilterModel;
-import ambroafb.invoices.helper.InvoiceFinaces;
+import ambroafb.invoices.helper.InvoiceFinance;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
 import ambroafb.invoices.helper.InvoiceStatusClarify;
-import ambroafb.licenses.helper.LicenseFinaces;
+import ambroafb.licenses.helper.LicenseFinance;
 import ambroafb.products.Product;
 import ambroafb.products.helpers.ProductDiscount;
 import authclient.db.ConditionBuilder;
@@ -38,7 +38,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.beans.binding.Bindings;
+import java.util.function.Consumer;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -69,7 +69,7 @@ public class Invoice extends EditorPanelable {
     private final ObjectProperty<InvoiceStatusClarify> clarifyObj;
     
     @AView.Column(title = "%license", width = TableColumnWidths.LICENSE)
-    private final StringProperty licensesDescript;
+    private final StringProperty licensesDescrip;
     private final ObservableList<LicenseShortData> licenses;
     
     @AView.Column(title = "%client", width = TableColumnWidths.CLIENT_MAIL)
@@ -116,10 +116,8 @@ public class Invoice extends EditorPanelable {
     private static final String DB_CLARIFIES_TABLE = "invoice_status_clarify_descrips";
     private static final String DB_INVOICES_VIEW = "invoices_whole";
     
-    @JsonIgnore
-    public ArrayList<LicenseFinaces> licenseFinanceses = new ArrayList<>();
-    @JsonIgnore
-    public ArrayList<InvoiceFinaces> invoiceFinaceses = new ArrayList<>();
+    private List<LicenseFinance> licenseFinanceses = new ArrayList<>();
+    private InvoiceFinance invoiceFinace = new InvoiceFinance();
     
     private final Map<CountComboBoxItem, Integer> productsCounter = new HashMap<>();
     private static int clarifyStatus;
@@ -130,7 +128,7 @@ public class Invoice extends EditorPanelable {
     public Invoice(){
         invoiceNumber = new SimpleStringProperty("");
         createdDate = new SimpleStringProperty("");
-        licensesDescript = new SimpleStringProperty("");
+        licensesDescrip = new SimpleStringProperty("");
         licenses = FXCollections.observableArrayList();
         clientObj = new SimpleObjectProperty<>(new Client());
         clientDescrip = clientObj.get().getShortDescrip(", ");
@@ -165,7 +163,8 @@ public class Invoice extends EditorPanelable {
         });
         
         licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
-            rebindLicenses();
+            resetLicenses();
+//            rebindLicenses();
         });
         
         moneyPaid.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -173,19 +172,32 @@ public class Invoice extends EditorPanelable {
         });
     }
     
-    private void rebindLicenses(){
-        licensesDescript.unbind();
-        licensesDescript.bind(licenses.stream()
-                                    .map(LicenseShortData::licenseNumberProperty)
-                                    .reduce(new SimpleStringProperty(""), (StringProperty total, StringProperty unary) -> {
-                                        StringProperty temp = new SimpleStringProperty("");
-                                        StringExpression exp = total.concat(Bindings.createStringBinding(() -> {
-                                                                    return (total.get().isEmpty()) ? "" : ", ";
-                                                                }, total.isEmpty())).concat(unary);
-                                        temp.set(exp.get());
-                                        return temp;
-                                    })
-                            );
+//    private void rebindLicenses(){
+//        licensesDescrip.unbind();
+//        licensesDescrip.bind(
+//                licenses.stream()
+//                                    .map(LicenseShortData::licenseNumberProperty)
+//                                    .reduce(new SimpleStringProperty(""), (StringProperty total, StringProperty unary) -> {
+//                                        StringProperty temp = new SimpleStringProperty("");
+//                                        StringExpression exp = total.concat(Bindings.createStringBinding(() -> {
+//                                                                    return (total.get().isEmpty()) ? "" : ", ";
+//                                                                }, total.isEmpty())).concat(unary);
+//                                        temp.set(exp.get());
+//                                        return temp;
+//                                    })
+//                            );
+//    }
+    
+    private void resetLicenses(){
+        String licensesNumersDescrip = "";
+        if (!licenses.isEmpty()){
+            licensesNumersDescrip = licenses.stream().map(LicenseShortData::licenseNumberProperty).reduce(new SimpleStringProperty(""), (StringProperty total, StringProperty unary) -> {
+                String totalValue = (total.isEmpty().get()) ? unary.get() : total.get() + ", " + unary.get();
+                total.set(totalValue);
+                return total;
+            }).get();
+        }
+        licensesDescrip.set(licensesNumersDescrip);
     }
     
     private void rebindEndDate(){
@@ -249,13 +261,18 @@ public class Invoice extends EditorPanelable {
     
     public static Invoice getOneFromDB (int invoiceId){
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", invoiceId).condition().build();
-        DBUtils.callInvoiceExistedLicenses(invoiceId);
-        ArrayList<LicenseFinaces> licenseFinances = DBUtils.getLicensesFinaces();
-        ArrayList<InvoiceFinaces> invoicesFinaceses = DBUtils.getInvoicesFinaces();
         Invoice invoiceFromDB = DBUtils.getObjectFromDB(Invoice.class, DB_INVOICES_VIEW, params);
         
-        invoiceFromDB.setLicenseFinances(licenseFinances);
-        invoiceFromDB.setInvoiceFinances(invoicesFinaceses);
+        Consumer<List<LicenseFinance>> licensesFianceConsumer = (List<LicenseFinance> licenseFinances) -> {
+            invoiceFromDB.setLicenseFinances(licenseFinances);
+        };
+        
+        Consumer<InvoiceFinance> invoiceFianceConsumer = (InvoiceFinance invoiceFinanaceData) -> {
+            invoiceFromDB.setInvoiceFinances(invoiceFinanaceData);
+        };
+        
+        // licenses and client data gives from invoice_whole, so method does not need their consumers:
+        DBUtils.callInvoiceExistedLicenses(invoiceId, null, licensesFianceConsumer, invoiceFianceConsumer, null);
         
         return invoiceFromDB;
     }
@@ -302,7 +319,7 @@ public class Invoice extends EditorPanelable {
     }
     
     public StringProperty licensesNumbersProperty(){
-        return licensesDescript;
+        return licensesDescrip;
     }
 
     public StringProperty moneyToPayProperty(){
@@ -365,13 +382,13 @@ public class Invoice extends EditorPanelable {
     }
     
     @JsonIgnore
-    public ArrayList<LicenseFinaces> getLicenseFinances(){
+    public List<LicenseFinance> getLicenseFinances(){
         return licenseFinanceses;
     }
     
     @JsonIgnore
-    public ArrayList<InvoiceFinaces> getInvoiceFinances(){
-        return invoiceFinaceses;
+    public InvoiceFinance getInvoiceFinance(){
+        return invoiceFinace;
     }
     
     public int getClientId(){
@@ -478,13 +495,14 @@ public class Invoice extends EditorPanelable {
         this.licenses.setAll(licenses);
     }
     
-    public void setLicenseFinances(ArrayList<LicenseFinaces> licensesFinanceses){
+    @JsonProperty
+    public void setLicenseFinances(List<LicenseFinance> licensesFinanceses){
         this.licenseFinanceses = licensesFinanceses;
         productsCounter.clear();
         licensesFinanceses.forEach((finance) -> makeAndSaveProductFrom(finance));
     }
     
-    private void makeAndSaveProductFrom(LicenseFinaces finance){
+    private void makeAndSaveProductFrom(LicenseFinance finance){
         Product p = new Product();
         p.setRecId(finance.productId);
         p.setAbbreviation(finance.articul.substring(0, Product.ABREVIATION_LENGTH));
@@ -505,10 +523,12 @@ public class Invoice extends EditorPanelable {
         productsCounter.put(p, finance.count);
     }
     
-    public void setInvoiceFinances(ArrayList<InvoiceFinaces> invoiceFinances){
-        this.invoiceFinaceses = invoiceFinances;
-        InvoiceFinaces invFinances = invoiceFinances.get(0); // There is only one entry in list.
-        additionalDiscRate.set(invFinances.additionalDiscountRate);
+    @JsonProperty
+    public void setInvoiceFinances(InvoiceFinance invoiceFinances){
+        this.invoiceFinace = invoiceFinances;
+        if (invoiceFinances != null){
+            additionalDiscRate.set(invoiceFinances.additionalDiscountRate);
+        }
     }
     
     public void setClientId(int recId){
@@ -649,17 +669,12 @@ public class Invoice extends EditorPanelable {
         
         licenseFinanceses.clear();
         invoice.getLicenseFinances().stream().forEach((otherFinanceOfLicense) -> {
-            LicenseFinaces finance = new LicenseFinaces();
+            LicenseFinance finance = new LicenseFinance();
             finance.copyFrom(otherFinanceOfLicense);
             licenseFinanceses.add(finance);
         });
         
-        invoiceFinaceses.clear();
-        invoice.getInvoiceFinances().stream().forEach((otherFinanceOfInvoice) -> {
-            InvoiceFinaces finance = new InvoiceFinaces();
-            finance.copyFrom(otherFinanceOfInvoice);
-            invoiceFinaceses.add(finance);
-        });
+        invoiceFinace.copyFrom(invoice.getInvoiceFinance());
         
         setBeginDate(invoice.getBeginDate());
         setEndDate(invoice.getEndDate());
@@ -685,8 +700,8 @@ public class Invoice extends EditorPanelable {
     @Override
     public String toStringForSearch() {
         String searchString = "";
-        if (clientObj.isNotNull().get() && licensesDescript.isNotNull().get()){
-            searchString = clientObj.get().getShortDescrip(" ").get() + " " + licensesDescript.get();
+        if (clientObj.isNotNull().get() && licensesDescrip.isNotNull().get()){
+            searchString = clientObj.get().getShortDescrip(" ").get() + " " + licensesDescrip.get();
         }
         return searchString;
     }

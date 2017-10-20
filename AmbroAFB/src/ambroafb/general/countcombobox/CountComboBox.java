@@ -32,8 +32,6 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
     
     private static final int defaultWidth = 500;
     
-//    private Map<CountComboBoxItem, Integer> data = new HashMap<>();
-//    private final Map<String, CountComboBoxContainer> drawItems = new HashMap<>();
     private boolean isDisableState = false;
     private String viewableCSSFile = "/styles/css/countcomboboxviewable.css";
     private final Tooltip tooltip = new Tooltip();;
@@ -73,7 +71,6 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
         addKeyListeners();
     }
     
-    // +++
     public void fillcomboBox(Supplier<List<CountComboBoxItem>> itemsGenerator, Consumer<ObservableList<CountComboBoxItem>> extraAction){
         new Thread(new FetchDataFromDB(itemsGenerator, extraAction)).start();
     }
@@ -96,27 +93,6 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
             refreshButtonCell();
         });
     }
-    
-//    public void setData(Map<CountComboBoxItem, Integer> data){
-////        this.data = data;
-//
-//        
-//        System.out.println("--------------------------------- aaa ---------------------------");
-//        data.keySet().forEach((item) -> {
-//            // ამ დროს item-ს არ მოყვება დასახელება. ხოლო თუ მაშინ შვქმნით container-ს როცა სია მოგვივიდა ანუ fetchDataFromDB-ში, მაშინ სრული ინფორმაცია გვაქსვ Item-ბზე.
-//            System.out.println(item.getDrawableName());
-//            
-////            CountComboBoxContainer drawItem = convertIntoDrawItem(item);
-////            drawItem.numberProperty().set(data.get(item));
-////            drawItems.put(item.getUniqueIdentifier(), drawItem);
-//        });
-//        
-//        // ComboBox button cell text will show after any item select in comboBox. 
-//        // So we select every item. The last selected item will be zero indexed (only for visually effect).
-//        for (int i = getItems().size() - 1; i >= 0; i--){
-//            getSelectionModel().select(i);
-//        }
-//    }
     
     public void setBasket(Basket b){
         if (b == null || b.isEmpty()){
@@ -157,7 +133,11 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
         return basket;
     }
     
-    public void changeState(boolean isDisableState){
+    /**
+     *  The method provides to disabled count comboBox. selection colors are gray, increase and decrease buttons does not work.
+     * @param isDisableState True - if comboBox must be disabled. False - if comboBox must be enabled.
+     */
+    public void setDisabledState(boolean isDisableState){
         this.isDisableState = isDisableState;
         if (isDisableState){
             getStylesheets().add(viewableCSSFile);
@@ -166,10 +146,6 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
             getStylesheets().remove(viewableCSSFile);
         }
     }
-    
-//    public boolean nothingIsSelected(){
-//        return data.isEmpty();
-//    }
     
     
     // Private class
@@ -208,15 +184,15 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
         @Override
         public void updateItem(CountComboBoxItem item, boolean empty) {
             super.updateItem(item, empty);
-            if (item == null || empty){ //  +++
+            if (item == null || empty){ // This is importent line by javafx ComboBox class reference.
                 setText(null);
             }
             else {
                 String title = "";
                 for (CountComboBoxItem boxItem : getItems()) {
                     String identifier = boxItem.getUniqueIdentifier();
-                    if (containers.containsKey(identifier)) { // +++
-                        CountComboBoxContainer boxDrawItem = containers.get(identifier); // ++
+                    if (containers.containsKey(identifier)) {
+                        CountComboBoxContainer boxDrawItem = containers.get(identifier);
                         title = title.concat(boxDrawItem.nameExpression().getValueSafe());
                         if (!boxDrawItem.nameExpression().getValueSafe().isEmpty()){
                             title = title.concat(delimiter);

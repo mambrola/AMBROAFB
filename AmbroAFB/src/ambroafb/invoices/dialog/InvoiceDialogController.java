@@ -25,16 +25,15 @@ import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.invoices.Invoice;
-import ambroafb.invoices.helper.InvoiceFinaces;
+import ambroafb.invoices.helper.InvoiceFinance;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.PartOfLicense;
-import ambroafb.licenses.helper.LicenseFinaces;
+import ambroafb.licenses.helper.LicenseFinance;
 import ambroafb.products.Product;
 import authclient.AuthServerException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -57,7 +56,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.MaskerPane;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -112,7 +110,7 @@ public class InvoiceDialogController extends DialogController {
         financesFromSuitedLicense = new RecalcFinancesInBackground();
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
             if (oldValue != null && newValue != null){
-                System.out.println("rebindFinance from clients");
+                System.out.println("+++ rebindFinance from clients");
                 rebindFinanceData();
             }
         });
@@ -120,36 +118,28 @@ public class InvoiceDialogController extends DialogController {
         products.showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (newValue){
                 prevBasket.clearAndCopy(products.getBasket());
-                System.out.println("prevBasket:");
-                System.out.println(prevBasket);
-                
-                System.out.println("products basket:");
-                System.out.println(products.getBasket());
             }
             else if (!prevBasket.equals(products.getBasket())) {
-                System.out.println("rebindFinance from products");
+                System.out.println("+++ rebindFinance from products");
                 rebindFinanceData();
-            }
-            else {
-                System.out.println("ar wavidaaaaa");
             }
         });
         beginDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
             if (oldValue != null && newValue != null){
-                System.out.println("rebindFinance from beginDate");
+                System.out.println("+++ rebindFinance from beginDate");
                 rebindFinanceData();
             }
         });
         monthCounter.valueProperty().addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
             if (oldValue != null && newValue != null){
-                System.out.println("rebindFinance from monthCounter");
+                System.out.println("+++ rebindFinance from monthCounter");
                 rebindFinanceData();
             }
         });
         additionalDiscount.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             double discount = Utils.getDoubleValueFor(additionalDiscount.getText());
             if (discount > 0 && !discountText.getText().contains(additionalDiscount.getText()) && !newValue){
-                System.out.println("rebindFinance from additionalDiscount");
+                System.out.println("+++ rebindFinance from additionalDiscount");
                 rebindFinanceData();
             }
         });
@@ -166,9 +156,13 @@ public class InvoiceDialogController extends DialogController {
         payText.setText(config.getTitleFor("money_paid") + colonDelimiter);
     }
     
-    private void setShowFinanceData(boolean showTextLabel, boolean showNumberLabel){
-        financesLabelTextContainer.setVisible(showTextLabel);
-        financesLabelNumberContainer.setVisible(showNumberLabel);
+    private void changeFinanceInfoVisibility(boolean visibleTextData, boolean visibleNumberData){
+        financesLabelTextContainer.setVisible(visibleTextData);
+        financesLabelNumberContainer.setVisible(visibleNumberData);
+    }
+    
+    private void changeFinanceNumbersInfoVisibility(boolean visibility){
+        changeFinanceInfoVisibility(true, visibility);
     }
     
     /**
@@ -183,20 +177,23 @@ public class InvoiceDialogController extends DialogController {
         }
         else {
             setFinanceDataToDefaultText();
-            setShowFinanceData(true, false);
+            changeFinanceInfoVisibility(true, false);
         }
     }
     
-    private void processFinanceData(ArrayList<InvoiceFinaces> invoiceFinances){
-        if (invoiceFinances.isEmpty()) return;
-        InvoiceFinaces financeOfInvoce = invoiceFinances.get(0);
-        sumNumber.setText(financeOfInvoce.symbolTotal + " " + financeOfInvoce.sum);
-        discountText.setText(getUpdatedTextWithNumber(discountText.getText(), financeOfInvoce.additionalDiscountRate));
-        discountNumber.setText(financeOfInvoce.symbolTotal + " " + financeOfInvoce.additionalDiscountSum);
-        netoNumber.setText(financeOfInvoce.symbolTotal + " " + financeOfInvoce.nettoSum);
-        vatText.setText(getUpdatedTextWithNumber(vatText.getText(), financeOfInvoce.vatRate));
-        vatNumber.setText(financeOfInvoce.symbolTotal + " " + financeOfInvoce.vat);
-        payNumber.setText(financeOfInvoce.symbolTotal + " " + financeOfInvoce.paySum);
+    private void processFinanceData(InvoiceFinance invoiceFinances){
+        changeFinanceNumbersInfoVisibility(!invoiceFinances.dataIsEmpty()); // ---
+        if (invoiceFinances.dataIsEmpty()) {
+            setFinanceDataToDefaultText();
+        } else {
+            sumNumber.setText(invoiceFinances.symbolTotal + " " + invoiceFinances.sum);
+            discountText.setText(getUpdatedTextWithNumber(discountText.getText(), invoiceFinances.additionalDiscountRate));
+            discountNumber.setText(invoiceFinances.symbolTotal + " " + invoiceFinances.additionalDiscountSum);
+            netoNumber.setText(invoiceFinances.symbolTotal + " " + invoiceFinances.nettoSum);
+            vatText.setText(getUpdatedTextWithNumber(vatText.getText(), invoiceFinances.vatRate));
+            vatNumber.setText(invoiceFinances.symbolTotal + " " + invoiceFinances.vat);
+            payNumber.setText(invoiceFinances.symbolTotal + " " + invoiceFinances.paySum);
+        }
     }
     
     private String getUpdatedTextWithNumber(String currState, String newNumberValue){
@@ -206,7 +203,6 @@ public class InvoiceDialogController extends DialogController {
     
     private boolean isEveryNessesaryFieldValid(){
         return  clients.valueProperty().get() != null && 
-                !products.getBasket().isEmpty() && 
                 beginDate.getValue() != null && 
                 monthCounter.getValue() != null;
     }
@@ -228,22 +224,14 @@ public class InvoiceDialogController extends DialogController {
             createdDate.setValue(invoice.getCreatedDateObj());
             invoiceNumber.textProperty().bindBidirectional(invoice.invoiceNumberProperty());
             status.textProperty().bindBidirectional(invoice.getInvoiceStatus().descripProperty());
-            
             clients.valueProperty().bindBidirectional(invoice.clientProperty());
-            
-//            products.setData(invoice.getProductsWithCounts()); // --- წასაშლელია. მოაგვარა consumer-მა extraAction-ში.
-            
             beginDate.valueProperty().bindBidirectional(invoice.beginDateProperty());
             monthCounter.valueProperty().bindBidirectional(invoice.monthsProperty());
             endDate.valueProperty().bindBidirectional(invoice.endDateProperty());
-            
             additionalDiscount.textProperty().bindBidirectional(invoice.additionaldiscountProperty());
             licenses.textProperty().bind(invoice.licensesNumbersProperty());
-            
             invoiceReissuings.valueProperty().bindBidirectional(invoice.reissuingProperty());
             revokedDate.valueProperty().bindBidirectional(invoice.revokedDateProperty());
-            
-            processFinanceData(invoice.getInvoiceFinances());
         }
     }
     
@@ -257,7 +245,7 @@ public class InvoiceDialogController extends DialogController {
 
         editorPanelButtonType = buttonType;
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
-            products.changeState(true);
+            products.setDisabledState(true);
         }
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
             makeActionasForDialogTypeADD();
@@ -265,6 +253,7 @@ public class InvoiceDialogController extends DialogController {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
             makeActionsForDialogTypeAddBySample();
         }
+        processFinanceData(((Invoice)sceneObj).getInvoiceFinance());
     }
     
     private Basket convertMapToBasket(Map<CountComboBoxItem, Integer> data){
@@ -283,30 +272,18 @@ public class InvoiceDialogController extends DialogController {
         InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
         ((Invoice)sceneObj).reissuingProperty().set(defaultReissuing);
         backupObj.copyFrom(sceneObj);
-        
-//        setShowFinanceData(true, false);
-        setShowFinanceData(true, true); //  ------------------------------------
     }
     
     private void makeActionsForDialogTypeAddBySample(){
         makeActionasForDialogTypeADD();
         ((Invoice)sceneObj).setInvoiceNumber("");
         ((Invoice)sceneObj).getInvoiceStatus().setDescrip(""); // set empty status
-        ((Invoice)sceneObj).setLicenseFinances(new ArrayList<>()); // empty list cause clear the products map.
+        ((Invoice)sceneObj).setLicenseFinances(new ArrayList<>()); // empty list cause to clear the products map.
+        ((Invoice)sceneObj).setInvoiceFinances(new InvoiceFinance());
         products.setBasket(convertMapToBasket(((Invoice)sceneObj).getProductsWithCounts()));
-        System.out.println("-------------- size:");
-        System.out.println(((Invoice)sceneObj).getLicenses().size());
         ((Invoice)sceneObj).getLicenses().clear();
         ((Invoice)sceneObj).setRevokedDate("");
         backupObj.copyFrom(sceneObj);
-        
-//        Consumer<Invoice> updateInvoiceBackup = (Invoice inv) -> {
-//            backupObj.createClone(inv);
-//        };
-//        if (isEveryNessesaryFieldValid()){
-//            // we need new license numbers:
-//            new Thread(new RecalcFinancesInBackground(updateInvoiceBackup)).start();
-//        }
     }
     
     @Override
@@ -349,7 +326,7 @@ public class InvoiceDialogController extends DialogController {
                 calculateFinaceData();
                 
                 Platform.runLater(() -> {
-                    processFinanceData(((Invoice)sceneObj).getInvoiceFinances());
+                    processFinanceData(((Invoice)sceneObj).getInvoiceFinance());
                     masker.setVisible(false);
                 });
                 semLock.release();
@@ -359,45 +336,30 @@ public class InvoiceDialogController extends DialogController {
         }
         
         private void calculateFinaceData() {
-            setShowFinanceData(true, true);
-//            Map<CountComboBoxItem, Integer> productsMap = products.getData();
-            Basket basket = products.getBasket();
-            
-//            System.out.println("calculateFinaceData -> productsMap: " + productsMap);
-
-            JSONArray productsArray = new JSONArray();
-            Iterator<String> itr = basket.getIterator();
-            while(itr.hasNext()){
-                String uniqueId = itr.next();
-                JSONObject json = Utils.getJsonFrom(null, "product_id", uniqueId);
-                productsArray.put(Utils.getJsonFrom(json, "count", basket.getCountFor(uniqueId)));
-            }
-//            productsMap.keySet().stream().forEach((item) -> {
-//                Product product = (Product)item;
-//                JSONObject json = Utils.getJsonFrom(null, "product_id", product.getRecId());
-//                productsArray.put(Utils.getJsonFrom(json, "count", productsMap.get(product)));
-//            });
-//            System.out.println("rebindFinanceData -> productsArray minda: " + productsArray);
-
-            Integer invoiceId = null;
-            if (((Invoice)sceneObj).getRecId() != 0 && !editorPanelButtonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
-                invoiceId = ((Invoice)sceneObj).getRecId();
-            }
-            
-            Float discount = ((Invoice)sceneObj).getAdditionalDiscountRate();
-//            String discount = invoice.getAdditionalDiscountRate();
-//            if (discount == null || discount.isEmpty()) {
-//                discount = null;
-//            }
-            
-            JSONArray licensesIds = new JSONArray();
-            ((Invoice)sceneObj).getLicenses().forEach((licenseShortData) -> {
-                licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
-            });
-//            System.out.println("maqvs  license_ids: " + licensesIds);
-
             try {
-                DBUtils.callInvoiceSuitedLicenses(invoiceId, ((Invoice)sceneObj).getClientId(), ((Invoice)sceneObj).beginDateProperty().get(), ((Invoice)sceneObj).endDateProperty().get(), productsArray, discount, licensesIds);
+                Consumer<List<PartOfLicense>> licensesConsumer = (List<PartOfLicense> licensesPartDataList) -> {
+                    List<Invoice.LicenseShortData> wholeLicenses = licensesPartDataList.stream().map((license) -> {
+                        Invoice.LicenseShortData shortData = new Invoice.LicenseShortData();
+                        shortData.setLicenseId(license.recId);
+                        shortData.setLicenseNumber(license.licenseNumber);
+                        if (license.invoiceLicenseId != 0){
+                            shortData.setInvoiceLicense(license.invoiceLicenseId);
+                        }
+                        return shortData;
+                    }).collect(Collectors.toList());
+
+                    ((Invoice)sceneObj).setLicenses(wholeLicenses);
+                };
+
+                Consumer<List<LicenseFinance>> licenseFinanceConsumer = (List<LicenseFinance> licenseFinances) -> {
+                    ((Invoice)sceneObj).setLicenseFinances(licenseFinances);
+                };
+                
+                Consumer<InvoiceFinance> invoiceFianceConsumer = (InvoiceFinance invoiceFinanaceData) -> {
+                    ((Invoice)sceneObj).setInvoiceFinances(invoiceFinanaceData);
+                };
+                
+                DBUtils.callInvoiceSuitedLicenses((Invoice)sceneObj, products.getBasket(), licensesConsumer, licenseFinanceConsumer, invoiceFianceConsumer);
             } catch (AuthServerException ex) {
                 JSONObject json = Utils.getJsonFrom(ex.getMessage());
                 if (json == null) return;
@@ -413,24 +375,6 @@ public class InvoiceDialogController extends DialogController {
                 }
                 return;
             }
-            
-            ArrayList<PartOfLicense> invoiceLicenses = DBUtils.getLicenses();
-            ArrayList<LicenseFinaces> licenseFinances = DBUtils.getLicensesFinaces();
-            ArrayList<InvoiceFinaces> invoiceFinances = DBUtils.getInvoicesFinaces();
-
-            ((Invoice)sceneObj).setLicenseFinances(licenseFinances);
-            ((Invoice)sceneObj).setInvoiceFinances(invoiceFinances);
-            List<Invoice.LicenseShortData> wholeLicenses = invoiceLicenses.stream().map((license) -> {
-                Invoice.LicenseShortData shortData = new Invoice.LicenseShortData();
-                shortData.setLicenseId(license.recId);
-                shortData.setLicenseNumber(license.licenseNumber);
-                if (license.invoiceLicenseId != 0){
-                    shortData.setInvoiceLicense(license.invoiceLicenseId);
-                }
-                return shortData;
-            }).collect(Collectors.toList());
-            
-            ((Invoice)sceneObj).setLicenses(wholeLicenses);
             
             if (callBack != null){
                 callBack.accept(((Invoice)sceneObj));

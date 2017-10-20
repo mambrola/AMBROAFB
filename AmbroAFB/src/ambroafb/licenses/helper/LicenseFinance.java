@@ -9,7 +9,7 @@ package ambroafb.licenses.helper;
  *
  * @author dato
  */
-public class LicenseFinaces {
+public class LicenseFinance {
     
     public int productId;
     public String articul;
@@ -25,7 +25,7 @@ public class LicenseFinaces {
     public String discountRate;
     public String totalPrice;
     
-    public void copyFrom(LicenseFinaces other){
+    public void copyFrom(LicenseFinance other){
         productId = other.productId;
         articul = other.articul;
         productDescrip = other.productDescrip;
