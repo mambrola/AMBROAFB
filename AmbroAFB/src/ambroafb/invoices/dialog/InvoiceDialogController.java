@@ -98,7 +98,6 @@ public class InvoiceDialogController extends DialogController {
     
     private String colonDelimiter = ":";
     private String percentDelimiter = "%";
-    private Names.EDITOR_BUTTON_TYPE editorPanelButtonType;
     private Runnable financesFromSuitedLicense;
 
     @Override
@@ -243,7 +242,6 @@ public class InvoiceDialogController extends DialogController {
         };
         products.fillcomboBox(productsGenerator, productsConsumer);
 
-        editorPanelButtonType = buttonType;
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
             products.setDisabledState(true);
         }
