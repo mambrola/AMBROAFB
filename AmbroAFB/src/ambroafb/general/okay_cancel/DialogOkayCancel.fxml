@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.*?>
 
 <HBox   fx:id="formNode"
-
+        styleClass="alwaysEnable"
         stylesheets="/styles/css/okaycancel.css" 
         xmlns:fx="http://javafx.com/fxml/1" 
         fx:controller="ambroafb.general.okay_cancel.DialogOkayCancelController">

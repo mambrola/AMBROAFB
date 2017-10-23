@@ -5,6 +5,7 @@
  */
 package ambroafb.general.okay_cancel;
 
+import ambroafb.accounts.dialog.AccountDialog;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.AnnotiationUtils;
 import ambroafb.general.GeneralConfig;
@@ -39,6 +40,16 @@ public class DialogOkayCancelController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        okay.setOnAction((ActionEvent event) -> {
+            System.out.println("--- Ok ---");
+            
+            ((AccountDialog)okay.getScene().getWindow()).okAction();
+        });
+        cancel.setOnAction((ActionEvent event) -> {
+            System.out.println("--- Cancel ---");
+            
+            ((UserInteractiveDialogStage)cancel.getScene().getWindow()).cancelAction();
+        });
     }
     
     public Button getOkayButton(){

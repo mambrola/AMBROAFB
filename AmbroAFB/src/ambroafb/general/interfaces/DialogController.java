@@ -47,7 +47,7 @@ public abstract class DialogController implements Initializable {
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EDITOR_BUTTON_TYPE.DELETE)){
             focusTraversableNodes.forEach((Node t) -> { t.setDisable(true); });
         }
-        getOkayCancelController().setButtonsFeatures(buttonType);
+//        getOkayCancelController().setButtonsFeatures(buttonType);
         makeExtraActions(buttonType);
     }
     

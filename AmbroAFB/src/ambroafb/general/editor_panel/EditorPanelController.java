@@ -9,6 +9,7 @@ import ambro.AFilterableTableView;
 import ambro.AFilterableTreeTableView;
 import ambro.ATableView;
 import ambro.AView;
+import ambroafb.general.EPManagerFactory;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
@@ -17,6 +18,7 @@ import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.EditorPanelableManager;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
@@ -78,8 +80,8 @@ public class EditorPanelController implements Initializable {
     
     private ObservableList<EditorPanelable> tableData;
     
-    @FXML
-    private void delete(ActionEvent e) {
+//    @FXML
+    private void deleteOld(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (dialogStage == null || !dialogStage.isShowing()){
@@ -101,6 +103,30 @@ public class EditorPanelController implements Initializable {
             }
         }
         else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
+        }
+    }
+    
+    @FXML
+    private void delete(ActionEvent e){
+        Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if (dialogStage == null || !dialogStage.isShowing()){
+            System.out.println("--- DELETE ---");
+            
+            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            EditorPanelableManager manager = EPManagerFactory.getEPManager(selected);
+            EditorPanelable real = manager.getDataProvider().getOneFromDB(selected.getRecId());
+            if (real != null) {
+                selected.copyFrom(real);
+            }
+            Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.DELETE, selected);
+            EditorPanelable result = dialog.getResult();
+            if (result != null){
+                tableData.remove(selected);
+            }
+        } else {
             dialogStage.requestFocus();
             StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
         }
