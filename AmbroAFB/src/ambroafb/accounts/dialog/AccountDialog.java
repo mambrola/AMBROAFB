@@ -6,15 +6,11 @@
 package ambroafb.accounts.dialog;
 
 import ambroafb.accounts.Account;
-import ambroafb.general.AlertMessage;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.DataProvider;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
-import java.util.function.Function;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 /**
@@ -36,8 +32,6 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
         accountBackup = account.cloneWithID();
         
         dialogController.setSceneData(account, accountBackup, buttonType);
-        
-        System.out.println("--- Account Dialog ---");
     }
 
     @Override
@@ -48,7 +42,6 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
 
     @Override
     public void operationCanceled() {
-        System.out.println("--- AccountDialog op Cancel ---");
         account = null;
     }
     
@@ -57,32 +50,8 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
         this.dataProvider = dp;
     }
     
-    public void okAction(){
-        switch(editorButtonType){
-            case DELETE:
-                System.out.println("--- User Interactive DELETE ---");
-                
-                Function<Exception, ButtonType> error = (ex) -> {
-                    return new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), getTitle()).showAndWait().get();
-                };
-                dataProvider.deleteOneFromDB(getSceneObject().getRecId(), null, error);
-                break;
-            case EDIT: 
-                dataProvider.editOneToDB(getSceneObject());
-                break;
-            case ADD:
-            case ADD_SAMPLE:
-                dataProvider.saveOneToDB(getSceneObject());
-                break;
-            default:
-                break;
-        }
-    }
-    
     @Override
     public Account getSceneObject(){
-        System.out.println("--- AccountDialog getSceneObject ---");
-        System.out.println("account: " + account);
         return account;
     }
 }

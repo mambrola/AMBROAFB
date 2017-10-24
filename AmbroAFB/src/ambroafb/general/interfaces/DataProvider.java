@@ -11,7 +11,6 @@ import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import javafx.scene.control.ButtonType;
 import org.json.JSONObject;
@@ -31,7 +30,7 @@ public abstract class DataProvider {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         dbClient.callProcedure(deleteProcName, id);
     }
-            
+    
     
     /**
      *  The method returns list by condition.
@@ -52,25 +51,30 @@ public abstract class DataProvider {
     /**
      *  The method removes one object by recId.
      * @param recId The unique identifier for object.
-     * @param success The success action.
-     * @param error The error action.
+     * @param success The action when delete was successful. It will call in Platform.runLater and before stage close. 
+     *                                      If nothing is executed, then gives null value.
+     * @param error The action when delete was not successful.  If nothing is executed, then gives null value.
      */
-    public abstract void deleteOneFromDB(int recId, Consumer<Boolean> success, Function<Exception, ButtonType> error);
+    public abstract void deleteOneFromDB(int recId, Function<Object, ButtonType> success, Function<Exception, ButtonType> error);
     
     
     /**
      *  The method changes existed object.
      * @param object The object that must be change.
-     * @return Object that was changed.
+     * @param success The action when delete was successful. It will call in Platform.runLater and before stage close. 
+     *                                      If nothing is executed, then gives null value.
+     * @param error The action when delete was not successful. If nothing is executed, then gives null value.
      */
-    public abstract EditorPanelable editOneToDB(EditorPanelable object);
+    public abstract void editOneToDB(EditorPanelable object, Function<Object, ButtonType> success, Function<Exception, ButtonType> error);
     
     
     /**
      *  The method saveOneToDB new object.
      * @param object The new Object.
-     * @return Object that was saved. It will have DB id too.
+     * @param success The action when delete was successful. It will call in Platform.runLater and before stage close. 
+     *                                      If nothing is executed, then gives null value.
+     * @param error The action when delete was not successful.  If nothing is executed, then gives null value.
      */
-    public abstract EditorPanelable saveOneToDB(EditorPanelable object);
+    public abstract void saveOneToDB(EditorPanelable object, Function<Object, ButtonType> success, Function<Exception, ButtonType> error);
     
 }

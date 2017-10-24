@@ -9,6 +9,7 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import java.util.function.Function;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -60,7 +61,62 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         return dialogController.anySceneComponentChanged();
     }
     
-    public void cancelAction(){
+    /**
+     *  According to dialog type (DELETE, EDIT, VIEW, ADD, ADD_SMAPLE), the method execute okay actions.
+     */
+    public final void okayAction(){
+        if (dataProvider != null){
+            switch(editorButtonType){
+                case DELETE:
+                    String alertText = GeneralConfig.getInstance().getTitleFor("dialog_delete_confirm");
+                    if (new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, "").showAndWait().get().equals(ButtonType.OK)){
+                        dataProvider.deleteOneFromDB(getSceneObject().getRecId(), builSuccessFunction(), getErrorFunction());
+                    }
+                    break;
+                case EDIT: 
+                    dataProvider.editOneToDB(getSceneObject(), builSuccessFunction(), getErrorFunction());
+                    break;
+                case ADD:
+                case ADD_SAMPLE:
+                    dataProvider.saveOneToDB(getSceneObject(), builSuccessFunction(), getErrorFunction());
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    private Function<Object, ButtonType> builSuccessFunction(){
+        Function<Object, ButtonType> closeFn = (Object t) -> {
+            close();
+            return ButtonType.OK;
+        };
+        Function<Object, ButtonType> successFn = getSuccessFunction();
+        return (successFn == null) ? closeFn : successFn.andThen(closeFn);
+    }
+    
+    /**
+     *  The function will execute before stage close, if DB action was successful.
+     * @return 
+     */
+    protected Function<Object, ButtonType> getSuccessFunction(){
+        return null;
+    }
+    
+    /**
+     *  The function will execute before stage close, if DB action was not successful.
+     * @return 
+     */
+    protected Function<Exception, ButtonType> getErrorFunction(){
+        return  (ex) -> {
+                    return new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), getTitle()).showAndWait().get();
+                };
+    }
+    
+    /**
+     * According to dialog type (DELETE, EDIT, VIEW, ADD, ADD_SMAPLE), the method execute cancel actions.
+     */
+    public final void cancelAction(){
         switch(editorButtonType){
             case EDIT: 
             case ADD:
@@ -85,9 +141,11 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
                     close();
                 }
                 break;
-            default: // DELETE, VIEW
+            case DELETE: 
+            case VIEW:
                 operationCanceled();
                 close();
+            default:
                 break;
         }
     }
