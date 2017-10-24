@@ -113,8 +113,6 @@ public class EditorPanelController implements Initializable {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (dialogStage == null || !dialogStage.isShowing()){
-            System.out.println("--- DELETE ---");
-            
             EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             EditorPanelableManager manager = EPManagerFactory.getEPManager(selected);
             EditorPanelable real = manager.getDataProvider().getOneFromDB(selected.getRecId());

@@ -198,14 +198,14 @@ public class StagesContainer {
      * @return True if current stage must close, false otherwise.
      */
     public static boolean closeStageWithChildren(Stage currStage) {
-        boolean closePermission = true;
+        boolean childClosePermission = true;
         String currStagePath = (String) bidmap.getKey(currStage);
         
         List<String> childrenPath = getFirstLevelChildrenFor(currStagePath);
         if (childrenPath.isEmpty()) {
             if (currStage instanceof UserInteractiveDialogStage) {
                 callStageCloseRequest(currStage);
-                ((UserInteractiveDialogStage)currStage).getPermissionToClose();
+                childClosePermission = ((UserInteractiveDialogStage)currStage).getPermissionToClose();
             } 
             else if (currStage instanceof Filterable){
                 callStageCloseRequest(currStage);
@@ -215,13 +215,13 @@ public class StagesContainer {
         }
         else {
             for (String childPath : childrenPath) {
-                closePermission = closeStageWithChildren((Stage) bidmap.get(childPath)) && closePermission;
+                childClosePermission = closeStageWithChildren((Stage) bidmap.get(childPath)) && childClosePermission;
             }
-            if (currStage.isShowing() && closePermission && !((String)bidmap.getKey(currStage)).equals("main")){
+            if (currStage.isShowing() && childClosePermission && !((String)bidmap.getKey(currStage)).equals("main")){
                 currStage.close();
             }
         }
-        return closePermission;
+        return childClosePermission;
     }
     
     private static void callStageCloseRequest(Stage currStage){

@@ -7,7 +7,6 @@ package ambroafb.accounts.dialog;
 
 import ambroafb.accounts.Account;
 import ambroafb.general.Names;
-import ambroafb.general.interfaces.DataProvider;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -43,11 +42,6 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
     @Override
     public void operationCanceled() {
         account = null;
-    }
-    
-    // შესატანია Dialogable-ში.
-    public void setDataProvider(DataProvider dp){
-        this.dataProvider = dp;
     }
     
     @Override

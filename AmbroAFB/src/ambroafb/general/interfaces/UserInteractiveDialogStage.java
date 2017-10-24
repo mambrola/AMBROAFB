@@ -26,9 +26,8 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     protected DialogController dialogController;
 
     private boolean permissionToClose = true;
-    
-    protected Names.EDITOR_BUTTON_TYPE editorButtonType;
-    protected DataProvider dataProvider;
+    private Names.EDITOR_BUTTON_TYPE editorButtonType;
+    private DataProvider dataProvider;
     
     public UserInteractiveDialogStage(Stage owner, String sceneFXMLFilePath, String stageTitleBundleKey){
         super(owner, Names.LEVEL_FOR_PATH, stageTitleBundleKey, "/images/dialog.png");
@@ -47,6 +46,10 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         this(owner, sceneFXMLFilePath, stageTitleBundleKey);
         
         editorButtonType = buttonType;
+    }
+    
+    public void setDataProvider(DataProvider dp){
+        this.dataProvider = dp;
     }
     
     public void changePermissionForClose(boolean value){
