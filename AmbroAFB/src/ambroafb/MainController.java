@@ -6,6 +6,7 @@
 package ambroafb;
 
 import ambroafb.accounts.Account;
+import ambroafb.accounts.AccountManager;
 import ambroafb.accounts.filter.AccountFilter;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.balance_accounts.BalanceAccounts;
@@ -113,6 +114,7 @@ public class MainController implements Initializable {
         Stage accountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Account.class.getSimpleName());
         if(accountsStage == null || !accountsStage.isShowing()){
             TableList accounts = new TableList(AmbroAFB.mainStage, Account.class, stageTitle);
+            accounts.setEPManager(new AccountManager());
             accounts.show();
             
             AccountFilter filter = new AccountFilter(accounts);
@@ -120,7 +122,7 @@ public class MainController implements Initializable {
             if (filterModel.isCanceled()){
                 accounts.close();
             } else {
-                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                Supplier<List<EditorPanelable>> fetchData = () -> {
                                                         return new ArrayList(Account.getFilteredFromDB(filterModel));
                                                     };
                 accounts.getController().reAssignTable(fetchData);
@@ -148,7 +150,7 @@ public class MainController implements Initializable {
                 clients.close();
             }
             else {
-                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                Supplier<List<EditorPanelable>> fetchData = () -> {
                                             ArrayList<Client> clientsList = Client.getFilteredFromDB(model);
                                             return new ArrayList(clientsList);
                                         };
@@ -178,7 +180,7 @@ public class MainController implements Initializable {
                 loggings.close();
             }
             else {
-                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                Supplier<List<EditorPanelable>> fetchData = () -> {
                                                         return new ArrayList(Logging.getFilteredFromDB(model));
                                                     };
                 loggings.getController().reAssignTable(fetchData);
@@ -205,7 +207,7 @@ public class MainController implements Initializable {
                 invoices.close();
             }
             else {
-                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                Supplier<List<EditorPanelable>> fetchData = () -> {
                                                         return new ArrayList(Invoice.getFilteredFromDB(model));
                                                     };
                 invoices.getController().reAssignTable(fetchData);
@@ -223,7 +225,7 @@ public class MainController implements Initializable {
         Stage productsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Product.class.getSimpleName());
         if (productsStage == null || !productsStage.isShowing()){
             TableList products = new TableList(AmbroAFB.mainStage, Product.class, stageTitle);
-            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+            Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Product.getAllFromDB());
                                                 };
             products.getController().reAssignTable(fetchData);
@@ -251,7 +253,7 @@ public class MainController implements Initializable {
 //            FetchTableListEntriesFromDB fetch = new FetchTableListEntriesFromDB(supplier, countries);
 //            fetch.start();
             
-            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+            Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Country.getAllFromDB());
                                                 };
             countries.getController().reAssignTable(fetchData);
@@ -281,7 +283,7 @@ public class MainController implements Initializable {
                 Supplier<ArrayList<Doc>> fetchData = () -> {
                                                             return new ArrayList(Doc.getFilteredFromDB(model));
                                                         };
-                docs.getController().reAssignTable(fetchData);
+                docs.getDocController().reAssignTable(fetchData);
             }
         }
         else {
@@ -305,7 +307,7 @@ public class MainController implements Initializable {
                 licenses.close();
             }
             else {
-                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                Supplier<List<EditorPanelable>> fetchData = () -> {
                                                         return new ArrayList(License.getFilteredFromDB(filterModel));
                                                     };
                 licenses.getController().reAssignTable(fetchData);
@@ -330,7 +332,7 @@ public class MainController implements Initializable {
         Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Attitude.class.getSimpleName());
         if(miniTablesStage == null || !miniTablesStage.isShowing()){
             TableList attitudes = new TableList(AmbroAFB.mainStage, Attitude.class, stageTitle);
-            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+            Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Attitude.getAllFromDB());
                                                 };
             attitudes.getController().reAssignTable(fetchData);
@@ -350,7 +352,7 @@ public class MainController implements Initializable {
         Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Merchandise.class.getSimpleName());
         if(miniTablesStage == null || !miniTablesStage.isShowing()){
             TableList merchandises = new TableList(AmbroAFB.mainStage, Merchandise.class, stageTitle);
-            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+            Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Merchandise.getAllFromDB());
                                                 };
             merchandises.getController().reAssignTable(fetchData);
@@ -366,7 +368,7 @@ public class MainController implements Initializable {
         Stage paramsGeneralStage = StagesContainer.getStageFor(AmbroAFB.mainStage, ParamGeneral.class.getSimpleName());
         if(paramsGeneralStage == null || !paramsGeneralStage.isShowing()){
             TableList generalParams = new TableList(AmbroAFB.mainStage, ParamGeneral.class, "general_params");
-            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+            Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(ParamGeneral.getAllFromDB());
                                                 };
             generalParams.getController().reAssignTable(fetchData);
@@ -386,7 +388,7 @@ public class MainController implements Initializable {
             TableList currencies = new TableList(AmbroAFB.mainStage, Currency.class, stageTitle);
             currencies.getController().removeElementsFromEditorPanel("#search");
             currencies.getController().getEditorPanelController().turnOffAddBySample();
-            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+            Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Currency.getAllFromDB());
                                                 };
             currencies.getController().reAssignTable(fetchData);
@@ -412,7 +414,7 @@ public class MainController implements Initializable {
                 currencyRates.close();
             }
             else {
-                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+                Supplier<List<EditorPanelable>> fetchData = () -> {
                                                         return new ArrayList(CurrencyRate.getFilteredFromDB(model));
                                                     };
                 currencyRates.getController().reAssignTable(fetchData);
@@ -429,7 +431,7 @@ public class MainController implements Initializable {
         Stage discountOnCountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, DiscountOnCount.class.getSimpleName());
         if (discountOnCountsStage == null || !discountOnCountsStage.isShowing()){
             TableList discountOnCounts = new TableList(AmbroAFB.mainStage, DiscountOnCount.class, stageTitle);
-            Supplier<ArrayList<EditorPanelable>> fetchData = () -> {
+            Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(DiscountOnCount.getAllFromDB());
                                                 };
             discountOnCounts.getController().reAssignTable(fetchData);
@@ -447,7 +449,7 @@ public class MainController implements Initializable {
         Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BalanceAccount.class.getSimpleName());
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
             BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage);
-            Supplier<ArrayList<EditorPanelable>> fetchData = () -> new ArrayList(BalanceAccount.getAllFromDB());
+            Supplier<List<EditorPanelable>> fetchData = () -> new ArrayList(BalanceAccount.getAllFromDB());
             balAccounts.getBalanceAccountsController().reAssignTable(fetchData);
             balAccounts.show();
         }
@@ -520,7 +522,7 @@ public class MainController implements Initializable {
         public void run() {
             List<EditorPanelable> contentList = supplier.get();
             Platform.runLater(() -> {
-//                Supplier<ArrayList<EditorPanelable>> fetchData = () -> {};
+//                Supplier<List<EditorPanelable>> fetchData = () -> {};
 //                tableList.getController().reAssignTable(contentList, null);
                 tableList.show();
             });

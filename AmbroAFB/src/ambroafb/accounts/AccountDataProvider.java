@@ -13,6 +13,7 @@ import authclient.db.ConditionBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import javafx.application.Platform;
 import javafx.scene.control.ButtonType;
@@ -39,30 +40,37 @@ public class AccountDataProvider extends DataProvider {
     }
 
     @Override
-    public Account getOneFromDB(int recId) {
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
-        return DBUtils.getObjectFromDB(Account.class, DB_VEIW_NAME, params);
+    public void getOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction) {
+        new Thread(() -> {
+            JSONObject params = new ConditionBuilder().where().and("rec_id", "=", 100).condition().build();
+            try {
+                Account accountFromDB = getObjectFromDB(Account.class, DB_VEIW_NAME, params);
+                Platform.runLater(() -> {
+                    if (successAction != null) successAction.accept(accountFromDB);
+                });
+            } catch (IOException | AuthServerException ex) {
+                Platform.runLater(() -> {
+                    if (errorAction != null) errorAction.accept(ex);
+                });
+            }
+        }).start();
     }
 
-    @Override
+    @Override // -----------------------------------------
     public void deleteOneFromDB(int recId, Function<Object, ButtonType> successAction, Function<Exception, ButtonType> errorAction) {
         new Thread(() -> {
             JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
             
             try {
                 deleteObjectFromDB(ACCOUNT_DELETE_CHECK_PROCEDURE, recId);
-                deleteAccount(recId);
+//                deleteAccount(recId);
                 Platform.runLater(() -> {
                     if (successAction != null) successAction.apply(null);
                 });
             } catch (IOException | AuthServerException ex) {
                 Platform.runLater(() -> {
                     if (errorAction != null) {
-                        if (errorAction.apply(ex).equals(ButtonType.OK)) {
-                            new Thread(() -> {
-                                deleteAccount(recId);
-                            }).start();
-                        }
+                        errorAction.apply(ex);
                     }
                 });
             }

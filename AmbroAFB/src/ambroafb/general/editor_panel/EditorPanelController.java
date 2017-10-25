@@ -9,7 +9,6 @@ import ambro.AFilterableTableView;
 import ambro.AFilterableTreeTableView;
 import ambro.ATableView;
 import ambro.AView;
-import ambroafb.general.EPManagerFactory;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
@@ -21,9 +20,11 @@ import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
+import ambroafb.general.interfaces.ListingStage;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -110,28 +111,31 @@ public class EditorPanelController implements Initializable {
     
     @FXML
     private void delete(ActionEvent e){
-        Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (dialogStage == null || !dialogStage.isShowing()){
             EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-            EditorPanelableManager manager = EPManagerFactory.getEPManager(selected);
-            EditorPanelable real = manager.getDataProvider().getOneFromDB(selected.getRecId());
-            if (real != null) {
-                selected.copyFrom(real);
-            }
-            Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.DELETE, selected);
-            EditorPanelable result = dialog.getResult();
-            if (result != null){
-                tableData.remove(selected);
-            }
+            EditorPanelableManager manager = editorPanelSceneStage.getEPManager();
+            Consumer<Object> successAction = (objFromDB) -> {
+                if (objFromDB != null){
+                    selected.copyFrom((EditorPanelable)objFromDB);
+                }
+                Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.DELETE, selected);
+                EditorPanelable result = dialog.getResult();
+                if (result != null){
+                    tableData.remove(selected);
+                }
+            };
+            manager.getDataProvider().getOneFromDB(selected.getRecId(), successAction, null);
+                
         } else {
             dialogStage.requestFocus();
             StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
         }
     }
     
-    @FXML
-    private void edit(ActionEvent e) {
+//    @FXML
+    private void editOld(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (dialogStage == null || !dialogStage.isShowing()){
@@ -163,7 +167,34 @@ public class EditorPanelController implements Initializable {
     }
     
     @FXML
-    private void view(ActionEvent e) {
+    private void edit(ActionEvent e) {
+        ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if (dialogStage == null || !dialogStage.isShowing()){
+            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            EditorPanelableManager manager = editorPanelSceneStage.getEPManager(); // EPManagerFactory.getEPManager(selected);
+            Consumer<Object> successAction = (ObjFromDB) -> {
+                if (ObjFromDB != null) {
+                    selected.copyFrom((EditorPanelable)ObjFromDB);
+                }
+                EditorPanelable backup = selected.cloneWithID();
+                Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.EDIT, selected);
+                EditorPanelable result = dialog.getResult();
+                if (result == null){
+                    selected.copyFrom(backup);
+                }
+            };
+            manager.getDataProvider().getOneFromDB(selected.getRecId(), successAction, null);
+            
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
+        }
+    }
+    
+//    @FXML
+    private void viewOld(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
@@ -185,7 +216,30 @@ public class EditorPanelController implements Initializable {
     }
     
     @FXML
-    private void add(ActionEvent e) {
+    private void view(ActionEvent e) {
+        ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            EditorPanelableManager manager = editorPanelSceneStage.getEPManager();
+            Consumer<Object> successAction = (ObjFromDB) -> {
+                if (ObjFromDB != null) {
+                    selected.copyFrom((EditorPanelable)ObjFromDB);
+                }
+                Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.VIEW, selected);
+                dialog.showAndWait();
+            };
+            manager.getDataProvider().getOneFromDB(selected.getRecId(), successAction, null);
+
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
+        }
+    }
+    
+//    @FXML
+    private void addOld(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
@@ -208,7 +262,26 @@ public class EditorPanelController implements Initializable {
     }
     
     @FXML
-    private void addBySample(ActionEvent e) {
+    private void add(ActionEvent e) {
+        ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            EditorPanelableManager manager = editorPanelSceneStage.getEPManager();
+            Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.ADD, null);
+            
+            EditorPanelable result = dialog.getResult();
+            if (result != null) {
+                tableData.add(result);
+            }
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
+        }
+    }
+    
+//    @FXML
+    private void addBySampleOld(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage == null || !dialogStage.isShowing()){
@@ -241,7 +314,38 @@ public class EditorPanelController implements Initializable {
     }
     
     @FXML
-    private void refresh(ActionEvent e) {
+    private void addBySample(ActionEvent e) {
+        ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage == null || !dialogStage.isShowing()){
+            EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+            EditorPanelableManager manager = editorPanelSceneStage.getEPManager();
+            Consumer<Object> successAction = (objFromDB) -> {
+                EditorPanelable cloneOfSelected;
+                if (objFromDB != null) {
+                    cloneOfSelected = ((EditorPanelable)objFromDB).cloneWithoutID();
+                }
+                else {
+                    cloneOfSelected = selected.cloneWithoutID();
+                }
+
+                Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.ADD_SAMPLE, selected);
+                EditorPanelable result = dialog.getResult();
+                if (result != null) {
+                    tableData.add(result);
+                }
+            };
+            manager.getDataProvider().getOneFromDB(selected.getRecId(), successAction, null);
+            
+        }
+        else {
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
+        }
+    }
+    
+//    @FXML
+    private void refreshOld(ActionEvent e) {
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage filterStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if (filterStage == null || !filterStage.isShowing()){
@@ -255,6 +359,27 @@ public class EditorPanelController implements Initializable {
 
                 Class controllerClass = Utils.getClassByName(getClassName(CLASS_TYPE.CONTROLLER));
                 Utils.getInvokedClassMethod(controllerClass, "reAssignTable", new Class[]{Supplier.class}, outerController, fetchData);
+            }
+        }
+        else {
+            filterStage.requestFocus();
+            StageUtils.centerChildOf(editorPanelSceneStage, filterStage);
+        }
+        refresh.setSelected(false);
+    }
+    
+    @FXML
+    private void refresh(ActionEvent e) {
+        ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
+        Stage filterStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if (filterStage == null || !filterStage.isShowing()){
+            Filterable filter = editorPanelSceneStage.getEPManager().getFilterFor(editorPanelSceneStage);
+            FilterModel model = (filter != null) ? filter.getResult() : null;
+            if (model != null && !model.isCanceled()){
+                Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+                Supplier<List<EditorPanelable>> fetchData = makeAppropSupplier(objectClass, model);
+                
+                editorPanelSceneStage.getController().reAssignTable(fetchData);
             }
         }
         else {

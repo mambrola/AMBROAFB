@@ -36,7 +36,7 @@ public class DocTableList extends ListingStage {
         super.setFeatures(() -> tableListController.getDocEditorPanelController().getPanelMinWidth());
     }
     
-    public DocTableListController getController(){
+    public DocTableListController getDocController(){
         return tableListController;
     }
 }

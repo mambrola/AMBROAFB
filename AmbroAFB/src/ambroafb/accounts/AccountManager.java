@@ -6,10 +6,12 @@
 package ambroafb.accounts;
 
 import ambroafb.accounts.dialog.AccountDialog;
+import ambroafb.accounts.filter.AccountFilter;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
+import ambroafb.general.interfaces.Filterable;
 import javafx.stage.Stage;
 
 /**
@@ -27,6 +29,11 @@ public class AccountManager extends EditorPanelableManager {
         AccountDialog dialog = new AccountDialog(object, type, owner);
         dialog.setDataProvider(dataProvider);
         return dialog;
+    }
+
+    @Override
+    public Filterable getFilterFor(Stage owner) {
+        return new AccountFilter(owner);
     }
     
 }

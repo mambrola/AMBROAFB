@@ -21,5 +21,6 @@ public abstract class EditorPanelableManager {
     }
     
     public abstract Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object);
+    public abstract Filterable getFilterFor(Stage owner);
     
 }

@@ -57,7 +57,7 @@ public class BalanceAccountsController implements Initializable {
         });
     }
 
-    public void reAssignTable(Supplier<ArrayList<EditorPanelable>> fetchBalAccsData){
+    public void reAssignTable(Supplier<List<EditorPanelable>> fetchBalAccsData){
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         roots.clear();
         aview.removeAll();
@@ -164,10 +164,10 @@ public class BalanceAccountsController implements Initializable {
     
     public class BalanceAccountsRunnable implements Runnable {
 
-        private final Supplier<ArrayList<EditorPanelable>> supplier;
+        private final Supplier<List<EditorPanelable>> supplier;
         private final int selectedIndex;
         
-        public BalanceAccountsRunnable(Supplier<ArrayList<EditorPanelable>> supplier, int selectedIndex){
+        public BalanceAccountsRunnable(Supplier<List<EditorPanelable>> supplier, int selectedIndex){
             this.supplier = supplier;
             this.selectedIndex = selectedIndex;
         }

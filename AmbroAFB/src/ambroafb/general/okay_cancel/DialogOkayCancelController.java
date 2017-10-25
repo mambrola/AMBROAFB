@@ -54,6 +54,14 @@ public class DialogOkayCancelController implements Initializable {
     public Button getCancelButton(){
         return cancel;
     }
+    
+    public void visibleOkay(boolean visible){
+        okay.setVisible(visible);
+    }
+    
+    public void visibleCancel(boolean visible){
+        cancel.setVisible(visible);
+    }
 
     public void setButtonsFeatures(EDITOR_BUTTON_TYPE type){
         String alertText;

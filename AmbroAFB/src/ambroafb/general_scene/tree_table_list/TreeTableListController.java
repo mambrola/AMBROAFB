@@ -5,16 +5,17 @@
  */
 package ambroafb.general_scene.tree_table_list;
 
-import ambroafb.balance_accounts.*;
 import ambro.AFilterableTreeTableView;
-import ambroafb.general.interfaces.FilterModel;
+import ambroafb.balance_accounts.*;
 import ambroafb.general.Names;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,7 +30,7 @@ import org.controlsfx.control.MaskerPane;
  *
  * @author dato
  */
-public class TreeTableListController implements Initializable {
+public class TreeTableListController extends ListingController implements Initializable {
 
 //    @FXML
     private AFilterableTreeTableView<EditorPanelable> aview; // this name is need for editorPanel
@@ -62,13 +63,16 @@ public class TreeTableListController implements Initializable {
 //        reAssignTable(null);
     }
 
-    public void reAssignTable(List<EditorPanelable> sortedList, FilterModel model){
-        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
-        roots.clear();
-        aview.removeAll();
-        new Thread(new BalanceAccountsFromDB(roots, selectedIndex)).start();
+    
+    @Override
+    public void reAssignTable(Supplier<List<EditorPanelable>> fetchData){
+//        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+//        roots.clear();
+//        aview.removeAll();
+//        new Thread(new BalanceAccountsFromDB(roots, selectedIndex)).start();
     }
     
+    @Override
     public EditorPanelController getEditorPanelController(){
         return editorPanelController;
     }
@@ -166,8 +170,9 @@ public class TreeTableListController implements Initializable {
                searchCodeAfterPrefix.charAt(0) != '0';
     }
     
-    public void addTreeTableByClass(Class targetClass) {
-        aview = new AFilterableTreeTableView<>(targetClass);
+    @Override
+    public void addListByClass(Class content) {
+        aview = new AFilterableTreeTableView<>(content);
         aview.setId("aview");
         aview.setBundle(bundle);
         editorPanelController.buttonsMainPropertysBinder(aview);
@@ -177,6 +182,11 @@ public class TreeTableListController implements Initializable {
         });
 
         containerPane.getChildren().add(0, aview);
+    }
+
+    @Override
+    public void removeElementsFromEditorPanel(String... componentFXids) {
+        
     }
     
     

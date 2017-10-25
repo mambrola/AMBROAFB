@@ -8,8 +8,9 @@ package ambroafb.general_scene.table_list;
 import ambro.AFilterableTableView;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 import javafx.application.Platform;
@@ -25,7 +26,7 @@ import org.controlsfx.control.MaskerPane;
  *
  * @author dato
  */
-public class TableListController implements Initializable {
+public class TableListController extends ListingController implements Initializable {
 
     private AFilterableTableView<EditorPanelable> aview;
     
@@ -53,7 +54,8 @@ public class TableListController implements Initializable {
         editorPanelController.setOuterController(this);
     } 
     
-    public void reAssignTable(Supplier<ArrayList<EditorPanelable>> fetchData){
+    @Override
+    public void reAssignTable(Supplier<List<EditorPanelable>> fetchData){
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         contents.clear();
         
@@ -62,7 +64,7 @@ public class TableListController implements Initializable {
                 masker.setVisible(true);
             });
             
-            ArrayList<EditorPanelable> list = fetchData.get();
+            List<EditorPanelable> list = fetchData.get();
             contents.setAll(list);
             
             Platform.runLater(() -> {
@@ -75,8 +77,9 @@ public class TableListController implements Initializable {
         
     }
     
-    public void addTableByClass(Class targetClass){
-        aview = new AFilterableTableView<>(targetClass);
+    @Override
+    public void addListByClass(Class content) {
+        aview = new AFilterableTableView<>(content);
         aview.setId("aview");
         aview.setBundle(bundle);
         editorPanelController.buttonsMainPropertysBinder(aview);
@@ -85,13 +88,16 @@ public class TableListController implements Initializable {
         containerPane.getChildren().add(0, aview);
     }
     
+    @Override
     public void removeElementsFromEditorPanel(String... componentFXids){
         for (String id : componentFXids) {
             editorPanelController.removeButtonsByFxIDs(id);
         }
     }
     
+    @Override
     public EditorPanelController getEditorPanelController() {
         return editorPanelController;
     }
+
 }
