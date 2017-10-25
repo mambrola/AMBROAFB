@@ -115,12 +115,12 @@ public class AccountDataProvider extends DataProvider {
     }
 
     @Override
-    public void editOneToDB(EditorPanelable object, Consumer<Object> success, Consumer<Exception> error) {
+    public void editOneToDB(EditorPanelable object, Consumer<Object> successAction, Consumer<Exception> errorAction) {
         System.out.println("account edit method...");
     }
 
     @Override
-    public void saveOneToDB(EditorPanelable object, Consumer<Object> success, Consumer<Exception> error) {
+    public void saveOneToDB(EditorPanelable object, Consumer<Object> successAction, Consumer<Exception> errorAction) {
         System.out.println("account save method...");
     }
     
