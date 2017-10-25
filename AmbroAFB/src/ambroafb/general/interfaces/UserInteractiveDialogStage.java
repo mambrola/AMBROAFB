@@ -9,7 +9,7 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
-import java.util.function.Function;
+import java.util.function.Consumer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -28,7 +28,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     private boolean permissionToClose = true;
     private Names.EDITOR_BUTTON_TYPE editorButtonType;
     private DataProvider dataProvider;
-    Function<Object, ButtonType> closeFn;
+    Consumer<Object> closeFn;
     
     public UserInteractiveDialogStage(Stage owner, String sceneFXMLFilePath, String stageTitleBundleKey){
         super(owner, Names.LEVEL_FOR_PATH, stageTitleBundleKey, "/images/dialog.png");
@@ -44,7 +44,6 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         
         closeFn = (Object t) -> {
             close();
-            return ButtonType.OK;
         };
     }
     
@@ -98,8 +97,8 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         }
     }
     
-    private Function<Object, ButtonType> builSuccessFunction(){
-        Function<Object, ButtonType> successFn = getSuccessFunction();
+    private Consumer<Object> builSuccessFunction(){
+        Consumer<Object> successFn = getSuccessFunction();
         return (successFn == null) ? closeFn : successFn.andThen(closeFn);
     }
     
@@ -107,7 +106,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
      *  The function will execute before stage close, if DB action was successful.
      * @return 
      */
-    protected Function<Object, ButtonType> getSuccessFunction(){
+    protected Consumer<Object> getSuccessFunction(){
         return null;
     }
     
@@ -115,9 +114,9 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
      *  The function will execute before stage close, if DB action was not successful.
      * @return 
      */
-    protected Function<Exception, ButtonType> getErrorFunction(){
+    protected Consumer<Exception> getErrorFunction(){
         return  (ex) -> {
-                    return new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), getTitle()).showAndWait().get();
+                    new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), getTitle()).showAndWait();
                 };
     }
     

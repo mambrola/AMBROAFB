@@ -11,10 +11,9 @@ import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import javafx.scene.control.ButtonType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -29,9 +28,15 @@ public abstract class DataProvider {
     protected String DB_VEIW_NAME = "";
     
     
-    protected void deleteObjectFromDB(String deleteProcName, int id) throws IOException, AuthServerException {
+    protected void callProcedure(String procedureName, Object... params) throws IOException, AuthServerException {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        dbClient.callProcedure(deleteProcName, id);
+        dbClient.callProcedure(procedureName, params);
+    }
+    
+    protected <T> ArrayList<T> callProcedure(Class<?> listElementClass, String procedureName, Object... params) throws IOException, AuthServerException {
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        JSONArray data = dbClient.callProcedureAndGetAsJson(procedureName, params);
+        return Utils.getListFromJSONArray(listElementClass, data);
     }
     
     /**
@@ -54,25 +59,61 @@ public abstract class DataProvider {
         return Utils.getClassFromJSON(targetClass, jsonResult);
     }
     
+    /**
+     *  The static function gets a ArrayList of specified class elements from DB.
+     * If exception returns from DB, the method uses errorAction Consumer.
+     * @param <T>
+     * @param listElementClass The class of elements which must be in list.
+     * @param dbTableOrViewName The table or view name where entries are in DB.
+     * @param params The parameter JSON for filter DB select.
+     *                  It could be empty JSON, if user wants every column values from DB table or view.
+     * @return Empty ArrayList if becomes exception. Otherwise - Full of specific objects.
+     * @throws java.io.IOException
+     * @throws authclient.AuthServerException
+     */
+    public <T> ArrayList<T> getObjectsListFromDB(Class<?> listElementClass, String dbTableOrViewName, JSONObject params) throws IOException, AuthServerException{
+        System.out.println(dbTableOrViewName + " params For DB: " + params);
+
+        JSONArray data = GeneralConfig.getInstance().getDBClient().select(dbTableOrViewName, params);
+
+        System.out.println(dbTableOrViewName + " data from DB: " + data);
+
+        return Utils.getListFromJSONArray(listElementClass, data);
+    }
+    
     
     
     
     
     /**
-     *  The method returns list by condition.
+     *  The method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list by condition.
      * @param params The JSON object for condition.
-     * @return List of EditorPanelable object by condition. If nothing exists on given condition or make exception, then returns empty list.
+     * @param successAction The action executes when list returning from DB was successful. It will call in Platform.runLater. 
+     *                                      If you want to nothing will be executed, please give the null value for it.
+     * @param errorAction The action executes if list returning from DB was not successful.  It will call in Platform.runLater.
+     *                                      If you want to nothing will be executed, please give the null value for it.
      */
-    public abstract List<EditorPanelable> getListByConditoin(JSONObject params);
+    public abstract void getListByConditoin(JSONObject params, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction);
+    
+    
+    /**
+     *  According to filter model,  the method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list.
+     * @param model The filterable model
+     * @param successAction The action executes when list returning from DB was successful. It will call in Platform.runLater. 
+     *                                      If you want to nothing will be executed, please give the null value for it.
+     * @param errorAction The action executes if list returning from DB was not successful.  It will call in Platform.runLater.
+     *                                      If you want to nothing will be executed, please give the null value for it.
+     */
+    public abstract void getListBy(FilterModel model, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction);
     
     
     /**
      *  The method gets one by id.
      * @param recId The unique identifier for object.
-     * @param successAction The action when delete was successful. It will call in Platform.runLater and before stage close. 
-     *                                      If nothing is executed, then gives null value.
-     * @param errorAction The action when delete was not successful.  It will call in Platform.runLater and before stage close.
-     *                                      If nothing is executed, then gives null value.
+     * @param successAction The action executes if object returning from DB was successful. It will call in Platform.runLater and before stage close. 
+     *                                       If you want to nothing will be executed, please give the null value for it.
+     * @param errorAction The action  executes if object returning from DB was not successful.  It will call in Platform.runLater.
+     *                                      If you want to nothing will be executed, please give the null value for it.
      */
     public abstract void getOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction);
     
@@ -80,30 +121,24 @@ public abstract class DataProvider {
     /**
      *  The method removes one object by recId.
      * @param recId The unique identifier for object.
-     * @param success The action when delete was successful. It will call in Platform.runLater and before stage close. 
+     * @param successAction The action when delete was successful. It will call in Platform.runLater and before stage close. 
      *                                      If nothing is executed, then gives null value.
-     * @param error The action when delete was not successful.  If nothing is executed, then gives null value.
+     * @param errorAction The action when delete was not successful.  If nothing is executed, then gives null value.
      */
-    public abstract void deleteOneFromDB(int recId, Function<Object, ButtonType> success, Function<Exception, ButtonType> error);
+    public abstract void deleteOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction);
     
     
     /**
      *  The method changes existed object.
      * @param object The object that must be change.
-     * @param success The action when delete was successful. It will call in Platform.runLater and before stage close. 
-     *                                      If nothing is executed, then gives null value.
-     * @param error The action when delete was not successful. If nothing is executed, then gives null value.
      */
-    public abstract void editOneToDB(EditorPanelable object, Function<Object, ButtonType> success, Function<Exception, ButtonType> error);
+    public abstract void editOneToDB(EditorPanelable object, Consumer<Object> successAction, Consumer<Exception> errorAction);
     
     
     /**
      *  The method saveOneToDB new object.
      * @param object The new Object.
-     * @param success The action when delete was successful. It will call in Platform.runLater and before stage close. 
-     *                                      If nothing is executed, then gives null value.
-     * @param error The action when delete was not successful.  If nothing is executed, then gives null value.
      */
-    public abstract void saveOneToDB(EditorPanelable object, Function<Object, ButtonType> success, Function<Exception, ButtonType> error);
+    public abstract void saveOneToDB(EditorPanelable object, Consumer<Object> successAction, Consumer<Exception> errorAction);
     
 }

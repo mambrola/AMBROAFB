@@ -5,18 +5,18 @@
  */
 package ambroafb.accounts;
 
-import ambroafb.general.DBUtils;
+import ambroafb.accounts.filter.AccountFilterModel;
 import ambroafb.general.interfaces.DataProvider;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
 import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
+import authclient.db.WhereBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import javafx.application.Platform;
-import javafx.scene.control.ButtonType;
 import org.json.JSONObject;
 
 /**
@@ -33,10 +33,41 @@ public class AccountDataProvider extends DataProvider {
     }
     
     @Override
-    public List<EditorPanelable> getListByConditoin(JSONObject params) {
-        List<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_VEIW_NAME, params);
-        accountFromDB.sort((Account ac1, Account ac2) -> ac1.compareById(ac2));
-        return new ArrayList<>(accountFromDB);
+    public void getListByConditoin(JSONObject params, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction) {
+        List<Account> accountFromDB;
+        try {
+            accountFromDB = getObjectsListFromDB(Account.class, DB_VEIW_NAME, params);
+            accountFromDB.sort((Account ac1, Account ac2) -> ac1.compareById(ac2));
+            Platform.runLater(() -> {
+                if (successAction != null) successAction.accept(new ArrayList<>(accountFromDB));
+            });
+        } catch (IOException | AuthServerException ex) {
+            Platform.runLater(() -> {
+                if (errorAction != null) errorAction.accept(ex);
+            });
+        }
+    }
+    
+    @Override
+    public void getListBy(FilterModel model, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction){
+        AccountFilterModel accountFiletModel = (AccountFilterModel) model;
+        WhereBuilder whereBuilder = new ConditionBuilder().where();
+        
+        if (accountFiletModel.isSelectedConcreteCurrency()){
+            whereBuilder.and("iso", "=", accountFiletModel.getCurrencyIso());
+        }
+        if (accountFiletModel.isSelectedConcreteBalAccount()){
+            whereBuilder.and("bal_account", "=", accountFiletModel.getBalAccountNumber());
+        }
+        if (accountFiletModel.isSelectedConcreteClient()){
+            whereBuilder.and("client_id", "=", accountFiletModel.getClientId());
+        }
+        if (!accountFiletModel.getTypeIntdeterminate()){
+            String relation = (accountFiletModel.isTypeSelected()) ? "is null" : "is not null";
+            whereBuilder.and("date_close", relation, "");
+        }
+        JSONObject params = whereBuilder.condition().build();
+        getListByConditoin(params, successAction, errorAction);
     }
 
     @Override
@@ -56,22 +87,20 @@ public class AccountDataProvider extends DataProvider {
         }).start();
     }
 
-    @Override // -----------------------------------------
-    public void deleteOneFromDB(int recId, Function<Object, ButtonType> successAction, Function<Exception, ButtonType> errorAction) {
+    @Override
+    public void deleteOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction) {
         new Thread(() -> {
             JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
             
             try {
-                deleteObjectFromDB(ACCOUNT_DELETE_CHECK_PROCEDURE, recId);
-//                deleteAccount(recId);
+                callProcedure(ACCOUNT_DELETE_CHECK_PROCEDURE, recId);
+                deleteAccount(recId);
                 Platform.runLater(() -> {
-                    if (successAction != null) successAction.apply(null);
+                    if (successAction != null) successAction.accept(null);
                 });
             } catch (IOException | AuthServerException ex) {
                 Platform.runLater(() -> {
-                    if (errorAction != null) {
-                        errorAction.apply(ex);
-                    }
+                    if (errorAction != null) errorAction.accept(ex);
                 });
             }
         }).start();
@@ -80,18 +109,18 @@ public class AccountDataProvider extends DataProvider {
     private void deleteAccount(int recId) {
         System.out.println("<<< call account_delete ... >>>");
 //        try {
-//            deleteObjectFromDB(ACCOUNT_DELETE_PROCEDURE, recId);
+//            callProcedure(ACCOUNT_DELETE_PROCEDURE, recId);
 //        } catch (IOException | AuthServerException ex) {
 //        }
     }
 
     @Override
-    public void editOneToDB(EditorPanelable object, Function<Object, ButtonType> success, Function<Exception, ButtonType> error) {
+    public void editOneToDB(EditorPanelable object, Consumer<Object> success, Consumer<Exception> error) {
         System.out.println("account edit method...");
     }
 
     @Override
-    public void saveOneToDB(EditorPanelable object, Function<Object, ButtonType> success, Function<Exception, ButtonType> error) {
+    public void saveOneToDB(EditorPanelable object, Consumer<Object> success, Consumer<Exception> error) {
         System.out.println("account save method...");
     }
     
