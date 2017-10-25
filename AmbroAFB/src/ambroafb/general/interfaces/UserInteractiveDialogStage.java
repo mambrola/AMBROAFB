@@ -28,6 +28,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     private boolean permissionToClose = true;
     private Names.EDITOR_BUTTON_TYPE editorButtonType;
     private DataProvider dataProvider;
+    Function<Object, ButtonType> closeFn;
     
     public UserInteractiveDialogStage(Stage owner, String sceneFXMLFilePath, String stageTitleBundleKey){
         super(owner, Names.LEVEL_FOR_PATH, stageTitleBundleKey, "/images/dialog.png");
@@ -40,6 +41,11 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
             if (event != null) event.consume();
         });
+        
+        closeFn = (Object t) -> {
+            close();
+            return ButtonType.OK;
+        };
     }
     
     public UserInteractiveDialogStage(Stage owner, Names.EDITOR_BUTTON_TYPE buttonType, String sceneFXMLFilePath, String stageTitleBundleKey){
@@ -83,6 +89,9 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
                 case ADD_SAMPLE:
                     dataProvider.saveOneToDB(getSceneObject(), builSuccessFunction(), getErrorFunction());
                     break;
+                case VIEW:
+                    close();
+                    break;
                 default:
                     break;
             }
@@ -90,10 +99,6 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     }
     
     private Function<Object, ButtonType> builSuccessFunction(){
-        Function<Object, ButtonType> closeFn = (Object t) -> {
-            close();
-            return ButtonType.OK;
-        };
         Function<Object, ButtonType> successFn = getSuccessFunction();
         return (successFn == null) ? closeFn : successFn.andThen(closeFn);
     }

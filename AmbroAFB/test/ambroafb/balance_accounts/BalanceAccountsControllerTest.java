@@ -8,6 +8,7 @@ package ambroafb.balance_accounts;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,7 +65,7 @@ public class BalanceAccountsControllerTest {
      */
     @Test @Ignore
     public void testReAssignTable() {
-        Supplier<ArrayList<EditorPanelable>> supplier = () -> spyList;
+        Supplier<List<EditorPanelable>> supplier = () -> spyList;
         instance.reAssignTable(supplier);
         
         try {
@@ -81,7 +82,7 @@ public class BalanceAccountsControllerTest {
      */
     @Test @Ignore
     public void testAccountAlreadyExistForCode() {
-        Supplier<ArrayList<EditorPanelable>> supplier = () -> spyList;
+        Supplier<List<EditorPanelable>> supplier = () -> spyList;
         instance.reAssignTable(supplier);
         EditorPanelable newElem = createBalAccount(1, 1000, "some desc");
         Names.EDITOR_BUTTON_TYPE type = Names.EDITOR_BUTTON_TYPE.ADD;
