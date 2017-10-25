@@ -73,7 +73,7 @@ public class AccountDataProvider extends DataProvider {
     @Override
     public void getOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction) {
         new Thread(() -> {
-            JSONObject params = new ConditionBuilder().where().and("rec_id", "=", 100).condition().build();
+            JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
             try {
                 Account accountFromDB = getObjectFromDB(Account.class, DB_VEIW_NAME, params);
                 Platform.runLater(() -> {
