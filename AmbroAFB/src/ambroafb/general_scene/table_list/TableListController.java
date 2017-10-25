@@ -17,7 +17,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.layout.StackPane;
 import org.controlsfx.control.MaskerPane;
 
@@ -26,7 +25,7 @@ import org.controlsfx.control.MaskerPane;
  *
  * @author dato
  */
-public class TableListController extends ListingController implements Initializable {
+public class TableListController extends ListingController {
 
     private AFilterableTableView<EditorPanelable> aview;
     
@@ -43,16 +42,11 @@ public class TableListController extends ListingController implements Initializa
     
     private ResourceBundle bundle;
     
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
+    
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
         bundle = rb;
-        editorPanelController.setOuterController(this);
-    } 
+    }
     
     @Override
     public void reAssignTable(Supplier<List<EditorPanelable>> fetchData){

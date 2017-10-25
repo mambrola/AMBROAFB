@@ -20,7 +20,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.layout.StackPane;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.MaskerPane;
@@ -30,7 +29,7 @@ import org.controlsfx.control.MaskerPane;
  *
  * @author dato
  */
-public class TreeTableListController extends ListingController implements Initializable {
+public class TreeTableListController extends ListingController {
 
 //    @FXML
     private AFilterableTreeTableView<EditorPanelable> aview; // this name is need for editorPanel
@@ -50,19 +49,10 @@ public class TreeTableListController extends ListingController implements Initia
     private ResourceBundle bundle; 
     
     
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-//        aview.setBundle(rb);
-        editorPanelController.setOuterController(this);
-        
-//        reAssignTable(null);
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
+        bundle = rb;
     }
-
     
     @Override
     public void reAssignTable(Supplier<List<EditorPanelable>> fetchData){
