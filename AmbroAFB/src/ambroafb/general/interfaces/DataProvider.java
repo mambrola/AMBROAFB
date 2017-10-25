@@ -93,7 +93,7 @@ public abstract class DataProvider {
      * @param errorAction The action executes if list returning from DB was not successful.  It will call in Platform.runLater.
      *                                      If you want to nothing will be executed, please give the null value for it.
      */
-    public abstract void getListByConditoin(JSONObject params, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction);
+    public abstract void getListByCondition(JSONObject params, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction);
     
     
     /**

@@ -33,19 +33,19 @@ public class AccountDataProvider extends DataProvider {
     }
     
     @Override
-    public void getListByConditoin(JSONObject params, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction) {
-        List<Account> accountFromDB;
-        try {
-            accountFromDB = getObjectsListFromDB(Account.class, DB_VEIW_NAME, params);
-            accountFromDB.sort((Account ac1, Account ac2) -> ac1.compareById(ac2));
-            Platform.runLater(() -> {
-                if (successAction != null) successAction.accept(new ArrayList<>(accountFromDB));
-            });
-        } catch (IOException | AuthServerException ex) {
-            Platform.runLater(() -> {
-                if (errorAction != null) errorAction.accept(ex);
-            });
-        }
+    public void getListByCondition(JSONObject params, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction) {
+        new Thread(() -> {
+            try {
+                List<Account> accountFromDB = getObjectsListFromDB(Account.class, DB_VEIW_NAME, params);
+                Platform.runLater(() -> {
+                    if (successAction != null) successAction.accept(new ArrayList<>(accountFromDB));
+                });
+            } catch (IOException | AuthServerException ex) {
+                Platform.runLater(() -> {
+                    if (errorAction != null) errorAction.accept(ex);
+                });
+            }
+        }).start();
     }
     
     @Override
@@ -67,7 +67,7 @@ public class AccountDataProvider extends DataProvider {
             whereBuilder.and("date_close", relation, "");
         }
         JSONObject params = whereBuilder.condition().build();
-        getListByConditoin(params, successAction, errorAction);
+        getListByCondition(params, successAction, errorAction);
     }
 
     @Override
