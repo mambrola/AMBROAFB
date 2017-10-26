@@ -10,6 +10,7 @@ import ambroafb.balance_accounts.*;
 import ambroafb.general.Names;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
 import java.util.ArrayList;
@@ -56,6 +57,14 @@ public class TreeTableListController extends ListingController {
     
     @Override
     public void reAssignTable(Supplier<List<EditorPanelable>> fetchData){
+//        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+//        roots.clear();
+//        aview.removeAll();
+//        new Thread(new BalanceAccountsFromDB(roots, selectedIndex)).start();
+    }
+    
+    @Override
+    public void reAssignTable(FilterModel model){
 //        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
 //        roots.clear();
 //        aview.removeAll();

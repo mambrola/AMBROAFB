@@ -126,7 +126,7 @@ public class EditorPanelController implements Initializable {
                     tableData.remove(selected);
                 }
             };
-            manager.getDataProvider().getOneFromDB(selected.getRecId(), successAction, null);
+            manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);
                 
         } else {
             dialogStage.requestFocus();
@@ -184,7 +184,7 @@ public class EditorPanelController implements Initializable {
                     selected.copyFrom(backup);
                 }
             };
-            manager.getDataProvider().getOneFromDB(selected.getRecId(), successAction, null);
+            manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);
             
         }
         else {
@@ -229,7 +229,7 @@ public class EditorPanelController implements Initializable {
                 Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.VIEW, selected);
                 dialog.showAndWait();
             };
-            manager.getDataProvider().getOneFromDB(selected.getRecId(), successAction, null);
+            manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);
 
         }
         else {
@@ -335,7 +335,7 @@ public class EditorPanelController implements Initializable {
                     tableData.add(result);
                 }
             };
-            manager.getDataProvider().getOneFromDB(selected.getRecId(), successAction, null);
+            manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);
             
         }
         else {

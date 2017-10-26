@@ -14,10 +14,15 @@ import javafx.stage.Stage;
  */
 public abstract class EditorPanelableManager {
     
-    protected DataProvider dataProvider;
+    protected DataFetchProvider dataFetchProvider;
+    protected DataChangeProvider dataChangeProvider;
     
-    public DataProvider getDataProvider(){
-        return dataProvider;
+    public DataFetchProvider getDataFetchProvider(){
+        return dataFetchProvider;
+    }
+    
+    public DataChangeProvider getDataChangeProvider(){
+        return dataChangeProvider;
     }
     
     public abstract Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object);

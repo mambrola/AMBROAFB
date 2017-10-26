@@ -5,7 +5,9 @@
  */
 package ambroafb.accounts;
 
-import java.util.ArrayList;
+import ambroafb.general.interfaces.DataProvider;
+import authclient.AuthServerException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -25,6 +27,7 @@ public class AccountComboBox extends ComboBox<Account> {
     private final Account accountALL = new Account();
     private final ObservableList<Account> items = FXCollections.observableArrayList();
     private final FilteredList<Account> filteredList = new FilteredList(items);
+    private final AccountDataFetchProvider dataFetchProvider = new AccountDataFetchProvider();
     
     public AccountComboBox(){
         super();
@@ -46,7 +49,7 @@ public class AccountComboBox extends ComboBox<Account> {
             setValue(accountALL);
         };
         Consumer<ObservableList<Account>> consumer = (extraAction == null) ? addCategoryALL : addCategoryALL.andThen(extraAction);
-        new Thread(new FetchDataFromDB(consumer)).start();
+        fillComboBoxWithoutALL(consumer);
     }
     
     /**
@@ -104,13 +107,16 @@ public class AccountComboBox extends ComboBox<Account> {
         
         @Override
         public void run() {
-            ArrayList<Account> accountFromDB = Account.getAllFromDB();
-            Platform.runLater(() -> {
-                items.setAll(accountFromDB);
-                if (consumer != null){
-                    consumer.accept(items);
-                }
-            });
+            try {
+                List<Account> accountFromDB = dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL);
+                Platform.runLater(() -> {
+                    items.setAll(accountFromDB);
+                    if (consumer != null){
+                        consumer.accept(items);
+                    }
+                });
+            } catch (IOException | AuthServerException ex) {
+            }
         }
         
     }

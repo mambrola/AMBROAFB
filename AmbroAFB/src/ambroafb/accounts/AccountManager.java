@@ -21,13 +21,14 @@ import javafx.stage.Stage;
 public class AccountManager extends EditorPanelableManager {
 
     public AccountManager(){
-        dataProvider = new AccountDataProvider();
+        dataFetchProvider = new AccountDataFetchProvider();
+        dataChangeProvider = new AccountDataChangeProvider();
     }
     
     @Override
     public Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         AccountDialog dialog = new AccountDialog(object, type, owner);
-        dialog.setDataProvider(dataProvider);
+        dialog.setDataChangeProvider(dataChangeProvider);
         return dialog;
     }
 

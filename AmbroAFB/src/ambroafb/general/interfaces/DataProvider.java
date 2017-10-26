@@ -13,7 +13,6 @@ import authclient.db.DBClient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,7 +22,7 @@ import org.json.JSONObject;
  */
 public abstract class DataProvider {
     
-    public final JSONObject PARAM_ALL = new ConditionBuilder().build();
+    public static final JSONObject PARAM_FOR_ALL = new ConditionBuilder().build();
     
     protected String DB_VEIW_NAME = "";
     
@@ -50,7 +49,7 @@ public abstract class DataProvider {
      * @throws java.io.IOException 
      * @throws authclient.AuthServerException 
      */
-    public <T> T getObjectFromDB(Class<?> targetClass, String dbTableOrViewName, JSONObject params) throws IOException, AuthServerException{
+    public <T> T getObjectFromDB(Class<?> targetClass, String dbTableOrViewName, JSONObject params) throws IOException, AuthServerException {
         JSONArray selectResultAsArray = GeneralConfig.getInstance().getDBClient().select(dbTableOrViewName, params);
         JSONObject jsonResult = selectResultAsArray.optJSONObject(0);
 
@@ -71,7 +70,7 @@ public abstract class DataProvider {
      * @throws java.io.IOException
      * @throws authclient.AuthServerException
      */
-    public <T> ArrayList<T> getObjectsListFromDB(Class<?> listElementClass, String dbTableOrViewName, JSONObject params) throws IOException, AuthServerException{
+    public <T> List<T> getObjectsListFromDB(Class<?> listElementClass, String dbTableOrViewName, JSONObject params) throws IOException, AuthServerException{
         System.out.println(dbTableOrViewName + " params For DB: " + params);
 
         JSONArray data = GeneralConfig.getInstance().getDBClient().select(dbTableOrViewName, params);
@@ -84,61 +83,61 @@ public abstract class DataProvider {
     
     
     
-    
-    /**
-     *  The method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list by condition.
-     * @param params The JSON object for condition.
-     * @param successAction The action executes when list returning from DB was successful. It will call in Platform.runLater. 
-     *                                      If you want to nothing will be executed, please give the null value for it.
-     * @param errorAction The action executes if list returning from DB was not successful.  It will call in Platform.runLater.
-     *                                      If you want to nothing will be executed, please give the null value for it.
-     */
-    public abstract void getListByCondition(JSONObject params, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction);
-    
-    
-    /**
-     *  According to filter model,  the method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list.
-     * @param model The filterable model
-     * @param successAction The action executes when list returning from DB was successful. It will call in Platform.runLater. 
-     *                                      If you want to nothing will be executed, please give the null value for it.
-     * @param errorAction The action executes if list returning from DB was not successful.  It will call in Platform.runLater.
-     *                                      If you want to nothing will be executed, please give the null value for it.
-     */
-    public abstract void getListBy(FilterModel model, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction);
-    
-    
-    /**
-     *  The method gets one by id.
-     * @param recId The unique identifier for object.
-     * @param successAction The action executes if object returning from DB was successful. It will call in Platform.runLater and before stage close. 
-     *                                       If you want to nothing will be executed, please give the null value for it.
-     * @param errorAction The action  executes if object returning from DB was not successful.  It will call in Platform.runLater.
-     *                                      If you want to nothing will be executed, please give the null value for it.
-     */
-    public abstract void getOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction);
-    
-    
-    /**
-     *  The method removes one object by recId.
-     * @param recId The unique identifier for object.
-     * @param successAction The action when delete was successful. It will call in Platform.runLater and before stage close. 
-     *                                      If nothing is executed, then gives null value.
-     * @param errorAction The action when delete was not successful.  If nothing is executed, then gives null value.
-     */
-    public abstract void deleteOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction);
-    
-    
-    /**
-     *  The method changes existed object.
-     * @param object The object that must be change.
-     */
-    public abstract void editOneToDB(EditorPanelable object, Consumer<Object> successAction, Consumer<Exception> errorAction);
-    
-    
-    /**
-     *  The method saveOneToDB new object.
-     * @param object The new Object.
-     */
-    public abstract void saveOneToDB(EditorPanelable object, Consumer<Object> successAction, Consumer<Exception> errorAction);
+//    
+//    /**
+//     *  The method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list by condition.
+//     * @param params The JSON object for condition.
+//     * @param successAction The action executes when list returning from DB was successful. It will call in Platform.runLater. 
+//     *                                      If you want to nothing will be executed, please give the null value for it.
+//     * @param errorAction The action executes if list returning from DB was not successful.  It will call in Platform.runLater.
+//     *                                      If you want to nothing will be executed, please give the null value for it.
+//     */
+//    public abstract void getListByCondition(JSONObject params, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction);
+//    
+//    
+//    /**
+//     *  According to filter model,  the method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list.
+//     * @param model The filterable model
+//     * @param successAction The action executes when list returning from DB was successful. It will call in Platform.runLater. 
+//     *                                      If you want to nothing will be executed, please give the null value for it.
+//     * @param errorAction The action executes if list returning from DB was not successful.  It will call in Platform.runLater.
+//     *                                      If you want to nothing will be executed, please give the null value for it.
+//     */
+//    public abstract void getListBy(FilterModel model, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction);
+//    
+//    
+//    /**
+//     *  The method gets one by id.
+//     * @param recId The unique identifier for object.
+//     * @param successAction The action executes if object returning from DB was successful. It will call in Platform.runLater and before stage close. 
+//     *                                       If you want to nothing will be executed, please give the null value for it.
+//     * @param errorAction The action  executes if object returning from DB was not successful.  It will call in Platform.runLater.
+//     *                                      If you want to nothing will be executed, please give the null value for it.
+//     */
+//    public abstract void getOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction);
+//    
+//    
+//    /**
+//     *  The method removes one object by recId.
+//     * @param recId The unique identifier for object.
+//     * @param successAction The action when delete was successful. It will call in Platform.runLater and before stage close. 
+//     *                                      If nothing is executed, then gives null value.
+//     * @param errorAction The action when delete was not successful.  If nothing is executed, then gives null value.
+//     */
+//    public abstract void deleteOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction);
+//    
+//    
+//    /**
+//     *  The method changes existed object.
+//     * @param object The object that must be change.
+//     */
+//    public abstract void editOneToDB(EditorPanelable object, Consumer<Object> successAction, Consumer<Exception> errorAction);
+//    
+//    
+//    /**
+//     *  The method saveOneToDB new object.
+//     * @param object The new Object.
+//     */
+//    public abstract void saveOneToDB(EditorPanelable object, Consumer<Object> successAction, Consumer<Exception> errorAction);
     
 }

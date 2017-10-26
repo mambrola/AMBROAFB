@@ -7,8 +7,12 @@ package ambroafb.general_scene.table_list;
 
 import ambro.AFilterableTableView;
 import ambroafb.general.editor_panel.EditorPanelController;
+import ambroafb.general.interfaces.DataProvider;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.ListingController;
+import authclient.AuthServerException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -60,6 +64,33 @@ public class TableListController extends ListingController {
             
             List<EditorPanelable> list = fetchData.get();
             contents.setAll(list);
+            
+            Platform.runLater(() -> {
+                masker.setVisible(false);
+                if (selectedIndex >= 0){
+                    aview.getSelectionModel().select(selectedIndex);
+                }
+            });
+        }).start();
+        
+    }
+    
+    @Override
+    public void reAssignTable(FilterModel model){
+        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+        contents.clear();
+        
+        new Thread(() -> {
+            Platform.runLater(() -> {
+                masker.setVisible(true);
+            });
+            
+            try {
+                List<EditorPanelable> list = (model == null) ? dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL)
+                                                             : dataFetchProvider.getFilteredBy(model);
+                contents.setAll(list);
+            } catch (IOException | AuthServerException ex) {
+            }
             
             Platform.runLater(() -> {
                 masker.setVisible(false);

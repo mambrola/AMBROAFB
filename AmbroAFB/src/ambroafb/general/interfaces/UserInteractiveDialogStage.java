@@ -9,7 +9,11 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import authclient.AuthServerException;
+import java.io.IOException;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -27,7 +31,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
 
     private boolean permissionToClose = true;
     private Names.EDITOR_BUTTON_TYPE editorButtonType;
-    private DataProvider dataProvider;
+    private DataChangeProvider dataChangeProvider;
     Consumer<Object> closeFn;
     
     public UserInteractiveDialogStage(Stage owner, String sceneFXMLFilePath, String stageTitleBundleKey){
@@ -53,8 +57,8 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         editorButtonType = buttonType;
     }
     
-    public void setDataProvider(DataProvider dp){
-        this.dataProvider = dp;
+    public void setDataChangeProvider(DataChangeProvider provider){
+        this.dataChangeProvider = provider;
     }
     
     public void changePermissionForClose(boolean value){
@@ -73,20 +77,36 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
      *  According to dialog type (DELETE, EDIT, VIEW, ADD, ADD_SMAPLE), the method execute okay actions.
      */
     public final void okayAction(){
-        if (dataProvider != null){
+        if (dataChangeProvider != null){
             switch(editorButtonType){
                 case DELETE:
                     String alertText = GeneralConfig.getInstance().getTitleFor("dialog_delete_confirm");
                     if (new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, "").showAndWait().get().equals(ButtonType.OK)){
-                        dataProvider.deleteOneFromDB(getSceneObject().getRecId(), builSuccessFunction(), getErrorFunction());
+                    try {
+                        dataChangeProvider.deleteOneFromDB(getSceneObject().getRecId());
+                    } catch (IOException | AuthServerException ex) {
+                        Logger.getLogger(UserInteractiveDialogStage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     }
                     break;
                 case EDIT: 
-                    dataProvider.editOneToDB(getSceneObject(), builSuccessFunction(), getErrorFunction());
+                    {
+                        try {
+                            dataChangeProvider.editOneToDB(getSceneObject());
+                        } catch (IOException | AuthServerException ex) {
+                            Logger.getLogger(UserInteractiveDialogStage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                     break;
                 case ADD:
                 case ADD_SAMPLE:
-                    dataProvider.saveOneToDB(getSceneObject(), builSuccessFunction(), getErrorFunction());
+                    {
+                        try {
+                            dataChangeProvider.saveOneToDB(getSceneObject());
+                        } catch (IOException | AuthServerException ex) {
+                            Logger.getLogger(UserInteractiveDialogStage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                     break;
                 case VIEW:
                     close();

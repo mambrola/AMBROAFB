@@ -67,7 +67,10 @@ public abstract class ListingStage extends UserInteractiveStage {
     }
     
     public void setEPManager(EditorPanelableManager manager){
-        this.editorPanelableManager = manager;
+        if (manager != null){
+            this.editorPanelableManager = manager;
+            controller.dataFetchProvider = manager.getDataFetchProvider();
+        }
     }
     
     public EditorPanelableManager getEPManager(){

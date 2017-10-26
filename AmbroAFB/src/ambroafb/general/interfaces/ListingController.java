@@ -18,6 +18,8 @@ import javafx.fxml.Initializable;
  */
 public abstract class ListingController implements Initializable {
     
+    protected DataFetchProvider dataFetchProvider;
+    
     /**
      * Initializes the controller class.
      * @param url
@@ -31,6 +33,7 @@ public abstract class ListingController implements Initializable {
     protected abstract void componentsInitialize(URL url, ResourceBundle rb);
     
     public abstract void reAssignTable(Supplier<List<EditorPanelable>> fetchData);
+    public abstract void reAssignTable(FilterModel model);
     public abstract void addListByClass(Class content);
     public abstract EditorPanelController getEditorPanelController();
     public abstract void removeElementsFromEditorPanel(String... componentFXids);
