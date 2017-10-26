@@ -12,6 +12,7 @@ import ambroafb.balance_accounts.BalanceAccountTreeComboBox;
 import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.currencies.IsoComboBox;
+import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.DialogController;
@@ -27,13 +28,18 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -130,44 +136,107 @@ public class AccountDialogController extends DialogController {
     private class CustomNumberGenerator implements NumberGenerateManager {
 
         private final String procedureNameForKey = "account_set_key";
-        private final String procedureNameForNew = "account_get_fit_account";
-        private final String responseKey = "account";
+        private final String procedureNameForNew = "account_insert_update_get_fit_account";
+        
+        private final String accountNumberJsonKey = "account";
+        private final String accountExistsJsonKey = "accountExists";
+        private final String accountInOtherISOJsonKey = "accountInOtherIso";
+        private final String accountNewJsonKey = "accountNew";
+        private final String fitFlagJsonKey = "fitFlag";
+//        private final String descripJsonKey = "descrip";
+//        private final String descripBundleKey = "descrip";
+        
         private final DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         private final String emptyServerResponse = "No account number";
+        private final int fitFlag = 0;
         
         @Override
         public void generateKeyFor(Consumer<String> success, Consumer<Exception> error) {
             if (!accountNumber.getText().isEmpty()){
-                try {
-                    String accNum = getAccountNumber(procedureNameForKey, Integer.parseInt(accountNumber.getText()));
-                    success.accept(accNum);
-                } catch (IOException | AuthServerException | JSONException ex) {
-                    error.accept(ex);
-                }
+                new Thread(() -> {
+                    try {
+                        String accNum = getAccountNumber(Integer.parseInt(accountNumber.getText()));
+                        Platform.runLater(() -> {
+                            if (success != null) success.accept(accNum);
+                        });
+                    } catch (IOException | AuthServerException | JSONException ex) {
+                        Platform.runLater(() -> {
+                            if (error != null) error.accept(ex);
+                        });
+                    }
+                }).start();
             }
+        }
+        
+        private String getAccountNumber(int accNumWithoutKey) throws IOException, AuthServerException, JSONException {
+            JSONArray data = dbClient.callProcedureAndGetAsJson(procedureNameForKey, accNumWithoutKey);
+            System.out.println("data: " + data);
+            return (!data.isNull(0)) ? "" + data.getJSONObject(0).optInt(accountNumberJsonKey) : emptyServerResponse;
         }
 
         @Override
         public void generateNewNumber(Consumer<String> success, Consumer<Exception> error) {
             if (clients.getSelectionModel().getSelectedIndex() >= 0 && balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
-                try {
-                    String accNum = getAccountNumber(procedureNameForNew, clients.valueProperty().get().getRecId(), balAccounts.getValue().getBalAcc(), currencies.getValue());
-                    success.accept(accNum);
-                } catch (IOException | AuthServerException | JSONException ex) {
-                    error.accept(ex);
-                }
+                Function<JSONObject, ButtonType> warningFN = (JSONObject obj) -> {
+                    String message =  getWarningMessageFrom(obj);
+                    AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, message, "");
+                    return alert.showAndWait().get();
+                };
+                        
+                callDBProcedure(success, warningFN, error, Integer.parseInt(accountNumber.getText()),
+                                    clients.valueProperty().get().getRecId(), balAccounts.getValue().getBalAcc(), currencies.getValue(), fitFlag);
             }
             else {
                 success.accept("");
             }
         }
         
-        private String getAccountNumber(String procedureName, Object... params) throws IOException, AuthServerException, JSONException{
-            String resposne = dbClient.callProcedure(procedureName, params).getDataAsString();
-            JSONArray accountsNumber = new JSONArray(resposne);
-            return (!accountsNumber.isNull(0)) 
-                                    ? accountsNumber.getJSONObject(0).optString(responseKey) 
-                                    : emptyServerResponse;
+        private void callDBProcedure(Consumer<String> success, Function<JSONObject, ButtonType> warning, Consumer<Exception> error,
+                                        int accNum, int clientId, int balAcc, String iso, int fitflag) {
+            new Thread(() -> {
+                try {
+                    JSONArray data = dbClient.callProcedureAndGetAsJson(procedureNameForNew, accNum, clientId, balAcc, iso, fitflag);
+                    if (!data.isNull(0)){
+                        JSONObject obj = data.getJSONObject(0);
+                        if (obj.length() == 1 || obj.has(accountNewJsonKey)){
+                            Platform.runLater(() -> {
+                                if (success != null) success.accept("" + obj.optInt(accountNumberJsonKey));
+                            });
+                        }
+                        else {
+                            Platform.runLater(() -> {
+                                if (warning != null){
+                                    if (warning.apply(obj).equals(ButtonType.OK)){
+                                        int fit = obj.optInt(fitFlagJsonKey);
+                                        callDBProcedure(success, warning, error, 
+                                                            accNum, clientId, balAcc, iso, fit);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } catch (IOException | AuthServerException | JSONException  ex) {
+                    Platform.runLater(() -> {
+                        if (error != null) error.accept(ex);
+                    });
+                }
+                
+            }).start();
         }
+        
+        private String getWarningMessageFrom(JSONObject obj){
+            String key = "";
+            if (obj.has(accountExistsJsonKey)){
+                key = accountExistsJsonKey;
+            }
+            else if (obj.has(accountInOtherISOJsonKey)){
+                key = accountInOtherISOJsonKey;
+            }
+            else if (obj.has(accountNewJsonKey)){
+                key = accountNewJsonKey;
+            }
+            return GeneralConfig.getInstance().getTitleFor(key);
+        }
+        
     }
 }
