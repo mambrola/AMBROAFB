@@ -376,10 +376,10 @@ public class EditorPanelController implements Initializable {
             Filterable filter = editorPanelSceneStage.getEPManager().getFilterFor(editorPanelSceneStage);
             FilterModel model = (filter != null) ? filter.getResult() : null;
             if (model != null && !model.isCanceled()){
-                Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
-                Supplier<List<EditorPanelable>> fetchData = makeAppropSupplier(objectClass, model);
+//                Class objectClass = Utils.getClassByName(getClassName(CLASS_TYPE.OBJECT));
+//                Supplier<List<EditorPanelable>> fetchData = makeAppropSupplier(objectClass, model);
                 
-                editorPanelSceneStage.getController().reAssignTable(fetchData);
+                editorPanelSceneStage.getController().reAssignTable(model);
             }
         }
         else {

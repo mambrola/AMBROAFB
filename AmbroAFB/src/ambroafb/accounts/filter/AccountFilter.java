@@ -75,21 +75,27 @@ public class AccountFilter extends UserInteractiveFilterStage implements Filtera
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Consumer<ObservableList<Currency>> currencyConsumer = (currencyList) -> {
+        Consumer<ObservableList<Currency>> selectCurrency = (currencyList) -> {
             Optional<Currency> optCurrency = currencyList.stream().filter((curr) -> curr.getIso().equals(model.getCurrencyIso())).findFirst();
             if (optCurrency.isPresent()){
                 currencies.setValue(optCurrency.get());
             }
         };
-        currencies.fillComboBoxWithALL(currencyConsumer);
+        Consumer<ObservableList<Currency>> increaseFromCurrency = (balAccList) -> {
+            increaseCounter.accept(null);
+        };
+        currencies.fillComboBoxWithALL(selectCurrency.andThen(increaseFromCurrency));
         
-        Consumer<ObservableList<BalanceAccount>> balAccountConsumer = (balAccList) -> {
+        Consumer<ObservableList<BalanceAccount>> selectBalAcc = (balAccList) -> {
             Optional<BalanceAccount> optBallAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == model.getBalAccountNumber()).findFirst();
             if (optBallAcc.isPresent()){
                 balAccounts.setValue(optBallAcc.get());
             }
         };
-        balAccounts.fillComboBoxWithALL(balAccountConsumer);
+        Consumer<ObservableList<BalanceAccount>> increaseFromBalAcc = (balAccList) -> {
+            increaseCounter.accept(null);
+        };
+        balAccounts.fillComboBoxWithALL(selectBalAcc.andThen(increaseFromBalAcc));
 
         Consumer<ObservableList<Client>> clientConsumer = (clientList) -> {
             Optional<Client> optClient = clientList.stream().filter((client) -> client.getRecId() == model.getClientId()).findFirst();
@@ -97,7 +103,10 @@ public class AccountFilter extends UserInteractiveFilterStage implements Filtera
                 clients.getSelectionModel().select(optClient.get());
             }
         };
-        clients.fillComboBoxWithClientsAndPartnersWithALL(clientConsumer);
+        Consumer<ObservableList<Client>> increaseFromClient = (clientList) -> {
+            increaseCounter.accept(null);
+        };
+        clients.fillComboBoxWithClientsAndPartnersWithALL(clientConsumer.andThen(increaseFromClient));
 
         accountType.setSelected(model.isTypeSelected());
         accountType.setIndeterminate(model.getTypeIntdeterminate());

@@ -9,8 +9,6 @@ import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.Filterable;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,7 +25,7 @@ public class FilterOkayCancelController implements Initializable {
     @FXML
     private Button okay, cancel;
     
-    private final BooleanProperty disableProperty = new SimpleBooleanProperty();
+//    private final BooleanProperty disableProperty = new SimpleBooleanProperty();
     
     /**
      * Initializes the controller class.
@@ -36,7 +34,8 @@ public class FilterOkayCancelController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        okay.disableProperty().bind(disableProperty);
+        setOkaydisable(true);
+//        okay.disableProperty().bind(disableProperty);
     }    
     
     @FXML
@@ -52,7 +51,11 @@ public class FilterOkayCancelController implements Initializable {
         StagesContainer.removeByStage((Stage) okay.getScene().getWindow());
     }
     
-    public BooleanProperty disableProperty(){
-        return disableProperty;
+//    public BooleanProperty disableProperty(){
+//        return disableProperty;
+//    }
+    
+    public void setOkaydisable(boolean disable){
+        okay.setDisable(disable);
     }
 }
