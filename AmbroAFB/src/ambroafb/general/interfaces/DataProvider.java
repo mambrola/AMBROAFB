@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -36,6 +37,18 @@ public abstract class DataProvider {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONArray data = dbClient.callProcedureAndGetAsJson(procedureName, params);
         return Utils.getListFromJSONArray(listElementClass, data);
+    }
+    
+    protected <T> T getObject(Class targetClass, String procedureName, Object... params) throws IOException, AuthServerException {
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        JSONArray data = dbClient.callProcedureAndGetAsJson(procedureName, params);
+        if (!data.isNull(0)){
+            try {
+                return Utils.getClassFromJSON(targetClass, data.getJSONObject(0));
+            } catch (JSONException ex) {
+            }
+        }
+        return null;
     }
     
     /**

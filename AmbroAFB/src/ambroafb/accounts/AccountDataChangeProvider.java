@@ -18,31 +18,25 @@ public class AccountDataChangeProvider extends DataChangeProvider {
 
     private final String ACCOUNT_DELETE_CHECK_PROCEDURE = "account_delete_check_account";
     private final String ACCOUNT_DELETE_PROCEDURE = "account_delete";
+    private final String ACCOUNT_INSERT_PROCEDURE = "account_insert_update_check_account";
     
     public AccountDataChangeProvider(){
         
     }
     
 
-//    @Override
-//    public void deleteOneFromDB(int recId, String b) {
-//        new Thread(() -> {
-//            JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
-//            
-//            try {
-//                callProcedure(ACCOUNT_DELETE_CHECK_PROCEDURE, recId);
-//                deleteAccount(recId);
-//                Platform.runLater(() -> {
-//                    if (successAction != null) successAction.accept(null);
-//                });
-//            } catch (IOException | AuthServerException ex) {
-//                Platform.runLater(() -> {
-//                    if (errorAction != null) errorAction.accept(ex);
-//                });
-//            }
-//        }).start();
-//    }
-
+    @Override
+    public boolean deleteOneFromDB(int recId) throws IOException, AuthServerException {
+        boolean result = true;
+        try {
+            callProcedure(ACCOUNT_DELETE_CHECK_PROCEDURE, recId);
+        } catch (IOException | AuthServerException ex){
+            result = false;
+            throw ex;
+        }
+        deleteAccount(recId);
+        return result;
+    }
     
     private void deleteAccount(int recId) {
         System.out.println("<<< call account_delete ... >>>");
@@ -52,21 +46,29 @@ public class AccountDataChangeProvider extends DataChangeProvider {
 //        }
     }
 
-    @Override
-    public boolean deleteOneFromDB(int recId) throws IOException, AuthServerException {
-        return false;
-    }
 
     @Override
     public Account editOneToDB(EditorPanelable object) throws IOException, AuthServerException {
-        System.out.println("Account edit method >>>");
-        return null;
+        Account result = null;
+        Account acc = (Account) object;
+        try {
+            result = getObject(Account.class, ACCOUNT_INSERT_PROCEDURE, acc.getRecId(), (int)acc.getAccount(), acc.getClientId(), acc.getbalAccount(), acc.getIso());
+        } catch (IOException | AuthServerException ex){
+            throw ex;
+        }
+        return result;
     }
 
     @Override
     public Account saveOneToDB(EditorPanelable object) throws IOException, AuthServerException {
-        System.out.println("Account save method >>>");
-        return null;
+        Account result = null;
+        Account acc = (Account) object;
+        try {
+            result = getObject(Account.class, ACCOUNT_INSERT_PROCEDURE, null, (int)acc.getAccount(), acc.getClientId(), acc.getbalAccount(), acc.getIso());
+        } catch (IOException | AuthServerException ex){
+            throw ex;
+        }
+        return result;
     }
 
     

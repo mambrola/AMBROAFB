@@ -9,11 +9,7 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
-import authclient.AuthServerException;
-import java.io.IOException;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -81,32 +77,15 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
             switch(editorButtonType){
                 case DELETE:
                     String alertText = GeneralConfig.getInstance().getTitleFor("dialog_delete_confirm");
-                    if (new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, "").showAndWait().get().equals(ButtonType.OK)){
-                    try {
-                        dataChangeProvider.deleteOneFromDB(getSceneObject().getRecId());
-                    } catch (IOException | AuthServerException ex) {
-                        Logger.getLogger(UserInteractiveDialogStage.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    }
+                    if (new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, "").showAndWait().get().equals(ButtonType.OK))
+                        dataChangeProvider.deleteOneFromDB(getSceneObject().getRecId(), builSuccessFunction(), getErrorFunction());
                     break;
                 case EDIT: 
-                    {
-                        try {
-                            dataChangeProvider.editOneToDB(getSceneObject());
-                        } catch (IOException | AuthServerException ex) {
-                            Logger.getLogger(UserInteractiveDialogStage.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
+                        dataChangeProvider.editOneToDB(getSceneObject(), builSuccessFunction(), getErrorFunction());
                     break;
                 case ADD:
                 case ADD_SAMPLE:
-                    {
-                        try {
-                            dataChangeProvider.saveOneToDB(getSceneObject());
-                        } catch (IOException | AuthServerException ex) {
-                            Logger.getLogger(UserInteractiveDialogStage.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
+                        dataChangeProvider.saveOneToDB(getSceneObject(), builSuccessFunction(), getErrorFunction());
                     break;
                 case VIEW:
                     close();
