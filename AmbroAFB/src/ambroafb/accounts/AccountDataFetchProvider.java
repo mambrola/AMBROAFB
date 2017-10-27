@@ -44,10 +44,12 @@ public class AccountDataFetchProvider extends DataFetchProvider {
         if (accountFiletModel.isSelectedConcreteClient()){
             whereBuilder.and("client_id", "=", accountFiletModel.getClientId());
         }
-        if (!accountFiletModel.getTypeIntdeterminate()){
+        if (!accountFiletModel.getTypeIndeterminate()){
             String relation = (accountFiletModel.isTypeSelected()) ? "is null" : "is not null";
             whereBuilder.and("date_close", relation, "");
         }
+        // this is extra condition, none of statements was setisfied:
+        whereBuilder.and("rec_id", ">", 0);
         JSONObject params = whereBuilder.condition().build();
         return getFilteredBy(params);
     }

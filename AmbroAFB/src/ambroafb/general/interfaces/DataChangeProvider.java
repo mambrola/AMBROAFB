@@ -5,8 +5,6 @@
  */
 package ambroafb.general.interfaces;
 
-import authclient.AuthServerException;
-import java.io.IOException;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 
@@ -23,7 +21,7 @@ public abstract class DataChangeProvider extends DataProvider {
      * @throws java.io.IOException
      * @throws authclient.AuthServerException
      */
-    public abstract boolean deleteOneFromDB(int recId) throws IOException, AuthServerException;
+    public abstract boolean deleteOneFromDB(int recId) throws Exception;
     
     /**
      *  The method removes one object from DB.
@@ -36,9 +34,10 @@ public abstract class DataChangeProvider extends DataProvider {
             try {
                 Boolean deleted = deleteOneFromDB(recId);
                 Platform.runLater(() -> {
+                    System.out.println("------ successAction: " + successAction);
                     if (successAction != null) successAction.accept(deleted);
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
                 Platform.runLater(() -> {
                     if (errorAction != null) errorAction.accept(ex);
                 });
@@ -55,7 +54,7 @@ public abstract class DataChangeProvider extends DataProvider {
      * @throws java.io.IOException
      * @throws authclient.AuthServerException
      */
-    public abstract <T> T editOneToDB(EditorPanelable object) throws IOException, AuthServerException;
+    public abstract <T> T editOneToDB(EditorPanelable object) throws Exception;
     
     /**
      *  The method changes existed object.
@@ -71,7 +70,7 @@ public abstract class DataChangeProvider extends DataProvider {
                 Platform.runLater(() -> {
                     if (successAction != null) successAction.accept(obj);
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
                 Platform.runLater(() -> {
                     if (errorAction != null) errorAction.accept(ex);
                 });
@@ -89,7 +88,7 @@ public abstract class DataChangeProvider extends DataProvider {
      * @throws java.io.IOException
      * @throws authclient.AuthServerException
      */
-    public abstract <T> T saveOneToDB(EditorPanelable object) throws IOException, AuthServerException;
+    public abstract <T> T saveOneToDB(EditorPanelable object) throws Exception;
     
     /**
      *  The method saves  new object to DB.
@@ -105,7 +104,7 @@ public abstract class DataChangeProvider extends DataProvider {
                 Platform.runLater(() -> {
                     if (successAction != null) successAction.accept(obj);
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
                 Platform.runLater(() -> {
                     if (errorAction != null) errorAction.accept(ex);
                 });

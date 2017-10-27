@@ -109,7 +109,7 @@ public class AccountFilter extends UserInteractiveFilterStage implements Filtera
         clients.fillComboBoxWithClientsAndPartnersWithALL(clientConsumer.andThen(increaseFromClient));
 
         accountType.setSelected(model.isTypeSelected());
-        accountType.setIndeterminate(model.getTypeIntdeterminate());
+        accountType.setIndeterminate(model.getTypeIndeterminate());
     }
 
     @Override

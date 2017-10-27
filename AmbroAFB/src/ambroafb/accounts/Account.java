@@ -6,21 +6,18 @@
 package ambroafb.accounts;
 
 import ambro.AView;
-import ambroafb.accounts.filter.AccountFilterModel;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.clients.Client;
-import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
-import authclient.db.ConditionBuilder;
-import authclient.db.WhereBuilder;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.binding.StringExpression;
@@ -29,7 +26,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
-import org.json.JSONObject;
 
 /**
  *
@@ -69,7 +65,7 @@ public class Account extends EditorPanelable {
         descrip = new SimpleStringProperty("");
         clientId = new SimpleStringProperty("");
         clientObj = new SimpleObjectProperty<>(new Client());
-        dateClosedObj = new SimpleObjectProperty<>(LocalDate.now());
+        dateClosedObj = new SimpleObjectProperty<>();
         remark = new SimpleStringProperty("");
         
         clientObj.addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
@@ -114,53 +110,6 @@ public class Account extends EditorPanelable {
     }
     
     
-    public static ArrayList<Account> getAllFromDB(){
-        JSONObject params = new ConditionBuilder().build();
-        ArrayList<Account> accountFromDB = DBUtils.getObjectsListFromDB(Account.class, DB_VEIW_NAME, params);
-        accountFromDB.sort((Account ac1, Account ac2) -> ac1.compareById(ac2));
-        return accountFromDB;
-    }
-    
-    public static ArrayList<Account> getFilteredFromDB(FilterModel filterModel){
-        AccountFilterModel accountFiletModel = (AccountFilterModel) filterModel;
-        WhereBuilder whereBuilder = new ConditionBuilder().where();
-        
-        if (accountFiletModel.isSelectedConcreteCurrency()){
-            whereBuilder.and("iso", "=", accountFiletModel.getCurrencyIso());
-        }
-        if (accountFiletModel.isSelectedConcreteBalAccount()){
-            whereBuilder.and("bal_account", "=", accountFiletModel.getBalAccountNumber());
-        }
-        if (accountFiletModel.isSelectedConcreteClient()){
-            whereBuilder.and("client_id", "=", accountFiletModel.getClientId());
-        }
-        if (!accountFiletModel.getTypeIntdeterminate()){
-            String relation = (accountFiletModel.isTypeSelected()) ? "is null" : "is not null";
-            whereBuilder.and("date_close", relation, "");
-        }
-        JSONObject params = whereBuilder.condition().build();
-        return DBUtils.getObjectsListFromDB(Account.class, DB_VEIW_NAME, params);
-    }
-    
-    public static Account getOneFromDB(int id){
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-        Account res = DBUtils.getObjectFromDB(Account.class, DB_VEIW_NAME, params);
-        System.out.println("res account: " + res);
-        return res;
-    }
-    
-    public static Account saveOneToDB(Account account){
-        System.out.println("account save method...");
-        return null;
-    }
-    
-    public static boolean deleteOneFromDB(int id){
-//        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-//        return DBUtils.deleteObjectFromDB(DB_VEIW_NAME, params);
-        System.out.println("account delete method...");
-        return false;
-    }
-    
     // Getters:
     public long getAccount(){
         return (accountNumber.get().isEmpty()) ? -1 : Long.parseLong(accountNumber.get());
@@ -170,7 +119,8 @@ public class Account extends EditorPanelable {
         return iso.get();
     }
     
-    public int getbalAccount(){
+    @JsonGetter("bal_acc")
+    public int getBalAccount(){
         return (balAccountObj.isNull().get()) ? -1 : balAccountObj.get().getBalAcc();
     }
     
@@ -191,10 +141,12 @@ public class Account extends EditorPanelable {
         return (dateOpenedObj.isNull().get()) ? "" : dateOpenedObj.get().toString();
     }
     
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public String getRemark(){
         return remark.get();
     }
     
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public String getDateClose(){
         return (dateClosedObj.isNull().get()) ? "" : dateClosedObj.get().toString();
     }
@@ -208,8 +160,9 @@ public class Account extends EditorPanelable {
     public void setIso(String iso){
         this.iso.set(iso);
     }
-    
-    public void setbalAccount(int balAcc){
+
+    @JsonSetter("balAccount")
+    public void setBalAccount(int balAcc){
         this.balAccount.set("" + balAcc);
         if (balAccountObj.isNotNull().get()){
             this.balAccountObj.get().setBalAcc(balAcc);
@@ -267,7 +220,7 @@ public class Account extends EditorPanelable {
         Account otherAccount = (Account)other;
         setAccount(otherAccount.getAccount());
         setIso(otherAccount.getIso());
-        setbalAccount(otherAccount.getbalAccount());
+        setBalAccount(otherAccount.getBalAccount());
         setDescrip(otherAccount.getDescrip());
         setClientId(otherAccount.getClientId());
         setClientDescrip(otherAccount.getClientDescrip());
@@ -299,14 +252,23 @@ public class Account extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
+        
+        System.out.println("getAccount() == other.getAccount(): " + (getAccount() == other.getAccount()));
+        System.out.println("getBalAccount() == other.getBalAccount(): " + (getBalAccount() == other.getBalAccount()));
+        System.out.println("getDescrip().equals(other.getDescrip()): " + (getDescrip().equals(other.getDescrip())));
+        System.out.println("getClientId() == other.getClientId(): " + (getClientId() == other.getClientId()));
+        System.out.println("Utils.dateEquals(openedProperty().get(), other.openedProperty().get()): " + (Utils.dateEquals(openedProperty().get(), other.openedProperty().get())));
+        System.out.println("getRemark().equals(other.getRemark()): " + (getRemark().equals(other.getRemark())));
+        System.out.println("Utils.dateEquals(closedProperty().get(), other.closedProperty().get()): " + (Utils.dateEquals(closedProperty().get(), other.closedProperty().get())));
+        
         return  getAccount() == other.getAccount() &&
                 getIso().equals(other.getIso()) &&
-                getbalAccount() == other.getbalAccount() &&
+                getBalAccount() == other.getBalAccount() &&
                 getDescrip().equals(other.getDescrip()) &&
                 getClientId() == other.getClientId() &&
-                Utils.avoidNull(openedProperty().get()).equals(other.openedProperty().get()) &&
+                Utils.dateEquals(openedProperty().get(), other.openedProperty().get()) &&
                 getRemark().equals(other.getRemark()) &&
-                Utils.avoidNull(closedProperty().get()).equals(Utils.avoidNull(other.closedProperty().get()));
+                Utils.dateEquals(closedProperty().get(), other.closedProperty().get());
     }
     
     @Override

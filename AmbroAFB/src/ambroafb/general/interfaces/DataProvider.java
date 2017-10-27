@@ -27,28 +27,74 @@ public abstract class DataProvider {
     
     protected String DB_VEIW_NAME = "";
     
-    
+    /**
+     *  The method calls DB procedure and gives parameters to it.
+     * @param procedureName The name of DB procedure.
+     * @param params Parameters for procedure.
+     * @throws IOException
+     * @throws AuthServerException 
+     */
     protected void callProcedure(String procedureName, Object... params) throws IOException, AuthServerException {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         dbClient.callProcedure(procedureName, params);
     }
     
+    /**
+     *  The method calls DB procedure, gives parameters to it and returns objects list.
+     * @param <T>
+     * @param listElementClass The class of list elements.
+     * @param procedureName The name of DB procedure.
+     * @param params Parameters for DB procedure.
+     * @return The list of generic objects.
+     * @throws IOException
+     * @throws AuthServerException 
+     */
     protected <T> ArrayList<T> callProcedure(Class<?> listElementClass, String procedureName, Object... params) throws IOException, AuthServerException {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONArray data = dbClient.callProcedureAndGetAsJson(procedureName, params);
         return Utils.getListFromJSONArray(listElementClass, data);
     }
     
-    protected <T> T getObject(Class targetClass, String procedureName, Object... params) throws IOException, AuthServerException {
+    /**
+     *  The method saves 'simple' objects to DB.
+     * @param <T>
+     * @param source The object data.
+     * @param tableName The name of table.
+     * @param dataWithUnderscores Flag provides to send data with or without underscores to DB (getter method camalCase names change to underscores:  getClientId   ->  get_client_id). 
+     * @return The new object that saved in DB. It will has DB id too.
+     * @throws IOException
+     * @throws AuthServerException 
+     */
+    protected static <T> T saveSimple(Object source, String tableName, boolean dataWithUnderscores) throws IOException, AuthServerException, JSONException {
+        JSONObject targetJson = (dataWithUnderscores) ? authclient.Utils.toUnderScore(Utils.getJSONFromClass(source))
+                                                      : Utils.getJSONFromClass(source);
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        JSONArray data = dbClient.callProcedureAndGetAsJson(procedureName, params);
-        if (!data.isNull(0)){
-            try {
-                return Utils.getClassFromJSON(targetClass, data.getJSONObject(0));
-            } catch (JSONException ex) {
-            }
-        }
-        return null;
+        JSONArray data = dbClient.callProcedureAndGetAsJson("general_insert_update_simple", tableName, dbClient.getLang(), targetJson);
+        if (data == null || data.length() == 0) return null;
+        return Utils.getClassFromJSON(source.getClass(), data.getJSONObject(0));
+    }
+    
+    /**
+     *  The method saves object and uses specific procedure for it.
+     * @param <T>
+     * @param source The object data.
+     * @param procName The name of procedure.
+     * @return The new object that saved in DB. It will has DB id too.
+     * @throws IOException
+     * @throws AuthServerException
+     * @throws JSONException 
+     */
+    protected static <T> T saveObjectByProcedure(Object source, String procName) throws IOException, AuthServerException, JSONException{
+        JSONObject targetJson = authclient.Utils.toUnderScore(Utils.getJSONFromClass(source));
+            
+        System.out.println("data for simple table to server: " + targetJson);
+
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        JSONArray newSourceFromDB = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), targetJson); // insertUpdate(tableName, targetJson);
+
+        System.out.println("data for simple table from server: " + newSourceFromDB);
+        if (newSourceFromDB == null || newSourceFromDB.length() == 0) return null;
+        return Utils.getClassFromJSON(source.getClass(), newSourceFromDB.getJSONObject(0));
     }
     
     /**
@@ -62,7 +108,7 @@ public abstract class DataProvider {
      * @throws java.io.IOException 
      * @throws authclient.AuthServerException 
      */
-    public <T> T getObjectFromDB(Class<?> targetClass, String dbTableOrViewName, JSONObject params) throws IOException, AuthServerException {
+    protected <T> T getObjectFromDB(Class<?> targetClass, String dbTableOrViewName, JSONObject params) throws IOException, AuthServerException {
         JSONArray selectResultAsArray = GeneralConfig.getInstance().getDBClient().select(dbTableOrViewName, params);
         JSONObject jsonResult = selectResultAsArray.optJSONObject(0);
 
@@ -83,7 +129,7 @@ public abstract class DataProvider {
      * @throws java.io.IOException
      * @throws authclient.AuthServerException
      */
-    public <T> List<T> getObjectsListFromDB(Class<?> listElementClass, String dbTableOrViewName, JSONObject params) throws IOException, AuthServerException{
+    protected <T> List<T> getObjectsListFromDB(Class<?> listElementClass, String dbTableOrViewName, JSONObject params) throws IOException, AuthServerException{
         System.out.println(dbTableOrViewName + " params For DB: " + params);
 
         JSONArray data = GeneralConfig.getInstance().getDBClient().select(dbTableOrViewName, params);
@@ -92,65 +138,5 @@ public abstract class DataProvider {
 
         return Utils.getListFromJSONArray(listElementClass, data);
     }
-    
-    
-    
-    
-//    
-//    /**
-//     *  The method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list by condition.
-//     * @param params The JSON object for condition.
-//     * @param successAction The action executes when list returning from DB was successful. It will call in Platform.runLater. 
-//     *                                      If you want to nothing will be executed, please give the null value for it.
-//     * @param errorAction The action executes if list returning from DB was not successful.  It will call in Platform.runLater.
-//     *                                      If you want to nothing will be executed, please give the null value for it.
-//     */
-//    public abstract void getListByCondition(JSONObject params, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction);
-//    
-//    
-//    /**
-//     *  According to filter model,  the method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list.
-//     * @param model The filterable model
-//     * @param successAction The action executes when list returning from DB was successful. It will call in Platform.runLater. 
-//     *                                      If you want to nothing will be executed, please give the null value for it.
-//     * @param errorAction The action executes if list returning from DB was not successful.  It will call in Platform.runLater.
-//     *                                      If you want to nothing will be executed, please give the null value for it.
-//     */
-//    public abstract void getListBy(FilterModel model, Consumer<List<EditorPanelable>> successAction, Consumer<Exception> errorAction);
-//    
-//    
-//    /**
-//     *  The method gets one by id.
-//     * @param recId The unique identifier for object.
-//     * @param successAction The action executes if object returning from DB was successful. It will call in Platform.runLater and before stage close. 
-//     *                                       If you want to nothing will be executed, please give the null value for it.
-//     * @param errorAction The action  executes if object returning from DB was not successful.  It will call in Platform.runLater.
-//     *                                      If you want to nothing will be executed, please give the null value for it.
-//     */
-//    public abstract void getOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction);
-//    
-//    
-//    /**
-//     *  The method removes one object by recId.
-//     * @param recId The unique identifier for object.
-//     * @param successAction The action when delete was successful. It will call in Platform.runLater and before stage close. 
-//     *                                      If nothing is executed, then gives null value.
-//     * @param errorAction The action when delete was not successful.  If nothing is executed, then gives null value.
-//     */
-//    public abstract void deleteOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction);
-//    
-//    
-//    /**
-//     *  The method changes existed object.
-//     * @param object The object that must be change.
-//     */
-//    public abstract void editOneToDB(EditorPanelable object, Consumer<Object> successAction, Consumer<Exception> errorAction);
-//    
-//    
-//    /**
-//     *  The method saveOneToDB new object.
-//     * @param object The new Object.
-//     */
-//    public abstract void saveOneToDB(EditorPanelable object, Consumer<Object> successAction, Consumer<Exception> errorAction);
     
 }

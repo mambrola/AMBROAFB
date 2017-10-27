@@ -73,7 +73,7 @@ public class AccountFilterModel extends FilterModel {
         return getIntFromPref(PREF_CLIENT_KEY);
     }
     
-    public boolean getTypeIntdeterminate(){
+    public boolean getTypeIndeterminate(){
         return getBooleanFromPref(PREF_TYPE_INDETERMINATE_KEY);
     }
     

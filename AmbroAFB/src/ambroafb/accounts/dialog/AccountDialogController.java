@@ -15,6 +15,7 @@ import ambroafb.currencies.IsoComboBox;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
+import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -51,7 +52,7 @@ public class AccountDialogController extends DialogController {
     @FXML
     private VBox formPane;
     
-    @FXML
+    @FXML @ContentNotEmpty
     private ADatePicker openDate;
     @FXML
     private IsoComboBox currencies;
@@ -104,7 +105,7 @@ public class AccountDialogController extends DialogController {
     @Override
     protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
         Consumer<ObservableList<BalanceAccount>> setBalAccByNumber = (balAccList) -> {
-            int balAccountNumber = ((Account)sceneObj).getbalAccount();
+            int balAccountNumber = ((Account)sceneObj).getBalAccount();
             Optional<BalanceAccount> optBalAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == balAccountNumber).findFirst();
             if (optBalAcc.isPresent()){
                 balAccounts.setValue(null); // რადგან balAccount_ებისთვის მხოლოდ Number მოდის ბაზიდან buttonCell-ში ჩნდება მარტო Number. ამიტომ ვაკეთებთ ამ ერთგვარ "refresh"-ს.
@@ -170,13 +171,13 @@ public class AccountDialogController extends DialogController {
         
         private String getAccountNumber(int accNumWithoutKey) throws IOException, AuthServerException, JSONException {
             JSONArray data = dbClient.callProcedureAndGetAsJson(procedureNameForKey, accNumWithoutKey);
-            System.out.println("data: " + data);
+            System.out.println("getAccountNumber data: " + data);
             return (!data.isNull(0)) ? "" + data.getJSONObject(0).optInt(accountNumberJsonKey) : emptyServerResponse;
         }
 
         @Override
         public void generateNewNumber(Consumer<String> success, Consumer<Exception> error) {
-            if (balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
+            if (!accountNumber.getText().isEmpty() && balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
                 Function<JSONObject, ButtonType> warningFN = (JSONObject obj) -> {
                     String message =  getWarningMessageFrom(obj);
                     AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, message, "");

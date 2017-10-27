@@ -122,10 +122,7 @@ public class MainController implements Initializable {
             if (filterModel.isCanceled()){
                 accounts.close();
             } else {
-                Supplier<List<EditorPanelable>> fetchData = () -> {
-                                                        return new ArrayList(Account.getFilteredFromDB(filterModel));
-                                                    };
-                accounts.getController().reAssignTable(fetchData);
+                accounts.getController().reAssignTable(filterModel);
             }
         }
         else {
