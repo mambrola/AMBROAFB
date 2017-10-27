@@ -98,7 +98,6 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     
     private Consumer<Object> builSuccessFunction(){
         Consumer<Object> successFn = getSuccessFunction();
-        System.out.println("------- successFn: " + successFn);
         return (successFn == null) ? closeFn : successFn.andThen(closeFn);
     }
     

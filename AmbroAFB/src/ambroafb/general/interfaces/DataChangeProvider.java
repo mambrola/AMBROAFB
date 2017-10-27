@@ -34,7 +34,6 @@ public abstract class DataChangeProvider extends DataProvider {
             try {
                 Boolean deleted = deleteOneFromDB(recId);
                 Platform.runLater(() -> {
-                    System.out.println("------ successAction: " + successAction);
                     if (successAction != null) successAction.accept(deleted);
                 });
             } catch (Exception ex) {
