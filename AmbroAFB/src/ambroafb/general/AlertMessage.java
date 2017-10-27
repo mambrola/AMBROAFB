@@ -16,6 +16,8 @@ import javafx.stage.Stage;
  */
 public class AlertMessage extends Alert {
     
+    private Exception exception;
+    
     /**
      * კონსტრუქტორი უზრუნველყოფს შექმნას შესაბამისი AlertType alert-ი.
      * დაუსეტავს ფანჯარას დასახელებას და ასევე დასასელებას, თუ რის შესახებაა დიალოგი. , 
@@ -36,26 +38,44 @@ public class AlertMessage extends Alert {
         }
         setTitle(GeneralConfig.getInstance().getTitleFor(title));
         setResizable(true);
-//        setHeaderText(message);
+        setHeaderText(message);
         setContentText(message);
         
         getDialogPane().getStylesheets().add(
             getClass().getResource("/styles/css/core.css").toExternalForm());
         
         ((Stage)getDialogPane().getScene().getWindow()).initOwner(AmbroAFB.mainStage);
-//        if (titleForAlertType.equals(Names.ALERT_ERROR_WINDOW_TITLE) && ex != null)
-//            Utils.log(message, ex);
     }
     
-    public void setOwner(Stage owner){
+    public AlertMessage(Stage owner, AlertType alertType, String headerText, String contentText) {
+        super(alertType);
+        setOwner(owner);
+        setHeaderText(headerText);
+        setContentText(contentText);
+        
+        String titleForAlertType; //added by Murman 
+        switch (alertType){
+            case CONFIRMATION: titleForAlertType = Names.ALERT_CONFIRMATION_WINDOW_TITLE; break;
+            case ERROR: titleForAlertType = Names.ALERT_ERROR_WINDOW_TITLE; break;
+            case INFORMATION: titleForAlertType = Names.ALERT_INFORMATION_WINDOW_TITLE; break;
+            case WARNING: titleForAlertType = Names.ALERT_WARNING_WINDOW_TITLE; break;
+            default: titleForAlertType = "?";
+        }
+        setTitle(GeneralConfig.getInstance().getTitleFor(titleForAlertType));
+        setResizable(true);
+        
+        getDialogPane().getStylesheets().add(getClass().getResource("/styles/css/core.css").toExternalForm());
+    }
+    
+    public void setException(Exception ex){
+        exception = ex;
+    }
+    
+    public final void setOwner(Stage owner){
         this.initOwner(owner);
         StageUtils.centerChildOf(owner, (Stage)this.getDialogPane().getScene().getWindow());
     }
     
-    /**
-     * მეთოდი უზრუნველყოფს შეცდომის ტექსტის გამოჩენას ეკრანზე. 
-     * Alert-ი ჩანს მანამ სანამ მომხმარებელი არ დააჭერს OK ღილაკს. 
-     */
     public void showAlert(){
         showAndWait();
     }

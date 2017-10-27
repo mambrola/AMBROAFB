@@ -38,6 +38,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -144,8 +145,10 @@ public class AccountDialogController extends DialogController {
         private final String accountInOtherISOJsonKey = "accountInOtherIso";
         private final String accountNewJsonKey = "accountNew";
         private final String fitFlagJsonKey = "fitFlag";
-//        private final String descripJsonKey = "descrip";
-//        private final String descripBundleKey = "descrip";
+        private final String descripJsonKey = "descrip";
+        
+        private final String descripBundleKey = "descrip";
+        private final String accountNumberBundleKey = "account";
         
         private final DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         private final String emptyServerResponse = "No account number";
@@ -179,8 +182,12 @@ public class AccountDialogController extends DialogController {
         public void generateNewNumber(Consumer<String> success, Consumer<Exception> error) {
             if (!accountNumber.getText().isEmpty() && balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
                 Function<JSONObject, ButtonType> warningFN = (JSONObject obj) -> {
-                    String message =  getWarningMessageFrom(obj);
-                    AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, message, "");
+                    String headerText = getWarningMessageFrom(obj);
+                    String contentText = GeneralConfig.getInstance().getTitleFor(accountNumberBundleKey) + ":\t" +
+                                         obj.optInt(accountNumberJsonKey) + "\n" +
+                                         GeneralConfig.getInstance().getTitleFor(descripBundleKey) + ":\t" + 
+                                         obj.optString(descripJsonKey);
+                    AlertMessage alert = new AlertMessage((Stage)formPane.getScene().getWindow(), Alert.AlertType.CONFIRMATION, headerText, contentText);
                     return alert.showAndWait().get();
                 };
                 Integer clientID = (clients.getSelectionModel().getSelectedIndex() >= 0) ? clients.valueProperty().get().getRecId() : null;
@@ -197,6 +204,7 @@ public class AccountDialogController extends DialogController {
             new Thread(() -> {
                 try {
                     JSONArray data = dbClient.callProcedureAndGetAsJson(procedureNameForNew, accNum, clientId, balAcc, iso, fitflag);
+                    System.out.println("account data: " + data);
                     if (!data.isNull(0)){
                         JSONObject obj = data.getJSONObject(0);
                         if (obj.length() == 1 || obj.has(accountNewJsonKey)){
