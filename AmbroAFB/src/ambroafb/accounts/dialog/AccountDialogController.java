@@ -176,15 +176,15 @@ public class AccountDialogController extends DialogController {
 
         @Override
         public void generateNewNumber(Consumer<String> success, Consumer<Exception> error) {
-            if (clients.getSelectionModel().getSelectedIndex() >= 0 && balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
+            if (balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
                 Function<JSONObject, ButtonType> warningFN = (JSONObject obj) -> {
                     String message =  getWarningMessageFrom(obj);
                     AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, message, "");
                     return alert.showAndWait().get();
                 };
-                        
+                Integer clientID = (clients.getSelectionModel().getSelectedIndex() >= 0) ? clients.valueProperty().get().getRecId() : null;
                 callDBProcedure(success, warningFN, error, Integer.parseInt(accountNumber.getText()),
-                                    clients.valueProperty().get().getRecId(), balAccounts.getValue().getBalAcc(), currencies.getValue(), fitFlag);
+                                    clientID, balAccounts.getValue().getBalAcc(), currencies.getValue(), fitFlag);
             }
             else {
                 success.accept("");
@@ -192,7 +192,7 @@ public class AccountDialogController extends DialogController {
         }
         
         private void callDBProcedure(Consumer<String> success, Function<JSONObject, ButtonType> warning, Consumer<Exception> error,
-                                        int accNum, int clientId, int balAcc, String iso, int fitflag) {
+                                        int accNum, Integer clientId, int balAcc, String iso, int fitflag) {
             new Thread(() -> {
                 try {
                     JSONArray data = dbClient.callProcedureAndGetAsJson(procedureNameForNew, accNum, clientId, balAcc, iso, fitflag);
