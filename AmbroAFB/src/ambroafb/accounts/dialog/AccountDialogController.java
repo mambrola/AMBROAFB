@@ -149,7 +149,7 @@ public class AccountDialogController extends DialogController {
         
         private final DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         private final String emptyServerResponse = "No account number";
-        private final int fitFlag = 0;
+        private int fitFlag = 0;
         
         @Override
         public void generateKeyFor(Consumer<String> success, Consumer<Exception> error) {
@@ -201,16 +201,20 @@ public class AccountDialogController extends DialogController {
                         JSONObject obj = data.getJSONObject(0);
                         if (obj.length() == 1 || obj.has(accountNewJsonKey)){
                             Platform.runLater(() -> {
-                                if (success != null) success.accept("" + obj.optInt(accountNumberJsonKey));
+                                if (success != null) {
+                                    fitFlag = obj.optInt(fitFlagJsonKey);
+                                    success.accept("" + obj.optInt(accountNumberJsonKey));
+                                }
                             });
                         }
                         else {
                             Platform.runLater(() -> {
                                 if (warning != null){
                                     if (warning.apply(obj).equals(ButtonType.OK)){
-                                        int fit = obj.optInt(fitFlagJsonKey);
+                                        int newAccNum = obj.optInt(accountNumberJsonKey);
+                                        int newFitFlag = obj.optInt(fitFlagJsonKey);
                                         askNewAccountNumberToDB(success, warning, error, 
-                                                            accNum, clientId, balAcc, iso, fit);
+                                                            newAccNum, clientId, balAcc, iso, newFitFlag);
                                     }
                                 }
                             });

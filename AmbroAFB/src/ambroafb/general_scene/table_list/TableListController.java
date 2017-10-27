@@ -115,9 +115,7 @@ public class TableListController extends ListingController {
     
     @Override
     public void removeElementsFromEditorPanel(String... componentFXids){
-        for (String id : componentFXids) {
-            editorPanelController.removeButtonsByFxIDs(id);
-        }
+        editorPanelController.removeButtonsByFxIDs(componentFXids);
     }
     
     @Override
