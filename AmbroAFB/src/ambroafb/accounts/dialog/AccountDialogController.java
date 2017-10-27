@@ -183,7 +183,7 @@ public class AccountDialogController extends DialogController {
                     return alert.showAndWait().get();
                 };
                 Integer clientID = (clients.getSelectionModel().getSelectedIndex() >= 0) ? clients.valueProperty().get().getRecId() : null;
-                callDBProcedure(success, warningFN, error, Integer.parseInt(accountNumber.getText()),
+                askNewAccountNumberToDB(success, warningFN, error, Integer.parseInt(accountNumber.getText()),
                                     clientID, balAccounts.getValue().getBalAcc(), currencies.getValue(), fitFlag);
             }
             else {
@@ -191,7 +191,7 @@ public class AccountDialogController extends DialogController {
             }
         }
         
-        private void callDBProcedure(Consumer<String> success, Function<JSONObject, ButtonType> warning, Consumer<Exception> error,
+        private void askNewAccountNumberToDB(Consumer<String> success, Function<JSONObject, ButtonType> warning, Consumer<Exception> error,
                                         int accNum, Integer clientId, int balAcc, String iso, int fitflag) {
             new Thread(() -> {
                 try {
@@ -208,7 +208,7 @@ public class AccountDialogController extends DialogController {
                                 if (warning != null){
                                     if (warning.apply(obj).equals(ButtonType.OK)){
                                         int fit = obj.optInt(fitFlagJsonKey);
-                                        callDBProcedure(success, warning, error, 
+                                        askNewAccountNumberToDB(success, warning, error, 
                                                             accNum, clientId, balAcc, iso, fit);
                                     }
                                 }
