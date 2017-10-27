@@ -14,7 +14,6 @@ import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import java.time.LocalDate;
@@ -138,17 +137,15 @@ public class Account extends EditorPanelable {
     }
     
     public String getDateOpen(){
-        return (dateOpenedObj.isNull().get()) ? "" : dateOpenedObj.get().toString();
+        return (dateOpenedObj.isNull().get()) ? null : dateOpenedObj.get().toString();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public String getRemark(){
         return remark.get();
     }
     
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public String getDateClose(){
-        return (dateClosedObj.isNull().get()) ? "" : dateClosedObj.get().toString();
+        return (dateClosedObj.isNull().get()) ? null : dateClosedObj.get().toString();
     }
     
     
@@ -252,15 +249,6 @@ public class Account extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
-        
-        System.out.println("getAccount() == other.getAccount(): " + (getAccount() == other.getAccount()));
-        System.out.println("getBalAccount() == other.getBalAccount(): " + (getBalAccount() == other.getBalAccount()));
-        System.out.println("getDescrip().equals(other.getDescrip()): " + (getDescrip().equals(other.getDescrip())));
-        System.out.println("getClientId() == other.getClientId(): " + (getClientId() == other.getClientId()));
-        System.out.println("Utils.dateEquals(openedProperty().get(), other.openedProperty().get()): " + (Utils.dateEquals(openedProperty().get(), other.openedProperty().get())));
-        System.out.println("getRemark().equals(other.getRemark()): " + (getRemark().equals(other.getRemark())));
-        System.out.println("Utils.dateEquals(closedProperty().get(), other.closedProperty().get()): " + (Utils.dateEquals(closedProperty().get(), other.closedProperty().get())));
-        
         return  getAccount() == other.getAccount() &&
                 getIso().equals(other.getIso()) &&
                 getBalAccount() == other.getBalAccount() &&
