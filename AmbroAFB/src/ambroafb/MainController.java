@@ -277,10 +277,11 @@ public class MainController implements Initializable {
                 docs.close();
             }
             else {
-                Supplier<ArrayList<Doc>> fetchData = () -> {
-                                                            return new ArrayList(Doc.getFilteredFromDB(model));
-                                                        };
-                docs.getDocController().reAssignTable(fetchData);
+//                Supplier<ArrayList<Doc>> fetchData = () -> {
+//                                                            return new ArrayList(Doc.getFilteredFromDB(model));
+//                                                        };
+//                docs.getDocController().reAssignTable(fetchData);
+                docs.getController().reAssignTable(model);
             }
         }
         else {

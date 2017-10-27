@@ -83,7 +83,7 @@ public class DocEditorPanelController implements Initializable {
     
     private enum CLASS_TYPE {OBJECT, DIALOG, FILTER, CONTROLLER};
     
-    private ObservableList<Doc> tableData;
+    private ObservableList<EditorPanelable> tableData;
 
     /**
      * The method removes entry from docs table. If doc is child, Custom dialog scene will be shown. Otherwise, docType variable 
@@ -106,7 +106,7 @@ public class DocEditorPanelController implements Initializable {
                     int selectedIndex = tableData.indexOf(selected);
                     tableData.remove(selected);
                     if (selected.isParentDoc()){
-                        List<Doc> childrenDocs = tableData.stream().
+                        List<Doc> childrenDocs = tableData.stream().map((elem) -> (Doc)elem).
                                                             filter((doc) -> doc.getParentRecId() == selected.getRecId()).
                                                         collect(Collectors.toList());
                         tableData.removeAll(childrenDocs);
@@ -144,7 +144,8 @@ public class DocEditorPanelController implements Initializable {
                 if (!newDocsFromDB.isEmpty()){ 
                     if (selected.isParentDoc()){
                         newDocsFromDB.stream().forEach((newDoc) -> {
-                            Optional<Doc> docFromAFBTable = tableData.stream().filter((Doc doc) -> doc.getRecId() == newDoc.getRecId()).findFirst();
+                            Optional<Doc> docFromAFBTable = tableData.stream().map((elem) -> (Doc)elem).
+                                                                filter((Doc doc) -> doc.getRecId() == newDoc.getRecId()).findFirst();
                             if (docFromAFBTable.isPresent()){
                                 docFromAFBTable.get().copyFrom(newDoc);
                             }
@@ -337,7 +338,7 @@ public class DocEditorPanelController implements Initializable {
     }
     
     private Doc getAppropriateDocFromTable(int recId){
-        Optional<Doc> opt = tableData.stream().filter((docInTable) -> docInTable.getRecId() == recId).findFirst();
+        Optional<Doc> opt = tableData.stream().map((elem) -> (Doc)elem).filter((docInTable) -> docInTable.getRecId() == recId).findFirst();
         return (opt.isPresent()) ? opt.get() : null;
     }
     
@@ -442,7 +443,7 @@ public class DocEditorPanelController implements Initializable {
      * @param table Table component on scene.
      * @param list  Data list of given table (At the beginning, it may be empty).
      */
-    public void setTableDataList(ATableView<Doc> table, ObservableList<Doc> list){
+    public void setTableDataList(ATableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
         tableData = list;
         table.setItems(list);
         if (table instanceof AFilterableTableView){
@@ -455,7 +456,7 @@ public class DocEditorPanelController implements Initializable {
      * The method binds editor panel buttons to scene list elements.
      * @param aView The list components that is on the scene (ATableView, ATreeTableView).
      */
-    public void buttonsMainPropertysBinder (AView<Doc> aView){
+    public void buttonsMainPropertysBinder (AView<EditorPanelable> aView){
         BooleanBinding allowModify = Bindings.createBooleanBinding(() -> {
                                                                     if (aView.getCustomSelectedItem() == null){
                                                                         return true;

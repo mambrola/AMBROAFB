@@ -14,22 +14,8 @@ import javafx.stage.Stage;
  */
 public class TableList extends ListingStage {
     
-//    private TableListController tableListController;
-    
     public TableList(Stage owner, Class tableContent, String stageTitleBundleKey){
         super(owner, "/ambroafb/general_scene/table_list/TableList.fxml", tableContent, stageTitleBundleKey);
-        
-//        Scene scene = SceneUtils.createScene("/ambroafb/general_scene/table_list/TableList.fxml", null);
-//        tableListController = (TableListController) scene.getProperties().get("controller");
-//        tableListController.addTableByClass(tableContent);
-//        this.setScene(scene);
-        
-//        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-//            tableListController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-//            if(event != null) event.consume();
-//        });
-        
-//        super.setFeatures(() -> tableListController.getEditorPanelController().getPanelMinWidth());
     }
     
 }

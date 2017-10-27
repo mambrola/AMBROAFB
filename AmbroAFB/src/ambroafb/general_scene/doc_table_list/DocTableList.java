@@ -5,12 +5,8 @@
  */
 package ambroafb.general_scene.doc_table_list;
 
-import ambroafb.general.SceneUtils;
 import ambroafb.general.interfaces.ListingStage;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -18,25 +14,26 @@ import javafx.stage.WindowEvent;
  */
 public class DocTableList extends ListingStage {
     
-    private DocTableListController tableListController;
+//    private DocTableListController tableListController;
     
     public DocTableList(Stage owner, Class tableContent, String stageTitleBundleKey){
-        super(owner, tableContent.getSimpleName(), stageTitleBundleKey);
+        super(owner, "/ambroafb/general_scene/doc_table_list/DocTableList.fxml", tableContent, stageTitleBundleKey);
         
-        Scene scene = SceneUtils.createScene("/ambroafb/general_scene/doc_table_list/DocTableList.fxml", null);
-        tableListController = (DocTableListController) scene.getProperties().get("controller");
-        tableListController.addTableByClass(tableContent);
-        this.setScene(scene);
+//        Scene scene = SceneUtils.createScene("/ambroafb/general_scene/doc_table_list/DocTableList.fxml", null);
+//        tableListController = (DocTableListController) scene.getProperties().get("controller");
+//        tableListController.addTableByClass(tableContent);
         
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            tableListController.getDocEditorPanelController().getExitButton().getOnAction().handle(null);
-            if(event != null) event.consume();
-        });
-        
-        super.setFeatures(() -> tableListController.getDocEditorPanelController().getPanelMinWidth());
+//        this.setScene(scene);
+//        
+//        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
+//            tableListController.getDocEditorPanelController().getExitButton().getOnAction().handle(null);
+//            if(event != null) event.consume();
+//        });
+//        
+//        super.setFeatures(() -> tableListController.getDocEditorPanelController().getPanelMinWidth());
     }
     
-    public DocTableListController getDocController(){
-        return tableListController;
-    }
+//    public DocTableListController getDocController(){
+//        return tableListController;
+//    }
 }

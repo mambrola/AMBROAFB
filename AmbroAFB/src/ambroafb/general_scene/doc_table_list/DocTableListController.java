@@ -6,17 +6,22 @@
 package ambroafb.general_scene.doc_table_list;
 
 import ambro.AFilterableTableView;
-import ambroafb.docs.Doc;
 import ambroafb.docs.doc_editor_panel.DocEditorPanelController;
+import ambroafb.general.editor_panel.EditorPanelController;
+import ambroafb.general.interfaces.DataProvider;
+import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
+import ambroafb.general.interfaces.ListingController;
+import authclient.AuthServerException;
+import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.layout.StackPane;
 import org.controlsfx.control.MaskerPane;
 
@@ -25,9 +30,9 @@ import org.controlsfx.control.MaskerPane;
  *
  * @author dkobuladze
  */
-public class DocTableListController implements Initializable {
+public class DocTableListController extends ListingController {
 
-    private AFilterableTableView<Doc> aview;
+    private AFilterableTableView<EditorPanelable> aview;
     
     @FXML
     private DocEditorPanelController docEditorPanelController;
@@ -38,21 +43,22 @@ public class DocTableListController implements Initializable {
     @FXML
     private StackPane containerPane;
     
-    private final ObservableList<Doc> contents = FXCollections.observableArrayList();
+    private final ObservableList<EditorPanelable> contents = FXCollections.observableArrayList();
     private ResourceBundle bundle;
     
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        bundle = rb;
-        docEditorPanelController.setOuterController(this);
-    }
+//    /**
+//     * Initializes the controller class.
+//     * @param url
+//     * @param rb
+//     */
+//    @Override
+//    public void initialize(URL url, ResourceBundle rb) {
+//        bundle = rb;
+//        docEditorPanelController.setOuterController(this);
+//    }
     
-    public void reAssignTable(Supplier<ArrayList<Doc>> fetchData){
+    @Override
+    public void reAssignTable(Supplier<List<EditorPanelable>> fetchData){
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         contents.clear();
         
@@ -61,7 +67,7 @@ public class DocTableListController implements Initializable {
                 masker.setVisible(true);
             });
             
-            ArrayList<Doc> list = fetchData.get();
+            List<EditorPanelable> list = fetchData.get();
             contents.setAll(list);
             
             Platform.runLater(() -> {
@@ -73,15 +79,15 @@ public class DocTableListController implements Initializable {
         }).start();
     }
     
-    public void addTableByClass(Class targetClass){
-        aview = new AFilterableTableView<>(targetClass);
-        aview.setId("aview");
-        aview.setBundle(bundle);
-        docEditorPanelController.buttonsMainPropertysBinder(aview);
-        docEditorPanelController.setTableDataList(aview, contents);
-
-        containerPane.getChildren().add(0, aview);
-    }
+//    public void addTableByClass(Class targetClass){
+//        aview = new AFilterableTableView<>(targetClass);
+//        aview.setId("aview");
+//        aview.setBundle(bundle);
+//        docEditorPanelController.buttonsMainPropertysBinder(aview);
+//        docEditorPanelController.setTableDataList(aview, contents);
+//
+//        containerPane.getChildren().add(0, aview);
+//    }
     
     public void setSelected(int selectedIndex){
         if (selectedIndex >= 0) {
@@ -91,5 +97,58 @@ public class DocTableListController implements Initializable {
     
     public DocEditorPanelController getDocEditorPanelController(){
         return docEditorPanelController;
+    }
+
+    @Override
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
+        bundle = rb;
+//        docEditorPanelController.setOuterController(this);
+    }
+
+    @Override
+    public void reAssignTable(FilterModel model) {
+        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+        contents.clear();
+        
+        new Thread(() -> {
+            Platform.runLater(() -> {
+                masker.setVisible(true);
+            });
+            
+            try {
+                List<EditorPanelable> list = (model == null) ? dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL)
+                                                             : dataFetchProvider.getFilteredBy(model);
+                contents.setAll(list);
+            } catch (IOException | AuthServerException ex) {
+            }
+            
+            Platform.runLater(() -> {
+                masker.setVisible(false);
+                if (selectedIndex >= 0){
+                    aview.getSelectionModel().select(selectedIndex);
+                }
+            });
+        }).start();
+    }
+
+    @Override
+    public void addListByClass(Class content) {
+        aview = new AFilterableTableView<>(content);
+        aview.setId("aview");
+        aview.setBundle(bundle);
+        docEditorPanelController.buttonsMainPropertysBinder(aview);
+        docEditorPanelController.setTableDataList(aview, contents);
+
+        containerPane.getChildren().add(0, aview);
+    }
+
+    @Override
+    public EditorPanelController getEditorPanelController() {
+        return null;
+    }
+
+    @Override
+    public void removeElementsFromEditorPanel(String... componentFXids) {
+        
     }
 }
