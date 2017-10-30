@@ -73,7 +73,7 @@ public class DialogOkayCancelController implements Initializable {
                 alertText = "You Realy want Delete this item?";
                 okay.setOnAction((ActionEvent event) -> {
                     String stageName = ((Stage)okay.getScene().getWindow()).getTitle();
-                    if(new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, stageName).showAndWait().get().equals(ButtonType.OK)){
+                    if(new AlertMessage(((Stage) okay.getScene().getWindow()), Alert.AlertType.CONFIRMATION, alertText, stageName).showAndWait().get().equals(ButtonType.OK)){
                         ((Stage) okay.getScene().getWindow()).close();
                     }
                 });
@@ -101,7 +101,7 @@ public class DialogOkayCancelController implements Initializable {
                     boolean anyFieldWasChanged = ((UserInteractiveDialogStage)cancel.getScene().getWindow()).anyComponentChanged();
                     if (anyFieldWasChanged) {
                         String stageName = ((Stage)okay.getScene().getWindow()).getTitle();
-                        AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, stageName);
+                        AlertMessage alert = new AlertMessage(((Stage) okay.getScene().getWindow()), Alert.AlertType.CONFIRMATION, alertText, stageName);
                         alert.setOwner((Stage)okay.getScene().getWindow());
                         ButtonType buttonType = alert.showAndWait().get();
                         if (buttonType.equals(ButtonType.OK)){

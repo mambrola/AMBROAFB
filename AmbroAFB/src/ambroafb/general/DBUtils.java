@@ -285,7 +285,7 @@ public class DBUtils {
         } 
         catch (IOException | AuthServerException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAlert();
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAndWait();
         }
         return null;
     }
@@ -296,7 +296,7 @@ public class DBUtils {
         } 
         catch (IOException | AuthServerException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAlert();
+            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAndWait();
         }
         return null;
     }
@@ -364,7 +364,7 @@ public class DBUtils {
                 String newMsg = entries.stream().map((entry) -> "[" + entry.toString() + "]" + ",\n").reduce("", String::concat);
                 AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, newMsg, GeneralConfig.getInstance().getTitleFor("conflict_params_general"));
                 alert.setHeaderText(headerTxt);
-                alert.showAlert();
+                alert.showAndWait();
             }
         }
         return result;
@@ -433,7 +433,7 @@ public class DBUtils {
                 Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
-        new AlertMessage(Alert.AlertType.ERROR, ex, message, docDBErorTitle).showAlert();
+        new AlertMessage(Alert.AlertType.ERROR, ex, message, docDBErorTitle).showAndWait();
     }
     
     

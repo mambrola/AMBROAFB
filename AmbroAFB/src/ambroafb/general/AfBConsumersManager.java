@@ -24,7 +24,7 @@ public class AfBConsumersManager {
         return (Exception ex) -> {
                             Platform.runLater(() -> {
                                 DBExceptionManager exManager = new DBExceptionManager(ex);
-                                new AlertMessage(Alert.AlertType.ERROR, ex, exManager.getExceptionMessage(), "").showAlert();
+                                new AlertMessage(Alert.AlertType.ERROR, ex, exManager.getExceptionMessage(), "").showAndWait();
                             });
                         };
     }

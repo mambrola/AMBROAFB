@@ -89,7 +89,7 @@ public class LoginController extends UserInteractiveStage implements Initializab
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                 Platform.runLater(() -> {
                     masker.setVisible(false);
-                    new AlertMessage(Alert.AlertType.ERROR, ex, "Network Error", getClass().getSimpleName()).showAlert();
+                    new AlertMessage(Alert.AlertType.ERROR, ex, "Network Error", getClass().getSimpleName()).showAndWait();
                 });
             } 
             catch (AuthServerException ex) {

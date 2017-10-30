@@ -365,7 +365,7 @@ public class InvoiceDialogController extends DialogController {
                     String message = processManyProductChoiceException(json.optString("message"));
                     String title = GeneralConfig.getInstance().getTitleFor("many_product_warning");
                     Platform.runLater(() -> {
-                        new AlertMessage(Alert.AlertType.WARNING, ex, message, title).showAlert();
+                        new AlertMessage(Alert.AlertType.WARNING, ex, message, title).showAndWait();
                     });
                 }
                 else {

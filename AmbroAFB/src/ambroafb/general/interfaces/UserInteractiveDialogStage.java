@@ -77,7 +77,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
             switch(editorButtonType){
                 case DELETE:
                     String alertText = GeneralConfig.getInstance().getTitleFor("dialog_delete_confirm");
-                    if (new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, "").showAndWait().get().equals(ButtonType.OK))
+                    if (new AlertMessage(this, Alert.AlertType.CONFIRMATION, alertText, "").showAndWait().get().equals(ButtonType.OK))
                         dataChangeProvider.deleteOneFromDB(getSceneObject().getRecId(), builSuccessFunction(), getErrorFunction());
                     break;
                 case EDIT: 
@@ -115,7 +115,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
      */
     protected Consumer<Exception> getErrorFunction(){
         return  (ex) -> {
-                    new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), getTitle()).showAndWait();
+                    new AlertMessage(this, Alert.AlertType.ERROR, ex, ex.getMessage(), getTitle()).showAndWait();
                 };
     }
     
@@ -130,7 +130,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
                 boolean anyFieldWasChanged = anyComponentChanged();
                 if (anyFieldWasChanged) {
                     String alertText = GeneralConfig.getInstance().getTitleFor("dialog_cancel_confirm");
-                    AlertMessage alert = new AlertMessage(Alert.AlertType.CONFIRMATION, null, alertText, getTitle());
+                    AlertMessage alert = new AlertMessage(this, Alert.AlertType.CONFIRMATION, alertText, "");
                     alert.setOwner(this);
                     ButtonType buttonType = alert.showAndWait().get();
                     if (buttonType.equals(ButtonType.OK)){
