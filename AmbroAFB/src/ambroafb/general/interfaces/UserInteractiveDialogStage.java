@@ -103,7 +103,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     
     /**
      *  The function will execute before stage close, if DB action was successful.
-     * @return 
+     * @return The action that will execute if get success  from DB.
      */
     protected Consumer<Object> getSuccessFunction(){
         return null;
@@ -111,7 +111,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     
     /**
      *  The function will execute before stage close, if DB action was not successful.
-     * @return 
+     * @return The action that will execute if get error from DB.
      */
     protected Consumer<Exception> getErrorFunction(){
         return  (ex) -> {
