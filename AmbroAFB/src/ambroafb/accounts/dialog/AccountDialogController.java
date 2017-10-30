@@ -31,6 +31,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -80,7 +81,14 @@ public class AccountDialogController extends DialogController {
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        accountNumber.setNumberGenerateManager(new CustomNumberGenerator());
+        CustomNumberGenerator customGenerator = new CustomNumberGenerator();
+        accountNumber.setNumberGenerateManager(customGenerator);
+        currencies.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            customGenerator.resetFitFlag();
+        });
+        balAccounts.valueProperty().addListener((ObservableValue<? extends BalanceAccount> observable, BalanceAccount oldValue, BalanceAccount newValue) -> {
+            customGenerator.resetFitFlag();
+        });
     }
 
     @Override
@@ -251,5 +259,8 @@ public class AccountDialogController extends DialogController {
             return GeneralConfig.getInstance().getTitleFor(key);
         }
         
+        public void resetFitFlag(){
+            fitFlag = 0;
+        }
     }
 }
