@@ -156,20 +156,19 @@ public class AccountDialogController extends DialogController {
         
         @Override
         public void generateKeyFor(Consumer<String> success, Consumer<Exception> error) {
-            if (!accountNumber.getText().isEmpty()){
-                new Thread(() -> {
-                    try {
-                        String accNum = getAccountNumber(Integer.parseInt(accountNumber.getText()));
-                        Platform.runLater(() -> {
-                            if (success != null) success.accept(accNum);
-                        });
-                    } catch (IOException | AuthServerException | JSONException ex) {
-                        Platform.runLater(() -> {
-                            if (error != null) error.accept(ex);
-                        });
-                    }
-                }).start();
-            }
+            new Thread(() -> {
+                try {
+                    int accountNum = (accountNumber.getText().isEmpty()) ? 0 : Integer.parseInt(accountNumber.getText());
+                    String accNum = getAccountNumber(accountNum);
+                    Platform.runLater(() -> {
+                        if (success != null) success.accept(accNum);
+                    });
+                } catch (IOException | AuthServerException | JSONException ex) {
+                    Platform.runLater(() -> {
+                        if (error != null) error.accept(ex);
+                    });
+                }
+            }).start();
         }
         
         private String getAccountNumber(int accNumWithoutKey) throws IOException, AuthServerException, JSONException {
@@ -180,18 +179,19 @@ public class AccountDialogController extends DialogController {
 
         @Override
         public void generateNewNumber(Consumer<String> success, Consumer<Exception> error) {
-            if (!accountNumber.getText().isEmpty() && balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
+            if (balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
+                int accountNum = (accountNumber.getText().isEmpty()) ? 0 : Integer.parseInt(accountNumber.getText());
                 Function<JSONObject, ButtonType> warningFN = (JSONObject obj) -> {
                     String headerText = getWarningMessageFrom(obj);
-                    String contentText = GeneralConfig.getInstance().getTitleFor(accountNumberBundleKey) + ":\t" +
-                                         obj.optInt(accountNumberJsonKey) + "\n" +
-                                         GeneralConfig.getInstance().getTitleFor(descripBundleKey) + ":\t" + 
-                                         obj.optString(descripJsonKey);
+                    String numberSp = String.format("|%20s|", GeneralConfig.getInstance().getTitleFor(accountNumberBundleKey));
+                    String descripSp = String.format("|%20s|", GeneralConfig.getInstance().getTitleFor(descripBundleKey));
+                    String contentText = numberSp + ":\t" + obj.optInt(accountNumberJsonKey) + "\n" +
+                                        descripSp + ":\t" + obj.optString(descripJsonKey);
                     AlertMessage alert = new AlertMessage((Stage)formPane.getScene().getWindow(), Alert.AlertType.CONFIRMATION, headerText, contentText);
                     return alert.showAndWait().get();
                 };
                 Integer clientID = (clients.getSelectionModel().getSelectedIndex() >= 0) ? clients.valueProperty().get().getRecId() : null;
-                askNewAccountNumberToDB(success, warningFN, error, Integer.parseInt(accountNumber.getText()),
+                askNewAccountNumberToDB(success, warningFN, error, accountNum,
                                     clientID, balAccounts.getValue().getBalAcc(), currencies.getValue(), fitFlag);
             }
             else {
