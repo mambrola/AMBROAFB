@@ -84,10 +84,13 @@ public class AccountDialogController extends DialogController {
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
+        balAccounts.valueProperty().addListener((ObservableValue<? extends BalanceAccount> observable, BalanceAccount oldValue, BalanceAccount newValue) -> {
+            customGenerator.resetFitFlag();
+        });
         currencies.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             customGenerator.resetFitFlag();
         });
-        balAccounts.valueProperty().addListener((ObservableValue<? extends BalanceAccount> observable, BalanceAccount oldValue, BalanceAccount newValue) -> {
+        clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
             customGenerator.resetFitFlag();
         });
         
@@ -103,23 +106,17 @@ public class AccountDialogController extends DialogController {
     }
     
     private void accountNextAction(ActionEvent event){
+        String accNumBundleKey = "account_number";
+        String defaultTitle = GeneralConfig.getInstance().getTitleFor(accNumBundleKey);
         Consumer<JSONObject> successAction = (obj) -> {
             accountNumber.setText("" + obj.optInt(customGenerator.accountNumberJsonKey));
             if (obj.length() == 1){
-                accNumTitle.setText(GeneralConfig.getInstance().getTitleFor("account_number"));
+                accNumTitle.setText(defaultTitle);
             }
             else {
-                if (obj.has(customGenerator.accountExistsJsonKey)){
-                    okayCancelController.getOkayButton().setDisable(true);
-                }
-                else if (obj.has(customGenerator.accountInOtherISOJsonKey)){
-                    String message = customGenerator.getWarningMessageFrom(obj);
-                    accNumTitle.setText(message);
-                }
-                else if (obj.has(customGenerator.accountNewJsonKey)){
-                    String message = customGenerator.getWarningMessageFrom(obj);
-                    accNumTitle.setText(message);
-                }
+                okayCancelController.getOkayButton().setDisable(obj.has(customGenerator.accountExistsJsonKey));
+                String message = customGenerator.getWarningMessageFrom(obj);
+                accNumTitle.setText(defaultTitle + " - " + message);
                 
                 descrip.setText(obj.optString(customGenerator.accountDescripJsonKey));
                 customGenerator.setFitFlag(obj.optInt(customGenerator.fitFlagJsonKey));
@@ -131,7 +128,7 @@ public class AccountDialogController extends DialogController {
             new AlertMessage((Stage)formPane.getScene().getWindow(), Alert.AlertType.ERROR, headerText, contentText).showAndWait();
         };
 
-        accNumTitle.setText(GeneralConfig.getInstance().getTitleFor("account_number"));
+        accNumTitle.setText(defaultTitle);
         if (balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
             Integer accountNum = (!accountNumber.getText().isEmpty()) ? Integer.parseInt(accountNumber.getText()) : null; 
             Integer clientID = (clients.getSelectionModel().getSelectedIndex() >= 0) ? clients.valueProperty().get().getRecId() : null;
