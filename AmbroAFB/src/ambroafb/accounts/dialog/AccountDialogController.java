@@ -20,7 +20,6 @@ import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.account_number.AccountNumber;
-import ambroafb.general.scene_components.account_number.NumberGenerateManager;
 import authclient.AuthServerException;
 import authclient.db.DBClient;
 import java.io.IOException;
@@ -29,14 +28,14 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -61,6 +60,8 @@ public class AccountDialogController extends DialogController {
     @FXML
     private BalanceAccountTreeComboBox balAccounts;
     @FXML
+    private Label accNumTitle;
+    @FXML
     private AccountNumber accountNumber;
     @FXML
     private ClientComboBox clients;
@@ -69,10 +70,12 @@ public class AccountDialogController extends DialogController {
     @FXML
     private ADatePicker closeDate;
     
-    
-    
     @FXML
     private DialogOkayCancelController okayCancelController;
+    
+    
+    CustomNumberGenerator customGenerator = new CustomNumberGenerator();
+    
     
     @Override
     protected Parent getSceneRoot() {
@@ -81,15 +84,64 @@ public class AccountDialogController extends DialogController {
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        CustomNumberGenerator customGenerator = new CustomNumberGenerator();
-        accountNumber.setNumberGenerateManager(customGenerator);
         currencies.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             customGenerator.resetFitFlag();
         });
         balAccounts.valueProperty().addListener((ObservableValue<? extends BalanceAccount> observable, BalanceAccount oldValue, BalanceAccount newValue) -> {
             customGenerator.resetFitFlag();
         });
+        
+        accountNumber.getKey().setOnAction(this::accountKeyAction);
+        accountNumber.getNext().setOnAction(this::accountNextAction);
     }
+    
+    private void accountKeyAction(ActionEvent event){
+        Consumer<String> successAction = (value) -> {
+            accountNumber.setText(value);
+        };
+        customGenerator.generateKeyFor(successAction, null);
+    }
+    
+    private void accountNextAction(ActionEvent event){
+        Consumer<JSONObject> successAction = (obj) -> {
+            accountNumber.setText("" + obj.optInt(customGenerator.accountNumberJsonKey));
+            if (obj.length() == 1){
+                accNumTitle.setText(GeneralConfig.getInstance().getTitleFor("account_number"));
+            }
+            else {
+                if (obj.has(customGenerator.accountExistsJsonKey)){
+                    okayCancelController.getOkayButton().setDisable(true);
+                }
+                else if (obj.has(customGenerator.accountInOtherISOJsonKey)){
+                    String message = customGenerator.getWarningMessageFrom(obj);
+                    accNumTitle.setText(message);
+                }
+                else if (obj.has(customGenerator.accountNewJsonKey)){
+                    String message = customGenerator.getWarningMessageFrom(obj);
+                    accNumTitle.setText(message);
+                }
+                
+                descrip.setText(obj.optString(customGenerator.accountDescripJsonKey));
+                customGenerator.setFitFlag(obj.optInt(customGenerator.fitFlagJsonKey));
+            }
+        };
+        Consumer<Exception> errorAction = (ex) -> {
+            String headerText = "";
+            String contentText = ex.getMessage();
+            new AlertMessage((Stage)formPane.getScene().getWindow(), Alert.AlertType.ERROR, headerText, contentText).showAndWait();
+        };
+
+        accNumTitle.setText(GeneralConfig.getInstance().getTitleFor("account_number"));
+        if (balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
+            Integer accountNum = (!accountNumber.getText().isEmpty()) ? Integer.parseInt(accountNumber.getText()) : null; 
+            Integer clientID = (clients.getSelectionModel().getSelectedIndex() >= 0) ? clients.valueProperty().get().getRecId() : null;
+            customGenerator.generateNewNumber(successAction, errorAction, accountNum, clientID, balAccounts.getValue().getBalAcc(), currencies.getValue());
+        }
+        else {
+            accountNumber.setText("");
+        }
+    }
+    
 
     @Override
     public DialogOkayCancelController getOkayCancelController() {
@@ -143,30 +195,26 @@ public class AccountDialogController extends DialogController {
     }
     
     
-    private class CustomNumberGenerator implements NumberGenerateManager {
+    private class CustomNumberGenerator {
 
         private final String procedureNameForKey = "account_set_key";
         private final String procedureNameForNew = "account_insert_update_get_fit_account";
         
-        private final String accountNumberJsonKey = "account";
-        private final String accountExistsJsonKey = "accountExists";
-        private final String accountInOtherISOJsonKey = "accountInOtherIso";
-        private final String accountNewJsonKey = "accountNew";
-        private final String fitFlagJsonKey = "fitFlag";
-        private final String descripJsonKey = "descrip";
-        
-        private final String descripBundleKey = "descrip";
-        private final String accountNumberBundleKey = "account";
+        public final String accountNumberJsonKey = "account";
+        public final String accountExistsJsonKey = "accountExists";
+        public final String accountInOtherISOJsonKey = "accountInOtherIso";
+        public final String accountNewJsonKey = "accountNew";
+        public final String fitFlagJsonKey = "fitFlag";
+        public final String accountDescripJsonKey = "descrip";
         
         private final DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         private final String emptyServerResponse = "No account number";
         private int fitFlag = 0;
         
-        @Override
         public void generateKeyFor(Consumer<String> success, Consumer<Exception> error) {
             new Thread(() -> {
                 try {
-                    int accountNum = (accountNumber.getText().isEmpty()) ? 0 : Integer.parseInt(accountNumber.getText());
+                    Integer accountNum = (!accountNumber.getText().isEmpty()) ? Integer.parseInt(accountNumber.getText()) : null;
                     String accNum = getAccountNumber(accountNum);
                     Platform.runLater(() -> {
                         if (success != null) success.accept(accNum);
@@ -179,62 +227,23 @@ public class AccountDialogController extends DialogController {
             }).start();
         }
         
-        private String getAccountNumber(int accNumWithoutKey) throws IOException, AuthServerException, JSONException {
+        private String getAccountNumber(Integer accNumWithoutKey) throws IOException, AuthServerException, JSONException {
             JSONArray data = dbClient.callProcedureAndGetAsJson(procedureNameForKey, accNumWithoutKey);
             System.out.println("getAccountNumber data: " + data);
             return (!data.isNull(0)) ? "" + data.getJSONObject(0).optInt(accountNumberJsonKey) : emptyServerResponse;
         }
 
-        @Override
-        public void generateNewNumber(Consumer<String> success, Consumer<Exception> error) {
-            if (balAccounts.valueProperty().isNotNull().get() && currencies.valueProperty().isNotNull().get()){
-                int accountNum = (accountNumber.getText().isEmpty()) ? 0 : Integer.parseInt(accountNumber.getText());
-                Function<JSONObject, ButtonType> warningFN = (JSONObject obj) -> {
-                    String headerText = getWarningMessageFrom(obj);
-                    String numberSp = String.format("|%20s|", GeneralConfig.getInstance().getTitleFor(accountNumberBundleKey));
-                    String descripSp = String.format("|%20s|", GeneralConfig.getInstance().getTitleFor(descripBundleKey));
-                    String contentText = numberSp + ":\t" + obj.optInt(accountNumberJsonKey) + "\n" +
-                                        descripSp + ":\t" + obj.optString(descripJsonKey);
-                    AlertMessage alert = new AlertMessage((Stage)formPane.getScene().getWindow(), Alert.AlertType.CONFIRMATION, headerText, contentText);
-                    return alert.showAndWait().get();
-                };
-                Integer clientID = (clients.getSelectionModel().getSelectedIndex() >= 0) ? clients.valueProperty().get().getRecId() : null;
-                askNewAccountNumberToDB(success, warningFN, error, accountNum,
-                                    clientID, balAccounts.getValue().getBalAcc(), currencies.getValue(), fitFlag);
-            }
-            else {
-                success.accept("");
-            }
-        }
-        
-        private void askNewAccountNumberToDB(Consumer<String> success, Function<JSONObject, ButtonType> warning, Consumer<Exception> error,
-                                        int accNum, Integer clientId, int balAcc, String iso, int fitflag) {
+        public void generateNewNumber(Consumer<JSONObject> success, Consumer<Exception> error,
+                                        Integer accNum, Integer clientId, int balAcc, String iso) {
             new Thread(() -> {
                 try {
-                    JSONArray data = dbClient.callProcedureAndGetAsJson(procedureNameForNew, accNum, clientId, balAcc, iso, fitflag);
+                    JSONArray data = dbClient.callProcedureAndGetAsJson(procedureNameForNew, accNum, clientId, balAcc, iso, fitFlag);
                     System.out.println("account data: " + data);
                     if (!data.isNull(0)){
                         JSONObject obj = data.getJSONObject(0);
-                        if (obj.length() == 1 || obj.has(accountNewJsonKey)){
-                            Platform.runLater(() -> {
-                                if (success != null) {
-                                    fitFlag = obj.optInt(fitFlagJsonKey);
-                                    success.accept("" + obj.optInt(accountNumberJsonKey));
-                                }
-                            });
-                        }
-                        else {
-                            Platform.runLater(() -> {
-                                if (warning != null){
-                                    if (warning.apply(obj).equals(ButtonType.OK)){
-                                        int newAccNum = obj.optInt(accountNumberJsonKey);
-                                        int newFitFlag = obj.optInt(fitFlagJsonKey);
-                                        askNewAccountNumberToDB(success, warning, error, 
-                                                            newAccNum, clientId, balAcc, iso, newFitFlag);
-                                    }
-                                }
-                            });
-                        }
+                        Platform.runLater(() -> {
+                            if (success != null) success.accept(obj);
+                        });
                     }
                 } catch (IOException | AuthServerException | JSONException  ex) {
                     Platform.runLater(() -> {
@@ -245,22 +254,26 @@ public class AccountDialogController extends DialogController {
             }).start();
         }
         
-        private String getWarningMessageFrom(JSONObject obj){
+        public String getWarningMessageFrom(JSONObject obj){
             String key = "";
             if (obj.has(accountExistsJsonKey)){
-                key = accountExistsJsonKey;
+                key = obj.optString(accountExistsJsonKey);
             }
             else if (obj.has(accountInOtherISOJsonKey)){
-                key = accountInOtherISOJsonKey;
+                key = obj.optString(accountInOtherISOJsonKey);
             }
             else if (obj.has(accountNewJsonKey)){
-                key = accountNewJsonKey;
+                key = obj.optString(accountNewJsonKey);
             }
             return GeneralConfig.getInstance().getTitleFor(key);
         }
         
         public void resetFitFlag(){
             fitFlag = 0;
+        }
+        
+        public void setFitFlag(int value){
+            fitFlag = value;
         }
     }
 }

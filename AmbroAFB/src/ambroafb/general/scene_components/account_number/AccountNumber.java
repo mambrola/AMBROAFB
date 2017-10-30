@@ -5,18 +5,14 @@
  */
 package ambroafb.general.scene_components.account_number;
 
-import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import java.io.IOException;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -39,16 +35,11 @@ public class AccountNumber extends HBox {
     private final Button key = new Button();
     private final Button next = new Button();
     
-    private NumberGenerateManager numberGeneratorManager;
-    
     private final String contentPattern = "[\\d-]*";
     
     private final double fieldDefaultPrefWidth = 10;
     private final String keyButtonSymbol = "\uD83D\uDD11";
     private final String nextButtonSymbol = "\u21D2";
-    
-    private final Consumer<String> successFn;
-    private final Consumer<Exception> errorFn;
     
     public AccountNumber(){
         super();
@@ -61,15 +52,6 @@ public class AccountNumber extends HBox {
             }
         });
         
-        key.setOnAction(this::keyAction);
-        next.setOnAction(this::nextAction);
-        
-        successFn = (String accNum) -> {
-            accountNumber.setText(accNum);
-        };
-        errorFn = (Exception ex) -> {
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getMessage(), "").showAlert();
-        };
     }
     
     private void assignLoader(){
@@ -97,32 +79,16 @@ public class AccountNumber extends HBox {
         getChildren().addAll(accountNumber, key, next);
     }
     
-    /**
-     * The method sets number generate manager that can generate key for account number and create new.
-     * @param nmg Account number generator abstraction.
-     */
-    public void setNumberGenerateManager(NumberGenerateManager nmg){
-        numberGeneratorManager = nmg;
+    public Button getKey(){
+        return key;
     }
     
-    /**
-     * Generates account number last digit.
-     * @param event 
-     */
-    private void keyAction(ActionEvent event){
-        if (numberGeneratorManager != null){
-            numberGeneratorManager.generateKeyFor(successFn, errorFn);
-        }
+    public Button getNext(){
+        return next;
     }
     
-    /**
-     * Generate new account number.
-     * @param event 
-     */
-    private void nextAction(ActionEvent event){
-        if (numberGeneratorManager != null){
-            numberGeneratorManager.generateNewNumber(successFn, errorFn);
-        }
+    public TextField getField(){
+        return accountNumber;
     }
     
     /**
@@ -138,7 +104,7 @@ public class AccountNumber extends HBox {
      * @param number 
      */
     public void setText(String number){
-        
+        accountNumber.setText(number);
     }
     
     /**
