@@ -88,16 +88,19 @@ public class BalanceAccountTreeComboBox extends ComboBox<BalanceAccount> {
                     @Override 
                     public void updateItem(BalanceAccount item, boolean empty) {
                         super.updateItem(item, empty);
-                        if (item == null || empty){
-                            return;
-                        }
-                        if (!item.isLeaf()){
-                            setDisable(true);
+                        if (item == null || empty){ // This is need for CellFactory specification
+                            setText(null);
                         }
                         else {
-                            setTextFill(Color.BLACK);
+                            setText(item.toString());
+                            if (item.isLeaf()){
+                                setTextFill(Color.BLACK);
+                                setDisable(false); // This is need for enable leaf items. Without it the items numeration will disable leaf items too.
+                            }
+                            else {
+                                setDisable(true); // This is need for disable leaf items.
+                            }
                         }
-                        setText(item.toString());
                     }
             };
             return cell;
