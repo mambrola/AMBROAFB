@@ -329,7 +329,7 @@ public class EditorPanelController implements Initializable {
                     cloneOfSelected = selected.cloneWithoutID();
                 }
 
-                Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.ADD_SAMPLE, selected);
+                Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.ADD_SAMPLE, cloneOfSelected);
                 EditorPanelable result = dialog.getResult();
                 if (result != null) {
                     tableData.add(result);
