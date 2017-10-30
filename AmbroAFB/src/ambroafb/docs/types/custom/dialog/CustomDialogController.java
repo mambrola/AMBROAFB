@@ -51,7 +51,7 @@ public class CustomDialogController extends DialogController {
         lsComp.setDialogType(buttonType);
         formPane.getChildren().add(0, lsComp);
         
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             ((Doc)sceneObj).setDocDate(LocalDate.now().toString());
             ((Doc)sceneObj).setDocInDocDate(LocalDate.now().toString());
             ((Doc)sceneObj).amountProperty().set(""); // for empty amount field.

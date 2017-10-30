@@ -21,7 +21,7 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
     private Account account;
     private final Account accountBackup;
     
-    public AccountDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+    public AccountDialog(Stage owner, Names.EDITOR_BUTTON_TYPE buttonType, EditorPanelable object) {
         super(owner, buttonType, "/ambroafb/accounts/dialog/AccountDialog.fxml", "account_dialog_title");
     
         if (object == null)

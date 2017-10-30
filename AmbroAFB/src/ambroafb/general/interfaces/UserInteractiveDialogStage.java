@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -53,6 +54,35 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         editorButtonType = buttonType;
     }
     
+    /**
+     * The method sets icon and title for stage according to type.
+     * @param type The dialog type.
+     * @param classNameBundleKey The object bundle key that dialog it is.
+     */
+    public void setFrameFeatures(Names.EDITOR_BUTTON_TYPE type, String classNameBundleKey){
+        String titleByTypeBundleKey;
+        String iconPath = "/images/";
+        switch (type){
+            case ADD:
+                titleByTypeBundleKey = "new";
+                iconPath += "new.png";
+                break;
+            case ADD_BY_SAMPLE:
+                titleByTypeBundleKey = type.name().toLowerCase();
+                iconPath += "clone.png";
+                break;
+            default:
+                titleByTypeBundleKey = type.name().toLowerCase();
+                iconPath += type.name().toLowerCase() + ".png";
+                break;
+        }
+        String titleByType = GeneralConfig.getInstance().getTitleFor(titleByTypeBundleKey);
+        String titleByClass = GeneralConfig.getInstance().getTitleFor(classNameBundleKey);
+        setTitle(titleByClass + ":  " + titleByType);
+
+        this.getIcons().add(new Image(iconPath));
+    }
+    
     public void setDataChangeProvider(DataChangeProvider provider){
         this.dataChangeProvider = provider;
     }
@@ -84,7 +114,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
                         dataChangeProvider.editOneToDB(getSceneObject(), builSuccessFunction(), getErrorFunction());
                     break;
                 case ADD:
-                case ADD_SAMPLE:
+                case ADD_BY_SAMPLE:
                         dataChangeProvider.saveOneToDB(getSceneObject(), builSuccessFunction(), getErrorFunction());
                     break;
                 case VIEW:
@@ -126,7 +156,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         switch(editorButtonType){
             case EDIT: 
             case ADD:
-            case ADD_SAMPLE:
+            case ADD_BY_SAMPLE:
                 boolean anyFieldWasChanged = anyComponentChanged();
                 if (anyFieldWasChanged) {
                     String alertText = GeneralConfig.getInstance().getTitleFor("dialog_cancel_confirm");

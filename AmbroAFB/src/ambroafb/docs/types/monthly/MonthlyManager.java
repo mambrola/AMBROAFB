@@ -74,7 +74,7 @@ public class MonthlyManager implements DocManager {
         if (object == null){
             dialog = new DocInOrderDialog(object, type, owner, StageTitleBundleKey);
         }
-        else if (type.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+        else if (type.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             Optional<Doc> optDoc = ((DocInOrder)object).getDocs().stream().filter((doc) -> doc.isParentDoc()).findFirst();
             dialog = (optDoc.isPresent()) ? new CustomDialog(optDoc.get(), type, owner) : new DocInOrderDialog(object, type, owner, StageTitleBundleKey);
         }

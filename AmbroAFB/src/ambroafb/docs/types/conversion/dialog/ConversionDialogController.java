@@ -133,7 +133,7 @@ public class ConversionDialogController extends DialogController {
 
     @Override
     protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             ((Conversion)sceneObj).setDocDate(LocalDate.now().toString());
             ((Conversion)sceneObj).setDocInDocDate(LocalDate.now().toString());
             ((Conversion)sceneObj).sellAmountProperty().set(""); // for empty amount field.

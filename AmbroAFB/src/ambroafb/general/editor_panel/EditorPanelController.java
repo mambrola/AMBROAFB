@@ -297,7 +297,7 @@ public class EditorPanelController implements Initializable {
             }
             
             Class dialogClass = Utils.getClassByName(getClassName(CLASS_TYPE.DIALOG));
-            Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, cloneOfSelected, EDITOR_BUTTON_TYPE.ADD_SAMPLE, (Stage) exit.getScene().getWindow());
+            Dialogable dialog = (Dialogable) Utils.getInstanceOfClass(dialogClass, new Class[]{EditorPanelable.class, EDITOR_BUTTON_TYPE.class, Stage.class}, cloneOfSelected, EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE, (Stage) exit.getScene().getWindow());
             
             EditorPanelable result = dialog.getResult();
             if (result != null) {
@@ -329,7 +329,7 @@ public class EditorPanelController implements Initializable {
                     cloneOfSelected = selected.cloneWithoutID();
                 }
 
-                Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.ADD_SAMPLE, cloneOfSelected);
+                Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE, cloneOfSelected);
                 EditorPanelable result = dialog.getResult();
                 if (result != null) {
                     tableData.add(result);

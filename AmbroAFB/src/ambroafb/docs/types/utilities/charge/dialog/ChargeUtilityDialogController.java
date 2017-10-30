@@ -101,7 +101,7 @@ public class ChargeUtilityDialogController extends DialogController {
 
     @Override
     protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             ((ChargeUtility)sceneObj).setDocDate(LocalDate.now().toString());
             ((ChargeUtility)sceneObj).setDocInDocDate(LocalDate.now().toString());
             ((ChargeUtility)sceneObj).amountProperty().set("");

@@ -248,7 +248,7 @@ public class InvoiceDialogController extends DialogController {
         if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
             makeActionasForDialogTypeADD();
         }
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             makeActionsForDialogTypeAddBySample();
         }
         processFinanceData(((Invoice)sceneObj).getInvoiceFinance());

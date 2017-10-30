@@ -24,7 +24,7 @@
             </tooltip>
             <graphic>
                 <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="/images/delete2.png" />
+                    <Image url="/images/delete.png" />
                 </ImageView>
             </graphic>
         </Button>
@@ -34,7 +34,7 @@
             </tooltip>
             <graphic>
                 <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="/images/edit2.png" />
+                    <Image url="/images/edit.png" />
                 </ImageView>
             </graphic>
         </Button>

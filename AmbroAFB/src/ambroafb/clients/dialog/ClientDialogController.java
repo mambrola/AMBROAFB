@@ -213,7 +213,7 @@ public class ClientDialogController extends DialogController {
             statusProperty.bind(client.statusProperty()); // static variable ???????????????
         }
         
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             
         }
     }

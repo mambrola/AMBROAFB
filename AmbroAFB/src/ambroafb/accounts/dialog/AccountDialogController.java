@@ -182,7 +182,7 @@ public class AccountDialogController extends DialogController {
         };
         clients.fillComboBoxWithClientsAndPartners(setClientbyId);
         
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_SAMPLE)){
+        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             ((Account)sceneObj).setDateOpen(LocalDate.now().toString());
             ((Account)sceneObj).setDateClose("");
             ((Account)sceneObj).accountNumberProperty().set("");
