@@ -11,11 +11,11 @@
 <?import javafx.scene.layout.*?>
 
 <HBox   
-    fx:id = "formNode"
-    alignment="CENTER_LEFT" 
-    stylesheets="/styles/css/editorpanel.css"
-    xmlns:fx="http://javafx.com/fxml/1" 
-    fx:controller="ambroafb.docs.doc_editor_panel.DocEditorPanelController">
+        fx:id = "formNode"
+        alignment="CENTER_LEFT" 
+        stylesheets="/styles/css/editorpanel.css"
+        xmlns:fx="http://javafx.com/fxml/1" 
+        fx:controller="ambroafb.docs.doc_editor_panel.DocEditorPanelController">
     <children>
         <fx:include fx:id="exit" source="/ambroafb/general/exit_button/ExitButton.fxml"/>
         <Button fx:id="delete" onAction="#delete" >
