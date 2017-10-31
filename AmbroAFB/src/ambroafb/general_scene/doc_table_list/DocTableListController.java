@@ -7,7 +7,7 @@ package ambroafb.general_scene.doc_table_list;
 
 import ambro.AFilterableTableView;
 import ambroafb.docs.doc_editor_panel.DocEditorPanelController;
-import ambroafb.general.editor_panel.EditorPanelController;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.DataProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
@@ -142,13 +142,18 @@ public class DocTableListController extends ListingController {
         containerPane.getChildren().add(0, aview);
     }
 
-    @Override
-    public EditorPanelController getEditorPanelController() {
-        return null;
-    }
+//    @Override
+//    public EditorPanelController getEditorPanelController() {
+//        return null;
+//    }
 
     @Override
     public void removeElementsFromEditorPanel(String... componentFXids) {
         
+    }
+
+    @Override
+    public EditorPanel getEditorPanel() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

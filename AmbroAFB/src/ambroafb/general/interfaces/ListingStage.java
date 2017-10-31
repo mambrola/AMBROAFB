@@ -49,11 +49,11 @@ public abstract class ListingStage extends UserInteractiveStage {
         this.setScene(scene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            controller.getEditorPanelController().getExitButton().getOnAction().handle(null);
+            controller.getEditorPanel().getExitButton().getOnAction().handle(null);
             if(event != null) event.consume();
         });
         
-        StageUtils.stopStageWidthDecrease((Stage)this, () -> controller.getEditorPanelController().getPanelMinWidth());
+        StageUtils.stopStageWidthDecrease((Stage)this, () -> controller.getEditorPanel().getPanelMinWidth());
         StagesContainer.setSizeFor((Stage)this);
     }
     

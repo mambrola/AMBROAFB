@@ -8,6 +8,7 @@ package ambroafb.general_scene.tree_table_list;
 import ambro.AFilterableTreeTableView;
 import ambroafb.balance_accounts.*;
 import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
@@ -71,10 +72,10 @@ public class TreeTableListController extends ListingController {
 //        new Thread(new BalanceAccountsFromDB(roots, selectedIndex)).start();
     }
     
-    @Override
-    public EditorPanelController getEditorPanelController(){
-        return editorPanelController;
-    }
+//    @Override
+//    public EditorPanelController getEditorPanelController(){
+//        return editorPanelController;
+//    }
     
     /**
      * The method checks already exist account in tree or not. The logic is following:
@@ -186,6 +187,11 @@ public class TreeTableListController extends ListingController {
     @Override
     public void removeElementsFromEditorPanel(String... componentFXids) {
         
+    }
+
+    @Override
+    public EditorPanel getEditorPanel() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

@@ -6,7 +6,6 @@
 package ambroafb.general_scene.table_list;
 
 import ambro.AFilterableTableView;
-import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.DataProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
@@ -32,9 +31,6 @@ import org.controlsfx.control.MaskerPane;
 public class TableListController extends ListingController {
 
     private AFilterableTableView<EditorPanelable> aview;
-    
-    @FXML
-    private EditorPanelController editorPanelController;
     
     @FXML
     private MaskerPane masker;
@@ -107,20 +103,14 @@ public class TableListController extends ListingController {
         aview = new AFilterableTableView<>(content);
         aview.setId("aview");
         aview.setBundle(bundle);
-        editorPanelController.buttonsMainPropertysBinder(aview);
-        editorPanelController.setTableDataList(aview, contents);
-
+        editorPanel.buttonsMainPropertysBinder(aview);
+        editorPanel.setTableDataList(aview, contents);
         containerPane.getChildren().add(0, aview);
     }
     
     @Override
     public void removeElementsFromEditorPanel(String... componentFXids){
-        editorPanelController.removeButtonsByFxIDs(componentFXids);
+        editorPanel.removeButtonsByFxIDs(componentFXids);
     }
     
-    @Override
-    public EditorPanelController getEditorPanelController() {
-        return editorPanelController;
-    }
-
 }
