@@ -15,9 +15,10 @@ public interface Dialogable {
     
     /**
      * The method gets dialog result.
+     * @param <T>
      * @return The object that change by dialog stage.
      */
-    public EditorPanelable getResult();
+    public <T> T getResult();
     
     /**
      * The method returns dialog scene.

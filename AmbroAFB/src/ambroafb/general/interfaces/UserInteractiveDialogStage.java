@@ -108,14 +108,14 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
                 case DELETE:
                     String alertText = GeneralConfig.getInstance().getTitleFor("dialog_delete_confirm");
                     if (new AlertMessage(this, Alert.AlertType.CONFIRMATION, alertText, "").showAndWait().get().equals(ButtonType.OK))
-                        dataChangeProvider.deleteOneFromDB(getSceneObject().getRecId(), builSuccessFunction(), getErrorFunction());
+                        dataChangeProvider.deleteOneFromDB(getSceneObject().getRecId(), builDeleteSuccessAction(), getErrorAction());
                     break;
                 case EDIT: 
-                        dataChangeProvider.editOneToDB(getSceneObject(), builSuccessFunction(), getErrorFunction());
+                        dataChangeProvider.editOneToDB(getSceneObject(), builEditSuccessAction(), getErrorAction());
                     break;
                 case ADD:
                 case ADD_BY_SAMPLE:
-                        dataChangeProvider.saveOneToDB(getSceneObject(), builSuccessFunction(), getErrorFunction());
+                        dataChangeProvider.saveOneToDB(getSceneObject(), builAddSuccessAction(), getErrorAction());
                     break;
                 case VIEW:
                     close();
@@ -126,8 +126,19 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         }
     }
     
-    private Consumer<Object> builSuccessFunction(){
-        Consumer<Object> successFn = getSuccessFunction();
+    private Consumer<Boolean> builDeleteSuccessAction(){
+        Consumer<Boolean> successFn = getDeleteSuccessAction();
+        Consumer<Boolean> closeAction = (value) -> close();
+        return (successFn == null) ? closeAction : successFn.andThen(closeAction);
+    }
+    
+    private Consumer<Object> builEditSuccessAction(){
+        Consumer<Object> successFn = getEditSuccessAction();
+        return (successFn == null) ? closeFn : successFn.andThen(closeFn);
+    }
+    
+    private Consumer<Object> builAddSuccessAction(){
+        Consumer<Object> successFn = getAddSuccessAction();
         return (successFn == null) ? closeFn : successFn.andThen(closeFn);
     }
     
@@ -135,7 +146,23 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
      *  The function will execute before stage close, if DB action was successful.
      * @return The action that will execute if get success  from DB.
      */
-    protected Consumer<Object> getSuccessFunction(){
+    protected Consumer<Boolean> getDeleteSuccessAction(){
+        return null;
+    }
+    
+    /**
+     *  The function will execute before stage close, if DB action was successful.
+     * @return The action that will execute if get success  from DB.
+     */
+    protected Consumer<Object> getEditSuccessAction(){
+        return null;
+    }
+    
+    /**
+     *  The function will execute before stage close, if DB action was successful.
+     * @return The action that will execute if get success  from DB.
+     */
+    protected Consumer<Object> getAddSuccessAction(){
         return null;
     }
     
@@ -143,7 +170,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
      *  The function will execute before stage close, if DB action was not successful.
      * @return The action that will execute if get error from DB.
      */
-    protected Consumer<Exception> getErrorFunction(){
+    protected Consumer<Exception> getErrorAction(){
         return  (ex) -> {
                     new AlertMessage(this, Alert.AlertType.ERROR, ex, ex.getMessage(), getTitle()).showAndWait();
                 };

@@ -5,6 +5,7 @@
  */
 package ambroafb.docs.types.conversion;
 
+import static ambroafb.clients.Client.DB_VIEW_NAME;
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.conversion.dialog.ConversionDialog;
@@ -12,6 +13,8 @@ import ambroafb.general.DBUtils;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.EditorPanelableManager;
+import ambroafb.general.interfaces.Filterable;
 import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
 import javafx.stage.Stage;
@@ -21,10 +24,15 @@ import org.json.JSONObject;
  *
  * @author dkobuladze
  */
-public class ConversionManager implements DocManager {
+public class ConversionManager extends EditorPanelableManager implements DocManager {
 
     private final String DB_DELETE_PROCEDURE_NAME = "doc_delete";
-    private final String DB_VIEW_NAME = "docs_whole";
+//    private final String DB_VIEW_NAME = "docs_whole";
+    
+    public ConversionManager(){
+        dataFetchProvider = new ConversionDataFetchProvider();
+        dataChangeProvider = new ConversionDataChangeProvider();
+    }
     
     @Override
     public EditorPanelable getOneFromDB(int id) {
@@ -72,6 +80,17 @@ public class ConversionManager implements DocManager {
     public Dialogable getDocDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         ConversionDialog dialog = new ConversionDialog(object, type, owner);
         return dialog;
+    }
+
+    @Override
+    public Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
+        ConversionDialog dialog = new ConversionDialog(object, type, owner);
+        return dialog;
+    }
+
+    @Override
+    public Filterable getFilterFor(Stage owner) {
+        return null;
     }
     
 }

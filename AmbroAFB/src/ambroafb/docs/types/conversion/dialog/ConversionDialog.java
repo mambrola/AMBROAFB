@@ -5,11 +5,15 @@
  */
 package ambroafb.docs.types.conversion.dialog;
 
+import ambroafb.docs.Doc;
 import ambroafb.docs.types.conversion.Conversion;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -20,6 +24,8 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
 
     private Conversion conversion;
     private final Conversion conversionBackup;
+    
+    private final List<Doc> conversionDocs = new ArrayList<>();
     
     public ConversionDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         super(owner, "/ambroafb/docs/types/conversion/dialog/ConversionDialog.fxml", "doc_conversion_dialog_title");
@@ -34,14 +40,30 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
     }
 
     @Override
-    public EditorPanelable getResult() {
+    public List<Doc> getResult() {
         showAndWait();
-        return conversion;
+        return conversionDocs;
     }
 
     @Override
     public void operationCanceled() {
-        conversion = null;
+        
     }
 
+    @Override
+    protected Consumer<Object> getEditSuccessAction() {
+        Consumer<Object> consumer = (obj) -> {
+            conversionDocs.clear();
+            conversionDocs.addAll((ArrayList<Doc>)obj);
+        };
+        return consumer;
+    }
+
+    
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return getEditSuccessAction();
+    }
+
+    
 }

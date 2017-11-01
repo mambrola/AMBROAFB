@@ -6,7 +6,7 @@
 package ambroafb.general.interfaces;
 
 import ambroafb.general.editor_panel.EditorPanel;
-import ambroafb.general.editor_panel.custom.CustomEditorPanel;
+import ambroafb.general.editor_panel.custom.StandardEditorPanel;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -25,7 +25,7 @@ public abstract class ListingController implements Initializable {
     protected BorderPane formPane;
     
     protected DataFetchProvider dataFetchProvider;
-    protected EditorPanel editorPanel = new CustomEditorPanel();
+    protected EditorPanel editorPanel = new StandardEditorPanel();
     
     /**
      * Initializes the controller class.

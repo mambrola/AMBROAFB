@@ -22,12 +22,12 @@ import org.json.JSONObject;
 public class AccountDataFetchProvider extends DataFetchProvider {
 
     public AccountDataFetchProvider(){
-        DB_VEIW_NAME = "accounts_whole";
+        DB_VIEW_NAME = "accounts_whole";
     }
 
     @Override
     public List<Account> getFilteredBy(JSONObject params) throws IOException, AuthServerException {
-        return getObjectsListFromDB(Account.class, DB_VEIW_NAME, params);
+        return getObjectsListFromDB(Account.class, DB_VIEW_NAME, params);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class AccountDataFetchProvider extends DataFetchProvider {
     @Override
     public Account getOneFromDB(int recId) throws IOException, AuthServerException {
         JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
-        return getObjectFromDB(Account.class, DB_VEIW_NAME, params);
+        return getObjectFromDB(Account.class, DB_VIEW_NAME, params);
     }
 
 }

@@ -11,6 +11,7 @@ import ambroafb.docs.types.custom.CustomManager;
 import ambroafb.docs.types.monthly.MonthlyManager;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
 import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
+import ambroafb.general.interfaces.EditorPanelableManager;
 
 /**
  *
@@ -47,4 +48,7 @@ public class DocManagersFactory {
         }
     }
     
+    public static EditorPanelableManager getEPManager(Doc doc){
+        return new ConversionManager();
+    }
 }

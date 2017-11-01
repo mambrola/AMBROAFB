@@ -54,6 +54,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -270,7 +271,11 @@ public class MainController implements Initializable {
         Stage docsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Doc.class.getSimpleName());
         if(docsStage == null || !docsStage.isShowing()){
             TableList docs = new TableList(AmbroAFB.mainStage, Doc.class, stageTitle);
-            docs.getController().setEditorPanel(new DocEditorPanel());
+            docs.setEPManager(new ambroafb.docs.DocManager());
+            DocEditorPanel docEditorPanel = new DocEditorPanel();
+            docEditorPanel.addComponent(4, new TextField());
+            docEditorPanel.removeComponents("#add");
+            docs.getController().setEditorPanel(docEditorPanel);
             docs.show();
             
             Filterable filter = new DocFilter(docs);

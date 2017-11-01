@@ -12,6 +12,9 @@ import ambro.AView;
 import ambroafb.AmbroAFB;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.Names;
+import ambroafb.general.StageUtils;
+import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.io.IOException;
 import java.net.URL;
@@ -25,6 +28,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
@@ -35,6 +39,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.stage.Stage;
 
 /**
  *
@@ -85,21 +90,32 @@ public abstract class EditorPanel extends HBox implements Initializable {
     }
     
     private void buttonsActions(){
-        delete.setOnAction(this::delete);
-        edit.setOnAction(this::edit);
-        view.setOnAction(this::view);
-        add.setOnAction(this::add);
-        addBySample.setOnAction(this::addBySample);
-        refresh.setOnAction(this::refresh);
+        delete.setOnAction(this::deleteAction);
+        edit.setOnAction(this::editAction);
+        view.setOnAction(this::viewAction);
+        add.setOnAction(this::addAction);
+        addBySample.setOnAction(this::addBySampleAction);
+        refresh.setOnAction(this::refreshAction);
     }
     
         /**
      *  Removes Buttons from editor panel.
      * @param fxIds fx:ids array which must be removed.
      */
-    public void removeButtonsByFxIDs(String... fxIds){
+    public void removeComponents(String... fxIds){
         for (String fxId : fxIds) {
             this.getChildren().remove(this.lookup(fxId));
+        }
+    }
+    
+    /**
+     * The method adds new component to the editor panel on specific index from left side.
+     * @param onIndex The index where new component will be placed (Numeration starts from 0).
+     * @param node The new component.
+     */
+    public void addComponent(int onIndex, Node node){
+        if (onIndex >= 0){
+            getChildren().add(onIndex, node);
         }
     }
     
@@ -180,6 +196,45 @@ public abstract class EditorPanel extends HBox implements Initializable {
         outerController = controller;
     }
     
+    /**
+     *  The function checks any type of dialog or filter stage already show or not.
+     * @return False - if filter or any type of dialog stage  is  showing. True - otherwise.
+     */
+    public final boolean allowToOpenDialogOrFilter(){
+        boolean allow = true;
+        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        if(dialogStage != null && dialogStage.isShowing()){
+            dialogStage.requestFocus();
+            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+            allow = false;
+        }
+        return allow;
+    }
+    
+    private void deleteAction(ActionEvent event){
+        if (allowToOpenDialogOrFilter()) delete(event);
+    }
+    
+    private void editAction(ActionEvent event){
+        if (allowToOpenDialogOrFilter()) edit(event);
+    }
+    
+    private void viewAction(ActionEvent event){
+        if (allowToOpenDialogOrFilter()) view(event);
+    }
+    
+    private void addAction(ActionEvent event){
+        if (allowToOpenDialogOrFilter()) add(event);
+    }
+    
+    private void addBySampleAction(ActionEvent event){
+        if (allowToOpenDialogOrFilter()) addBySample(event);
+    }
+    
+    private void refreshAction(ActionEvent event){
+        if (allowToOpenDialogOrFilter()) refresh(event);
+    }
     
     protected abstract void componentsInitialize(URL location, ResourceBundle resources);
     public abstract void delete(ActionEvent event);

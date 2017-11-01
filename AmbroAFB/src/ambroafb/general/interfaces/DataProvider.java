@@ -25,7 +25,7 @@ public abstract class DataProvider {
     
     public static final JSONObject PARAM_FOR_ALL = new ConditionBuilder().build();
     
-    protected String DB_VEIW_NAME = "";
+    protected String DB_VIEW_NAME = "";
     
     /**
      *  The method calls DB procedure and gives parameters to it.

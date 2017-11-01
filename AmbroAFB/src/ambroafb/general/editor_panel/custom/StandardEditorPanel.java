@@ -26,9 +26,9 @@ import javafx.stage.Stage;
  *
  * @author dkobuladze
  */
-public class CustomEditorPanel extends EditorPanel {
+public class StandardEditorPanel extends EditorPanel {
 
-    public CustomEditorPanel() {
+    public StandardEditorPanel() {
         assignLoader();
     }
     

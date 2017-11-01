@@ -110,7 +110,7 @@ public class TableListController extends ListingController {
     
     @Override
     public void removeElementsFromEditorPanel(String... componentFXids){
-        editorPanel.removeButtonsByFxIDs(componentFXids);
+        editorPanel.removeComponents(componentFXids);
     }
     
 }

@@ -29,7 +29,7 @@ public abstract class DataChangeProvider extends DataProvider {
      * @param successAction
      * @param errorAction
      */
-    public void deleteOneFromDB(int recId, Consumer<Object> successAction, Consumer<Exception> errorAction){
+    public void deleteOneFromDB(int recId, Consumer<Boolean> successAction, Consumer<Exception> errorAction){
         new Thread(() -> {
             try {
                 Boolean deleted = deleteOneFromDB(recId);

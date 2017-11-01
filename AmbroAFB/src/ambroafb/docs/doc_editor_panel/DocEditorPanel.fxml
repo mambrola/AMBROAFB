@@ -110,7 +110,7 @@
                         </Label> 
                     </graphic>
                     <items>
-                        <MenuItem fx:id="addTransferUtility" text="%transfer" onAction="#addPaymentUtility" mnemonicParsing="false" />
+                        <MenuItem fx:id="addPaymentUtility" text="%transfer" onAction="#addPaymentUtility" mnemonicParsing="false" />
                         <MenuItem fx:id="addChargeUtility" text="%charge" onAction="#addChargeUtility" mnemonicParsing="false" />
                     </items>
                 </Menu>
