@@ -19,7 +19,6 @@ import ambroafb.licenses.helper.LicenseFinance;
 import ambroafb.params_general.ParamGeneral;
 import ambroafb.params_general.helper.ParamGeneralDBResponse;
 import authclient.AuthServerException;
-import authclient.Response;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
@@ -329,21 +328,21 @@ public class DBUtils {
     }
     
     
-    // Concrete class methods:
-    public static Invoice saveInvoice(Object invoice){
-        try {
-            JSONObject targetJson = Utils.getJSONFromClass(invoice);
-            
-            System.out.println("invoice target json: " + targetJson);
-            
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            Response r = dbClient.post("invoices/fromAfb?lang=" + dbClient.getLang(), targetJson.toString());
-            return Utils.getClassFromJSON(invoice.getClass(), new JSONObject(r.getDataAsString()));
-        } catch (IOException | AuthServerException | JSONException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
+//    // Concrete class methods:
+//    public static Invoice saveInvoice(Object invoice){
+//        try {
+//            JSONObject targetJson = Utils.getJSONFromClass(invoice);
+//            
+//            System.out.println("invoice target json: " + targetJson);
+//            
+//            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+//            Response r = dbClient.post("invoices/fromAfb?lang=" + dbClient.getLang(), targetJson.toString());
+//            return Utils.getClassFromJSON(invoice.getClass(), new JSONObject(r.getDataAsString()));
+//        } catch (IOException | AuthServerException | JSONException ex) {
+//            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
+//    }
     
     
     public static ParamGeneral saveParamGeneral(ParamGeneral paramGeneral, String procName){
@@ -528,6 +527,7 @@ public class DBUtils {
         return result;
     }
     
+    @Deprecated
     public static void callInvoiceExistedLicenses(int invoiceId, 
                                                     Consumer<List<PartOfLicense>> licensesCnsm,
                                                     Consumer<List<LicenseFinance>> licenseFinancesCnsm,

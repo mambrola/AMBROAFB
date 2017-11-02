@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.clients.helper;
+package ambroafb.invoices.helper;
 
-import ambroafb.clients.ClientDataFetchProvider;
+import ambroafb.invoices.InvoiceDataFetchProvider;
 import authclient.AuthServerException;
 import java.io.IOException;
 import java.util.List;
@@ -19,35 +19,39 @@ import javafx.scene.control.ComboBox;
  *
  * @author dkobuladze
  */
-public class ClientStatusComboBox extends ComboBox<ClientStatus> {
+public class InvoiceStatusClarifyComboBox extends ComboBox<InvoiceStatusClarify> {
     
-    private final ObservableList<ClientStatus> items = FXCollections.observableArrayList();
-    private final ClientDataFetchProvider dataFetchProvider = new ClientDataFetchProvider();
+    private final ObservableList<InvoiceStatusClarify> items = FXCollections.observableArrayList();
+    private final InvoiceDataFetchProvider dataFetchProvider = new InvoiceDataFetchProvider();
     
-    public ClientStatusComboBox(){
+    public InvoiceStatusClarifyComboBox(){
         super();
         setItems(items);
+        
     }
     
-    public void fillComboBox(Consumer<ObservableList<ClientStatus>> extraAction){
-        new Thread(new FetchDataFromDB(extraAction)).start();
+    
+    public void fillComboBox(Consumer<ObservableList<InvoiceStatusClarify>> extraAxtion){
+        new Thread(new FetchDataFromDB(extraAxtion)).start();
     }
+
+    
     
     private class FetchDataFromDB implements Runnable {
+
+        private final Consumer<ObservableList<InvoiceStatusClarify>> consumer;
         
-        private final Consumer<ObservableList<ClientStatus>> consumer;
-        
-        public FetchDataFromDB(Consumer<ObservableList<ClientStatus>> consumer){
+        public FetchDataFromDB(Consumer<ObservableList<InvoiceStatusClarify>> consumer){
             this.consumer = consumer;
         }
         
         @Override
         public void run() {
             try {
-                List<ClientStatus> statuses = dataFetchProvider.getClientStatuses();
-                statuses.sort((ClientStatus status1, ClientStatus status2) -> status1.compateById(status2));
+                List<InvoiceStatusClarify> clarifies = dataFetchProvider.getAllIvoiceClarifiesFromDB();
+                clarifies.sort((InvoiceStatusClarify clarify1, InvoiceStatusClarify clarify2) -> clarify1.compareById(clarify2));
                 Platform.runLater(() -> {
-                    items.setAll(statuses);
+                    items.setAll(clarifies);
                     if (consumer != null){
                         consumer.accept(items);
                     }
@@ -57,4 +61,5 @@ public class ClientStatusComboBox extends ComboBox<ClientStatus> {
         }
         
     }
+    
 }

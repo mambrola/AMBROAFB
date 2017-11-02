@@ -22,7 +22,7 @@ public class InvoiceDialog extends UserInteractiveDialogStage implements Dialoga
     private final Invoice invoiceBackup;
     
     public InvoiceDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "/ambroafb/invoices/dialog/InvoiceDialog.fxml", "invoice_dialog_title");
+        super(owner, buttonType, "/ambroafb/invoices/dialog/InvoiceDialog.fxml");
         
         if (object == null)
             invoice = new Invoice();
@@ -44,4 +44,10 @@ public class InvoiceDialog extends UserInteractiveDialogStage implements Dialoga
         invoice = null;
     }
 
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return invoice;
+    }
+
+    
 }

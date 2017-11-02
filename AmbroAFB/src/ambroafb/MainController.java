@@ -33,6 +33,7 @@ import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general_scene.table_list.TableList;
 import ambroafb.invoices.Invoice;
+import ambroafb.invoices.InvoiceManager;
 import ambroafb.invoices.filter.InvoiceFilter;
 import ambroafb.licenses.License;
 import ambroafb.licenses.filter.LicenseFilter;
@@ -199,6 +200,7 @@ public class MainController implements Initializable {
         Stage invoicesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Invoice.class.getSimpleName());
         if(invoicesStage == null || !invoicesStage.isShowing()){
             TableList invoices = new TableList(AmbroAFB.mainStage, Invoice.class, stageTitle);
+            invoices.setEPManager(new InvoiceManager());
             invoices.show();
             
             InvoiceFilter filter = new InvoiceFilter(invoices);
@@ -208,10 +210,10 @@ public class MainController implements Initializable {
                 invoices.close();
             }
             else {
-                Supplier<List<EditorPanelable>> fetchData = () -> {
-                                                        return new ArrayList(Invoice.getFilteredFromDB(model));
-                                                    };
-                invoices.getController().reAssignTable(fetchData);
+//                Supplier<List<EditorPanelable>> fetchData = () -> {
+//                                                        return new ArrayList(Invoice.getFilteredFromDB(model));
+//                                                    };
+                invoices.getController().reAssignTable(model);
             }
         }
         else {

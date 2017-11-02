@@ -8,17 +8,13 @@ package ambroafb.invoices;
 import ambro.AView;
 import ambroafb.clients.Client;
 import ambroafb.currencies.Currency;
-import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
-import ambroafb.invoices.filter.InvoiceFilterModel;
 import ambroafb.invoices.helper.InvoiceFinance;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceStatus;
@@ -26,9 +22,6 @@ import ambroafb.invoices.helper.InvoiceStatusClarify;
 import ambroafb.licenses.helper.LicenseFinance;
 import ambroafb.products.Product;
 import ambroafb.products.helpers.ProductDiscount;
-import authclient.db.ConditionBuilder;
-import authclient.db.DBClient;
-import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -38,7 +31,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -50,7 +42,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import org.json.JSONObject;
 
 
 /**
@@ -111,10 +102,6 @@ public class Invoice extends EditorPanelable {
     
     private final ObjectProperty<MonthCounterItem> months;
     private final BooleanProperty isLogined, isPaid;
-    
-    private static final String DB_REISSUINGS_TABLE = "invoice_reissuing_descrips";
-    private static final String DB_CLARIFIES_TABLE = "invoice_status_clarify_descrips";
-    private static final String DB_INVOICES_VIEW = "invoices_whole";
     
     private List<LicenseFinance> licenseFinanceses = new ArrayList<>();
     private InvoiceFinance invoiceFinace = new InvoiceFinance();
@@ -206,89 +193,6 @@ public class Invoice extends EditorPanelable {
         endDateObj.set(beginDateObj.get().plusMonths(monthValue).plusDays(dayValue));
     }
     
-    // DBService methods:
-    public static ArrayList<Invoice> getAllFromDB (){
-        JSONObject params = new ConditionBuilder().build();
-        ArrayList<Invoice> invoices = DBUtils.getObjectsListFromDB(Invoice.class, DB_INVOICES_VIEW, params);
-        invoices.sort((Invoice inv1, Invoice inv2) -> inv2.compareById(inv1));
-        return invoices;
-    }
-    
-    public static ArrayList<Invoice> getFilteredFromDB(FilterModel model){
-        InvoiceFilterModel invoiseFilterModel = (InvoiceFilterModel) model;
-        WhereBuilder whereBuilder = new ConditionBuilder().where().and("begin_date", ">=", invoiseFilterModel.getStartDateForDB(true))
-                    .and("begin_date", "<=", invoiseFilterModel.getStartDateForDB(false))
-                    .and("end_date", ">=", invoiseFilterModel.getEndDateForDB(true))
-                    .and("end_date", "<=", invoiseFilterModel.getEndDateForDB(false));
-        
-        if (invoiseFilterModel.isSelectedConcreteClient()){
-            whereBuilder.and("client_id", "=", invoiseFilterModel.getSelectedClientId());
-        }
-        if (invoiseFilterModel.hasSelectedClarifies()){
-            whereBuilder = whereBuilder.andGroup();
-            for(InvoiceStatusClarify invClarify : invoiseFilterModel.getCheckedClarifies()){
-                whereBuilder = whereBuilder.or("status_clarify", "=", invClarify.getInvoiceStatusClarifyId());
-            }
-            whereBuilder = whereBuilder.closeGroup();
-        }
-        if (invoiseFilterModel.hasSelectedReissuings()){
-            whereBuilder = whereBuilder.andGroup();
-            for(InvoiceReissuing invReissuing : invoiseFilterModel.getCheckedReissuings()){
-                whereBuilder = whereBuilder.or("reissuing", "=", invReissuing.getInvoiceReissuingId());
-            }
-            whereBuilder = whereBuilder.closeGroup();
-        }
-        
-        JSONObject params = whereBuilder.condition().build();
-        ArrayList<Invoice> invoices = DBUtils.getObjectsListFromDB(Invoice.class, DB_INVOICES_VIEW, params);
-        invoices.sort((Invoice inv1, Invoice inv2) -> inv2.compareById(inv1));
-        return invoices;
-    }
-    
-    public static ArrayList<InvoiceReissuing> getAllIvoiceReissuingsesFromDB(){
-        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
-
-        return DBUtils.getObjectsListFromDB(InvoiceReissuing.class, DB_REISSUINGS_TABLE, params);
-    }
-    
-    public static ArrayList<InvoiceStatusClarify> getAllIvoiceClarifiesFromDB(){
-        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
-
-        return DBUtils.getObjectsListFromDB(InvoiceStatusClarify.class, DB_CLARIFIES_TABLE, params);
-    }
-    
-    public static Invoice getOneFromDB (int invoiceId){
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", invoiceId).condition().build();
-        Invoice invoiceFromDB = DBUtils.getObjectFromDB(Invoice.class, DB_INVOICES_VIEW, params);
-        
-        Consumer<List<LicenseFinance>> licensesFianceConsumer = (List<LicenseFinance> licenseFinances) -> {
-            invoiceFromDB.setLicenseFinances(licenseFinances);
-        };
-        
-        Consumer<InvoiceFinance> invoiceFianceConsumer = (InvoiceFinance invoiceFinanaceData) -> {
-            invoiceFromDB.setInvoiceFinances(invoiceFinanaceData);
-        };
-        
-        // licenses and client data gives from invoice_whole, so method does not need their consumers:
-        DBUtils.callInvoiceExistedLicenses(invoiceId, null, licensesFianceConsumer, invoiceFianceConsumer, null);
-        
-        return invoiceFromDB;
-    }
-    
-    
-    public static Invoice saveOneToDB(Invoice invoice) {
-        if (invoice == null) return null;
-        return DBUtils.saveInvoice(invoice);
-    }
-
-    
-    public static boolean deleteOneFromDB(int id) {
-        return DBUtils.deleteObjectFromDB("invoice_delete", id);
-    }
-    
-
     // Properties getters:
     public ObjectProperty<Client> clientProperty(){
         return clientObj;

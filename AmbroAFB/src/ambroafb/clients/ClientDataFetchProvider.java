@@ -37,7 +37,7 @@ public class ClientDataFetchProvider extends DataFetchProvider {
 
     @Override
     public List<Client> getFilteredBy(FilterModel model) throws IOException, AuthServerException {
-        final ClientFilterModel clientFilterModel = (ClientFilterModel) model;
+        ClientFilterModel clientFilterModel = (ClientFilterModel) model;
         WhereBuilder whereBuilder = new ConditionBuilder().where()
                                                 .and("created_time", ">=", clientFilterModel.getFromDateForDB())
                                                 .and("created_time", "<=", clientFilterModel.getToDateForDB());

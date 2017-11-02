@@ -13,11 +13,11 @@ import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
-import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceReissuing;
+import ambroafb.invoices.helper.InvoiceReissuingCheckComboBox;
 import ambroafb.invoices.helper.InvoiceStatusClarify;
+import ambroafb.invoices.helper.InvoiceStatusClarifyCheckComboBox;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -26,7 +26,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.controlsfx.control.CheckComboBox;
 
 /**
  *
@@ -40,11 +39,11 @@ public class InvoiceFilter extends UserInteractiveFilterStage implements Filtera
     @FXML
     private ClientComboBox clients;
     @FXML
-    private CheckComboBox<InvoiceReissuing> invoiceReissuings;
+    private InvoiceReissuingCheckComboBox invoiceReissuings;
     @FXML
     private FilterOkayCancelController okayCancelController;
     @FXML
-    private CheckComboBox<InvoiceStatusClarify> clarifyType;
+    private InvoiceStatusClarifyCheckComboBox clarifyType;
     
     private final InvoiceFilterModel invoiceFilterModel = new InvoiceFilterModel();
     
@@ -89,32 +88,23 @@ public class InvoiceFilter extends UserInteractiveFilterStage implements Filtera
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ArrayList<InvoiceStatusClarify> clarifies = Invoice.getAllIvoiceClarifiesFromDB();
-        
-//        System.out.println("Before sort");
-//        printClarifiesIDsList(clarifies);
-        
-        clarifies.sort((InvoiceStatusClarify clarify1, InvoiceStatusClarify clarify2) -> clarify1.compareById(clarify2));
-        
-//        System.out.println("After sort");
-//        printClarifiesIDsList(clarifies);
-        
-        clarifyType.getItems().setAll(clarifies);
-        
-        ArrayList<InvoiceReissuing> reissuings = Invoice.getAllIvoiceReissuingsesFromDB();
-        reissuings.sort((InvoiceReissuing reissuing1, InvoiceReissuing reissuing2) -> reissuing1.getRecId() - reissuing2.getRecId());
-        invoiceReissuings.getItems().setAll(reissuings);
-        
         startDateFrom.setValue(invoiceFilterModel.getStartDate(true));
         startDateTo.setValue(invoiceFilterModel.getStartDate(false));
         endDateFrom.setValue(invoiceFilterModel.getEndDate(true));
         endDateTo.setValue(invoiceFilterModel.getEndDate(false));
-        invoiceFilterModel.getCheckedClarifiesIndexes().stream().forEach((index) -> {
-            clarifyType.getCheckModel().check(index);
-        });
-        invoiceFilterModel.getCheckedReissuingsIndexes().stream().forEach((index) -> {
-            invoiceReissuings.getCheckModel().check(index);
-        });
+        Consumer<ObservableList<InvoiceStatusClarify>> selectedSavedClarifies = (clarifyList) -> {
+            invoiceFilterModel.getCheckedClarifiesIndexes().stream().forEach((index) -> {
+                clarifyType.getCheckModel().check(index);
+            });
+        };
+        clarifyType.fillComboBox(selectedSavedClarifies);
+        
+        Consumer<ObservableList<InvoiceReissuing>> selectedSavedReissuings = (resissuingList) -> {
+            invoiceFilterModel.getCheckedReissuingsIndexes().stream().forEach((index) -> {
+                invoiceReissuings.getCheckModel().check(index);
+            });
+        };
+        invoiceReissuings.fillComboBox(selectedSavedReissuings);
         
         Consumer<ObservableList<Client>> clientConsumer = (clientList) -> {
             Optional<Client> optClient = clientList.stream().filter((client) -> client.getRecId() == invoiceFilterModel.getSelectedClientId()).findFirst();
@@ -125,12 +115,12 @@ public class InvoiceFilter extends UserInteractiveFilterStage implements Filtera
         clients.fillComboBoxOnlyClientsWithALL(clientConsumer);
     }
     
-    private void printClarifiesIDsList(ArrayList<InvoiceStatusClarify> clarifies){
-        clarifies.stream().forEach((cl) -> {
-            System.out.print(cl.getRecId() + " ");
-        });
-        System.out.println("");
-    }
+//    private void printClarifiesIDsList(ArrayList<InvoiceStatusClarify> clarifies){
+//        clarifies.stream().forEach((cl) -> {
+//            System.out.print(cl.getRecId() + " ");
+//        });
+//        System.out.println("");
+//    }
 
     @Override
     protected FilterOkayCancelController getOkayCancelController() {

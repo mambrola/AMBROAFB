@@ -27,6 +27,7 @@ import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.helper.InvoiceFinance;
 import ambroafb.invoices.helper.InvoiceReissuing;
+import ambroafb.invoices.helper.InvoiceReissuingComboBox;
 import ambroafb.invoices.helper.PartOfLicense;
 import ambroafb.licenses.helper.LicenseFinance;
 import ambroafb.products.Product;
@@ -50,7 +51,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -82,7 +82,7 @@ public class InvoiceDialogController extends DialogController {
     @FXML
     private VBox formPane, financesLabelTextContainer, financesLabelNumberContainer;
     @FXML
-    private ComboBox<InvoiceReissuing> invoiceReissuings;
+    private InvoiceReissuingComboBox invoiceReissuings;
     @FXML
     private ADatePicker createdDate, endDate, revokedDate;
     @FXML
@@ -102,8 +102,6 @@ public class InvoiceDialogController extends DialogController {
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        invoiceReissuings.getItems().setAll(Invoice.getAllIvoiceReissuingsesFromDB());
-        
         clients.fillComboBoxOnlyClients(null);
 
         financesFromSuitedLicense = new RecalcFinancesInBackground();
@@ -267,8 +265,12 @@ public class InvoiceDialogController extends DialogController {
         ((Invoice)sceneObj).beginDateProperty().set(null); // It is needed for beginDate valuePropety listener, that it does not go to DB for finances.
         ((Invoice)sceneObj).beginDateProperty().set(LocalDate.now());
         
-        InvoiceReissuing defaultReissuing = invoiceReissuings.getItems().stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
-        ((Invoice)sceneObj).reissuingProperty().set(defaultReissuing);
+        Consumer<ObservableList<InvoiceReissuing>> selectDefaultReissuing = (reissuingList) -> {
+            InvoiceReissuing defaultReissuing = reissuingList.stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
+            ((Invoice)sceneObj).reissuingProperty().set(defaultReissuing);
+            ((Invoice)backupObj).reissuingProperty().set(defaultReissuing);
+        };
+        invoiceReissuings.fillComboBox(selectDefaultReissuing);
         backupObj.copyFrom(sceneObj);
     }
     

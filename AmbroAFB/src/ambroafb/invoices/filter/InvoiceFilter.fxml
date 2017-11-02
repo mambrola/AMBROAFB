@@ -8,6 +8,7 @@
 <?import org.controlsfx.control.*?>
 <?import ambro.*?>
 <?import ambroafb.clients.*?>
+<?import ambroafb.invoices.helper.*?>
 
 <ambroafb.general.DialogPanel   stylesheets="/styles/css/invoicefilter.css" 
                                 xmlns:fx="http://javafx.com/fxml/1">
@@ -50,13 +51,13 @@
                     <VBox>
                         <children>
                             <Label text="%invoice_status_clarify" />
-                            <CheckComboBox fx:id="clarifyType" />
+                            <InvoiceStatusClarifyCheckComboBox fx:id="clarifyType" />
                         </children>
                     </VBox>
                     <VBox >
                         <children>
                             <Label text="%invoice_reissuings" />
-                            <CheckComboBox fx:id="invoiceReissuings" />
+                            <InvoiceReissuingCheckComboBox fx:id="invoiceReissuings" />
                         </children>
                     </VBox>
                 </children>
