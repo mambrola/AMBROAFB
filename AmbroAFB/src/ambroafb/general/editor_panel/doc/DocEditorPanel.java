@@ -21,6 +21,7 @@ import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.ListingStage;
 import ambroafb.general_scene.doc_table_list.DocTableListController;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -34,7 +35,7 @@ import javafx.stage.Stage;
  *
  * @author dkobuladze
  */
-public class DocEditorPanel extends EditorPanel implements Initializable {
+public class DocEditorPanel extends EditorPanel implements Initializable, DocEditorPanelObserver {
 
     public DocEditorPanel() {
         assignLoader();
@@ -150,6 +151,17 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
             StageUtils.centerChildOf(editorPanelSceneStage, filterStage);
         }
         refresh.setSelected(false);
+    }
+
+    @Override
+    public boolean operationIsAllow() {
+        return allowToOpenDialogOrFilter();
+    }
+
+    @Override
+    public void notify(ArrayList<Doc> docs) {
+        tableData.addAll(0, docs);
+//        ((DocTableListController)outerController).setSelected(0);
     }
     
 }

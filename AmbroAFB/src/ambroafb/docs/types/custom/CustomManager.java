@@ -5,58 +5,38 @@
  */
 package ambroafb.docs.types.custom;
 
-import ambroafb.docs.Doc;
-import ambroafb.docs.types.DocManager;
+import ambroafb.docs.DocDataChangeProvider;
+import ambroafb.docs.DocDataFetchProvider;
 import ambroafb.docs.types.custom.dialog.CustomDialog;
-import ambroafb.general.DBUtils;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
-import authclient.db.ConditionBuilder;
-import java.util.ArrayList;
+import ambroafb.general.interfaces.EditorPanelableManager;
+import ambroafb.general.interfaces.Filterable;
 import javafx.stage.Stage;
-import org.json.JSONObject;
 
 /**
  *
  * @author dkobuladze
  */
-public class CustomManager implements DocManager {
+public class CustomManager extends EditorPanelableManager {
     
-    private final String DB_VIEW_NAME = "docs_whole";
-    private final String DB_DELETE_PROCEDURE_NAME = "doc_delete";
-    private Doc doc, docBackup;
-
-    @Override
-    public EditorPanelable getOneFromDB(int id) {
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-        return DBUtils.getObjectFromDB(Doc.class, DB_VIEW_NAME, params);
+    public CustomManager(){
+        dataFetchProvider = new DocDataFetchProvider();
+        dataChangeProvider = new DocDataChangeProvider();
     }
     
     @Override
-    public ArrayList<Doc> saveOneToDB(EditorPanelable newDocComponent) {
-        Doc newDoc = (Doc) newDocComponent;
-        Doc newFromDB = DBUtils.saveCustomDoc(newDoc);
-        ArrayList<Doc> docsFromDB = new ArrayList<>();
-        if (newFromDB != null){
-            docsFromDB.add(newFromDB);
-        }
-        return docsFromDB;
-    }
-
-    @Override
-    public boolean deleteOneFromDB(int id) {
-        return DBUtils.deleteObjectFromDB(DB_DELETE_PROCEDURE_NAME, id);
-    }
-
-    @Override
-    public void undo() {
-    }
-
-    @Override
-    public Dialogable getDocDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
-        CustomDialog dialog = new CustomDialog(object, type, owner);
+    public Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
+        CustomDialog dialog = new CustomDialog(owner, type, object);
+        dialog.setDataChangeProvider(dataChangeProvider);
+        dialog.setFrameFeatures(type, "doc_custom_dialog_title");
         return dialog;
+    }
+
+    @Override
+    public Filterable getFilterFor(Stage owner) {
+        return null;
     }
     
 }

@@ -26,6 +26,7 @@ import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.doc.DocEditorPanel;
+import ambroafb.general.editor_panel.doc.DocsAddButton;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
@@ -54,7 +55,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -270,12 +270,15 @@ public class MainController implements Initializable {
         String stageTitle = "docs";
         Stage docsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Doc.class.getSimpleName());
         if(docsStage == null || !docsStage.isShowing()){
-            TableList docs = new TableList(AmbroAFB.mainStage, Doc.class, stageTitle);
-            docs.setEPManager(new ambroafb.docs.DocManager());
             DocEditorPanel docEditorPanel = new DocEditorPanel();
-            docEditorPanel.addComponent(4, new TextField());
-            docEditorPanel.removeComponents("#add");
-            docs.getController().setEditorPanel(docEditorPanel);
+                DocsAddButton docsAdd = new DocsAddButton();
+                docsAdd.registerObserver(docEditorPanel);
+                docEditorPanel.addComponent(4, docsAdd);
+                docEditorPanel.removeComponents("#add");
+                
+            TableList docs = new TableList(AmbroAFB.mainStage, Doc.class, stageTitle, docEditorPanel);
+            docs.setEPManager(new ambroafb.docs.DocManager());
+//            docs.getController().setEditorPanel(docEditorPanel);
             docs.show();
             
             Filterable filter = new DocFilter(docs);

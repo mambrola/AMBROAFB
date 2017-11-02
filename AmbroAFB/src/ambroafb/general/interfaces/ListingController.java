@@ -6,7 +6,6 @@
 package ambroafb.general.interfaces;
 
 import ambroafb.general.editor_panel.EditorPanel;
-import ambroafb.general.editor_panel.custom.StandardEditorPanel;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -25,7 +24,7 @@ public abstract class ListingController implements Initializable {
     protected BorderPane formPane;
     
     protected DataFetchProvider dataFetchProvider;
-    protected EditorPanel editorPanel = new StandardEditorPanel();
+    protected EditorPanel editorPanel;
     
     /**
      * Initializes the controller class.
@@ -34,7 +33,6 @@ public abstract class ListingController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        formPane.topProperty().setValue(editorPanel);
         componentsInitialize(url, rb);
     }
     
@@ -46,10 +44,8 @@ public abstract class ListingController implements Initializable {
     public abstract void removeElementsFromEditorPanel(String... componentFXids);
     
     public void setEditorPanel(EditorPanel editorPanel){
-        if (editorPanel != null){
-            this.editorPanel = editorPanel;
-            formPane.topProperty().setValue(editorPanel);
-        }
+        this.editorPanel = editorPanel;
+        formPane.topProperty().setValue(editorPanel);
     }
     
     public EditorPanel getEditorPanel(){

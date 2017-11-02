@@ -5,6 +5,8 @@
  */
 package ambroafb.general_scene.table_list;
 
+import ambroafb.general.editor_panel.EditorPanel;
+import ambroafb.general.editor_panel.standard.StandardEditorPanel;
 import ambroafb.general.interfaces.ListingStage;
 import javafx.stage.Stage;
 
@@ -15,7 +17,11 @@ import javafx.stage.Stage;
 public class TableList extends ListingStage {
     
     public TableList(Stage owner, Class tableContent, String stageTitleBundleKey){
-        super(owner, "/ambroafb/general_scene/table_list/TableList.fxml", tableContent, stageTitleBundleKey);
+        this(owner, tableContent, stageTitleBundleKey, new StandardEditorPanel());
+    }
+    
+    public TableList(Stage owner, Class tableContent, String stageTitleBundleKey, EditorPanel editorPanel){
+        super(owner, "/ambroafb/general_scene/table_list/TableList.fxml", tableContent, stageTitleBundleKey, editorPanel);
     }
     
 }

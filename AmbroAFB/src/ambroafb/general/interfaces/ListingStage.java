@@ -8,6 +8,8 @@ package ambroafb.general.interfaces;
 import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
+import ambroafb.general.editor_panel.EditorPanel;
+import ambroafb.general.editor_panel.standard.StandardEditorPanel;
 import java.util.function.Supplier;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -39,12 +41,26 @@ public abstract class ListingStage extends UserInteractiveStage {
      * @param contentClass The class that type of objects putting in table.
      * @param localizableTitle The key which will convert an appropriate language by bundle.
      */
+    @Deprecated
     public ListingStage(Stage owner, String fxmlPath, Class contentClass, String localizableTitle){
+        this(owner, fxmlPath, contentClass, localizableTitle, new StandardEditorPanel());
+    }
+    
+    /**
+     *  The constructor of listingStage provides to create base features stage for list elements.
+     * @param owner The owner of list stage.
+     * @param fxmlPath The path of FXML file.
+     * @param contentClass The table content class.
+     * @param localizableTitle The bundle key.
+     * @param editorPanel The editor panel type.
+     */
+    public ListingStage(Stage owner, String fxmlPath, Class contentClass, String localizableTitle, EditorPanel editorPanel){
         super(owner, contentClass.getSimpleName(), localizableTitle, "/images/list.png");
         this.setResizable(true);
         
         Scene scene = SceneUtils.createScene(fxmlPath, null);
         controller = (ListingController) scene.getProperties().get("controller");
+        controller.setEditorPanel(editorPanel);
         controller.addListByClass(contentClass);
         this.setScene(scene);
         
@@ -56,6 +72,8 @@ public abstract class ListingStage extends UserInteractiveStage {
         StageUtils.stopStageWidthDecrease((Stage)this, () -> controller.getEditorPanel().getPanelMinWidth());
         StagesContainer.setSizeFor((Stage)this);
     }
+    
+    
     
     /**
      * The method sets min width to current stage.

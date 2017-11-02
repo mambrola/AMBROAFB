@@ -71,7 +71,7 @@
                 </Label> 
             </graphic>
             <items>
-                <MenuItem fx:id="addTransferUtility" text="%transfer" mnemonicParsing="false" />
+                <MenuItem fx:id="addPaymentUtility" text="%payment" mnemonicParsing="false" />
                 <MenuItem fx:id="addChargeUtility" text="%charge" mnemonicParsing="false" />
             </items>
         </Menu>

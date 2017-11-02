@@ -21,7 +21,6 @@ public class DocManager extends EditorPanelableManager {
     
     public DocManager(){
         dataFetchProvider = new DocDataFetchProvider();
-//        dataChangeProvider = new DocDataChangeProvider();
     }
 
     @Override

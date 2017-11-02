@@ -54,7 +54,7 @@ public class DocDataFetchProvider extends DataFetchProvider {
 
     @Override
     public Doc getOneFromDB(int recId) throws IOException, AuthServerException {
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
+        JSONObject params = new ConditionBuilder().where().and(DB_ID, "=", recId).condition().build();
         return getObjectFromDB(Doc.class, DB_VIEW_NAME, params);
     }
     

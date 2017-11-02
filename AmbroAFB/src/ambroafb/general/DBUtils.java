@@ -394,6 +394,7 @@ public class DBUtils {
         return null;
     }
     
+    @Deprecated
     public static ArrayList<Doc> saveConversionDoc(Conversion conversion){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         Integer id = (conversion.getRecId() == 0) ? null : conversion.getRecId();
@@ -475,6 +476,7 @@ public class DBUtils {
       return new ArrayList();
     }
     
+    @Deprecated
     public static Doc saveCustomDoc(Doc doc){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         Integer id = (doc.getRecId() == 0) ? null : doc.getRecId();

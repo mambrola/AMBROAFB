@@ -27,16 +27,9 @@ public class AccountDataChangeProvider extends DataChangeProvider {
     
 
     @Override
-    public boolean deleteOneFromDB(int recId) throws Exception {
-        boolean result = true;
-        try {
-            callProcedure(ACCOUNT_DELETE_CHECK_PROCEDURE, recId);
-            callProcedure(ACCOUNT_DELETE_PROCEDURE, recId);
-        } catch (AuthServerException | IOException ex){
-            result = false;
-            throw ex;
-        }
-        return result;
+    public void deleteOneFromDB(int recId) throws Exception {
+        callProcedure(ACCOUNT_DELETE_CHECK_PROCEDURE, recId);
+        callProcedure(ACCOUNT_DELETE_PROCEDURE, recId);
     }
     
     @Override

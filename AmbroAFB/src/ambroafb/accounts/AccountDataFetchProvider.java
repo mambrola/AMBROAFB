@@ -49,14 +49,14 @@ public class AccountDataFetchProvider extends DataFetchProvider {
             whereBuilder.and("date_close", relation, "");
         }
         // this is extra condition, none of statements was setisfied:
-        whereBuilder.and("rec_id", ">", 0);
+        whereBuilder.and(DB_ID, ">", 0);
         JSONObject params = whereBuilder.condition().build();
         return getFilteredBy(params);
     }
 
     @Override
     public Account getOneFromDB(int recId) throws IOException, AuthServerException {
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
+        JSONObject params = new ConditionBuilder().where().and(DB_ID, "=", recId).condition().build();
         return getObjectFromDB(Account.class, DB_VIEW_NAME, params);
     }
 

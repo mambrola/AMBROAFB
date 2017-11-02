@@ -26,7 +26,8 @@ public class DocManagersFactory {
      */
     public static DocManager getDocManager(Doc doc){
         if (doc.isChildDoc()){
-            return new CustomManager();
+            return null;
+//            return new CustomManager();
         }
         else if (doc.isParentDoc()){
             switch (doc.getDocType()) {
@@ -43,12 +44,36 @@ public class DocManagersFactory {
                 return new PaymentUtilityManager();
             }
             else {
-                return new CustomManager();
+                return null;
+//                return new CustomManager();
             }
         }
     }
     
     public static EditorPanelableManager getEPManager(Doc doc){
-        return new ConversionManager();
+        if (doc.isChildDoc()){
+            return new CustomManager();
+        }
+        else if (doc.isParentDoc()){
+            switch (doc.getDocType()) {
+                case 12:
+                    return null;
+//                    return new ChargeUtilityManager();
+                case 60:
+                    return new ConversionManager();
+                default:
+                    return null;
+//                    return new MonthlyManager();
+            }
+        }
+        else { // Doc has not children
+            if (doc.getDocType() == 82){
+                return null;
+//                return new PaymentUtilityManager();
+            }
+            else {
+                return new CustomManager();
+            }
+        }
     }
 }

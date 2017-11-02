@@ -22,7 +22,7 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
     private final Account accountBackup;
     
     public AccountDialog(Stage owner, Names.EDITOR_BUTTON_TYPE buttonType, EditorPanelable object) {
-        super(owner, buttonType, "/ambroafb/accounts/dialog/AccountDialog.fxml", "account_dialog_title");
+        super(owner, buttonType, "/ambroafb/accounts/dialog/AccountDialog.fxml");
     
         if (object == null)
             account = new Account();

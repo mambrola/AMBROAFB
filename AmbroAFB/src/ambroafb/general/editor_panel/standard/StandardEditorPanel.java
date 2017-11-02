@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.general.editor_panel.custom;
+package ambroafb.general.editor_panel.standard;
 
 import ambro.AView;
 import ambroafb.general.Names;

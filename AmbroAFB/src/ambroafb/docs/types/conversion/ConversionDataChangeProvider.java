@@ -6,11 +6,10 @@
 package ambroafb.docs.types.conversion;
 
 import ambroafb.docs.Doc;
-import ambroafb.general.DBUtils;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.DataChangeProvider;
 import ambroafb.general.interfaces.EditorPanelable;
-import authclient.AuthServerException;
-import java.io.IOException;
+import authclient.db.DBClient;
 import java.util.ArrayList;
 
 /**
@@ -19,28 +18,48 @@ import java.util.ArrayList;
  */
 public class ConversionDataChangeProvider extends DataChangeProvider {
 
-    private final String DB_DELETE_PROCEDURE_NAME = "doc_delete";
+    private final String DELETE_PROCEDURE = "doc_delete";
+    private final String SAVE_UPDATE_PROCEDURE = "doc_conversion_insert_update";
     
     @Override
-    public boolean deleteOneFromDB(int recId) throws Exception {
-        boolean result = true;
-        try {
-            callProcedure(DB_DELETE_PROCEDURE_NAME, recId);
-        } catch(IOException | AuthServerException ex){
-            result = false;
-            throw ex;
-        }
-        return result;
+    public void deleteOneFromDB(int recId) throws Exception {
+        callProcedure(DELETE_PROCEDURE, recId);
     }
 
     @Override
     public ArrayList<Doc> editOneToDB(EditorPanelable object) throws Exception {
-        return DBUtils.saveConversionDoc((Conversion)object); // ------
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        Conversion conversionFromAfB = (Conversion) object;
+        return callProcedure(Doc.class, SAVE_UPDATE_PROCEDURE,
+                                                        dbClient.getLang(),
+                                                        null,
+                                                        conversionFromAfB.docDateProperty().get(),
+                                                        conversionFromAfB.docInDocDateProperty().get(),
+                                                        conversionFromAfB.getSellAccount().getIso(),
+                                                        conversionFromAfB.getSellAccount().getRecId(),
+                                                        conversionFromAfB.getSellAmount(),
+                                                        conversionFromAfB.getBuyingAccount().getIso(),
+                                                        conversionFromAfB.getBuyingAccount().getRecId(),
+                                                        conversionFromAfB.getBuyingAmount(),
+                                                        -1);
     }
 
     @Override
     public ArrayList<Doc> saveOneToDB(EditorPanelable object) throws Exception {
-        return DBUtils.saveConversionDoc((Conversion)object); // ------
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        Conversion conversionFromAfB = (Conversion) object;
+        return callProcedure(Doc.class, SAVE_UPDATE_PROCEDURE,
+                                                        dbClient.getLang(),
+                                                        conversionFromAfB.getRecId(),
+                                                        conversionFromAfB.docDateProperty().get(),
+                                                        conversionFromAfB.docInDocDateProperty().get(),
+                                                        conversionFromAfB.getSellAccount().getIso(),
+                                                        conversionFromAfB.getSellAccount().getRecId(),
+                                                        conversionFromAfB.getSellAmount(),
+                                                        conversionFromAfB.getBuyingAccount().getIso(),
+                                                        conversionFromAfB.getBuyingAccount().getRecId(),
+                                                        conversionFromAfB.getBuyingAmount(),
+                                                        -1);
     }
     
 }

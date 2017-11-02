@@ -18,6 +18,8 @@ import org.json.JSONObject;
  */
 public abstract class DataFetchProvider extends DataProvider {
     
+    public static final String DB_ID = "rec_id";
+    
     /**
      *  The method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list by condition.
      * @param <T>

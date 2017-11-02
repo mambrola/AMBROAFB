@@ -52,7 +52,7 @@ public class Account extends EditorPanelable {
     private final ObjectProperty<LocalDate> dateOpenedObj, dateClosedObj;
     private final StringProperty remark;
     
-    private static final String DB_VEIW_NAME = "accounts_whole";
+//    private static final String DB_VEIW_NAME = "accounts_whole";
     private final int clientIdDefaultValue = 0;
     
     public Account(){

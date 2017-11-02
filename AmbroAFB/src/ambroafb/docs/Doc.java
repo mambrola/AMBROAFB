@@ -90,9 +90,9 @@ public class Doc extends EditorPanelable {
         marker = new SimpleIntegerProperty(markerDefaultValue);
         parentRecId = new SimpleIntegerProperty(parentRecIdDefaultValue);
         processId = new SimpleIntegerProperty();
-        docDateDescrip = new SimpleStringProperty("");
+        docDateDescrip = new SimpleStringProperty(DateConverter.getInstance().getDayMonthnameYearBySpace(LocalDate.now()));
         docDateObj = new SimpleObjectProperty<>(LocalDate.now());
-        docInDocDateDescrip = new SimpleStringProperty("");
+        docInDocDateDescrip = new SimpleStringProperty(DateConverter.getInstance().getDayMonthnameYearBySpace(LocalDate.now()));
         docInDocDateObj = new SimpleObjectProperty<>(LocalDate.now());
         
         debitDescrip = new SimpleStringProperty("");
@@ -106,6 +106,13 @@ public class Doc extends EditorPanelable {
         docCode = new SimpleObjectProperty<>(new DocCode());
         descrip = new SimpleStringProperty("");
         ownerId = new SimpleIntegerProperty(ownerIdDefaultValue);
+        
+        docDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+            docDateDescrip.set(newValue == null ? "" : DateConverter.getInstance().getDayMonthnameYearBySpace(newValue));
+        });
+        docInDocDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+            docInDocDateDescrip.set(newValue == null ? "" : DateConverter.getInstance().getDayMonthnameYearBySpace(newValue));
+        });
         
         debitObj.addListener((ObservableValue<? extends Account> observable, Account oldValue, Account newValue) -> {
             if (newValue != null){

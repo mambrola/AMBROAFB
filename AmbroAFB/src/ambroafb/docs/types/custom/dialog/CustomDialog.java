@@ -21,8 +21,8 @@ public class CustomDialog extends UserInteractiveDialogStage implements Dialogab
     private Doc doc;
     private final Doc docBackup;
     
-    public CustomDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, "/ambroafb/docs/types/custom/dialog/CustomDialog.fxml", "doc_custom_dialog_title");
+    public CustomDialog(Stage owner, Names.EDITOR_BUTTON_TYPE buttonType, EditorPanelable object) {
+        super(owner, buttonType, "/ambroafb/docs/types/custom/dialog/CustomDialog.fxml");
         
         if (object == null)
             doc = new Doc();
@@ -44,4 +44,8 @@ public class CustomDialog extends UserInteractiveDialogStage implements Dialogab
         doc = null;
     }
 
+    @Override
+    public Doc getSceneObject(){
+        return doc;
+    }
 }

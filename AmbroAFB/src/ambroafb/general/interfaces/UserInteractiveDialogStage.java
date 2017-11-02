@@ -48,8 +48,8 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         };
     }
     
-    public UserInteractiveDialogStage(Stage owner, Names.EDITOR_BUTTON_TYPE buttonType, String sceneFXMLFilePath, String stageTitleBundleKey){
-        this(owner, sceneFXMLFilePath, stageTitleBundleKey);
+    public UserInteractiveDialogStage(Stage owner, Names.EDITOR_BUTTON_TYPE buttonType, String sceneFXMLFilePath){
+        this(owner, sceneFXMLFilePath, "");
         
         editorButtonType = buttonType;
     }
@@ -126,9 +126,9 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         }
     }
     
-    private Consumer<Boolean> builDeleteSuccessAction(){
-        Consumer<Boolean> successFn = getDeleteSuccessAction();
-        Consumer<Boolean> closeAction = (value) -> close();
+    private Consumer<Void> builDeleteSuccessAction(){
+        Consumer<Void> successFn = getDeleteSuccessAction();
+        Consumer<Void> closeAction = (value) -> close();
         return (successFn == null) ? closeAction : successFn.andThen(closeAction);
     }
     
@@ -146,7 +146,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
      *  The function will execute before stage close, if DB action was successful.
      * @return The action that will execute if get success  from DB.
      */
-    protected Consumer<Boolean> getDeleteSuccessAction(){
+    protected Consumer<Void> getDeleteSuccessAction(){
         return null;
     }
     

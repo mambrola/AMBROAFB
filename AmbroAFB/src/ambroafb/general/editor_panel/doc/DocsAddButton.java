@@ -6,10 +6,16 @@
 package ambroafb.general.editor_panel.doc;
 
 import ambroafb.AmbroAFB;
+import ambroafb.docs.Doc;
+import ambroafb.docs.types.custom.CustomManager;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.Names;
+import ambroafb.general.interfaces.Dialogable;
+import ambroafb.general.interfaces.EditorPanelableManager;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +25,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
+import javafx.stage.Stage;
 
 /**
  *
@@ -29,7 +36,7 @@ public class DocsAddButton extends SplitMenuButton implements Initializable {
     @FXML
     private MenuItem addBySample, addConvert, addPaymentUtility, addChargeUtility, addMonthlyAccrual;
     
-    private DocEditorPanel docEditorPanel;
+    private DocEditorPanelObserver observer;
     
     public DocsAddButton(){
         super();
@@ -64,42 +71,49 @@ public class DocsAddButton extends SplitMenuButton implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
     }
     
-    public void setDocEditorPanel(DocEditorPanel panel){
-        docEditorPanel = panel;
+    public void registerObserver(DocEditorPanelObserver observer){
+        this.observer = observer;
     }
     
     public void addCustom(ActionEvent e) {
-        if (docEditorPanel.allowToOpenDialogOrFilter()) {
-            
+        if (observer.operationIsAllow()) {
+            EditorPanelableManager manager = new CustomManager();
+            Dialogable dialog = manager.getDialogFor((Stage)getScene().getWindow(), Names.EDITOR_BUTTON_TYPE.ADD, null);
+            Doc docFromDialog = dialog.getResult();
+            if (docFromDialog != null){
+                ArrayList<Doc> docs = new ArrayList<>();
+                docs.add(docFromDialog);
+                observer.notify(docs);
+            }
         }
     }
     
     public void addBySample(ActionEvent e) {
-        if (docEditorPanel.allowToOpenDialogOrFilter()) {
+        if (observer.operationIsAllow()) {
             
         }
     }
     
     public void addConversion(ActionEvent e){
-        if (docEditorPanel.allowToOpenDialogOrFilter()) {
+        if (observer.operationIsAllow()) {
             
         }
     }
     
     public void addPaymentUtility(ActionEvent e) {
-        if (docEditorPanel.allowToOpenDialogOrFilter()) {
+        if (observer.operationIsAllow()) {
             
         }
     }
     
     public void addChargeUtility(ActionEvent e) {
-        if (docEditorPanel.allowToOpenDialogOrFilter()) {
+        if (observer.operationIsAllow()) {
             
         }
     }
     
     public void addMonthlyAccrual(ActionEvent e){
-        if (docEditorPanel.allowToOpenDialogOrFilter()) {
+        if (observer.operationIsAllow()) {
             
         }
     }

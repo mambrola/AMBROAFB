@@ -28,17 +28,17 @@ public class ConversionDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<Conversion> getFilteredBy(JSONObject params) throws IOException, AuthServerException {
-        return new ArrayList<>();
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public List<Conversion> getFilteredBy(FilterModel model) throws IOException, AuthServerException {
-        return new ArrayList<>();
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Conversion getOneFromDB(int recId) throws IOException, AuthServerException {
-        JSONObject params = new ConditionBuilder().where().orGroup().or("rec_id", "=", recId).or("parent_rec_id", "=", recId).closeGroup().condition().build();
+        JSONObject params = new ConditionBuilder().where().orGroup().or(DB_ID, "=", recId).or("parent_rec_id", "=", recId).closeGroup().condition().build();
         ArrayList<Doc> bouquet = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
         Conversion conversion = makeConversionFrom(bouquet);
         return conversion;
