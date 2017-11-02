@@ -20,11 +20,11 @@ import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.ListingStage;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
@@ -53,20 +53,14 @@ public class DocEditorPanel extends EditorPanel implements Initializable, DocEdi
             Consumer<EditorPanelable> successAction = (obj) -> {
                 Dialogable dialog = manager.getDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.DELETE, obj);
                 List<Doc> result = dialog.getResult();
-                if (!result.isEmpty()){
-                    int selectedIndex = tableData.indexOf(selected);
-                    tableData.remove(selected);
-                    if (selected.isParentDoc()){
-                        List<Doc> childrenDocs = tableData.stream().map((elem) -> (Doc)elem).
-                                                            filter((doc) -> doc.getParentRecId() == selected.getRecId()).
-                                                        collect(Collectors.toList());
-                        tableData.removeAll(childrenDocs);
-                    }
-                    if (selectedIndex > tableData.size() - 1){
-                        selectedIndex = tableData.size() - 1;
-                    }
-//                    ((DocTableListController)outerController).setSelected(selectedIndex);
-                }
+                List<Doc> removedDocs = new ArrayList<>();
+                result.stream().forEach((doc) -> {
+                        removedDocs.add(tableData.stream().map((elem) -> (Doc)elem).filter((tableDoc) -> {
+                                            return doc.getRecId() == tableDoc.getRecId() || doc.getParentRecId() == tableDoc.getParentRecId();
+                                        }).findFirst().get());
+                    
+                });
+                tableData.removeAll(removedDocs);
             };
             manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);
             
