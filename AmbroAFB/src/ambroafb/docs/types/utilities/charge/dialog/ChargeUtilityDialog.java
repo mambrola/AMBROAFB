@@ -5,11 +5,15 @@
  */
 package ambroafb.docs.types.utilities.charge.dialog;
 
+import ambroafb.docs.Doc;
 import ambroafb.docs.types.utilities.charge.ChargeUtility;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -21,8 +25,10 @@ public class ChargeUtilityDialog extends UserInteractiveDialogStage implements D
     private ChargeUtility chargeUtility;
     private final ChargeUtility chargeUtilityBackup;
     
+    private List<Doc> docs = new ArrayList<>();
+    
     public ChargeUtilityDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "/ambroafb/docs/types/utilities/charge/dialog/ChargeUtilityDialog.fxml", "doc_charge_utility_dialog_title");
+        super(owner, buttonType, "/ambroafb/docs/types/utilities/charge/dialog/ChargeUtilityDialog.fxml");
         
         if (object == null)
             chargeUtility = new ChargeUtility();
@@ -34,14 +40,39 @@ public class ChargeUtilityDialog extends UserInteractiveDialogStage implements D
     }
     
     @Override
-    public EditorPanelable getResult() {
+    public List<Doc> getResult() {
         showAndWait();
-        return chargeUtility;
+        return docs;
     }
 
     @Override
     public void operationCanceled() {
-        chargeUtility = null;
+        docs.clear();
     }
 
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return chargeUtility;
+    }
+
+//    @Override
+//    protected Consumer<Void> getDeleteSuccessAction() {
+//        return () -> {};
+//    }
+
+    @Override
+    protected Consumer<Object> getEditSuccessAction() {
+        return getAddSuccessAction();
+    }
+    
+    
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> {
+                docs.clear();
+                docs.addAll((List<Doc>)obj);
+            };
+    }
+
+    
 }

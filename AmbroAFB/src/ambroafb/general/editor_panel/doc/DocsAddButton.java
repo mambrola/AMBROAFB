@@ -10,6 +10,7 @@ import ambroafb.docs.Doc;
 import ambroafb.docs.types.conversion.ConversionManager;
 import ambroafb.docs.types.custom.CustomManager;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
+import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
@@ -112,13 +113,21 @@ public class DocsAddButton extends SplitMenuButton implements Initializable {
     
     public void addChargeUtility(ActionEvent e) {
         if (observer.operationIsAllow()) {
-            
+            makeAddAction(new ChargeUtilityManager());
         }
     }
     
     public void addMonthlyAccrual(ActionEvent e){
         if (observer.operationIsAllow()) {
             
+        }
+    }
+    
+    private void makeAddAction(EditorPanelableManager manager){
+        Dialogable dialog = manager.getDialogFor((Stage)getScene().getWindow(), Names.EDITOR_BUTTON_TYPE.ADD, null);
+        List<Doc> docsFromDialog = dialog.getResult();
+        if (docsFromDialog != null){
+            observer.notify(docsFromDialog);
         }
     }
 }

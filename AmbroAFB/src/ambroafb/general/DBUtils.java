@@ -457,6 +457,7 @@ public class DBUtils {
         return null;
     }
     
+    @Deprecated
     public static ArrayList<Doc> saveChargeUtility(ChargeUtility chargeUtility){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         Integer id = (chargeUtility.getRecId() == 0) ? null : chargeUtility.getRecId();

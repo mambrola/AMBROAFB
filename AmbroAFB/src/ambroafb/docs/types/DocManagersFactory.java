@@ -32,7 +32,8 @@ public class DocManagersFactory {
         else if (doc.isParentDoc()){
             switch (doc.getDocType()) {
                 case 12:
-                    return new ChargeUtilityManager();
+                    return null;
+//                    return new ChargeUtilityManager();
                 case 60:
 //                    return new ConversionManager();
                     return null;
@@ -59,8 +60,7 @@ public class DocManagersFactory {
         else if (doc.isParentDoc()){
             switch (doc.getDocType()) {
                 case 12:
-                    return null;
-//                    return new ChargeUtilityManager();
+                    return new ChargeUtilityManager();
                 case 60:
                     return new ConversionManager();
                 default:
