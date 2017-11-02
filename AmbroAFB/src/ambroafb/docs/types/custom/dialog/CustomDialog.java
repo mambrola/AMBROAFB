@@ -10,6 +10,9 @@ import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -20,6 +23,8 @@ public class CustomDialog extends UserInteractiveDialogStage implements Dialogab
 
     private Doc doc;
     private final Doc docBackup;
+    
+    private List<Doc> docs = new ArrayList<>();
     
     public CustomDialog(Stage owner, Names.EDITOR_BUTTON_TYPE buttonType, EditorPanelable object) {
         super(owner, buttonType, "/ambroafb/docs/types/custom/dialog/CustomDialog.fxml");
@@ -34,18 +39,39 @@ public class CustomDialog extends UserInteractiveDialogStage implements Dialogab
     }
 
     @Override
-    public EditorPanelable getResult() {
+    public List<Doc> getResult() {
         showAndWait();
-        return doc;
+        return docs;
     }
 
     @Override
     public void operationCanceled() {
-        doc = null;
+        docs.clear();
     }
 
     @Override
     public Doc getSceneObject(){
         return doc;
     }
+
+    @Override
+    protected Consumer<Void> getDeleteSuccessAction() {
+        return (Void) -> docs.add(doc);
+    }
+    
+    
+
+    @Override
+    protected Consumer<Object> getEditSuccessAction() {
+        return (obj) -> docs.add((Doc)obj);
+    }
+
+    
+    
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> docs.add((Doc)obj);
+    }
+    
+    
 }

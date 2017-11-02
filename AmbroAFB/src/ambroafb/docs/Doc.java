@@ -90,9 +90,9 @@ public class Doc extends EditorPanelable {
         marker = new SimpleIntegerProperty(markerDefaultValue);
         parentRecId = new SimpleIntegerProperty(parentRecIdDefaultValue);
         processId = new SimpleIntegerProperty();
-        docDateDescrip = new SimpleStringProperty(DateConverter.getInstance().getDayMonthnameYearBySpace(LocalDate.now()));
+        docDateDescrip = new SimpleStringProperty("");
         docDateObj = new SimpleObjectProperty<>(LocalDate.now());
-        docInDocDateDescrip = new SimpleStringProperty(DateConverter.getInstance().getDayMonthnameYearBySpace(LocalDate.now()));
+        docInDocDateDescrip = new SimpleStringProperty("");
         docInDocDateObj = new SimpleObjectProperty<>(LocalDate.now());
         
         debitDescrip = new SimpleStringProperty("");

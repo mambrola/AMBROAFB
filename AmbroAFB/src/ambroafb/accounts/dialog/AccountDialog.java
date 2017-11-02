@@ -10,6 +10,7 @@ import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -48,4 +49,11 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
     public Account getSceneObject(){
         return account;
     }
+
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> account.copyFrom((Account)obj);
+    }
+    
+    
 }

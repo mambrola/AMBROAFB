@@ -6,7 +6,7 @@
 package ambroafb.general.editor_panel.doc;
 
 import ambroafb.docs.Doc;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -15,6 +15,6 @@ import java.util.ArrayList;
 public interface DocEditorPanelObserver {
     
     public boolean operationIsAllow();
-    public void notify(ArrayList<Doc> docs);
+    public void notify(List<Doc> docs);
     
 }

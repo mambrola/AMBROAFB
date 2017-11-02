@@ -19,9 +19,7 @@ import ambroafb.general.interfaces.EditorPanelableManager;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.ListingStage;
-import ambroafb.general_scene.doc_table_list.DocTableListController;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -67,7 +65,7 @@ public class DocEditorPanel extends EditorPanel implements Initializable, DocEdi
                     if (selectedIndex > tableData.size() - 1){
                         selectedIndex = tableData.size() - 1;
                     }
-                    ((DocTableListController)outerController).setSelected(selectedIndex);
+//                    ((DocTableListController)outerController).setSelected(selectedIndex);
                 }
             };
             manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);
@@ -159,7 +157,7 @@ public class DocEditorPanel extends EditorPanel implements Initializable, DocEdi
     }
 
     @Override
-    public void notify(ArrayList<Doc> docs) {
+    public void notify(List<Doc> docs) {
         tableData.addAll(0, docs);
 //        ((DocTableListController)outerController).setSelected(0);
     }

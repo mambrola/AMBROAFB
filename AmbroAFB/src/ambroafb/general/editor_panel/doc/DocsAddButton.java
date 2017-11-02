@@ -15,7 +15,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelableManager;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,11 +79,9 @@ public class DocsAddButton extends SplitMenuButton implements Initializable {
         if (observer.operationIsAllow()) {
             EditorPanelableManager manager = new CustomManager();
             Dialogable dialog = manager.getDialogFor((Stage)getScene().getWindow(), Names.EDITOR_BUTTON_TYPE.ADD, null);
-            Doc docFromDialog = dialog.getResult();
-            if (docFromDialog != null){
-                ArrayList<Doc> docs = new ArrayList<>();
-                docs.add(docFromDialog);
-                observer.notify(docs);
+            List<Doc> docsFromDialog = dialog.getResult();
+            if (docsFromDialog != null){
+                observer.notify(docsFromDialog);
             }
         }
     }
