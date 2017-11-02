@@ -34,7 +34,8 @@ public class DocManagersFactory {
                 case 12:
                     return new ChargeUtilityManager();
                 case 60:
-                    return new ConversionManager();
+//                    return new ConversionManager();
+                    return null;
                 default:
                     return new MonthlyManager();
             }

@@ -28,7 +28,7 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
     private final List<Doc> conversionDocs = new ArrayList<>();
     
     public ConversionDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, "/ambroafb/docs/types/conversion/dialog/ConversionDialog.fxml", "doc_conversion_dialog_title");
+        super(owner, buttonType, "/ambroafb/docs/types/conversion/dialog/ConversionDialog.fxml");
         
         if (object == null)
             conversion = new Conversion();
@@ -47,9 +47,47 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
 
     @Override
     public void operationCanceled() {
-        
+        conversionDocs.clear();
     }
 
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return conversion;
+    }
+
+    @Override
+    protected Consumer<Void> getDeleteSuccessAction() {
+        return (Void) -> {
+                        conversionDocs.clear();
+                        conversionDocs.addAll(deserializeConversion(conversion));
+                    };
+    }
+    
+    private List<Doc> deserializeConversion(Conversion conversion){
+        List<Doc> result = new ArrayList<>();
+        Doc firstDoc = new Doc();
+        firstDoc.setRecId(conversion.getRecId());
+        firstDoc.setDocDate(conversion.getDocDate());
+        firstDoc.setDocInDocDate(conversion.getDocInDocDate());
+        firstDoc.setDescrip(conversion.descripProperty().get());
+        
+        Doc secondDoc = new Doc();
+        secondDoc.copyFrom(firstDoc);
+        
+        firstDoc.setIso(conversion.getSellCurrency());
+        firstDoc.setAmount(conversion.getSellAmount());
+        firstDoc.debitProperty().set(conversion.getSellAccount());
+        
+        secondDoc.setParentRecId(conversion.getRecId());
+        secondDoc.setIso(conversion.getBuyingCurrency());
+        secondDoc.debitProperty().set(conversion.getBuyingAccount());
+        secondDoc.setAmount(conversion.getBuyingAmount());
+        
+        result.add(firstDoc);
+        result.add(secondDoc);
+        return result;
+    }
+    
     @Override
     protected Consumer<Object> getEditSuccessAction() {
         Consumer<Object> consumer = (obj) -> {
@@ -64,6 +102,7 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
     protected Consumer<Object> getAddSuccessAction() {
         return getEditSuccessAction();
     }
+
 
     
 }

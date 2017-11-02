@@ -53,7 +53,6 @@ public class ConversionDataFetchProvider extends DataFetchProvider {
         result.setDocInDocDate(firstDoc.getDocInDocDate());
         result.descripProperty().set(firstDoc.getDescrip());
        
-        
         result.setSellCurrency(firstDoc.getIso());
         result.setSellAccount(firstDoc.debitProperty().get());
         result.setSellAmount(firstDoc.getAmount());

@@ -7,6 +7,7 @@ package ambroafb.general.editor_panel.doc;
 
 import ambroafb.AmbroAFB;
 import ambroafb.docs.Doc;
+import ambroafb.docs.types.conversion.ConversionManager;
 import ambroafb.docs.types.custom.CustomManager;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.GeneralConfig;
@@ -94,7 +95,12 @@ public class DocsAddButton extends SplitMenuButton implements Initializable {
     
     public void addConversion(ActionEvent e){
         if (observer.operationIsAllow()) {
-            
+            EditorPanelableManager manager = new ConversionManager();
+            Dialogable dialog = manager.getDialogFor((Stage)getScene().getWindow(), Names.EDITOR_BUTTON_TYPE.ADD, null);
+            List<Doc> docsFromDialog = dialog.getResult();
+            if (docsFromDialog != null){
+                observer.notify(docsFromDialog);
+            }
         }
     }
     
