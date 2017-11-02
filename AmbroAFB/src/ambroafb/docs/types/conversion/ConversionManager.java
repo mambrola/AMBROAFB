@@ -5,7 +5,6 @@
  */
 package ambroafb.docs.types.conversion;
 
-import static ambroafb.clients.Client.DB_VIEW_NAME;
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.conversion.dialog.ConversionDialog;
@@ -15,10 +14,8 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
 import ambroafb.general.interfaces.Filterable;
-import authclient.db.ConditionBuilder;
 import java.util.ArrayList;
 import javafx.stage.Stage;
-import org.json.JSONObject;
 
 /**
  *
@@ -36,10 +33,11 @@ public class ConversionManager extends EditorPanelableManager implements DocMana
     
     @Override
     public EditorPanelable getOneFromDB(int id) {
-        JSONObject params = new ConditionBuilder().where().orGroup().or("rec_id", "=", id).or("parent_rec_id", "=", id).closeGroup().condition().build();
-        ArrayList<Doc> bouquet = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
-        Conversion conversion = makeConversionFrom(bouquet);
-        return conversion;
+        return null;
+//        JSONObject params = new ConditionBuilder().where().orGroup().or("rec_id", "=", id).or("parent_rec_id", "=", id).closeGroup().condition().build();
+//        ArrayList<Doc> bouquet = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
+//        Conversion conversion = makeConversionFrom(bouquet);
+//        return conversion;
     }
     
     private Conversion makeConversionFrom(ArrayList<Doc> docs){

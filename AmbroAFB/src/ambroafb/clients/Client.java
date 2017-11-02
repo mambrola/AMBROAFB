@@ -6,7 +6,6 @@
 package ambroafb.clients;
 
 import ambro.AView;
-import ambroafb.clients.filter.ClientFilterModel;
 import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.Country;
 import ambroafb.general.DBUtils;
@@ -14,16 +13,12 @@ import ambroafb.general.DateConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.phones.Phone;
-import authclient.db.ConditionBuilder;
-import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
@@ -44,7 +39,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
-import org.json.JSONObject;
 
 /**
  *
@@ -111,9 +105,6 @@ public class Client extends EditorPanelable{
     private final ObservableList<Document> documents;
     @JsonIgnore
     private ImageGalleryController clientImageGallery;
-    
-    @JsonIgnore
-    public static final String DB_TABLE_NAME = "clients", DB_VIEW_NAME = "clients_whole", DB_STATUS_TABLE = "client_status_descrips";
     
     @JsonIgnore
     private static final String IMAGE_OFFICE_URL = "/images/office.png", IMAGE_PERSON_URL = "/images/person.png";
@@ -204,84 +195,6 @@ public class Client extends EditorPanelable{
         }
     }
     
-    
-    // DBService methods:
-    public static ArrayList<Client> getAllFromDB() {
-        JSONObject params = new ConditionBuilder().build();
-        ArrayList<Client> clients = DBUtils.getObjectsListFromDB(Client.class, DB_TABLE_NAME, params);
-        return clients;
-    }
-    
-//    public static ArrayList<ClientStatus> getAllStatusFromDB(){
-//        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-//        JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
-//        return DBUtils.getObjectsListFromDB(ClientStatus.class, DB_STATUS_TABLE, params);
-//    }
-    
-    public static ArrayList<Client> getFilteredFromDB(FilterModel model) {
-        final ClientFilterModel clientFilterModel = (ClientFilterModel) model;
-        WhereBuilder whereBuilder = new ConditionBuilder().where()
-                                                .and("created_time", ">=", clientFilterModel.getFromDateForDB())
-                                                .and("created_time", "<=", clientFilterModel.getToDateForDB());
-        if (!clientFilterModel.isJuridicalIndeterminate()) {
-            whereBuilder.and("is_jur", "=", clientFilterModel.isJuridicalSelected() ? 1 : 0);
-        }
-        if (!clientFilterModel.isRezidentIndeterminate()) {
-            whereBuilder.and("is_rezident", "=", clientFilterModel.isRezidentSelected() ? 1 : 0);
-        }
-        if (!clientFilterModel.isTypeIndeterminate()){
-            String relation = (clientFilterModel.isTypeSelected()) ? "is not null" : "is null";
-            whereBuilder.and("email", relation, "");
-        }
-        if (clientFilterModel.isSelectedConcreteCountry()){
-            whereBuilder.and("country_code", "=", clientFilterModel.getSelectedCountryCode());
-        }
-        if (clientFilterModel.hasSelectedStatuses()){
-            whereBuilder = whereBuilder.andGroup();
-            for (ClientStatus clientStatus : clientFilterModel.getSelectedStatuses()) {
-                whereBuilder.or("status", "=", clientStatus.getClientStatusId());
-            }
-            whereBuilder = whereBuilder.closeGroup();
-        }
-        
-        JSONObject params = whereBuilder.condition().build();
-        System.out.println("filter params: " + params);
-        return DBUtils.getObjectsListFromDB(Client.class, DB_VIEW_NAME, params);
-    }
-    
-    public static Client getOneFromDB(int id) {
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-        return DBUtils.getObjectFromDB(Client.class, DB_VIEW_NAME, params);
-    }
-
-    public static Client saveOneToDB(Client client) {
-        if (client == null) return null;
-        Client clientFromDB = DBUtils.saveClient(client);
-        if (clientFromDB == null) return null;
-        client.getClientImageGallery().sendDataToServer("" + clientFromDB.getRecId(), (String path, Boolean isDeleted) -> {
-            if (isDeleted){
-                for (int i = 0; i < clientFromDB.getDocuments().size(); i++) {
-                    Document doc = clientFromDB.getDocuments().get(i);
-                    if (doc.path.equals(path)){
-                        clientFromDB.getDocuments().remove(i);
-                        break;
-                    }
-                }
-            }
-            else {
-                Document doc = new Document();
-                doc.path = path;
-                clientFromDB.getDocuments().add(doc);
-            }
-        }, new GalleryDBUpdater(clientFromDB));
-        
-        return clientFromDB;
-    }
-    
-    public static boolean deleteOneFromDB(int id) {
-        return DBUtils.deleteObjectFromDB("client_delete", id);
-    }
-
     
     //Properties getters:
     public SimpleBooleanProperty isJurProperty() {
