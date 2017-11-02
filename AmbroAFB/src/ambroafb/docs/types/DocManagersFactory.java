@@ -37,7 +37,8 @@ public class DocManagersFactory {
 //                    return new ConversionManager();
                     return null;
                 default:
-                    return new MonthlyManager();
+                    return null;
+//                    return new MonthlyManager();
             }
         }
         else { // Doc has not children
@@ -63,8 +64,7 @@ public class DocManagersFactory {
                 case 60:
                     return new ConversionManager();
                 default:
-                    return null;
-//                    return new MonthlyManager();
+                    return new MonthlyManager();
             }
         }
         else { // Doc has not children

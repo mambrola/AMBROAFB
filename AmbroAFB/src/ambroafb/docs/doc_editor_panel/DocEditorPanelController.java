@@ -13,7 +13,6 @@ import ambroafb.docs.Doc;
 import ambroafb.docs.filter.DocFilter;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.DocManagersFactory;
-import ambroafb.docs.types.monthly.MonthlyManager;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
 import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 import ambroafb.general.Names;
@@ -262,62 +261,62 @@ public class DocEditorPanelController implements Initializable {
     
     @FXML
     private void addMonthlyAccrual(ActionEvent e){
-        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
-        if(dialogStage == null || !dialogStage.isShowing()){
-            DocManager dm = new MonthlyManager();
-            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
-            EditorPanelable newMonthly = dd.getResult();
-            if (newMonthly != null){
-                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newMonthly);
-                if (!newDocsFromDB.isEmpty()){
-                    int selectedIndex = 0;
-                    int updatedIndex = 0;
-                    List<Doc> insertedDocs = new ArrayList<>();
-                    List<Doc> removedDocs = new ArrayList<>();
-                    for (Doc doc : newDocsFromDB) {
-                        int status = getDocStatus(doc);
-                        if (status == 0){
-                            insertedDocs.add(doc);
-                        }
-                        else {
-                            Doc docFromTable = getAppropriateDocFromTable(doc.getRecId());
-                            if (docFromTable != null){
-                                if (status == 1){
-                                    docFromTable.copyFrom(doc);
-                                    updatedIndex = tableData.indexOf(docFromTable);
-                                } else {
-                                    removedDocs.add(doc);
-                                }
-                            }
-                        }
-                    }
-                    
-                    if (!insertedDocs.isEmpty()){
-                        tableData.addAll(0, insertedDocs);
-                        selectedIndex = 0;
-                    }
-                    else {
-                        if (!removedDocs.isEmpty()) {
-                            int firstRmDocIndex = tableData.indexOf(removedDocs.get(0)); 
-                            tableData.removeAll(removedDocs);
-                            if (firstRmDocIndex > tableData.size() - 1){
-                                firstRmDocIndex = tableData.size() - 1;
-                            }
-                            selectedIndex = firstRmDocIndex;
-                        }
-                        if (updatedIndex != 0){
-                            selectedIndex = updatedIndex;
-                        }
-                    }
-                    ((DocTableListController)outerController).setSelected(selectedIndex);
-                }
-            }
-        }
-        else {
-            dialogStage.requestFocus();
-            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
-        }
+//        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+//        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+//        if(dialogStage == null || !dialogStage.isShowing()){
+//            DocManager dm = new MonthlyManager();
+//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
+//            EditorPanelable newMonthly = dd.getResult();
+//            if (newMonthly != null){
+//                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newMonthly);
+//                if (!newDocsFromDB.isEmpty()){
+//                    int selectedIndex = 0;
+//                    int updatedIndex = 0;
+//                    List<Doc> insertedDocs = new ArrayList<>();
+//                    List<Doc> removedDocs = new ArrayList<>();
+//                    for (Doc doc : newDocsFromDB) {
+//                        int status = getDocStatus(doc);
+//                        if (status == 0){
+//                            insertedDocs.add(doc);
+//                        }
+//                        else {
+//                            Doc docFromTable = getAppropriateDocFromTable(doc.getRecId());
+//                            if (docFromTable != null){
+//                                if (status == 1){
+//                                    docFromTable.copyFrom(doc);
+//                                    updatedIndex = tableData.indexOf(docFromTable);
+//                                } else {
+//                                    removedDocs.add(doc);
+//                                }
+//                            }
+//                        }
+//                    }
+//                    
+//                    if (!insertedDocs.isEmpty()){
+//                        tableData.addAll(0, insertedDocs);
+//                        selectedIndex = 0;
+//                    }
+//                    else {
+//                        if (!removedDocs.isEmpty()) {
+//                            int firstRmDocIndex = tableData.indexOf(removedDocs.get(0)); 
+//                            tableData.removeAll(removedDocs);
+//                            if (firstRmDocIndex > tableData.size() - 1){
+//                                firstRmDocIndex = tableData.size() - 1;
+//                            }
+//                            selectedIndex = firstRmDocIndex;
+//                        }
+//                        if (updatedIndex != 0){
+//                            selectedIndex = updatedIndex;
+//                        }
+//                    }
+//                    ((DocTableListController)outerController).setSelected(selectedIndex);
+//                }
+//            }
+//        }
+//        else {
+//            dialogStage.requestFocus();
+//            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+//        }
     }
     
     /**
