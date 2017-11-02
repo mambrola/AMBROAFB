@@ -5,9 +5,10 @@
  */
 package ambroafb.clients;
 
-import ambroafb.general.DBUtils;
+import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
@@ -42,6 +43,8 @@ public class ClientComboBox extends AnchorPane {
     private FilteredList<Client> filteredList;
     
     private Consumer<ObservableList<Client>> addCategoryALL;
+    
+    private ClientDataFetchProvider dataFetchProvider = new ClientDataFetchProvider();
     
     public ClientComboBox(){
         addSceneComponentsToAnchorPane();
@@ -266,14 +269,17 @@ public class ClientComboBox extends AnchorPane {
         
         @Override
         public void run() {
-            ArrayList<Client> clientsList = DBUtils.getObjectsListFromDB(Client.class, Client.DB_VIEW_NAME, params);
-            Platform.runLater(() -> {
-                items.setAll(clientsList);
-                if (consumer != null){
-                    consumer.accept(items);
-                }
-                decreasePopUpWidth();
-            });
+            try {
+                List<Client> clientsList = dataFetchProvider.getFilteredBy(params);
+                Platform.runLater(() -> {
+                    items.setAll(clientsList);
+                    if (consumer != null){
+                        consumer.accept(items);
+                    }
+                    decreasePopUpWidth();
+                });
+            } catch (IOException | AuthServerException ex) {
+            }
         }
     
         /**

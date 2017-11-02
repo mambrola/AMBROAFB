@@ -11,6 +11,7 @@ import ambroafb.accounts.filter.AccountFilter;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Client;
+import ambroafb.clients.ClientManager;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.configuration.Configuration;
 import ambroafb.countries.Country;
@@ -138,7 +139,7 @@ public class MainController implements Initializable {
         Stage clientsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Client.class.getSimpleName());
         if(clientsStage == null || !clientsStage.isShowing()){
             TableList clients = new TableList(AmbroAFB.mainStage, Client.class, stageTitle);
-//            clients.getController().getEditorPanelController().turnOffAddBySample();
+            clients.setEPManager(new ClientManager());
             clients.getController().getEditorPanel().turnOffAddBySample();
             clients.show();
             
@@ -149,12 +150,13 @@ public class MainController implements Initializable {
                 clients.close();
             }
             else {
-                Supplier<List<EditorPanelable>> fetchData = () -> {
-                                            ArrayList<Client> clientsList = Client.getFilteredFromDB(model);
-                                            return new ArrayList(clientsList);
-                                        };
-                
-                clients.getController().reAssignTable(fetchData);
+//                Supplier<List<EditorPanelable>> fetchData = () -> {
+//                                            ArrayList<Client> clientsList = Client.getFilteredFromDB(model);
+//                                            return new ArrayList(clientsList);
+//                                        };
+//                
+//                clients.getController().reAssignTable(fetchData);
+                clients.getController().reAssignTable(model);
             }
         }
         else {

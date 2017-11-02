@@ -11,7 +11,6 @@ import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.Country;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -19,7 +18,6 @@ import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.phones.Phone;
 import authclient.db.ConditionBuilder;
-import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -115,7 +113,7 @@ public class Client extends EditorPanelable{
     private ImageGalleryController clientImageGallery;
     
     @JsonIgnore
-    public static final String DB_TABLE_NAME = "clients", DB_VIEW_NAME = "clients_whole", DB_STATUS_TABLE = "client_status_descrips";;
+    public static final String DB_TABLE_NAME = "clients", DB_VIEW_NAME = "clients_whole", DB_STATUS_TABLE = "client_status_descrips";
     
     @JsonIgnore
     private static final String IMAGE_OFFICE_URL = "/images/office.png", IMAGE_PERSON_URL = "/images/person.png";
@@ -214,11 +212,11 @@ public class Client extends EditorPanelable{
         return clients;
     }
     
-    public static ArrayList<ClientStatus> getAllStatusFromDB(){
-        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
-        return DBUtils.getObjectsListFromDB(ClientStatus.class, DB_STATUS_TABLE, params);
-    }
+//    public static ArrayList<ClientStatus> getAllStatusFromDB(){
+//        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+//        JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
+//        return DBUtils.getObjectsListFromDB(ClientStatus.class, DB_STATUS_TABLE, params);
+//    }
     
     public static ArrayList<Client> getFilteredFromDB(FilterModel model) {
         final ClientFilterModel clientFilterModel = (ClientFilterModel) model;
@@ -641,7 +639,7 @@ public class Client extends EditorPanelable{
         public int recId;
     }
     
-    private static class GalleryDBUpdater implements Runnable {
+    public static class GalleryDBUpdater implements Runnable {
         
         private final Client client;
         

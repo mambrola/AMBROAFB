@@ -32,7 +32,7 @@ public class ConversionDataChangeProvider extends DataChangeProvider {
         Conversion conversionFromAfB = (Conversion) object;
         return callProcedure(Doc.class, SAVE_UPDATE_PROCEDURE,
                                                         dbClient.getLang(),
-                                                        null,
+                                                        conversionFromAfB.getRecId(),
                                                         conversionFromAfB.docDateProperty().get(),
                                                         conversionFromAfB.docInDocDateProperty().get(),
                                                         conversionFromAfB.getSellAccount().getIso(),
@@ -50,7 +50,7 @@ public class ConversionDataChangeProvider extends DataChangeProvider {
         Conversion conversionFromAfB = (Conversion) object;
         return callProcedure(Doc.class, SAVE_UPDATE_PROCEDURE,
                                                         dbClient.getLang(),
-                                                        conversionFromAfB.getRecId(),
+                                                        null,
                                                         conversionFromAfB.docDateProperty().get(),
                                                         conversionFromAfB.docInDocDateProperty().get(),
                                                         conversionFromAfB.getSellAccount().getIso(),

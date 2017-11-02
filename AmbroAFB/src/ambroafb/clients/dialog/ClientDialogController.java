@@ -8,6 +8,7 @@ package ambroafb.clients.dialog;
 import ambro.ADatePicker;
 import ambroafb.clients.Client;
 import ambroafb.clients.helper.ClientStatus;
+import ambroafb.clients.helper.ClientStatusComboBox;
 import ambroafb.countries.*;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
@@ -37,7 +38,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -83,7 +83,7 @@ public class ClientDialogController extends DialogController {
     @FXML @ContentNotEmpty(predicate = CustomPredicate.class)
     private CountryComboBox country;
     @FXML @ContentNotEmpty(predicate = CustomPredicate.class)
-    private ComboBox<ClientStatus> statuses;
+    private ClientStatusComboBox statuses;
     // end required nodes.
     
     
@@ -111,7 +111,8 @@ public class ClientDialogController extends DialogController {
             }
         });
         country.fillComboBoxWithouyALL(null);
-        statuses.getItems().setAll(Client.getAllStatusFromDB());
+        statuses.fillComboBox(null);
+//        statuses.getItems().setAll(Client.getAllStatusFromDB());
     }
 
     private void switchJuridical(ActionEvent e) {

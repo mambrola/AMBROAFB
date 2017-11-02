@@ -6,8 +6,8 @@
 package ambroafb.clients.filter;
 
 import ambro.ADatePicker;
-import ambroafb.clients.Client;
 import ambroafb.clients.helper.ClientStatus;
+import ambroafb.clients.helper.ClientStatusCheckComboBox;
 import ambroafb.countries.Country;
 import ambroafb.countries.CountryComboBox;
 import ambroafb.general.SceneUtils;
@@ -16,7 +16,6 @@ import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -26,7 +25,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
-import org.controlsfx.control.CheckComboBox;
 
 /**
  *
@@ -40,7 +38,7 @@ public class ClientFilter  extends UserInteractiveFilterStage implements Filtera
     @FXML
     private CountryComboBox countries;
     @FXML
-    private CheckComboBox<ClientStatus> statuses;
+    private ClientStatusCheckComboBox statuses;
     @FXML
     private FilterOkayCancelController okayCancelController;
     
@@ -84,9 +82,9 @@ public class ClientFilter  extends UserInteractiveFilterStage implements Filtera
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ArrayList<ClientStatus> clientStatuses = Client.getAllStatusFromDB();
-        clientStatuses.sort((ClientStatus status1, ClientStatus status2) -> status1.compateById(status2));
-        statuses.getItems().addAll(clientStatuses);
+//        ArrayList<ClientStatus> clientStatuses = Client.getAllStatusFromDB();
+//        clientStatuses.sort((ClientStatus status1, ClientStatus status2) -> status1.compateById(status2));
+//        statuses.getItems().addAll(clientStatuses);
         
         dateBigger.setValue(clientFilterModel.getFromDate());
         dateLess.setValue(clientFilterModel.getToDate());
@@ -96,9 +94,13 @@ public class ClientFilter  extends UserInteractiveFilterStage implements Filtera
         rezident.setIndeterminate(clientFilterModel.isRezidentIndeterminate());
         type.setSelected(clientFilterModel.isTypeSelected());
         type.setIndeterminate(clientFilterModel.isTypeIndeterminate());
-        clientFilterModel.getSelectedStatusesIndexes().stream().forEach((index) -> {
-            statuses.getCheckModel().check(index);
-        });
+        
+        Consumer<ObservableList<ClientStatus>> selectSavingStatuses = (statusList) -> {
+            clientFilterModel.getSelectedStatusesIndexes().stream().forEach((index) -> {
+                statuses.getCheckModel().check(index);
+            });
+        };
+        statuses.fillComboBox(selectSavingStatuses);
         
         Consumer<ObservableList<Country>> countryConsumer = (countryList) -> {
             Optional<Country> optCountry = countryList.stream().filter((c) -> c.getCode().equals(clientFilterModel.getSelectedCountryCode())).findFirst();

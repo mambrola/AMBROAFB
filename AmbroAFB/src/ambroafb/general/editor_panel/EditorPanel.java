@@ -122,6 +122,7 @@ public abstract class EditorPanel extends HBox implements Initializable {
     /**
      * The method turns off addBySample functionality.
      */
+    @Deprecated
     public void turnOffAddBySample(){
         int addBySimpleIndex = this.getChildren().indexOf(add);
         Button addButton = buildAddWithoutSample();

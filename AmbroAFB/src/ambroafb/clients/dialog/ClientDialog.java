@@ -22,7 +22,7 @@ public class ClientDialog extends UserInteractiveDialogStage implements Dialogab
     public final Client clientBackup;
     
     public ClientDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, "/ambroafb/clients/dialog/ClientDialog.fxml", "client_dialog_title");
+        super(owner, buttonType, "/ambroafb/clients/dialog/ClientDialog.fxml");
         
         if (object == null)
             client = new Client();
@@ -44,4 +44,10 @@ public class ClientDialog extends UserInteractiveDialogStage implements Dialogab
         client = null;
     }
 
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return client;
+    }
+
+    
 }

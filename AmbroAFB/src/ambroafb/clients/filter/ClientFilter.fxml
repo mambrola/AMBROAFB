@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import ambro.*?>
 <?import ambroafb.clients.*?>
+<?import ambroafb.clients.helper.*?>
 <?import ambroafb.countries.*?>
 <?import org.controlsfx.control.*?>
 
@@ -40,7 +41,7 @@
                 <VBox >
                     <children>
                         <Label text="%client_status" /> 
-                        <CheckComboBox fx:id="statuses" />
+                        <ClientStatusCheckComboBox fx:id="statuses" />
                     </children>
                 </VBox >
             </children>

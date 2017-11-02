@@ -14,6 +14,7 @@
 <?import ambroafb.countries.* ?>
 <?import javafx.scene.image.*?>
 <?import ambroafb.clients.*?>
+<?import ambroafb.clients.helper.*?>
 
 <ambroafb.general.DialogPanel stylesheets="/styles/css/clientdialog.css" 
                               xmlns:fx="http://javafx.com/fxml/1" 
@@ -105,7 +106,7 @@
                     <HBox   styleClass="oneThirds">
                         <VBox styleClass="couple">
                             <Label text="%client_status" styleClass="validationMessage" /> 
-                            <ComboBox fx:id="statuses" />
+                            <ClientStatusComboBox fx:id="statuses" />
                         </VBox>
                     </HBox>
                     <HBox styleClass="okayCancelPane" alignment="CENTER_RIGHT" >

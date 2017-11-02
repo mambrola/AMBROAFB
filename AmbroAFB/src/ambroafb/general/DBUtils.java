@@ -379,6 +379,7 @@ public class DBUtils {
         return getObjectsListFromDBProcedure(ParamGeneral.class, ParamGeneral.DB_SELECT_PROC_NAME, conflictedIDs);
     }
     
+    @Deprecated
     public static Client saveClient(Client client){
         try {
             JSONObject targetJson = Utils.getJSONFromClass(client);

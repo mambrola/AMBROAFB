@@ -73,6 +73,9 @@ public class ClientStatus {
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object other){
         if (other == null) return false;
+        if (other instanceof String) { // If user clicks on lable the parameter is String
+            return getDescrip().equals((String)other);
+        }
         ClientStatus otherStatus = (ClientStatus) other;
         return getClientStatusId() == otherStatus.getClientStatusId() && getDescrip().equals(otherStatus.getDescrip());
     }
