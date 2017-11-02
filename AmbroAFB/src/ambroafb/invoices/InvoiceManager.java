@@ -22,7 +22,7 @@ public class InvoiceManager extends EditorPanelableManager {
 
     public InvoiceManager(){
         dataFetchProvider = new InvoiceDataFetchProvider();
-        dataChangeProvider = null;
+        dataChangeProvider = new InvoiceDataChangeProvider();
     }
     
     @Override

@@ -11,7 +11,7 @@ package ambroafb.invoices.helper;
  */
 public class InvoiceFinance {
     
-    public String sum, additionalDiscountRate, additionalDiscountSum, nettoSum, vatRate, vat, paySum, isoTotal, symbolTotal;
+    public String payDelay, sum, additionalDiscountRate, additionalDiscountSum, nettoSum, vatRate, vat, paySum, isoTotal, symbolTotal;
     
     public void copyFrom(InvoiceFinance other){
         sum = other.sum;
