@@ -172,7 +172,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
      */
     protected Consumer<Exception> getErrorAction(){
         return  (ex) -> {
-                    new AlertMessage(this, Alert.AlertType.ERROR, ex, getTitle(), ex.getMessage()).showAndWait();
+                    new AlertMessage(this, Alert.AlertType.ERROR, ex, getTitle(), ex.getLocalizedMessage()).showAndWait();
                 };
     }
     

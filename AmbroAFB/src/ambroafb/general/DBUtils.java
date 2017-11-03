@@ -107,6 +107,7 @@ public class DBUtils {
      * @param params
      * @return 
      */
+    @Deprecated
     public static <T> ArrayList<T> getObjectsListFromDBProcedure(Class<?> listElementClass, String procName, Object... params){
         try {
             System.out.println(procName + " params For DB: ");
@@ -215,6 +216,7 @@ public class DBUtils {
      *                  It could be empty JSON, if user wants every column values from DB table or view.
      * @return 
      */
+    @Deprecated
     public static <T> T getObjectFromDB(Class<?> targetClass, String dbTableOrViewName, JSONObject params){
         try {
             JSONArray selectResultAsArray = GeneralConfig.getInstance().getDBClient().select(dbTableOrViewName, params);
@@ -229,6 +231,7 @@ public class DBUtils {
         return null;
     }
     
+    @Deprecated
     public static <T> T getObjectFromDBProcedure(Class<?> targetClass, String procName, JSONObject params){
         try {
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();

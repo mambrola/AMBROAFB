@@ -5,8 +5,6 @@
  */
 package ambroafb.general.interfaces;
 
-import authclient.AuthServerException;
-import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 import javafx.application.Platform;
@@ -28,7 +26,7 @@ public abstract class DataFetchProvider extends DataProvider {
      * @throws java.io.IOException
      * @throws authclient.AuthServerException
      */
-    public abstract <T> List<T> getFilteredBy(JSONObject params) throws IOException, AuthServerException;
+    public abstract <T> List<T> getFilteredBy(JSONObject params) throws Exception;
     
     /**
      *  The method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list by condition.
@@ -46,7 +44,7 @@ public abstract class DataFetchProvider extends DataProvider {
                 Platform.runLater(() -> {
                     if (successAction != null) successAction.accept(list);
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
                 Platform.runLater(() -> {
                     if (errorAction != null) errorAction.accept(ex);
                 });
@@ -63,7 +61,7 @@ public abstract class DataFetchProvider extends DataProvider {
      * @throws java.io.IOException
      * @throws authclient.AuthServerException
      */
-    public abstract <T> List<T> getFilteredBy(FilterModel model) throws IOException, AuthServerException;
+    public abstract <T> List<T> getFilteredBy(FilterModel model) throws Exception;
     
     /**
      *  According to filter model,  the method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list.
@@ -81,7 +79,7 @@ public abstract class DataFetchProvider extends DataProvider {
                 Platform.runLater(() -> {
                     if (successAction != null) successAction.accept(list);
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
                 Platform.runLater(() -> {
                     if (errorAction != null) errorAction.accept(ex);
                 });
@@ -98,7 +96,7 @@ public abstract class DataFetchProvider extends DataProvider {
      * @throws java.io.IOException
      * @throws authclient.AuthServerException
      */
-    public abstract <T> T getOneFromDB(int recId) throws IOException, AuthServerException;
+    public abstract <T> T getOneFromDB(int recId) throws Exception;
     
     /**
      *  The method gets one by id.
@@ -116,7 +114,7 @@ public abstract class DataFetchProvider extends DataProvider {
                 Platform.runLater(() -> {
                     if (successAction != null) successAction.accept((T)obj);
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
                 Platform.runLater(() -> {
                     if (errorAction != null) errorAction.accept(ex);
                 });

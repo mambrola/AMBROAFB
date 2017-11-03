@@ -9,9 +9,7 @@ import ambroafb.docs.DocMerchandise;
 import ambroafb.general.DBUtils;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,19 +28,19 @@ public class PaymentUtilityDataFetchProvider extends DataFetchProvider {
     }
     
     @Override
-    public <T> List<T> getFilteredBy(JSONObject params) throws IOException, AuthServerException {
+    public <T> List<T> getFilteredBy(JSONObject params) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <T> List<T> getFilteredBy(FilterModel model) throws IOException, AuthServerException {
+    public <T> List<T> getFilteredBy(FilterModel model) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public PaymentUtility getOneFromDB(int recId) throws IOException, AuthServerException {
+    public PaymentUtility getOneFromDB(int recId) throws Exception {
         JSONObject params = new ConditionBuilder().where().and(DB_ID, "=", recId).condition().build();
-        PaymentUtility paymentUtility = DBUtils.getObjectFromDB(PaymentUtility.class, DB_TABLE_NAME, params);
+        PaymentUtility paymentUtility = getObjectFromDB(PaymentUtility.class, DB_TABLE_NAME, params);
         paymentUtility.utilityProperty().set(getDocMerchandise(paymentUtility.getProcessId()));
         return paymentUtility;
     }
