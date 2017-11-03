@@ -56,7 +56,8 @@ public class DocEditorPanel extends EditorPanel implements Initializable, DocEdi
                 List<Doc> removedDocs = new ArrayList<>();
                 result.stream().forEach((doc) -> {
                         removedDocs.add(tableData.stream().map((elem) -> (Doc)elem).filter((tableDoc) -> {
-                                            return doc.getRecId() == tableDoc.getRecId() || doc.getParentRecId() == tableDoc.getParentRecId();
+                                            if (doc.getRecId() != 0) return doc.getRecId() == tableDoc.getRecId();
+                                            return doc.getParentRecId() == tableDoc.getParentRecId();
                                         }).findFirst().get());
                     
                 });
