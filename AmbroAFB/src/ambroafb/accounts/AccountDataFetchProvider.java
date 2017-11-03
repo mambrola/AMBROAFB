@@ -8,10 +8,8 @@ package ambroafb.accounts;
 import ambroafb.accounts.filter.AccountFilterModel;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.WhereBuilder;
-import java.io.IOException;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -26,12 +24,12 @@ public class AccountDataFetchProvider extends DataFetchProvider {
     }
 
     @Override
-    public List<Account> getFilteredBy(JSONObject params) throws IOException, AuthServerException {
+    public List<Account> getFilteredBy(JSONObject params) throws Exception {
         return getObjectsListFromDB(Account.class, DB_VIEW_NAME, params);
     }
 
     @Override
-    public List<Account> getFilteredBy(FilterModel model) throws IOException, AuthServerException {
+    public List<Account> getFilteredBy(FilterModel model) throws Exception {
         AccountFilterModel accountFiletModel = (AccountFilterModel) model;
         WhereBuilder whereBuilder = new ConditionBuilder().where();
         
@@ -55,7 +53,7 @@ public class AccountDataFetchProvider extends DataFetchProvider {
     }
 
     @Override
-    public Account getOneFromDB(int recId) throws IOException, AuthServerException {
+    public Account getOneFromDB(int recId) throws Exception {
         JSONObject params = new ConditionBuilder().where().and(DB_ID, "=", recId).condition().build();
         return getObjectFromDB(Account.class, DB_VIEW_NAME, params);
     }

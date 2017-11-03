@@ -50,7 +50,7 @@ public class ClientStatusCheckComboBox extends CheckComboBox<ClientStatus> {
                         consumer.accept(getItems());
                     }
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
             }
         }
         

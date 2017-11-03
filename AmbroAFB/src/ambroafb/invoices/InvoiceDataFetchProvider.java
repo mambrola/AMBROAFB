@@ -46,14 +46,14 @@ public class InvoiceDataFetchProvider extends DataFetchProvider {
     }
     
     @Override
-    public List<Invoice> getFilteredBy(JSONObject params) throws IOException, AuthServerException {
+    public List<Invoice> getFilteredBy(JSONObject params) throws Exception {
         ArrayList<Invoice> invoices = DBUtils.getObjectsListFromDB(Invoice.class, DB_VIEW_NAME, params);
         invoices.sort((Invoice inv1, Invoice inv2) -> inv2.compareById(inv1));
         return invoices;
     }
 
     @Override
-    public List<Invoice> getFilteredBy(FilterModel model) throws IOException, AuthServerException {
+    public List<Invoice> getFilteredBy(FilterModel model) throws Exception {
         InvoiceFilterModel invoiseFilterModel = (InvoiceFilterModel) model;
         WhereBuilder whereBuilder = new ConditionBuilder().where().and("begin_date", ">=", invoiseFilterModel.getStartDateForDB(true))
                     .and("begin_date", "<=", invoiseFilterModel.getStartDateForDB(false))
@@ -127,13 +127,13 @@ public class InvoiceDataFetchProvider extends DataFetchProvider {
         }
     }
     
-    public List<InvoiceReissuing> getAllIvoiceReissuingsesFromDB() throws IOException, AuthServerException {
+    public List<InvoiceReissuing> getAllIvoiceReissuingsesFromDB() throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
         return getObjectsListFromDB(InvoiceReissuing.class, DB_REISSUINGS_TABLE, params);
     }
     
-    public List<InvoiceStatusClarify> getAllIvoiceClarifiesFromDB() throws IOException, AuthServerException{
+    public List<InvoiceStatusClarify> getAllIvoiceClarifiesFromDB() throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
         return getObjectsListFromDB(InvoiceStatusClarify.class, DB_CLARIFIES_TABLE, params);

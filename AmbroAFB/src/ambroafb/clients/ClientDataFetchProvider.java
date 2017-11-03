@@ -31,12 +31,12 @@ public class ClientDataFetchProvider extends DataFetchProvider {
     }
     
     @Override
-    public List<Client> getFilteredBy(JSONObject params) throws IOException, AuthServerException {
+    public List<Client> getFilteredBy(JSONObject params) throws Exception {
         return getObjectsListFromDB(Client.class, DB_VIEW_NAME, params);
     }
 
     @Override
-    public List<Client> getFilteredBy(FilterModel model) throws IOException, AuthServerException {
+    public List<Client> getFilteredBy(FilterModel model) throws Exception {
         ClientFilterModel clientFilterModel = (ClientFilterModel) model;
         WhereBuilder whereBuilder = new ConditionBuilder().where()
                                                 .and("created_time", ">=", clientFilterModel.getFromDateForDB())
@@ -67,7 +67,7 @@ public class ClientDataFetchProvider extends DataFetchProvider {
     }
 
     @Override
-    public <T> T getOneFromDB(int recId) throws IOException, AuthServerException {
+    public <T> T getOneFromDB(int recId) throws Exception {
         JSONObject params = new ConditionBuilder().where().and(DB_ID, "=", recId).condition().build();
         return getObjectFromDB(Client.class, DB_VIEW_NAME, params);
     }
@@ -78,7 +78,7 @@ public class ClientDataFetchProvider extends DataFetchProvider {
      * @throws IOException
      * @throws AuthServerException 
      */
-    public List<ClientStatus> getClientStatuses() throws IOException, AuthServerException{
+    public List<ClientStatus> getClientStatuses() throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
         return getObjectsListFromDB(ClientStatus.class, DB_CLIENT_STATUS_TABLE, params);

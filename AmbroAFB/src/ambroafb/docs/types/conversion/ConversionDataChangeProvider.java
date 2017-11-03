@@ -28,29 +28,17 @@ public class ConversionDataChangeProvider extends DataChangeProvider {
 
     @Override
     public ArrayList<Doc> editOneToDB(EditorPanelable object) throws Exception {
-        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        Conversion conversionFromAfB = (Conversion) object;
-        return callProcedure(Doc.class, SAVE_UPDATE_PROCEDURE,
-                                                        dbClient.getLang(),
-                                                        conversionFromAfB.getRecId(),
-                                                        conversionFromAfB.docDateProperty().get(),
-                                                        conversionFromAfB.docInDocDateProperty().get(),
-                                                        conversionFromAfB.getSellAccount().getIso(),
-                                                        conversionFromAfB.getSellAccount().getRecId(),
-                                                        conversionFromAfB.getSellAmount(),
-                                                        conversionFromAfB.getBuyingAccount().getIso(),
-                                                        conversionFromAfB.getBuyingAccount().getRecId(),
-                                                        conversionFromAfB.getBuyingAmount(),
-                                                        -1);
+        return saveOneToDB(object);
     }
 
     @Override
     public ArrayList<Doc> saveOneToDB(EditorPanelable object) throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         Conversion conversionFromAfB = (Conversion) object;
+        Integer id = (conversionFromAfB.getRecId() == 0) ? null : conversionFromAfB.getRecId();
         return callProcedure(Doc.class, SAVE_UPDATE_PROCEDURE,
                                                         dbClient.getLang(),
-                                                        null,
+                                                        id,
                                                         conversionFromAfB.docDateProperty().get(),
                                                         conversionFromAfB.docInDocDateProperty().get(),
                                                         conversionFromAfB.getSellAccount().getIso(),

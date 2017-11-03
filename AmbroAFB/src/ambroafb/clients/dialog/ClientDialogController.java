@@ -246,7 +246,7 @@ public class ClientDialogController extends DialogController {
                                                 .collect(Collectors.toList()), 
                                                 getStringConverter());
                 
-            } catch (IOException | AuthServerException | JSONException ex) {
+            } catch (AuthServerException | IOException | JSONException ex) {
                 Logger.getLogger(ClientDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

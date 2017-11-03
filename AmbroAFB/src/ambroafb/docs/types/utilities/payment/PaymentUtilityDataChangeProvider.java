@@ -15,8 +15,6 @@ import authclient.db.DBClient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -42,11 +40,7 @@ public class PaymentUtilityDataChangeProvider extends DataChangeProvider {
     @Override
     public List<Doc> saveOneToDB(EditorPanelable object) throws Exception {
         ArrayList<Doc> docs = new ArrayList<>();
-        try {
-            docs.add(savePaymentUtility((PaymentUtility) object));
-        } catch (JSONException ex){
-            Logger.getLogger(PaymentUtilityDataChangeProvider.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        docs.add(savePaymentUtility((PaymentUtility) object));
         return docs;
     }
     

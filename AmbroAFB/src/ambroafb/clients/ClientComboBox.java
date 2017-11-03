@@ -278,7 +278,7 @@ public class ClientComboBox extends AnchorPane {
                     }
                     decreasePopUpWidth();
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
             }
         }
     

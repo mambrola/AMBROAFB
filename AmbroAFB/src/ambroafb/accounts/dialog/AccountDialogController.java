@@ -216,7 +216,7 @@ public class AccountDialogController extends DialogController {
                     Platform.runLater(() -> {
                         if (success != null) success.accept(accNum);
                     });
-                } catch (IOException | AuthServerException | JSONException ex) {
+                } catch (AuthServerException | IOException | NumberFormatException | JSONException ex) {
                     Platform.runLater(() -> {
                         if (error != null) error.accept(ex);
                     });
@@ -242,7 +242,7 @@ public class AccountDialogController extends DialogController {
                             if (success != null) success.accept(obj);
                         });
                     }
-                } catch (IOException | AuthServerException | JSONException  ex) {
+                } catch (AuthServerException | IOException | JSONException  ex) {
                     Platform.runLater(() -> {
                         if (error != null) error.accept(ex);
                     });

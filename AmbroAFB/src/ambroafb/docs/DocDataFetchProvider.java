@@ -8,10 +8,8 @@ package ambroafb.docs;
 import ambroafb.docs.filter.DocFilterModel;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.WhereBuilder;
-import java.io.IOException;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -26,12 +24,12 @@ public class DocDataFetchProvider extends DataFetchProvider {
     }
     
     @Override
-    public List<Doc> getFilteredBy(JSONObject params) throws IOException, AuthServerException {
+    public List<Doc> getFilteredBy(JSONObject params) throws Exception {
         return getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
     }
 
     @Override
-    public List<Doc> getFilteredBy(FilterModel model) throws IOException, AuthServerException {
+    public List<Doc> getFilteredBy(FilterModel model) throws Exception {
         DocFilterModel docFilterModel = (DocFilterModel) model;
         WhereBuilder whereBuilder = new ConditionBuilder().where().
                         and("doc_date", ">=", docFilterModel.getDocDateForDB(true)).
@@ -53,7 +51,7 @@ public class DocDataFetchProvider extends DataFetchProvider {
     }
 
     @Override
-    public Doc getOneFromDB(int recId) throws IOException, AuthServerException {
+    public Doc getOneFromDB(int recId) throws Exception {
         JSONObject params = new ConditionBuilder().where().and(DB_ID, "=", recId).condition().build();
         return getObjectFromDB(Doc.class, DB_VIEW_NAME, params);
     }

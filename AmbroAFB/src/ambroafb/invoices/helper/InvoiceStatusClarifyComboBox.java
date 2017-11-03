@@ -56,7 +56,7 @@ public class InvoiceStatusClarifyComboBox extends ComboBox<InvoiceStatusClarify>
                         consumer.accept(items);
                     }
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
             }
         }
         

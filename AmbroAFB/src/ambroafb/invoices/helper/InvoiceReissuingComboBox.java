@@ -58,7 +58,7 @@ public class InvoiceReissuingComboBox extends ComboBox<InvoiceReissuing> {
                         consumer.accept(items);
                     }
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
             }
         }
         

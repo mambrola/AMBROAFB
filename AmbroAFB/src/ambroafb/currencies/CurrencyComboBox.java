@@ -137,7 +137,7 @@ public class CurrencyComboBox extends ComboBox<Currency>{
                 JSONArray jsonArr = GeneralConfig.getInstance().getDBClient().select("basic_params", new ConditionBuilder().where().and("param", "=", "rates_basic_iso").condition().build());
                 String removedIso = (String)((JSONObject)jsonArr.opt(0)).opt("value");
                 removeCurrency(removedIso);
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(CurrencyComboBox.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

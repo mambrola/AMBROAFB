@@ -6,8 +6,6 @@
 package ambroafb.invoices.helper;
 
 import ambroafb.invoices.InvoiceDataFetchProvider;
-import authclient.AuthServerException;
-import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 import javafx.application.Platform;
@@ -52,7 +50,7 @@ public class InvoiceReissuingCheckComboBox extends CheckComboBox<InvoiceReissuin
                         consumer.accept(getItems());
                     }
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
             }
         }
         

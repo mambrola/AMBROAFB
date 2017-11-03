@@ -10,8 +10,6 @@ import ambroafb.general.interfaces.DataProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.ListingController;
-import authclient.AuthServerException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -85,7 +83,7 @@ public class TableListController extends ListingController {
                 List<EditorPanelable> list = (model == null) ? dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL)
                                                              : dataFetchProvider.getFilteredBy(model);
                 contents.setAll(list);
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
             }
             
             Platform.runLater(() -> {

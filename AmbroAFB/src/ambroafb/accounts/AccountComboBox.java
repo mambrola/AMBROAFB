@@ -6,8 +6,6 @@
 package ambroafb.accounts;
 
 import ambroafb.general.interfaces.DataProvider;
-import authclient.AuthServerException;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -115,7 +113,7 @@ public class AccountComboBox extends ComboBox<Account> {
                         consumer.accept(items);
                     }
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
             }
         }
         

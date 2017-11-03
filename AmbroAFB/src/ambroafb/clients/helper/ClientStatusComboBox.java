@@ -52,7 +52,7 @@ public class ClientStatusComboBox extends ComboBox<ClientStatus> {
                         consumer.accept(items);
                     }
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
             }
         }
         

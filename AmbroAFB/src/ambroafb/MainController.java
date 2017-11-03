@@ -483,7 +483,7 @@ public class MainController implements Initializable {
         MonitoringClient monitoring = new MonitoringClient(email, password, authclient.Utils.getDefaultConfig(Names.MONITORING_URL_ON_SERVER, Names.APP_NAME));
         try {
             monitoring.loginAndOpenBrowser(email, password);
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
 //            String msg = GeneralConfig.getInstance().getTitleFor("failed_monitoring_login");

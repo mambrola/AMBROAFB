@@ -52,7 +52,7 @@ public class InvoiceStatusClarifyCheckComboBox extends CheckComboBox<InvoiceStat
                         consumer.accept(getItems());
                     }
                 });
-            } catch (IOException | AuthServerException ex) {
+            } catch (Exception ex) {
             }
         }
         

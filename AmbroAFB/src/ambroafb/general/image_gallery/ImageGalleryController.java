@@ -400,7 +400,7 @@ public class ImageGalleryController implements Initializable {
                                     data
                             );
                         }
-                    } catch (IOException | AuthServerException ex) {
+                    } catch (Exception ex) {
                         Logger.getLogger(ImageGalleryController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }

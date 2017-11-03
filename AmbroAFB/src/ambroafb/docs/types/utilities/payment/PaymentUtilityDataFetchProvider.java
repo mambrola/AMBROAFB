@@ -6,10 +6,11 @@
 package ambroafb.docs.types.utilities.payment;
 
 import ambroafb.docs.DocMerchandise;
-import ambroafb.general.DBUtils;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
 import authclient.db.ConditionBuilder;
+import authclient.db.DBClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +46,9 @@ public class PaymentUtilityDataFetchProvider extends DataFetchProvider {
         return paymentUtility;
     }
     
-    private DocMerchandise getDocMerchandise(int merchandiseProcessId) {
-        ArrayList<DocMerchandise> merchandises = DBUtils.getObjectsListFromDBProcedure(DocMerchandise.class, DB_MERCHANDISES_PROCEDURE_NAME);
+    private DocMerchandise getDocMerchandise(int merchandiseProcessId) throws Exception {
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        ArrayList<DocMerchandise> merchandises = callProcedure(DocMerchandise.class, DB_MERCHANDISES_PROCEDURE_NAME, dbClient.getLang());
         Optional<DocMerchandise> opt = merchandises.stream().filter((DocMerchandise dm) -> dm.getRecId() == merchandiseProcessId).findFirst();
         return (opt.isPresent()) ? opt.get() : null;
     }

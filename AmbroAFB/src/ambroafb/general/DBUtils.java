@@ -76,7 +76,7 @@ public class DBUtils {
             System.out.println(dbTableOrViewName + " data from DB: " + data);
             
             return Utils.getListFromJSONArray(listElementClass, data);
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             errorAction.accept(ex);
         }
         return new ArrayList<>();
@@ -92,7 +92,7 @@ public class DBUtils {
             System.out.println(procName + " data from DB: " + data);
             
             return Utils.getListFromJSONArray(listElementClass, data);
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             analyzeDBException(ex);
         }
         return new ArrayList<>();
@@ -130,12 +130,13 @@ public class DBUtils {
             System.out.println(procName + " data from DB: " + data.toString());
             
             return Utils.getListFromJSONArray(listElementClass, data);
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             analyzeDBException(ex);
         }
         return new ArrayList<>();
     }
     
+    @Deprecated
     public static ArrayList<Doc> saveMonthlyAccrual(LocalDate date){
         ArrayList<Doc> docs = new ArrayList();
         try {
@@ -169,7 +170,7 @@ public class DBUtils {
                     appendArrayLists(docs, insertedDocsbyRate);
                 }
             }
-        } catch (IOException | AuthServerException | JSONException ex) {
+        } catch (Exception ex) {
             analyzeDBException(ex);
         }
         return docs;
@@ -201,7 +202,7 @@ public class DBUtils {
             ArrayList<ParamGeneral> generalParamsList = mapper.readValue(generalParams, mapper.getTypeFactory().constructCollectionType(ArrayList.class, ParamGeneral.class));
             response.setParamGenerals(generalParamsList);
             
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return response;
@@ -225,7 +226,7 @@ public class DBUtils {
             System.out.println("one " + targetClass + " data: " + jsonResult);
             
             return Utils.getClassFromJSON(targetClass, jsonResult);
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -241,7 +242,7 @@ public class DBUtils {
             System.out.println("one " + targetClass + " data: " + jsonResult);
             
             return Utils.getClassFromJSON(targetClass, jsonResult);
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(License.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -265,7 +266,7 @@ public class DBUtils {
             System.out.println("save " + source.getClass() + " data: " + newSourceFromDB.toString());
             
             return Utils.getClassFromJSON(source.getClass(), newSourceFromDB);
-        } catch (IOException | AuthServerException | JSONException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -285,7 +286,7 @@ public class DBUtils {
         try {
             return saveObjectSample(source, tableName);
         } 
-        catch (IOException | AuthServerException ex) {
+        catch (Exception ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
             new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAndWait();
         }
@@ -296,7 +297,7 @@ public class DBUtils {
         try {
             return saveObjectByProcedure(source, procName);
         } 
-        catch (IOException | AuthServerException | JSONException ex) {
+        catch (Exception ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
             new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAndWait();
         }
@@ -341,7 +342,7 @@ public class DBUtils {
 //            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
 //            Response r = dbClient.post("invoices/fromAfb?lang=" + dbClient.getLang(), targetJson.toString());
 //            return Utils.getClassFromJSON(invoice.getClass(), new JSONObject(r.getDataAsString()));
-//        } catch (IOException | AuthServerException | JSONException ex) {
+//        } catch (Exception | JSONException ex) {
 //            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        return null;
@@ -391,7 +392,7 @@ public class DBUtils {
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             JSONObject jsonFromDB = dbClient.insertUpdateFromAfb("client", targetJson);
             return Utils.getClassFromJSON(Client.class, jsonFromDB);
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -416,7 +417,7 @@ public class DBUtils {
                                                             -1);
             System.out.println("save Conversion data from DB: " + data);
             return Utils.getListFromJSONArray(Doc.class, data);
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             analyzeDBException(ex);
         }
         return new ArrayList();
@@ -454,7 +455,7 @@ public class DBUtils {
                                                             -1);
             System.out.println("save PaymentUtility data from DB: " + data);
             return Utils.getClassFromJSON(Doc.class, data.getJSONObject(0));
-        } catch (IOException | AuthServerException | JSONException ex) {
+        } catch (Exception ex) {
             analyzeDBException(ex);
         }
         return null;
@@ -474,7 +475,7 @@ public class DBUtils {
                                                             chargeUtility.getOwnerId());
             System.out.println("save ChangeUtility data from DB: " + data);
             return Utils.getListFromJSONArray(Doc.class, data);
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             analyzeDBException(ex);
         }
       return new ArrayList();
@@ -498,7 +499,7 @@ public class DBUtils {
                                                             doc.getOwnerId());
             System.out.println("doc_memorial_insert_update data from DB: " + data);
             return Utils.getClassFromJSON(Doc.class, data.getJSONObject(0));
-        } catch (IOException | AuthServerException | JSONException ex) {
+        } catch (Exception ex) {
             analyzeDBException(ex);
         }
         return null;
@@ -513,7 +514,7 @@ public class DBUtils {
             
             dbClient.callProcedure(deleteProcName, params);
             result = true;
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
@@ -525,7 +526,7 @@ public class DBUtils {
             DBClient dbClient = GeneralConfig.getInstance().getDBClient();
             dbClient.callProcedure(deleteProcName, id);
             result = true;
-        } catch (IOException | AuthServerException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
@@ -557,7 +558,7 @@ public class DBUtils {
                 clientCnsm.accept(clients.get(0)); // There is always one entry in it.
             }
             
-        } catch (IOException | AuthServerException | JSONException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -10,10 +10,8 @@ import ambroafb.docs.DocMerchandise;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.json.JSONObject;
@@ -31,17 +29,17 @@ public class ChargeUtilityDataFetchProvider extends DataFetchProvider {
     }
     
     @Override
-    public <T> List<T> getFilteredBy(JSONObject params) throws IOException, AuthServerException {
+    public <T> List<T> getFilteredBy(JSONObject params) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <T> List<T> getFilteredBy(FilterModel model) throws IOException, AuthServerException {
+    public <T> List<T> getFilteredBy(FilterModel model) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ChargeUtility getOneFromDB(int recId) throws IOException, AuthServerException {
+    public ChargeUtility getOneFromDB(int recId) throws Exception {
         JSONObject params = new ConditionBuilder().where().orGroup().or(DB_ID, "=", recId).or("parent_rec_id", "=", recId).closeGroup().condition().build();
         List<Doc> bouquet = getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
         ChargeUtility chargeFromBouqet = new ChargeUtility();
@@ -58,7 +56,7 @@ public class ChargeUtilityDataFetchProvider extends DataFetchProvider {
                                 findFirst().get();
     }
     
-    private void fillChargeUtility(Doc doc, ChargeUtility utility) throws IOException, AuthServerException{
+    private void fillChargeUtility(Doc doc, ChargeUtility utility) throws Exception {
         utility.merchandiseProperty().set(getDocMerchandise(doc.getProcessId()));
         utility.setRecId(doc.getRecId());
         utility.setParentRecId(doc.getParentRecId());
@@ -75,7 +73,7 @@ public class ChargeUtilityDataFetchProvider extends DataFetchProvider {
         utility.setOwnerId(doc.getOwnerId());
     }
     
-    private DocMerchandise getDocMerchandise(int merchandiseProcessId) throws IOException, AuthServerException {
+    private DocMerchandise getDocMerchandise(int merchandiseProcessId) throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         List<DocMerchandise> merchandises = callProcedure(DocMerchandise.class, DB_MERCHANDISES_PROCEDURE_NAME, dbClient.getLang());
         Optional<DocMerchandise> opt = merchandises.stream().filter((DocMerchandise dm) -> dm.getRecId() == merchandiseProcessId).findFirst();

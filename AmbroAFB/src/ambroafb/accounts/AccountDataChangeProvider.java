@@ -7,8 +7,6 @@ package ambroafb.accounts;
 
 import ambroafb.general.interfaces.DataChangeProvider;
 import ambroafb.general.interfaces.EditorPanelable;
-import authclient.AuthServerException;
-import java.io.IOException;
 
 /**
  *
@@ -34,30 +32,15 @@ public class AccountDataChangeProvider extends DataChangeProvider {
     
     @Override
     public Account editOneToDB(EditorPanelable object) throws Exception {
-        Account result = null;
-        Account acc = (Account) object;
-        try {
-            callProcedure(ACCOUNT_CHECK_PROCEDURE, acc.getRecId(), (int)acc.getAccount(), acc.getClientId(), acc.getBalAccount(), acc.getIso());
-            saveSimple(acc, ACCOUNT_TABLE, true);
-        } catch (AuthServerException | IOException ex){
-            throw ex;
-        }
-        
-        return result;
+        return saveOneToDB(object);
     }
 
     @Override
     public Account saveOneToDB(EditorPanelable object) throws Exception {
-        Account result = null;
         Account acc = (Account) object;
-        try {
-            callProcedure(ACCOUNT_CHECK_PROCEDURE, null, (int)acc.getAccount(), acc.getClientId(), acc.getBalAccount(), acc.getIso());
-            saveSimple(acc, ACCOUNT_TABLE, true);
-        } catch (AuthServerException | IOException ex){
-            throw ex;
-        }
-        
-        return result;
+        Integer id = (acc.getRecId() == 0) ? null : acc.getRecId();
+        callProcedure(ACCOUNT_CHECK_PROCEDURE, id, (int)acc.getAccount(), acc.getClientId(), acc.getBalAccount(), acc.getIso());
+        return saveSimple(acc, ACCOUNT_TABLE, true);
     }
 
     
