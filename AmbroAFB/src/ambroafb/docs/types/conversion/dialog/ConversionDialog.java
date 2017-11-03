@@ -25,7 +25,7 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
     private Conversion conversion;
     private final Conversion conversionBackup;
     
-    private final List<Doc> conversionDocs = new ArrayList<>();
+    private final List<Doc> docs = new ArrayList<>();
     
     public ConversionDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         super(owner, buttonType, "/ambroafb/docs/types/conversion/dialog/ConversionDialog.fxml");
@@ -42,12 +42,12 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
     @Override
     public List<Doc> getResult() {
         showAndWait();
-        return conversionDocs;
+        return docs;
     }
 
     @Override
     public void operationCanceled() {
-        conversionDocs.clear();
+        docs.clear();
     }
 
     @Override
@@ -58,49 +58,23 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
     @Override
     protected Consumer<Void> getDeleteSuccessAction() {
         return (Void) -> {
-                        conversionDocs.clear();
-                        conversionDocs.addAll(deserializeConversion(conversion));
+                        docs.clear();
+                        docs.addAll(conversion.convertToDoc());
                     };
-    }
-    
-    private List<Doc> deserializeConversion(Conversion conversion){
-        List<Doc> result = new ArrayList<>();
-        Doc firstDoc = new Doc();
-        firstDoc.setRecId(conversion.getRecId());
-        firstDoc.setDocDate(conversion.getDocDate());
-        firstDoc.setDocInDocDate(conversion.getDocInDocDate());
-        firstDoc.setDescrip(conversion.descripProperty().get());
-        
-        Doc secondDoc = new Doc();
-        secondDoc.copyFrom(firstDoc);
-        
-        firstDoc.setIso(conversion.getSellCurrency());
-        firstDoc.setAmount(conversion.getSellAmount());
-        firstDoc.debitProperty().set(conversion.getSellAccount());
-        
-        secondDoc.setParentRecId(conversion.getRecId());
-        secondDoc.setIso(conversion.getBuyingCurrency());
-        secondDoc.debitProperty().set(conversion.getBuyingAccount());
-        secondDoc.setAmount(conversion.getBuyingAmount());
-        
-        result.add(firstDoc);
-        result.add(secondDoc);
-        return result;
     }
     
     @Override
     protected Consumer<Object> getEditSuccessAction() {
-        Consumer<Object> consumer = (obj) -> {
-            conversionDocs.clear();
-            conversionDocs.addAll((ArrayList<Doc>)obj);
-        };
-        return consumer;
+        return getAddSuccessAction();
     }
 
     
     @Override
     protected Consumer<Object> getAddSuccessAction() {
-        return getEditSuccessAction();
+        return (obj) -> {
+                    docs.clear();
+                    docs.addAll((List<Doc>)obj);
+                };
     }
 
 

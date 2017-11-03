@@ -6,11 +6,15 @@
 package ambroafb.docs.types.conversion;
 
 import ambroafb.accounts.Account;
+import ambroafb.docs.Doc;
 import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -147,6 +151,33 @@ public class Conversion extends EditorPanelable {
     
     public void setBuyingAmount(Float amount){
         this.buyingAmount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
+    }
+    
+    
+    @JsonIgnore
+    public List<Doc> convertToDoc(){
+        Doc parent = new Doc();
+        Doc child = new Doc();
+        List<Doc> result = new ArrayList<>();
+        result.add(parent);
+        result.add(child);
+        
+        parent.setDocDate(getDocDate());
+        parent.setDocInDocDate(getDocInDocDate());
+        parent.setDescrip(descripProperty().get());
+        child.copyFrom(parent);
+
+        parent.setRecId(getRecId());
+        parent.setIso(getSellCurrency());
+        parent.setAmount(getSellAmount());
+        parent.debitProperty().set(getSellAccount());
+        
+        child.setParentRecId(parent.getRecId());
+        child.setIso(getBuyingCurrency());
+        child.debitProperty().set(getBuyingAccount());
+        child.setAmount(getBuyingAmount());
+        
+        return result;
     }
     
     

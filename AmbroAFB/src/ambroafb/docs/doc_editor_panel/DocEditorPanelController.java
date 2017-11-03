@@ -13,7 +13,6 @@ import ambroafb.docs.Doc;
 import ambroafb.docs.filter.DocFilter;
 import ambroafb.docs.types.DocManager;
 import ambroafb.docs.types.DocManagersFactory;
-import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
@@ -344,24 +343,24 @@ public class DocEditorPanelController implements Initializable {
      */
     @FXML
     private void addPaymentUtility(ActionEvent e) {
-        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
-        if(dialogStage == null || !dialogStage.isShowing()){
-            DocManager dm = new PaymentUtilityManager();
-            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
-            EditorPanelable newPaymentUtility = dd.getResult();
-            if (newPaymentUtility != null){
-                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newPaymentUtility);
-                if (!newDocsFromDB.isEmpty()){
-                    tableData.addAll(0, newDocsFromDB);
-                    ((DocTableListController)outerController).setSelected(0);
-                }
-            }
-        }
-        else {
-            dialogStage.requestFocus();
-            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
-        }
+//        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
+//        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+//        if(dialogStage == null || !dialogStage.isShowing()){
+//            DocManager dm = new PaymentUtilityManager();
+//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
+//            EditorPanelable newPaymentUtility = dd.getResult();
+//            if (newPaymentUtility != null){
+//                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newPaymentUtility);
+//                if (!newDocsFromDB.isEmpty()){
+//                    tableData.addAll(0, newDocsFromDB);
+//                    ((DocTableListController)outerController).setSelected(0);
+//                }
+//            }
+//        }
+//        else {
+//            dialogStage.requestFocus();
+//            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+//        }
     }
     
     /**

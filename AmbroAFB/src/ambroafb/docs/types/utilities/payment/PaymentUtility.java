@@ -5,6 +5,7 @@
  */
 package ambroafb.docs.types.utilities.payment;
 
+import ambroafb.docs.Doc;
 import ambroafb.docs.DocMerchandise;
 import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
@@ -187,6 +188,24 @@ public class PaymentUtility extends EditorPanelable {
         this.ownerId = ownerId;
     }
 
+    @JsonIgnore
+    public Doc convertToDoc(){
+        Doc result = new Doc();
+        result.setDocDate(getDocDate());
+        result.setDocInDocDate(getDocInDocDate());
+        result.setIso(getIso());
+        result.setAmount(getAmount());
+        result.setDocCode(getDocCode());
+        result.setDescrip(getDescrip());
+        result.setParentRecId(getParentRectId());
+        result.setProcessId(getProcessId());
+        result.setDebitId(getDebitId());
+        result.setCreditId(getCreditId());
+        result.setDocType(getDocType());
+        result.setOwnerId(getOwnerId());
+        return result;
+    }
+    
     
     @Override
     public PaymentUtility cloneWithoutID() {

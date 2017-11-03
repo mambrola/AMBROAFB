@@ -44,7 +44,8 @@ public class DocManagersFactory {
         }
         else { // Doc has not children
             if (doc.getDocType() == 82){
-                return new PaymentUtilityManager();
+                return null;
+//                return new PaymentUtilityManager();
             }
             else {
                 return null;
@@ -69,8 +70,7 @@ public class DocManagersFactory {
         }
         else { // Doc has not children
             if (doc.getDocType() == 82){
-                return null;
-//                return new PaymentUtilityManager();
+                return new PaymentUtilityManager();
             }
             else {
                 return new CustomManager();

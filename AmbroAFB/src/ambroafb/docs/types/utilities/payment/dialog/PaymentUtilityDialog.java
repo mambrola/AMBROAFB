@@ -5,11 +5,15 @@
  */
 package ambroafb.docs.types.utilities.payment.dialog;
 
+import ambroafb.docs.Doc;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -21,8 +25,10 @@ public class PaymentUtilityDialog extends UserInteractiveDialogStage implements 
     private PaymentUtility paymentUtility;
     private final PaymentUtility paymentUtilityBackup;
     
+    private List<Doc> docs = new ArrayList<>();
+    
     public PaymentUtilityDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, "/ambroafb/docs/types/utilities/payment/dialog/PaymentUtilityDialog.fxml", "doc_payment_utility_dialog_title");
+        super(owner, buttonType, "/ambroafb/docs/types/utilities/payment/dialog/PaymentUtilityDialog.fxml");
 
         if (object == null)
             paymentUtility = new PaymentUtility();
@@ -34,14 +40,44 @@ public class PaymentUtilityDialog extends UserInteractiveDialogStage implements 
     }
     
     @Override
-    public EditorPanelable getResult() {
+    public List<Doc> getResult() {
         showAndWait();
-        return paymentUtility;
+        return docs;
     }
 
     @Override
     public void operationCanceled(){
-        paymentUtility = null;
+        docs.clear();
     }
 
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return paymentUtility;
+    }
+
+    @Override
+    protected Consumer<Void> getDeleteSuccessAction() {
+        return (Void) -> {
+                        docs.clear();
+                        docs.add(paymentUtility.convertToDoc());
+                    };
+    }
+    
+
+    @Override
+    protected Consumer<Object> getEditSuccessAction() {
+        return getAddSuccessAction();
+    }
+    
+    
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> {
+                    docs.clear();
+                    docs.addAll((List<Doc>)obj);
+                };
+    }
+
+    
+    
 }

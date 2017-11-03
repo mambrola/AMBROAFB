@@ -5,6 +5,7 @@
  */
 package ambroafb.docs.types.utilities.charge;
 
+import ambroafb.docs.Doc;
 import ambroafb.docs.DocMerchandise;
 import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
@@ -15,8 +16,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -212,6 +215,36 @@ public class ChargeUtility extends EditorPanelable {
 
     public void setVat(Float vat) {
         this.vat.set(NumberConverter.makeFloatStringBySpecificFraction(vat, 2));
+    }
+    
+    
+    @JsonIgnore
+    public List<Doc> convertToDoc(){
+        Doc parent = new Doc();
+        Doc child = new Doc();
+        List<Doc> docs = new ArrayList<>();
+        docs.add(parent);
+        docs.add(child);
+        
+        parent.setDocDate(getDocDate());
+        parent.setDocInDocDate(getDocInDocDate());
+        parent.setIso(getIso());
+        parent.setAmount(getAmount());
+        parent.setDocCode(getDocCode());
+        parent.setDescrip(getDescrip());
+        parent.setParentRecId(getParentRectId());
+        parent.setProcessId(getProcessId());
+        parent.setDebitId(getDebitId());
+        parent.setCreditId(getCreditId());
+        parent.setDocType(getDocType());
+        parent.setOwnerId(getOwnerId());
+        child.copyFrom(parent);
+        
+        parent.setRecId(getRecId());
+        child.setParentRecId(parent.getRecId());
+        child.setAmount(getVat());
+        
+        return docs;
     }
 
     @Override

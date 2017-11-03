@@ -10,7 +10,9 @@ import ambroafb.docs.Doc;
 import ambroafb.docs.types.conversion.ConversionManager;
 import ambroafb.docs.types.custom.CustomManager;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
+import ambroafb.docs.types.monthly.MonthlyManager;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
+import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.Dialogable;
@@ -107,7 +109,7 @@ public class DocsAddButton extends SplitMenuButton implements Initializable {
     
     public void addPaymentUtility(ActionEvent e) {
         if (observer.operationIsAllow()) {
-            
+            makeAddAction(new PaymentUtilityManager());
         }
     }
     
@@ -119,7 +121,7 @@ public class DocsAddButton extends SplitMenuButton implements Initializable {
     
     public void addMonthlyAccrual(ActionEvent e){
         if (observer.operationIsAllow()) {
-            
+            makeAddAction(new MonthlyManager());
         }
     }
     

@@ -437,7 +437,7 @@ public class DBUtils {
         new AlertMessage(Alert.AlertType.ERROR, ex, message, docDBErorTitle).showAndWait();
     }
     
-    
+    @Deprecated
     public static Doc savePaymentUtility(PaymentUtility paymentUtility){
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         Integer id = (paymentUtility.getRecId() == 0) ? null : paymentUtility.getRecId();
