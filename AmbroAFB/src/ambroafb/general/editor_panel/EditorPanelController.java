@@ -50,6 +50,7 @@ import javafx.stage.Stage;
  *
  * @author mambroladze
  */
+@Deprecated
 public class EditorPanelController implements Initializable {
 
     @FXML

@@ -10,15 +10,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox   
-        fx:id = "formNode"
-        alignment="CENTER_LEFT" 
-        stylesheets="/styles/css/editorpanel.css"
-        xmlns:fx="http://javafx.com/fxml/1" 
-        fx:controller="ambroafb.general.editor_panel.EditorPanelController">
+<!--fx:controller="ambroafb.general.editor_panel.EditorPanelController"-->
+
+<fx:root   type="javafx.scene.layout.HBox"
+           fx:id = "formNode"
+           alignment="CENTER_LEFT" 
+           stylesheets="/styles/css/editorpanel.css"
+           xmlns:fx="http://javafx.com/fxml/1" 
+>
     <children>
         <fx:include fx:id="exit" source="/ambroafb/general/exit_button/ExitButton.fxml"/>
-        <Button fx:id="delete" onAction="#delete" >
+        <Button fx:id="delete" >
             <tooltip>
                 <Tooltip text="%delete" />
             </tooltip>
@@ -28,7 +30,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button fx:id="edit" onAction="#edit" >
+        <Button fx:id="edit" >
             <tooltip>
                 <Tooltip text="%edit" />
             </tooltip>
@@ -38,7 +40,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button fx:id="view" onAction="#view" >
+        <Button fx:id="view" >
             <tooltip>
                 <Tooltip text="%view" />
             </tooltip>
@@ -48,7 +50,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <SplitMenuButton fx:id="add" onAction="#add">
+        <SplitMenuButton fx:id="add" >
             <tooltip>
                 <Tooltip text="%new" />
             </tooltip>
@@ -58,7 +60,7 @@
                 </ImageView>
             </graphic>
             <items>
-                <MenuItem fx:id="addBySample" onAction="#addBySample" mnemonicParsing="false">
+                <MenuItem fx:id="addBySample" mnemonicParsing="false">
                     <graphic>
                         <Label text="%add_by_sample">
                             <tooltip>
@@ -66,19 +68,18 @@
                             </tooltip>
                             <graphic>
                                 <HBox  spacing="4" >
-                                    <ImageView fitHeight="22.0" fitWidth="22.0"  pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="18.0" fitWidth="18.0"  pickOnBounds="true" preserveRatio="true">
                                         <Image url="/images/clone.png" />
                                     </ImageView>
                                     <Separator orientation="VERTICAL" />
                                 </HBox>
                             </graphic>
                         </Label> 
-                                
                     </graphic>
                 </MenuItem>
             </items>
         </SplitMenuButton>
-        <ToggleButton fx:id="refresh" onAction="#refresh">
+        <ToggleButton fx:id="refresh">
             <tooltip>
                 <Tooltip text="%refresh" />
             </tooltip>
@@ -91,4 +92,4 @@
         <Region fx:id="region" HBox.hgrow="ALWAYS" />
         <TextField fx:id="search" promptText="%search" />
     </children>
-</HBox>
+</fx:root>

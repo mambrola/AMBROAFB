@@ -94,22 +94,6 @@ public class MainController implements Initializable {
         }
     }
     
-    @FXML
-    private void programsCarFines(ActionEvent event) {
-//        try{
-//            Stage stage = Utils.createMultiSceneStage(
-//                    Names.CAR_FINES_FXML, 
-//                    config.getTitleFor(Names.CAR_FINES_TITLE), 
-//                    Names.CAR_FINES_LOGO,
-//                    AmbroAFB.mainStage
-//            );
-//            stage.show();
-//        }catch(IOException ex){
-//            AlertMessage alert = new AlertMessage(AlertType.ERROR, ex, Names.ERROR_CAR_FINES_SCENE_START, "Car Fines");
-//            alert.showAlert();
-//        }
-    }
-    
     @FXML private void accounts(ActionEvent event) { 
         String stageTitle = "accounts";
         Stage accountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Account.class.getSimpleName());
@@ -149,12 +133,6 @@ public class MainController implements Initializable {
                 clients.close();
             }
             else {
-//                Supplier<List<EditorPanelable>> fetchData = () -> {
-//                                            ArrayList<Client> clientsList = Client.getFilteredFromDB(model);
-//                                            return new ArrayList(clientsList);
-//                                        };
-//                
-//                clients.getController().reAssignTable(fetchData);
                 clients.getController().reAssignTable(model);
             }
         }
@@ -170,7 +148,7 @@ public class MainController implements Initializable {
         Stage loggingsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Logging.class.getSimpleName());
         if(loggingsStage == null || !loggingsStage.isShowing()){
             TableList loggings = new TableList(AmbroAFB.mainStage, Logging.class, stageTitle);
-            loggings.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
+            loggings.getController().removeElementsFromEditorPanel(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID);
             loggings.show();
             
             LoggingFilter filter = new LoggingFilter(loggings);
@@ -208,9 +186,6 @@ public class MainController implements Initializable {
                 invoices.close();
             }
             else {
-//                Supplier<List<EditorPanelable>> fetchData = () -> {
-//                                                        return new ArrayList(Invoice.getFilteredFromDB(model));
-//                                                    };
                 invoices.getController().reAssignTable(model);
             }
         }
@@ -246,14 +221,6 @@ public class MainController implements Initializable {
             TableList countries = new TableList(AmbroAFB.mainStage, Country.class, stageTitle);
             countries.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
 
-//            Supplier< List<EditorPanelable> > supplier = () -> {
-//                ArrayList<EditorPanelable> list = new ArrayList<>();
-//                list.addAll(Country.getAllFromDB());
-//                return list;
-//            };
-//            FetchTableListEntriesFromDB fetch = new FetchTableListEntriesFromDB(supplier, countries);
-//            fetch.start();
-            
             Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Country.getAllFromDB());
                                                 };
@@ -273,13 +240,8 @@ public class MainController implements Initializable {
         Stage docsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Doc.class.getSimpleName());
         if(docsStage == null || !docsStage.isShowing()){
             DocEditorPanel docEditorPanel = new DocEditorPanel();
-//            DocsAddButton docsAdd = new DocsAddButton();
-//            docsAdd.registerObserver(docEditorPanel);
-//            docEditorPanel.addComponentAtAddPanel(docsAdd, true);
-                
             TableList docs = new TableList(AmbroAFB.mainStage, Doc.class, stageTitle, docEditorPanel);
             docs.setEPManager(new ambroafb.docs.DocManager());
-//            docs.getController().setEditorPanel(docEditorPanel);
             docs.show();
             
             Filterable filter = new DocFilter(docs);
@@ -288,10 +250,6 @@ public class MainController implements Initializable {
                 docs.close();
             }
             else {
-//                Supplier<ArrayList<Doc>> fetchData = () -> {
-//                                                            return new ArrayList(Doc.getFilteredFromDB(model));
-//                                                        };
-//                docs.getDocController().reAssignTable(fetchData);
                 docs.getController().reAssignTable(model);
             }
         }

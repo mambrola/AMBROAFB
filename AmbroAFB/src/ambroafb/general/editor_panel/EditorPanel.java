@@ -81,16 +81,13 @@ public abstract class EditorPanel extends HBox implements Initializable {
         DELETE, EDIT, VIEW, ADD, ADD_BY_SAMPLE
     }
     
-//    @FXML
-//    private HBox addPanel;
-    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         componentsInitialize(location, resources);
     }
     
     protected final void assignLoader(){
-        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/general/editor_panel/EditorPanelTest.fxml"));
+        FXMLLoader loader = new FXMLLoader(AmbroAFB.class.getResource("/ambroafb/general/editor_panel/EditorPanel.fxml"));
         loader.setResources(GeneralConfig.getInstance().getBundle());
         loader.setRoot(this);
         loader.setController(this);
