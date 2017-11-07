@@ -130,7 +130,7 @@ public class DocTableListController extends ListingController {
     }
 
     @Override
-    public void addListByClass(Class content) {
+    public void addListWith(Class content) {
         aview = new AFilterableTableView<>(content);
         aview.setId("aview");
         aview.setBundle(bundle);

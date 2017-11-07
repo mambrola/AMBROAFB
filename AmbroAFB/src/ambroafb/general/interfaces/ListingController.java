@@ -40,7 +40,7 @@ public abstract class ListingController implements Initializable {
     
     public abstract void reAssignTable(Supplier<List<EditorPanelable>> fetchData);
     public abstract void reAssignTable(FilterModel model);
-    public abstract void addListByClass(Class content);
+    public abstract void addListWith(Class content);
     public abstract void removeElementsFromEditorPanel(String... componentFXids);
     
     public void setEditorPanel(EditorPanel editorPanel){

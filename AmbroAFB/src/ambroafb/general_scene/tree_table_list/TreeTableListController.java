@@ -171,7 +171,7 @@ public class TreeTableListController extends ListingController {
     }
     
     @Override
-    public void addListByClass(Class content) {
+    public void addListWith(Class content) {
         aview = new AFilterableTreeTableView<>(content);
         aview.setId("aview");
         aview.setBundle(bundle);

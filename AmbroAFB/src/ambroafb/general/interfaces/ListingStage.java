@@ -61,7 +61,7 @@ public abstract class ListingStage extends UserInteractiveStage {
         Scene scene = SceneUtils.createScene(fxmlPath, null);
         controller = (ListingController) scene.getProperties().get("controller");
         controller.setEditorPanel(editorPanel);
-        controller.addListByClass(contentClass);
+        controller.addListWith(contentClass);
         this.setScene(scene);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
