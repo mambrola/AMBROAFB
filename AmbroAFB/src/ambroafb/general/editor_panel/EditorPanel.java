@@ -247,6 +247,11 @@ public abstract class EditorPanel extends HBox implements Initializable {
         if (allowToOpenDialogOrFilter()) refresh(event);
     }
     
+    
+    protected EditorPanelable getSelected(){
+        return (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+    }
+    
     protected abstract void componentsInitialize(URL location, ResourceBundle resources);
     public abstract void delete(ActionEvent event);
     public abstract void edit(ActionEvent event);

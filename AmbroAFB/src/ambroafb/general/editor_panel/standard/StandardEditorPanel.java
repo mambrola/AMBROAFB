@@ -5,8 +5,6 @@
  */
 package ambroafb.general.editor_panel.standard;
 
-import ambro.AView;
-import ambroafb.general.Names;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -36,7 +34,7 @@ public class StandardEditorPanel extends EditorPanel {
     @Override
     public void delete(ActionEvent event) {
         ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-        EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+        EditorPanelable selected = getSelected();
         EditorPanelableManager manager = editorPanelSceneStage.getEPManager();
         Consumer<Object> successAction = (objFromDB) -> {
             if (objFromDB != null){
@@ -54,7 +52,7 @@ public class StandardEditorPanel extends EditorPanel {
     @Override
     public void edit(ActionEvent event) {
         ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-        EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+        EditorPanelable selected = getSelected();
         EditorPanelableManager manager = editorPanelSceneStage.getEPManager(); // EPManagerFactory.getEPManager(selected);
         Consumer<Object> successAction = (ObjFromDB) -> {
             if (ObjFromDB != null) {
@@ -73,7 +71,7 @@ public class StandardEditorPanel extends EditorPanel {
     @Override
     public void view(ActionEvent event) {
         ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-        EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+        EditorPanelable selected = getSelected();
         EditorPanelableManager manager = editorPanelSceneStage.getEPManager();
         Consumer<Object> successAction = (ObjFromDB) -> {
             if (ObjFromDB != null) {
@@ -100,7 +98,7 @@ public class StandardEditorPanel extends EditorPanel {
     @Override
     public void addBySample(ActionEvent event) {
         ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-        EditorPanelable selected = (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
+        EditorPanelable selected = getSelected();
         EditorPanelableManager manager = editorPanelSceneStage.getEPManager();
         Consumer<Object> successAction = (objFromDB) -> {
             EditorPanelable cloneOfSelected;
