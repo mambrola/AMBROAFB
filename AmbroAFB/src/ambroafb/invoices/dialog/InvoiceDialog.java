@@ -5,7 +5,7 @@
  */
 package ambroafb.invoices.dialog;
 
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -21,7 +21,7 @@ public class InvoiceDialog extends UserInteractiveDialogStage implements Dialoga
     private Invoice invoice;
     private final Invoice invoiceBackup;
     
-    public InvoiceDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+    public InvoiceDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
         super(owner, buttonType, "/ambroafb/invoices/dialog/InvoiceDialog.fxml");
         
         if (object == null)

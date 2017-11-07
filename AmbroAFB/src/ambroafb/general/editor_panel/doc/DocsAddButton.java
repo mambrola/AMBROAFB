@@ -8,13 +8,12 @@ package ambroafb.general.editor_panel.doc;
 import ambroafb.AmbroAFB;
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.conversion.ConversionManager;
-import ambroafb.docs.types.custom.CustomManager;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.docs.types.monthly.MonthlyManager;
 import ambroafb.docs.types.utilities.charge.ChargeUtilityManager;
 import ambroafb.docs.types.utilities.payment.PaymentUtilityManager;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelableManager;
 import java.io.IOException;
@@ -27,18 +26,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
 import javafx.stage.Stage;
 
 /**
  *
  * @author dkobuladze
  */
-public class DocsAddButton extends SplitMenuButton implements Initializable {
+public class DocsAddButton extends MenuButton implements Initializable {
     
     @FXML
-    private MenuItem addBySample, addConvert, addPaymentUtility, addChargeUtility, addMonthlyAccrual;
+    private MenuItem addConvert, addPaymentUtility, addChargeUtility, addMonthlyAccrual;
     
     private DocEditorPanelObserver observer;
     
@@ -62,8 +61,6 @@ public class DocsAddButton extends SplitMenuButton implements Initializable {
     }
     
     private void buttonsActions(){
-        setOnAction(this::addCustom);
-        addBySample.setOnAction(this::addBySample);
         addConvert.setOnAction(this::addConversion);
         addPaymentUtility.setOnAction(this::addPaymentUtility);
         addChargeUtility.setOnAction(this::addChargeUtility);
@@ -79,27 +76,10 @@ public class DocsAddButton extends SplitMenuButton implements Initializable {
         this.observer = observer;
     }
     
-    public void addCustom(ActionEvent e) {
-        if (observer.operationIsAllow()) {
-            EditorPanelableManager manager = new CustomManager();
-            Dialogable dialog = manager.getDialogFor((Stage)getScene().getWindow(), Names.EDITOR_BUTTON_TYPE.ADD, null);
-            List<Doc> docsFromDialog = dialog.getResult();
-            if (docsFromDialog != null){
-                observer.notify(docsFromDialog);
-            }
-        }
-    }
-    
-    public void addBySample(ActionEvent e) {
-        if (observer.operationIsAllow()) {
-            
-        }
-    }
-    
     public void addConversion(ActionEvent e){
         if (observer.operationIsAllow()) {
             EditorPanelableManager manager = new ConversionManager();
-            Dialogable dialog = manager.getDialogFor((Stage)getScene().getWindow(), Names.EDITOR_BUTTON_TYPE.ADD, null);
+            Dialogable dialog = manager.getDialogFor((Stage)getScene().getWindow(), EditorPanel.EDITOR_BUTTON_TYPE.ADD, null);
             List<Doc> docsFromDialog = dialog.getResult();
             if (docsFromDialog != null){
                 observer.notify(docsFromDialog);
@@ -126,7 +106,7 @@ public class DocsAddButton extends SplitMenuButton implements Initializable {
     }
     
     private void makeAddAction(EditorPanelableManager manager){
-        Dialogable dialog = manager.getDialogFor((Stage)getScene().getWindow(), Names.EDITOR_BUTTON_TYPE.ADD, null);
+        Dialogable dialog = manager.getDialogFor((Stage)getScene().getWindow(), EditorPanel.EDITOR_BUTTON_TYPE.ADD, null);
         List<Doc> docsFromDialog = dialog.getResult();
         if (docsFromDialog != null){
             observer.notify(docsFromDialog);

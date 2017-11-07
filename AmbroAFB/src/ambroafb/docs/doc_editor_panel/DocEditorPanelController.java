@@ -17,6 +17,7 @@ import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
@@ -93,7 +94,7 @@ public class DocEditorPanelController implements Initializable {
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             DocManager dm = DocManagersFactory.getDocManager(selected);
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
-            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.DELETE, docFromDB);
+            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.DELETE, docFromDB);
             EditorPanelable result = dialog.getResult();
             if (result != null){
                 boolean isDeleted = dm.deleteOneFromDB(docFromDB.getRecId());
@@ -132,7 +133,7 @@ public class DocEditorPanelController implements Initializable {
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             DocManager dm = DocManagersFactory.getDocManager(selected);
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
-            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.EDIT, docFromDB);
+            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.EDIT, docFromDB);
             EditorPanelable result = dialog.getResult();
             if (result != null){ // If result is null, "selected" Doc object stay in table. The edit dialog changed "docFromDB" object.
                 ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(result);
@@ -171,7 +172,7 @@ public class DocEditorPanelController implements Initializable {
             Doc selected = (Doc)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
             DocManager dm = DocManagersFactory.getDocManager(selected);
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
-            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.VIEW, docFromDB);
+            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.VIEW, docFromDB);
             dialog.showAndWait();
         }
         else {
@@ -190,7 +191,7 @@ public class DocEditorPanelController implements Initializable {
 //        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
 //        if(dialogStage == null || !dialogStage.isShowing()){
 //            DocManager dm = new CustomManager();
-//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
+//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.ADD, null);
 //            EditorPanelable result = dd.getResult();
 //            if (result != null){
 //                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(result);
@@ -219,7 +220,7 @@ public class DocEditorPanelController implements Initializable {
             DocManager dm = DocManagersFactory.getDocManager(selected);
             EditorPanelable docFromDB = dm.getOneFromDB(selected.getRecId());
             EditorPanelable cloneFromReal = docFromDB.cloneWithoutID(); // Without this coping, program make "edit" action.
-            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE, cloneFromReal);
+            Dialogable dialog = dm.getDocDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE, cloneFromReal);
             EditorPanelable newFromDialog =  dialog.getResult();
             if (newFromDialog != null){
                 ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newFromDialog);
@@ -241,7 +242,7 @@ public class DocEditorPanelController implements Initializable {
 //        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
 //        if(dialogStage == null || !dialogStage.isShowing()){
 //            DocManager dm = new ConversionManager();
-//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
+//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.ADD, null);
 //            EditorPanelable newMonthly = dd.getResult();
 //            if (newMonthly != null){
 //                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newMonthly);
@@ -263,7 +264,7 @@ public class DocEditorPanelController implements Initializable {
 //        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
 //        if(dialogStage == null || !dialogStage.isShowing()){
 //            DocManager dm = new MonthlyManager();
-//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
+//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.ADD, null);
 //            EditorPanelable newMonthly = dd.getResult();
 //            if (newMonthly != null){
 //                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newMonthly);
@@ -347,7 +348,7 @@ public class DocEditorPanelController implements Initializable {
 //        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
 //        if(dialogStage == null || !dialogStage.isShowing()){
 //            DocManager dm = new PaymentUtilityManager();
-//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
+//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.ADD, null);
 //            EditorPanelable newPaymentUtility = dd.getResult();
 //            if (newPaymentUtility != null){
 //                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newPaymentUtility);
@@ -373,7 +374,7 @@ public class DocEditorPanelController implements Initializable {
 //        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
 //        if(dialogStage == null || !dialogStage.isShowing()){
 //            DocManager dm = new ChargeUtilityManager();
-//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, Names.EDITOR_BUTTON_TYPE.ADD, null);
+//            Dialogable dd = dm.getDocDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.ADD, null);
 //            EditorPanelable newChargeUtility = dd.getResult();
 //            if (newChargeUtility != null){
 //                ArrayList<Doc> newDocsFromDB = dm.saveOneToDB(newChargeUtility);

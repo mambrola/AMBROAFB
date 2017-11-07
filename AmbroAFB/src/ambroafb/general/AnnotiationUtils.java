@@ -9,6 +9,7 @@ import ambro.ADatePicker;
 import ambroafb.clients.ClientComboBox;
 import static ambroafb.general.Utils.getInvokedClassMethod;
 import ambroafb.general.countcombobox.CountComboBox;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.Annotations;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -40,7 +41,7 @@ public class AnnotiationUtils {
     
     private static Tooltip toolTip = new Tooltip();
     
-    public static boolean everyFieldContentIsValidFor(Object currentClassObject, Names.EDITOR_BUTTON_TYPE type) {
+    public static boolean everyFieldContentIsValidFor(Object currentClassObject, EditorPanel.EDITOR_BUTTON_TYPE type) {
         boolean result = true;
         Field[] fields = currentClassObject.getClass().getDeclaredFields();
 
@@ -124,7 +125,7 @@ public class AnnotiationUtils {
         return true;
     }
 
-    private static boolean checkValidationForContentTreeItemAnnotation(Field field, Object currSceneController, Names.EDITOR_BUTTON_TYPE  type){
+    private static boolean checkValidationForContentTreeItemAnnotation(Field field, Object currSceneController, EditorPanel.EDITOR_BUTTON_TYPE  type){
         boolean contentIsCorrect = false;
         Annotations.ContentTreeItem annotation = field.getAnnotation(Annotations.ContentTreeItem.class);
         Object[] typeAndContent = getNodesTypeAndContent(field, currSceneController);
@@ -140,7 +141,7 @@ public class AnnotiationUtils {
             EditorPanelable newPanelableObject = (EditorPanelable) getInvokedClassMethod(currSceneController.getClass(), "getNewEditorPanelable", null, currSceneController);
             Object contr = getInvokedClassMethod(currSceneController.getClass(), "getOwnerController", null, currSceneController);
             // already exist this item for this code:
-            if ((Boolean)getInvokedClassMethod(contr.getClass(), "accountAlreadyExistForCode", new Class[]{EditorPanelable.class, Names.EDITOR_BUTTON_TYPE.class}, contr, newPanelableObject, type)){
+            if ((Boolean)getInvokedClassMethod(contr.getClass(), "accountAlreadyExistForCode", new Class[]{EditorPanelable.class, EditorPanel.EDITOR_BUTTON_TYPE.class}, contr, newPanelableObject, type)){
                 changeNodeTitleLabelVisual((Node)typeAndContent[0], annotation.explainForExists());
             }
             // item has not a parent:

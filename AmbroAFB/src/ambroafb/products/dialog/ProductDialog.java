@@ -5,7 +5,7 @@
  */
 package ambroafb.products.dialog;
 
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -21,7 +21,7 @@ public class ProductDialog extends UserInteractiveDialogStage implements Dialoga
     private Product product;
     private final Product productBackup;
     
-    public ProductDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+    public ProductDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
         super(owner, "/ambroafb/products/dialog/ProductDialog.fxml", "product_dialog_title");
         
         if (object == null)

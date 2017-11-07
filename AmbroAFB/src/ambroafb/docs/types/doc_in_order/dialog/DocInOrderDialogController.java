@@ -8,7 +8,7 @@ package ambroafb.docs.types.doc_in_order.dialog;
 import ambro.ADatePicker;
 import ambroafb.docs.types.doc_in_order.DocInOrder;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -56,8 +56,8 @@ public class DocInOrderDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
+    protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD)){
             formPane.getChildren().remove(1); // remove scrollpane.
         }
         else {
@@ -66,9 +66,9 @@ public class DocInOrderDialogController extends DialogController {
                 lsComp.removeDocDateComponent();
                 lsComp.binTo(doc);
                 lsComp.setDialogType(buttonType);
-                if ((buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.EDIT)) 
+                if ((buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD) || buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.EDIT)) 
                     && !doc.isParentDoc()){
-                    lsComp.setDialogType(Names.EDITOR_BUTTON_TYPE.VIEW);
+                    lsComp.setDialogType(EditorPanel.EDITOR_BUTTON_TYPE.VIEW);
                 }
                 lsComp.setDottedBorder('a');
                 listVBox.getChildren().add(lsComp);

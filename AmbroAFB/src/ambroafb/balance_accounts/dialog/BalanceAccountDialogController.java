@@ -6,7 +6,7 @@
 package ambroafb.balance_accounts.dialog;
 
 import ambroafb.balance_accounts.BalanceAccount;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentTreeItem;
 import ambroafb.general.interfaces.DialogController;
@@ -68,8 +68,8 @@ public class BalanceAccountDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.EDIT) && !((BalanceAccount)sceneObj).childrenAccounts.isEmpty()){
+    protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.EDIT) && !((BalanceAccount)sceneObj).childrenAccounts.isEmpty()){
             balAccountCode.setDisable(true);
         }
     }

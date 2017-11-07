@@ -26,8 +26,8 @@ import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.editor_panel.doc.DocEditorPanel;
-import ambroafb.general.editor_panel.doc.DocsAddButton;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
@@ -43,9 +43,7 @@ import ambroafb.minitables.attitudes.Attitude;
 import ambroafb.minitables.merchandises.Merchandise;
 import ambroafb.params_general.ParamGeneral;
 import ambroafb.products.Product;
-import authclient.AuthServerException;
 import authclient.monitoring.MonitoringClient;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +139,7 @@ public class MainController implements Initializable {
         if(clientsStage == null || !clientsStage.isShowing()){
             TableList clients = new TableList(AmbroAFB.mainStage, Client.class, stageTitle);
             clients.setEPManager(new ClientManager());
-            clients.getController().getEditorPanel().turnOffAddBySample();
+            clients.getController().getEditorPanel().hideMenuOnAddButton();
             clients.show();
             
             ClientFilter filter = new ClientFilter(clients);
@@ -275,10 +273,9 @@ public class MainController implements Initializable {
         Stage docsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Doc.class.getSimpleName());
         if(docsStage == null || !docsStage.isShowing()){
             DocEditorPanel docEditorPanel = new DocEditorPanel();
-                DocsAddButton docsAdd = new DocsAddButton();
-                docsAdd.registerObserver(docEditorPanel);
-                docEditorPanel.addComponent(4, docsAdd);
-                docEditorPanel.removeComponents("#add");
+//            DocsAddButton docsAdd = new DocsAddButton();
+//            docsAdd.registerObserver(docEditorPanel);
+//            docEditorPanel.addComponentAtAddPanel(docsAdd, true);
                 
             TableList docs = new TableList(AmbroAFB.mainStage, Doc.class, stageTitle, docEditorPanel);
             docs.setEPManager(new ambroafb.docs.DocManager());
@@ -398,9 +395,8 @@ public class MainController implements Initializable {
         Stage currenciesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Currency.class.getSimpleName());
         if(currenciesStage == null || !currenciesStage.isShowing()){
             TableList currencies = new TableList(AmbroAFB.mainStage, Currency.class, stageTitle);
-            currencies.getController().removeElementsFromEditorPanel("#search");
-//            currencies.getController().getEditorPanelController().turnOffAddBySample();
-            currencies.getController().getEditorPanel().turnOffAddBySample();
+            currencies.getController().removeElementsFromEditorPanel(EditorPanel.SEARCH_FXID);
+            currencies.getController().getEditorPanel().hideMenuOnAddButton();
             Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Currency.getAllFromDB());
                                                 };

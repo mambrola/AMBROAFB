@@ -6,7 +6,7 @@
 package ambroafb.docs;
 
 import ambroafb.docs.filter.DocFilter;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
@@ -24,7 +24,7 @@ public class DocManager extends EditorPanelableManager {
     }
 
     @Override
-    public Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
+    public Dialogable getDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         return null;
     }
 

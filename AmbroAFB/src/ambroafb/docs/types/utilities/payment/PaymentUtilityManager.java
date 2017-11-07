@@ -6,7 +6,7 @@
 package ambroafb.docs.types.utilities.payment;
 
 import ambroafb.docs.types.utilities.payment.dialog.PaymentUtilityDialog;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
@@ -61,7 +61,7 @@ public class PaymentUtilityManager extends EditorPanelableManager {
 //    }
 //
 //    @Override
-//    public Dialogable getDocDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
+//    public Dialogable getDocDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
 //        PaymentUtilityDialog tranferDialog = new PaymentUtilityDialog(object, type, owner);
 //        
 //        return tranferDialog;
@@ -73,7 +73,7 @@ public class PaymentUtilityManager extends EditorPanelableManager {
 //    }
 
     @Override
-    public Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
+    public Dialogable getDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         PaymentUtilityDialog dialog = new PaymentUtilityDialog(object, type, owner);
         dialog.setDataChangeProvider(dataChangeProvider);
         dialog.setFrameFeatures(type, "doc_payment_utility_dialog_title");

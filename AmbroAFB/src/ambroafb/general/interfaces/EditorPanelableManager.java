@@ -5,7 +5,7 @@
  */
 package ambroafb.general.interfaces;
 
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import javafx.stage.Stage;
 
 /**
@@ -25,7 +25,7 @@ public abstract class EditorPanelableManager {
         return dataChangeProvider;
     }
     
-    public abstract Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object);
+    public abstract Dialogable getDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object);
     public abstract Filterable getFilterFor(Stage owner);
     
 }

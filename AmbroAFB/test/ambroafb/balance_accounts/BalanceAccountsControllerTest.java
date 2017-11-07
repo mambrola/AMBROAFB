@@ -5,7 +5,7 @@
  */
 package ambroafb.balance_accounts;
 
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class BalanceAccountsControllerTest {
         Supplier<List<EditorPanelable>> supplier = () -> spyList;
         instance.reAssignTable(supplier);
         EditorPanelable newElem = createBalAccount(1, 1000, "some desc");
-        Names.EDITOR_BUTTON_TYPE type = Names.EDITOR_BUTTON_TYPE.ADD;
+        EDITOR_BUTTON_TYPE type = EDITOR_BUTTON_TYPE.ADD;
         Assert.assertTrue(instance.accountAlreadyExistForCode(newElem, type));
     }
 

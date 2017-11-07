@@ -5,7 +5,7 @@
  */
 package ambroafb.minitables.attitudes.dialog;
 
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -21,7 +21,7 @@ public class AttitudeDialog extends UserInteractiveDialogStage implements Dialog
     private Attitude attitude;
     private final Attitude attitudeBackup;
     
-    public AttitudeDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+    public AttitudeDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
         super(owner, "/ambroafb/minitables/attitudes/dialog/AttitudeDialog.fxml", "attitude");
         
         if (object == null)

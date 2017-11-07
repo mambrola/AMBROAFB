@@ -11,7 +11,7 @@ import ambroafb.docs.types.doc_in_order.DocInOrder;
 import ambroafb.docs.types.doc_in_order.DocInOrderDataChangeProvider;
 import ambroafb.docs.types.doc_in_order.DocInOrderDataFetchProvider;
 import ambroafb.docs.types.doc_in_order.dialog.DocInOrderDialog;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
@@ -32,13 +32,13 @@ public class MonthlyManager extends EditorPanelableManager {
     }
     
     @Override
-    public Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
+    public Dialogable getDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         UserInteractiveDialogStage dialog = new DocInOrderDialog(object, type, owner);
         String StageTitleBundleKey = "doc_monthly_accrual";
         if (object == null){
             dialog = new DocInOrderDialog(object, type, owner, StageTitleBundleKey);
         }
-        else if (type.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
+        else if (type.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             Optional<Doc> optDoc = ((DocInOrder)object).getDocs().stream().filter((doc) -> doc.isParentDoc()).findFirst();
             dialog = (optDoc.isPresent()) ? new CustomDialog(owner, type, optDoc.get()) : new DocInOrderDialog(object, type, owner, StageTitleBundleKey);
         }

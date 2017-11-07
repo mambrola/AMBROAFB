@@ -6,7 +6,7 @@
 package ambroafb.docs.types;
 
 import ambroafb.docs.Doc;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.util.ArrayList;
@@ -51,5 +51,5 @@ public interface DocManager {
         * @param object Object that must be show on scene.
         * @return DocDialogable abstraction.
         */
-    public Dialogable getDocDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object);
+    public Dialogable getDocDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object);
 }

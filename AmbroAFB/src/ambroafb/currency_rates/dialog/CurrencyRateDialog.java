@@ -6,7 +6,7 @@
 package ambroafb.currency_rates.dialog;
 
 import ambroafb.currency_rates.CurrencyRate;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -21,7 +21,7 @@ public class CurrencyRateDialog extends UserInteractiveDialogStage implements Di
     private CurrencyRate currRate;
     private final CurrencyRate currRateBackup;
     
-    public CurrencyRateDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+    public CurrencyRateDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
         super(owner, "/ambroafb/currency_rates/dialog/CurrencyRateDialog.fxml", "currency_rate_dialog_title");
         
         if (object == null)

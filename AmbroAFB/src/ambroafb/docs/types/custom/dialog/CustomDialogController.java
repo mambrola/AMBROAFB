@@ -7,7 +7,7 @@ package ambroafb.docs.types.custom.dialog;
 
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -45,13 +45,13 @@ public class CustomDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
+    protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
         DocOrderComponent lsComp = new DocOrderComponent();
         lsComp.binTo((Doc)sceneObj);
         lsComp.setDialogType(buttonType);
         formPane.getChildren().add(0, lsComp);
         
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             ((Doc)sceneObj).setDocDate(LocalDate.now().toString());
             ((Doc)sceneObj).setDocInDocDate(LocalDate.now().toString());
             ((Doc)sceneObj).amountProperty().set(""); // for empty amount field.

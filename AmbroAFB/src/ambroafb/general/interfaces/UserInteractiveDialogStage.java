@@ -9,6 +9,7 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
+import ambroafb.general.editor_panel.EditorPanel;
 import java.util.function.Consumer;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -27,7 +28,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     protected DialogController dialogController;
 
     private boolean permissionToClose = true;
-    private Names.EDITOR_BUTTON_TYPE editorButtonType;
+    private EditorPanel.EDITOR_BUTTON_TYPE editorButtonType;
     private DataChangeProvider dataChangeProvider;
     Consumer<Object> closeFn;
     
@@ -48,7 +49,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         };
     }
     
-    public UserInteractiveDialogStage(Stage owner, Names.EDITOR_BUTTON_TYPE buttonType, String sceneFXMLFilePath){
+    public UserInteractiveDialogStage(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE buttonType, String sceneFXMLFilePath){
         this(owner, sceneFXMLFilePath, "");
         
         editorButtonType = buttonType;
@@ -59,7 +60,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
      * @param type The dialog type.
      * @param classNameBundleKey The object bundle key that dialog it is.
      */
-    public void setFrameFeatures(Names.EDITOR_BUTTON_TYPE type, String classNameBundleKey){
+    public void setFrameFeatures(EditorPanel.EDITOR_BUTTON_TYPE type, String classNameBundleKey){
         String titleByTypeBundleKey;
         String iconPath = "/images/";
         switch (type){

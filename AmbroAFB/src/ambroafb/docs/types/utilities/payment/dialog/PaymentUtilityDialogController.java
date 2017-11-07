@@ -9,7 +9,7 @@ import ambro.ADatePicker;
 import ambroafb.docs.DocMerchandise;
 import ambroafb.docs.DocMerchandiseComboBox;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.DialogController;
@@ -76,8 +76,8 @@ public class PaymentUtilityDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
+    protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             ((PaymentUtility)sceneObj).setDocDate(LocalDate.now().toString());
             ((PaymentUtility)sceneObj).setDocInDocDate(LocalDate.now().toString());
             ((PaymentUtility)sceneObj).amountProperty().set("");

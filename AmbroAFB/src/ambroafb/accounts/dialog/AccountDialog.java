@@ -6,7 +6,7 @@
 package ambroafb.accounts.dialog;
 
 import ambroafb.accounts.Account;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -22,7 +22,7 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
     private Account account;
     private final Account accountBackup;
     
-    public AccountDialog(Stage owner, Names.EDITOR_BUTTON_TYPE buttonType, EditorPanelable object) {
+    public AccountDialog(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE buttonType, EditorPanelable object) {
         super(owner, buttonType, "/ambroafb/accounts/dialog/AccountDialog.fxml");
     
         if (object == null)

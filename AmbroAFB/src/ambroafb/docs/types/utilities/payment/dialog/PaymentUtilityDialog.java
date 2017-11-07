@@ -7,7 +7,7 @@ package ambroafb.docs.types.utilities.payment.dialog;
 
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.utilities.payment.PaymentUtility;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -27,7 +27,7 @@ public class PaymentUtilityDialog extends UserInteractiveDialogStage implements 
     
     private List<Doc> docs = new ArrayList<>();
     
-    public PaymentUtilityDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+    public PaymentUtilityDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         super(owner, buttonType, "/ambroafb/docs/types/utilities/payment/dialog/PaymentUtilityDialog.fxml");
 
         if (object == null)

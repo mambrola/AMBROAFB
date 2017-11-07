@@ -35,7 +35,6 @@ import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -54,21 +53,36 @@ public abstract class EditorPanel extends HBox implements Initializable {
     protected SplitMenuButton add;
     
     @FXML
+    protected MenuItem addBySample;
+    
+    @FXML
     protected ToggleButton refresh;
     
     @FXML
     protected TextField search;
 
-
-    @FXML
-    protected MenuItem addBySample;
-    
     @FXML
     protected Region region;
     
     protected ObservableList<EditorPanelable> tableData;
     
     protected Initializable outerController; // ----
+    
+    
+    public static String DELETE_FXID = "#delete";
+    public static String EDIT_FXID = "#edit";
+    public static String VIEW_FXID = "#view";
+    public static String ADD_FXID = "#add";
+    public static String ADD_BY_SAMPLE_FXID = "#addBySample";
+    public static String REFRESH_FXID = "#refresh";
+    public static String SEARCH_FXID = "#search";
+    
+    public static enum EDITOR_BUTTON_TYPE {
+        DELETE, EDIT, VIEW, ADD, ADD_BY_SAMPLE
+    }
+    
+//    @FXML
+//    private HBox addPanel;
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -120,22 +134,18 @@ public abstract class EditorPanel extends HBox implements Initializable {
     }
     
     /**
-     * The method turns off addBySample functionality.
+     * The method turns hide add button items list on right side of it.
      */
-    @Deprecated
-    public void turnOffAddBySample(){
+    public void hideMenuOnAddButton(){
         int addBySimpleIndex = this.getChildren().indexOf(add);
-        Button addButton = buildAddWithoutSample();
+        Button addButton = buildAddWithoutMenu();
         this.getChildren().set(addBySimpleIndex, addButton);
     }
     
-        /**
-     * The method creates  add button without addBySample functionality.
-     */
-    private Button buildAddWithoutSample(){
+    private Button buildAddWithoutMenu(){
         Button addB = new Button();
         addB.setTooltip(new Tooltip(GeneralConfig.getInstance().getTitleFor("new")));
-        ImageView imgView = new ImageView(new Image("/images/new.png"));
+        ImageView imgView = new ImageView("/images/new.png");
         imgView.setFitHeight(18);
         imgView.setFitWidth(18);
         addB.setGraphic(imgView);
@@ -203,11 +213,11 @@ public abstract class EditorPanel extends HBox implements Initializable {
      */
     public final boolean allowToOpenDialogOrFilter(){
         boolean allow = true;
-        Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Stage dialogStage = StagesContainer.getStageFor(docEditorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
+        Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
         if(dialogStage != null && dialogStage.isShowing()){
             dialogStage.requestFocus();
-            StageUtils.centerChildOf(docEditorPanelSceneStage, dialogStage);
+            StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
             allow = false;
         }
         return allow;

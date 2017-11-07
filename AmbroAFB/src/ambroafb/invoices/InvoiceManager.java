@@ -5,7 +5,7 @@
  */
 package ambroafb.invoices;
 
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
@@ -26,7 +26,7 @@ public class InvoiceManager extends EditorPanelableManager {
     }
     
     @Override
-    public Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
+    public Dialogable getDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         InvoiceDialog dialog = new InvoiceDialog(object, type, owner);
         dialog.setDataChangeProvider(dataChangeProvider);
         dialog.setFrameFeatures(type, "invoice_dialog_title");

@@ -6,7 +6,7 @@
 package ambroafb.discounts_on_count.dialog;
 
 import ambroafb.discounts_on_count.DiscountOnCount;
-import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.DialogController;

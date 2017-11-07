@@ -6,7 +6,7 @@
 package ambroafb.balance_accounts.dialog;
 
 import ambroafb.balance_accounts.BalanceAccount;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -21,7 +21,7 @@ public class BalanceAccountDialog extends UserInteractiveDialogStage implements 
     private BalanceAccount balAccount;
     private final BalanceAccount balAccountBackup;
     
-    public BalanceAccountDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+    public BalanceAccountDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
         super(owner, "/ambroafb/balance_accounts/dialog/BalanceAccountDialog.fxml", "balaccount_dialog_title");
         
         if (object == null)

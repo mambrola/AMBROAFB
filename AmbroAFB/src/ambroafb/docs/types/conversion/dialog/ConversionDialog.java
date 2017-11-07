@@ -7,7 +7,7 @@ package ambroafb.docs.types.conversion.dialog;
 
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.conversion.Conversion;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -27,7 +27,7 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
     
     private final List<Doc> docs = new ArrayList<>();
     
-    public ConversionDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+    public ConversionDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         super(owner, buttonType, "/ambroafb/docs/types/conversion/dialog/ConversionDialog.fxml");
         
         if (object == null)

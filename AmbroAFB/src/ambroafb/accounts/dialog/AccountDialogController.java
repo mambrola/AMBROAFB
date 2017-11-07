@@ -14,7 +14,7 @@ import ambroafb.clients.ClientComboBox;
 import ambroafb.currencies.IsoComboBox;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -161,7 +161,7 @@ public class AccountDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
+    protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
         Consumer<ObservableList<BalanceAccount>> setBalAccByNumber = (balAccList) -> {
             int balAccountNumber = ((Account)sceneObj).getBalAccount();
             Optional<BalanceAccount> optBalAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == balAccountNumber).findFirst();
@@ -182,7 +182,7 @@ public class AccountDialogController extends DialogController {
         };
         clients.fillComboBoxWithClientsAndPartners(setClientbyId);
         
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             ((Account)sceneObj).setDateOpen(LocalDate.now().toString());
             ((Account)sceneObj).setDateClose("");
             ((Account)sceneObj).accountNumberProperty().set("");

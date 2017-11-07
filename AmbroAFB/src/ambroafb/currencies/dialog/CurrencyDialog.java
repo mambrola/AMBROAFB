@@ -6,7 +6,7 @@
 package ambroafb.currencies.dialog;
 
 import ambroafb.currencies.Currency;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -21,7 +21,7 @@ public class CurrencyDialog extends UserInteractiveDialogStage implements Dialog
     private Currency currency;
     private final Currency currencyBackup;
     
-    public CurrencyDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+    public CurrencyDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
         super(owner, "/ambroafb/currencies/dialog/CurrencyDialog.fxml", "currency_dialog_title");
         
         if (object == null)

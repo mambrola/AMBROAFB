@@ -8,7 +8,7 @@ package ambroafb.currency_rates.dialog;
 import ambro.ADatePicker;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.currency_rates.CurrencyRate;
-import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Annotations.ContentRate;

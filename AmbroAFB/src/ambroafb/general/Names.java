@@ -78,12 +78,12 @@ public class Names {
     public static final String BAL_ACCOUNT_ACT = "Act";
     public static final String BAL_ACCOUNT_PAS = "Pas";
     
-    public static enum EDITOR_BUTTON_TYPE {
-        DELETE, EDIT, VIEW, ADD, ADD_BY_SAMPLE
-    } 
-    
-    public static enum DOC_EDITOR_BUTTON_TYPE {
-        DELETE, EDIT, VIEW, ADD, ADD_BY_SAMPLE;
-    } 
+//    public static enum EDITOR_BUTTON_TYPE {
+//        DELETE, EDIT, VIEW, ADD, ADD_BY_SAMPLE
+//    } 
+//    
+//    public static enum DOC_EDITOR_BUTTON_TYPE {
+//        DELETE, EDIT, VIEW, ADD, ADD_BY_SAMPLE;
+//    } 
     
 }

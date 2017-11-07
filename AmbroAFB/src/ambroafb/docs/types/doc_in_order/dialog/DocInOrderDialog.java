@@ -7,7 +7,7 @@ package ambroafb.docs.types.doc_in_order.dialog;
 
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.doc_in_order.DocInOrder;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -27,7 +27,7 @@ public class DocInOrderDialog extends UserInteractiveDialogStage implements Dial
     
     private List<Doc> docs = new ArrayList<>();
     
-    public DocInOrderDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner, String stageTitleBundleKey) {
+    public DocInOrderDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner, String stageTitleBundleKey) {
         super(owner, "/ambroafb/docs/types/doc_in_order/dialog/DocInOrderDialog.fxml", stageTitleBundleKey);
         
         if (object == null)
@@ -39,7 +39,7 @@ public class DocInOrderDialog extends UserInteractiveDialogStage implements Dial
         dialogController.setSceneData(docInOrder, docInOrderBackup, buttonType);
     }
     
-    public DocInOrderDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+    public DocInOrderDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         this(object, buttonType, owner, "doc_order_dialog_title");
     }
 

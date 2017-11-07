@@ -8,7 +8,12 @@ package ambroafb.general.okay_cancel;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.AnnotiationUtils;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
+import static ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE.ADD;
+import static ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE;
+import static ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE.DELETE;
+import static ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE.EDIT;
+import static ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE.VIEW;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import java.net.URL;
@@ -63,6 +68,7 @@ public class DialogOkayCancelController implements Initializable {
         cancel.setVisible(visible);
     }
 
+    @Deprecated
     public void setButtonsFeatures(EDITOR_BUTTON_TYPE type){
         String alertText;
         okay.setDisable(false);

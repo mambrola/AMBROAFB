@@ -12,8 +12,8 @@ import ambroafb.currencies.IsoComboBox;
 import ambroafb.docs.Doc;
 import ambroafb.docs.DocCodeComboBox;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.Names;
 import ambroafb.general.Utils;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
@@ -162,8 +162,8 @@ public class DocOrderComponent extends VBox {
         }
     }
 
-    public void setDialogType(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
+    public void setDialogType(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.DELETE)){
             setDisableComponents();
         }
     }

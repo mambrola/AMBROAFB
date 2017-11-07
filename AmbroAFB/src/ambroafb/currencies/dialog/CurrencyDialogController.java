@@ -8,7 +8,7 @@ package ambroafb.currencies.dialog;
 import ambro.ADatePicker;
 import ambroafb.currencies.Currency;
 import ambroafb.currencies.IsoComboBox;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentISO;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
@@ -63,9 +63,9 @@ public class CurrencyDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
+    protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
         openDate.setDisable(true);
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD)){
             iso.setEditable(true);
         }
     }

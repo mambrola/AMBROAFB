@@ -88,7 +88,7 @@ public class TreeTableListController extends ListingController {
      * @param type DELETE, EDIT, VIEW, or ADD.
      * @return 
      */
-    public boolean accountAlreadyExistForCode(EditorPanelable newElem, Names.EDITOR_BUTTON_TYPE type){
+    public boolean accountAlreadyExistForCode(EditorPanelable newElem, EditorPanel.EDITOR_BUTTON_TYPE type){
         BalanceAccount newAccount = (BalanceAccount) newElem;
         boolean result = false;
         for (BalanceAccount currAcount : roots) {
@@ -111,15 +111,15 @@ public class TreeTableListController extends ListingController {
      * @param type DELETE, EDIT, VIEW, or ADD.
      * @return 
      */
-    private boolean existAccount(BalanceAccount account, BalanceAccount search, Names.EDITOR_BUTTON_TYPE type){
+    private boolean existAccount(BalanceAccount account, BalanceAccount search, EditorPanel.EDITOR_BUTTON_TYPE type){
         List<Boolean> valuesComparesResults = new ArrayList<>();
         if (account.getBalAcc() == search.getBalAcc()){
-            if (type.equals(Names.EDITOR_BUTTON_TYPE.ADD)) return true;
+            if (type.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD)) return true;
             valuesComparesResults.add(account.compares(search));
         }
         for (BalanceAccount childAccount : account.childrenAccounts) {
             if (existAccount(childAccount, search, type)){
-                if (type.equals(Names.EDITOR_BUTTON_TYPE.ADD)) return true;
+                if (type.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD)) return true;
                 valuesComparesResults.add(false);
             }
         }

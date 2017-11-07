@@ -6,7 +6,7 @@
 package ambroafb.products.dialog;
 
 import ambroafb.currencies.CurrencyComboBox;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentMapEditor;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
@@ -87,8 +87,8 @@ public class ProductDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
+    protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.DELETE)){
             discounts.changeState(true);
         }
     }

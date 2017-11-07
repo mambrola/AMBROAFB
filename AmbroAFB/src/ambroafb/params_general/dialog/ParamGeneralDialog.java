@@ -5,7 +5,7 @@
  */
 package ambroafb.params_general.dialog;
 
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -21,7 +21,7 @@ public class ParamGeneralDialog extends UserInteractiveDialogStage implements Di
     private ParamGeneral paramGeneral;
     private final ParamGeneral paramGeneralBackup;
     
-    public ParamGeneralDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+    public ParamGeneralDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
         super(owner, "/ambroafb/params_general/dialog/ParamGeneralDialog.fxml", "param_general_dialog_title");
         
         if (object == null)

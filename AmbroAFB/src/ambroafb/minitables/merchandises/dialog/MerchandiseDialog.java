@@ -5,7 +5,7 @@
  */
 package ambroafb.minitables.merchandises.dialog;
 
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -21,7 +21,7 @@ public class MerchandiseDialog extends UserInteractiveDialogStage implements Dia
     private Merchandise merchandise;
     private final Merchandise merchandiseBackup;
     
-    public MerchandiseDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+    public MerchandiseDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
         super(owner, "/ambroafb/minitables/merchandises/dialog/MerchandiseDialog.fxml", "merchandise");
         
         if (object == null)

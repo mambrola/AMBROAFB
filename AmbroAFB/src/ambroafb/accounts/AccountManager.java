@@ -7,7 +7,7 @@ package ambroafb.accounts;
 
 import ambroafb.accounts.dialog.AccountDialog;
 import ambroafb.accounts.filter.AccountFilter;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
@@ -26,7 +26,7 @@ public class AccountManager extends EditorPanelableManager {
     }
     
     @Override
-    public Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
+    public Dialogable getDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         AccountDialog dialog = new AccountDialog(owner, type, object);
         dialog.setDataChangeProvider(dataChangeProvider);
         dialog.setFrameFeatures(type, "account_dialog_title");

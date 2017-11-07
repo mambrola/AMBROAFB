@@ -11,11 +11,11 @@ import ambroafb.clients.ClientComboBox;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.Names;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.Basket;
 import ambroafb.general.countcombobox.CountComboBox;
 import ambroafb.general.countcombobox.CountComboBoxItem;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.DialogController;
@@ -233,20 +233,20 @@ public class InvoiceDialogController extends DialogController {
     }
     
     @Override
-    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
+    protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
         Supplier<List<CountComboBoxItem>> productsGenerator = () -> new ArrayList<>(Product.getAllFromDB());
         Consumer<ObservableList<CountComboBoxItem>> productsConsumer = (itemsList) -> {
             products.setBasket(convertMapToBasket(((Invoice)sceneObj).getProductsWithCounts()));
         };
         products.fillcomboBox(productsGenerator, productsConsumer);
 
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(Names.EDITOR_BUTTON_TYPE.DELETE)){
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.DELETE)){
             products.setDisabledState(true);
         }
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD)){
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD)){
             makeActionasForDialogTypeADD();
         }
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             makeActionsForDialogTypeAddBySample();
         }
         processFinanceData(((Invoice)sceneObj).getInvoiceFinance());

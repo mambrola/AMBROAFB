@@ -6,7 +6,7 @@
 package ambroafb.clients.dialog;
 
 import ambroafb.clients.Client;
-import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;

@@ -6,7 +6,7 @@
 package ambroafb.docs.types.custom.dialog;
 
 import ambroafb.docs.Doc;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -26,7 +26,7 @@ public class CustomDialog extends UserInteractiveDialogStage implements Dialogab
     
     private List<Doc> docs = new ArrayList<>();
     
-    public CustomDialog(Stage owner, Names.EDITOR_BUTTON_TYPE buttonType, EditorPanelable object) {
+    public CustomDialog(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE buttonType, EditorPanelable object) {
         super(owner, buttonType, "/ambroafb/docs/types/custom/dialog/CustomDialog.fxml");
         
         if (object == null)

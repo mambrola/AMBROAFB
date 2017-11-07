@@ -6,7 +6,7 @@
 package ambroafb.docs.types.utilities.charge;
 
 import ambroafb.docs.types.utilities.charge.dialog.ChargeUtilityDialog;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
@@ -25,7 +25,7 @@ public class ChargeUtilityManager extends EditorPanelableManager {
     }
 
     @Override
-    public Dialogable getDialogFor(Stage owner, Names.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
+    public Dialogable getDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         ChargeUtilityDialog dialog = new ChargeUtilityDialog(object, type, owner);
         dialog.setDataChangeProvider(dataChangeProvider);
         dialog.setFrameFeatures(type, "doc_charge_utility_dialog_title");

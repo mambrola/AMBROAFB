@@ -5,7 +5,7 @@
  */
 package ambroafb.minitables.dialog;
 
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -23,7 +23,7 @@ public class MiniTableDialog extends UserInteractiveDialogStage implements Dialo
     private MiniTable miniTable;
     private final MiniTable miniTableBackup;
     
-    public MiniTableDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+    public MiniTableDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
         super(owner, "/ambroafb/minitables/dialog/MiniTableDialog.fxml", "");
         
         if (object == null)

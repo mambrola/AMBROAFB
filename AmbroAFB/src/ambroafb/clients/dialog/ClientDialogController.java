@@ -11,8 +11,8 @@ import ambroafb.clients.helper.ClientStatus;
 import ambroafb.clients.helper.ClientStatusComboBox;
 import ambroafb.countries.*;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.Names;
-import ambroafb.general.Names.EDITOR_BUTTON_TYPE;
+import ambroafb.general.editor_panel.EditorPanel;
+import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.Annotations.ContentMail;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
@@ -214,7 +214,7 @@ public class ClientDialogController extends DialogController {
             statusProperty.bind(client.statusProperty()); // static variable ???????????????
         }
         
-        if (buttonType.equals(Names.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
+        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             
         }
     }

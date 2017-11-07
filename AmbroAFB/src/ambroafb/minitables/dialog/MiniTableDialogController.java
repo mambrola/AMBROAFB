@@ -5,7 +5,7 @@
  */
 package ambroafb.minitables.dialog;
 
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -50,7 +50,7 @@ public class MiniTableDialogController extends DialogController {
     }
 
     @Override
-    protected void makeExtraActions(Names.EDITOR_BUTTON_TYPE buttonType) {
+    protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
         
     }
     

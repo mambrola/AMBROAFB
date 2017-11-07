@@ -7,7 +7,7 @@ package ambroafb.docs.types.utilities.charge.dialog;
 
 import ambroafb.docs.Doc;
 import ambroafb.docs.types.utilities.charge.ChargeUtility;
-import ambroafb.general.Names;
+import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -27,7 +27,7 @@ public class ChargeUtilityDialog extends UserInteractiveDialogStage implements D
     
     private List<Doc> docs = new ArrayList<>();
     
-    public ChargeUtilityDialog(EditorPanelable object, Names.EDITOR_BUTTON_TYPE buttonType, Stage owner){
+    public ChargeUtilityDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
         super(owner, buttonType, "/ambroafb/docs/types/utilities/charge/dialog/ChargeUtilityDialog.fxml");
         
         if (object == null)
