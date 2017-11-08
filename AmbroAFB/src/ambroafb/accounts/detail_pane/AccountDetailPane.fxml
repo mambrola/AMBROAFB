@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.* ?>
+
+<fx:root    type="javafx.scene.layout.VBox"
+            stylesheets="/styles/css/AccountDetailPane.css"
+            xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label fx:id="accountInfo" />
+        <Label fx:id="balAccInfo" />
+        <Label fx:id="clientInfo" />
+        <VBox>
+            <children>
+                <HBox>
+                    <children>
+                        <VBox>
+                            <children>
+                                <Label text="%end_date" />
+                                <ADatePicker fx:id="endDate" />
+                            </children>
+                        </VBox>
+                        <VBox>
+                            <children>
+                                <Label text="" />
+                                <Button fx:id="compute" text="%compute" />
+                            </children>
+                        </VBox>
+                        <VBox>
+                            <children>
+                                <Label text="" />
+                                <Label text="%current_amount_remain" />
+                            </children>
+                        </VBox>
+                        <VBox>
+                            <children>
+                                <Label text="%debit" />
+                                <Label fx:id="currentDebitInfo" />
+                            </children>
+                        </VBox>
+                        <VBox>
+                            <children>
+                                <Label text="%credit" />
+                                <Label fx:id="currentCreditInfo" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <ATableView initializer="ambroafb.accounts.detail_pane.AccountDetailEntry" VBox.vgrow="ALWAYS" />
+                <HBox>
+                    <children>
+                        <VBox>
+                            <children>
+                                <!--<Label text="%begin_date" />-->
+                                <ADatePicker fx:id="beginDate" />
+                            </children>
+                        </VBox>
+                        <VBox>
+                            <children>
+                                <Label text="%starting_amount_remain" />
+                            </children>
+                        </VBox>
+                        <VBox>
+                            <children>
+                                <Label fx:id="startingDebitInfo" />
+                            </children>
+                        </VBox>
+                        <VBox>
+                            <children>
+                                <Label fx:id="startingCreditInfo" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

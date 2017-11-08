@@ -7,6 +7,7 @@ package ambroafb;
 
 import ambroafb.accounts.Account;
 import ambroafb.accounts.AccountManager;
+import ambroafb.accounts.detail_pane.AccountDetailPane;
 import ambroafb.accounts.filter.AccountFilter;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.balance_accounts.BalanceAccounts;
@@ -32,6 +33,8 @@ import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general_scene.table_list.TableList;
+import ambroafb.general_scene.table_master_detail.TableMasterDetail;
+import ambroafb.general_scene.table_master_detail.TableMasterDetailController;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.InvoiceManager;
 import ambroafb.invoices.filter.InvoiceFilter;
@@ -102,9 +105,12 @@ public class MainController implements Initializable {
         String stageTitle = "accounts";
         Stage accountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Account.class.getSimpleName());
         if(accountsStage == null || !accountsStage.isShowing()){
-            TableList accounts = new TableList(AmbroAFB.mainStage, Account.class, stageTitle);
+            TableMasterDetail accounts = new TableMasterDetail(AmbroAFB.mainStage, Account.class, stageTitle);
             accounts.setEPManager(new AccountManager());
             accounts.show();
+            
+            AccountDetailPane detailPane = new AccountDetailPane();
+            ((TableMasterDetailController)accounts.getController()).setDetailNode(detailPane, detailPane.getDetailPaneAction());
             
             AccountFilter filter = new AccountFilter(accounts);
             FilterModel filterModel = filter.getResult();
@@ -152,7 +158,7 @@ public class MainController implements Initializable {
         Stage loggingsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Logging.class.getSimpleName());
         if(loggingsStage == null || !loggingsStage.isShowing()){
             TableList loggings = new TableList(AmbroAFB.mainStage, Logging.class, stageTitle);
-            loggings.getController().removeElementsFromEditorPanel(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID);
+            loggings.getController().getEditorPanel().removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID);
             loggings.show();
             
             LoggingFilter filter = new LoggingFilter(loggings);
@@ -223,7 +229,7 @@ public class MainController implements Initializable {
         Stage countriesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Country.class.getSimpleName());
         if (countriesStage == null || !countriesStage.isShowing()){
             TableList countries = new TableList(AmbroAFB.mainStage, Country.class, stageTitle);
-            countries.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
+            countries.getController().getEditorPanel().removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID);
 
             Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Country.getAllFromDB());
@@ -268,7 +274,7 @@ public class MainController implements Initializable {
         Stage licensesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, License.class.getSimpleName());
         if(licensesStage == null || !licensesStage.isShowing()){
             TableList licenses = new TableList(AmbroAFB.mainStage, License.class, stageTitle);
-            licenses.getController().removeElementsFromEditorPanel("#delete", "#edit", "#view", "#add");
+            licenses.getController().getEditorPanel().removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID);
             licenses.show();
             
             LicenseFilter filter = new LicenseFilter(licenses);
@@ -307,7 +313,7 @@ public class MainController implements Initializable {
                                                     return new ArrayList(Attitude.getAllFromDB());
                                                 };
             attitudes.getController().reAssignTable(fetchData);
-            attitudes.getController().removeElementsFromEditorPanel("#search");
+            attitudes.getController().getEditorPanel().removeComponents(EditorPanel.SEARCH_FXID);
             attitudes.show();
             
         } else {
@@ -327,7 +333,7 @@ public class MainController implements Initializable {
                                                     return new ArrayList(Merchandise.getAllFromDB());
                                                 };
             merchandises.getController().reAssignTable(fetchData);
-            merchandises.getController().removeElementsFromEditorPanel("#search");
+            merchandises.getController().getEditorPanel().removeComponents(EditorPanel.SEARCH_FXID);
             merchandises.show();
         } else {
             miniTablesStage.requestFocus();
@@ -343,7 +349,7 @@ public class MainController implements Initializable {
                                                     return new ArrayList(ParamGeneral.getAllFromDB());
                                                 };
             generalParams.getController().reAssignTable(fetchData);
-            generalParams.getController().removeElementsFromEditorPanel("#refresh");
+            generalParams.getController().getEditorPanel().removeComponents(EditorPanel.REFRESH_FXID);
             generalParams.show();
         }
         else {
@@ -357,7 +363,7 @@ public class MainController implements Initializable {
         Stage currenciesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Currency.class.getSimpleName());
         if(currenciesStage == null || !currenciesStage.isShowing()){
             TableList currencies = new TableList(AmbroAFB.mainStage, Currency.class, stageTitle);
-            currencies.getController().removeElementsFromEditorPanel(EditorPanel.SEARCH_FXID);
+            currencies.getController().getEditorPanel().removeComponents(EditorPanel.SEARCH_FXID);
             currencies.getController().getEditorPanel().hideMenuOnAddButton();
             Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Currency.getAllFromDB());
@@ -406,7 +412,7 @@ public class MainController implements Initializable {
                                                     return new ArrayList(DiscountOnCount.getAllFromDB());
                                                 };
             discountOnCounts.getController().reAssignTable(fetchData);
-            discountOnCounts.getController().removeElementsFromEditorPanel("#search");
+            discountOnCounts.getController().getEditorPanel().removeComponents(EditorPanel.SEARCH_FXID);
             discountOnCounts.show();
         }
         else {

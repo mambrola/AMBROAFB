@@ -8,12 +8,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import ambro.* ?>
 <?import ambroafb.general.okay_cancel.* ?>
 <?import ambroafb.general.scene_components.account_number.*?>
 <?import ambroafb.general.*?>
 <?import ambroafb.countries.* ?>
-<?import javafx.scene.image.*?>
 <?import ambroafb.clients.*?>
 <?import ambroafb.currencies.*?>
 <?import ambroafb.balance_accounts.*?>

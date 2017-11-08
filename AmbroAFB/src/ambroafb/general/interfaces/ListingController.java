@@ -25,6 +25,7 @@ public abstract class ListingController implements Initializable {
     
     protected DataFetchProvider dataFetchProvider;
     protected EditorPanel editorPanel;
+    protected ResourceBundle bundle;
     
     /**
      * Initializes the controller class.
@@ -33,6 +34,7 @@ public abstract class ListingController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        bundle = rb;
         componentsInitialize(url, rb);
     }
     
@@ -41,7 +43,6 @@ public abstract class ListingController implements Initializable {
     public abstract void reAssignTable(Supplier<List<EditorPanelable>> fetchData);
     public abstract void reAssignTable(FilterModel model);
     public abstract void addListWith(Class content);
-    public abstract void removeElementsFromEditorPanel(String... componentFXids);
     
     public void setEditorPanel(EditorPanel editorPanel){
         this.editorPanel = editorPanel;
