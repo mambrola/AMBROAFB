@@ -5,6 +5,8 @@
  */
 package ambroafb.accounts.detail_pane;
 
+import ambro.ADatePicker;
+import ambro.ATableView;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Printer;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -14,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
@@ -24,7 +27,17 @@ import javafx.scene.layout.VBox;
 public class AccountDetailPane extends VBox  {
     
     @FXML
-    private Label accountInfo;
+    private Label accountInfo, balAccInfo, clientInfo, currentDebitInfo, currentCreditInfo, startingDebitInfo, startingCreditInfo;
+    
+    @FXML
+    private ADatePicker endDate, beginDate;
+    
+    @FXML
+    private Button compute;
+    
+    @FXML
+    private ATableView<AccountEntry> accountEntries;
+    
     
     public AccountDetailPane(){
         assignLoader();
@@ -44,7 +57,7 @@ public class AccountDetailPane extends VBox  {
     
     public Consumer<EditorPanelable> getDetailPaneAction(){
         return (obj) -> {
-            Printer.printIsNull("accountInfo", accountInfo);
+            Printer.printInfo("AccountDetailPane", "getDetailPaneAction", "");
         };
     }
 }

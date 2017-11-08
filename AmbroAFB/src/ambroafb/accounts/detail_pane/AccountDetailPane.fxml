@@ -8,15 +8,17 @@
 <?import ambro.* ?>
 
 <fx:root    type="javafx.scene.layout.VBox"
+            id="parentPane"
+            styleClass="vContainer"
             stylesheets="/styles/css/AccountDetailPane.css"
             xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Label fx:id="accountInfo" />
         <Label fx:id="balAccInfo" />
         <Label fx:id="clientInfo" />
-        <VBox>
+        <VBox styleClass="vContainer">
             <children>
-                <HBox>
+                <HBox styleClass="hContainer">
                     <children>
                         <VBox>
                             <children>
@@ -50,8 +52,8 @@
                         </VBox>
                     </children>
                 </HBox>
-                <ATableView initializer="ambroafb.accounts.detail_pane.AccountDetailEntry" VBox.vgrow="ALWAYS" />
-                <HBox>
+                <ATableView fx:id="accountEntries" initializer="ambroafb.accounts.detail_pane.AccountEntry" VBox.vgrow="ALWAYS" />
+                <HBox styleClass="hContainer">
                     <children>
                         <VBox>
                             <children>

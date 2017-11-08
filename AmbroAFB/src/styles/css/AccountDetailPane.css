@@ -1,0 +1,10 @@
+@import url("/styles/css/core.css");
+#parentPane {
+  -fx-padding: 5;
+}
+.vContainer {
+  -fx-spacing: 8;
+}
+.hContainer {
+  -fx-spacing: 20;
+}
