@@ -19,7 +19,7 @@
         <StackPane fx:id="containerPane" >
             <children>
                 <!--<AFilterableTreeTableView fx:id="aview" initializer="ambroafb.balance_accounts.BalanceAccount" styleClass="unicode" />--> 
-                <MaskerPane fx:id="masker" />
+                <MaskerPane fx:id="masker" visible="false" text="%loading"/>
             </children>
         </StackPane>
     </center>

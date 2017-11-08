@@ -5,6 +5,8 @@
  */
 package ambroafb.general_scene.tree_table_list;
 
+import ambroafb.general.editor_panel.EditorPanel;
+import ambroafb.general.editor_panel.standard.StandardEditorPanel;
 import ambroafb.general.interfaces.ListingStage;
 import javafx.stage.Stage;
 
@@ -15,7 +17,10 @@ import javafx.stage.Stage;
 public class TreeTableList extends ListingStage {
     
     public TreeTableList(Stage owner, Class treeContent, String stageTitleBundleKey){
-        super(owner, "/ambroafb/general_scene/tree_table_list/TreeTableList.fxml", treeContent,  stageTitleBundleKey);
+        this(owner, treeContent,  stageTitleBundleKey, new StandardEditorPanel());
     }
     
+    public TreeTableList(Stage owner, Class treeContent, String stageTitleBundleKey, EditorPanel editorPanel){
+        super(owner, "/ambroafb/general_scene/tree_table_list/TreeTableList.fxml", treeContent, stageTitleBundleKey, editorPanel);
+    }
 }

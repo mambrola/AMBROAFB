@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.*?>
+
+<BorderPane fx:id="formPane" 
+            stylesheets="/styles/css/tablelist.css" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="ambroafb.general_scene.table_master_detail.TableMasterDetailController" >
+    <top>
+        
+    </top>
+    <center>
+        <MasterDetailPane fx:id="masterDetailPane">
+            <masterNode>
+                <StackPane >
+                    <children>
+                        
+                        <MaskerPane fx:id="masterMasker" visible="false" text="%loading"/>
+                    </children>
+                </StackPane>
+            </masterNode>
+            <detailNode >
+                <StackPane>
+                    <children>
+                        
+                        <MaskerPane fx:id="detailMasker" visible="false" text="%loading"/>
+                    </children>
+                </StackPane>
+            </detailNode>
+        </MasterDetailPane>
+    </center>
+</BorderPane>

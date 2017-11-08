@@ -38,12 +38,10 @@ public class TableListController extends ListingController {
     
     private final ObservableList<EditorPanelable> contents = FXCollections.observableArrayList();
     
-    private ResourceBundle bundle;
-    
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        bundle = rb;
+        
     }
     
     @Override
@@ -104,11 +102,6 @@ public class TableListController extends ListingController {
         editorPanel.buttonsMainPropertysBinder(aview);
         editorPanel.setTableDataList(aview, contents);
         containerPane.getChildren().add(0, aview);
-    }
-    
-    @Override
-    public void removeElementsFromEditorPanel(String... componentFXids){
-        editorPanel.removeComponents(componentFXids);
     }
     
 }

@@ -7,7 +7,6 @@ package ambroafb.general_scene.tree_table_list;
 
 import ambro.AFilterableTreeTableView;
 import ambroafb.balance_accounts.*;
-import ambroafb.general.Names;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.editor_panel.EditorPanelController;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -48,12 +47,10 @@ public class TreeTableListController extends ListingController {
     
     private final ObservableList<BalanceAccount> roots = FXCollections.observableArrayList();
     
-    private ResourceBundle bundle; 
-    
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        bundle = rb;
+        
     }
     
     @Override
@@ -182,11 +179,6 @@ public class TreeTableListController extends ListingController {
         });
 
         containerPane.getChildren().add(0, aview);
-    }
-
-    @Override
-    public void removeElementsFromEditorPanel(String... componentFXids) {
-        
     }
 
     @Override
