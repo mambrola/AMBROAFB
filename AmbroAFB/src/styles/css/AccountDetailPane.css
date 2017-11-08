@@ -1,6 +1,6 @@
 @import url("/styles/css/core.css");
 #parentPane {
-  -fx-padding: 5;
+  -fx-padding: 5 5 10 5;
 }
 .vContainer {
   -fx-spacing: 8;

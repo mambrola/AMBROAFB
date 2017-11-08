@@ -23,13 +23,13 @@ public class AccountEntry {
     private final StringProperty dateProperty = new SimpleStringProperty("");
     private final ObjectProperty<LocalDate> dateObj = new SimpleObjectProperty<>();
     
-    @AView.Column(title = "%correspondent", width = "200")
+    @AView.Column(title = "%correspondent", width = "280")
     private final StringProperty correspondent = new SimpleStringProperty("");
     
-    @AView.Column(title = "%debit", width = "60")
+    @AView.Column(title = "%debit", width = TableColumnWidths.MONEY)
     private final StringProperty debit = new SimpleStringProperty("");
     
-    @AView.Column(title = "%credit", width = "60")
+    @AView.Column(title = "%credit", width = TableColumnWidths.MONEY)
     private final StringProperty credit = new SimpleStringProperty("");
     
     public AccountEntry() {

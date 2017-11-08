@@ -22,9 +22,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.StackPane;
 import org.controlsfx.control.MaskerPane;
-import org.controlsfx.control.MasterDetailPane;
 
 /**
  * FXML Controller class
@@ -35,8 +35,11 @@ public class TableMasterDetailController extends ListingController {
 
     private AFilterableTableView<EditorPanelable> tableView;
     
+//    @FXML
+//    private MasterDetailPane masterDetailPane;
+    
     @FXML
-    private MasterDetailPane masterDetailPane;
+    private SplitPane splitPane;
     
     @FXML
     private MaskerPane masterMasker, detailMasker;
@@ -45,6 +48,9 @@ public class TableMasterDetailController extends ListingController {
 
     private Consumer<EditorPanelable> selectionAction;
 
+    
+    private final double detailPaneWidth = 400;
+    
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
         
@@ -52,7 +58,8 @@ public class TableMasterDetailController extends ListingController {
     
     
     public void setDetailNode(Node node, Consumer<EditorPanelable> action){
-        ((StackPane)masterDetailPane.getDetailNode()).getChildren().add(0, node);
+        ((StackPane)splitPane.getItems().get(1)).getChildren().add(0, node);
+//        ((StackPane)masterDetailPane.getDetailNode()).getChildren().add(0, node);
         selectionAction = action;
     }
 
@@ -94,7 +101,11 @@ public class TableMasterDetailController extends ListingController {
         tableView.setBundle(bundle);
         editorPanel.buttonsMainPropertysBinder(tableView);
         editorPanel.setTableDataList(tableView, contents);
-        ((StackPane)masterDetailPane.getMasterNode()).getChildren().add(0, tableView);
+        ((StackPane)splitPane.getItems().get(0)).getChildren().add(0, tableView);
+//        ((StackPane)masterDetailPane.getMasterNode()).getChildren().add(0, tableView);
+        
+        System.out.println("------------ devider: " + splitPane.getDividerPositions()[0]);
+//        masterDetailPane.setDividerPosition(0.28);
         
         tableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
             if (selectionAction != null){

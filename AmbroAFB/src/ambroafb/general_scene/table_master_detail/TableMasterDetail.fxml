@@ -15,23 +15,21 @@
         
     </top>
     <center>
-        <MasterDetailPane fx:id="masterDetailPane">
-            <masterNode>
+        <SplitPane fx:id="splitPane">
+            <items>
                 <StackPane >
                     <children>
                         
                         <MaskerPane fx:id="masterMasker" visible="false" text="%loading"/>
                     </children>
                 </StackPane>
-            </masterNode>
-            <detailNode >
-                <StackPane>
+                <StackPane minWidth="524" maxWidth="524" >
                     <children>
                         
                         <MaskerPane fx:id="detailMasker" visible="false" text="%loading"/>
                     </children>
                 </StackPane>
-            </detailNode>
-        </MasterDetailPane>
+            </items>
+        </SplitPane>
     </center>
 </BorderPane>

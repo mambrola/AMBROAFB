@@ -10,6 +10,7 @@ import ambro.ATableView;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Printer;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TableColumnWidths;
 import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -38,9 +39,22 @@ public class AccountDetailPane extends VBox  {
     @FXML
     private ATableView<AccountEntry> accountEntries;
     
+    @FXML
+    private VBox currentDebitPane, currentCreditPane;
+    
     
     public AccountDetailPane(){
         assignLoader();
+        double dateWidth = Double.parseDouble(TableColumnWidths.DATE);
+        endDate.setMinWidth(dateWidth + dateWidth / 2);
+        endDate.setMaxWidth(dateWidth + dateWidth / 2);
+        
+        beginDate.setMinWidth(dateWidth + dateWidth / 2);
+        beginDate.setMaxWidth(dateWidth + dateWidth / 2);
+        
+//        double moneyWidth = Double.parseDouble(TableColumnWidths.MONEY);
+//        currentCreditPane.setPrefWidth(moneyWidth);
+//        currentDebitPane.setPrefWidth(moneyWidth);
     }
     
     private void assignLoader(){
