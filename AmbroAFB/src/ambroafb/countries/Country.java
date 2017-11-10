@@ -6,17 +6,13 @@
 package ambroafb.countries;
 
 import ambro.AView;
-import ambroafb.general.DBUtils;
 import ambroafb.general.interfaces.EditorPanelable;
-import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.json.JSONObject;
 
 /**
  *
@@ -48,26 +44,26 @@ public class Country extends EditorPanelable{
         }, code));
     }
     
-    public static ArrayList<Country> getAllFromDB() {
-        JSONObject params =  new ConditionBuilder().build();
-        ArrayList<Country> countries = DBUtils.getObjectsListFromDB(Country.class, DB_TABLE_NAME, params);
-        countries.sort((Country c1, Country c2) -> c1.compareByDescrip(c2));
-        return countries;
-    }
+//    public static ArrayList<Country> getAllFromDB() {
+//        JSONObject params =  new ConditionBuilder().build();
+//        ArrayList<Country> countries = DBUtils.getObjectsListFromDB(Country.class, DB_TABLE_NAME, params);
+//        countries.sort((Country c1, Country c2) -> c1.compareByDescrip(c2));
+//        return countries;
+//    }
     
-    public static Country getOneFromDB(int recId) {
-        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
-        return getOneFromDBHelper(conditionBuilder);
-    }
-    
-    public static Country getOneFromDB(String countryCode) {
-        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("code", "=", countryCode).condition();
-        return getOneFromDBHelper(conditionBuilder);
-    }
-    
-    private static Country getOneFromDBHelper(ConditionBuilder conditionBuilder){
-        return DBUtils.getObjectFromDB(Country.class, DB_TABLE_NAME, conditionBuilder.build());
-    }
+//    public static Country getOneFromDB(int recId) {
+//        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
+//        return getOneFromDBHelper(conditionBuilder);
+//    }
+//    
+//    public static Country getOneFromDB(String countryCode) {
+//        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("code", "=", countryCode).condition();
+//        return getOneFromDBHelper(conditionBuilder);
+//    }
+//    
+//    private static Country getOneFromDBHelper(ConditionBuilder conditionBuilder){
+//        return DBUtils.getObjectFromDB(Country.class, DB_TABLE_NAME, conditionBuilder.build());
+//    }
 
     // Properties:
     public StringProperty codeProperty() {

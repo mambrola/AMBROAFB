@@ -16,7 +16,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,13 +52,13 @@ public class TreeTableListController extends ListingController {
         
     }
     
-    @Override
-    public void reAssignTable(Supplier<List<EditorPanelable>> fetchData){
-//        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
-//        roots.clear();
-//        aview.removeAll();
-//        new Thread(new BalanceAccountsFromDB(roots, selectedIndex)).start();
-    }
+//    @Override
+//    public void reAssignTable(Supplier<List<EditorPanelable>> fetchData){
+////        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+////        roots.clear();
+////        aview.removeAll();
+////        new Thread(new BalanceAccountsFromDB(roots, selectedIndex)).start();
+//    }
     
     @Override
     public void reAssignTable(FilterModel model){

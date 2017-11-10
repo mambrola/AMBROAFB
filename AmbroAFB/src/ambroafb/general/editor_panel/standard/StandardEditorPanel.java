@@ -123,7 +123,7 @@ public class StandardEditorPanel extends EditorPanel {
         ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
         Filterable filter = editorPanelSceneStage.getEPManager().getFilterFor(editorPanelSceneStage);
         FilterModel model = (filter != null) ? filter.getResult() : null;
-        if (model != null && !model.isCanceled()){
+        if (model == null || !model.isCanceled()){
             editorPanelSceneStage.getController().reAssignTable(model);
         }
         refresh.setSelected(false);

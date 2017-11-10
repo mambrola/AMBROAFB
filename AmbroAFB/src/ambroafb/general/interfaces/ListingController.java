@@ -7,9 +7,7 @@ package ambroafb.general.interfaces;
 
 import ambroafb.general.editor_panel.EditorPanel;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Supplier;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
@@ -40,7 +38,7 @@ public abstract class ListingController implements Initializable {
     
     protected abstract void componentsInitialize(URL url, ResourceBundle rb);
     
-    public abstract void reAssignTable(Supplier<List<EditorPanelable>> fetchData);
+//    public abstract void reAssignTable(Supplier<List<EditorPanelable>> fetchData);
     public abstract void reAssignTable(FilterModel model);
     public abstract void addListWith(Class content);
     

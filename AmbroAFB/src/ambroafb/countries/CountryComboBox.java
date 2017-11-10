@@ -5,7 +5,8 @@
  */
 package ambroafb.countries;
 
-import java.util.ArrayList;
+import ambroafb.general.interfaces.DataProvider;
+import java.util.List;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -22,6 +23,7 @@ public class CountryComboBox extends ComboBox<Country> {
     public static final String categoryALL = "ALL";
     private final ObservableList<Country> items = FXCollections.observableArrayList();
     private final Country countryALL = new Country();
+    private final CountryDataFetchProvider dataFetchProvider = new CountryDataFetchProvider();
     
     public CountryComboBox(){
         super();
@@ -91,13 +93,16 @@ public class CountryComboBox extends ComboBox<Country> {
         
         @Override
         public void run() {
-            ArrayList<Country> countries = Country.getAllFromDB();
-            Platform.runLater(() -> {
-                items.setAll(countries);
-                if (consumer != null){
-                    consumer.accept(items);
-                }
-            });
+            try {
+                List<Country> countries = dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL);
+                Platform.runLater(() -> {
+                    items.setAll(countries);
+                    if (consumer != null){
+                        consumer.accept(items);
+                    }
+                });
+            } catch (Exception ex) {
+            }
         }
         
     }

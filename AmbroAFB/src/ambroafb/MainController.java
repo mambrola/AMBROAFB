@@ -17,6 +17,7 @@ import ambroafb.clients.ClientManager;
 import ambroafb.clients.filter.ClientFilter;
 import ambroafb.configuration.Configuration;
 import ambroafb.countries.Country;
+import ambroafb.countries.CountryManager;
 import ambroafb.currencies.Currency;
 import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
@@ -217,7 +218,7 @@ public class MainController implements Initializable {
             Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Product.getAllFromDB());
                                                 };
-            products.getController().reAssignTable(fetchData);
+//            products.getController().reAssignTable(fetchData);
             products.show();
         }
         else{
@@ -232,12 +233,10 @@ public class MainController implements Initializable {
         Stage countriesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Country.class.getSimpleName());
         if (countriesStage == null || !countriesStage.isShowing()){
             TableList countries = new TableList(AmbroAFB.mainStage, Country.class, stageTitle);
+            countries.setEPManager(new CountryManager());
             countries.getController().getEditorPanel().removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID);
 
-            Supplier<List<EditorPanelable>> fetchData = () -> {
-                                                    return new ArrayList(Country.getAllFromDB());
-                                                };
-            countries.getController().reAssignTable(fetchData);
+            countries.getController().reAssignTable(null);
             countries.show();
         }
         else {
@@ -313,7 +312,7 @@ public class MainController implements Initializable {
             Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Attitude.getAllFromDB());
                                                 };
-            attitudes.getController().reAssignTable(fetchData);
+//            attitudes.getController().reAssignTable(fetchData);
             attitudes.getController().getEditorPanel().removeComponents(EditorPanel.SEARCH_FXID);
             attitudes.show();
             
@@ -333,7 +332,7 @@ public class MainController implements Initializable {
             Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Merchandise.getAllFromDB());
                                                 };
-            merchandises.getController().reAssignTable(fetchData);
+//            merchandises.getController().reAssignTable(fetchData);
             merchandises.getController().getEditorPanel().removeComponents(EditorPanel.SEARCH_FXID);
             merchandises.show();
         } else {
@@ -349,7 +348,7 @@ public class MainController implements Initializable {
             Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(ParamGeneral.getAllFromDB());
                                                 };
-            generalParams.getController().reAssignTable(fetchData);
+//            generalParams.getController().reAssignTable(fetchData);
             generalParams.getController().getEditorPanel().removeComponents(EditorPanel.REFRESH_FXID);
             generalParams.show();
         }
@@ -369,7 +368,7 @@ public class MainController implements Initializable {
             Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(Currency.getAllFromDB());
                                                 };
-            currencies.getController().reAssignTable(fetchData);
+//            currencies.getController().reAssignTable(fetchData);
             currencies.show();
         }
         else {
@@ -395,7 +394,7 @@ public class MainController implements Initializable {
                 Supplier<List<EditorPanelable>> fetchData = () -> {
                                                         return new ArrayList(CurrencyRate.getFilteredFromDB(model));
                                                     };
-                currencyRates.getController().reAssignTable(fetchData);
+//                currencyRates.getController().reAssignTable(fetchData);
             }
         }
         else {
@@ -412,7 +411,7 @@ public class MainController implements Initializable {
             Supplier<List<EditorPanelable>> fetchData = () -> {
                                                     return new ArrayList(DiscountOnCount.getAllFromDB());
                                                 };
-            discountOnCounts.getController().reAssignTable(fetchData);
+//            discountOnCounts.getController().reAssignTable(fetchData);
             discountOnCounts.getController().getEditorPanel().removeComponents(EditorPanel.SEARCH_FXID);
             discountOnCounts.show();
         }

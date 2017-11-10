@@ -6,7 +6,6 @@
 package ambroafb.general_scene.table_master_detail;
 
 import ambro.AFilterableTableView;
-import ambroafb.general.Printer;
 import ambroafb.general.interfaces.DataProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -62,11 +60,6 @@ public class TableMasterDetailController extends ListingController {
     
     public void registerObserver(MasterObserver observer){
         if (observer != null) observers.add(observer);
-    }
-
-    @Override
-    public void reAssignTable(Supplier<List<EditorPanelable>> fetchData) {
-        Printer.printInfo("TableMasterDetailController", "reAssignTable", "Supplier<List<EditorPanelable>> fetchData");
     }
 
     @Override

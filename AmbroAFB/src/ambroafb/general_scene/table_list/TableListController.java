@@ -13,7 +13,6 @@ import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,29 +40,6 @@ public class TableListController extends ListingController {
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        
-    }
-    
-    @Override
-    public void reAssignTable(Supplier<List<EditorPanelable>> fetchData){
-        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
-        contents.clear();
-        
-        new Thread(() -> {
-            Platform.runLater(() -> {
-                masker.setVisible(true);
-            });
-            
-            List<EditorPanelable> list = fetchData.get();
-            contents.setAll(list);
-            
-            Platform.runLater(() -> {
-                masker.setVisible(false);
-                if (selectedIndex >= 0){
-                    aview.getSelectionModel().select(selectedIndex);
-                }
-            });
-        }).start();
         
     }
     
