@@ -48,6 +48,10 @@ public class TableMasterDetailController extends ListingController {
 
     private final ArrayList<MasterObserver> observers = new ArrayList<>();
             
+    private final Timer timer = new Timer();
+    private EditorPanelable newSelected;
+    private final long waitingMilisecond = 300;
+    
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
         
@@ -88,10 +92,6 @@ public class TableMasterDetailController extends ListingController {
         }).start();
     }
 
-    private final Timer timer = new Timer();
-    private EditorPanelable newSelected;
-    private final long waitingSecond = 1;
-    
     @Override
     public void addListWith(Class content) {
         tableView = new AFilterableTableView<>(content);
@@ -107,7 +107,7 @@ public class TableMasterDetailController extends ListingController {
                     splitPane.getItems().get(1).setDisable(false);
                 }
                 observers.stream().forEach(observer -> observer.notify(newValue));
-                timer.schedule(new ToDoTask(newValue), waitingSecond * 1000);
+                timer.schedule(new ToDoTask(newValue), waitingMilisecond);
                 newSelected = newValue;
             }
         });

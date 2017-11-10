@@ -59,7 +59,7 @@
                                             </children>
                                         </VBox>
                                         <Region HBox.hgrow="ALWAYS" />
-                                        <VBox alignment="CENTER" >
+                                        <VBox alignment="CENTER"  >
                                             <children>
                                                 <Label text="%current_amount_remain" />
                                             </children>
@@ -68,16 +68,17 @@
                                 </HBox>
                                 <HBox >
                                     <children>
-                                        <VBox fx:id="currentDebitPane" alignment="CENTER_RIGHT" >
+                                        <VBox fx:id="currentDebitPane" HBox.hgrow="NEVER" alignment="CENTER_RIGHT" >
                                             <children>
                                                 <Label fx:id="currentDebitInfo" text="" />
                                             </children>
                                         </VBox>
-                                        <VBox fx:id="currentCreditPane" alignment="CENTER_RIGHT" >
+                                        <VBox fx:id="currentCreditPane" HBox.hgrow="NEVER" alignment="CENTER_RIGHT" >
                                             <children>
                                                 <Label fx:id="currentCreditInfo" text="" />
                                             </children>
                                         </VBox>
+                                        <Region fx:id="headerEmptyRegion" HBox.hgrow="ALWAYS" />
                                     </children>
                                 </HBox>
                             </children>
@@ -109,6 +110,7 @@
                                                 <Label fx:id="startingCreditInfo" text="" />
                                             </children>
                                         </VBox>
+                                        <Region fx:id="footerEmptyRegion" HBox.hgrow="ALWAYS" />
                                     </children>
                                 </HBox>
                             </children>

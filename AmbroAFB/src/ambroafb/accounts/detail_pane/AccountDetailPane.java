@@ -29,7 +29,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.controlsfx.control.MaskerPane;
@@ -61,10 +61,10 @@ public class AccountDetailPane extends VBox implements MasterObserver  {
     private VBox currentDebitPane, currentCreditPane, startingDebitPane, startingCreditPane;
     
     @FXML
-    private HBox moneyHeaderPane;
+    private MaskerPane masker;
     
     @FXML
-    private MaskerPane masker;
+    private Region headerEmptyRegion, footerEmptyRegion;
     
     
     private AccountDataFetchProvider dataFetchProvider;
@@ -106,6 +106,12 @@ public class AccountDetailPane extends VBox implements MasterObserver  {
         startingDebitPane.setMaxWidth(moneyWidth);
         startingCreditPane.setMinWidth(moneyWidth);
         startingCreditPane.setMaxWidth(moneyWidth);
+        
+        // -----
+        headerEmptyRegion.setMinWidth(Double.parseDouble(TableColumnWidths.SLIDER));
+        headerEmptyRegion.setMaxWidth(Double.parseDouble(TableColumnWidths.SLIDER));
+        footerEmptyRegion.setMinWidth(Double.parseDouble(TableColumnWidths.SLIDER));
+        footerEmptyRegion.setMaxWidth(Double.parseDouble(TableColumnWidths.SLIDER));
     }
     
     private void setComponentsFeatures(){
