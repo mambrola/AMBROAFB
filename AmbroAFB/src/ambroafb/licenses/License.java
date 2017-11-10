@@ -7,23 +7,15 @@ package ambroafb.licenses;
 
 import ambro.AView;
 import ambroafb.clients.Client;
-import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
-import ambroafb.licenses.filter.LicenseFilterModel;
 import ambroafb.licenses.helper.LicenseStatus;
 import ambroafb.products.Product;
-import authclient.db.ConditionBuilder;
-import authclient.db.DBClient;
-import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -35,8 +27,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
-import org.json.JSONObject;
 
 /**
  *
@@ -60,7 +50,7 @@ public class License extends EditorPanelable {
     private String firstName, lastName, email;
     
     @AView.Column(title = "%product", width = TableColumnWidths.PRODUCT, styleClass = "textCenter")
-    private final StringExpression productDescrip;
+    private final StringProperty productDescrip;
     private final ObjectProperty<Product> productObj;
     private int productId; // for object mapper (case: class to json)
     private String abbreviation, former;
@@ -107,7 +97,8 @@ public class License extends EditorPanelable {
         clientObj = new SimpleObjectProperty<>(new Client());
         clientDescrip = clientObj.get().getShortDescrip(", ");
         productObj = new SimpleObjectProperty<>(new Product());
-        productDescrip = Utils.avoidNull(productObj.get().abbreviationProperty()).concat(Utils.avoidNull(productObj.get().formerProperty()));
+        productDescrip = new SimpleStringProperty("");
+//        productDescrip = Utils.avoidNull(productObj.get().abbreviationProperty()).concat(Utils.avoidNull(productObj.get().formerProperty()));
 //        invoiceObj = new SimpleObjectProperty<>(new Invoice());
         invoiceNumber = new SimpleStringProperty("");
         cfCurrentInvoiceId = new SimpleIntegerProperty(0);
@@ -144,77 +135,6 @@ public class License extends EditorPanelable {
             statusDescrip.bind(statusObj.get().descripProperty());
         }
     }
-    
-    // DB methods:
-    public static ArrayList<License> getAllFromDB(){
-        JSONObject params = new ConditionBuilder().build();
-        return DBUtils.getObjectsListFromDB(License.class, DB_VIEW_NAME, params);
-    }
-    
-    public static ArrayList<License> getFilteredFromDB(FilterModel model) {
-        WhereBuilder whereBuilder = new ConditionBuilder().where();
-        LicenseFilterModel licenseFilterModel = (LicenseFilterModel) model;
-        
-        if (licenseFilterModel.isSelectedConcreteClient()){
-            whereBuilder = whereBuilder.and("client_id", "=", licenseFilterModel.getSelectedClientId());
-        }
-        if (licenseFilterModel.isSelectedConcreteProduct()){
-            whereBuilder = whereBuilder.and("product_id", "=", licenseFilterModel.getSelectedProductId());
-        }
-        ObservableList<LicenseStatus> statuses = licenseFilterModel.getSelectedStatuses();
-        if (!statuses.isEmpty()){
-            whereBuilder = whereBuilder.andGroup();
-            for (LicenseStatus status : statuses) {
-                whereBuilder = whereBuilder.or("status", "=", status.getLicenseStatusId());
-            }
-            whereBuilder = whereBuilder.closeGroup();
-        }
-        if (licenseFilterModel.onlyExtraDays()){
-            whereBuilder = whereBuilder.and("additional_days", ">", 0);
-        }
-        else if (licenseFilterModel.withAndWithoutExtraDays()){
-            whereBuilder = whereBuilder.and("additional_days", ">=", 0);
-        }
-        else {
-            whereBuilder = whereBuilder.and("additional_days", "=", 0);
-        }
-        
-        JSONObject params = whereBuilder.condition().build();
-        ArrayList<License> licenses = DBUtils.getObjectsListFromDB(License.class, DB_VIEW_NAME, params);
-        licenses.sort((License lic1, License lic2) -> {
-            return lic2.compareTo(lic1);
-        });
-        return licenses;
-    }
-
-    
-    public static ArrayList<LicenseStatus> getAllLicenseStatusFromDB(){
-        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
-        return DBUtils.getObjectsListFromDB(LicenseStatus.class, DB_STATUSES_TABLE_NAME, params);
-    }
-    
-    public static LicenseStatus getLicenseStatusFromDB(int licenseStatusId){
-        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("license_status_id", "=", licenseStatusId).condition();
-        JSONObject params = conditionBuilder.build();
-        return DBUtils.getObjectFromDB(LicenseStatus.class, DB_STATUSES_TABLE_NAME, params);
-    }
-    
-    public static License getOneFromDB(int recId){
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
-        return DBUtils.getObjectFromDB(License.class, DB_TABLE_NAME, params);
-    }
-    
-    public static License saveOneToDB(License license){
-        if (license == null) return null;
-        return DBUtils.saveObjectToDB("license", DB_TABLE_NAME);
-    }
-    
-    public static boolean deleteFromDB(int recId){
-        System.out.println("delete from db...??");
-        return false;
-    }
-    
     
     // properties:
     public ObjectProperty<LocalDateTime> createdTimeProperty(){
@@ -358,6 +278,10 @@ public class License extends EditorPanelable {
         return lastLoginTime.get();
     }
     
+    public String getProductDescrip(){
+        return productDescrip.get();
+    }
+    
     
     
     // Setters:
@@ -444,6 +368,10 @@ public class License extends EditorPanelable {
     // ask DB the new license info, licenses finances and invoice finances.
     public void setIsNew(int isNew){
         this.isNew.set(isNew == 1);
+    }
+    
+    public void setProductDescrip(String productDescrip){
+        this.productDescrip.set(productDescrip);
     }
     
     /**

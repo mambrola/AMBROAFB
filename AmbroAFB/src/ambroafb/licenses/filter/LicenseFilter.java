@@ -12,12 +12,11 @@ import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
-import ambroafb.licenses.License;
 import ambroafb.licenses.helper.LicenseStatus;
+import ambroafb.licenses.helper.LicenseStatusCheckComboBox;
 import ambroafb.products.Product;
 import ambroafb.products.ProductComboBox;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -27,7 +26,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
-import org.controlsfx.control.CheckComboBox;
 
 /**
  *
@@ -40,7 +38,7 @@ public class LicenseFilter extends UserInteractiveFilterStage implements Filtera
     @FXML
     private ProductComboBox products;
     @FXML
-    private CheckComboBox<LicenseStatus> statuses;
+    private LicenseStatusCheckComboBox statuses;
     @FXML
     private CheckBox extraDays;
     @FXML
@@ -98,13 +96,12 @@ public class LicenseFilter extends UserInteractiveFilterStage implements Filtera
         };
         products.fillComboBoxWithALL(productConsumer);
         
-        ArrayList<LicenseStatus> licenseStatuses = License.getAllLicenseStatusFromDB();
-        licenseStatuses.sort((LicenseStatus status1, LicenseStatus status2) -> status1.compareById(status2));
-        statuses.getItems().setAll(licenseStatuses);
-        
-        filterModel.getSelectedStatusIndexes().stream().forEach((index) -> {
-            statuses.getCheckModel().check(index);
-        });
+        Consumer<ObservableList<LicenseStatus>> selectSaveStatuses = (statusList) -> {
+            filterModel.getSelectedStatusIndexes().stream().forEach((index) -> {
+                statuses.getCheckModel().check(index);
+            });
+        };
+        statuses.fillComboBox(selectSaveStatuses);
         
         // The order of these bellow command is importent.
         extraDays.setSelected(filterModel.onlyExtraDays());

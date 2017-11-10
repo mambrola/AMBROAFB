@@ -40,6 +40,7 @@ import ambroafb.invoices.Invoice;
 import ambroafb.invoices.InvoiceManager;
 import ambroafb.invoices.filter.InvoiceFilter;
 import ambroafb.licenses.License;
+import ambroafb.licenses.LicenseManager;
 import ambroafb.licenses.filter.LicenseFilter;
 import ambroafb.loggings.Logging;
 import ambroafb.loggings.filter.LoggingFilter;
@@ -277,6 +278,7 @@ public class MainController implements Initializable {
         Stage licensesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, License.class.getSimpleName());
         if(licensesStage == null || !licensesStage.isShowing()){
             TableList licenses = new TableList(AmbroAFB.mainStage, License.class, stageTitle);
+            licenses.setEPManager(new LicenseManager());
             licenses.getController().getEditorPanel().removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID);
             licenses.show();
             
@@ -287,10 +289,7 @@ public class MainController implements Initializable {
                 licenses.close();
             }
             else {
-                Supplier<List<EditorPanelable>> fetchData = () -> {
-                                                        return new ArrayList(License.getFilteredFromDB(filterModel));
-                                                    };
-                licenses.getController().reAssignTable(fetchData);
+                licenses.getController().reAssignTable(filterModel);
             }
         }
         else {
