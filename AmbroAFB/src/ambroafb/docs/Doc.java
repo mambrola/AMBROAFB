@@ -440,13 +440,13 @@ public class Doc extends EditorPanelable {
                     if (empty) {
                         setText(null);
                     } else {
-                        String imgPath = "\u26AB"; //"\u23EC" "\u25EF"; 
+                        String imgPath = "\u26AB";
                         switch(marker){
                             case -1:
-                                imgPath = "\u29ED"; // "\u25BC", "\u2A00"; 
+                                imgPath = "\u29ED";
                                 break;
                             case 1:
-                                imgPath = "\u25B4"; //"\u26AA" "\u29CA" 
+                                imgPath = "\u25B4";
                                 break;
                             default:
                                 break;
