@@ -7,16 +7,10 @@ package ambroafb.loggings;
 
 import ambro.AView;
 import ambroafb.clients.Client;
-import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
-import ambroafb.loggings.filter.LoggingFilterModel;
-import authclient.db.ConditionBuilder;
-import authclient.db.WhereBuilder;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -24,7 +18,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.json.JSONObject;
 
 /**
  *
@@ -68,20 +61,20 @@ public class Logging extends EditorPanelable {
     }
 
     // DB functions:
-    public static ArrayList<Logging> getFilteredFromDB(FilterModel model) {
-        LoggingFilterModel logingFilterModel = (LoggingFilterModel) model;
-        WhereBuilder whereBuilder = new ConditionBuilder().where()
-                                        .and("login_time", ">=", logingFilterModel.getFromDateForDB())
-                                        .and("login_time", "<=", logingFilterModel.getToDateForDB());
-        if (logingFilterModel.isSelectedConcreteClient()){
-            whereBuilder.and("client_id", "=", logingFilterModel.getSelectedClientId());
-        }
-        
-        JSONObject params = whereBuilder.condition().build();
-        ArrayList<Logging> loggings = DBUtils.getObjectsListFromDB(Logging.class, DB_LOGIN_VIEW, params);
-        loggings.sort((Logging log1, Logging log2) -> log2.compareById(log1));
-        return loggings;
-    }
+//    public static ArrayList<Logging> getFilteredFromDB(FilterModel model) {
+//        LoggingFilterModel logingFilterModel = (LoggingFilterModel) model;
+//        WhereBuilder whereBuilder = new ConditionBuilder().where()
+//                                        .and("login_time", ">=", logingFilterModel.getFromDateForDB())
+//                                        .and("login_time", "<=", logingFilterModel.getToDateForDB());
+//        if (logingFilterModel.isSelectedConcreteClient()){
+//            whereBuilder.and("client_id", "=", logingFilterModel.getSelectedClientId());
+//        }
+//        
+//        JSONObject params = whereBuilder.condition().build();
+//        ArrayList<Logging> loggings = DBUtils.getObjectsListFromDB(Logging.class, DB_LOGIN_VIEW, params);
+//        loggings.sort((Logging log1, Logging log2) -> log2.compareById(log1));
+//        return loggings;
+//    }
     
     
     // Properties:

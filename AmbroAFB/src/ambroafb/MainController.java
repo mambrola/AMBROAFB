@@ -43,6 +43,7 @@ import ambroafb.licenses.License;
 import ambroafb.licenses.LicenseManager;
 import ambroafb.licenses.filter.LicenseFilter;
 import ambroafb.loggings.Logging;
+import ambroafb.loggings.LoggingManager;
 import ambroafb.loggings.filter.LoggingFilter;
 import ambroafb.minitables.attitudes.Attitude;
 import ambroafb.minitables.merchandises.Merchandise;
@@ -162,6 +163,7 @@ public class MainController implements Initializable {
         Stage loggingsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Logging.class.getSimpleName());
         if(loggingsStage == null || !loggingsStage.isShowing()){
             TableList loggings = new TableList(AmbroAFB.mainStage, Logging.class, stageTitle);
+            loggings.setEPManager(new LoggingManager());
             loggings.getController().getEditorPanel().removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID);
             loggings.show();
             
@@ -172,10 +174,7 @@ public class MainController implements Initializable {
                 loggings.close();
             }
             else {
-                Supplier<List<EditorPanelable>> fetchData = () -> {
-                                                        return new ArrayList(Logging.getFilteredFromDB(model));
-                                                    };
-                loggings.getController().reAssignTable(fetchData);
+                loggings.getController().reAssignTable(model);
             }
         }
         else {

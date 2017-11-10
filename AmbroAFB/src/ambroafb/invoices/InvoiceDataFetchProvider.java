@@ -47,7 +47,7 @@ public class InvoiceDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<Invoice> getFilteredBy(JSONObject params) throws Exception {
-        ArrayList<Invoice> invoices = DBUtils.getObjectsListFromDB(Invoice.class, DB_VIEW_NAME, params);
+        List<Invoice> invoices = getObjectsListFromDB(Invoice.class, DB_VIEW_NAME, params);
         invoices.sort((Invoice inv1, Invoice inv2) -> inv2.compareById(inv1));
         return invoices;
     }

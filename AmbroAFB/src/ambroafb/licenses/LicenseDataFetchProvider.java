@@ -65,8 +65,7 @@ public class LicenseDataFetchProvider extends DataFetchProvider {
             whereBuilder = whereBuilder.and("additional_days", "=", 0);
         }
         
-        JSONObject params = whereBuilder.condition().build();
-        return getFilteredBy(params);
+        return getFilteredBy(whereBuilder.condition().build());
     }
 
     @Override
