@@ -23,5 +23,5 @@ public interface TableColumnWidths {
     public static final String PHONE = "110";
     public static final String MONEY = "80";
     public static final String MAC_ADDRESS = "120";
-    public static final String SLIDER = "16";
+    public static final String SLIDER = "20";
 }
