@@ -1,10 +1,21 @@
 @import url("/styles/css/core.css");
 #parentPane {
   -fx-padding: 5 5 10 5;
+  -fx-spacing: 32;
+  -fx-min-width: 524;
+  -fx-max-width: 524;
 }
 .vContainer {
   -fx-spacing: 8;
 }
 .hContainer {
   -fx-spacing: 20;
+}
+#infoNumersPane {
+  -fx-min-width: 126;
+  -fx-max-width: 126;
+}
+#infoDescripsPane {
+  -fx-min-width: 378;
+  -fx-max-width: 378;
 }

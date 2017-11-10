@@ -6,90 +6,117 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
+<?import org.controlsfx.control.*?>
 <?import ambro.* ?>
 
 <fx:root    type="javafx.scene.layout.VBox"
             id="parentPane"
-            styleClass="vContainer"
             stylesheets="/styles/css/AccountDetailPane.css"
-            xmlns:fx="http://javafx.com/fxml/1">
+            xmlns:fx="http://javafx.com/fxml/1"
+            alignment="CENTER" >
     <children>
-        <Label fx:id="accountInfo"  style="-fx-background-color: gray;"/>
-        <Label fx:id="balAccInfo"  style="-fx-background-color: black;"/>
-        <Label fx:id="clientInfo"  style="-fx-background-color: blue;"/>
-        <VBox styleClass="vContainer">
+        <HBox styleClass="hContainer" >
             <children>
-                <HBox styleClass="hContainer" style="-fx-background-color: red;" >
+                <VBox id="infoNumersPane" styleClass="vContainer" HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT" >
                     <children>
-                        <VBox>
+                        <Label fx:id="accountNumberIso" text="" />
+                        <Label fx:id="balAccNumber" text=""  />
+                        <Label fx:id="clientId" text=""  />
+                    </children>
+                </VBox>
+                <VBox id="infoDescripsPane" styleClass="vContainer" HBox.hgrow="ALWAYS" >
+                    <children>
+                        <Label fx:id="accountDescrip" text="" />
+                        <Label fx:id="balAccDescrip" text="" />
+                        <Label fx:id="clientDescrip" text=""  />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <StackPane>
+            <children>
+                <VBox styleClass="vContainer">
+                    <children>
+                        <HBox styleClass="hContainer" >
                             <children>
-                                <Label text="%end_date" />
-                                <ADatePicker fx:id="endDate" />
-                            </children>
-                        </VBox>
-                        <HBox HBox.hgrow="ALWAYS" style="-fx-background-color: green;" >
-                            <children>
-                                <VBox alignment="BOTTOM_CENTER" >
+                                <VBox >
                                     <children>
-                                        <Button fx:id="compute" >
-                                            <graphic>
-                                                <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                                    <Image url="/images/refresh.png" />
-                                                </ImageView>
-                                            </graphic>
-                                        </Button>
+                                        <Label text="%end_date" />
+                                        <ADatePicker fx:id="endDate" />
                                     </children>
                                 </VBox>
-                                
-                                <VBox alignment="CENTER" style="-fx-background-color: blue;" >
+                                <HBox HBox.hgrow="ALWAYS" >
                                     <children>
-                                        <Label />
-                                        <Label text="%current_amount_remain" style="-fx-background-color: gray;" />
+                                        <VBox alignment="BOTTOM_CENTER" >
+                                            <children>
+                                                <Button fx:id="compute" >
+                                                    <graphic>
+                                                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                                            <Image url="/images/refresh.png" />
+                                                        </ImageView>
+                                                    </graphic>
+                                                </Button>
+                                            </children>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <VBox alignment="CENTER" >
+                                            <children>
+                                                <Label text="%current_amount_remain" />
+                                            </children>
+                                        </VBox>
                                     </children>
-                                </VBox>
+                                </HBox>
+                                <HBox >
+                                    <children>
+                                        <VBox fx:id="currentDebitPane" alignment="CENTER" >
+                                            <children>
+                                                <Label fx:id="currentDebitInfo" text="" />
+                                            </children>
+                                        </VBox>
+                                        <VBox fx:id="currentCreditPane" alignment="CENTER" >
+                                            <children>
+                                                <Label fx:id="currentCreditInfo" text="" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
                             </children>
                         </HBox>
-                        <VBox fx:id="currentDebitPane" HBox.hgrow="ALWAYS" style="-fx-background-color: green;" >
+                        <ATableView fx:id="accountEntries" initializer="ambroafb.accounts.detail_pane.helper.AccountEntry" VBox.vgrow="ALWAYS" />
+                        <HBox >
                             <children>
-                                <Label text="%debit" />
-                                <Label fx:id="currentDebitInfo" />
+                                <VBox>
+                                    <children>
+                                        <Label text="%begin_date" />
+                                        <ADatePicker fx:id="beginDate"  />
+                                    </children>
+                                </VBox>
+                                <Region HBox.hgrow="ALWAYS" />
+                                <VBox alignment="CENTER" >
+                                    <children>
+                                        <Label text="%starting_amount_remain" />
+                                    </children>
+                                </VBox>
+                                <HBox>
+                                    <children>
+                                        <VBox fx:id="startingDebitPane" alignment="CENTER" >
+                                            <children>
+                                                <Label fx:id="startingDebitInfo" text="" />
+                                            </children>
+                                        </VBox>
+                                        <VBox fx:id="startingCreditPane" alignment="CENTER" >
+                                            <children>
+                                                <Label fx:id="startingCreditInfo" text="" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
                             </children>
-                        </VBox>
-                        <VBox fx:id="currentCreditPane" HBox.hgrow="ALWAYS" style="-fx-background-color: green;" >
-                            <children>
-                                <Label text="%credit" />
-                                <Label fx:id="currentCreditInfo" />
-                            </children>
-                        </VBox>
+                        </HBox>
                     </children>
-                </HBox>
-                <ATableView fx:id="accountEntries" initializer="ambroafb.accounts.detail_pane.AccountEntry" VBox.vgrow="ALWAYS" />
-                <HBox styleClass="hContainer" style="-fx-background-color: green;">
-                    <children>
-                        <VBox>
-                            <children>
-                                <!--<Label text="%begin_date" />-->
-                                <ADatePicker fx:id="beginDate"  />
-                            </children>
-                        </VBox>
-                        <VBox alignment="CENTER" >
-                            <children>
-                                <Label text="%starting_amount_remain" style="-fx-background-color: red;"/>
-                            </children>
-                        </VBox>
-                        <VBox>
-                            <children>
-                                <Label fx:id="startingDebitInfo" />
-                            </children>
-                        </VBox>
-                        <VBox>
-                            <children>
-                                <Label fx:id="startingCreditInfo" />
-                            </children>
-                        </VBox>
-                    </children>
-                </HBox>
+                </VBox>
+                <MaskerPane fx:id="masker" visible="false" text="%loading" />
             </children>
-        </VBox>
+        </StackPane>
     </children>
 </fx:root>

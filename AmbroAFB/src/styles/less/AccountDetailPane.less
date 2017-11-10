@@ -1,12 +1,17 @@
 @import url("/styles/css/core.css");
 
+@fullWidth: 524;
 @gap: 5;
 @spacing_H: 20;
 @spacing_V: 8;
 
+@oneFourth: (@fullWidth - @spacing_H) / 4;
 
 #parentPane {
     -fx-padding: @gap @gap 2*@gap @gap;
+    -fx-spacing: 4 * @spacing_V;
+    -fx-min-width: @fullWidth;
+    -fx-max-width: @fullWidth;
 }
 
 .vContainer {
@@ -17,3 +22,12 @@
     -fx-spacing: @spacing_H;
 }
 
+#infoNumersPane {
+    -fx-min-width: @oneFourth;
+    -fx-max-width: @oneFourth;
+}
+
+#infoDescripsPane {
+    -fx-min-width: 3 * @oneFourth;
+    -fx-max-width: 3 * @oneFourth;
+}

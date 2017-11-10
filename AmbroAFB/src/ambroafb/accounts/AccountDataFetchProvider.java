@@ -5,12 +5,20 @@
  */
 package ambroafb.accounts;
 
+import ambroafb.accounts.detail_pane.helper.AccountCommonInfo;
+import ambroafb.accounts.detail_pane.helper.AccountEntry;
 import ambroafb.accounts.filter.AccountFilterModel;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
 import authclient.db.ConditionBuilder;
+import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import javafx.application.Platform;
 import org.json.JSONObject;
 
 /**
@@ -19,6 +27,9 @@ import org.json.JSONObject;
  */
 public class AccountDataFetchProvider extends DataFetchProvider {
 
+    private final String ACCOUNT_INFO_PROCEDURE = "account_get_info";
+    private final String ACCOUNT_DEBIT_CREDIT_ENTRIES_PROCEDURE = "account_get_turnover";
+    
     public AccountDataFetchProvider(){
         DB_VIEW_NAME = "accounts_whole";
     }
@@ -58,4 +69,24 @@ public class AccountDataFetchProvider extends DataFetchProvider {
         return getObjectFromDB(Account.class, DB_VIEW_NAME, params);
     }
 
+    public void fetchAccountInfo(int accountId, Consumer<AccountCommonInfo> successAction, Consumer<Exception> errorAction) {
+        new Thread(() -> {
+            AccountCommonInfo accInfo = null;
+            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+            try {
+                ArrayList<AccountCommonInfo> data = callProcedure(AccountCommonInfo.class, ACCOUNT_INFO_PROCEDURE, dbClient.getLang(), accountId);
+                Platform.runLater(() -> {
+                    if (successAction != null && data != null) successAction.accept(data.get(0));
+                });
+            } catch (Exception ex) {
+                Platform.runLater(() -> {
+                    if (errorAction != null) errorAction.accept(ex);
+                });
+            }
+        }).start();
+    }
+    
+    public List<AccountEntry> getAccountEntries(int accountId, LocalDate from, LocalDate to) throws Exception{
+        return callProcedure(AccountEntry.class, ACCOUNT_DEBIT_CREDIT_ENTRIES_PROCEDURE, accountId, from, to);
+    }
 }

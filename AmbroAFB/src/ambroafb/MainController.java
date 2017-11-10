@@ -6,6 +6,7 @@
 package ambroafb;
 
 import ambroafb.accounts.Account;
+import ambroafb.accounts.AccountDataFetchProvider;
 import ambroafb.accounts.AccountManager;
 import ambroafb.accounts.detail_pane.AccountDetailPane;
 import ambroafb.accounts.filter.AccountFilter;
@@ -106,11 +107,13 @@ public class MainController implements Initializable {
         Stage accountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Account.class.getSimpleName());
         if(accountsStage == null || !accountsStage.isShowing()){
             TableMasterDetail accounts = new TableMasterDetail(AmbroAFB.mainStage, Account.class, stageTitle);
-            accounts.setEPManager(new AccountManager());
-            accounts.show();
-            
+            AccountManager manager = new AccountManager();
+            accounts.setEPManager(manager);
             AccountDetailPane detailPane = new AccountDetailPane();
-            ((TableMasterDetailController)accounts.getController()).setDetailNode(detailPane, detailPane.getDetailPaneAction());
+            detailPane.setDataFetchProvider((AccountDataFetchProvider)manager.getDataFetchProvider());
+            ((TableMasterDetailController)accounts.getController()).setDetailNode(detailPane);
+            ((TableMasterDetailController)accounts.getController()).registerObserver(detailPane);
+            accounts.show();
             
             AccountFilter filter = new AccountFilter(accounts);
             FilterModel filterModel = filter.getResult();

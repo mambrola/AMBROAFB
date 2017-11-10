@@ -12,9 +12,11 @@ import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -42,25 +44,24 @@ public class TableMasterDetailController extends ListingController {
     private SplitPane splitPane;
     
     @FXML
-    private MaskerPane masterMasker, detailMasker;
+    private MaskerPane masterMasker;
     
     private final ObservableList<EditorPanelable> contents = FXCollections.observableArrayList();
 
-    private Consumer<EditorPanelable> selectionAction;
-
-    
-    private final double detailPaneWidth = 400;
-    
+    private final ArrayList<MasterObserver> observers = new ArrayList<>();
+            
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
         
     }
     
+    public void setDetailNode(Node node){
+        splitPane.getItems().add(node);
+        node.setDisable(true);
+    }
     
-    public void setDetailNode(Node node, Consumer<EditorPanelable> action){
-        ((StackPane)splitPane.getItems().get(1)).getChildren().add(0, node);
-//        ((StackPane)masterDetailPane.getDetailNode()).getChildren().add(0, node);
-        selectionAction = action;
+    public void registerObserver(MasterObserver observer){
+        if (observer != null) observers.add(observer);
     }
 
     @Override
@@ -94,6 +95,10 @@ public class TableMasterDetailController extends ListingController {
         }).start();
     }
 
+    private final Timer timer = new Timer();
+    private EditorPanelable newSelected;
+    private final long waitingSecond = 1;
+    
     @Override
     public void addListWith(Class content) {
         tableView = new AFilterableTableView<>(content);
@@ -102,22 +107,35 @@ public class TableMasterDetailController extends ListingController {
         editorPanel.buttonsMainPropertysBinder(tableView);
         editorPanel.setTableDataList(tableView, contents);
         ((StackPane)splitPane.getItems().get(0)).getChildren().add(0, tableView);
-//        ((StackPane)masterDetailPane.getMasterNode()).getChildren().add(0, tableView);
-        
-        System.out.println("------------ devider: " + splitPane.getDividerPositions()[0]);
-//        masterDetailPane.setDividerPosition(0.28);
         
         tableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
-            if (selectionAction != null){
-                detailMasker.setVisible(true);
-                new Thread(() -> {
-                    selectionAction.accept(newValue);
-                    Platform.runLater(() -> {
-                        detailMasker.setVisible(false);
-                    });
-                }).start();
+            if (newValue != null){
+                if (splitPane.getItems().size() > 1){
+                    splitPane.getItems().get(1).setDisable(false);
+                }
+                observers.stream().forEach(observer -> observer.notify(newValue));
+                timer.schedule(new ToDoTask(newValue), waitingSecond * 1000);
+                newSelected = newValue;
             }
         });
     }
 
+    
+    private class ToDoTask extends TimerTask {
+
+        private final EditorPanelable selected;
+        
+        public ToDoTask(EditorPanelable selected) {
+            this.selected = selected;
+        }
+        
+        @Override
+        public void run() {
+            if (selected.getRecId() == newSelected.getRecId()){
+                System.out.println("OK, time is out. Update detail...");
+                observers.stream().forEach(observer -> observer.update(selected));
+            }
+        }
+        
+    }
 }
