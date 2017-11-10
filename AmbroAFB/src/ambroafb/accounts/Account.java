@@ -51,6 +51,7 @@ public class Account extends EditorPanelable {
     
     private final ObjectProperty<LocalDate> dateOpenedObj, dateClosedObj;
     private final StringProperty remark;
+    private final StringProperty balAccDescrip;
     
 //    private static final String DB_VEIW_NAME = "accounts_whole";
     private final int clientIdDefaultValue = 0;
@@ -66,6 +67,7 @@ public class Account extends EditorPanelable {
         clientObj = new SimpleObjectProperty<>(new Client());
         dateClosedObj = new SimpleObjectProperty<>();
         remark = new SimpleStringProperty("");
+        balAccDescrip = new SimpleStringProperty("");
         
         clientObj.addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
             String newClientId = "";
@@ -94,6 +96,10 @@ public class Account extends EditorPanelable {
     
     public StringProperty remarkProperty(){
         return remark;
+    }
+    
+    public StringProperty balAccDescripProperty(){
+        return balAccDescrip;
     }
     
     public ObjectProperty<Client> clientProperty(){
@@ -144,6 +150,10 @@ public class Account extends EditorPanelable {
         return remark.get();
     }
     
+    public String getBalAccDescrip(){
+        return balAccDescrip.get();
+    }
+    
     public String getDateClose(){
         return (dateClosedObj.isNull().get()) ? null : dateClosedObj.get().toString();
     }
@@ -190,6 +200,10 @@ public class Account extends EditorPanelable {
     
     public void setRemark(String remark){
         this.remark.set(remark);
+    }
+    
+    public void setBalAccDescrip(String balAccDescrip){
+        this.balAccDescrip.set(balAccDescrip);
     }
     
     public void setDateClose(String date){

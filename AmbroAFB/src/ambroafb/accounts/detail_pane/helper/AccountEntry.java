@@ -29,10 +29,10 @@ public class AccountEntry {
     @AView.Column(title = "%correspondent", width = "280")
     private final StringProperty correspondent = new SimpleStringProperty("");
     
-    @AView.Column(title = "%debit", width = TableColumnWidths.MONEY)
+    @AView.Column(title = "%debit", width = TableColumnWidths.MONEY, styleClass = "textRight")
     private final StringProperty debit = new SimpleStringProperty("");
     
-    @AView.Column(title = "%credit", width = TableColumnWidths.MONEY)
+    @AView.Column(title = "%credit", width = TableColumnWidths.MONEY, styleClass = "textRight")
     private final StringProperty credit = new SimpleStringProperty("");
     
     private int docId;
@@ -81,18 +81,18 @@ public class AccountEntry {
         correspondent.set(descrip);
     }
     
-    public void setAmount(Float amount) {
-        debit.set("" + amount);
-        credit.set("" + amount);
+    public void setAmount(float amount) {
+        debit.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
+        credit.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
     }
     
     public void setIsDebit(boolean isDebit) {
         isDebitEntry = isDebit;
         if (isDebit){
-            credit.set("");
+            credit.set(""); // If amunt is debit, credit value must be empty.
         }
         else {
-            debit.set("");
+            debit.set(""); // If amunt is credit, debit value must be empty.
         }
     }
 

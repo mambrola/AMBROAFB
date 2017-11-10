@@ -9,19 +9,20 @@ import ambro.ADatePicker;
 import ambro.ATableView;
 import ambroafb.accounts.Account;
 import ambroafb.accounts.AccountDataFetchProvider;
-import ambroafb.accounts.detail_pane.helper.AccountCommonInfo;
 import ambroafb.accounts.detail_pane.helper.AccountEntry;
+import ambroafb.accounts.detail_pane.helper.AccountReview;
 import ambroafb.general.GeneralConfig;
+import ambroafb.general.NumberConverter;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.general_scene.table_master_detail.MasterObserver;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,6 +33,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.controlsfx.control.MaskerPane;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  *
@@ -66,7 +69,6 @@ public class AccountDetailPane extends VBox implements MasterObserver  {
     
     private AccountDataFetchProvider dataFetchProvider;
     private Account selectedAccount;
-    private AccountCommonInfo accountInfo;
     
     public AccountDetailPane(){
         assignLoader();
@@ -125,66 +127,42 @@ public class AccountDetailPane extends VBox implements MasterObserver  {
         dataFetchProvider = dataFetcher;
     }
     
-    @Deprecated
-    public Consumer<EditorPanelable> getUpdateAction(){
-        return (selected) -> {
+    private void fetchEntries(){
+        Consumer<JSONArray> successAction = (data) -> {
             try {
-                selectedAccount = (Account) selected;
-                fetchInfo();
-                fetchEntries();
-            } catch (Exception ex) {
+                JSONArray reviewData = data.getJSONArray(0);
+                ArrayList<AccountReview> reviewList = Utils.getListFromJSONArray(AccountReview.class, reviewData);
+                JSONArray entries = data.getJSONArray(1);
+                ArrayList<AccountEntry> entryList = Utils.getListFromJSONArray(AccountEntry.class, entries);
+            
+                AccountReview header = reviewList.stream().filter(review -> review.isTo()).findFirst().get();
+                AccountReview footer = reviewList.stream().filter(review -> !review.isTo()).findFirst().get();
+                updateAmountInfo(header, currentDebitInfo, currentCreditInfo);
+                updateAmountInfo(footer, startingDebitInfo, startingCreditInfo);
+                accountEntries.setItems(FXCollections.observableArrayList(entryList));
+                
+                masker.setVisible(false);
+            } catch (JSONException ex) {
                 Logger.getLogger(AccountDetailPane.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
         };
+        masker.setVisible(true);
+        dataFetchProvider.getAccountEntries(selectedAccount.getRecId(), beginDate.getValue(), endDate.getValue(), successAction, null);
     }
     
-    private void fetchInfo() throws Exception {
-        Consumer<AccountCommonInfo> successAction = (accInfo) -> {
-            accountInfo = accInfo;
-            accountNumberIso.setText(selectedAccount.getAccount() + " / " + selectedAccount.getIso());
-            accountDescrip.setText(accountInfo.getAccountDescrip());
-
-            balAccNumber.setText("" + selectedAccount.getBalAccount());
-            balAccDescrip.setText(accountInfo.getBalAccDescrip());
-
-            String clientIdText = (selectedAccount.getClientId() == 0) ? "" : "" + selectedAccount.getClientId();
-            clientId.setText(clientIdText);
-            clientDescrip.setText(accountInfo.getClientDescrip());
-        };
-        dataFetchProvider.fetchAccountInfo(selectedAccount.getRecId(), successAction, null);
-    }
-    
-    private void fetchEntries(){
-        new Thread(() -> {
-            try {
-                List<AccountEntry> entries = dataFetchProvider.getAccountEntries(selectedAccount.getRecId(), beginDate.getValue(), endDate.getValue());
-                System.out.println("----------- entries size: " + entries.size());
-                
-                Platform.runLater(() -> {
-                    AccountEntry header = entries.remove(0);
-                    updateAmountInfo(header, currentDebitInfo, currentCreditInfo);
-                    AccountEntry footer = entries.remove(entries.size() - 1);
-                    updateAmountInfo(footer, startingDebitInfo, startingCreditInfo);
-
-                    accountEntries.setItems(FXCollections.observableArrayList(entries));
-                });
-            } catch (Exception ex) {
-            }
-        }).start();
-    }
-    
-    private void updateAmountInfo(AccountEntry data, Label debit, Label credit){
+    private void updateAmountInfo(AccountReview data, Label debit, Label credit){
         String debitText = "";
         Color debitColor = Color.BLACK;
         String creditText = "";
         Color creditColor = Color.BLACK;
         if (data.isDebit()){
-            debitText = "" + data.getDebit();
-            if (accountInfo != null && accountInfo.isDebitRed()) debitColor = Color.RED;
+            debitText = NumberConverter.makeFloatStringBySpecificFraction(data.getAmount(), 2);
+            if (data.isRed()) debitColor = Color.RED;
         }
         else {
-            creditText = "" + data.getCredit();
-            if (accountInfo != null && accountInfo.isCreditRed()) creditColor = Color.RED;
+            creditText = NumberConverter.makeFloatStringBySpecificFraction(data.getAmount(), 2);
+            if (data.isRed()) creditColor = Color.RED;
         }
         debit.setText(debitText);
         debit.setTextFill(debitColor);
@@ -195,21 +173,21 @@ public class AccountDetailPane extends VBox implements MasterObserver  {
 
     @Override
     public void notify(EditorPanelable selected) {
-        Account account = (Account) selected;
-        accountNumberIso.setText(account.getAccount() + " / " + account.getIso());
-        accountDescrip.setText(account.getDescrip());
+        selectedAccount = (Account) selected;
+        accountNumberIso.setText(selectedAccount.getAccount() + " / " + selectedAccount.getIso());
+        accountDescrip.setText(selectedAccount.getDescrip());
 
-        balAccNumber.setText("" + account.getBalAccount());
-//        balAccDescrip.setText(account.get); // +++++
+        balAccNumber.setText("" + selectedAccount.getBalAccount());
+        balAccDescrip.setText(selectedAccount.getBalAccDescrip());
 
-        String clientIdText = (account.getClientId() == 0) ? "" : "" + account.getClientId();
+        String clientIdText = (selectedAccount.getClientId() == 0) ? "" : "" + selectedAccount.getClientId();
         clientId.setText(clientIdText);
-        clientDescrip.setText(account.getClientDescrip());
+        clientDescrip.setText(selectedAccount.getClientDescrip());
     }
 
     @Override
     public void update(EditorPanelable selected) {
-        
+        fetchEntries();
     }
     
 }

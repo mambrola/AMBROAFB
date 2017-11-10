@@ -68,12 +68,12 @@
                                 </HBox>
                                 <HBox >
                                     <children>
-                                        <VBox fx:id="currentDebitPane" alignment="CENTER" >
+                                        <VBox fx:id="currentDebitPane" alignment="CENTER_RIGHT" >
                                             <children>
                                                 <Label fx:id="currentDebitInfo" text="" />
                                             </children>
                                         </VBox>
-                                        <VBox fx:id="currentCreditPane" alignment="CENTER" >
+                                        <VBox fx:id="currentCreditPane" alignment="CENTER_RIGHT" >
                                             <children>
                                                 <Label fx:id="currentCreditInfo" text="" />
                                             </children>
@@ -99,12 +99,12 @@
                                 </VBox>
                                 <HBox>
                                     <children>
-                                        <VBox fx:id="startingDebitPane" alignment="CENTER" >
+                                        <VBox fx:id="startingDebitPane" alignment="CENTER_RIGHT" >
                                             <children>
                                                 <Label fx:id="startingDebitInfo" text="" />
                                             </children>
                                         </VBox>
-                                        <VBox fx:id="startingCreditPane" alignment="CENTER" >
+                                        <VBox fx:id="startingCreditPane" alignment="CENTER_RIGHT" >
                                             <children>
                                                 <Label fx:id="startingCreditInfo" text="" />
                                             </children>

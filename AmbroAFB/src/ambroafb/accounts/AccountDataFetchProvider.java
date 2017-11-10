@@ -6,19 +6,21 @@
 package ambroafb.accounts;
 
 import ambroafb.accounts.detail_pane.helper.AccountCommonInfo;
-import ambroafb.accounts.detail_pane.helper.AccountEntry;
 import ambroafb.accounts.filter.AccountFilterModel;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
+import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import javafx.application.Platform;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -86,7 +88,19 @@ public class AccountDataFetchProvider extends DataFetchProvider {
         }).start();
     }
     
-    public List<AccountEntry> getAccountEntries(int accountId, LocalDate from, LocalDate to) throws Exception{
-        return callProcedure(AccountEntry.class, ACCOUNT_DEBIT_CREDIT_ENTRIES_PROCEDURE, accountId, from, to);
+    public void getAccountEntries(int accountId, LocalDate from, LocalDate to, Consumer<JSONArray> successAction, Consumer<Exception> errorAction) {
+        new Thread(() -> {
+            try {
+                DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+                JSONArray data = dbClient.callProcedureAndGetAsJson(ACCOUNT_DEBIT_CREDIT_ENTRIES_PROCEDURE, accountId, from, to);
+                Platform.runLater(() -> {
+                    if (successAction != null) successAction.accept(data);
+                });
+            } catch (AuthServerException | IOException ex) {
+                Platform.runLater(() -> {
+                    if (errorAction != null) errorAction.accept(ex);
+                });
+            }
+        }).start();
     }
 }
