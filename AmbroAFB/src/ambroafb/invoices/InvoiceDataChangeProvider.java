@@ -22,8 +22,10 @@ public class InvoiceDataChangeProvider extends DataChangeProvider {
     private final String DELETE_PROCEDURE = "invoice_delete";
     
     @Override
-    public void deleteOneFromDB(int recId) throws Exception {
+    public EditorPanelable deleteOneFromDB(int recId) throws Exception {
         callProcedure(DELETE_PROCEDURE, recId);
+        
+        return null;
     }
 
     @Override

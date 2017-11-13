@@ -56,10 +56,11 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
     }
 
     @Override
-    protected Consumer<Void> getDeleteSuccessAction() {
-        return (Void) -> {
+    protected Consumer<Object> getDeleteSuccessAction() {
+        return (obj) -> {
                         docs.clear();
-                        docs.addAll(conversion.convertToDoc());
+                        docs.addAll((List<Doc>)obj);
+//                        docs.addAll(conversion.convertToDoc());
                     };
     }
     

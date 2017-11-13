@@ -21,8 +21,8 @@ public class DocInOrderDataChangeProvider extends DataChangeProvider {
     private final String DELETE_PROCEDURE = "doc_delete";
     
     @Override
-    public void deleteOneFromDB(int recId) throws Exception {
-        callProcedure(DELETE_PROCEDURE, recId);
+    public List<Doc> deleteOneFromDB(int recId) throws Exception {
+        return callProcedure(Doc.class, DELETE_PROCEDURE, recId);
     }
 
     @Override

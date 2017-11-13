@@ -55,10 +55,11 @@ public class CustomDialog extends UserInteractiveDialogStage implements Dialogab
     }
 
     @Override
-    protected Consumer<Void> getDeleteSuccessAction() {
-        return (Void) -> {
+    protected Consumer<Object> getDeleteSuccessAction() {
+        return (obj) -> {
                     docs.clear();
-                    docs.add(doc);
+                    docs.addAll((List<Doc>)obj);
+//                    docs.add(doc);
                 };
     }
     

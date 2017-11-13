@@ -60,6 +60,8 @@ public abstract class DataProvider {
         try {
             data = dbClient.callProcedureAndGetAsJson(procedureName, params);
         } catch (AuthServerException ex){
+            System.err.println("------------- ERROR -------------");
+            System.err.println(ex.getMessage());
             throw ExceptionsFactory.getAppropriateException(ex);
         }
         return Utils.getListFromJSONArray(listElementClass, data);
