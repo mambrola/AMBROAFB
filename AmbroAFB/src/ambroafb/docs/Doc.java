@@ -413,7 +413,8 @@ public class Doc extends EditorPanelable {
 
     @Override
     public String toString() {
-        return "Doc{" + "marker=" + marker.get() + ", parentRecId=" + parentRecId.get() + 
+        return "Doc{" + "recId= " + getRecId() + 
+                        ", marker=" + marker.get() + ", parentRecId=" + parentRecId.get() + 
                         ", processId=" + processId.get() + 
                         ", docDateObj=" + docDateObj.get().toString() + 
                         ", docInDocDateObj=" + docInDocDateObj.get().toString() + 
@@ -426,7 +427,7 @@ public class Doc extends EditorPanelable {
 
     
     
-//    private static final String DOC_NO_CHILD_IMG_URL = "/images/doc_hasnot_child.png", DOC_PARENT_IMG_URL = "/images/doc_parent.png", DOC_CHILD_IMG_URL = "/images/doc_child.png";
+    private static final String DOC_NO_CHILD_SYMBOL = "\u26AB", DOC_PARENT_SYMBOL = "\u29ED", DOC_CHILD_SYMBOL = "\u25B4";
     
     public static class MarkerCellFactory implements Callback<TableColumn<Doc, Integer>, TableCell<Doc, Integer>> {
 
@@ -440,18 +441,19 @@ public class Doc extends EditorPanelable {
                     if (empty) {
                         setText(null);
                     } else {
-                        String imgPath = "\u26AB";
+                        String symbol;
                         switch(marker){
                             case -1:
-                                imgPath = "\u29ED";
+                                symbol = DOC_PARENT_SYMBOL;
                                 break;
                             case 1:
-                                imgPath = "\u25B4";
+                                symbol = DOC_CHILD_SYMBOL;
                                 break;
                             default:
+                                symbol = DOC_NO_CHILD_SYMBOL;
                                 break;
                         }
-                        setText(imgPath);
+                        setText(symbol);
                         setTextFill(Paint.valueOf("black"));
                     }
                 }

@@ -24,12 +24,7 @@ public class ConversionDataChangeProvider extends DataChangeProvider {
     
     @Override
     public List<Doc> deleteOneFromDB(int recId) throws Exception {
-        System.out.println("child delete method...");
-        ArrayList<Doc> d =  callProcedure(Doc.class, DELETE_PROCEDURE, recId);
-        for (Doc doc : d) {
-            System.out.println(doc);
-        }
-        return d;
+        return callProcedure(Doc.class, DELETE_PROCEDURE, recId);
     }
 
     @Override

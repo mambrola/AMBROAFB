@@ -16,7 +16,9 @@ public abstract class DataChangeProvider extends DataProvider {
     
     /**
      *  The method removes one object from DB.
+     * @param <T>
      * @param recId The unique identifier for object.
+     * @return 
      * @throws java.io.IOException
      * @throws authclient.AuthServerException
      */

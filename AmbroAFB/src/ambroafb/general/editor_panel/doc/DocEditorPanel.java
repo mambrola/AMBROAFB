@@ -108,10 +108,19 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
             List<Doc> result = dialog.getResult();
             List<Doc> removedDocs = new ArrayList<>();
             result.stream().forEach((doc) -> {
-                    removedDocs.add(tableData.stream().map((elem) -> (Doc)elem).filter((tableDoc) -> {
-                                        if (doc.getRecId() != 0) return doc.getRecId() == tableDoc.getRecId();
-                                        return doc.getParentRecId() == tableDoc.getParentRecId();
-                                    }).findFirst().get());
+                if (selected.isParentDoc() || selected.getRecId() == doc.getRecId()) { // Save every docs from bouquet or only it that was selected.
+                    Optional<Doc> optDoc = tableData.stream().map((elem) -> (Doc)elem).filter(tableDoc -> doc.getRecId() == tableDoc.getRecId()).findFirst();
+                    if (optDoc.isPresent()){
+                        removedDocs.add(optDoc.get());
+                    }
+                }
+                else if (selected.getParentRecId() == doc.getRecId()) { // update only parent doc.
+                    Optional<Doc> optDoc = tableData.stream().map((elem) -> (Doc)elem).filter((tabledoc) -> tabledoc.getRecId() == doc.getRecId()).findFirst();
+                    if (optDoc.isPresent()){
+                        optDoc.get().setMarker(doc.getMarker());
+                    }
+                }
+                    
 
             });
             tableData.removeAll(removedDocs);
