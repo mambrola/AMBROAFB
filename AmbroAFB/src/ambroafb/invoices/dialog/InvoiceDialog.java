@@ -10,6 +10,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.invoices.Invoice;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -47,6 +48,11 @@ public class InvoiceDialog extends UserInteractiveDialogStage implements Dialoga
     @Override
     protected EditorPanelable getSceneObject() {
         return invoice;
+    }
+
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> invoice = (Invoice) obj;
     }
 
     

@@ -10,6 +10,7 @@ import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -49,5 +50,9 @@ public class ClientDialog extends UserInteractiveDialogStage implements Dialogab
         return client;
     }
 
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> client = (Client)obj;
+    }
     
 }

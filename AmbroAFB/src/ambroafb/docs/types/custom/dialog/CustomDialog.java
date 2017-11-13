@@ -59,7 +59,6 @@ public class CustomDialog extends UserInteractiveDialogStage implements Dialogab
         return (obj) -> {
                     docs.clear();
                     docs.addAll((List<Doc>)obj);
-//                    docs.add(doc);
                 };
     }
     

@@ -60,7 +60,6 @@ public class ChargeUtilityDialog extends UserInteractiveDialogStage implements D
         return (obj) -> {
                 docs.clear();
                 docs.addAll((List<Doc>)obj);
-//                docs.addAll(chargeUtility.convertToDoc());
             };
     }
 

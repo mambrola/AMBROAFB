@@ -64,22 +64,21 @@ public class DocInOrderDialog extends UserInteractiveDialogStage implements Dial
         return (obj) -> {
                     docs.clear();
                     docs.addAll((List<Doc>)obj);
-//                    docs.addAll(docInOrder.getDocs());
                 };
     }
 
     @Override
     protected Consumer<Object> getEditSuccessAction() {
-        return (obj) -> {
-                        docs.clear();
-                        docs.addAll((List<Doc>)obj);
-                    };
+        return getAddSuccessAction();
     }
 
     
     @Override
     protected Consumer<Object> getAddSuccessAction() {
-        return getEditSuccessAction();
+        return (obj) -> {
+                        docs.clear();
+                        docs.addAll((List<Doc>)obj);
+                    };
     }
 
     

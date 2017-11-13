@@ -52,7 +52,7 @@ public class AccountDialog extends UserInteractiveDialogStage implements Dialoga
 
     @Override
     protected Consumer<Object> getAddSuccessAction() {
-        return (obj) -> account = (Account)obj;
+        return (obj) -> account = (Account)obj; // new object has DB id.
     }
     
     

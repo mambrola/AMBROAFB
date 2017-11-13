@@ -60,7 +60,6 @@ public class PaymentUtilityDialog extends UserInteractiveDialogStage implements 
         return (obj) -> {
                         docs.clear();
                         docs.addAll((List<Doc>)obj);
-//                        docs.add(paymentUtility.convertToDoc());
                     };
     }
     

@@ -60,7 +60,6 @@ public class ConversionDialog extends UserInteractiveDialogStage implements Dial
         return (obj) -> {
                         docs.clear();
                         docs.addAll((List<Doc>)obj);
-//                        docs.addAll(conversion.convertToDoc());
                     };
     }
     
