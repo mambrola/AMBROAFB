@@ -11,6 +11,7 @@ import ambroafb.general.interfaces.DataChangeProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import authclient.db.DBClient;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -22,8 +23,13 @@ public class ConversionDataChangeProvider extends DataChangeProvider {
     private final String SAVE_UPDATE_PROCEDURE = "doc_conversion_insert_update";
     
     @Override
-    public void deleteOneFromDB(int recId) throws Exception {
-        callProcedure(DELETE_PROCEDURE, recId);
+    public List<Doc> deleteOneFromDB(int recId) throws Exception {
+        System.out.println("child delete method...");
+        ArrayList<Doc> d =  callProcedure(Doc.class, DELETE_PROCEDURE, recId);
+        for (Doc doc : d) {
+            System.out.println(doc);
+        }
+        return d;
     }
 
     @Override

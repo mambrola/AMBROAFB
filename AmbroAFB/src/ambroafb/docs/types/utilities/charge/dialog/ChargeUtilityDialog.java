@@ -56,10 +56,11 @@ public class ChargeUtilityDialog extends UserInteractiveDialogStage implements D
     }
 
     @Override
-    protected Consumer<Void> getDeleteSuccessAction() {
-        return (Void) -> {
+    protected Consumer<Object> getDeleteSuccessAction() {
+        return (obj) -> {
                 docs.clear();
-                docs.addAll(chargeUtility.convertToDoc());
+                docs.addAll((List<Doc>)obj);
+//                docs.addAll(chargeUtility.convertToDoc());
             };
     }
 

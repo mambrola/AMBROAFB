@@ -124,9 +124,17 @@ public class Account extends EditorPanelable {
         return iso.get();
     }
     
+    public int getBalAccountId(){
+        return (balAccountObj.isNull().get()) ? -1 : balAccountObj.get().getRecId();
+    }
+    
     @JsonGetter("bal_acc")
     public int getBalAccount(){
         return (balAccountObj.isNull().get()) ? -1 : balAccountObj.get().getBalAcc();
+    }
+    
+    public String getBalAccountDescrip(){
+        return balAccDescrip.get();
     }
     
     public String getDescrip(){
@@ -167,13 +175,23 @@ public class Account extends EditorPanelable {
     public void setIso(String iso){
         this.iso.set(iso);
     }
+    
+    public void setBalAccountId(int id){
+        if (balAccountObj.isNotNull().get()){
+            this.balAccountObj.get().setRecId(id);
+        }
+    }
 
-    @JsonSetter("balAccount")
+    @JsonSetter("balAcc")
     public void setBalAccount(int balAcc){
         this.balAccount.set("" + balAcc);
         if (balAccountObj.isNotNull().get()){
             this.balAccountObj.get().setBalAcc(balAcc);
         }
+    }
+    
+    public void setBalAccountDescrip(String balAccDescrip){
+        this.balAccDescrip.set(balAccDescrip);
     }
     
     public void setDescrip(String descrip){
@@ -200,10 +218,6 @@ public class Account extends EditorPanelable {
     
     public void setRemark(String remark){
         this.remark.set(remark);
-    }
-    
-    public void setBalAccDescrip(String balAccDescrip){
-        this.balAccDescrip.set(balAccDescrip);
     }
     
     public void setDateClose(String date){
