@@ -60,11 +60,10 @@ public class DocInOrderDialog extends UserInteractiveDialogStage implements Dial
     }
 
     @Override
-    protected Consumer<Object> getDeleteSuccessAction() {
-        return (obj) -> {
+    protected Consumer<Void> getDeleteSuccessAction() {
+        return (Void) -> {
                     docs.clear();
-                    docs.addAll((List<Doc>)obj);
-//                    docs.addAll(docInOrder.getDocs());
+                    docs.addAll(docInOrder.getDocs());
                 };
     }
 

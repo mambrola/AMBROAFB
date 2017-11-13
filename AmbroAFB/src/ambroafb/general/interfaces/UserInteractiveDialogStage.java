@@ -127,10 +127,10 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         }
     }
     
-    private Consumer<Object> builDeleteSuccessAction(){
-        Consumer<Object> successFn = getDeleteSuccessAction();
-//        Consumer<Object> closeAction = (value) -> close();
-        return (successFn == null) ? closeFn : successFn.andThen(closeFn);
+    private Consumer<Void> builDeleteSuccessAction(){
+        Consumer<Void> successFn = getDeleteSuccessAction();
+        Consumer<Void> closeAction = (value) -> close();
+        return (successFn == null) ? closeAction : successFn.andThen(closeAction);
     }
     
     private Consumer<Object> builEditSuccessAction(){
@@ -147,7 +147,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
      *  The function will execute before stage close, if DB action was successful.
      * @return The action that will execute if get success  from DB.
      */
-    protected Consumer<Object> getDeleteSuccessAction(){
+    protected Consumer<Void> getDeleteSuccessAction(){
         return null;
     }
     

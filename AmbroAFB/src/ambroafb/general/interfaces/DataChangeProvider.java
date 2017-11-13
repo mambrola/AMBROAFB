@@ -20,21 +20,20 @@ public abstract class DataChangeProvider extends DataProvider {
      * @throws java.io.IOException
      * @throws authclient.AuthServerException
      */
-    public abstract <T> T deleteOneFromDB(int recId) throws Exception;
+    public abstract void deleteOneFromDB(int recId) throws Exception;
     
     /**
      *  The method removes one object from DB.
-     * @param <T>
      * @param recId The unique identifier for object.
      * @param successAction
      * @param errorAction
      */
-    public <T> void deleteOneFromDB(int recId, Consumer<T> successAction, Consumer<Exception> errorAction){
+    public void deleteOneFromDB(int recId, Consumer<Void> successAction, Consumer<Exception> errorAction){
         new Thread(() -> {
             try {
-                T obj = deleteOneFromDB(recId);
+                deleteOneFromDB(recId);
                 Platform.runLater(() -> {
-                    if (successAction != null) successAction.accept(obj);
+                    if (successAction != null) successAction.accept(null);
                 });
             } catch (Exception ex) {
                 Platform.runLater(() -> {

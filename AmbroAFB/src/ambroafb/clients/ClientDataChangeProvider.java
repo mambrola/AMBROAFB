@@ -23,10 +23,8 @@ public class ClientDataChangeProvider extends DataChangeProvider {
     private final String DELETE_PROCEDURE = "client_delete";
     
     @Override
-    public EditorPanelable deleteOneFromDB(int recId) throws Exception {
+    public void deleteOneFromDB(int recId) throws Exception {
         callProcedure(DELETE_PROCEDURE, recId);
-        
-        return null;
     }
 
     @Override

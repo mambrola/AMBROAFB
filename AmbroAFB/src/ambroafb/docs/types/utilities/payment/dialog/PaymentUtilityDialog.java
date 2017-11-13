@@ -56,11 +56,10 @@ public class PaymentUtilityDialog extends UserInteractiveDialogStage implements 
     }
 
     @Override
-    protected Consumer<Object> getDeleteSuccessAction() {
-        return (obj) -> {
+    protected Consumer<Void> getDeleteSuccessAction() {
+        return (Void) -> {
                         docs.clear();
-                        docs.addAll((List<Doc>)obj);
-//                        docs.add(paymentUtility.convertToDoc());
+                        docs.add(paymentUtility.convertToDoc());
                     };
     }
     

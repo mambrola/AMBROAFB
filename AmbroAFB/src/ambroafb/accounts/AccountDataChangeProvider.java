@@ -25,11 +25,9 @@ public class AccountDataChangeProvider extends DataChangeProvider {
     
 
     @Override
-    public EditorPanelable deleteOneFromDB(int recId) throws Exception {
+    public void deleteOneFromDB(int recId) throws Exception {
         callProcedure(ACCOUNT_DELETE_CHECK_PROCEDURE, recId);
         callProcedure(ACCOUNT_DELETE_PROCEDURE, recId);
-        
-        return null;
     }
     
     @Override

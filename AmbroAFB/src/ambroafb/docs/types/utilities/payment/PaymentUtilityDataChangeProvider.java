@@ -28,8 +28,8 @@ public class PaymentUtilityDataChangeProvider extends DataChangeProvider {
     private final String SAVE_UPDATE_PROCEDURE = "doc_utilities_insert_update";
     
     @Override
-    public List<Doc> deleteOneFromDB(int recId) throws Exception {
-        return callProcedure(Doc.class, DELETE_PROCEDURE, recId);
+    public void deleteOneFromDB(int recId) throws Exception {
+        callProcedure(DELETE_PROCEDURE, recId);
     }
 
     @Override
