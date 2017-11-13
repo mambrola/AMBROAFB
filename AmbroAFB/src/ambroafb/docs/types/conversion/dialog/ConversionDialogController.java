@@ -11,6 +11,7 @@ import ambroafb.currencies.IsoComboBox;
 import ambroafb.docs.types.conversion.Conversion;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.NumberConverter;
+import ambroafb.general.Printer;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
@@ -134,6 +135,11 @@ public class ConversionDialogController extends DialogController {
     @Override
     protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
+            System.out.println("--------- ADD BY SAMPLE -----------");
+            Printer.printIsNull("((Conversion)sceneObj).getSellAccount()", ((Conversion)sceneObj).getSellAccount());
+            System.out.println(((Conversion)sceneObj).getSellAccount());
+            
+            
             ((Conversion)sceneObj).setDocDate(LocalDate.now().toString());
             ((Conversion)sceneObj).setDocInDocDate(LocalDate.now().toString());
             ((Conversion)sceneObj).sellAmountProperty().set(""); // for empty amount field.

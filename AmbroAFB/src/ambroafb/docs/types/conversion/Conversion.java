@@ -202,8 +202,8 @@ public class Conversion extends EditorPanelable {
         setDocInDocDate(otherConversion.getDocInDocDate());
         setSellCurrency(otherConversion.getSellCurrency());
         setBuyingCurrency(otherConversion.getBuyingCurrency());
-        setSellAccount(otherConversion.getSellAccount().cloneWithoutID());
-        setBuyingAccount(otherConversion.getBuyingAccount().cloneWithoutID());
+        setSellAccount(otherConversion.getSellAccount().cloneWithID());
+        setBuyingAccount(otherConversion.getBuyingAccount().cloneWithID());
         setSellAmount(otherConversion.getSellAmount());
         setBuyingAmount(otherConversion.getBuyingAmount());
         // descrip property not change on scene, so need not copy.

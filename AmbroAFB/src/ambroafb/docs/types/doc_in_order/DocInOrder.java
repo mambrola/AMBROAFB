@@ -76,7 +76,7 @@ public class DocInOrder extends EditorPanelable {
         setDocDate(otherMonthly.getDocDate());
         docs.clear();
         otherMonthly.getDocs().forEach((othersDoc) -> {
-            docs.add(othersDoc.cloneWithoutID());
+            docs.add(othersDoc.cloneWithID());
         });
     }
 
