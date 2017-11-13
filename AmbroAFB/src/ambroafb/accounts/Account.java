@@ -12,7 +12,6 @@ import ambroafb.general.DateConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -128,13 +127,9 @@ public class Account extends EditorPanelable {
         return (balAccountObj.isNull().get()) ? -1 : balAccountObj.get().getRecId();
     }
     
-    @JsonGetter("bal_acc")
+    @JsonIgnore
     public int getBalAccount(){
         return (balAccountObj.isNull().get()) ? -1 : balAccountObj.get().getBalAcc();
-    }
-    
-    public String getBalAccountDescrip(){
-        return balAccDescrip.get();
     }
     
     public String getDescrip(){
@@ -158,7 +153,8 @@ public class Account extends EditorPanelable {
         return remark.get();
     }
     
-    public String getBalAccDescrip(){
+    @JsonIgnore
+    public String getBalAccountDescrip(){
         return balAccDescrip.get();
     }
     
@@ -176,6 +172,7 @@ public class Account extends EditorPanelable {
         this.iso.set(iso);
     }
     
+    @JsonProperty
     public void setBalAccountId(int id){
         if (balAccountObj.isNotNull().get()){
             this.balAccountObj.get().setRecId(id);
@@ -190,6 +187,7 @@ public class Account extends EditorPanelable {
         }
     }
     
+    @JsonProperty
     public void setBalAccountDescrip(String balAccDescrip){
         this.balAccDescrip.set(balAccDescrip);
     }

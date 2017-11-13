@@ -186,7 +186,7 @@ public class AccountDetailPane extends VBox implements MasterObserver  {
         accountDescrip.setText(selectedAccount.getDescrip());
 
         balAccNumber.setText("" + selectedAccount.getBalAccount());
-        balAccDescrip.setText(selectedAccount.getBalAccDescrip());
+        balAccDescrip.setText(selectedAccount.getBalAccountDescrip());
 
         String clientIdText = (selectedAccount.getClientId() == 0) ? "" : "" + selectedAccount.getClientId();
         clientId.setText(clientIdText);
