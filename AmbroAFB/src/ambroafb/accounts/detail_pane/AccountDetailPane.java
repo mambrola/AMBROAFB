@@ -69,7 +69,6 @@ public class AccountDetailPane extends VBox implements MasterObserver  {
     
     private AccountDataFetchProvider dataFetchProvider;
     private Account selectedAccount;
-    private final double maskerOpacity = 0.4;
     
     public AccountDetailPane(){
         assignLoader();
@@ -118,7 +117,6 @@ public class AccountDetailPane extends VBox implements MasterObserver  {
     private void setComponentsFeatures(){
         accountEntries.setBundle(GeneralConfig.getInstance().getBundle());
         compute.setOnAction(this::compute);
-        masker.setOpacity(maskerOpacity);
     }
     
     private void compute(ActionEvent event){

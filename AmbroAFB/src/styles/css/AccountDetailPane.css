@@ -19,3 +19,6 @@
   -fx-min-width: 397.5;
   -fx-max-width: 397.5;
 }
+.masker-pane .masker-glass {
+  -fx-background-color: transparent;
+}
