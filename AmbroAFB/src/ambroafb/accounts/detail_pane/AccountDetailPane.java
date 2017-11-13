@@ -23,11 +23,10 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -50,9 +49,6 @@ public class AccountDetailPane extends VBox implements MasterObserver  {
     
     @FXML
     private ADatePicker endDate, beginDate;
-    
-    @FXML
-    private Button compute;
     
     @FXML
     private ATableView<AccountEntry> accountEntries;
@@ -107,20 +103,25 @@ public class AccountDetailPane extends VBox implements MasterObserver  {
         startingCreditPane.setMinWidth(moneyWidth);
         startingCreditPane.setMaxWidth(moneyWidth);
         
-        // -----
-        headerEmptyRegion.setMinWidth(Double.parseDouble(TableColumnWidths.SLIDER));
-        headerEmptyRegion.setMaxWidth(Double.parseDouble(TableColumnWidths.SLIDER));
-        footerEmptyRegion.setMinWidth(Double.parseDouble(TableColumnWidths.SLIDER));
-        footerEmptyRegion.setMaxWidth(Double.parseDouble(TableColumnWidths.SLIDER));
+        // find out right edge empty regions width:
+        widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            double fullWidth = accountEntries.getColumns().stream().map((column) -> column.getWidth()).reduce(0d, (accumulator, columnWidth) -> accumulator + columnWidth);
+            double emptySpaceWidth = getWidth() - fullWidth - 2 * getPadding().getLeft();
+            headerEmptyRegion.setMinWidth(emptySpaceWidth);
+            headerEmptyRegion.setMaxWidth(emptySpaceWidth);
+            footerEmptyRegion.setMinWidth(emptySpaceWidth);
+            footerEmptyRegion.setMaxWidth(emptySpaceWidth);
+        });
     }
     
     private void setComponentsFeatures(){
         accountEntries.setBundle(GeneralConfig.getInstance().getBundle());
-        compute.setOnAction(this::compute);
-    }
-    
-    private void compute(ActionEvent event){
-        fetchEntries();
+        endDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+            fetchEntries();
+        });
+        beginDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+            fetchEntries();
+        });
     }
     
     private void setValues(){
@@ -153,8 +154,10 @@ public class AccountDetailPane extends VBox implements MasterObserver  {
             }
             
         };
-        masker.setVisible(true);
-        dataFetchProvider.getAccountEntries(selectedAccount.getRecId(), beginDate.getValue(), endDate.getValue(), successAction, null);
+        if (dataFetchProvider != null){
+            masker.setVisible(true);
+            dataFetchProvider.getAccountEntries(selectedAccount.getRecId(), beginDate.getValue(), endDate.getValue(), successAction, null);
+        }
     }
     
     private void updateAmountInfo(AccountReview data, Label debit, Label credit){

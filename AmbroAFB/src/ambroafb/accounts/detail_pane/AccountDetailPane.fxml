@@ -45,40 +45,28 @@
                                         <ADatePicker fx:id="endDate" />
                                     </children>
                                 </VBox>
-                                <HBox HBox.hgrow="ALWAYS" >
+                                <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT" style="-fx-background-color: red;" >
                                     <children>
-                                        <VBox alignment="BOTTOM_CENTER" >
-                                            <children>
-                                                <Button fx:id="compute" >
-                                                    <graphic>
-                                                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                                            <Image url="/images/refresh.png" />
-                                                        </ImageView>
-                                                    </graphic>
-                                                </Button>
-                                            </children>
-                                        </VBox>
-                                        <Region HBox.hgrow="ALWAYS" />
-                                        <VBox alignment="CENTER"  >
+                                        <VBox alignment="CENTER" style="-fx-background-color: green;" >
                                             <children>
                                                 <Label text="%current_amount_remain" />
                                             </children>
                                         </VBox>
                                     </children>
                                 </HBox>
-                                <HBox >
+                                <HBox  style="-fx-background-color: red;" >
                                     <children>
-                                        <VBox fx:id="currentDebitPane" HBox.hgrow="NEVER" alignment="CENTER_RIGHT" >
+                                        <VBox fx:id="currentDebitPane" alignment="CENTER_RIGHT"  style="-fx-background-color: green;" >
                                             <children>
                                                 <Label fx:id="currentDebitInfo" text="" />
                                             </children>
                                         </VBox>
-                                        <VBox fx:id="currentCreditPane" HBox.hgrow="NEVER" alignment="CENTER_RIGHT" >
+                                        <VBox fx:id="currentCreditPane" alignment="CENTER_RIGHT" style="-fx-background-color: green;" >
                                             <children>
                                                 <Label fx:id="currentCreditInfo" text="" />
                                             </children>
                                         </VBox>
-                                        <Region fx:id="headerEmptyRegion" HBox.hgrow="ALWAYS" />
+                                        <Region fx:id="headerEmptyRegion" />
                                     </children>
                                 </HBox>
                             </children>
@@ -98,14 +86,14 @@
                                         <Label text="%starting_amount_remain" />
                                     </children>
                                 </VBox>
-                                <HBox>
+                                <HBox style="-fx-background-color: red;">
                                     <children>
-                                        <VBox fx:id="startingDebitPane" alignment="CENTER_RIGHT" >
+                                        <VBox fx:id="startingDebitPane" alignment="CENTER_RIGHT" style="-fx-background-color: green;" >
                                             <children>
                                                 <Label fx:id="startingDebitInfo" text="" />
                                             </children>
                                         </VBox>
-                                        <VBox fx:id="startingCreditPane" alignment="CENTER_RIGHT" >
+                                        <VBox fx:id="startingCreditPane" alignment="CENTER_RIGHT" style="-fx-background-color: green;" >
                                             <children>
                                                 <Label fx:id="startingCreditInfo" text="" />
                                             </children>
