@@ -69,13 +69,13 @@ public abstract class EditorPanel extends HBox implements Initializable {
     protected Initializable outerController; // ----
     
     
-    public static String DELETE_FXID = "#delete";
-    public static String EDIT_FXID = "#edit";
-    public static String VIEW_FXID = "#view";
-    public static String ADD_FXID = "#add";
-    public static String ADD_BY_SAMPLE_FXID = "#addBySample";
-    public static String REFRESH_FXID = "#refresh";
-    public static String SEARCH_FXID = "#search";
+    public static final String DELETE_FXID = "#delete";
+    public static final String EDIT_FXID = "#edit";
+    public static final String VIEW_FXID = "#view";
+    public static final String ADD_FXID = "#add";
+    public static final String ADD_BY_SAMPLE_FXID = "#addBySample";
+    public static final String REFRESH_FXID = "#refresh";
+    public static final String SEARCH_FXID = "#search";
     
     public static enum EDITOR_BUTTON_TYPE {
         DELETE, EDIT, VIEW, ADD, ADD_BY_SAMPLE
@@ -107,6 +107,23 @@ public abstract class EditorPanel extends HBox implements Initializable {
         add.setOnAction(this::addAction);
         addBySample.setOnAction(this::addBySampleAction);
         refresh.setOnAction(this::refreshAction);
+        
+        // If buttons click more than one, call appropriate "onAction" method. Without this, dialogs stages for any single button, may show more than one.
+        delete.setOnMouseClicked((event) -> {
+            if (event.getClickCount() > 1) delete.getOnAction().handle(null);
+        });
+        view.setOnMouseClicked((event) -> {
+            if (event.getClickCount() > 1) view.getOnAction().handle(null);
+        });
+        edit.setOnMouseClicked((event) -> {
+            if (event.getClickCount() > 1) edit.getOnAction().handle(null);
+        });
+        add.setOnMouseClicked((event) -> {
+            if (event.getClickCount() > 1) add.getOnAction().handle(null);
+        });
+        refresh.setOnMouseClicked((event) -> {
+            if (event.getClickCount() > 1) refresh.getOnAction().handle(null);
+        });
     }
     
         /**
