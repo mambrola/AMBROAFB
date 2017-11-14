@@ -114,6 +114,7 @@ public class DocOrderComponent extends VBox {
             debits.filterBy(newValue);
             credits.filterBy(newValue);
         });
+        currency.fillComboBox(null);
     }
     
     /**

@@ -96,6 +96,8 @@ public class AccountDialogController extends DialogController {
         
         accountNumber.getKey().setOnAction(this::accountKeyAction);
         accountNumber.getNext().setOnAction(this::accountNextAction);
+        
+        currencies.fillComboBox(null);
     }
     
     private void accountKeyAction(ActionEvent event){

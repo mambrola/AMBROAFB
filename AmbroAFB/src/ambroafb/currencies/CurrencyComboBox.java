@@ -6,10 +6,8 @@
 package ambroafb.currencies;
 
 import ambroafb.general.GeneralConfig;
-import authclient.AuthServerException;
+import ambroafb.general.interfaces.DataFetchProvider;
 import authclient.db.ConditionBuilder;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -32,6 +30,7 @@ public class CurrencyComboBox extends ComboBox<Currency>{
     private final ObservableList<Currency> items = FXCollections.observableArrayList();
     private final FilteredList<Currency> filteredList = new FilteredList<>(items);
     private final Currency currencyALL = new Currency();
+    private final CurrencyDataFetchProvider dataFetchProvider = new CurrencyDataFetchProvider();
     
     public CurrencyComboBox(){
         super();
@@ -153,13 +152,16 @@ public class CurrencyComboBox extends ComboBox<Currency>{
 
         @Override
         public void run() {
-            ArrayList<Currency> currencies = Currency.getAllFromDB();
-            Platform.runLater(() -> {
-                items.setAll(currencies);
-                if (consumer != null){
-                    consumer.accept(items);
-                }
-            });
+            try {
+                List<Currency> currencies = dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL);
+                Platform.runLater(() -> {
+                    items.setAll(currencies);
+                    if (consumer != null){
+                        consumer.accept(items);
+                    }
+                });
+            } catch (Exception ex) {
+            }
         }
     }
 }

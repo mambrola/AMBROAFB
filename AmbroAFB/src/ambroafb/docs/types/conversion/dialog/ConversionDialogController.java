@@ -70,7 +70,9 @@ public class ConversionDialogController extends DialogController {
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
+        sellCurrency.fillComboBox(null);
         sellAccount.fillComboBoxWithoutALL(null);
+        buyingCurrency.fillComboBox(null);
         buyingAccount.fillComboBoxWithoutALL(null);
         
         sellCurrency.valueProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {

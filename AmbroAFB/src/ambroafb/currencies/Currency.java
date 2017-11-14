@@ -6,21 +6,15 @@
 package ambroafb.currencies;
 
 import ambro.AView;
-import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
-import authclient.db.ConditionBuilder;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
-import org.json.JSONObject;
 
 /**
  *
@@ -62,44 +56,6 @@ public class Currency extends EditorPanelable {
         
     }
 
-    
-    // DB methods:
-    public static ArrayList<Currency> getAllFromDB(){
-        JSONObject params = new ConditionBuilder().build();
-        ArrayList<Currency> currencies = DBUtils.getObjectsListFromDB(Currency.class, DB_TABLE_NAME, params);
-        currencies.sort((Currency c1, Currency c2) -> c1.compareByIso(c2));
-        return currencies;
-    }
-    
-    public static List<String> getAllIsoFromDB(){
-        return getAllFromDB().stream().map((Currency currency) -> currency.getIso()).collect(Collectors.toList());
-    }
-    
-    public static Currency getOneFromDB (int recId){
-        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("rec_id", "=", recId).condition();
-        return getOneFromDBHelper(conditionBuilder);
-    }
-    
-    
-    public static Currency getOneFromDB (String iso){
-        ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("iso", "=", iso).condition();
-        return getOneFromDBHelper(conditionBuilder);
-    }
-    
-    private static Currency getOneFromDBHelper(ConditionBuilder conditionBuilder){
-        JSONObject params = conditionBuilder.build();
-        return DBUtils.getObjectFromDB(Currency.class, DB_TABLE_NAME, params);
-    }
-    
-    public static Currency saveOneToDB(Currency currency){
-        if (currency == null) return null;
-        return DBUtils.saveObjectToDBSimple(currency, DB_TABLE_NAME);
-    }
-    
-    public static boolean deleteOneFromDB(int productId){
-        System.out.println("delete from db...??");
-        return false;
-    }
     
     // Properties:
     public ObjectProperty<LocalDate> dateProperty(){

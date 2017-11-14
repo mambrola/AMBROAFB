@@ -44,6 +44,7 @@ public class CurrencyDialogController extends DialogController {
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
+        iso.fillComboBox(null);
     }
 
     @Override

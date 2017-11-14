@@ -19,6 +19,7 @@ import ambroafb.configuration.Configuration;
 import ambroafb.countries.Country;
 import ambroafb.countries.CountryManager;
 import ambroafb.currencies.Currency;
+import ambroafb.currencies.CurrencyManager;
 import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCount;
@@ -363,12 +364,14 @@ public class MainController implements Initializable {
         Stage currenciesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Currency.class.getSimpleName());
         if(currenciesStage == null || !currenciesStage.isShowing()){
             TableList currencies = new TableList(AmbroAFB.mainStage, Currency.class, stageTitle);
+            currencies.setEPManager(new CurrencyManager());
             currencies.getController().getEditorPanel().removeComponents(EditorPanel.SEARCH_FXID);
             currencies.getController().getEditorPanel().hideMenuOnAddButton();
-            Supplier<List<EditorPanelable>> fetchData = () -> {
-                                                    return new ArrayList(Currency.getAllFromDB());
-                                                };
+//            Supplier<List<EditorPanelable>> fetchData = () -> {
+//                                                    return new ArrayList(Currency.getAllFromDB());
+//                                                };
 //            currencies.getController().reAssignTable(fetchData);
+            currencies.getController().reAssignTable(null);
             currencies.show();
         }
         else {

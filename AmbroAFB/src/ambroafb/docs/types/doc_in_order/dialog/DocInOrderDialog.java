@@ -27,8 +27,8 @@ public class DocInOrderDialog extends UserInteractiveDialogStage implements Dial
     
     private List<Doc> docs = new ArrayList<>();
     
-    public DocInOrderDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner, String stageTitleBundleKey) {
-        super(owner, "/ambroafb/docs/types/doc_in_order/dialog/DocInOrderDialog.fxml", stageTitleBundleKey);
+    public DocInOrderDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+        super(owner, buttonType, "/ambroafb/docs/types/doc_in_order/dialog/DocInOrderDialog.fxml");
         
         if (object == null)
             docInOrder = new DocInOrder();
@@ -39,9 +39,9 @@ public class DocInOrderDialog extends UserInteractiveDialogStage implements Dial
         dialogController.setSceneData(docInOrder, docInOrderBackup, buttonType);
     }
     
-    public DocInOrderDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        this(object, buttonType, owner, "doc_order_dialog_title");
-    }
+//    public DocInOrderDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner) {
+//        this(object, buttonType, owner);
+//    }
 
     @Override
     public List<Doc> getResult() {

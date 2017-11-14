@@ -5,6 +5,9 @@
  */
 package ambroafb.currencies;
 
+import java.util.List;
+import java.util.function.Consumer;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -17,15 +20,19 @@ import javafx.util.StringConverter;
  */
 public class IsoComboBox extends ComboBox<String> {
     
-    private final ObservableList<String> isoes = FXCollections.observableArrayList();
-    private final FilteredList<String> filteredList = new FilteredList<>(isoes);
+    private final ObservableList<String> items = FXCollections.observableArrayList();
+    private final FilteredList<String> filteredList = new FilteredList<>(items);
     private final String GEL_ISO = "GEL";
+    private final CurrencyDataFetchProvider dataFetchProvider = new CurrencyDataFetchProvider();
     
     public IsoComboBox(){
         super();
-        isoes.setAll(Currency.getAllIsoFromDB());
         this.setItems(filteredList);
         this.setConverter(new CustomIsoConverter());
+    }
+    
+    public void fillComboBox(Consumer<ObservableList<String>> extraAction){
+        new Thread(new FetchDataFromDB(extraAction)).start();
     }
     
     public void filterBy(String iso){
@@ -54,6 +61,28 @@ public class IsoComboBox extends ComboBox<String> {
         @Override
         public String fromString(String input) {
             return input.toUpperCase();
+        }
+        
+    }
+    
+    private class FetchDataFromDB implements Runnable {
+
+        private Consumer<ObservableList<String>> consumer;
+        
+        public FetchDataFromDB(Consumer<ObservableList<String>> consumer) {
+            this.consumer = consumer;
+        }
+        
+        @Override
+        public void run() {
+            try {
+                List<String> currencies = dataFetchProvider.getAllIsoFromDB();
+                Platform.runLater(() -> {
+                    items.setAll(currencies);
+                    if (consumer != null) consumer.accept(items);
+                });
+            } catch (Exception ex) {
+            }
         }
         
     }

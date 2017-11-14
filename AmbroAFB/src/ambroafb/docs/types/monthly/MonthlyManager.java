@@ -34,16 +34,24 @@ public class MonthlyManager extends EditorPanelableManager {
     @Override
     public Dialogable getDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         UserInteractiveDialogStage dialog = new DocInOrderDialog(object, type, owner);
-        String StageTitleBundleKey = "doc_monthly_accrual";
+        String stageTitleBundleKey = "doc_monthly_accrual";
         if (object == null){
-            dialog = new DocInOrderDialog(object, type, owner, StageTitleBundleKey);
+            stageTitleBundleKey = "doc_order_dialog_title";
+            dialog = new DocInOrderDialog(object, type, owner);
         }
         else if (type.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
             Optional<Doc> optDoc = ((DocInOrder)object).getDocs().stream().filter((doc) -> doc.isParentDoc()).findFirst();
-            dialog = (optDoc.isPresent()) ? new CustomDialog(owner, type, optDoc.get()) : new DocInOrderDialog(object, type, owner, StageTitleBundleKey);
+            if (optDoc.isPresent()){
+                stageTitleBundleKey = "doc_custom_dialog_title";
+                dialog = new CustomDialog(owner, type, optDoc.get());
+            }
+            else {
+                stageTitleBundleKey = "doc_order_dialog_title";
+                dialog = new DocInOrderDialog(object, type, owner);
+            }
         }
         dialog.setDataChangeProvider(dataChangeProvider);
-        dialog.setFrameFeatures(type, ""); // ???
+        dialog.setFrameFeatures(type, stageTitleBundleKey);
         return (Dialogable)dialog;
     }
 

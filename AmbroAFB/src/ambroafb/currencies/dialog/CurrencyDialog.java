@@ -10,6 +10,7 @@ import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +23,7 @@ public class CurrencyDialog extends UserInteractiveDialogStage implements Dialog
     private final Currency currencyBackup;
     
     public CurrencyDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "/ambroafb/currencies/dialog/CurrencyDialog.fxml", "currency_dialog_title");
+        super(owner, buttonType, "/ambroafb/currencies/dialog/CurrencyDialog.fxml");
         
         if (object == null)
             currency = new Currency();
@@ -43,5 +44,16 @@ public class CurrencyDialog extends UserInteractiveDialogStage implements Dialog
     public void operationCanceled() {
         currency = null;
     }
+
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return currency;
+    }
+
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> currency = (Currency) obj;
+    }
+    
     
 }
