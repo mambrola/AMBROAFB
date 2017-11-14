@@ -66,10 +66,6 @@ public class Currency extends EditorPanelable {
         return iso;
     }
     
-//    public ObjectProperty<Currency> currencyProperty(){
-//        return currency;
-//    }
-    
     public StringProperty descripProperty(){
         return descrip;
     }

@@ -21,7 +21,7 @@ public class CurrencyManager extends EditorPanelableManager {
 
     public CurrencyManager(){
         dataFetchProvider = new CurrencyDataFetchProvider();
-        dataChangeProvider = null;
+        dataChangeProvider = new CurrencyDataChangeProvider();
     }
     
     @Override

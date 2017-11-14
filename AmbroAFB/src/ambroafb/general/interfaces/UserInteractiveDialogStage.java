@@ -129,7 +129,6 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     
     private Consumer<Object> builDeleteSuccessAction(){
         Consumer<Object> successFn = getDeleteSuccessAction();
-//        Consumer<Object> closeAction = (value) -> close();
         return (successFn == null) ? closeFn : successFn.andThen(closeFn);
     }
     

@@ -367,10 +367,6 @@ public class MainController implements Initializable {
             currencies.setEPManager(new CurrencyManager());
             currencies.getController().getEditorPanel().removeComponents(EditorPanel.SEARCH_FXID);
             currencies.getController().getEditorPanel().hideMenuOnAddButton();
-//            Supplier<List<EditorPanelable>> fetchData = () -> {
-//                                                    return new ArrayList(Currency.getAllFromDB());
-//                                                };
-//            currencies.getController().reAssignTable(fetchData);
             currencies.getController().reAssignTable(null);
             currencies.show();
         }
