@@ -44,4 +44,9 @@ public class BalanceAccountDialog extends UserInteractiveDialogStage implements 
         balAccount = null;
     }
 
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return balAccount;
+    }
+
 }

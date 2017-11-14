@@ -10,6 +10,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.products.Product;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +23,7 @@ public class ProductDialog extends UserInteractiveDialogStage implements Dialoga
     private final Product productBackup;
     
     public ProductDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "/ambroafb/products/dialog/ProductDialog.fxml", "product_dialog_title");
+        super(owner, buttonType, "/ambroafb/products/dialog/ProductDialog.fxml");
         
         if (object == null)
             product = new Product();
@@ -44,4 +45,15 @@ public class ProductDialog extends UserInteractiveDialogStage implements Dialoga
         product = null;
     }
 
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return product;
+    }
+
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> product = (Product)obj;
+    }
+
+    
 }

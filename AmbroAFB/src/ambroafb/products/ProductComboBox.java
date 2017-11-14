@@ -5,7 +5,8 @@
  */
 package ambroafb.products;
 
-import java.util.ArrayList;
+import ambroafb.general.interfaces.DataFetchProvider;
+import java.util.List;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -20,6 +21,7 @@ public class ProductComboBox extends ComboBox<Product> {
     
     private static final String categoryAll = "ALL";
     private final Product productALL = new Product();
+    private final ProductDataFetchProvider dataFetchProvider = new ProductDataFetchProvider();
     
     private final ObservableList<Product> items = FXCollections.observableArrayList();
     
@@ -60,13 +62,16 @@ public class ProductComboBox extends ComboBox<Product> {
         
         @Override
         public void run() {
-            ArrayList<Product> products = Product.getAllFromDB();
-            Platform.runLater(() -> {
-                items.setAll(products);
-                if (consumer != null){
-                    consumer.accept(items);
-                }
-            });
+            try {
+                List<Product> products = dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL);
+                Platform.runLater(() -> {
+                    items.setAll(products);
+                    if (consumer != null){
+                        consumer.accept(items);
+                    }
+                });
+            } catch (Exception ex) {
+            }
         }
         
     }

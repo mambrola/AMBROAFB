@@ -56,6 +56,7 @@ import ambroafb.minitables.merchandises.MerchandiseManager;
 import ambroafb.params_general.ParamGeneral;
 import ambroafb.params_general.ParamGeneralManager;
 import ambroafb.products.Product;
+import ambroafb.products.ProductManager;
 import authclient.monitoring.MonitoringClient;
 import java.net.URL;
 import java.util.ArrayList;
@@ -221,10 +222,8 @@ public class MainController implements Initializable {
         Stage productsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Product.class.getSimpleName());
         if (productsStage == null || !productsStage.isShowing()){
             TableList products = new TableList(AmbroAFB.mainStage, Product.class, stageTitle);
-            Supplier<List<EditorPanelable>> fetchData = () -> {
-                                                    return new ArrayList(Product.getAllFromDB());
-                                                };
-//            products.getController().reAssignTable(fetchData);
+            products.setEPManager(new ProductManager());
+            products.getController().reAssignTable(null);
             products.show();
         }
         else{

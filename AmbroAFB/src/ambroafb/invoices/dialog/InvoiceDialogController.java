@@ -18,6 +18,7 @@ import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.monthcountercombobox.MonthCounterComboBox;
@@ -31,6 +32,7 @@ import ambroafb.invoices.helper.InvoiceReissuingComboBox;
 import ambroafb.invoices.helper.PartOfLicense;
 import ambroafb.licenses.helper.LicenseFinance;
 import ambroafb.products.Product;
+import ambroafb.products.ProductDataFetchProvider;
 import authclient.AuthServerException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -99,6 +101,8 @@ public class InvoiceDialogController extends DialogController {
     private String colonDelimiter = ":";
     private String percentDelimiter = "%";
     private Runnable financesFromSuitedLicense;
+    
+    private final ProductDataFetchProvider productFetcher = new ProductDataFetchProvider();
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
@@ -234,7 +238,13 @@ public class InvoiceDialogController extends DialogController {
     
     @Override
     protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
-        Supplier<List<CountComboBoxItem>> productsGenerator = () -> new ArrayList<>(Product.getAllFromDB());
+        Supplier<List<CountComboBoxItem>> productsGenerator = () -> {
+                                                                    try {
+                                                                        return new ArrayList<>(productFetcher.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL));
+                                                                    } catch (Exception ex) {
+                                                                    }
+                                                                    return null;
+                                                                };
         Consumer<ObservableList<CountComboBoxItem>> productsConsumer = (itemsList) -> {
             products.setBasket(convertMapToBasket(((Invoice)sceneObj).getProductsWithCounts()));
         };

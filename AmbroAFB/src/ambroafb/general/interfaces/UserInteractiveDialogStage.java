@@ -214,16 +214,8 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     }
     
     
-    ////////////////////////////// ---------------------------------------------------------------------------------------- abstract
-    public void operationCanceled(){
-        System.out.println("--- UserInteractive Op Cancel ---");
-    }
+    public abstract void operationCanceled();
     
-    ////////////////////////////// ---------------------------------------------------------------------------------------- abstract
-    protected EditorPanelable getSceneObject(){
-        System.out.println("--- UserInteractive getSceneObject ---");
-        
-        return null;
-    }
+    protected abstract EditorPanelable getSceneObject();
     
 }

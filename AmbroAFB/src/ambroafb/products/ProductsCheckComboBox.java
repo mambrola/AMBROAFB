@@ -5,6 +5,7 @@
  */
 package ambroafb.products;
 
+import ambroafb.general.interfaces.DataFetchProvider;
 import javafx.util.StringConverter;
 import org.controlsfx.control.CheckComboBox;
 
@@ -13,6 +14,8 @@ import org.controlsfx.control.CheckComboBox;
  * @author dato
  */
 public class ProductsCheckComboBox extends CheckComboBox<Product> {
+    
+    private final ProductDataFetchProvider dataFetchProvider = new ProductDataFetchProvider();
     
     public ProductsCheckComboBox(){
         this.setConverter(new StringConverter<Product>() {
@@ -26,7 +29,10 @@ public class ProductsCheckComboBox extends CheckComboBox<Product> {
                 return null;
             }
         });
-        this.getItems().setAll(Product.getAllFromDB());
+        try {
+            this.getItems().setAll(dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL));
+        } catch (Exception ex) {
+        }
     }
     
     

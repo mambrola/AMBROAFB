@@ -17,13 +17,17 @@ import javafx.scene.control.ComboBox;
 public class ProductsSpecificsComboBox extends ComboBox<ProductSpecific> {
     
     private final ObservableList<ProductSpecific> items = FXCollections.observableArrayList();
+    private final ProductDataFetchProvider dataFetchProvider = new ProductDataFetchProvider();
     
     public ProductsSpecificsComboBox(){
         this.setItems(items);
         
-        Product.getAllSpecificsFromDB().stream().forEach((specific) -> {
-            items.add(specific);
-        });
+        try {
+            dataFetchProvider.getAllSpecificsFromDB().stream().forEach((specific) -> {
+                items.add(specific);
+            });
+        } catch (Exception ex) {
+        }
     }
     
 }

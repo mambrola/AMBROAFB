@@ -281,6 +281,7 @@ public class DBUtils {
      *                                  
      * @return 
      */
+    @Deprecated
     public static <T> T saveObjectToDB(Object source, String tableName){
         try {
             return saveObjectSample(source, tableName);

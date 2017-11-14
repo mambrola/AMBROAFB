@@ -58,4 +58,9 @@ public class MiniTableDialog extends UserInteractiveDialogStage implements Dialo
         return result;
     }
 
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return miniTable;
+    }
+
 }

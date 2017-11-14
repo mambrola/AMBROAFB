@@ -8,8 +8,6 @@ package ambroafb.products;
 import ambro.ANodeSlider;
 import ambro.AView;
 import ambroafb.currencies.Currency;
-import ambroafb.general.DBUtils;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBoxItem;
@@ -18,10 +16,7 @@ import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.general.mapeditor.MapEditorElement;
 import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
-import authclient.db.ConditionBuilder;
-import authclient.db.DBClient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javafx.beans.property.BooleanProperty;
@@ -40,7 +35,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
-import org.json.JSONObject;
 
 /**
  *
@@ -82,11 +76,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     
     @AView.Column(title = "%testing_days", width = "100", styleClass = "textRight")
     private final StringProperty testingDays;
-    
-    private static final String DB_VIEW_NAME = "products_whole";
-    private static final String DB_SPECIFIC_TABLE_NAME = "product_specific_descrips";
-    private static final String DB_TABLE_NAME = "products";
-    private static final String DB_DELETE_PROCEDURE_NAME = "general_delete";
     
     public static final int ABREVIATION_LENGTH = 2;
     public static final int FORMER_LENGTH = 2;
@@ -156,37 +145,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
             specific.bind(productSpecific.get().specificProperty());
             specificDescrip.bind(productSpecific.get().descripProperty());
         }
-    }
-    
-    // DBService methods:
-    public static ArrayList<Product> getAllFromDB (){
-        JSONObject params = new ConditionBuilder().build();
-        ArrayList<Product> products = DBUtils.getObjectsListFromDB(Product.class, DB_VIEW_NAME, params);
-        products.sort((Product p1, Product p2) -> p1.compareById(p2));
-        return products;
-    }
-    
-    
-    public static ArrayList<ProductSpecific> getAllSpecificsFromDB(){
-        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        ConditionBuilder condition = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition();
-        JSONObject params = condition.build();
-        return DBUtils.getObjectsListFromDB(ProductSpecific.class, DB_SPECIFIC_TABLE_NAME, params);
-    }
-    
-    public static Product getOneFromDB (int productId){
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", productId).condition().build();
-        Product p = DBUtils.getObjectFromDB(Product.class, DB_VIEW_NAME, params);
-        return p;
-    }
-    
-    public static Product saveOneToDB(Product product){
-        if (product == null) return null;
-        return DBUtils.saveObjectToDB(product, "product");
-    }
-    
-    public static boolean deleteOneFromDB(int productId){
-        return DBUtils.deleteObjectFromDB(DB_DELETE_PROCEDURE_NAME, DB_TABLE_NAME, productId);
     }
     
     
