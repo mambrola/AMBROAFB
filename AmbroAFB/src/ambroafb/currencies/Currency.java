@@ -37,8 +37,6 @@ public class Currency extends EditorPanelable {
     @AView.Column(width = "20")
     private final StringProperty symbol;
     
-    private static final String DB_TABLE_NAME = "currencies";
-    
     public Currency(){
         createdDate = new SimpleStringProperty("");
         dateProperty = new SimpleObjectProperty<>();

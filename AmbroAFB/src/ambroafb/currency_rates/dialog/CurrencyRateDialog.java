@@ -10,6 +10,7 @@ import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +23,7 @@ public class CurrencyRateDialog extends UserInteractiveDialogStage implements Di
     private final CurrencyRate currRateBackup;
     
     public CurrencyRateDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "/ambroafb/currency_rates/dialog/CurrencyRateDialog.fxml", "currency_rate_dialog_title");
+        super(owner, buttonType, "/ambroafb/currency_rates/dialog/CurrencyRateDialog.fxml");
         
         if (object == null)
             currRate = new CurrencyRate();
@@ -43,5 +44,16 @@ public class CurrencyRateDialog extends UserInteractiveDialogStage implements Di
     public void operationCanceled() {
         currRate = null;
     }
+
+    @Override
+    protected CurrencyRate getSceneObject() {
+        return currRate;
+    }
+
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> currRate = (CurrencyRate)obj;
+    }
+    
     
 }

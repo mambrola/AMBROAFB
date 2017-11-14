@@ -7,24 +7,17 @@ package ambroafb.currency_rates;
 
 import ambro.AView;
 import ambroafb.currencies.Currency;
-import ambroafb.currency_rates.filter.CurrencyRateFilterModel;
-import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.TableColumnWidths;
-import authclient.db.ConditionBuilder;
-import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
-import org.json.JSONObject;
 
 
 /**
@@ -46,9 +39,6 @@ public class CurrencyRate extends EditorPanelable {
     
     @AView.Column(title = "%rate", width = "80", styleClass = "textRight")
     private final StringProperty rate;
-    
-    private static final String DB_TABLE_NAME = "rates", DB_VIEW_NAME = "rates_whole";
-    
     
     public CurrencyRate(){
         dateProperty = new SimpleObjectProperty<>();
@@ -77,35 +67,6 @@ public class CurrencyRate extends EditorPanelable {
         if (currency.get() != null){
             iso.bind(currency.get().isoProperty());
         }
-    }
-    
-    public static ArrayList<CurrencyRate> getFilteredFromDB(FilterModel model) {
-        CurrencyRateFilterModel currencyRateFilterModel = (CurrencyRateFilterModel) model;
-        WhereBuilder whereBuilder = new ConditionBuilder().where()
-                .and("date", ">=", currencyRateFilterModel.getFromDateForDB())
-                .and("date", "<=", currencyRateFilterModel.getToDateForDB());
-        if (currencyRateFilterModel.isSelectedConcreteCurrency()) {
-            whereBuilder.and("iso", "=", currencyRateFilterModel.getSelectedCurrencyIso());
-        }
-        JSONObject params = whereBuilder.condition().build();
-        ArrayList<CurrencyRate> currencyRates = DBUtils.getObjectsListFromDB(CurrencyRate.class, DB_VIEW_NAME, params);
-        currencyRates.sort((CurrencyRate c1, CurrencyRate c2) -> c1.compareTo(c2));
-        return currencyRates;
-    }
-
-    public static CurrencyRate getOneFromDB (int recId){
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
-        return DBUtils.getObjectFromDB(CurrencyRate.class, DB_VIEW_NAME, params);
-    }
-    
-    public static CurrencyRate saveOneToDB(CurrencyRate currencyRate){
-        if (currencyRate == null) return null;
-        return DBUtils.saveObjectToDBSimple(currencyRate, DB_TABLE_NAME);
-    }
-    
-    public static boolean deleteOneFromDB(int recId){
-        System.out.println("delete from DB... ??");
-        return false;
     }
     
     

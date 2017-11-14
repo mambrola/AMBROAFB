@@ -21,6 +21,7 @@ import ambroafb.countries.CountryManager;
 import ambroafb.currencies.Currency;
 import ambroafb.currencies.CurrencyManager;
 import ambroafb.currency_rates.CurrencyRate;
+import ambroafb.currency_rates.CurrencyRateManager;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCount;
 import ambroafb.docs.Doc;
@@ -381,6 +382,7 @@ public class MainController implements Initializable {
         Stage currencyRatesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, CurrencyRate.class.getSimpleName());
         if(currencyRatesStage == null || !currencyRatesStage.isShowing()){
             TableList currencyRates = new TableList(AmbroAFB.mainStage, CurrencyRate.class, stageTitle);
+            currencyRates.setEPManager(new CurrencyRateManager());
             currencyRates.show();
             
             CurrencyRateFilter filter = new CurrencyRateFilter(currencyRates);
@@ -390,10 +392,7 @@ public class MainController implements Initializable {
                 currencyRates.close();
             }
             else {
-                Supplier<List<EditorPanelable>> fetchData = () -> {
-                                                        return new ArrayList(CurrencyRate.getFilteredFromDB(model));
-                                                    };
-//                currencyRates.getController().reAssignTable(fetchData);
+                currencyRates.getController().reAssignTable(model);
             }
         }
         else {
