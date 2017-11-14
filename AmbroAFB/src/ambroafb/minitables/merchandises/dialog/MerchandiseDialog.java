@@ -10,6 +10,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.minitables.merchandises.Merchandise;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +23,7 @@ public class MerchandiseDialog extends UserInteractiveDialogStage implements Dia
     private final Merchandise merchandiseBackup;
     
     public MerchandiseDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "/ambroafb/minitables/merchandises/dialog/MerchandiseDialog.fxml", "merchandise");
+        super(owner, buttonType, "/ambroafb/minitables/merchandises/dialog/MerchandiseDialog.fxml");
         
         if (object == null)
             merchandise = new Merchandise();
@@ -44,4 +45,15 @@ public class MerchandiseDialog extends UserInteractiveDialogStage implements Dia
         merchandise = null;
     }
 
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return merchandise;
+    }
+
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> merchandise = (Merchandise)obj;
+    }
+
+    
 }

@@ -14,8 +14,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {   BalanceAccountObjectTest.class, 
-                        BalanceAccountParameterizedTest.class,
-                        BalanceAccountStaticMethodsTest.class} )
+                        BalanceAccountParameterizedTest.class} )
 public class BalanceAccountSuitTest {
     
 }

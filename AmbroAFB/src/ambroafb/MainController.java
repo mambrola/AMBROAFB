@@ -51,6 +51,7 @@ import ambroafb.loggings.LoggingManager;
 import ambroafb.loggings.filter.LoggingFilter;
 import ambroafb.minitables.attitudes.Attitude;
 import ambroafb.minitables.merchandises.Merchandise;
+import ambroafb.minitables.merchandises.MerchandiseManager;
 import ambroafb.params_general.ParamGeneral;
 import ambroafb.products.Product;
 import authclient.monitoring.MonitoringClient;
@@ -332,11 +333,9 @@ public class MainController implements Initializable {
         Stage miniTablesStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Merchandise.class.getSimpleName());
         if(miniTablesStage == null || !miniTablesStage.isShowing()){
             TableList merchandises = new TableList(AmbroAFB.mainStage, Merchandise.class, stageTitle);
-            Supplier<List<EditorPanelable>> fetchData = () -> {
-                                                    return new ArrayList(Merchandise.getAllFromDB());
-                                                };
-//            merchandises.getController().reAssignTable(fetchData);
+            merchandises.setEPManager(new MerchandiseManager());
             merchandises.getController().getEditorPanel().removeComponents(EditorPanel.SEARCH_FXID);
+            merchandises.getController().reAssignTable(null);
             merchandises.show();
         } else {
             miniTablesStage.requestFocus();

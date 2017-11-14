@@ -5,7 +5,10 @@
  */
 package ambroafb.minitables.merchandises;
 
-import java.util.ArrayList;
+import ambroafb.general.interfaces.DataFetchProvider;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -19,6 +22,7 @@ public class MerchandiseComboBox extends ComboBox<Merchandise> {
     
     private final ObservableList<Merchandise> items = FXCollections.observableArrayList();
     private final Merchandise all = new Merchandise();
+    private MerchandiseDataFetchProvider dataFetchProvider = new MerchandiseDataFetchProvider();
     
     public MerchandiseComboBox(){
         this.setItems(items);
@@ -36,10 +40,15 @@ public class MerchandiseComboBox extends ComboBox<Merchandise> {
                 return null;
             }
         });
-        ArrayList<Merchandise> merchandises = Merchandise.getAllFromDB();
-        merchandises.sort((Merchandise b1, Merchandise b2) -> b1.getRecId() - b2.getRecId());
-        items.addAll(merchandises);
-        this.setValue(all);
+        
+        try {
+            List<Merchandise> merchandises = dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL);
+            merchandises.sort((Merchandise b1, Merchandise b2) -> b1.getRecId() - b2.getRecId());
+            items.addAll(merchandises);
+            this.setValue(all);
+        } catch (Exception ex) {
+            Logger.getLogger(MerchandiseComboBox.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void selectItem(Merchandise merchandise){
