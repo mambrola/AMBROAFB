@@ -18,7 +18,7 @@ public class CurrencyDataChangeProvider extends DataChangeProvider {
     
     @Override
     public Currency deleteOneFromDB(int recId) throws Exception {
-        System.out.println("Delete action on currency ???");
+        generalDelete(DB_TABLE_NAME, recId);
         return null;
     }
 

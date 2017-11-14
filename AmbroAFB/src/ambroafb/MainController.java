@@ -24,6 +24,7 @@ import ambroafb.currency_rates.CurrencyRate;
 import ambroafb.currency_rates.CurrencyRateManager;
 import ambroafb.currency_rates.filter.CurrencyRateFilter;
 import ambroafb.discounts_on_count.DiscountOnCount;
+import ambroafb.discounts_on_count.DiscountOnCountManager;
 import ambroafb.docs.Doc;
 import ambroafb.docs.filter.DocFilter;
 import ambroafb.general.GeneralConfig;
@@ -406,11 +407,9 @@ public class MainController implements Initializable {
         Stage discountOnCountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, DiscountOnCount.class.getSimpleName());
         if (discountOnCountsStage == null || !discountOnCountsStage.isShowing()){
             TableList discountOnCounts = new TableList(AmbroAFB.mainStage, DiscountOnCount.class, stageTitle);
-            Supplier<List<EditorPanelable>> fetchData = () -> {
-                                                    return new ArrayList(DiscountOnCount.getAllFromDB());
-                                                };
-//            discountOnCounts.getController().reAssignTable(fetchData);
+            discountOnCounts.setEPManager(new DiscountOnCountManager());
             discountOnCounts.getController().getEditorPanel().removeComponents(EditorPanel.SEARCH_FXID);
+            discountOnCounts.getController().reAssignTable(null);
             discountOnCounts.show();
         }
         else {

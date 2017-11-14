@@ -10,6 +10,7 @@ import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +23,7 @@ public class DiscountOnCountDialog extends UserInteractiveDialogStage implements
     public final DiscountOnCount discountOnCountBackup;
     
     public DiscountOnCountDialog(EditorPanelable object, EDITOR_BUTTON_TYPE buttonType, Stage owner) {
-        super(owner, "/ambroafb/discounts_on_count/dialog/DiscountOnCountDialog.fxml", "discounts_on_count");
+        super(owner, buttonType, "/ambroafb/discounts_on_count/dialog/DiscountOnCountDialog.fxml");
         
         if (object == null)
             discountOnCount = new DiscountOnCount();
@@ -43,5 +44,17 @@ public class DiscountOnCountDialog extends UserInteractiveDialogStage implements
     public void operationCanceled(){
         discountOnCount = null;
     }
+
+    @Override
+    protected DiscountOnCount getSceneObject() {
+        return discountOnCount;
+    }
+
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> discountOnCount = (DiscountOnCount)obj;
+    }
+    
+    
 
 }

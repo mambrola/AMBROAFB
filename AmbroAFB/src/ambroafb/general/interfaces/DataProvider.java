@@ -169,4 +169,13 @@ public abstract class DataProvider {
         return Utils.getListFromJSONArray(listElementClass, data);
     }
     
+    /**
+     *  The method removes entry on appropriate index.
+     * @param tableName The name of table where want to remove entry.
+     * @param recId The identifier of entry.
+     * @throws Exception 
+     */
+    protected void generalDelete(String tableName, int recId) throws Exception {
+        callProcedure("general_delete", tableName, recId);
+    }
 }
