@@ -19,9 +19,7 @@ import ambroafb.licenses.helper.LicenseFinance;
 import ambroafb.params_general.ParamGeneral;
 import ambroafb.params_general.helper.ParamGeneralDBResponse;
 import authclient.AuthServerException;
-import authclient.db.ConditionBuilder;
 import authclient.db.DBClient;
-import authclient.db.WhereBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -41,6 +39,7 @@ import org.json.JSONObject;
  * @author dato
  */
 public class DBUtils {
+    
     
     /**
      * The static function gets a ArrayList of specified class elements from DB.
@@ -186,7 +185,7 @@ public class DBUtils {
 //        dest.add(null);
     }
     
-    
+    @Deprecated
     public static ParamGeneralDBResponse getParamsGeneral(String procedureName, JSONObject params){
         ParamGeneralDBResponse response = new ParamGeneralDBResponse();
         try {
@@ -331,56 +330,6 @@ public class DBUtils {
         return Utils.getClassFromJSON(source.getClass(), newSourceFromDB.getJSONObject(0));
     }
     
-    
-//    // Concrete class methods:
-//    public static Invoice saveInvoice(Object invoice){
-//        try {
-//            JSONObject targetJson = Utils.getJSONFromClass(invoice);
-//            
-//            System.out.println("invoice target json: " + targetJson);
-//            
-//            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-//            Response r = dbClient.post("invoices/fromAfb?lang=" + dbClient.getLang(), targetJson.toString());
-//            return Utils.getClassFromJSON(invoice.getClass(), new JSONObject(r.getDataAsString()));
-//        } catch (Exception | JSONException ex) {
-//            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return null;
-//    }
-    
-    
-    public static ParamGeneral saveParamGeneral(ParamGeneral paramGeneral, String procName){
-        ParamGeneral result = null;
-        try {
-            result = saveObjectByProcedure(paramGeneral, procName);
-        } catch (IOException | JSONException ex) {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (AuthServerException ex) {
-            String[] errorData = Utils.processAuthServerError(ex);
-            if (errorData[0].equals("4042")){ // conflicted entry
-                String startStr = ": ";
-                int startIndex = errorData[1].indexOf(startStr) + startStr.length();
-                int endIndex = errorData[1].indexOf(";");
-                String[] ids = errorData[1].substring(startIndex, endIndex).split(",");
-                String headerTxt = GeneralConfig.getInstance().getTitleFor("param_general_error") + "\n";
-                ArrayList<ParamGeneral> entries = selectConflictedEntries(ids);
-                String newMsg = entries.stream().map((entry) -> "[" + entry.toString() + "]" + ",\n").reduce("", String::concat);
-                AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, newMsg, GeneralConfig.getInstance().getTitleFor("conflict_params_general"));
-                alert.setHeaderText(headerTxt);
-                alert.showAndWait();
-            }
-        }
-        return result;
-    }
-    
-    private static ArrayList<ParamGeneral> selectConflictedEntries(String[] ids){
-        WhereBuilder whereBuilder = new ConditionBuilder().where();
-        for (int i = 0; i < ids.length - 1; i++) {
-            whereBuilder.or("rec_id", "=", ids[i]);
-        }
-        JSONObject conflictedIDs = whereBuilder.condition().build();
-        return getObjectsListFromDBProcedure(ParamGeneral.class, ParamGeneral.DB_SELECT_PROC_NAME, conflictedIDs);
-    }
     
     @Deprecated
     public static Client saveClient(Client client){

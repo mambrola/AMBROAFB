@@ -10,6 +10,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.params_general.ParamGeneral;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +23,7 @@ public class ParamGeneralDialog extends UserInteractiveDialogStage implements Di
     private final ParamGeneral paramGeneralBackup;
     
     public ParamGeneralDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "/ambroafb/params_general/dialog/ParamGeneralDialog.fxml", "param_general_dialog_title");
+        super(owner, buttonType, "/ambroafb/params_general/dialog/ParamGeneralDialog.fxml");
         
         if (object == null)
             paramGeneral = new ParamGeneral();
@@ -44,4 +45,15 @@ public class ParamGeneralDialog extends UserInteractiveDialogStage implements Di
         paramGeneral = null;
     }
 
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return paramGeneral;
+    }
+
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> paramGeneral = (ParamGeneral)obj;
+    }
+
+    
 }

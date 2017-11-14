@@ -6,22 +6,17 @@
 package ambroafb.params_general;
 
 import ambro.AView;
-import ambroafb.general.DBUtils;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.minitables.attitudes.Attitude;
 import ambroafb.minitables.merchandises.Merchandise;
-import ambroafb.params_general.helper.ParamGeneralDBResponse;
-import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
-import org.json.JSONObject;
 
 /**
  *
@@ -29,11 +24,6 @@ import org.json.JSONObject;
  */
 public class ParamGeneral extends EditorPanelable {
     
-    public static final String DB_SELECT_PROC_NAME = "process_general_param_select";
-    public static final String DB_INSERT_UPDATE_PROC_NAME = "process_general_param_insert_update";
-    public static final String DB_DELETE_PROC_NAME = "general_delete";
-    public static final String DB_TABLE_NAME = "process_general_params";
-                                                
 //    @AView.Column(title = "%client", width = "150", styleClass = "textCenter")
 //    private final StringProperty clientDescrip;
 //    private final ObjectProperty<Client> clientObj;
@@ -109,29 +99,6 @@ public class ParamGeneral extends EditorPanelable {
         }
     }
     
-    // DB methods:
-    public static ArrayList<ParamGeneral> getAllFromDB(){
-        JSONObject json = new ConditionBuilder().build();
-        ParamGeneralDBResponse paramsGeneralResponse = DBUtils.getParamsGeneral(DB_SELECT_PROC_NAME, json);
-//        DBUtils.getObjectsListFromDBProcedure(ParamGeneral.class, DB_SELECT_PROC_NAME, lang, json) ;// 
-        ArrayList<ParamGeneral> paramsGeneral = paramsGeneralResponse.getParamGenerals();
-        paramsGeneral.sort((ParamGeneral p1, ParamGeneral p2) -> p1.compareById(p2));
-        return paramsGeneral;
-    }
-    
-    public static ParamGeneral getOneFromDB(int id) {
-        JSONObject json = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-        return DBUtils.getObjectFromDBProcedure(ParamGeneral.class, DB_SELECT_PROC_NAME, json);
-    }
-    
-    public static ParamGeneral saveOneToDB(ParamGeneral genParam) {
-        if (genParam == null) return null;
-        return DBUtils.saveParamGeneral(genParam, DB_INSERT_UPDATE_PROC_NAME);
-    }
-    
-    public static boolean deleteOneFromDB(int id) {
-        return DBUtils.deleteObjectFromDB(DB_DELETE_PROC_NAME, DB_TABLE_NAME, id);
-    }
     
     
     // Propertis:

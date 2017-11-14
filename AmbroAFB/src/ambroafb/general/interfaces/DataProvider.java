@@ -142,6 +142,21 @@ public abstract class DataProvider {
         return Utils.getClassFromJSON(targetClass, jsonResult);
     }
     
+    protected <T> T getObjectFromDBProcedure(Class<?> targetClass, String procName, JSONObject params) throws Exception{
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        JSONArray selectResultAsArray;
+        try {
+            selectResultAsArray = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), params);
+        } catch (AuthServerException ex) {
+            throw ExceptionsFactory.getAppropriateException(ex);
+        }
+        JSONObject jsonResult = selectResultAsArray.optJSONObject(0);
+
+        System.out.println("one " + targetClass + " data: " + jsonResult);
+
+        return Utils.getClassFromJSON(targetClass, jsonResult);
+    }
+    
     /**
      *  The static function gets a ArrayList of specified class elements from DB.
      * If exception returns from DB, the method uses errorAction Consumer.

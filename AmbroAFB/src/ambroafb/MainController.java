@@ -54,6 +54,7 @@ import ambroafb.minitables.attitudes.AttitudeManager;
 import ambroafb.minitables.merchandises.Merchandise;
 import ambroafb.minitables.merchandises.MerchandiseManager;
 import ambroafb.params_general.ParamGeneral;
+import ambroafb.params_general.ParamGeneralManager;
 import ambroafb.products.Product;
 import authclient.monitoring.MonitoringClient;
 import java.net.URL;
@@ -346,10 +347,8 @@ public class MainController implements Initializable {
         Stage paramsGeneralStage = StagesContainer.getStageFor(AmbroAFB.mainStage, ParamGeneral.class.getSimpleName());
         if(paramsGeneralStage == null || !paramsGeneralStage.isShowing()){
             TableList generalParams = new TableList(AmbroAFB.mainStage, ParamGeneral.class, "general_params");
-            Supplier<List<EditorPanelable>> fetchData = () -> {
-                                                    return new ArrayList(ParamGeneral.getAllFromDB());
-                                                };
-//            generalParams.getController().reAssignTable(fetchData);
+            generalParams.setEPManager(new ParamGeneralManager());
+            generalParams.getController().reAssignTable(null);
             generalParams.getController().getEditorPanel().removeComponents(EditorPanel.REFRESH_FXID);
             generalParams.show();
         }
