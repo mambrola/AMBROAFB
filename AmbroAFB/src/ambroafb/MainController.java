@@ -10,6 +10,7 @@ import ambroafb.accounts.AccountDataFetchProvider;
 import ambroafb.accounts.AccountManager;
 import ambroafb.accounts.detail_pane.AccountDetailPane;
 import ambroafb.accounts.filter.AccountFilter;
+import ambroafb.balance_accounts.BalAccountManager;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.clients.Client;
@@ -34,7 +35,6 @@ import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.editor_panel.doc.DocEditorPanel;
-import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general_scene.table_list.TableList;
@@ -59,10 +59,7 @@ import ambroafb.products.Product;
 import ambroafb.products.ProductManager;
 import authclient.monitoring.MonitoringClient;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -419,8 +416,8 @@ public class MainController implements Initializable {
         Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BalanceAccount.class.getSimpleName());
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
             BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage);
-            Supplier<List<EditorPanelable>> fetchData = () -> new ArrayList(BalanceAccount.getAllFromDB());
-            balAccounts.getBalanceAccountsController().reAssignTable(fetchData);
+            balAccounts.setEPManager(new BalAccountManager());
+            balAccounts.getController().reAssignTable(null);
             balAccounts.show();
         }
         else {

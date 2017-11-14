@@ -5,7 +5,8 @@
  */
 package ambroafb.balance_accounts;
 
-import java.util.ArrayList;
+import ambroafb.general.interfaces.DataFetchProvider;
+import java.util.List;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -27,6 +28,7 @@ public class BalanceAccountTreeComboBox extends ComboBox<BalanceAccount> {
     private final BalanceAccount balAccountALL = new BalanceAccount();
     private final ObservableList<BalanceAccount> items = FXCollections.observableArrayList();
     private final FilteredList<BalanceAccount> filteredList = new FilteredList<>(items);
+    private BalAccountDataFetchProvider dataFetchProvider = new BalAccountDataFetchProvider();
     
     public BalanceAccountTreeComboBox(){
         super();
@@ -62,13 +64,16 @@ public class BalanceAccountTreeComboBox extends ComboBox<BalanceAccount> {
         
         @Override
         public void run() {
-            ArrayList<BalanceAccount> balAccs = BalanceAccount.getAllFromDB();
-            Platform.runLater(() -> {
-                items.setAll(balAccs);
-                if (consumer != null){
-                    consumer.accept(items);
-                }
-            });
+            try {
+                List<BalanceAccount> balAccs = dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL);
+                Platform.runLater(() -> {
+                    items.setAll(balAccs);
+                    if (consumer != null){
+                        consumer.accept(items);
+                    }
+                });
+            } catch (Exception ex) {
+            }
         }
     }
     

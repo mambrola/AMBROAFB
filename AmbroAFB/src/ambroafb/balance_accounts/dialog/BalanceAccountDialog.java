@@ -10,6 +10,7 @@ import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +23,7 @@ public class BalanceAccountDialog extends UserInteractiveDialogStage implements 
     private final BalanceAccount balAccountBackup;
     
     public BalanceAccountDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "/ambroafb/balance_accounts/dialog/BalanceAccountDialog.fxml", "balaccount_dialog_title");
+        super(owner, buttonType, "/ambroafb/balance_accounts/dialog/BalanceAccountDialog.fxml");
         
         if (object == null)
             balAccount = new BalanceAccount();
@@ -49,4 +50,10 @@ public class BalanceAccountDialog extends UserInteractiveDialogStage implements 
         return balAccount;
     }
 
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> balAccount = (BalanceAccount)obj;
+    }
+
+    
 }

@@ -9,6 +9,7 @@ import ambro.AFilterableTreeTableView;
 import ambroafb.balance_accounts.*;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.editor_panel.EditorPanelController;
+import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.ListingController;
@@ -16,6 +17,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -198,22 +201,26 @@ public class TreeTableListController extends ListingController {
         
         @Override
         public void run() {
-            Platform.runLater(() -> {
-                masker.setVisible(true); 
-            });
-            BalanceAccount.getAllFromDB().stream().forEach((account) -> {
-                makeTreeStructure(account);
-            });
-            Platform.runLater(() -> {
-                roots.stream().forEach((account) -> {
-                    aview.append(account);
+            try {
+                Platform.runLater(() -> {
+                    masker.setVisible(true);
                 });
-                aview.expand(1);
-                masker.setVisible(false);
-                if (selectedIndex >= 0){
-                    aview.getSelectionModel().select(selectedIndex);
-                }
-            });
+                dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL).stream().forEach((account) -> {
+                    makeTreeStructure((BalanceAccount)account);
+                });
+                Platform.runLater(() -> {
+                    roots.stream().forEach((account) -> {
+                        aview.append(account);
+                    });
+                    aview.expand(1);
+                    masker.setVisible(false);
+                    if (selectedIndex >= 0){
+                        aview.getSelectionModel().select(selectedIndex);
+                    }
+                });
+            } catch (Exception ex) {
+                Logger.getLogger(TreeTableListController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         

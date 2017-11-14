@@ -7,13 +7,10 @@ package ambroafb.balance_accounts;
 
 import ambro.AFilterableTreeTableView;
 import ambro.AView;
-import ambroafb.general.DBUtils;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.EditorPanelable;
-import authclient.db.ConditionBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
@@ -25,7 +22,6 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.json.JSONObject;
 
 /**
  *
@@ -56,8 +52,8 @@ public class BalanceAccount extends EditorPanelable {
     public final ObservableList<String> rowStyle = FXCollections.observableArrayList();
     
     @JsonIgnore
-    public static final String DB_TABLE_NAME = "bal_accounts";
-    public static final String DB_DELETE_PROC_NAME = "general_delete";
+//    public static final String DB_TABLE_NAME = "bal_accounts";
+//    public static final String DB_DELETE_PROC_NAME = "general_delete";
     public static final String DESCRIP_DELIMITER = " - ";
     
     private static final int ACT = 1, PAS = 2, INDETERMINATE = 3;
@@ -86,25 +82,25 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     
-    public static ArrayList<BalanceAccount> getAllFromDB(){
-        JSONObject params = new ConditionBuilder().build();
-        System.out.println("params: " + params);
-        return DBUtils.getObjectsListFromDB(BalanceAccount.class, DB_TABLE_NAME, params);
-    }
+//    public static ArrayList<BalanceAccount> getAllFromDB(){
+//        JSONObject params = new ConditionBuilder().build();
+//        System.out.println("params: " + params);
+//        return DBUtils.getObjectsListFromDB(BalanceAccount.class, DB_TABLE_NAME, params);
+//    }
     
-    public static BalanceAccount getOneFromDB(int recId){
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
-        return DBUtils.getObjectFromDB(BalanceAccount.class, DB_TABLE_NAME, params);
-    }
+//    public static BalanceAccount getOneFromDB(int recId){
+//        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
+//        return DBUtils.getObjectFromDB(BalanceAccount.class, DB_TABLE_NAME, params);
+//    }
     
-    public static BalanceAccount saveOneToDB(BalanceAccount balAccount){
-        if (balAccount == null) return null;
-        return DBUtils.saveObjectToDBSimple(balAccount, DB_TABLE_NAME);
-    }
+//    public static BalanceAccount saveOneToDB(BalanceAccount balAccount){
+//        if (balAccount == null) return null;
+//        return DBUtils.saveObjectToDBSimple(balAccount, DB_TABLE_NAME);
+//    }
     
-    public static boolean deleteOneFromDB(int id){
-        return DBUtils.deleteObjectFromDB(DB_DELETE_PROC_NAME, DB_TABLE_NAME, id);
-    }
+//    public static boolean deleteOneFromDB(int id){
+//        return DBUtils.deleteObjectFromDB(DB_DELETE_PROC_NAME, DB_TABLE_NAME, id);
+//    }
     
     
     // Properties getters:
