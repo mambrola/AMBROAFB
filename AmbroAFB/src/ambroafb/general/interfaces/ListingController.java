@@ -38,7 +38,6 @@ public abstract class ListingController implements Initializable {
     
     protected abstract void componentsInitialize(URL url, ResourceBundle rb);
     
-//    public abstract void reAssignTable(Supplier<List<EditorPanelable>> fetchData);
     public abstract void reAssignTable(FilterModel model);
     public abstract void addListWith(Class content);
     

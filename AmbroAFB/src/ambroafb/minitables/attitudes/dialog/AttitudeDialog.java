@@ -10,6 +10,7 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.minitables.attitudes.Attitude;
+import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +23,7 @@ public class AttitudeDialog extends UserInteractiveDialogStage implements Dialog
     private final Attitude attitudeBackup;
     
     public AttitudeDialog(EditorPanelable object, EditorPanel.EDITOR_BUTTON_TYPE buttonType, Stage owner){
-        super(owner, "/ambroafb/minitables/attitudes/dialog/AttitudeDialog.fxml", "attitude");
+        super(owner, buttonType, "/ambroafb/minitables/attitudes/dialog/AttitudeDialog.fxml");
         
         if (object == null)
             attitude = new Attitude();
@@ -44,4 +45,15 @@ public class AttitudeDialog extends UserInteractiveDialogStage implements Dialog
         attitude = null;
     }
 
+    @Override
+    protected EditorPanelable getSceneObject() {
+        return attitude;
+    }
+
+    @Override
+    protected Consumer<Object> getAddSuccessAction() {
+        return (obj) -> attitude = (Attitude)obj;
+    }
+
+    
 }

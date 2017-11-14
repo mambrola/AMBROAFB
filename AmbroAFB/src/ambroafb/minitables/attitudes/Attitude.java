@@ -5,11 +5,7 @@
  */
 package ambroafb.minitables.attitudes;
 
-import ambroafb.general.DBUtils;
 import ambroafb.minitables.MiniTable;
-import authclient.db.ConditionBuilder;
-import java.util.ArrayList;
-import org.json.JSONObject;
 
 /**
  *
@@ -17,37 +13,9 @@ import org.json.JSONObject;
  */
 public class Attitude extends MiniTable {
 
-    private static final String DB_TABLE_NAME = "process_attitudes";
     
     public Attitude() {
     }
-    
-    //DB methods:
-    public static ArrayList<Attitude> getAllFromDB(){
-        JSONObject params = new ConditionBuilder().build();
-        ArrayList<Attitude> attitudeList = DBUtils.getObjectsListFromDB(Attitude.class, DB_TABLE_NAME, params);
-        attitudeList.sort((Attitude b1, Attitude b2) -> b1.getDescrip().compareTo(b2.getDescrip()));
-        return attitudeList;
-    }
-    
-    public static Attitude getOneFromDB(int id){
-        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", id).condition().build();
-        return DBUtils.getObjectFromDB(Attitude.class, DB_TABLE_NAME, params);
-    }
-    
-    public static Attitude saveOneToDB(Attitude attitude){
-        if (attitude == null) return null;
-        return DBUtils.saveObjectToDBSimple(attitude, DB_TABLE_NAME);
-    }
-    
-    public static boolean deleteOneFromDB(int id){
-        System.out.println("delete from DB... ??");
-        return false;
-    }
-    
-//    public static String getDialogStagePath(){
-//        return "ambroafb.minitables.dialog.MiniTableDialog";
-//    }
     
     @Override
     public Attitude cloneWithoutID() {

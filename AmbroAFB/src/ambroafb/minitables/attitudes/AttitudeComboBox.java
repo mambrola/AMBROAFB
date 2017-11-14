@@ -5,7 +5,10 @@
  */
 package ambroafb.minitables.attitudes;
 
-import java.util.ArrayList;
+import ambroafb.general.interfaces.DataFetchProvider;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -19,27 +22,32 @@ public class AttitudeComboBox extends ComboBox<Attitude> {
     
     private final ObservableList<Attitude> items = FXCollections.observableArrayList();
     private final Attitude all = new Attitude();
+    private final AttitudeDataFetchProvider dataFetchProvider = new AttitudeDataFetchProvider();
     
     public AttitudeComboBox(){
-        this.setItems(items);
-        all.setRecId(0);
-        all.setDescrip("ALL");
-        items.add(all);
-
-        this.setConverter(new StringConverter<Attitude>() {
-            @Override
-            public String toString(Attitude attitude) {
-                return attitude.toString();
-            }
-            @Override
-            public Attitude fromString(String input) {
-                return null;
-            }
-        });
-        ArrayList<Attitude> attitudes = Attitude.getAllFromDB();
-        attitudes.sort((Attitude b1, Attitude b2) -> b1.getRecId() - b2.getRecId());
-        items.addAll(attitudes);
-        this.setValue(all);
+        try {
+            this.setItems(items);
+            all.setRecId(0);
+            all.setDescrip("ALL");
+            items.add(all);
+            
+            this.setConverter(new StringConverter<Attitude>() {
+                @Override
+                public String toString(Attitude attitude) {
+                    return attitude.toString();
+                }
+                @Override
+                public Attitude fromString(String input) {
+                    return null;
+                }
+            });
+            List<Attitude> attitudes = dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL);
+            attitudes.sort((Attitude b1, Attitude b2) -> b1.getRecId() - b2.getRecId());
+            items.addAll(attitudes);
+            this.setValue(all);
+        } catch (Exception ex) {
+            Logger.getLogger(AttitudeComboBox.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void selectItem(Attitude attitude){
