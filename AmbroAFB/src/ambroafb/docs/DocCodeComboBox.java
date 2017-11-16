@@ -5,16 +5,14 @@
  */
 package ambroafb.docs;
 
-import ambroafb.general.DBUtils;
-import authclient.db.ConditionBuilder;
-import java.util.ArrayList;
+import ambroafb.general.interfaces.DataFetchProvider;
+import java.util.List;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
-import org.json.JSONObject;
 
 /**
  *
@@ -25,6 +23,7 @@ public class DocCodeComboBox extends ComboBox<DocCode> {
     public static final String categoryALL = "ALL";
     private final DocCode docCodeALL = new DocCode();
     private final  ObservableList<DocCode> items = FXCollections.observableArrayList();
+    private final DocDataFetchProvider dataFetchProvider = new DocDataFetchProvider();
     
     public DocCodeComboBox(){
         super();
@@ -74,7 +73,6 @@ public class DocCodeComboBox extends ComboBox<DocCode> {
 
     private class FetchDataFromDB implements Runnable {
 
-        private final String DB_VIEW_NAME = "doc_codes";
         private final Consumer<ObservableList<DocCode>> consumer;
         
         public FetchDataFromDB(Consumer<ObservableList<DocCode>> consumer) {
@@ -83,14 +81,16 @@ public class DocCodeComboBox extends ComboBox<DocCode> {
 
         @Override
         public void run() {
-            JSONObject params = new ConditionBuilder().build();
-            ArrayList<DocCode> itemsFromDB = DBUtils.getObjectsListFromDB(DocCode.class, DB_VIEW_NAME, params);
-            Platform.runLater(() -> {
-                items.setAll(itemsFromDB);
-                if (consumer != null){
-                    consumer.accept(items);
-                }
-            });
+            try {
+                List<DocCode> itemsFromDB = dataFetchProvider.getDocCodes(DataFetchProvider.PARAM_FOR_ALL);
+                Platform.runLater(() -> {
+                    items.setAll(itemsFromDB);
+                    if (consumer != null){
+                        consumer.accept(items);
+                    }
+                });
+            } catch (Exception ex) {
+            }
         }
     }
     

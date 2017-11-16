@@ -5,11 +5,9 @@
  */
 package ambroafb.discounts_on_count;
 
-import ambroafb.general.DBUtils;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
 import authclient.db.ConditionBuilder;
-import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -23,7 +21,7 @@ public class DiscountOnCountDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<DiscountOnCount> getFilteredBy(JSONObject params) throws Exception {
-        ArrayList<DiscountOnCount> discounts = DBUtils.getObjectsListFromDB(DiscountOnCount.class, DB_TABLE_NAME, params);
+        List<DiscountOnCount> discounts = getObjectsListFromDBTable(DiscountOnCount.class, DB_TABLE_NAME, params);
         discounts.sort((DiscountOnCount d1, DiscountOnCount d2) -> d2.compareById(d1));
         return discounts;
     }

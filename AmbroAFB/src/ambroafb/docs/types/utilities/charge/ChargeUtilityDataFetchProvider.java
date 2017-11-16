@@ -41,7 +41,7 @@ public class ChargeUtilityDataFetchProvider extends DataFetchProvider {
     @Override
     public ChargeUtility getOneFromDB(int recId) throws Exception {
         JSONObject params = new ConditionBuilder().where().orGroup().or(DB_ID, "=", recId).or("parent_rec_id", "=", recId).closeGroup().condition().build();
-        List<Doc> bouquet = getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
+        List<Doc> bouquet = getObjectsListFromDBTable(Doc.class, DB_VIEW_NAME, params);
         ChargeUtility chargeFromBouqet = new ChargeUtility();
         Doc mainDoc = getDocFromBouquet(bouquet, true);
         Doc vatDoc = getDocFromBouquet(bouquet, false);

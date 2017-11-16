@@ -38,7 +38,7 @@ public class AccountDataFetchProvider extends DataFetchProvider {
 
     @Override
     public List<Account> getFilteredBy(JSONObject params) throws Exception {
-        return getObjectsListFromDB(Account.class, DB_VIEW_NAME, params);
+        return getObjectsListFromDBTable(Account.class, DB_VIEW_NAME, params);
     }
 
     @Override

@@ -19,41 +19,6 @@ import ambroafb.general.interfaces.EditorPanelableManager;
  */
 public class DocManagersFactory {
     
-    /**
-     * The method returns specific DocManager by doc object docType and parent/child status.
-     * @param doc
-     * @return 
-     */
-    public static DocManager getDocManager(Doc doc){
-        if (doc.isChildDoc()){
-            return null;
-//            return new CustomManager();
-        }
-        else if (doc.isParentDoc()){
-            switch (doc.getDocType()) {
-                case 12:
-                    return null;
-//                    return new ChargeUtilityManager();
-                case 60:
-//                    return new ConversionManager();
-                    return null;
-                default:
-                    return null;
-//                    return new MonthlyManager();
-            }
-        }
-        else { // Doc has not children
-            if (doc.getDocType() == 82){
-                return null;
-//                return new PaymentUtilityManager();
-            }
-            else {
-                return null;
-//                return new CustomManager();
-            }
-        }
-    }
-    
     public static EditorPanelableManager getEPManager(Doc doc){
         if (doc.isChildDoc()){
             return new CustomManager();

@@ -6,11 +6,9 @@
 package ambroafb.docs.types.doc_in_order;
 
 import ambroafb.docs.Doc;
-import ambroafb.general.DBUtils;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
 import authclient.db.ConditionBuilder;
-import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -37,7 +35,7 @@ public class DocInOrderDataFetchProvider extends DataFetchProvider {
     @Override
     public DocInOrder getOneFromDB(int recId) throws Exception {
         JSONObject params = new ConditionBuilder().where().orGroup().or(DB_ID, "=", recId).or("parent_rec_id", "=", recId).closeGroup().condition().build();
-        ArrayList<Doc> docsFromDB = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
+        List<Doc> docsFromDB = getObjectsListFromDBTable(Doc.class, DB_VIEW_NAME, params);
         DocInOrder docInOrder = new DocInOrder();
         docInOrder.setDocs(docsFromDB);
         if (!docsFromDB.isEmpty()){

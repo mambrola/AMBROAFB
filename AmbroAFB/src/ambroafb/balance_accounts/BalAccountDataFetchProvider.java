@@ -21,7 +21,7 @@ public class BalAccountDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<BalanceAccount> getFilteredBy(JSONObject params) throws Exception {
-        return getObjectsListFromDB(BalanceAccount.class, DB_TABLE_NAME, params);
+        return getObjectsListFromDBTable(BalanceAccount.class, DB_TABLE_NAME, params);
     }
 
     @Override

@@ -5,8 +5,7 @@
  */
 package ambroafb.docs;
 
-import ambroafb.general.DBUtils;
-import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -17,6 +16,8 @@ import javafx.scene.control.ComboBox;
  */
 public class DocMerchandiseComboBox extends ComboBox<DocMerchandise> {
     
+    private final DocDataFetchProvider dataFetchProvider = new DocDataFetchProvider();
+    
     public DocMerchandiseComboBox(){
         super();
 
@@ -25,7 +26,6 @@ public class DocMerchandiseComboBox extends ComboBox<DocMerchandise> {
     
     private class FetchDataRunnable implements Runnable {
 
-        private final String procedureName = "utility_get_merchandises";
         private ObservableList<DocMerchandise> items;
         
         public FetchDataRunnable(ObservableList<DocMerchandise> items){
@@ -34,11 +34,14 @@ public class DocMerchandiseComboBox extends ComboBox<DocMerchandise> {
         
         @Override
         public void run() {
-            ArrayList<DocMerchandise> merchandises = DBUtils.getObjectsListFromDBProcedure(DocMerchandise.class, procedureName);
-            merchandises.sort((DocMerchandise m1, DocMerchandise m2) -> m1.compareById(m2));
-            Platform.runLater(() -> {
-                items.setAll(merchandises);
-            });
+            try {
+                List<DocMerchandise> merchandises = dataFetchProvider.getDocMerchandises();
+                merchandises.sort((DocMerchandise m1, DocMerchandise m2) -> m1.compareById(m2));
+                Platform.runLater(() -> {
+                    items.setAll(merchandises);
+                });
+            } catch (Exception ex) {
+            }
         }
         
     }

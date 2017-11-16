@@ -25,7 +25,7 @@ public class LoggingDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<Logging> getFilteredBy(JSONObject params) throws Exception {
-        List<Logging> loggings = getObjectsListFromDB(Logging.class, DB_VIEW_NAME, params);
+        List<Logging> loggings = getObjectsListFromDBTable(Logging.class, DB_VIEW_NAME, params);
         loggings.sort((Logging log1, Logging log2) -> log2.compareById(log1));
         return loggings;
     }

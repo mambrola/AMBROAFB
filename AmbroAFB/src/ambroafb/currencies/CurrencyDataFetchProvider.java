@@ -22,7 +22,7 @@ public class CurrencyDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<Currency> getFilteredBy(JSONObject params) throws Exception {
-        List<Currency> currencies = getObjectsListFromDB(Currency.class, DB_TABLE_NAME, params);
+        List<Currency> currencies = getObjectsListFromDBTable(Currency.class, DB_TABLE_NAME, params);
         currencies.sort((Currency c1, Currency c2) -> c1.compareByIso(c2));
         return currencies;
     }

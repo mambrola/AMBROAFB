@@ -7,7 +7,6 @@ package ambroafb.params_general;
 
 import ambroafb.general.AlertMessage;
 import ambroafb.general.DBUtils;
-import static ambroafb.general.DBUtils.getObjectsListFromDBProcedure;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.DataChangeProvider;
@@ -17,6 +16,7 @@ import authclient.db.ConditionBuilder;
 import authclient.db.WhereBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert;
@@ -59,7 +59,7 @@ public class ParamGeneralDataChangeProvider extends DataChangeProvider {
                 int endIndex = errorData[1].indexOf(";");
                 String[] ids = errorData[1].substring(startIndex, endIndex).split(",");
                 String headerTxt = GeneralConfig.getInstance().getTitleFor("param_general_error") + "\n";
-                ArrayList<ParamGeneral> entries = selectConflictedEntries(ids);
+                List<ParamGeneral> entries = selectConflictedEntries(ids);
                 String newMsg = entries.stream().map((entry) -> "[" + entry.toString() + "]" + ",\n").reduce("", String::concat);
                 AlertMessage alert = new AlertMessage(Alert.AlertType.ERROR, ex, newMsg, GeneralConfig.getInstance().getTitleFor("conflict_params_general"));
                 alert.setHeaderText(headerTxt);
@@ -69,13 +69,17 @@ public class ParamGeneralDataChangeProvider extends DataChangeProvider {
         return result;
     }
     
-    private ArrayList<ParamGeneral> selectConflictedEntries(String[] ids){
+    private List<ParamGeneral> selectConflictedEntries(String[] ids){
         WhereBuilder whereBuilder = new ConditionBuilder().where();
         for (int i = 0; i < ids.length - 1; i++) {
             whereBuilder.or("rec_id", "=", ids[i]);
         }
         JSONObject conflictedIDs = whereBuilder.condition().build();
-        return getObjectsListFromDBProcedure(ParamGeneral.class, DB_SELECT_PROC_NAME, conflictedIDs);
+        try {
+            return getObjectsListFromDBProcedure(ParamGeneral.class, DB_SELECT_PROC_NAME, conflictedIDs);
+        } catch (Exception ex) {
+        }
+        return new ArrayList<>();
     }
     
 }

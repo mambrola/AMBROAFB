@@ -19,13 +19,16 @@ import org.json.JSONObject;
  */
 public class DocDataFetchProvider extends DataFetchProvider {
 
+    private final String DB_DOC_CODES_VIEW_NAME = "doc_codes";
+    private final String DB_DOC_MERCHANDISE_PROCEDURE = "utility_get_merchandises";
+    
     public DocDataFetchProvider(){
         DB_VIEW_NAME = "docs_whole";
     }
     
     @Override
     public List<Doc> getFilteredBy(JSONObject params) throws Exception {
-        return getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
+        return getObjectsListFromDBTable(Doc.class, DB_VIEW_NAME, params);
     }
 
     @Override
@@ -47,7 +50,7 @@ public class DocDataFetchProvider extends DataFetchProvider {
             whereBuilder.and("doc_code", "=", docFilterModel.getSelectedDocCode());
         }
         JSONObject params = whereBuilder.condition().build();
-        return getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
+        return getObjectsListFromDBTable(Doc.class, DB_VIEW_NAME, params);
     }
 
     @Override
@@ -56,4 +59,12 @@ public class DocDataFetchProvider extends DataFetchProvider {
         return getObjectFromDB(Doc.class, DB_VIEW_NAME, params);
     }
     
+    
+    public List<DocCode> getDocCodes(JSONObject params) throws Exception {
+        return getObjectsListFromDBTable(DocCode.class, DB_DOC_CODES_VIEW_NAME, params);
+    }
+
+    public List<DocMerchandise> getDocMerchandises() throws Exception {
+        return getObjectsListFromDBProcedure(DocMerchandise.class, DB_DOC_MERCHANDISE_PROCEDURE);
+    }
 }

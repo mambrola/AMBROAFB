@@ -28,7 +28,7 @@ public class ProductDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<Product> getFilteredBy(JSONObject params) throws Exception {
-        List<Product> products = getObjectsListFromDB(Product.class, DB_VIEW_NAME, params);
+        List<Product> products = getObjectsListFromDBTable(Product.class, DB_VIEW_NAME, params);
         products.sort((Product p1, Product p2) -> p1.compareById(p2));
         return products;
     }
@@ -48,7 +48,7 @@ public class ProductDataFetchProvider extends DataFetchProvider {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         ConditionBuilder condition = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition();
         JSONObject params = condition.build();
-        return getObjectsListFromDB(ProductSpecific.class, DB_SPECIFIC_TABLE_NAME, params);
+        return getObjectsListFromDBTable(ProductSpecific.class, DB_SPECIFIC_TABLE_NAME, params);
     }
     
 }

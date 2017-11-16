@@ -25,7 +25,7 @@ public class CurrencyRateDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<CurrencyRate> getFilteredBy(JSONObject params) throws Exception {
-        List<CurrencyRate> currencyRates = getObjectsListFromDB(CurrencyRate.class, DB_VIEW_NAME, params);
+        List<CurrencyRate> currencyRates = getObjectsListFromDBTable(CurrencyRate.class, DB_VIEW_NAME, params);
         currencyRates.sort((CurrencyRate c1, CurrencyRate c2) -> c1.compareTo(c2));
         return currencyRates;
     }

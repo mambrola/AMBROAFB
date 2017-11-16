@@ -21,7 +21,7 @@ public class MerchandiseDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<Merchandise> getFilteredBy(JSONObject params) throws Exception {
-        List<Merchandise> merchandises = getObjectsListFromDB(Merchandise.class, DB_TABLE_NAME, params);
+        List<Merchandise> merchandises = getObjectsListFromDBTable(Merchandise.class, DB_TABLE_NAME, params);
         merchandises.sort((Merchandise s1, Merchandise s2) -> s1.getDescrip().compareTo(s2.getDescrip()));
         return merchandises;
     }

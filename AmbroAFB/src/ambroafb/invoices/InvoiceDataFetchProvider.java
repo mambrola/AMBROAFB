@@ -47,7 +47,7 @@ public class InvoiceDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<Invoice> getFilteredBy(JSONObject params) throws Exception {
-        List<Invoice> invoices = getObjectsListFromDB(Invoice.class, DB_VIEW_NAME, params);
+        List<Invoice> invoices = getObjectsListFromDBTable(Invoice.class, DB_VIEW_NAME, params);
         invoices.sort((Invoice inv1, Invoice inv2) -> inv2.compareById(inv1));
         return invoices;
     }
@@ -130,12 +130,12 @@ public class InvoiceDataFetchProvider extends DataFetchProvider {
     public List<InvoiceReissuing> getAllIvoiceReissuingsesFromDB() throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
-        return getObjectsListFromDB(InvoiceReissuing.class, DB_REISSUINGS_TABLE, params);
+        return getObjectsListFromDBTable(InvoiceReissuing.class, DB_REISSUINGS_TABLE, params);
     }
     
     public List<InvoiceStatusClarify> getAllIvoiceClarifiesFromDB() throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
-        return getObjectsListFromDB(InvoiceStatusClarify.class, DB_CLARIFIES_TABLE, params);
+        return getObjectsListFromDBTable(InvoiceStatusClarify.class, DB_CLARIFIES_TABLE, params);
     }
 }

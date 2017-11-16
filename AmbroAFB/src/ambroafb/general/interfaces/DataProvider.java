@@ -169,18 +169,38 @@ public abstract class DataProvider {
      * @throws java.io.IOException
      * @throws authclient.AuthServerException
      */
-    protected <T> List<T> getObjectsListFromDB(Class<?> listElementClass, String dbTableOrViewName, JSONObject params) throws Exception {
-        System.out.println(dbTableOrViewName + " params For DB: " + params);
-
+    protected <T> List<T> getObjectsListFromDBTable(Class<?> listElementClass, String dbTableOrViewName, JSONObject params) throws Exception {
         JSONArray data;
         try {
             data = GeneralConfig.getInstance().getDBClient().select(dbTableOrViewName, params);
         } catch (AuthServerException ex) {
             throw ExceptionsFactory.getAppropriateException(ex);
         }
-
-        System.out.println(dbTableOrViewName + " data from DB: " + data);
-
+        return Utils.getListFromJSONArray(listElementClass, data);
+    }
+    
+    /**
+     *  The method fetches data from database procedure and give it to appropriate parameters. 
+     * If 'params' is empty, DB procedure will call only with default language; Otherwise default language will put into 'params'.
+     * @param <T>
+     * @param listElementClass The elements class that will be 
+     * @param procName
+     * @param params
+     * @return
+     * @throws Exception 
+     */
+    protected <T> List<T> getObjectsListFromDBProcedure(Class<?> listElementClass, String procName, Object... params) throws Exception {
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        JSONArray data;
+        if (params.length > 0){
+            Object[] paramsObject = new Object[params.length + 1];
+            paramsObject[0] = dbClient.getLang();
+            System.arraycopy(params, 0, paramsObject, 1, params.length);
+            data = dbClient.callProcedureAndGetAsJson(procName, paramsObject);
+        }
+        else {
+            data = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang());
+        }
         return Utils.getListFromJSONArray(listElementClass, data);
     }
     

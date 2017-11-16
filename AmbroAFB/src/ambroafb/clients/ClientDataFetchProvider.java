@@ -32,7 +32,7 @@ public class ClientDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<Client> getFilteredBy(JSONObject params) throws Exception {
-        return getObjectsListFromDB(Client.class, DB_VIEW_NAME, params);
+        return getObjectsListFromDBTable(Client.class, DB_VIEW_NAME, params);
     }
 
     @Override
@@ -81,6 +81,6 @@ public class ClientDataFetchProvider extends DataFetchProvider {
     public List<ClientStatus> getClientStatuses() throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
-        return getObjectsListFromDB(ClientStatus.class, DB_CLIENT_STATUS_TABLE, params);
+        return getObjectsListFromDBTable(ClientStatus.class, DB_CLIENT_STATUS_TABLE, params);
     }
 }

@@ -6,11 +6,9 @@
 package ambroafb.docs.types.conversion;
 
 import ambroafb.docs.Doc;
-import ambroafb.general.DBUtils;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
 import authclient.db.ConditionBuilder;
-import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -37,12 +35,12 @@ public class ConversionDataFetchProvider extends DataFetchProvider {
     @Override
     public Conversion getOneFromDB(int recId) throws Exception {
         JSONObject params = new ConditionBuilder().where().orGroup().or(DB_ID, "=", recId).or("parent_rec_id", "=", recId).closeGroup().condition().build();
-        ArrayList<Doc> bouquet = DBUtils.getObjectsListFromDB(Doc.class, DB_VIEW_NAME, params);
+        List<Doc> bouquet = getObjectsListFromDBTable(Doc.class, DB_VIEW_NAME, params);
         Conversion conversion = makeConversionFrom(bouquet);
         return conversion;
     }
     
-    private Conversion makeConversionFrom(ArrayList<Doc> docs){
+    private Conversion makeConversionFrom(List<Doc> docs){
         Conversion result = new Conversion();
         Doc firstDoc = docs.get(0);
         Doc secondDoc = docs.get(1);

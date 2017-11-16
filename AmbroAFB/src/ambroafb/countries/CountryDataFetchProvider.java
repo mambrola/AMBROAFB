@@ -5,11 +5,9 @@
  */
 package ambroafb.countries;
 
-import ambroafb.general.DBUtils;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
 import authclient.db.ConditionBuilder;
-import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -27,7 +25,7 @@ public class CountryDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<Country> getFilteredBy(JSONObject params) throws Exception {
-        ArrayList<Country> countries = DBUtils.getObjectsListFromDB(Country.class, DB_TABLE_NAME, params);
+        List<Country> countries = getObjectsListFromDBTable(Country.class, DB_TABLE_NAME, params);
         countries.sort((Country c1, Country c2) -> c1.compareByDescrip(c2));
         return countries;
     }

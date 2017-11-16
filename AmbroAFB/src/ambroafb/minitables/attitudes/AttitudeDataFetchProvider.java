@@ -21,7 +21,7 @@ public class AttitudeDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<Attitude> getFilteredBy(JSONObject params) throws Exception {
-        List<Attitude> attitudeList = getObjectsListFromDB(Attitude.class, DB_TABLE_NAME, params);
+        List<Attitude> attitudeList = getObjectsListFromDBTable(Attitude.class, DB_TABLE_NAME, params);
         attitudeList.sort((Attitude b1, Attitude b2) -> b1.getDescrip().compareTo(b2.getDescrip()));
         return attitudeList;
     }

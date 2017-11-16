@@ -33,7 +33,7 @@ public class LicenseDataFetchProvider extends DataFetchProvider {
     
     @Override
     public List<License> getFilteredBy(JSONObject params) throws Exception {
-        return getObjectsListFromDB(License.class, DB_VIEW_NAME, params);
+        return getObjectsListFromDBTable(License.class, DB_VIEW_NAME, params);
     }
 
     @Override
@@ -78,6 +78,6 @@ public class LicenseDataFetchProvider extends DataFetchProvider {
     public List<LicenseStatus> getAllLicenseStatusFromDB() throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
-        return getObjectsListFromDB(LicenseStatus.class, DB_STATUSES_TABLE_NAME, params);
+        return getObjectsListFromDBTable(LicenseStatus.class, DB_STATUSES_TABLE_NAME, params);
     }
 }
