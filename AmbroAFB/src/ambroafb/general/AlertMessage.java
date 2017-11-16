@@ -5,7 +5,6 @@
  */
 package ambroafb.general;
 
-import ambroafb.AmbroAFB;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
@@ -47,21 +46,15 @@ public class AlertMessage extends Alert {
     
     /**
      * 
+     * @param owner
+     * @param alertType
+     * @param headerText
+     * @param contentText
      * @param ex The exception object.
      * @see ambroafb.general.AlertMessage#AlertMessage(javafx.stage.Stage, javafx.scene.control.Alert.AlertType, java.lang.String, java.lang.String)  AlertMessage Base Constructor
      */
-    public AlertMessage(Stage owner, AlertType alertType, Exception ex, String headerText, String contentText) {
+    public AlertMessage(Stage owner, AlertType alertType, String headerText, String contentText, Exception ex) {
         this(owner, alertType, headerText, contentText);
-        setException(ex);
-    }
-    
-    @Deprecated
-    public AlertMessage(AlertType alertType, Exception ex, String headerText, String contentText) {
-        this(AmbroAFB.mainStage, alertType, headerText, contentText);
-        setException(ex);
-    }
-    
-    private void setException(Exception ex){
         exception = ex;
     }
     

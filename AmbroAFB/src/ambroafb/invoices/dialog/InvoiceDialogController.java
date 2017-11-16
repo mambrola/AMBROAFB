@@ -56,6 +56,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONObject;
@@ -377,7 +378,7 @@ public class InvoiceDialogController extends DialogController {
                     String message = processManyProductChoiceException(json.optString("message"));
                     String title = GeneralConfig.getInstance().getTitleFor("many_product_warning");
                     Platform.runLater(() -> {
-                        new AlertMessage(Alert.AlertType.WARNING, ex, message, title).showAndWait();
+                        new AlertMessage((Stage)formPane.getScene().getWindow(), Alert.AlertType.WARNING, message, "").showAndWait();
                     });
                 }
                 else {

@@ -5,6 +5,7 @@
  */
 package ambroafb.general;
 
+import ambroafb.AmbroAFB;
 import ambroafb.docs.Doc;
 import ambroafb.general.countcombobox.Basket;
 import ambroafb.invoices.Invoice;
@@ -48,7 +49,7 @@ public class DBUtils {
         } 
         catch (Exception ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-            new AlertMessage(Alert.AlertType.ERROR, ex, ex.getLocalizedMessage(), "").showAndWait();
+            new AlertMessage(AmbroAFB.mainStage, Alert.AlertType.ERROR, ex.getLocalizedMessage(), "", ex).showAndWait();
         }
         return null;
     }
@@ -82,7 +83,7 @@ public class DBUtils {
                 Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
-        new AlertMessage(Alert.AlertType.ERROR, ex, message, docDBErorTitle).showAndWait();
+        new AlertMessage(AmbroAFB.mainStage, Alert.AlertType.ERROR, message, docDBErorTitle, ex).showAndWait();
     }
     
     @Deprecated

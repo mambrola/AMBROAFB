@@ -11,7 +11,6 @@ import ambroafb.docs.Doc;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.invoices.Invoice;
 import ambroafb.products.Product;
-import authclient.AuthServerException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -333,22 +332,22 @@ public class Utils {
         return value ? 1 : 0;
     }
     
-    /**
-     * The function process AuthServerException and returns array of its content data;
-     * @param ex
-     * @return String[] where error code is first and error message is second.
-     */
-    public static String[] processAuthServerError(AuthServerException ex){
-        String[] codeAndMsg = new String[2];
-        try {
-            JSONObject  errorJson = new JSONObject(ex.getLocalizedMessage());
-            codeAndMsg[0] = "" + errorJson.getInt("code");
-            codeAndMsg[1] = errorJson.getString("message");
-        } catch (JSONException ex1) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex1);
-        }
-        return codeAndMsg;
-    }
+//    /**
+//     * The function process AuthServerException and returns array of its content data;
+//     * @param ex
+//     * @return String[] where error code is first and error message is second.
+//     */
+//    public static String[] processAuthServerError(AuthServerException ex){
+//        String[] codeAndMsg = new String[2];
+//        try {
+//            JSONObject  errorJson = new JSONObject(ex.getLocalizedMessage());
+//            codeAndMsg[0] = "" + errorJson.getInt("code");
+//            codeAndMsg[1] = errorJson.getString("message");
+//        } catch (JSONException ex1) {
+//            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex1);
+//        }
+//        return codeAndMsg;
+//    }
     
     public static boolean compareDocs(List<Doc> docs1, List<Doc> docs2){
         if (docs1.size() != docs2.size()){
