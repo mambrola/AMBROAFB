@@ -18,7 +18,7 @@ import ambroafb.general.interfaces.FilterModel;
 public class AccountFilterModel extends FilterModel {
     
     private static final String PREF_CURRENCY_KEY = "accounts/filter/currency";
-    private static final String PREF_BALACCOUNT_KEY = "accounts/filter/balaccount";
+    private static final String PREF_BALACCOUNT_KEY = "accounts/filter/balaccount_id";
     private static final String PREF_CLIENT_KEY = "accounts/filter/client_id";
     private static final String PREF_TYPE_KEY = "accounts/filter/is_opened";
     private static final String PREF_TYPE_INDETERMINATE_KEY = "accounts/filter/is_opened_indeterminate";
@@ -31,7 +31,7 @@ public class AccountFilterModel extends FilterModel {
     
     public void setBalAccount(BalanceAccount balAcc){
         if (balAcc != null){
-            saveIntoPref(PREF_BALACCOUNT_KEY, balAcc.getBalAcc());
+            saveIntoPref(PREF_BALACCOUNT_KEY, balAcc.getRecId());
         }
     }
     
@@ -58,10 +58,10 @@ public class AccountFilterModel extends FilterModel {
     }
     
     public boolean isSelectedConcreteBalAccount(){
-        return getBalAccountNumber() > 0;
+        return getBalAccountId() > 0;
     }
     
-    public int getBalAccountNumber(){
+    public int getBalAccountId(){
         return getIntFromPref(PREF_BALACCOUNT_KEY);
     }
     

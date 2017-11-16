@@ -50,7 +50,7 @@ public class AccountDataFetchProvider extends DataFetchProvider {
             whereBuilder.and("iso", "=", accountFiletModel.getCurrencyIso());
         }
         if (accountFiletModel.isSelectedConcreteBalAccount()){
-            whereBuilder.and("bal_account", "=", accountFiletModel.getBalAccountNumber());
+            whereBuilder.and("bal_account_id", "=", accountFiletModel.getBalAccountId());
         }
         if (accountFiletModel.isSelectedConcreteClient()){
             whereBuilder.and("client_id", "=", accountFiletModel.getClientId());

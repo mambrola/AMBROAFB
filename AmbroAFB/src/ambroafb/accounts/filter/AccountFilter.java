@@ -88,7 +88,7 @@ public class AccountFilter extends UserInteractiveFilterStage implements Filtera
         currencies.fillComboBoxWithALL(selectCurrency.andThen(increaseFromCurrency));
         
         Consumer<ObservableList<BalanceAccount>> selectBalAcc = (balAccList) -> {
-            Optional<BalanceAccount> optBallAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == model.getBalAccountNumber()).findFirst();
+            Optional<BalanceAccount> optBallAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == model.getBalAccountId()).findFirst();
             if (optBallAcc.isPresent()){
                 balAccounts.setValue(optBallAcc.get());
             }
