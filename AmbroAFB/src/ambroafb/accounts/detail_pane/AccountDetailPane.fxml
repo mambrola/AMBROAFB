@@ -45,23 +45,23 @@
                                         <ADatePicker fx:id="endDate" />
                                     </children>
                                 </VBox>
-                                <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT" style="-fx-background-color: red;" >
+                                <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT" >
                                     <children>
-                                        <VBox alignment="CENTER" style="-fx-background-color: green;" >
+                                        <VBox alignment="CENTER" >
                                             <children>
                                                 <Label text="%current_amount_remain" />
                                             </children>
                                         </VBox>
                                     </children>
                                 </HBox>
-                                <HBox  style="-fx-background-color: red;" >
+                                <HBox  >
                                     <children>
-                                        <VBox fx:id="currentDebitPane" alignment="CENTER_RIGHT"  style="-fx-background-color: green;" >
+                                        <VBox fx:id="currentDebitPane" alignment="CENTER_RIGHT" >
                                             <children>
                                                 <Label fx:id="currentDebitInfo" text="" />
                                             </children>
                                         </VBox>
-                                        <VBox fx:id="currentCreditPane" alignment="CENTER_RIGHT" style="-fx-background-color: green;" >
+                                        <VBox fx:id="currentCreditPane" alignment="CENTER_RIGHT" >
                                             <children>
                                                 <Label fx:id="currentCreditInfo" text="" />
                                             </children>
@@ -86,14 +86,14 @@
                                         <Label text="%starting_amount_remain" />
                                     </children>
                                 </VBox>
-                                <HBox style="-fx-background-color: red;">
+                                <HBox >
                                     <children>
-                                        <VBox fx:id="startingDebitPane" alignment="CENTER_RIGHT" style="-fx-background-color: green;" >
+                                        <VBox fx:id="startingDebitPane" alignment="CENTER_RIGHT" >
                                             <children>
                                                 <Label fx:id="startingDebitInfo" text="" />
                                             </children>
                                         </VBox>
-                                        <VBox fx:id="startingCreditPane" alignment="CENTER_RIGHT" style="-fx-background-color: green;" >
+                                        <VBox fx:id="startingCreditPane" alignment="CENTER_RIGHT" >
                                             <children>
                                                 <Label fx:id="startingCreditInfo" text="" />
                                             </children>
