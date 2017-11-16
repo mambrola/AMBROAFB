@@ -39,13 +39,8 @@ public class ParamGeneralDataFetchProvider extends DataFetchProvider {
     public ParamGeneralDBResponse getParamsGeneral(String procedureName, JSONObject params) throws IOException, AuthServerException{
         ParamGeneralDBResponse response = new ParamGeneralDBResponse();
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        System.out.println("params: " + params.toString());
         JSONArray resultDB = dbClient.callProcedureAndGetAsJson(procedureName, dbClient.getLang(), params);
-
         String generalParams = authclient.Utils.toCamelCase(resultDB).toString();
-
-        System.out.println("params general from DB: " + generalParams);
-
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<ParamGeneral> generalParamsList = mapper.readValue(generalParams, mapper.getTypeFactory().constructCollectionType(ArrayList.class, ParamGeneral.class));
         response.setParamGenerals(generalParamsList);

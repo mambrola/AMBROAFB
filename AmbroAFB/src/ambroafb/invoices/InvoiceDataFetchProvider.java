@@ -6,7 +6,6 @@
 package ambroafb.invoices;
 
 import ambroafb.clients.Client;
-import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.DataFetchProvider;
@@ -81,9 +80,9 @@ public class InvoiceDataFetchProvider extends DataFetchProvider {
     }
 
     @Override
-    public Invoice getOneFromDB(int recId) throws IOException, AuthServerException {
+    public Invoice getOneFromDB(int recId) throws Exception {
         JSONObject params = new ConditionBuilder().where().and(DB_ID, "=", recId).condition().build();
-        Invoice invoiceFromDB = DBUtils.getObjectFromDB(Invoice.class, DB_VIEW_NAME, params);
+        Invoice invoiceFromDB = getObjectFromDB(Invoice.class, DB_VIEW_NAME, params);
         
         Consumer<List<LicenseFinance>> licensesFianceConsumer = (List<LicenseFinance> licenseFinances) -> {
             invoiceFromDB.setLicenseFinances(licenseFinances);

@@ -82,27 +82,6 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     
-//    public static ArrayList<BalanceAccount> getAllFromDB(){
-//        JSONObject params = new ConditionBuilder().build();
-//        System.out.println("params: " + params);
-//        return DBUtils.getObjectsListFromDB(BalanceAccount.class, DB_TABLE_NAME, params);
-//    }
-    
-//    public static BalanceAccount getOneFromDB(int recId){
-//        JSONObject params = new ConditionBuilder().where().and("rec_id", "=", recId).condition().build();
-//        return DBUtils.getObjectFromDB(BalanceAccount.class, DB_TABLE_NAME, params);
-//    }
-    
-//    public static BalanceAccount saveOneToDB(BalanceAccount balAccount){
-//        if (balAccount == null) return null;
-//        return DBUtils.saveObjectToDBSimple(balAccount, DB_TABLE_NAME);
-//    }
-    
-//    public static boolean deleteOneFromDB(int id){
-//        return DBUtils.deleteObjectFromDB(DB_DELETE_PROC_NAME, DB_TABLE_NAME, id);
-//    }
-    
-    
     // Properties getters:
     public StringProperty balAccProperty(){
         return balAcc;
