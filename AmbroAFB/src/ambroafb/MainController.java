@@ -412,10 +412,10 @@ public class MainController implements Initializable {
     }
     
     @FXML private void balAccounts(ActionEvent event) {
-        String stageTitle = "balanceaccounts";
+        String stageTitle = "bal_accounts";
         Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BalanceAccount.class.getSimpleName());
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
-            BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage);
+            BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage, BalanceAccount.class, stageTitle);
             balAccounts.setEPManager(new BalAccountManager());
             balAccounts.getController().reAssignTable(null);
             balAccounts.show();

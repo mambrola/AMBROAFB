@@ -7,18 +7,18 @@ package ambroafb.balance_accounts;
 
 import ambro.AFilterableTreeTableView;
 import ambroafb.general.editor_panel.EditorPanel;
-import ambroafb.general.editor_panel.EditorPanelController;
+import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
+import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.MaskerPane;
 
@@ -27,45 +27,37 @@ import org.controlsfx.control.MaskerPane;
  *
  * @author dato
  */
-public class BalanceAccountsController implements Initializable {
+public class BalanceAccountsController extends ListingController {
 
     @FXML
-    private AFilterableTreeTableView<EditorPanelable> aview; // this name is need for editorPanel
+    private AFilterableTreeTableView<EditorPanelable> aview;
     
     @FXML
     private MaskerPane masker;
     
-    @FXML
-    private EditorPanelController editorPanelController;
-            
-    
     private final ObservableList<BalanceAccount> roots = FXCollections.observableArrayList();
     
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    protected void componentsInitialize(URL url, ResourceBundle rb) {
         aview.setBundle(rb);
-        editorPanelController.setOuterController(this);
-        editorPanelController.buttonsMainPropertysBinder(aview);
-        editorPanelController.setTreeTable(aview);
         aview.getColumns().stream().forEach((column) -> {
             column.setSortable(false);
         });
     }
 
-    public void reAssignTable(Supplier<List<EditorPanelable>> fetchBalAccsData){
-        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+    
+    @Override
+    public void reAssignTable(FilterModel model) {
         roots.clear();
         aview.removeAll();
-        new Thread(new BalanceAccountsRunnable(fetchBalAccsData, selectedIndex)).start();
+        new Thread(new BalanceAccountsRunnable(model)).start();
     }
     
-    public EditorPanelController getEditorPanelController(){
-        return editorPanelController;
+    @Override
+    public void addListWith(Class content) {
+        aview.initialize(content);
+        editorPanel.buttonsMainPropertysBinder(aview);
+        editorPanel.setTreeTable(aview);
     }
     
     /**
@@ -160,16 +152,14 @@ public class BalanceAccountsController implements Initializable {
                currAccCodeAfterPrefix.charAt(0) == '0' && 
                searchCodeAfterPrefix.charAt(0) != '0';
     }
-    
+
     
     public class BalanceAccountsRunnable implements Runnable {
-
-        private final Supplier<List<EditorPanelable>> supplier;
-        private final int selectedIndex;
         
-        public BalanceAccountsRunnable(Supplier<List<EditorPanelable>> supplier, int selectedIndex){
-            this.supplier = supplier;
-            this.selectedIndex = selectedIndex;
+        private FilterModel model;
+        
+        public BalanceAccountsRunnable(FilterModel model) {
+            this.model = model;
         }
         
         @Override
@@ -177,19 +167,24 @@ public class BalanceAccountsController implements Initializable {
             Platform.runLater(() -> {
                 masker.setVisible(true); 
             });
-            supplier.get().stream().forEach((account) -> {
-                makeTreeStructure((BalanceAccount) account);
-            });
-            Platform.runLater(() -> {
-                roots.stream().forEach((account) -> {
-                    aview.append(account);
+            
+            try {
+                List<BalanceAccount> data = (model == null) ? dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL) : dataFetchProvider.getFilteredBy(model);
+                data.stream().forEach((account) -> {
+                    makeTreeStructure((BalanceAccount) account);
                 });
-                aview.expand(1);
-                masker.setVisible(false);
-                if (selectedIndex >= 0){
-                    aview.getSelectionModel().select(selectedIndex);
-                }
-            });
+                Platform.runLater(() -> {
+                    roots.stream().forEach((account) -> {
+                        aview.append(account);
+                    });
+                    aview.expand(1);
+                });
+            } catch (Exception ex) {
+            } finally {
+                Platform.runLater(() -> {
+                    masker.setVisible(false);
+                });
+            }
         }
         
         

@@ -13,14 +13,18 @@
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="ambroafb.balance_accounts.BalanceAccountsController">
     <top>
-        <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
+        
     </top>
     <center>
         <StackPane >
             <children>
-                <AFilterableTreeTableView fx:id="aview" initializer="ambroafb.balance_accounts.BalanceAccount" styleClass="unicode" /> 
+                <AFilterableTreeTableView fx:id="aview" styleClass="unicode" /> 
                 <MaskerPane fx:id="masker" />
             </children>
         </StackPane>
     </center>
 </BorderPane>
+
+
+<!--<fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>-->
+<!--initializer="ambroafb.balance_accounts.BalanceAccount"-->

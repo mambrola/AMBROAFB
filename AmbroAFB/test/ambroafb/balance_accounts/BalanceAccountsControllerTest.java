@@ -5,15 +5,9 @@
  */
 package ambroafb.balance_accounts;
 
-import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -58,35 +52,6 @@ public class BalanceAccountsControllerTest {
     @After
     public void tearDown() {
         spyList.clear();
-    }
-
-    /**
-     * Test of reAssignTable method, of class BalanceAccountsController.
-     */
-    @Test @Ignore
-    public void testReAssignTable() {
-        Supplier<List<EditorPanelable>> supplier = () -> spyList;
-        instance.reAssignTable(supplier);
-        
-        try {
-            Thread.currentThread().sleep(500);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(BalanceAccountsControllerTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        Mockito.verify(supplier).get();
-    }
-
-    /**
-     * Test of accountAlreadyExistForCode method, of class BalanceAccountsController.
-     */
-    @Test @Ignore
-    public void testAccountAlreadyExistForCode() {
-        Supplier<List<EditorPanelable>> supplier = () -> spyList;
-        instance.reAssignTable(supplier);
-        EditorPanelable newElem = createBalAccount(1, 1000, "some desc");
-        EDITOR_BUTTON_TYPE type = EDITOR_BUTTON_TYPE.ADD;
-        Assert.assertTrue(instance.accountAlreadyExistForCode(newElem, type));
     }
 
     /**

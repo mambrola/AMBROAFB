@@ -5,12 +5,10 @@
  */
 package ambroafb.balance_accounts;
 
-import ambroafb.general.SceneUtils;
+import ambroafb.general.editor_panel.EditorPanel;
+import ambroafb.general.editor_panel.standard.StandardEditorPanel;
 import ambroafb.general.interfaces.ListingStage;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  *
@@ -18,24 +16,12 @@ import javafx.stage.WindowEvent;
  */
 public class BalanceAccounts extends ListingStage {
     
-    private BalanceAccountsController balanceAccountsController;
-    
-    public BalanceAccounts(Stage owner){
-        super(owner, BalanceAccount.class.getSimpleName(),  "bal_accounts");
-        
-        Scene scene = SceneUtils.createScene("/ambroafb/balance_accounts/BalanceAccounts.fxml", null);
-        balanceAccountsController = (BalanceAccountsController) scene.getProperties().get("controller");
-        this.setScene(scene);
-        
-        onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
-            balanceAccountsController.getEditorPanelController().getExitButton().getOnAction().handle(null);
-            if(event != null) event.consume();
-        });
-        
-        super.setFeatures(() -> balanceAccountsController.getEditorPanelController().getPanelMinWidth());
+    public BalanceAccounts(Stage owner, Class tableContent, String stageTitleBundleKey){
+        this(owner, tableContent, stageTitleBundleKey, new StandardEditorPanel());
     }
     
-    public BalanceAccountsController getBalanceAccountsController(){
-        return balanceAccountsController;
+    public BalanceAccounts(Stage owner, Class tableContent, String stageTitleBundleKey, EditorPanel editorPanel){
+        super(owner, "/ambroafb/balance_accounts/BalanceAccounts.fxml", tableContent, stageTitleBundleKey, editorPanel);
     }
+    
 }
