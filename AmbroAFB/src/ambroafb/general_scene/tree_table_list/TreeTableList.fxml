@@ -13,12 +13,12 @@
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="ambroafb.general_scene.tree_table_list.TreeTableListController">
     <top>
-        <fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>
+        
     </top>
     <center>
         <StackPane fx:id="containerPane" >
             <children>
-                <!--<AFilterableTreeTableView fx:id="aview" initializer="ambroafb.balance_accounts.BalanceAccount" styleClass="unicode" />--> 
+                <AFilterableTreeTableView fx:id="aview" styleClass="unicode" /> 
                 <MaskerPane fx:id="masker" visible="false" text="%loading"/>
             </children>
         </StackPane>

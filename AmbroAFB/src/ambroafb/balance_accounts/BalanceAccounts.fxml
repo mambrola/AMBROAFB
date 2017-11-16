@@ -24,7 +24,3 @@
         </StackPane>
     </center>
 </BorderPane>
-
-
-<!--<fx:include fx:id="editorPanel" source="/ambroafb/general/editor_panel/EditorPanel.fxml"/>-->
-<!--initializer="ambroafb.balance_accounts.BalanceAccount"-->

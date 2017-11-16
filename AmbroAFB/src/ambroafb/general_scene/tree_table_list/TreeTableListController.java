@@ -8,8 +8,6 @@ package ambroafb.general_scene.tree_table_list;
 import ambro.AFilterableTreeTableView;
 import ambroafb.balance_accounts.*;
 import ambroafb.general.editor_panel.EditorPanel;
-import ambroafb.general.editor_panel.EditorPanelController;
-import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.ListingController;
@@ -17,13 +15,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.layout.StackPane;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.MaskerPane;
 
@@ -34,47 +28,30 @@ import org.controlsfx.control.MaskerPane;
  */
 public class TreeTableListController extends ListingController {
 
-//    @FXML
-    private AFilterableTreeTableView<EditorPanelable> aview; // this name is need for editorPanel
+    @FXML
+    private AFilterableTreeTableView<EditorPanelable> aview;
     
     @FXML
     private MaskerPane masker;
-    
-    @FXML
-    private EditorPanelController editorPanelController;
-    
-    @FXML
-    private StackPane containerPane;
-            
     
     private final ObservableList<BalanceAccount> roots = FXCollections.observableArrayList();
     
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        
+        aview.setBundle(rb);
+        aview.getColumns().stream().forEach((column) -> {
+            column.setSortable(false);
+        });
     }
-    
-//    @Override
-//    public void reAssignTable(Supplier<List<EditorPanelable>> fetchData){
-////        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
-////        roots.clear();
-////        aview.removeAll();
-////        new Thread(new BalanceAccountsFromDB(roots, selectedIndex)).start();
-//    }
     
     @Override
     public void reAssignTable(FilterModel model){
-//        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
-//        roots.clear();
-//        aview.removeAll();
-//        new Thread(new BalanceAccountsFromDB(roots, selectedIndex)).start();
+        roots.clear();
+        aview.removeAll();
+//        new Thread(new BalanceAccountsController.BalanceAccountsRunnable(model)).start();
     }
     
-//    @Override
-//    public EditorPanelController getEditorPanelController(){
-//        return editorPanelController;
-//    }
     
     /**
      * The method checks already exist account in tree or not. The logic is following:
@@ -171,69 +148,9 @@ public class TreeTableListController extends ListingController {
     
     @Override
     public void addListWith(Class content) {
-        aview = new AFilterableTreeTableView<>(content);
-        aview.setId("aview");
-        aview.setBundle(bundle);
-        editorPanelController.buttonsMainPropertysBinder(aview);
-        editorPanelController.setTreeTable(aview);
-        aview.getColumns().stream().forEach((column) -> {
-            column.setSortable(false);
-        });
-
-        containerPane.getChildren().add(0, aview);
+        aview.initialize(content);
+        editorPanel.buttonsMainPropertysBinder(aview);
+        editorPanel.setTreeTable(aview);
     }
 
-    @Override
-    public EditorPanel getEditorPanel() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    
-    private class BalanceAccountsFromDB implements Runnable {
-
-        private final ObservableList<BalanceAccount> roots;
-        private final int selectedIndex;
-        
-        public BalanceAccountsFromDB(ObservableList<BalanceAccount> roots, int selectedIndex){
-            this.roots = roots;
-            this.selectedIndex = selectedIndex;
-        }
-        
-        @Override
-        public void run() {
-            try {
-                Platform.runLater(() -> {
-                    masker.setVisible(true);
-                });
-                dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL).stream().forEach((account) -> {
-                    makeTreeStructure((BalanceAccount)account);
-                });
-                Platform.runLater(() -> {
-                    roots.stream().forEach((account) -> {
-                        aview.append(account);
-                    });
-                    aview.expand(1);
-                    masker.setVisible(false);
-                    if (selectedIndex >= 0){
-                        aview.getSelectionModel().select(selectedIndex);
-                    }
-                });
-            } catch (Exception ex) {
-                Logger.getLogger(TreeTableListController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        
-        private void makeTreeStructure(BalanceAccount account) {
-            int accountCode = account.getBalAcc();
-            if (accountCode % 1000 == 0) {
-                    roots.add(account);
-            } else {
-                BalanceAccount parentAccount = getParentFor((BalanceAccount)aview.getRoot().getValue(), "" + accountCode);
-                if (parentAccount != null) {
-                    parentAccount.childrenAccounts.add(account);
-                }
-            }
-        }
-    }
 }
