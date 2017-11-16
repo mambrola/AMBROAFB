@@ -38,23 +38,18 @@ public class DocInOrderDataChangeProvider extends DataChangeProvider {
 
     @Override
     public List<Doc> editOneToDB(EditorPanelable object) throws Exception {
-        return saveOneToDB(object);
+        ArrayList<Doc> result = new ArrayList<>();
+        DocInOrder newComponent = (DocInOrder) object;
+        Doc parentDoc = newComponent.getDocs().stream().filter((doc) -> doc.isParentDoc()).findFirst().get();
+        Doc newDocFromDB = DBUtils.saveCustomDoc(parentDoc);
+        result.add(newDocFromDB);
+        return result;
     }
 
     
     @Override
     public List<Doc> saveOneToDB(EditorPanelable object) throws Exception {
-        ArrayList<Doc> result = new ArrayList<>();
-        DocInOrder newComponent = (DocInOrder) object;
-        if (newComponent.getDocs().isEmpty()){
-            result = saveMonthlyAccrual(newComponent.docDateProperty().get());
-        }
-        else { //  შეიძლება აღარ გახდეს საჭირო. თუ Custom-ია მაშინ დიალოგიც custom-ის გაკეთდებოდა manager-ში.
-            Doc parentDoc = newComponent.getDocs().stream().filter((doc) -> doc.isParentDoc()).findFirst().get();
-            Doc newDocFromDB = DBUtils.saveCustomDoc(parentDoc);
-            result.add(newDocFromDB);
-        }
-        return result;
+        return saveMonthlyAccrual(((DocInOrder) object).docDateProperty().get());
     }
     
     
