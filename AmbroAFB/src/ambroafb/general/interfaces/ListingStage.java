@@ -9,7 +9,6 @@ import ambroafb.general.SceneUtils;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.editor_panel.EditorPanel;
-import ambroafb.general.editor_panel.standard.StandardEditorPanel;
 import java.util.function.Supplier;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -33,17 +32,6 @@ public abstract class ListingStage extends UserInteractiveStage {
     public ListingStage(Stage owner, String nameForPath, String localizableTitle){
         super(owner, nameForPath, localizableTitle, "/images/list.png");
         this.setResizable(true);
-    }
-    
-    /**
-     * @param owner The owner stage.
-     * @param fxmlPath The full path of scene FXML file.
-     * @param contentClass The class that type of objects putting in table.
-     * @param localizableTitle The key which will convert an appropriate language by bundle.
-     */
-    @Deprecated
-    public ListingStage(Stage owner, String fxmlPath, Class contentClass, String localizableTitle){
-        this(owner, fxmlPath, contentClass, localizableTitle, new StandardEditorPanel());
     }
     
     /**

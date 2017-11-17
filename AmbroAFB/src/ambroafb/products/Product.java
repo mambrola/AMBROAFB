@@ -17,6 +17,7 @@ import ambroafb.general.mapeditor.MapEditorElement;
 import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.List;
 import javafx.beans.property.BooleanProperty;
@@ -220,6 +221,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return this.currency.get().getIso();
     }
     
+    @JsonIgnore
     public ObservableList<ProductDiscount> getDiscounts() {
         return discounts;
     }
@@ -272,6 +274,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         this.currency.get().setIso(iso);
     }
     
+    @JsonProperty
     public void setDiscounts(Collection<ProductDiscount> discounts) {
         discountsForMapEditor.setAll(discounts);
     }

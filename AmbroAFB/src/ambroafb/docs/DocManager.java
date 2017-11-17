@@ -30,8 +30,7 @@ public class DocManager extends EditorPanelableManager {
 
     @Override
     public Filterable getFilterFor(Stage owner) {
-        DocFilter filter = new DocFilter(owner);
-        return filter;
+        return new DocFilter(owner);
     }
     
 }

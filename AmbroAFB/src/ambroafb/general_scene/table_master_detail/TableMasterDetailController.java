@@ -97,7 +97,7 @@ public class TableMasterDetailController extends ListingController {
         tableView = new AFilterableTableView<>(content);
         tableView.setId("aview");
         tableView.setBundle(bundle);
-        editorPanel.buttonsMainPropertysBinder(tableView);
+        editorPanel.buttonsMainPropertiesBinder(tableView);
         editorPanel.setTableDataList(tableView, contents);
         ((StackPane)splitPane.getItems().get(0)).getChildren().add(0, tableView);
         

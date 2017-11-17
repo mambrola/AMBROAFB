@@ -75,7 +75,7 @@ public class TableListController extends ListingController {
         aview = new AFilterableTableView<>(content);
         aview.setId("aview");
         aview.setBundle(bundle);
-        editorPanel.buttonsMainPropertysBinder(aview);
+        editorPanel.buttonsMainPropertiesBinder(aview);
         editorPanel.setTableDataList(aview, contents);
         containerPane.getChildren().add(0, aview);
     }

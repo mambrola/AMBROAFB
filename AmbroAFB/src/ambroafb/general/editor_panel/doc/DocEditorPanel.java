@@ -6,7 +6,6 @@
 package ambroafb.general.editor_panel.doc;
 
 import ambroafb.docs.Doc;
-import ambroafb.docs.filter.DocFilter;
 import ambroafb.docs.types.DocManagersFactory;
 import ambroafb.docs.types.conversion.ConversionManager;
 import ambroafb.docs.types.custom.CustomManager;
@@ -218,9 +217,9 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
     @Override
     public void refresh(ActionEvent event) {
         ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-        Filterable filter = new DocFilter(editorPanelSceneStage);
+        Filterable filter = editorPanelSceneStage.getEPManager().getFilterFor(editorPanelSceneStage);
         FilterModel model = filter.getResult();
-        if (model != null && !model.isCanceled()){
+        if (model == null || !model.isCanceled()){
             editorPanelSceneStage.getController().reAssignTable(model);
         }
         refresh.setSelected(false);

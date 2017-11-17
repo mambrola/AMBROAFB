@@ -193,7 +193,7 @@ public abstract class EditorPanel extends HBox implements Initializable {
         treeTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
     }
     
-    public void buttonsMainPropertysBinder (AView<EditorPanelable> aView){
+    public void buttonsMainPropertiesBinder (AView<EditorPanelable> aView){
         BooleanBinding allowModify = Bindings.createBooleanBinding(() -> {
                                                                     if (aView.getCustomSelectedItem() == null){
                                                                         return true;

@@ -56,7 +56,7 @@ public class BalanceAccountsController extends ListingController {
     @Override
     public void addListWith(Class content) {
         aview.initialize(content);
-        editorPanel.buttonsMainPropertysBinder(aview);
+        editorPanel.buttonsMainPropertiesBinder(aview);
         editorPanel.setTreeTable(aview);
     }
     
@@ -191,7 +191,7 @@ public class BalanceAccountsController extends ListingController {
         private void makeTreeStructure(BalanceAccount account) {
             int accountCode = account.getBalAcc();
             if (accountCode % 1000 == 0) {
-                    roots.add(account);
+                roots.add(account);
             } else {
                 BalanceAccount parentAccount = getParentFor((BalanceAccount)aview.getRoot().getValue(), "" + accountCode);
                 if (parentAccount != null) {

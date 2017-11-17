@@ -52,8 +52,6 @@ public class BalanceAccount extends EditorPanelable {
     public final ObservableList<String> rowStyle = FXCollections.observableArrayList();
     
     @JsonIgnore
-//    public static final String DB_TABLE_NAME = "bal_accounts";
-//    public static final String DB_DELETE_PROC_NAME = "general_delete";
     public static final String DESCRIP_DELIMITER = " - ";
     
     private static final int ACT = 1, PAS = 2, INDETERMINATE = 3;
