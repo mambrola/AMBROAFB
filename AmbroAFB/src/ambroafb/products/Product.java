@@ -371,12 +371,12 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
                 Utils.compareListsByElemOrder(getDiscounts(), productBackup.getDiscounts());
     }
 
-    @Override
+    @Override @JsonIgnore
     public String getDrawableName() {
         return getDescrip();
     }
 
-    @Override
+    @Override @JsonIgnore
     public String getUniqueIdentifier() {
         return "" + getRecId();
     }
