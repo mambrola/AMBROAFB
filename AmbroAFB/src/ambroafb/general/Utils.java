@@ -219,16 +219,20 @@ public class Utils {
         return acc == null ? new Account() : acc;
     }
 
-    public static String avoidNullAndReturnString(Object object) {
-        return object == null ? "" : (String) object;
+    public static String avoidNullAndReturnString(String object) {
+        return object == null ? "" : object;
     }
 
-    public static int avoidNullAndReturnInt(Object object) {
-        return object == null ? 0 : (int) object;
+    public static Float avoidNullAndReturnFloat(Float object) {
+        return object == null ? 0 : object;
     }
 
-    public static boolean avoidNullAndReturnBoolean(Object object) {
-        return object == null ? false : (boolean) object;
+    public static Integer avoidNullAndReturnInt(Integer object) {
+        return object == null ? 0 : object;
+    }
+
+    public static boolean avoidNullAndReturnBoolean(Boolean object) {
+        return object == null ? false : object;
     }
 
     public static StringBinding avoidNull(StringProperty prop) {

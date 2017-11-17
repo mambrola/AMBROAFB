@@ -5,9 +5,7 @@
  */
 package ambroafb.currencies;
 
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.DataFetchProvider;
-import authclient.db.ConditionBuilder;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -17,8 +15,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  *
@@ -133,9 +129,7 @@ public class CurrencyComboBox extends ComboBox<Currency>{
         @Override
         public void run() {
             try {
-                JSONArray jsonArr = GeneralConfig.getInstance().getDBClient().select("basic_params", new ConditionBuilder().where().and("param", "=", "rates_basic_iso").condition().build());
-                String removedIso = (String)((JSONObject)jsonArr.opt(0)).opt("value");
-                removeCurrency(removedIso);
+                removeCurrency(dataFetchProvider.getBasicIso());
             } catch (Exception ex) {
                 Logger.getLogger(CurrencyComboBox.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -13,6 +13,8 @@ import ambroafb.accounts.filter.AccountFilter;
 import ambroafb.balance_accounts.BalAccountManager;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.balance_accounts.BalanceAccounts;
+import ambroafb.balances.Balance;
+import ambroafb.balances.BalanceManager;
 import ambroafb.clients.Client;
 import ambroafb.clients.ClientManager;
 import ambroafb.clients.filter.ClientFilter;
@@ -40,6 +42,7 @@ import ambroafb.general.interfaces.Filterable;
 import ambroafb.general_scene.table_list.TableList;
 import ambroafb.general_scene.table_master_detail.TableMasterDetail;
 import ambroafb.general_scene.table_master_detail.TableMasterDetailController;
+import ambroafb.general_scene.tree_table_list.TreeTableList;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.InvoiceManager;
 import ambroafb.invoices.filter.InvoiceFilter;
@@ -59,9 +62,13 @@ import ambroafb.products.Product;
 import ambroafb.products.ProductManager;
 import authclient.monitoring.MonitoringClient;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -426,7 +433,29 @@ public class MainController implements Initializable {
         }
     }
     
-    @FXML private void balance(ActionEvent event) {}
+    @FXML private void balance(ActionEvent event) {
+        String stageTitle = "balance";
+        Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Balance.class.getSimpleName());
+        if (balAccountsStage == null || !balAccountsStage.isShowing()){
+            TreeTableList balances = new TreeTableList(AmbroAFB.mainStage, Balance.class, stageTitle);
+            // Change to SpectatorPanel ---
+            balances.getController().getEditorPanel().removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID);
+            
+            Function<List<EditorPanel>, ObservableList<EditorPanel>> makeTree = (balanseList) -> {
+                ObservableList<EditorPanel> roots = FXCollections.observableArrayList();
+                
+                return roots;
+            };
+            balances.setEPManager(new BalanceManager());
+            balances.getController().reAssignTable(null);
+            balances.show();
+        }
+        else {
+            balAccountsStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, balAccountsStage);
+        }
+    }
+    
     @FXML private void income_statement(ActionEvent event) {}
     @FXML private void other(ActionEvent event) {}
     

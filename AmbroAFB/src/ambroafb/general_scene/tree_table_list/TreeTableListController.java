@@ -6,12 +6,15 @@
 package ambroafb.general_scene.tree_table_list;
 
 import ambro.AFilterableTreeTableView;
-import ambroafb.balance_accounts.*;
+import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Function;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -30,8 +33,8 @@ public class TreeTableListController extends ListingController {
     @FXML
     private MaskerPane masker;
     
-    private final ObservableList<BalanceAccount> roots = FXCollections.observableArrayList();
-    
+    private final ObservableList<EditorPanelable> roots = FXCollections.observableArrayList();
+    private Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn;
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
@@ -43,9 +46,24 @@ public class TreeTableListController extends ListingController {
     
     @Override
     public void reAssignTable(FilterModel model){
-        roots.clear();
+        masker.setVisible(true);
         aview.removeAll();
-//        new Thread(new BalanceAccountsController.BalanceAccountsRunnable(model)).start();
+        new Thread(() -> {
+            try {
+                List<EditorPanelable> data = (model == null) ? dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL) 
+                                                             : dataFetchProvider.getFilteredBy(model);
+                roots.setAll(treeMakerFn.apply(data));
+                roots.stream().forEach((elem) -> {
+                    aview.append(elem);
+                });
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+            }
+            
+            Platform.runLater(() -> {
+                masker.setVisible(false);
+            });
+        }).start();
     }
     
     @Override
@@ -55,4 +73,9 @@ public class TreeTableListController extends ListingController {
         editorPanel.setTreeTable(aview);
     }
 
+    public <T> void setTreeMaker(Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn){
+        this.treeMakerFn = treeMakerFn;
+    }
+    
+    
 }

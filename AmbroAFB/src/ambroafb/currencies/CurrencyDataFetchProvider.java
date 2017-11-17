@@ -5,11 +5,15 @@
  */
 package ambroafb.currencies;
 
+import ambroafb.general.GeneralConfig;
+import ambroafb.general.exceptions.ExceptionsFactory;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
+import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -33,7 +37,7 @@ public class CurrencyDataFetchProvider extends DataFetchProvider {
     }
 
     @Override
-    public Currency getOneFromDB(int recId) throws Exception {
+    public Currency getOneFromDB(int recId) throws Exception  {
         ConditionBuilder conditionBuilder = new ConditionBuilder().where().and(DB_ID, "=", recId).condition();
         return getOneFromDBHelper(conditionBuilder);
     }
@@ -51,5 +55,15 @@ public class CurrencyDataFetchProvider extends DataFetchProvider {
     
     public List<String> getAllIsoFromDB() throws Exception {
         return getFilteredBy(DataFetchProvider.PARAM_FOR_ALL).stream().map((Currency currency) -> currency.getIso()).collect(Collectors.toList());
+    }
+    
+    public String getBasicIso() throws Exception {
+        JSONArray jsonArr;
+        try {
+            jsonArr = GeneralConfig.getInstance().getDBClient().select("basic_params", new ConditionBuilder().where().and("param", "=", "rates_basic_iso").condition().build());
+            return (String)((JSONObject)jsonArr.opt(0)).opt("value");
+        } catch (AuthServerException ex) {
+            throw ExceptionsFactory.getAppropriateException(ex);
+        }
     }
 }
