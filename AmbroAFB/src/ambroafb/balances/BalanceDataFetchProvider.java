@@ -36,6 +36,7 @@ public class BalanceDataFetchProvider extends DataFetchProvider {
             date = DateConverter.getInstance().parseDate(params.optString(DATE_JSON_KEY));
             iso = params.optString(ISO_JSON_KEY);
         }
+        System.out.println(String.format("dbClient.getLang(): %s, date: %s, iso: %s", dbClient.getLang(), date.toString(), iso));
         return callProcedure(Balance.class, DB_FETCH_BALANCES_PROCEDURE, dbClient.getLang(), date, iso);
     }
 

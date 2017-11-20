@@ -25,7 +25,7 @@ public class Balance extends EditorPanelable {
 
     private int accountId, balAcc, parentRecId, level;
     
-    @AView.Column(title = "%descrip", width = "100")
+    @AView.Column(title = "%descrip", width = "360")
     private final StringProperty descrip;
     
     @AView.Column(title = "%account", width = "100", styleClass = "textRight")
@@ -204,5 +204,11 @@ public class Balance extends EditorPanelable {
     public String toStringForSearch() {
         return "";
     }
+
+    @Override
+    public String toString() {
+        return "Balance{" + "id: " + getRecId() + ", accountId=" + accountId + ", balAcc=" + balAcc + ", parentRecId=" + parentRecId + ", level=" + level + ", descrip=" + descrip.get() + ", accountIso=" + accountIso.get() + ", active=" + active.get() + ", passive=" + passive.get() + ", activeIsRed=" + activeIsRed + ", passiveIsRed=" + passiveIsRed + '}';
+    }
+    
     
 }

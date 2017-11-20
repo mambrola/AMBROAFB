@@ -35,6 +35,7 @@ public class TreeTableListController extends ListingController {
     
     private final ObservableList<EditorPanelable> roots = FXCollections.observableArrayList();
     private Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn;
+    private int expandDepth = 1;
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
@@ -56,6 +57,7 @@ public class TreeTableListController extends ListingController {
                 roots.stream().forEach((elem) -> {
                     aview.append(elem);
                 });
+                aview.expand(expandDepth);
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
             }
@@ -73,8 +75,9 @@ public class TreeTableListController extends ListingController {
         editorPanel.setTreeTable(aview);
     }
 
-    public <T> void setTreeMaker(Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn){
+    public void setTreeFeatures(Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn, int depth){
         this.treeMakerFn = treeMakerFn;
+        expandDepth = depth;
     }
     
     
