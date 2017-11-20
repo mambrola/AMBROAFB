@@ -16,6 +16,7 @@ import ambroafb.general.interfaces.TableColumnWidths;
 import ambroafb.general.mapeditor.MapEditorElement;
 import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
@@ -36,6 +37,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -243,6 +247,16 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return Utils.getIntValueFor(testingDays.get());
     }
     
+    @JsonGetter("sets_for_separate_saving")
+    public JSONObject getSeperateSaving(){
+        JSONObject separateSaving = new JSONObject();
+        JSONArray array = new JSONArray(discounts);
+        try {
+            separateSaving.putOpt("descrip", array);
+        } catch (JSONException ex) {
+        }
+        return separateSaving;
+    }
 
     
     // Setters:

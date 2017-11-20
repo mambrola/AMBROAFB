@@ -14,11 +14,12 @@ import ambroafb.general.interfaces.EditorPanelable;
  */
 public class MerchandiseDataChangeProvider extends DataChangeProvider {
 
-    private final String DB_TABLE_NAME = "process_merchandises";
+    private final String INSERT_UPDATE_PROCEDURE = "process_merchandise_insert_update";
+    private final String DELETE_PROCEDURE = "process_merchandise_delete";
     
     @Override
     public Merchandise deleteOneFromDB(int recId) throws Exception {
-        generalDelete(DB_TABLE_NAME, recId);
+        generalDelete(DELETE_PROCEDURE, recId);
         return null;
     }
 
@@ -29,7 +30,7 @@ public class MerchandiseDataChangeProvider extends DataChangeProvider {
 
     @Override
     public Merchandise saveOneToDB(EditorPanelable object) throws Exception {
-        return saveSimple((Merchandise)object, DB_TABLE_NAME, true);
+        return saveObjectByProcedure(object, INSERT_UPDATE_PROCEDURE);
     }
     
 }
