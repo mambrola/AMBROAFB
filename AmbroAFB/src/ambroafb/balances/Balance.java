@@ -202,7 +202,7 @@ public class Balance extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return "";
+        return getDescrip() + " " + getBalAcc();
     }
 
     @Override

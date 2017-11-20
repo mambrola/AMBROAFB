@@ -441,7 +441,7 @@ public class MainController implements Initializable {
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
             TreeTableList balances = new TreeTableList(AmbroAFB.mainStage, Balance.class, stageTitle);
             // Change to SpectatorPanel ---
-            balances.getController().getEditorPanel().removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID);
+            balances.getController().getEditorPanel().removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID, EditorPanel.SEARCH_FXID);
             
             Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMaker = (balanseList) -> {
                 ObservableList<EditorPanelable> roots = FXCollections.observableArrayList();
