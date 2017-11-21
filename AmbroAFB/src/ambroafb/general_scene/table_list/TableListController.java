@@ -17,7 +17,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.layout.StackPane;
 import org.controlsfx.control.MaskerPane;
 
 /**
@@ -27,20 +26,18 @@ import org.controlsfx.control.MaskerPane;
  */
 public class TableListController extends ListingController {
 
+    @FXML
     private AFilterableTableView<EditorPanelable> aview;
     
     @FXML
     private MaskerPane masker;
-    
-    @FXML
-    private StackPane containerPane;
     
     private final ObservableList<EditorPanelable> contents = FXCollections.observableArrayList();
     
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        
+        aview.setBundle(rb);
     }
     
     @Override
@@ -72,12 +69,9 @@ public class TableListController extends ListingController {
     
     @Override
     public void addListWith(Class content) {
-        aview = new AFilterableTableView<>(content);
-        aview.setId("aview");
-        aview.setBundle(bundle);
+        aview.initialize(content);
         editorPanel.buttonsMainPropertiesBinder(aview);
         editorPanel.setTableDataList(aview, contents);
-        containerPane.getChildren().add(0, aview);
     }
     
 }

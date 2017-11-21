@@ -23,7 +23,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.StackPane;
 import org.controlsfx.control.MaskerPane;
 
 /**
@@ -33,7 +32,8 @@ import org.controlsfx.control.MaskerPane;
  */
 public class TableMasterDetailController extends ListingController {
 
-    private AFilterableTableView<EditorPanelable> tableView;
+    @FXML
+    private AFilterableTableView<EditorPanelable> aview;
     
 //    @FXML
 //    private MasterDetailPane masterDetailPane;
@@ -68,7 +68,7 @@ public class TableMasterDetailController extends ListingController {
 
     @Override
     public void reAssignTable(FilterModel model) {
-        int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
+        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         contents.clear();
         
         new Thread(() -> {
@@ -86,7 +86,7 @@ public class TableMasterDetailController extends ListingController {
             Platform.runLater(() -> {
                 masterMasker.setVisible(false);
                 if (selectedIndex >= 0){
-                    tableView.getSelectionModel().select(selectedIndex);
+                    aview.getSelectionModel().select(selectedIndex);
                 }
             });
         }).start();
@@ -94,14 +94,11 @@ public class TableMasterDetailController extends ListingController {
 
     @Override
     public void addListWith(Class content) {
-        tableView = new AFilterableTableView<>(content);
-        tableView.setId("aview");
-        tableView.setBundle(bundle);
-        editorPanel.buttonsMainPropertiesBinder(tableView);
-        editorPanel.setTableDataList(tableView, contents);
-        ((StackPane)splitPane.getItems().get(0)).getChildren().add(0, tableView);
+        aview.initialize(content);
+        editorPanel.buttonsMainPropertiesBinder(aview);
+        editorPanel.setTableDataList(aview, contents);
         
-        tableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
+        aview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
             if (newValue != null){
                 if (splitPane.getItems().size() > 1){
                     splitPane.getItems().get(1).setDisable(false);

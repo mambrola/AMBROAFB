@@ -14,7 +14,6 @@ import ambroafb.general.interfaces.EditorPanelable;
  */
 public class ProductDataChangeProvider extends DataChangeProvider {
 
-    private final String DB_TABLE_NAME = "products";
     private final String DELETE_PROCEDURE = "product_delete";
     private final String INSERT_UPDATE_PROCEDURE = "product_insert_update";
     

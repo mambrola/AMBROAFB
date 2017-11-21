@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.*?>
+<?import ambro.*?>
 
 <BorderPane fx:id="formPane" 
             stylesheets="/styles/css/tablelist.css" 
@@ -19,7 +20,7 @@
             <items>
                 <StackPane >
                     <children>
-                        
+                        <AFilterableTableView fx:id="aview" styleClass="unicode" /> 
                         <MaskerPane fx:id="masterMasker" visible="false" text="%loading" />
                     </children>
                 </StackPane>

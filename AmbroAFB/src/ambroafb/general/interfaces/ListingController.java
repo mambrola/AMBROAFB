@@ -23,7 +23,6 @@ public abstract class ListingController implements Initializable {
     
     protected DataFetchProvider dataFetchProvider;
     protected EditorPanel editorPanel;
-    protected ResourceBundle bundle;
     
     /**
      * Initializes the controller class.
@@ -32,7 +31,6 @@ public abstract class ListingController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        bundle = rb;
         componentsInitialize(url, rb);
     }
     
