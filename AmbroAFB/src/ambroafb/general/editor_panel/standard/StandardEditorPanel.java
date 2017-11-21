@@ -54,12 +54,15 @@ public class StandardEditorPanel extends EditorPanel {
         EditorPanelableManager manager = editorPanelSceneStage.getEPManager(); // EPManagerFactory.getEPManager(selected);
         Consumer<Object> successAction = (ObjFromDB) -> {
             if (ObjFromDB != null) {
+                System.out.println("--- 1 copyFrom ---");
                 selected.copyFrom((EditorPanelable)ObjFromDB);
             }
+            System.out.println("--- 2 copyFrom ---");
             EditorPanelable backup = selected.cloneWithID();
             Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.EDIT, selected);
             EditorPanelable result = dialog.getResult();
             if (result == null){
+                System.out.println("--- 3 copyFrom ---");
                 selected.copyFrom(backup);
             }
         };

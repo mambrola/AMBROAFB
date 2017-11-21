@@ -146,13 +146,23 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     }
     
     private void rebindSpecific(){
-        specific.unbind();
-        specificDescrip.unbind();
+//        specific.unbind();
+//        specificDescrip.unbind();
         if (productSpecific.get() != null){
-            specific.bind(productSpecific.get().specificProperty());
-            specificDescrip.bind(productSpecific.get().descripProperty());
+            specificDescrip.set(productSpecific.get().getDescrip());
+//            specific.bind(productSpecific.get().specificProperty());
+//            specificDescrip.bind(productSpecific.get().descripProperty());
         }
     }
+    
+//    private void rebindSpecific(){
+//        specific.unbind();
+//        specificDescrip.unbind();
+//        if (productSpecific.get() != null){
+//            specific.bind(productSpecific.get().specificProperty());
+//            specificDescrip.bind(productSpecific.get().descripProperty());
+//        }
+//    }
     
     
     // Get properties:
@@ -301,6 +311,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @JsonProperty
     public void setSpecificDescrip(String specificDescrip){
         this.productSpecific.get().setDescrip(specificDescrip);
+        this.specificDescrip.set(specificDescrip);
     }
     
     public void setPrice(double price) {
@@ -350,6 +361,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         setAbbreviation(product.getAbbreviation());
         setFormer(product.getFormer());
         setDescrip(product.getDescrip());
+        
+        System.out.println("------------ specific scene: " + specificProperty().get());
+        System.out.println("------------ specific backup: " + product.specificProperty().get());
+        
         productSpecific.get().copyFrom(product.specificProperty().get());
         setPrice(product.getPrice());
         setIso(product.getIso());
