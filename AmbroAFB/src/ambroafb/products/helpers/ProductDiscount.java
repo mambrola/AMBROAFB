@@ -8,6 +8,7 @@ package ambroafb.products.helpers;
 import ambroafb.general.Utils;
 import ambroafb.general.mapeditor.MapEditorElement;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -41,6 +42,7 @@ public class ProductDiscount implements MapEditorElement {
         return delimiter;
     } 
     
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public int getRecId(){
         return recId;
     }

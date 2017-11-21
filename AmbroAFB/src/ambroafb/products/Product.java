@@ -21,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -251,12 +253,31 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @JsonGetter("sets_for_separate_saving")
     public JSONObject getSeparateSaving(){
         JSONObject separateSaving = new JSONObject();
-        JSONArray array = new JSONArray(discounts);
         try {
-            separateSaving.putOpt("descrip", array);
+            separateSaving.putOpt("discounts", discountsToArray(discounts));
         } catch (JSONException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
         return separateSaving;
+    }
+    
+    private JSONArray discountsToArray(ObservableList<ProductDiscount> discountList){
+        JSONArray array = new JSONArray();
+        discountList.stream().forEach((discount) -> {
+            Integer discountId = (discount.getRecId() == 0) ? null : discount.getRecId();
+            Integer productId = (getRecId() == 0) ? null : getRecId();
+            JSONObject discountEntry = new JSONObject();
+            try {
+                discountEntry.put("rec_id", discountId);
+                discountEntry.put("product_id", productId);
+                discountEntry.put("days", discount.getDays());
+                discountEntry.put("discount_rate", discount.getDiscountRate());
+            } catch (JSONException ex) {
+                Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            array.put(discountEntry);
+        });
+        return array;
     }
 
     

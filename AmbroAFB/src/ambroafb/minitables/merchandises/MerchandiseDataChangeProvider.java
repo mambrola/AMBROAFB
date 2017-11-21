@@ -19,7 +19,7 @@ public class MerchandiseDataChangeProvider extends DataChangeProvider {
     
     @Override
     public Merchandise deleteOneFromDB(int recId) throws Exception {
-        generalDelete(DELETE_PROCEDURE, recId);
+        callProcedure(DELETE_PROCEDURE, recId);
         return null;
     }
 
