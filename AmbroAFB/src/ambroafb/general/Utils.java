@@ -9,6 +9,7 @@ import ambroafb.AmbroAFB;
 import ambroafb.accounts.Account;
 import ambroafb.docs.Doc;
 import ambroafb.general.countcombobox.CountComboBoxItem;
+import ambroafb.general.jackson.JSONModule;
 import ambroafb.invoices.Invoice;
 import ambroafb.products.Product;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -54,7 +55,12 @@ import org.json.JSONObject;
 public class Utils {
 
     private static Logger logger;
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper mapper;
+    
+    static {
+        mapper = new ObjectMapper();
+        mapper.registerModule(new JSONModule());
+    }
 
     /**
      * აკეთებს exception-ის ლოგირებას კონსოლში და ფაილში სახელად 'error.log'

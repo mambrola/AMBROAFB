@@ -213,6 +213,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return productSpecific.get().getRecId();
     }
     
+    @JsonIgnore
     public String getSpecificDescrip(){
         return productSpecific.get().getDescrip();
     }
@@ -248,7 +249,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     }
     
     @JsonGetter("sets_for_separate_saving")
-    public JSONObject getSeperateSaving(){
+    public JSONObject getSeparateSaving(){
         JSONObject separateSaving = new JSONObject();
         JSONArray array = new JSONArray(discounts);
         try {
@@ -276,6 +277,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         this.productSpecific.get().setProductSpecificId(specific);
     }
     
+    @JsonProperty
     public void setSpecificDescrip(String specificDescrip){
         this.productSpecific.get().setDescrip(specificDescrip);
     }
