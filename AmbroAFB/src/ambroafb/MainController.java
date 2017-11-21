@@ -12,6 +12,7 @@ import ambroafb.accounts.detail_pane.AccountDetailPane;
 import ambroafb.accounts.filter.AccountFilter;
 import ambroafb.balance_accounts.BalAccountManager;
 import ambroafb.balance_accounts.BalanceAccount;
+import ambroafb.balance_accounts.BalanceAccountEditorPanel;
 import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.balances.Balance;
 import ambroafb.balances.BalanceManager;
@@ -128,7 +129,7 @@ public class MainController implements Initializable {
             AccountDetailPane detailPane = new AccountDetailPane();
             detailPane.setDataFetchProvider((AccountDataFetchProvider)manager.getDataFetchProvider());
             ((TableMasterDetailController)accounts.getController()).setDetailNode(detailPane);
-            ((TableMasterDetailController)accounts.getController()).registerObserver(detailPane);
+            accounts.getController().registerObserver(detailPane);
             accounts.show();
             
             AccountFilter filter = new AccountFilter(accounts);
@@ -424,7 +425,7 @@ public class MainController implements Initializable {
         String stageTitle = "bal_accounts";
         Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BalanceAccount.class.getSimpleName());
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
-            BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage, BalanceAccount.class, stageTitle);
+            BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage, BalanceAccount.class, stageTitle, new BalanceAccountEditorPanel());
             balAccounts.setEPManager(new BalAccountManager());
             balAccounts.getController().reAssignTable(null);
             balAccounts.show();

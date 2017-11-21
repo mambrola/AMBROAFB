@@ -16,6 +16,7 @@ import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general_scene.SelectionObserver;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,7 +34,6 @@ import javafx.scene.paint.Color;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONArray;
 import org.json.JSONException;
-import ambroafb.general_scene.SelectionObserver;
 
 /**
  *
@@ -68,7 +68,7 @@ public class AccountDetailPane extends VBox implements SelectionObserver  {
     
     public AccountDetailPane(){
         assignLoader();
-        setComonentsSize();
+        setComponentsSize();
         setComponentsFeatures();
         setValues();
     }
@@ -85,7 +85,7 @@ public class AccountDetailPane extends VBox implements SelectionObserver  {
         }
     }
     
-    private void setComonentsSize(){
+    private void setComponentsSize(){
         double dateWidth = Double.parseDouble(TableColumnWidths.DATE);
         endDate.setMinWidth(dateWidth + dateWidth / 2);
         endDate.setMaxWidth(dateWidth + dateWidth / 2);
@@ -116,6 +116,7 @@ public class AccountDetailPane extends VBox implements SelectionObserver  {
     
     private void setComponentsFeatures(){
         accountEntries.setBundle(GeneralConfig.getInstance().getBundle());
+        accountEntries.initialize(AccountEntry.class); //  initialize method must call after setBundle. So if AccountEntry class initialize in fxml it execute firstly.
         endDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
             fetchEntries();
         });
@@ -196,6 +197,7 @@ public class AccountDetailPane extends VBox implements SelectionObserver  {
 
     @Override
     public void update(EditorPanelable selected) {
+        selectedAccount = (Account) selected;
         fetchEntries();
     }
     

@@ -16,9 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TreeItem;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.MaskerPane;
 
@@ -56,8 +58,14 @@ public class BalanceAccountsController extends ListingController {
     @Override
     public void addListWith(Class content) {
         aview.initialize(content);
-        editorPanel.buttonsMainPropertiesBinder(aview);
+//        editorPanel.buttonsMainPropertiesBinder(aview);
         editorPanel.setTreeTable(aview);
+        
+        aview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends TreeItem<EditorPanelable>> observable, TreeItem<EditorPanelable> oldValue, TreeItem<EditorPanelable> newValue) -> {
+            if (newValue != null && newValue.getValue() != null){
+                observers.stream().forEach((observer) -> observer.notify(newValue.getValue()));
+            }
+        });
     }
     
     /**

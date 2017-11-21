@@ -16,13 +16,12 @@ import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general_scene.SelectionObserver;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -44,7 +43,7 @@ import javafx.stage.Stage;
  *
  * @author dkobuladze
  */
-public abstract class EditorPanel extends HBox implements Initializable {
+public abstract class EditorPanel extends HBox implements Initializable, SelectionObserver {
 
     @FXML
     protected Button exit, delete, edit, view;
@@ -67,6 +66,8 @@ public abstract class EditorPanel extends HBox implements Initializable {
     protected ObservableList<EditorPanelable> tableData;
     
     protected Initializable outerController; // ----
+    
+    protected EditorPanelable selectedItem;
     
     
     public static final String DELETE_FXID = "#delete";
@@ -193,33 +194,50 @@ public abstract class EditorPanel extends HBox implements Initializable {
         treeTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
     }
     
-    public void buttonsMainPropertiesBinder (AView<EditorPanelable> aView){
-        BooleanBinding allowModify = Bindings.createBooleanBinding(() -> {
-                                                                    if (aView.getCustomSelectedItem() == null){
-                                                                        return true;
-                                                                    }
-                                                                    return aView.getCustomSelectedItem().isAllowToModify().not().get();
-                                                                }, aView.getCustomSelectionModel().selectedItemProperty());
-        if (aView instanceof AFilterableTreeTableView){
-            AFilterableTreeTableView<EditorPanelable> treeTable = (AFilterableTreeTableView)aView;
-            delete.disableProperty().bind(Bindings.createBooleanBinding(() -> {
-                if (aView.getCustomSelectionModel().selectedItemProperty().isNull().get()) {
-                    return true;
-                }
-                return !treeTable.getSelectionModel().getSelectedItem().isLeaf();
-            }, aView.getCustomSelectionModel().selectedItemProperty()));
-        }
-        else if (aView instanceof ATableView){
-            delete.disableProperty().bind(allowModify);
-        }
-        edit.disableProperty().bind(allowModify);
-        view.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
-        addBySample.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
-    }
+//    public void buttonsMainPropertiesBinder (AView<EditorPanelable> aView){
+//        BooleanBinding allowModify = Bindings.createBooleanBinding(() -> {
+//                                                                    if (aView.getCustomSelectedItem() == null){
+//                                                                        return true;
+//                                                                    }
+//                                                                    return aView.getCustomSelectedItem().isAllowToModify().not().get();
+//                                                                }, aView.getCustomSelectionModel().selectedItemProperty());
+//        if (aView instanceof AFilterableTreeTableView){
+//            AFilterableTreeTableView<EditorPanelable> treeTable = (AFilterableTreeTableView)aView;
+//            delete.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+//                if (aView.getCustomSelectionModel().selectedItemProperty().isNull().get()) {
+//                    return true;
+//                }
+//                return !treeTable.getSelectionModel().getSelectedItem().isLeaf();
+//            }, aView.getCustomSelectionModel().selectedItemProperty()));
+//        }
+//        else if (aView instanceof ATableView){
+//            delete.disableProperty().bind(allowModify);
+//        }
+//        edit.disableProperty().bind(allowModify);
+//        view.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
+//        addBySample.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
+//    }
     
     public void setOuterController(Initializable controller){
         outerController = controller;
     }
+
+    @Override
+    public void notify(EditorPanelable selected) {
+        selectedItem = selected;
+        boolean disable = (selected == null);
+        delete.setDisable(disable);
+        edit.setDisable(disable);
+        view.setDisable(disable);
+        addBySample.setDisable(disable);
+    }
+
+    @Override
+    public void update(EditorPanelable selected) {
+    }
+
+    
+    
     
     /**
      *  The function checks any type of dialog or filter stage already show or not.
