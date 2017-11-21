@@ -6,7 +6,10 @@
 package ambroafb.general.interfaces;
 
 import ambroafb.general.editor_panel.EditorPanel;
+import ambroafb.general_scene.SelectionObserver;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,6 +26,7 @@ public abstract class ListingController implements Initializable {
     
     protected DataFetchProvider dataFetchProvider;
     protected EditorPanel editorPanel;
+    protected List<SelectionObserver> observers = new ArrayList<>();
     
     /**
      * Initializes the controller class.
@@ -46,5 +50,9 @@ public abstract class ListingController implements Initializable {
     
     public EditorPanel getEditorPanel(){
         return editorPanel;
+    }
+    
+    public void registerObserver(SelectionObserver observer){
+        if (observer != null) observers.add(observer);
     }
 }

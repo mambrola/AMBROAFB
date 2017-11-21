@@ -11,7 +11,6 @@ import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -24,7 +23,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
 import org.controlsfx.control.MaskerPane;
-import ambroafb.general_scene.SelectionObserver;
 
 /**
  * FXML Controller class
@@ -47,8 +45,6 @@ public class TableMasterDetailController extends ListingController {
     
     private final ObservableList<EditorPanelable> contents = FXCollections.observableArrayList();
 
-    private final ArrayList<SelectionObserver> observers = new ArrayList<>();
-            
     private final Timer timer = new Timer();
     private EditorPanelable newSelected;
     private final long waitingMilisecond = 300;
@@ -63,10 +59,6 @@ public class TableMasterDetailController extends ListingController {
         node.setDisable(true);
     }
     
-    public void registerObserver(SelectionObserver observer){
-        if (observer != null) observers.add(observer);
-    }
-
     @Override
     public void reAssignTable(FilterModel model) {
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();

@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -33,7 +34,6 @@ public class TableListController extends ListingController {
     private MaskerPane masker;
     
     private final ObservableList<EditorPanelable> contents = FXCollections.observableArrayList();
-    
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
@@ -72,6 +72,12 @@ public class TableListController extends ListingController {
         aview.initialize(content);
         editorPanel.buttonsMainPropertiesBinder(aview);
         editorPanel.setTableDataList(aview, contents);
+        
+        aview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
+            if (newValue != null){
+                observers.stream().forEach((observer) -> observer.notify(newValue));
+            }
+        });
     }
     
 }

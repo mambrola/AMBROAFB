@@ -15,9 +15,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TreeItem;
 import org.controlsfx.control.MaskerPane;
 
 /**
@@ -73,8 +75,14 @@ public class TreeTableListController extends ListingController {
         aview.initialize(content);
         editorPanel.buttonsMainPropertiesBinder(aview);
         editorPanel.setTreeTable(aview);
+        
+        aview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends TreeItem<EditorPanelable>> observable, TreeItem<EditorPanelable> oldValue, TreeItem<EditorPanelable> newValue) -> {
+            if (newValue != null && newValue.getValue() != null){
+                observers.stream().forEach((observer) -> observer.notify(newValue.getValue()));
+            }
+        });
     }
-
+    
     public void setTreeFeatures(Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn, int depth){
         this.treeMakerFn = treeMakerFn;
         expandDepth = depth;
