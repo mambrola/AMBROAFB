@@ -16,7 +16,6 @@ import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnWidths;
-import ambroafb.general_scene.table_master_detail.MasterObserver;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,12 +33,13 @@ import javafx.scene.paint.Color;
 import org.controlsfx.control.MaskerPane;
 import org.json.JSONArray;
 import org.json.JSONException;
+import ambroafb.general_scene.SelectionObserver;
 
 /**
  *
  * @author dkobuladze
  */
-public class AccountDetailPane extends VBox implements MasterObserver  {
+public class AccountDetailPane extends VBox implements SelectionObserver  {
     
     @FXML
     private Label   accountNumberIso, accountDescrip,

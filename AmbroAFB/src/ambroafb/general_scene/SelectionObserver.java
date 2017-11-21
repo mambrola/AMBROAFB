@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.general_scene.table_master_detail;
+package ambroafb.general_scene;
 
 import ambroafb.general.interfaces.EditorPanelable;
 
@@ -11,7 +11,7 @@ import ambroafb.general.interfaces.EditorPanelable;
  *
  * @author dkobuladze
  */
-public interface MasterObserver {
+public interface SelectionObserver {
     
     /**
      *  The method should use when observer need selected object data for simple update (not go out from RAM).

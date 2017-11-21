@@ -24,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
 import org.controlsfx.control.MaskerPane;
+import ambroafb.general_scene.SelectionObserver;
 
 /**
  * FXML Controller class
@@ -46,7 +47,7 @@ public class TableMasterDetailController extends ListingController {
     
     private final ObservableList<EditorPanelable> contents = FXCollections.observableArrayList();
 
-    private final ArrayList<MasterObserver> observers = new ArrayList<>();
+    private final ArrayList<SelectionObserver> observers = new ArrayList<>();
             
     private final Timer timer = new Timer();
     private EditorPanelable newSelected;
@@ -62,7 +63,7 @@ public class TableMasterDetailController extends ListingController {
         node.setDisable(true);
     }
     
-    public void registerObserver(MasterObserver observer){
+    public void registerObserver(SelectionObserver observer){
         if (observer != null) observers.add(observer);
     }
 
