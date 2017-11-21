@@ -17,9 +17,6 @@ import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
-import ambroafb.general.interfaces.FilterModel;
-import ambroafb.general.interfaces.Filterable;
-import ambroafb.general.interfaces.ListingStage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +97,7 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
     @Override
     public void delete(ActionEvent event) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Doc selected = (Doc)getSelected();
+        Doc selected = (Doc)selectedItem;
         EditorPanelableManager manager = DocManagersFactory.getEPManager(selected);
         Consumer<EditorPanelable> successAction = (obj) -> {
             Dialogable dialog = manager.getDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.DELETE, obj);
@@ -130,7 +127,7 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
     @Override
     public void edit(ActionEvent event) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Doc selected = (Doc)getSelected();
+        Doc selected = (Doc)selectedItem;
         EditorPanelableManager manager = DocManagersFactory.getEPManager(selected);
         Consumer<EditorPanelable> successAction = (obj) -> {
             Dialogable dialog = manager.getDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.EDIT, obj);
@@ -149,7 +146,7 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
     @Override
     public void view(ActionEvent event) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Doc selected = (Doc)getSelected();
+        Doc selected = (Doc)selectedItem;
         EditorPanelableManager manager = DocManagersFactory.getEPManager(selected);
         Consumer<EditorPanelable> successAction = (obj) -> {
             Dialogable dialog = manager.getDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.VIEW, obj);
@@ -201,7 +198,7 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
     @Override
     public void addBySample(ActionEvent event) {
         Stage docEditorPanelSceneStage = (Stage) exit.getScene().getWindow();
-        Doc selected = (Doc)getSelected();
+        Doc selected = (Doc)selectedItem;
         EditorPanelableManager manager = DocManagersFactory.getEPManager(selected);
         Consumer<EditorPanelable> successAction = (obj) -> {
             EditorPanelable cloneFromReal = ((EditorPanelable)obj).cloneWithoutID(); // Without this coping, program make "edit" action.
@@ -214,15 +211,4 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
         manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);
     }
     
-    @Override
-    public void refresh(ActionEvent event) {
-        ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-        Filterable filter = editorPanelSceneStage.getEPManager().getFilterFor(editorPanelSceneStage);
-        FilterModel model = filter.getResult();
-        if (model == null || !model.isCanceled()){
-            editorPanelSceneStage.getController().reAssignTable(model);
-        }
-        refresh.setSelected(false);
-    }
-
 }

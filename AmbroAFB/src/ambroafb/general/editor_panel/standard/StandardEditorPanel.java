@@ -9,8 +9,6 @@ import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
-import ambroafb.general.interfaces.FilterModel;
-import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.ListingStage;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,7 +32,7 @@ public class StandardEditorPanel extends EditorPanel {
     @Override
     public void delete(ActionEvent event) {
         ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-        EditorPanelable selected = getSelected();
+        EditorPanelable selected = selectedItem;
         EditorPanelableManager manager = editorPanelSceneStage.getEPManager();
         Consumer<Object> successAction = (objFromDB) -> {
             if (objFromDB != null){
@@ -52,7 +50,7 @@ public class StandardEditorPanel extends EditorPanel {
     @Override
     public void edit(ActionEvent event) {
         ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-        EditorPanelable selected = getSelected();
+        EditorPanelable selected = selectedItem;
         EditorPanelableManager manager = editorPanelSceneStage.getEPManager(); // EPManagerFactory.getEPManager(selected);
         Consumer<Object> successAction = (ObjFromDB) -> {
             if (ObjFromDB != null) {
@@ -71,7 +69,7 @@ public class StandardEditorPanel extends EditorPanel {
     @Override
     public void view(ActionEvent event) {
         ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-        EditorPanelable selected = getSelected();
+        EditorPanelable selected = selectedItem;
         EditorPanelableManager manager = editorPanelSceneStage.getEPManager();
         Consumer<Object> successAction = (ObjFromDB) -> {
             if (ObjFromDB != null) {
@@ -98,7 +96,7 @@ public class StandardEditorPanel extends EditorPanel {
     @Override
     public void addBySample(ActionEvent event) {
         ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-        EditorPanelable selected = getSelected();
+        EditorPanelable selected = selectedItem;
         EditorPanelableManager manager = editorPanelSceneStage.getEPManager();
         Consumer<Object> successAction = (objFromDB) -> {
             EditorPanelable cloneOfSelected;
@@ -118,16 +116,4 @@ public class StandardEditorPanel extends EditorPanel {
         manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);
     }
 
-    @Override
-    public void refresh(ActionEvent event) {
-        ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-        Filterable filter = editorPanelSceneStage.getEPManager().getFilterFor(editorPanelSceneStage);
-        FilterModel model = (filter != null) ? filter.getResult() : null;
-        if (model == null || !model.isCanceled()){
-            editorPanelSceneStage.getController().reAssignTable(model);
-        }
-        refresh.setSelected(false);
-    }
-
-    
 }

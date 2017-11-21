@@ -8,7 +8,6 @@ package ambroafb.general.editor_panel;
 import ambro.AFilterableTableView;
 import ambro.AFilterableTreeTableView;
 import ambro.ATableView;
-import ambro.AView;
 import ambroafb.AmbroAFB;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.GeneralConfig;
@@ -16,6 +15,9 @@ import ambroafb.general.Names;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.FilterModel;
+import ambroafb.general.interfaces.Filterable;
+import ambroafb.general.interfaces.ListingStage;
 import ambroafb.general_scene.SelectionObserver;
 import java.io.IOException;
 import java.net.URL;
@@ -276,13 +278,17 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
     }
     
     private void refreshAction(ActionEvent event){
-        if (allowToOpenDialogOrFilter()) refresh(event);
+        if (allowToOpenDialogOrFilter()) {
+            ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
+            Filterable filter = editorPanelSceneStage.getEPManager().getFilterFor(editorPanelSceneStage);
+            FilterModel model = (filter != null) ? filter.getResult() : null;
+            if (model == null || !model.isCanceled()){
+                editorPanelSceneStage.getController().reAssignTable(model);
+            }
+            refresh.setSelected(false);
+        }
     }
     
-    
-    protected EditorPanelable getSelected(){
-        return (EditorPanelable)((AView)exit.getScene().lookup("#aview")).getCustomSelectedItem();
-    }
     
     protected abstract void componentsInitialize(URL location, ResourceBundle resources);
     public abstract void delete(ActionEvent event);
@@ -290,6 +296,5 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
     public abstract void view(ActionEvent event);
     public abstract void add(ActionEvent event);
     public abstract void addBySample(ActionEvent event);
-    public abstract void refresh(ActionEvent event);
     
 }
