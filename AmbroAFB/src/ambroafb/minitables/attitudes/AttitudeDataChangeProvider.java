@@ -14,11 +14,13 @@ import ambroafb.general.interfaces.EditorPanelable;
  */
 public class AttitudeDataChangeProvider extends DataChangeProvider {
 
-    private final String DB_TABLE_NAME = "process_attitudes";
+//    private final String DB_TABLE_NAME = "process_attitudes";
+    private final String DELETE_PROCEDURE = "process_attitude_delete";
+    private final String DB_INSERT_UPDATE = "process_attitude_insert_update";
     
     @Override
     public Attitude deleteOneFromDB(int recId) throws Exception {
-        generalDelete(DB_TABLE_NAME, recId);
+        callProcedure(DELETE_PROCEDURE, recId);
         return null;
     }
 
@@ -29,7 +31,7 @@ public class AttitudeDataChangeProvider extends DataChangeProvider {
 
     @Override
     public Attitude saveOneToDB(EditorPanelable object) throws Exception {
-        return saveSimple((Attitude)object, DB_TABLE_NAME, true);
+        return saveObjectByProcedure((Attitude)object, DB_INSERT_UPDATE);
     }
     
 }

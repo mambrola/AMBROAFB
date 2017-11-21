@@ -188,7 +188,6 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
                 if (anyFieldWasChanged) {
                     String alertText = GeneralConfig.getInstance().getTitleFor("dialog_cancel_confirm");
                     AlertMessage alert = new AlertMessage(this, Alert.AlertType.CONFIRMATION, alertText, "");
-                    alert.setOwner(this);
                     ButtonType buttonType = alert.showAndWait().get();
                     if (buttonType.equals(ButtonType.OK)){
                         operationCanceled();
