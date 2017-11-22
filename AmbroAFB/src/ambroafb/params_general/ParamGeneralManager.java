@@ -21,7 +21,7 @@ public class ParamGeneralManager extends EditorPanelableManager {
 
     public ParamGeneralManager(){
         dataFetchProvider = new ParamGeneralDataFetchProvider();
-        dataChangeProvider = new ParamGeneralDataChangeProvider();
+        dataChangeProvider = new ParamGeneralDataChangeProvider(dataFetchProvider);
     }
     
     @Override

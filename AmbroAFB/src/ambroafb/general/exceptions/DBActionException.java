@@ -46,7 +46,16 @@ public class DBActionException extends Exception {
      */
     @Override
     public String getLocalizedMessage(){
-        return (bundle.containsKey("" + code)) ? bundle.getString("" + code) : messageText;
+        return (bundle.containsKey("" + code)) ? bundle.getString("" + code) : getMessage();
+    }
+
+    @Override
+    public String getMessage() {
+        return messageText;
+    }
+    
+    public void setMessage(String msg){
+        messageText = msg;
     }
     
     /**

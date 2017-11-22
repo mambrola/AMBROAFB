@@ -5,10 +5,7 @@
  */
 package ambroafb.params_general.dialog;
 
-import ambroafb.general.AlertMessage;
-import ambroafb.general.GeneralConfig;
 import ambroafb.general.editor_panel.EditorPanel;
-import ambroafb.general.exceptions.DBActionException;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
@@ -18,7 +15,6 @@ import authclient.db.WhereBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
@@ -64,25 +60,25 @@ public class ParamGeneralDialog extends UserInteractiveDialogStage implements Di
         return (obj) -> paramGeneral = (ParamGeneral)obj;
     }
 
-    @Override
-    protected Consumer<Exception> getErrorAction() {
-        return (ex) -> {
-            if (ex instanceof DBActionException){
-                DBActionException dbEx = (DBActionException)ex;
-                String msg = dbEx.getLocalizedMessage();
-                if (dbEx.getCode() == 4042){ // conflicted entry
-                    String startStr = ": ";
-                    int startIndex = msg.indexOf(startStr) + startStr.length();
-                    int endIndex = msg.indexOf(";");
-                    String[] ids = msg.substring(startIndex, endIndex).split(",");
-                    String headerTxt = GeneralConfig.getInstance().getTitleFor("param_general_error");
-                    List<ParamGeneral> entries = new ArrayList<>(); // selectConflictedEntries(ids);
-                    String newMsg = entries.stream().map((entry) -> "[" + entry.toString() + "]" + ",\n").reduce("", String::concat);
-                    new AlertMessage(this, Alert.AlertType.ERROR, headerTxt, newMsg, ex).showAndWait();
-                }
-            }
-        };
-    }
+//    @Override
+//    protected Consumer<Exception> getErrorAction() {
+//        return (ex) -> {
+//            if (ex instanceof DBActionException){
+//                DBActionException dbEx = (DBActionException)ex;
+//                String msg = dbEx.getLocalizedMessage();
+//                if (dbEx.getCode() == 4042){ // conflicted entry
+//                    String startStr = ": ";
+//                    int startIndex = msg.indexOf(startStr) + startStr.length();
+//                    int endIndex = msg.indexOf(";");
+//                    String[] ids = msg.substring(startIndex, endIndex).split(",");
+//                    String headerTxt = GeneralConfig.getInstance().getTitleFor("param_general_error");
+//                    List<ParamGeneral> entries = new ArrayList<>(); // selectConflictedEntries(ids);
+//                    String newMsg = entries.stream().map((entry) -> "[" + entry.toString() + "]" + ",\n").reduce("", String::concat);
+//                    new AlertMessage(this, Alert.AlertType.ERROR, headerTxt, newMsg, ex).showAndWait();
+//                }
+//            }
+//        };
+//    }
     
     // კარგი იქნება თუ ex ექნება ინფორმაცია არა მარტო რომელ id-ებთან მოხდა კონფლიქტი არამედ ასეთი ParamGeneral-ების სრულ ინფორმაციასთან.
     // მაშინ ხელმეორედ კითხვა აღარ დაგვჭირდება.
