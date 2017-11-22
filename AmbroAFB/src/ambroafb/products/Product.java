@@ -23,12 +23,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -60,9 +57,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @AView.Column(title = "%descrip", width = "200")
     private final SimpleStringProperty descrip;
     
-    @AView.Column(title = "%product_specific", width = "200")
-    private final SimpleStringProperty specificDescrip;
-    private final IntegerProperty specific;
+    @AView.Column(title = "%product_specific", width = "200", cellFactory = SpecificCellFactory.class)
     private final ObjectProperty<ProductSpecific> productSpecific;
     
     @AView.Column(title = "%monthly_price", width = "90", styleClass = "textRight")
@@ -94,8 +89,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         abbreviation = new SimpleStringProperty("");
         former = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
-        specific = new SimpleIntegerProperty();
-        specificDescrip = new SimpleStringProperty("");
         productSpecific = new SimpleObjectProperty<>(new ProductSpecific());
         price = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
@@ -105,14 +98,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         isActive = new SimpleBooleanProperty();
         notJurMaxCount = new SimpleStringProperty("");
         testingDays = new SimpleStringProperty("");
-        
-        specificDescrip.bind(Bindings.createStringBinding(() -> {
-            return productSpecific.get().getDescrip();
-        }, productSpecific));
-//        productSpecific.addListener((ObservableValue<? extends ProductSpecific> observable, ProductSpecific oldValue, ProductSpecific newValue) -> {
-//            rebindSpecific();
-//        });
-//        rebindSpecific();
         
         discountsForMapEditor.addListener((ListChangeListener.Change<? extends Object> c) -> {
             c.next();
@@ -149,26 +134,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         }
     }
     
-    private void rebindSpecific(){
-//        specific.unbind();
-//        specificDescrip.unbind();
-        if (productSpecific.get() != null){
-            specificDescrip.set(productSpecific.get().getDescrip());
-//            specific.bind(productSpecific.get().specificProperty());
-//            specificDescrip.bind(productSpecific.get().descripProperty());
-        }
-    }
-    
-//    private void rebindSpecific(){
-//        specific.unbind();
-//        specificDescrip.unbind();
-//        if (productSpecific.get() != null){
-//            specific.bind(productSpecific.get().specificProperty());
-//            specificDescrip.bind(productSpecific.get().descripProperty());
-//        }
-//    }
-    
-    
     // Get properties:
     public StringProperty abbreviationProperty(){
         return abbreviation;
@@ -192,10 +157,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     
     public ObjectProperty<ProductSpecific> specificProperty(){
         return productSpecific;
-    }
-    
-    public StringProperty specificDescripProperty(){
-        return specificDescrip;
     }
     
     public BooleanProperty isAliveProperty(){
@@ -314,8 +275,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     
     @JsonProperty
     public void setSpecificDescrip(String specificDescrip){
-        this.productSpecific.get().setDescrip(specificDescrip + "Base");
-        this.specificDescrip.set(specificDescrip);
+        this.productSpecific.get().setDescrip(specificDescrip);
     }
     
     public void setPrice(double price) {
@@ -445,9 +405,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
             return new TableCell<Product, ObservableList<ProductDiscount>>() {
                 @Override
                 public void updateItem(ObservableList<ProductDiscount> discounts, boolean empty) {
+                    super.updateItem(discounts, empty);
                     setEditable(false);
                     if (discounts == null || discounts.isEmpty() || empty){
-                        setText(null);
+                        setGraphic(null);
                     }
                     else {
                         ANodeSlider<Label> nodeSlider = new ANodeSlider<>();
@@ -468,9 +429,25 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
             return new TableCell<Product, Boolean>() {
                 @Override
                 public void updateItem(Boolean isAct, boolean empty) {
+                    super.updateItem(isAct, true);
                     setText(empty ? null : (isAct ? "Act" : "Pas"));
                 }
             };
         }
+    }
+    
+    public static class SpecificCellFactory implements Callback<TableColumn<Product, ProductSpecific>, TableCell<Product, ProductSpecific>> {
+
+        @Override
+        public TableCell<Product, ProductSpecific> call(TableColumn<Product, ProductSpecific> param) {
+            return new TableCell<Product, ProductSpecific>(){
+                @Override
+                protected void updateItem(ProductSpecific item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText((item == null || empty) ? null : item.getDescrip());
+                }
+            };
+        }
+
     }
 }
