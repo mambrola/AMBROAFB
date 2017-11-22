@@ -8,6 +8,7 @@ package ambroafb.products;
 import ambro.ANodeSlider;
 import ambro.AView;
 import ambroafb.currencies.Currency;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBoxItem;
@@ -29,7 +30,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -63,8 +63,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @AView.Column(title = "%monthly_price", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final SimpleStringProperty price;
     
-    @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
-    private final SimpleStringProperty iso;
+    @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = TableColumnFeatures.Style.TEXT_CENTER, cellFactory = IsoCellFactory.class)
     private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%discounts", width = "90", cellFactory = DiscountCellFactory.class)
@@ -91,7 +90,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         descrip = new SimpleStringProperty("");
         productSpecific = new SimpleObjectProperty<>(new ProductSpecific());
         price = new SimpleStringProperty("");
-        iso = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>(new Currency());
         discounts = FXCollections.observableArrayList();
         discountsForMapEditor = FXCollections.observableArrayList();
@@ -120,19 +118,8 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
                 });
             }
         });
-        
-        currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
-            rebindIso();
-        });
-        rebindIso();
     }
     
-    private void rebindIso(){
-        iso.unbind();
-        if (currency.get() != null){
-            iso.bind(currency.get().isoProperty());
-        }
-    }
     
     // Get properties:
     public StringProperty abbreviationProperty(){
@@ -398,6 +385,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     }
     
     
+    /**
+     * The class provides to change visual  for table discount cell.  
+     * Discounts will show in {@link ambro.ANodeSlider  ANodeSlider} for table appropriate cell.
+     */
     public static class DiscountCellFactory implements Callback<TableColumn<Product, ObservableList<ProductDiscount>>, TableCell<Product, ObservableList<ProductDiscount>>> {
 
         @Override
@@ -422,6 +413,9 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         }
     }
     
+    /**
+     *  The class provides to show "act" or "pas" strings in table appropriate cell.
+     */
     public static class ActPasCellFactory implements Callback<TableColumn<Product, Boolean>, TableCell<Product, Boolean>> {
 
         @Override
@@ -430,12 +424,20 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
                 @Override
                 public void updateItem(Boolean isAct, boolean empty) {
                     super.updateItem(isAct, true);
-                    setText(empty ? null : (isAct ? "Act" : "Pas"));
+                    if (isAct == null || empty) {
+                        setText(null);
+                    } else {
+                        String actPasKey = (isAct ? "act" : "pas");
+                        setText(GeneralConfig.getInstance().getTitleFor(actPasKey));
+                    }
                 }
             };
         }
     }
     
+    /**
+     * The class provides to show product specific in table appropriate cell.
+     */
     public static class SpecificCellFactory implements Callback<TableColumn<Product, ProductSpecific>, TableCell<Product, ProductSpecific>> {
 
         @Override
@@ -448,6 +450,23 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
                 }
             };
         }
+    }
+    
+    /**
+     * The class provides to show iso in table appropriate cell.
+     */
+    public static class IsoCellFactory implements Callback<TableColumn<Product, Currency>, TableCell<Product, Currency>> {
 
+        @Override
+        public TableCell<Product, Currency> call(TableColumn<Product, Currency> param) {
+            return new TableCell<Product, Currency>() {
+                @Override
+                protected void updateItem(Currency item, boolean empty) {
+                    super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
+                    setText((item == null || empty) ? null : item.getIso());
+                }
+            };
+        }
+        
     }
 }
