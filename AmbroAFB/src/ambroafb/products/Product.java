@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -105,10 +106,13 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         notJurMaxCount = new SimpleStringProperty("");
         testingDays = new SimpleStringProperty("");
         
-        productSpecific.addListener((ObservableValue<? extends ProductSpecific> observable, ProductSpecific oldValue, ProductSpecific newValue) -> {
-            rebindSpecific();
-        });
-        rebindSpecific();
+        specificDescrip.bind(Bindings.createStringBinding(() -> {
+            return productSpecific.get().getDescrip();
+        }, productSpecific));
+//        productSpecific.addListener((ObservableValue<? extends ProductSpecific> observable, ProductSpecific oldValue, ProductSpecific newValue) -> {
+//            rebindSpecific();
+//        });
+//        rebindSpecific();
         
         discountsForMapEditor.addListener((ListChangeListener.Change<? extends Object> c) -> {
             c.next();
@@ -310,7 +314,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     
     @JsonProperty
     public void setSpecificDescrip(String specificDescrip){
-        this.productSpecific.get().setDescrip(specificDescrip);
+        this.productSpecific.get().setDescrip(specificDescrip + "Base");
         this.specificDescrip.set(specificDescrip);
     }
     
