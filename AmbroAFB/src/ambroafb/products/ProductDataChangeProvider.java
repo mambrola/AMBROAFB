@@ -8,9 +8,9 @@ package ambroafb.products;
 import ambroafb.general.interfaces.DataChangeProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.products.helpers.ProductDiscount;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.collections.ObservableList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,16 +37,24 @@ public class ProductDataChangeProvider extends DataChangeProvider {
 
     @Override
     public Product saveOneToDB(EditorPanelable object) throws Exception {
+        System.out.println("------- saveOneToDB -------");
+        
         Product product = (Product) object;
         JSONObject discountsSeparateSaving = new JSONObject();
         Integer productId = (product.getRecId() == 0) ? null : product.getRecId();
-        discountsSeparateSaving.put("discounts", discountsToArray(productId, product.getDiscounts()));
+        
+        JSONArray arr = discountsToArray(productId, product.getDiscounts());
+        System.out.println("-- arr: " + arr);
+        
+        discountsSeparateSaving.put("discounts", arr);
         return saveObjectByProcedure(product, INSERT_UPDATE_PROCEDURE, discountsSeparateSaving);
     }
     
     // Converts discounts list to appropriate DB discounts entries json array.
-    private JSONArray discountsToArray(int productId, ObservableList<ProductDiscount> discountList){
+    private JSONArray discountsToArray(Integer productId, List<ProductDiscount> discountList){
         JSONArray array = new JSONArray();
+        System.out.println("discountList: " + discountList.size());
+        
         discountList.stream().forEach((discount) -> {
             Integer discountId = (discount.getRecId() == 0) ? null : discount.getRecId();
             JSONObject discountEntry = new JSONObject();

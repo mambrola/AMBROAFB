@@ -14,11 +14,11 @@ import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnFeatures;
-import ambroafb.general.mapeditor.MapEditorElement;
 import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javafx.beans.property.BooleanProperty;
@@ -27,9 +27,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -61,8 +58,8 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%discounts", width = "90", cellFactory = DiscountCellFactory.class)
-    private final ObservableList<ProductDiscount> discounts;
-    private final ObservableList<MapEditorElement> discountsForMapEditor;
+    private final ObjectProperty<List<ProductDiscount>> discountsObj;
+//    private final ObservableList<MapEditorElement> discountsForMapEditor;
     
     @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)
     private final SimpleBooleanProperty isActive;
@@ -85,33 +82,34 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         productSpecific = new SimpleObjectProperty<>(new ProductSpecific());
         price = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>(new Currency());
-        discounts = FXCollections.observableArrayList();
-        discountsForMapEditor = FXCollections.observableArrayList();
+        discountsObj = new SimpleObjectProperty<>(new ArrayList<>());
+//        discounts = FXCollections.observableArrayList();
+//        discountsForMapEditor = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
         notJurMaxCount = new SimpleStringProperty("");
         testingDays = new SimpleStringProperty("");
         
-        discountsForMapEditor.addListener((ListChangeListener.Change<? extends Object> c) -> {
-            c.next();
-            if (c.wasAdded() ){
-                List<? extends Object> adds = c.getAddedSubList();
-                adds.stream().forEach((elem) -> {
-                    ProductDiscount disc = (ProductDiscount) elem;
-                    if (disc != null && !discounts.contains(disc)){
-                        discounts.add(disc);
-                    }
-                });
-            }
-            else if (c.wasRemoved()){
-                List<? extends Object> removes = c.getRemoved();
-                removes.stream().forEach((elem) -> {
-                    ProductDiscount disc = (ProductDiscount) elem;
-                    if (disc != null && discounts.contains(disc)){
-                        discounts.remove(disc);
-                    }
-                });
-            }
-        });
+//        discountsForMapEditor.addListener((ListChangeListener.Change<? extends Object> c) -> {
+//            c.next();
+//            if (c.wasAdded() ){
+//                List<? extends Object> adds = c.getAddedSubList();
+//                adds.stream().forEach((elem) -> {
+//                    ProductDiscount disc = (ProductDiscount) elem;
+//                    if (disc != null && !discounts.contains(disc)){
+//                        discounts.add(disc);
+//                    }
+//                });
+//            }
+//            else if (c.wasRemoved()){
+//                List<? extends Object> removes = c.getRemoved();
+//                removes.stream().forEach((elem) -> {
+//                    ProductDiscount disc = (ProductDiscount) elem;
+//                    if (disc != null && discounts.contains(disc)){
+//                        discounts.remove(disc);
+//                    }
+//                });
+//            }
+//        });
     }
     
     
@@ -184,15 +182,19 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return this.currency.get().getIso();
     }
     
+//    @JsonIgnore
+//    public ObservableList<ProductDiscount> getDiscounts() {
+//        return discounts;
+//    }
     @JsonIgnore
-    public ObservableList<ProductDiscount> getDiscounts() {
-        return discounts;
+    public List<ProductDiscount> getDiscounts() {
+        return discountsObj.get();
     }
     
-    @JsonIgnore
-    public ObservableList<MapEditorElement> getDiscountsForMapEditor(){
-        return discountsForMapEditor;
-    }
+//    @JsonIgnore
+//    public ObservableList<MapEditorElement> getDiscountsForMapEditor(){
+//        return discountsForMapEditor;
+//    }
     
     public boolean getIsActive() {
         return isActive.get();
@@ -239,7 +241,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     
     @JsonProperty
     public void setDiscounts(Collection<ProductDiscount> discounts) {
-        discountsForMapEditor.setAll(discounts);
+//        this.discountsObj.get().clear();
+        this.discountsObj.set(new ArrayList(discounts));
+//        this.discounts.setAll(discounts);
+//        discountsForMapEditor.setAll(discounts);
     }
 
     public void setIsActive(boolean isActive) {
@@ -287,10 +292,12 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         setNotJurMaxCount(product.getNotJurMaxCount());
         setTestingDays(product.getTestingDays());
 
-        discounts.clear();
-        discountsForMapEditor.clear();
-        discountsForMapEditor.addAll(product.getDiscountsForMapEditor());
-//        discounts.addAll(product.getDiscounts());
+        setDiscounts(product.getDiscounts());
+        
+//        discounts.clear();
+//        discountsForMapEditor.clear();
+//        discountsForMapEditor.addAll(product.getDiscountsForMapEditor());
+////        discounts.addAll(product.getDiscounts());
     }
 
     @Override
@@ -353,13 +360,13 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
      * The class provides to change visual  for table discount cell.  
      * Discounts will show in {@link ambro.ANodeSlider  ANodeSlider} for table appropriate cell.
      */
-    public static class DiscountCellFactory implements Callback<TableColumn<Product, ObservableList<ProductDiscount>>, TableCell<Product, ObservableList<ProductDiscount>>> {
+    public static class DiscountCellFactory implements Callback<TableColumn<Product, List<ProductDiscount>>, TableCell<Product, List<ProductDiscount>>> {
 
         @Override
-        public TableCell<Product, ObservableList<ProductDiscount>> call(TableColumn<Product, ObservableList<ProductDiscount>> param) {
-            return new TableCell<Product, ObservableList<ProductDiscount>>() {
+        public TableCell<Product, List<ProductDiscount>> call(TableColumn<Product, List<ProductDiscount>> param) {
+            return new TableCell<Product, List<ProductDiscount>>() {
                 @Override
-                public void updateItem(ObservableList<ProductDiscount> discounts, boolean empty) {
+                public void updateItem(List<ProductDiscount> discounts, boolean empty) {
                     super.updateItem(discounts, empty);
                     setEditable(false);
                     if (discounts == null || discounts.isEmpty() || empty){
