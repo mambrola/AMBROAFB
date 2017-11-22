@@ -26,7 +26,10 @@ public abstract class DataProvider {
     
     public static final JSONObject PARAM_FOR_ALL = new ConditionBuilder().build();
     
+    protected final String DB_ID = "rec_id";
+    
     protected String DB_VIEW_NAME = "";
+    
     
     /**
      *  The method calls DB procedure and gives parameters to it.
@@ -101,21 +104,45 @@ public abstract class DataProvider {
      */
     protected static <T> T saveObjectByProcedure(Object source, String procName) throws Exception {
         JSONObject targetJson = authclient.Utils.toUnderScore(Utils.getJSONFromClass(source));
-            
-        System.out.println("data for simple table to server: " + targetJson);
-
+        return saveObjectByProcedureHelper(source.getClass(), targetJson, procName);
+    }
+    
+    /**
+     *  The method saves object and uses specific procedure for it. The method must use if object have separate saving elements.
+     * @param <T>
+     * @param source The object data.
+     * @param procName The name of procedure.
+     * @param separateSaving The JSON for separate saving entries. It will put into eventually sending JSON and has its appropriate key.
+     * @return The new object that saved in DB. It will has DB id too.
+     * @throws IOException
+     * @throws AuthServerException
+     * @throws JSONException 
+     */
+    protected static <T> T saveObjectByProcedure(Object source, String procName, JSONObject separateSaving) throws Exception {
+        JSONObject targetJson = authclient.Utils.toUnderScore(Utils.getJSONFromClass(source));
+        targetJson.put("sets_for_separate_saving", separateSaving);
+        return saveObjectByProcedureHelper(source.getClass(), targetJson, procName);
+    }
+    
+    
+    private static <T> T saveObjectByProcedureHelper(Class target, JSONObject sendingJson, String procName) throws Exception{
+        System.out.println("----------- sendingJson: " + sendingJson);
+        
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONArray newSourceFromDB;
         try {
-            newSourceFromDB = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), targetJson); // insertUpdate(tableName, targetJson);
+            newSourceFromDB = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), sendingJson); // insertUpdate(tableName, targetJson); -> old version
         } catch (AuthServerException ex) {
+            System.err.println("--- error in saveObjectByProcedureHelper ---");
+            System.err.println(ex.getMessage());
             throw ExceptionsFactory.getAppropriateException(ex);
         }
 
         System.out.println("data for simple table from server: " + newSourceFromDB);
         if (newSourceFromDB == null || newSourceFromDB.length() == 0) return null;
-        return Utils.getClassFromJSON(source.getClass(), newSourceFromDB.getJSONObject(0));
+        return Utils.getClassFromJSON(target, newSourceFromDB.getJSONObject(0));
     }
+    
     
     /**
      * The static function gets one element from DB.

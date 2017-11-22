@@ -77,23 +77,6 @@ public class ProductDialogController extends DialogController {
             former.textProperty().bindBidirectional(product.formerProperty());
             descrip.textProperty().bindBidirectional(product.descriptionProperty());
             specifics.valueProperty().bindBidirectional(product.specificProperty());
-            
-//            StringConverter<ProductSpecific> converter = new StringConverter<ProductSpecific>() {
-//                @Override
-//                public String toString(ProductSpecific specific) {
-//                    if (specific == null) return null;
-//                    return specific.getDescrip();
-//                }
-//
-//                @Override
-//                public ProductSpecific fromString(String descrip) {
-//                    ProductSpecific specific = new ProductSpecific();
-//                    specific.setDescrip(descrip);
-//                    return specific;
-//                }
-//            };
-//            Bindings.bindBidirectional(product.specificDescripProperty(), specifics.valueProperty(), converter);
-            
             price.textProperty().bindBidirectional(product.priceProperty());
             currencies.valueProperty().bindBidirectional(product.currencyProperty());
             discounts.setItems(product.getDiscountsForMapEditor());

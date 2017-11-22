@@ -8,7 +8,6 @@ package ambroafb.licenses;
 import ambroafb.accounts.Account;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.DataFetchProvider;
-import static ambroafb.general.interfaces.DataFetchProvider.DB_ID;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.licenses.filter.LicenseFilterModel;
 import ambroafb.licenses.helper.LicenseStatus;

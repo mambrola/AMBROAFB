@@ -6,6 +6,7 @@
 package ambroafb.general.interfaces;
 
 import ambroafb.general.AlertMessage;
+import ambroafb.general.AnnotiationUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
 import ambroafb.general.SceneUtils;
@@ -112,11 +113,15 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
                         dataChangeProvider.deleteOneFromDB(getSceneObject().getRecId(), builDeleteSuccessAction(), getErrorAction());
                     break;
                 case EDIT: 
-                        dataChangeProvider.editOneToDB(getSceneObject(), builEditSuccessAction(), getErrorAction());
-                    break;
                 case ADD:
                 case ADD_BY_SAMPLE:
-                        dataChangeProvider.saveOneToDB(getSceneObject(), builAddSuccessAction(), getErrorAction());
+                    boolean allRequiredFieldsAreValid = AnnotiationUtils.everyFieldContentIsValidFor(dialogController, editorButtonType);
+                    if (allRequiredFieldsAreValid){
+                        if (editorButtonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.EDIT))
+                            dataChangeProvider.editOneToDB(getSceneObject(), builEditSuccessAction(), getErrorAction());
+                        else 
+                            dataChangeProvider.saveOneToDB(getSceneObject(), builAddSuccessAction(), getErrorAction());
+                    }
                     break;
                 case VIEW:
                     close();
@@ -172,6 +177,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
      */
     protected Consumer<Exception> getErrorAction(){
         return  (ex) -> {
+                    System.err.println(ex.getMessage());
                     new AlertMessage(this, Alert.AlertType.ERROR, getTitle(), ex.getLocalizedMessage(), ex).showAndWait();
                 };
     }

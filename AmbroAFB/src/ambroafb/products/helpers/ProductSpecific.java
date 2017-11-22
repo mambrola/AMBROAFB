@@ -6,6 +6,7 @@
 package ambroafb.products.helpers;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,8 +22,7 @@ public class ProductSpecific {
     private int recId;
     private final IntegerProperty productSpecificId;
     private final StringProperty descrip;
-    @JsonIgnore
-    public String language;
+    private String language;
 
     public ProductSpecific() {
         productSpecificId = new SimpleIntegerProperty(0);
@@ -37,6 +37,7 @@ public class ProductSpecific {
         return descrip;
     }
     
+    @JsonIgnore
     public int getRecId(){
         return recId;
     }
@@ -48,8 +49,14 @@ public class ProductSpecific {
     public String getDescrip(){
         return descrip.get();
     }
+
+    @JsonIgnore
+    public String getLanguage() {
+        return language;
+    }
     
     
+    @JsonProperty
     public void setRecId(int recId){
         this.recId = recId;
     }
@@ -61,6 +68,12 @@ public class ProductSpecific {
     public void setDescrip(String descrip){
         this.descrip.set(descrip);
     }
+
+    @JsonProperty
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+    
     
     @Override
     public String toString(){
@@ -71,8 +84,7 @@ public class ProductSpecific {
         if (other != null){
             setProductSpecificId(other.getProductSpecificId());
             setDescrip(other.getDescrip());
-            
-            setRecId(other.getRecId());
+//            setRecId(other.getRecId());
         }
     }
     

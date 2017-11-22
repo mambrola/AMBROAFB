@@ -17,13 +17,10 @@ import ambroafb.general.interfaces.TableColumnFeatures;
 import ambroafb.general.mapeditor.MapEditorElement;
 import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -37,9 +34,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  *
@@ -174,7 +168,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     }
     
     public int getSpecific(){
-        return productSpecific.get().getRecId();
+        return productSpecific.get().getProductSpecificId();
     }
     
     @JsonIgnore
@@ -212,36 +206,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return Utils.getIntValueFor(testingDays.get());
     }
     
-    @JsonGetter("sets_for_separate_saving")
-    public JSONObject getSeparateSaving(){
-        JSONObject separateSaving = new JSONObject();
-        try {
-            separateSaving.putOpt("discounts", discountsToArray(discounts));
-        } catch (JSONException ex) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return separateSaving;
-    }
-    
-    private JSONArray discountsToArray(ObservableList<ProductDiscount> discountList){
-        JSONArray array = new JSONArray();
-        discountList.stream().forEach((discount) -> {
-            Integer discountId = (discount.getRecId() == 0) ? null : discount.getRecId();
-            Integer productId = (getRecId() == 0) ? null : getRecId();
-            JSONObject discountEntry = new JSONObject();
-            try {
-                discountEntry.put("rec_id", discountId);
-                discountEntry.put("product_id", productId);
-                discountEntry.put("days", discount.getDays());
-                discountEntry.put("discount_rate", discount.getDiscountRate());
-            } catch (JSONException ex) {
-                Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            array.put(discountEntry);
-        });
-        return array;
-    }
-
     
     // Setters:
     public void setAbbreviation(String abbreviation){
