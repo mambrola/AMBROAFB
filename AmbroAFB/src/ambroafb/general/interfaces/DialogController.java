@@ -50,7 +50,6 @@ public abstract class DialogController implements Initializable {
         if (buttonType.equals(EDITOR_BUTTON_TYPE.VIEW)){
             getOkayCancelController().visibleCancel(false);
         }
-//        getOkayCancelController().setButtonsFeatures(buttonType);
         makeExtraActions(buttonType);
     }
     
