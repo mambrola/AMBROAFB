@@ -88,7 +88,7 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private final StringExpression fullAddress;
 
-    @AView.Column(title = "%country", width = "50", styleClass = "textCenter")
+    @AView.Column(title = "%country", width = "50", styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private final SimpleStringProperty countryCode;
     @JsonIgnore

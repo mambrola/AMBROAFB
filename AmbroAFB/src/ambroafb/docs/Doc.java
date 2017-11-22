@@ -34,7 +34,7 @@ import javafx.util.Callback;
  */
 public class Doc extends EditorPanelable {
     
-    @AView.Column(width = "24", cellFactory = MarkerCellFactory.class, styleClass = "textCenter")
+    @AView.Column(width = "24", cellFactory = MarkerCellFactory.class, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final IntegerProperty marker;
     
     private final IntegerProperty parentRecId;
@@ -56,10 +56,10 @@ public class Doc extends EditorPanelable {
     private final StringProperty creditDescrip;
     private final ObjectProperty<Account> creditObj;
     
-    @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = "textCenter")
+    @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final StringProperty iso;
     
-    @AView.Column(title = "%amount", width = "80", styleClass = "textRight")
+    @AView.Column(title = "%amount", width = "80", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty amount;
     
     @AView.Column(title = "%doc_code", width = "90")

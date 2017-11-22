@@ -31,7 +31,7 @@ import javafx.beans.value.ObservableValue;
  */
 public class Account extends EditorPanelable {
 
-    @AView.Column(title = "%account_number", width = "80", styleClass = "textRight")
+    @AView.Column(title = "%account_number", width = "80", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty accountNumber;
     
     @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO)
@@ -40,11 +40,11 @@ public class Account extends EditorPanelable {
     @AView.Column(title = "%descrip", width = "360")
     private final StringProperty descrip;
     
-    @AView.Column(title = "%bal_accounts_min", width = "70", styleClass = "textRight")
+    @AView.Column(title = "%bal_accounts_min", width = "70", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty balAccount;
     private final ObjectProperty<BalanceAccount> balAccountObj;
     
-    @AView.Column(title = "%client", width = "60", styleClass = "textRight")
+    @AView.Column(title = "%client", width = "60", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty clientId;
     private final ObjectProperty<Client> clientObj;
     

@@ -24,11 +24,11 @@ import javafx.beans.value.ObservableValue;
 public class Currency extends EditorPanelable {
 
     
-    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE, styleClass = "textCenter")
+    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final StringProperty createdDate;
     private final ObjectProperty<LocalDate> dateProperty;
     
-    @AView.Column(title = "%currency_name", width = TableColumnFeatures.Width.ISO, styleClass = "textCenter")
+    @AView.Column(title = "%currency_name", width = TableColumnFeatures.Width.ISO, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final StringProperty iso;
     
     @AView.Column(title = "%descrip", width = "150")

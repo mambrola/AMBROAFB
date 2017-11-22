@@ -60,7 +60,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @AView.Column(title = "%product_specific", width = "200", cellFactory = SpecificCellFactory.class)
     private final ObjectProperty<ProductSpecific> productSpecific;
     
-    @AView.Column(title = "%monthly_price", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight")
+    @AView.Column(title = "%monthly_price", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final SimpleStringProperty price;
     
     @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
@@ -74,10 +74,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)
     private final SimpleBooleanProperty isActive;
     
-    @AView.Column(title = "%max_count", width = "50", styleClass = "textRight")
+    @AView.Column(title = "%max_count", width = "50", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty notJurMaxCount;
     
-    @AView.Column(title = "%testing_days", width = "100", styleClass = "textRight")
+    @AView.Column(title = "%testing_days", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty testingDays;
     
     public static final int ABREVIATION_LENGTH = 2;

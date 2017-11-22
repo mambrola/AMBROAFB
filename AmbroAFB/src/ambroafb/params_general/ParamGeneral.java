@@ -8,6 +8,7 @@ package ambroafb.params_general;
 import ambro.AView;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import ambroafb.minitables.attitudes.Attitude;
 import ambroafb.minitables.merchandises.Merchandise;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,15 +25,15 @@ import javafx.beans.value.ObservableValue;
  */
 public class ParamGeneral extends EditorPanelable {
     
-//    @AView.Column(title = "%client", width = "150", styleClass = "textCenter")
+//    @AView.Column(title = "%client", width = "150", styleClass = TableColumnFeatures.Style.TEXT_CENTER)
 //    private final StringProperty clientDescrip;
 //    private final ObjectProperty<Client> clientObj;
     
-    @AView.Column(title = "%attitude", width = "100", styleClass = "textCenter")
+    @AView.Column(title = "%attitude", width = "100", styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final StringProperty attitudeDescrip;
     private final ObjectProperty<Attitude> attitudeObj;
     
-    @AView.Column(title = "%merchandise", width = "100", styleClass = "textCenter")
+    @AView.Column(title = "%merchandise", width = "100", styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final StringProperty merchandiseDescrip;
     private final ObjectProperty<Merchandise> merchandiseObj;
     

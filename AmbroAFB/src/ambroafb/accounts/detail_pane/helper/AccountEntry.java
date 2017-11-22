@@ -29,10 +29,10 @@ public class AccountEntry {
     @AView.Column(title = "%correspondent", width = "280")
     private final StringProperty correspondent = new SimpleStringProperty("");
     
-    @AView.Column(title = "%debit", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight")
+    @AView.Column(title = "%debit", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty debit = new SimpleStringProperty("");
     
-    @AView.Column(title = "%credit", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight")
+    @AView.Column(title = "%credit", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty credit = new SimpleStringProperty("");
     
     private int docId;

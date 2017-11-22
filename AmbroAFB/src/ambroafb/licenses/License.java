@@ -36,11 +36,11 @@ public class License extends EditorPanelable {
 
     public String password;
     
-    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATETIME, styleClass = "textRight")
+    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATETIME, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty createdTime;
     private final ObjectProperty<LocalDateTime> createdTimeObj;
     
-    @AView.Column(title = "%license_N", width = TableColumnFeatures.Width.LICENSE, styleClass = "textRight")
+    @AView.Column(title = "%license_N", width = TableColumnFeatures.Width.LICENSE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final IntegerProperty licenseNumber;
     
     @AView.Column(title = "%client", width = TableColumnFeatures.Width.CLIENT_MAIL)
@@ -49,7 +49,7 @@ public class License extends EditorPanelable {
     private int clientId; // for object mapper (case: class to json)
     private String firstName, lastName, email;
     
-    @AView.Column(title = "%product", width = TableColumnFeatures.Width.PRODUCT, styleClass = "textCenter")
+    @AView.Column(title = "%product", width = TableColumnFeatures.Width.PRODUCT, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final StringProperty productDescrip;
     private final ObjectProperty<Product> productObj;
     private int productId; // for object mapper (case: class to json)
@@ -69,17 +69,17 @@ public class License extends EditorPanelable {
     
     private final StringProperty remark;
     
-    @AView.Column(title = "%begin_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
+    @AView.Column(title = "%begin_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty firstDateDescrip;
     private final ObjectProperty<LocalDate> firstDateObj;
     private String firstDate; // for object mapper (case: class to json)
     
-    @AView.Column(title = "%end_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
+    @AView.Column(title = "%end_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty lastDateDescrip;
     private final ObjectProperty<LocalDate> lastDateObj;
     private String lastDate; // for object mapper (case: class to json)
     
-    @AView.Column(title = "%extra_days", width = "64", styleClass = "textRight")
+    @AView.Column(title = "%extra_days", width = "64", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final IntegerProperty additionalDays;
     
     private final StringProperty lastLoginTime;

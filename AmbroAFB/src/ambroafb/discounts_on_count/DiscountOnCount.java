@@ -8,6 +8,7 @@ package ambroafb.discounts_on_count;
 import ambro.AView;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -17,10 +18,10 @@ import javafx.beans.property.StringProperty;
  */
 public class DiscountOnCount extends EditorPanelable {
 
-    @AView.Column(title = "%licenses_count_min", width = "120", styleClass = "textRight")
+    @AView.Column(title = "%licenses_count_min", width = "120", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty licenseCount;
     
-    @AView.Column(title = "%sales_percent", width = "100", styleClass = "textRight")
+    @AView.Column(title = "%sales_percent", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty discountRate;
     
 

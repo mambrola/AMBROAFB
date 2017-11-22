@@ -50,7 +50,7 @@ import javafx.collections.ObservableList;
  */
 public class Invoice extends EditorPanelable { 
 
-    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
+    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty createdDate;
     
     @AView.Column(title = "%invoice_N", width = "100")
@@ -67,30 +67,30 @@ public class Invoice extends EditorPanelable {
     private final StringExpression clientDescrip;
     private final ObjectProperty<Client> clientObj;
     
-    @AView.Column(title = "%begin_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
+    @AView.Column(title = "%begin_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty beginDateDescrip;
     private final ObjectProperty<LocalDate> beginDateObj;
 
-    @AView.Column(title = "%end_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
+    @AView.Column(title = "%end_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty endDateDescrip;
     private final ObjectProperty<LocalDate> endDateObj;
     
-    @AView.Column(title = "%revoked_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
+    @AView.Column(title = "%revoked_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty revokedDateDescrip;
     private final ObjectProperty<LocalDate> revokedDateObj;
     private final BooleanProperty isRevoked;
     
-//    @AView.Column(title = "%extra_discount", width = "100", styleClass = "textRight")
+//    @AView.Column(title = "%extra_discount", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty additionalDiscRate;
     
-    @AView.Column(title = "%to_pay", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight" )
+    @AView.Column(title = "%to_pay", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT )
     private final StringProperty moneyToPay;
     
     
-    @AView.Column(title = "%vat", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight")
+    @AView.Column(title = "%vat", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty vat;
     
-    @AView.Column(title = "%paid", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight")
+    @AView.Column(title = "%paid", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty moneyPaid;
     
     

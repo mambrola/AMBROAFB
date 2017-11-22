@@ -9,6 +9,7 @@ import ambro.AFilterableTreeTableView;
 import ambro.AView;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -28,13 +29,13 @@ public class Balance extends EditorPanelable {
     @AView.Column(title = "%descrip", width = "360")
     private final StringProperty descrip;
     
-    @AView.Column(title = "%account", width = "100", styleClass = "textRight")
+    @AView.Column(title = "%account", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty accountIso;
     
-    @AView.Column(title = "%active", width = "100", styleClass = "textRight")
+    @AView.Column(title = "%active", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final FloatProperty active;
     
-    @AView.Column(title = "%passive", width = "100", styleClass = "textRight")
+    @AView.Column(title = "%passive", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final FloatProperty passive;
     
     private boolean activeIsRed, passiveIsRed;
