@@ -412,7 +412,7 @@ public class Invoice extends EditorPanelable {
         p.setAbbreviation(finance.articul.substring(0, Product.ABREVIATION_LENGTH));
         p.setFormer(Utils.getIntValueFor(finance.articul.substring(Product.FORMER_LENGTH)));
         p.setDescrip(finance.productDescrip);
-        p.setPrice(Utils.getIntValueFor(finance.price));
+        p.setPrice(Float.parseFloat(finance.price));
         Currency currency = new Currency();
         currency.setIso(finance.isoOrigin);
         currency.setSymbol(finance.symbolOrigin);

@@ -73,15 +73,17 @@ public class Annotations {
     @Target(ElementType.FIELD)
     public @interface ContentAmount {
         int integerPartMaxLen() default 0;
+        static int integerPartMinLen = 0;
         static int integerPartMaxLen = 10;
-        String valueForIntegerPart() default "(0|[1-9]\\d{0,"  + (integerPartMaxLen-1) + "})(\\.\\d*)?";
+        String valueForIntegerPart() default "\\d{" + integerPartMinLen + ","  + integerPartMaxLen + "}(\\.\\d*)?";
         String explainForIntegerPart() default "anot_amount_integer_part_exp";
         
-        static int fractionalPartLen = 2;
-        String valueForFractionalPart() default "\\d*(\\.\\d{" + fractionalPartLen + "})?";
+        static int fractionalPartMinLen = 0;
+        static int fractionalPartMaxLen = 2;
+        String valueForFractionalPart() default "\\d*(\\.\\d{" + fractionalPartMinLen + "," + fractionalPartMaxLen + "})?";
         String explainForFractionalPart() default "anot_amount_fractional_part_exp";
         
-        String valueForWhole() default "(0|[1-9]\\d{0," + integerPartMaxLen + "})(\\.\\d{" + fractionalPartLen + "})?";
+        String valueForWhole() default "\\d{" + integerPartMinLen + ","  + (integerPartMaxLen-1) + "}(\\.\\d{" + fractionalPartMinLen + "," + fractionalPartMaxLen + "})?";
         String explainForWhole() default "anot_amount_explain";
     }
     

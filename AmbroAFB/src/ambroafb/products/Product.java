@@ -229,8 +229,8 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         this.productSpecific.get().setDescrip(specificDescrip);
     }
     
-    public void setPrice(double price) {
-        this.price.set("" + price);
+    public void setPrice(Float price) {
+        this.price.set(NumberConverter.makeFloatStringBySpecificFraction(price, 2));
     }
     
     public void setIso(String iso){

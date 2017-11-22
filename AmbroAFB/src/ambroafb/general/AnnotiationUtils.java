@@ -241,7 +241,7 @@ public class AnnotiationUtils {
         }
         else if (!Pattern.matches(annotation.valueForFractionalPart(), (String) typeAndContent[1])){
             String explainFromBundle = GeneralConfig.getInstance().getTitleFor(annotation.explainForFractionalPart());
-            String fractionalPartExp = explainFromBundle.replaceFirst("#", "" + Annotations.ContentAmount.fractionalPartLen);
+            String fractionalPartExp = explainFromBundle.replaceFirst("#", "" + Annotations.ContentAmount.fractionalPartMaxLen);
             changeNodeTitleLabelVisual((Node)typeAndContent[0], fractionalPartExp);
         }
         else if (!Pattern.matches(annotation.valueForWhole(), (String) typeAndContent[1])){
