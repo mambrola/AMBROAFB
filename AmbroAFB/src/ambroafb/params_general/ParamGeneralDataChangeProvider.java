@@ -62,7 +62,7 @@ public class ParamGeneralDataChangeProvider extends DataChangeProvider {
                 JSONObject entryForParamGenerals = getAskForDB(ids);
                 List<ParamGeneral> conflicteds = dataFetchProvider.getFilteredBy(entryForParamGenerals);
                 String newMassage = exception.getLocalizedMessage();
-                newMassage += conflicteds.stream().map((paramGeneral) -> paramGeneral.toString()).reduce("", (t, u) -> t += u);
+                newMassage += conflicteds.stream().map((paramGeneral) -> paramGeneral.toString()).reduce("", (t, u) -> t += ("\n" + u));
                 ((DBActionException) exception).setMessage(newMassage);
             }
             throw exception;
