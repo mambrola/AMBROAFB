@@ -8,7 +8,7 @@ package ambroafb.accounts.detail_pane.helper;
 import ambro.AView;
 import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
-import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import javafx.beans.property.ObjectProperty;
@@ -22,17 +22,17 @@ import javafx.beans.property.StringProperty;
  */
 public class AccountEntry {
     
-    @AView.Column(title = "%date", width = TableColumnWidths.DATE)
+    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE)
     private final StringProperty dateDescrip = new SimpleStringProperty("");
     private final ObjectProperty<LocalDate> dateObj = new SimpleObjectProperty<>();
     
     @AView.Column(title = "%correspondent", width = "280")
     private final StringProperty correspondent = new SimpleStringProperty("");
     
-    @AView.Column(title = "%debit", width = TableColumnWidths.MONEY, styleClass = "textRight")
+    @AView.Column(title = "%debit", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight")
     private final StringProperty debit = new SimpleStringProperty("");
     
-    @AView.Column(title = "%credit", width = TableColumnWidths.MONEY, styleClass = "textRight")
+    @AView.Column(title = "%credit", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight")
     private final StringProperty credit = new SimpleStringProperty("");
     
     private int docId;

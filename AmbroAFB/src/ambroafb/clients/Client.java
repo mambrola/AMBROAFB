@@ -13,7 +13,7 @@ import ambroafb.general.DateConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import ambroafb.phones.Phone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -58,7 +58,7 @@ public class Client extends EditorPanelable{
 
     private final SimpleStringProperty firstName, lastName;
 
-    @AView.Column(title = "%descrip", width = TableColumnWidths.CLIENT)
+    @AView.Column(title = "%descrip", width = TableColumnFeatures.Width.CLIENT)
     @JsonIgnore
     private final StringExpression descrip;
 
@@ -66,10 +66,10 @@ public class Client extends EditorPanelable{
     @JsonProperty("passNumber")
     private final SimpleStringProperty IDNumber;
 
-    @AView.Column(title = "%email", width = TableColumnWidths.MAIL)
+    @AView.Column(title = "%email", width = TableColumnFeatures.Width.MAIL)
     private final SimpleStringProperty email;
 
-    @AView.Column(title = "%phones", width = TableColumnWidths.PHONE)
+    @AView.Column(title = "%phones", width = TableColumnFeatures.Width.PHONE)
     @JsonIgnore
     private final SimpleStringProperty phoneNumbers;
 
@@ -94,7 +94,7 @@ public class Client extends EditorPanelable{
     @JsonIgnore
     private final ObjectProperty<Country> country;
 
-    @AView.Column(title = "%fax", width = TableColumnWidths.PHONE)
+    @AView.Column(title = "%fax", width = TableColumnFeatures.Width.PHONE)
     private final SimpleStringProperty fax;
     
     @AView.Column(title = "%www_address", width = "140")

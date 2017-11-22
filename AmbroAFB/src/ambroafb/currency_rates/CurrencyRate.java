@@ -10,7 +10,7 @@ import ambroafb.currencies.Currency;
 import ambroafb.general.DateConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import javafx.beans.property.ObjectProperty;
@@ -26,14 +26,14 @@ import javafx.beans.value.ObservableValue;
  */
 public class CurrencyRate extends EditorPanelable {
     
-    @AView.Column(title = "%date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE, styleClass = "textCenter")
     private final StringProperty dateForColumn;
     private final ObjectProperty<LocalDate> dateProperty;
     
     @AView.Column(title = "%count", width = "50", styleClass = "textCenter")
     private final StringProperty count;
     
-    @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
+    @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = "textCenter")
     private final StringProperty iso;
     private final ObjectProperty<Currency> currency;
     

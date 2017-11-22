@@ -11,7 +11,7 @@ import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
@@ -40,11 +40,11 @@ public class Doc extends EditorPanelable {
     private final IntegerProperty parentRecId;
     private final IntegerProperty processId;
     
-    @AView.Column(title = "%doc_date", width = TableColumnWidths.DATE)
+    @AView.Column(title = "%doc_date", width = TableColumnFeatures.Width.DATE)
     private final StringProperty docDateDescrip;
     private final ObjectProperty<LocalDate> docDateObj;
 
-    @AView.Column(title = "%doc_in_doc_date", width = TableColumnWidths.DATE)
+    @AView.Column(title = "%doc_in_doc_date", width = TableColumnFeatures.Width.DATE)
     private final StringProperty docInDocDateDescrip;
     private final ObjectProperty<LocalDate> docInDocDateObj;
     
@@ -56,7 +56,7 @@ public class Doc extends EditorPanelable {
     private final StringProperty creditDescrip;
     private final ObjectProperty<Account> creditObj;
     
-    @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
+    @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = "textCenter")
     private final StringProperty iso;
     
     @AView.Column(title = "%amount", width = "80", styleClass = "textRight")

@@ -13,7 +13,7 @@ import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.invoices.helper.InvoiceFinance;
 import ambroafb.invoices.helper.InvoiceReissuing;
@@ -50,7 +50,7 @@ import javafx.collections.ObservableList;
  */
 public class Invoice extends EditorPanelable { 
 
-    @AView.Column(title = "%created_date", width = TableColumnWidths.DATE, styleClass = "textRight")
+    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
     private final StringProperty createdDate;
     
     @AView.Column(title = "%invoice_N", width = "100")
@@ -59,23 +59,23 @@ public class Invoice extends EditorPanelable {
     
     private final ObjectProperty<InvoiceStatusClarify> clarifyObj;
     
-    @AView.Column(title = "%license", width = TableColumnWidths.LICENSE)
+    @AView.Column(title = "%license", width = TableColumnFeatures.Width.LICENSE)
     private final StringProperty licensesDescrip;
     private final ObservableList<LicenseShortData> licenses;
     
-    @AView.Column(title = "%client", width = TableColumnWidths.CLIENT_MAIL)
+    @AView.Column(title = "%client", width = TableColumnFeatures.Width.CLIENT_MAIL)
     private final StringExpression clientDescrip;
     private final ObjectProperty<Client> clientObj;
     
-    @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE, styleClass = "textRight")
+    @AView.Column(title = "%begin_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
     private final StringProperty beginDateDescrip;
     private final ObjectProperty<LocalDate> beginDateObj;
 
-    @AView.Column(title = "%end_date", width = TableColumnWidths.DATE, styleClass = "textRight")
+    @AView.Column(title = "%end_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
     private final StringProperty endDateDescrip;
     private final ObjectProperty<LocalDate> endDateObj;
     
-    @AView.Column(title = "%revoked_date", width = TableColumnWidths.DATE, styleClass = "textRight")
+    @AView.Column(title = "%revoked_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
     private final StringProperty revokedDateDescrip;
     private final ObjectProperty<LocalDate> revokedDateObj;
     private final BooleanProperty isRevoked;
@@ -83,14 +83,14 @@ public class Invoice extends EditorPanelable {
 //    @AView.Column(title = "%extra_discount", width = "100", styleClass = "textRight")
     private final StringProperty additionalDiscRate;
     
-    @AView.Column(title = "%to_pay", width = TableColumnWidths.MONEY, styleClass = "textRight" )
+    @AView.Column(title = "%to_pay", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight" )
     private final StringProperty moneyToPay;
     
     
-    @AView.Column(title = "%vat", width = TableColumnWidths.MONEY, styleClass = "textRight")
+    @AView.Column(title = "%vat", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight")
     private final StringProperty vat;
     
-    @AView.Column(title = "%paid", width = TableColumnWidths.MONEY, styleClass = "textRight")
+    @AView.Column(title = "%paid", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight")
     private final StringProperty moneyPaid;
     
     
@@ -758,7 +758,7 @@ public class Invoice extends EditorPanelable {
 //    public static class TextColorCellFactory implements Callback<TableColumn<Invoice, String>, TableCell<Invoice, String>> {
 //
 //        @Override
-//        public TableCell<Invoice, String> call(TableColumn<Invoice, String> param) {
+//        public TableCell<Invoice, String> call(TableColumnFeatures<Invoice, String> param) {
 //            TableCell<Invoice, String> cell = new TableCell<Invoice, String>() {
 //
 //                @Override

@@ -10,7 +10,7 @@ import ambroafb.clients.Client;
 import ambroafb.general.DateConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import ambroafb.licenses.helper.LicenseStatus;
 import ambroafb.products.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,26 +36,26 @@ public class License extends EditorPanelable {
 
     public String password;
     
-    @AView.Column(title = "%created_date", width = TableColumnWidths.DATETIME, styleClass = "textRight")
+    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATETIME, styleClass = "textRight")
     private final StringProperty createdTime;
     private final ObjectProperty<LocalDateTime> createdTimeObj;
     
-    @AView.Column(title = "%license_N", width = TableColumnWidths.LICENSE, styleClass = "textRight")
+    @AView.Column(title = "%license_N", width = TableColumnFeatures.Width.LICENSE, styleClass = "textRight")
     private final IntegerProperty licenseNumber;
     
-    @AView.Column(title = "%client", width = TableColumnWidths.CLIENT_MAIL)
+    @AView.Column(title = "%client", width = TableColumnFeatures.Width.CLIENT_MAIL)
     private final StringExpression clientDescrip;
     private final ObjectProperty<Client> clientObj;
     private int clientId; // for object mapper (case: class to json)
     private String firstName, lastName, email;
     
-    @AView.Column(title = "%product", width = TableColumnWidths.PRODUCT, styleClass = "textCenter")
+    @AView.Column(title = "%product", width = TableColumnFeatures.Width.PRODUCT, styleClass = "textCenter")
     private final StringProperty productDescrip;
     private final ObjectProperty<Product> productObj;
     private int productId; // for object mapper (case: class to json)
     private String abbreviation, former;
     
-    @AView.Column(title = "%last_invoice", width = TableColumnWidths.INVOICE)
+    @AView.Column(title = "%last_invoice", width = TableColumnFeatures.Width.INVOICE)
     private final StringProperty invoiceNumber;
 //    @JsonIgnore
 //    private final ObjectProperty<Invoice> invoiceObj;
@@ -69,12 +69,12 @@ public class License extends EditorPanelable {
     
     private final StringProperty remark;
     
-    @AView.Column(title = "%begin_date", width = TableColumnWidths.DATE, styleClass = "textRight")
+    @AView.Column(title = "%begin_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
     private final StringProperty firstDateDescrip;
     private final ObjectProperty<LocalDate> firstDateObj;
     private String firstDate; // for object mapper (case: class to json)
     
-    @AView.Column(title = "%end_date", width = TableColumnWidths.DATE, styleClass = "textRight")
+    @AView.Column(title = "%end_date", width = TableColumnFeatures.Width.DATE, styleClass = "textRight")
     private final StringProperty lastDateDescrip;
     private final ObjectProperty<LocalDate> lastDateObj;
     private String lastDate; // for object mapper (case: class to json)

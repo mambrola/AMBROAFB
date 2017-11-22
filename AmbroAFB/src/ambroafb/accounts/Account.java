@@ -11,7 +11,7 @@ import ambroafb.clients.Client;
 import ambroafb.general.DateConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -34,7 +34,7 @@ public class Account extends EditorPanelable {
     @AView.Column(title = "%account_number", width = "80", styleClass = "textRight")
     private final StringProperty accountNumber;
     
-    @AView.Column(title = "%iso", width = TableColumnWidths.ISO)
+    @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO)
     private final StringProperty iso;
     
     @AView.Column(title = "%descrip", width = "360")

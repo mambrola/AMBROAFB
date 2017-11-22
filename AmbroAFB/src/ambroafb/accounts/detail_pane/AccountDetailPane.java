@@ -15,7 +15,7 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import ambroafb.general_scene.SelectionObserver;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -86,14 +86,14 @@ public class AccountDetailPane extends VBox implements SelectionObserver  {
     }
     
     private void setComponentsSize(){
-        double dateWidth = Double.parseDouble(TableColumnWidths.DATE);
+        double dateWidth = Double.parseDouble(TableColumnFeatures.Width.DATE);
         endDate.setMinWidth(dateWidth + dateWidth / 2);
         endDate.setMaxWidth(dateWidth + dateWidth / 2);
         
         beginDate.setMinWidth(dateWidth + dateWidth / 2);
         beginDate.setMaxWidth(dateWidth + dateWidth / 2);
         
-        double moneyWidth = Double.parseDouble(TableColumnWidths.MONEY);
+        double moneyWidth = Double.parseDouble(TableColumnFeatures.Width.MONEY);
         currentDebitPane.setMinWidth(moneyWidth);
         currentDebitPane.setMaxWidth(moneyWidth);
         currentCreditPane.setMinWidth(moneyWidth);

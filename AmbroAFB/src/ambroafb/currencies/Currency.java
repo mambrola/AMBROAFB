@@ -8,7 +8,7 @@ package ambroafb.currencies;
 import ambro.AView;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import java.time.LocalDate;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -24,11 +24,11 @@ import javafx.beans.value.ObservableValue;
 public class Currency extends EditorPanelable {
 
     
-    @AView.Column(title = "%date", width = TableColumnWidths.DATE, styleClass = "textCenter")
+    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE, styleClass = "textCenter")
     private final StringProperty createdDate;
     private final ObjectProperty<LocalDate> dateProperty;
     
-    @AView.Column(title = "%currency_name", width = TableColumnWidths.ISO, styleClass = "textCenter")
+    @AView.Column(title = "%currency_name", width = TableColumnFeatures.Width.ISO, styleClass = "textCenter")
     private final StringProperty iso;
     
     @AView.Column(title = "%descrip", width = "150")

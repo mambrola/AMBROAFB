@@ -9,7 +9,7 @@ import ambro.AView;
 import ambroafb.clients.Client;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import java.time.LocalDateTime;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.IntegerProperty;
@@ -25,18 +25,18 @@ import javafx.beans.property.StringProperty;
  */
 public class Logging extends EditorPanelable {
 
-    @AView.Column(title = "%license_N", width = TableColumnWidths.LICENSE, styleClass = "textCenter")
+    @AView.Column(title = "%license_N", width = TableColumnFeatures.Width.LICENSE, styleClass = "textCenter")
     private final StringProperty licenseNumber;
 
-    @AView.Column(title = "%client", width = TableColumnWidths.CLIENT_MAIL)
+    @AView.Column(title = "%client", width = TableColumnFeatures.Width.CLIENT_MAIL)
     private final StringExpression clientDescrip;
     private final ObjectProperty<Client> clientObj;
     
-    @AView.Column(title = "%login_time", width = TableColumnWidths.DATETIME, styleClass = "textRight")
+    @AView.Column(title = "%login_time", width = TableColumnFeatures.Width.DATETIME, styleClass = "textRight")
     private final StringProperty loginDateDescrip;
     private final ObjectProperty<LocalDateTime> loginDateObj;
     
-    @AView.Column(title = "%mac_address", width = TableColumnWidths.MAC_ADDRESS, styleClass = "textCenter")
+    @AView.Column(title = "%mac_address", width = TableColumnFeatures.Width.MAC_ADDRESS, styleClass = "textCenter")
     private final StringProperty macAddress;
     
     @AView.Column(title = "%login_response", width = "150")

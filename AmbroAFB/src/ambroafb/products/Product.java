@@ -12,7 +12,7 @@ import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.interfaces.TableColumnWidths;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import ambroafb.general.mapeditor.MapEditorElement;
 import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
@@ -60,10 +60,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @AView.Column(title = "%product_specific", width = "200", cellFactory = SpecificCellFactory.class)
     private final ObjectProperty<ProductSpecific> productSpecific;
     
-    @AView.Column(title = "%monthly_price", width = "90", styleClass = "textRight")
+    @AView.Column(title = "%monthly_price", width = TableColumnFeatures.Width.MONEY, styleClass = "textRight")
     private final SimpleStringProperty price;
     
-    @AView.Column(title = "%iso", width = TableColumnWidths.ISO, styleClass = "textCenter")
+    @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final SimpleStringProperty iso;
     private final ObjectProperty<Currency> currency;
     
