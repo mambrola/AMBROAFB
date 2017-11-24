@@ -5,9 +5,11 @@
  */
 package ambroafb.countries;
 
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
 import authclient.db.ConditionBuilder;
+import authclient.db.DBClient;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -18,6 +20,8 @@ import org.json.JSONObject;
 public class CountryDataFetchProvider extends DataFetchProvider {
 
     private final String DB_TABLE_NAME = "countries";
+    private final String ORDERED_PROCEDURE = "general_select_ordered";
+//    general_select_ordered('countries', 'ka', '{}', 'clients');
     
     public CountryDataFetchProvider(){
     
@@ -26,7 +30,6 @@ public class CountryDataFetchProvider extends DataFetchProvider {
     @Override
     public List<Country> getFilteredBy(JSONObject params) throws Exception {
         List<Country> countries = getObjectsListFromDBTable(Country.class, DB_TABLE_NAME, params);
-        countries.sort((Country c1, Country c2) -> c1.compareByDescrip(c2));
         return countries;
     }
 
@@ -50,4 +53,8 @@ public class CountryDataFetchProvider extends DataFetchProvider {
         return getObjectFromDB(Country.class, DB_TABLE_NAME, conditionBuilder.build());
     }
     
+    public List<Country> getOrderedByClients() throws Exception {
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        return callProcedure(Country.class, ORDERED_PROCEDURE, DB_TABLE_NAME, dbClient.getLang(), DataFetchProvider.PARAM_FOR_ALL, "clients");
+    }
 }

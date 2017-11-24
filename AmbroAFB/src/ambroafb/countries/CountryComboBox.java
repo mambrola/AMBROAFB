@@ -94,7 +94,7 @@ public class CountryComboBox extends ComboBox<Country> {
         @Override
         public void run() {
             try {
-                List<Country> countries = dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL);
+                List<Country> countries = dataFetchProvider.getOrderedByClients();
                 Platform.runLater(() -> {
                     items.setAll(countries);
                     if (consumer != null){

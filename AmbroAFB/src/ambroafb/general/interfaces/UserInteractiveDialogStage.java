@@ -116,6 +116,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
                 case ADD:
                 case ADD_BY_SAMPLE:
                     boolean allRequiredFieldsAreValid = AnnotiationUtils.everyFieldContentIsValidFor(dialogController, editorButtonType);
+                    System.out.println("allRequiredFieldsAreValid: " + allRequiredFieldsAreValid);
                     if (allRequiredFieldsAreValid){
                         if (editorButtonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.EDIT))
                             dataChangeProvider.editOneToDB(getSceneObject(), builEditSuccessAction(), getErrorAction());

@@ -29,6 +29,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -60,8 +62,8 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%discounts", width = "90", cellFactory = DiscountCellFactory.class)
-    private final ObjectProperty<List<ProductDiscount>> discountsObj;
-//    private final ObservableList<MapEditorElement> discountsForMapEditor;
+    private final ObjectProperty<ObservableList<ProductDiscount>> discountsObj;
+//    private final ObjectProperty<List<ProductDiscount>> discountsObj;
     
     @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)
     private final SimpleBooleanProperty isActive;
@@ -84,14 +86,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         productSpecific = new SimpleObjectProperty<>(new ProductSpecific());
         price = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>(new Currency());
-        discountsObj = new SimpleObjectProperty<>(new ArrayList<>());
+        discountsObj = new SimpleObjectProperty<>(FXCollections.observableArrayList());
         isActive = new SimpleBooleanProperty();
         notJurMaxCount = new SimpleStringProperty("");
         testingDays = new SimpleStringProperty("");
-        
-        discountsObj.addListener((ObservableValue<? extends List<ProductDiscount>> observable, List<ProductDiscount> oldValue, List<ProductDiscount> newValue) -> {
-            System.out.println("sheicvala list");
-        });
     }
     
     
@@ -166,6 +164,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     
     @JsonIgnore // Discounts must need "sets_separate_saving" parameter. So ProductDataChangeProvider provides to send accounts to DB.
     public List<ProductDiscount> getDiscounts() {
+        System.out.println("-- discount list class: " + discountsObj.get().getClass().getCanonicalName());
         return discountsObj.get();
     }
     
@@ -216,7 +215,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     public void setDiscounts(Collection<ProductDiscount> discounts) {
         Printer.printInfo("Product", "setDiscounts", "Collection<ProductDiscount> discounts");
         
-        this.discountsObj.set(new ArrayList(discounts));
+        this.discountsObj.set(FXCollections.observableArrayList(discounts));
     }
 
     public void setIsActive(boolean isActive) {
@@ -323,19 +322,21 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
      * The class provides to change visual  for table discount cell.  
      * Discounts will show in {@link ambro.ANodeSlider  ANodeSlider} for table appropriate cell.
      */
-    public static class DiscountCellFactory implements Callback<TableColumn<Product, List<ProductDiscount>>, TableCell<Product, List<ProductDiscount>>> {
+    public static class DiscountCellFactory implements Callback<TableColumn<Product, ObservableList<ProductDiscount>>, TableCell<Product, ObservableList<ProductDiscount>>> {
 
         @Override
-        public TableCell<Product, List<ProductDiscount>> call(TableColumn<Product, List<ProductDiscount>> param) {
-            return new TableCell<Product, List<ProductDiscount>>() {
+        public TableCell<Product, ObservableList<ProductDiscount>> call(TableColumn<Product, ObservableList<ProductDiscount>> param) {
+            return new TableCell<Product, ObservableList<ProductDiscount>>() {
                 @Override
-                public void updateItem(List<ProductDiscount> discounts, boolean empty) {
+                public void updateItem(ObservableList<ProductDiscount> discounts, boolean empty) {
                     super.updateItem(discounts, empty);
                     setEditable(false);
                     if (discounts == null || discounts.isEmpty() || empty){
                         setGraphic(null);
+                        System.out.println("----- if oooooooo----- shemovediiii");
                     }
                     else {
+                        System.out.println("----- else oooooooo----- shemovediiii");
                         ANodeSlider<Label> nodeSlider = new ANodeSlider<>();
                         discounts.stream().forEach((dis) -> {
                             nodeSlider.getItems().add(new Label(dis.toString()));

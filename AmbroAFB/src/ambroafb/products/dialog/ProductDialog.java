@@ -51,8 +51,18 @@ public class ProductDialog extends UserInteractiveDialogStage implements Dialoga
     }
 
     @Override
+    protected Consumer<Object> getEditSuccessAction() {
+        return (obj) -> { 
+            product.copyFrom((Product)obj);
+        };
+    }
+    
+    @Override
     protected Consumer<Object> getAddSuccessAction() {
-        return (obj) -> product = (Product)obj;
+        return (obj) -> { 
+            product.setRecId(((Product)obj).getRecId());
+            product.copyFrom((Product)obj);
+        };
     }
 
     
