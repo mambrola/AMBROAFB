@@ -58,4 +58,19 @@ public class NumberConverter {
         Float result = stringToFloat(floatStr, fractionDigitCount);
         return (result == null) ? defaultValue : result;
     }
+    
+    /**
+     *  The method converts string to Integer. If conversation is impossible, returns 'defaultValue' parameter.
+     * @param intStr The number in string.
+     * @param defaultValue The default value if conversation is not possible.
+     * @return 
+     */
+    public static Integer stringToInteger(String intStr, Integer defaultValue) {
+        Integer result = defaultValue;
+        try {
+            result = Integer.parseInt(intStr);
+        } catch (NumberFormatException ex){
+        }
+        return result;
+    }
 }

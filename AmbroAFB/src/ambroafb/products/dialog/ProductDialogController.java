@@ -66,7 +66,7 @@ public class ProductDialogController extends DialogController {
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        currencies.fillComboBoxWithoutALLAndWithoutRatesBasicIso(null);
+        currencies.fillComboBoxWithoutALL(null);
     }
 
     @Override

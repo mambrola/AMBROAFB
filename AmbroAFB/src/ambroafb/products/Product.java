@@ -169,12 +169,12 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return isActive.get();
     }
     
-    public int getNotJurMaxCount(){
-        return Utils.getIntValueFor(notJurMaxCount.get());
+    public Integer getNotJurMaxCount(){
+        return NumberConverter.stringToInteger(notJurMaxCount.get(), 0);
     }
     
-    public int getTestingDays(){
-        return Utils.getIntValueFor(testingDays.get());
+    public Integer getTestingDays(){
+        return NumberConverter.stringToInteger(testingDays.get(), 0);
     }
     
     
@@ -220,11 +220,11 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     }
     
     public void setNotJurMaxCount(int notJurMaxCount){
-        this.notJurMaxCount.set("" + notJurMaxCount);
+        this.notJurMaxCount.set((notJurMaxCount == 0) ? "" : "" + notJurMaxCount);
     }
 
     public void setTestingDays(int testingDays){
-        this.testingDays.set("" + testingDays);
+        this.testingDays.set((testingDays == 0) ? "" : "" + testingDays);
     }
 
     
