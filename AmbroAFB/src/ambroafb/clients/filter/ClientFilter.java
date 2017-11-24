@@ -82,10 +82,6 @@ public class ClientFilter  extends UserInteractiveFilterStage implements Filtera
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        ArrayList<ClientStatus> clientStatuses = Client.getAllStatusFromDB();
-//        clientStatuses.sort((ClientStatus status1, ClientStatus status2) -> status1.compateById(status2));
-//        statuses.getItems().addAll(clientStatuses);
-        
         dateBigger.setValue(clientFilterModel.getFromDate());
         dateLess.setValue(clientFilterModel.getToDate());
         juridical.setSelected(clientFilterModel.isJuridicalSelected());

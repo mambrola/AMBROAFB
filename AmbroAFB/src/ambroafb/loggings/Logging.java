@@ -60,22 +60,6 @@ public class Logging extends EditorPanelable {
         invoiceId = new SimpleIntegerProperty(0);
     }
 
-    // DB functions:
-//    public static ArrayList<Logging> getFilteredFromDB(FilterModel model) {
-//        LoggingFilterModel logingFilterModel = (LoggingFilterModel) model;
-//        WhereBuilder whereBuilder = new ConditionBuilder().where()
-//                                        .and("login_time", ">=", logingFilterModel.getFromDateForDB())
-//                                        .and("login_time", "<=", logingFilterModel.getToDateForDB());
-//        if (logingFilterModel.isSelectedConcreteClient()){
-//            whereBuilder.and("client_id", "=", logingFilterModel.getSelectedClientId());
-//        }
-//        
-//        JSONObject params = whereBuilder.condition().build();
-//        ArrayList<Logging> loggings = DBUtils.getObjectsListFromDB(Logging.class, DB_LOGIN_VIEW, params);
-//        loggings.sort((Logging log1, Logging log2) -> log2.compareById(log1));
-//        return loggings;
-//    }
-    
     
     // Properties:
     public StringProperty licenseNumberProperty(){

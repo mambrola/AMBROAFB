@@ -43,7 +43,6 @@ public class MerchandiseComboBox extends ComboBox<Merchandise> {
         
         try {
             List<Merchandise> merchandises = dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL);
-            merchandises.sort((Merchandise b1, Merchandise b2) -> b1.getRecId() - b2.getRecId());
             items.addAll(merchandises);
             this.setValue(all);
         } catch (Exception ex) {

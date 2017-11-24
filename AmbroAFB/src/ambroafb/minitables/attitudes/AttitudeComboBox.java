@@ -42,7 +42,6 @@ public class AttitudeComboBox extends ComboBox<Attitude> {
                 }
             });
             List<Attitude> attitudes = dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL);
-            attitudes.sort((Attitude b1, Attitude b2) -> b1.getRecId() - b2.getRecId());
             items.addAll(attitudes);
             this.setValue(all);
         } catch (Exception ex) {

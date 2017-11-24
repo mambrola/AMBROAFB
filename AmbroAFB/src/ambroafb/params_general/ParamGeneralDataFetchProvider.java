@@ -32,24 +32,8 @@ public class ParamGeneralDataFetchProvider extends DataFetchProvider {
         String generalParams = authclient.Utils.toCamelCase(resultDB).toString();
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(generalParams, mapper.getTypeFactory().constructCollectionType(ArrayList.class, ParamGeneral.class));
-        
-//        ParamGeneralDBResponse paramsGeneralResponse = getParamsGeneral(DB_SELECT_PROC_NAME, params);
-//        ArrayList<ParamGeneral> paramsGeneral = paramsGeneralResponse.getParamGenerals();
-//        paramsGeneral.sort((ParamGeneral p1, ParamGeneral p2) -> p1.compareById(p2));
-//        return paramsGeneral;
     }
     
-//    public ParamGeneralDBResponse getParamsGeneral(String procedureName, JSONObject params) throws IOException, AuthServerException{
-//        ParamGeneralDBResponse response = new ParamGeneralDBResponse();
-//        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-//        JSONArray resultDB = dbClient.callProcedureAndGetAsJson(procedureName, dbClient.getLang(), params);
-//        String generalParams = authclient.Utils.toCamelCase(resultDB).toString();
-//        ObjectMapper mapper = new ObjectMapper();
-//        ArrayList<ParamGeneral> generalParamsList = mapper.readValue(generalParams, mapper.getTypeFactory().constructCollectionType(ArrayList.class, ParamGeneral.class));
-//        response.setParamGenerals(generalParamsList);
-//        return response;
-//    }
-
     @Override
     public List<ParamGeneral> getFilteredBy(FilterModel model) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

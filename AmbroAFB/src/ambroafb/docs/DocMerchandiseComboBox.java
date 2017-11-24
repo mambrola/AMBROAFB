@@ -36,7 +36,6 @@ public class DocMerchandiseComboBox extends ComboBox<DocMerchandise> {
         public void run() {
             try {
                 List<DocMerchandise> merchandises = dataFetchProvider.getDocMerchandises();
-                merchandises.sort((DocMerchandise m1, DocMerchandise m2) -> m1.compareById(m2));
                 Platform.runLater(() -> {
                     items.setAll(merchandises);
                 });
