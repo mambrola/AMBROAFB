@@ -23,7 +23,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.util.Callback;
 
 /**
  *
@@ -40,41 +42,27 @@ public class Account extends EditorPanelable {
     @AView.Column(title = "%descrip", width = "360")
     private final StringProperty descrip;
     
-    @AView.Column(title = "%bal_accounts_min", width = "70", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
-    private final StringProperty balAccount;
+    @AView.Column(title = "%bal_accounts_min", width = "70", styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = BalAccountCellFactory.class)
     private final ObjectProperty<BalanceAccount> balAccountObj;
     
-    @AView.Column(title = "%client", width = "60", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
-    private final StringProperty clientId;
+    @AView.Column(title = "%client", width = "60", styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = ClientCellFactory.class)
     private final ObjectProperty<Client> clientObj;
     
     private final ObjectProperty<LocalDate> dateOpenedObj, dateClosedObj;
     private final StringProperty remark;
-    private final StringProperty balAccDescrip;
     
-//    private static final String DB_VEIW_NAME = "accounts_whole";
     private final int clientIdDefaultValue = 0;
     
     public Account(){
         dateOpenedObj = new SimpleObjectProperty<>(LocalDate.now());
         accountNumber = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
-        balAccount = new SimpleStringProperty("");
         balAccountObj = new SimpleObjectProperty<>(new BalanceAccount());
         descrip = new SimpleStringProperty("");
-        clientId = new SimpleStringProperty("");
         clientObj = new SimpleObjectProperty<>(new Client());
         dateClosedObj = new SimpleObjectProperty<>();
         remark = new SimpleStringProperty("");
-        balAccDescrip = new SimpleStringProperty("");
         
-        clientObj.addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
-            String newClientId = "";
-            if (newValue != null){
-                newClientId = "" + newValue.getRecId();
-            }
-            clientId.set(newClientId);
-        });
     }
     
     public StringProperty accountNumberProperty(){
@@ -95,10 +83,6 @@ public class Account extends EditorPanelable {
     
     public StringProperty remarkProperty(){
         return remark;
-    }
-    
-    public StringProperty balAccDescripProperty(){
-        return balAccDescrip;
     }
     
     public ObjectProperty<Client> clientProperty(){
@@ -155,7 +139,7 @@ public class Account extends EditorPanelable {
     
     @JsonIgnore
     public String getBalAccountDescrip(){
-        return balAccDescrip.get();
+        return balAccountObj.get().getDescrip();
     }
     
     public String getDateClose(){
@@ -174,22 +158,17 @@ public class Account extends EditorPanelable {
     
     @JsonProperty
     public void setBalAccountId(int id){
-        if (balAccountObj.isNotNull().get()){
-            this.balAccountObj.get().setRecId(id);
-        }
+        this.balAccountObj.get().setRecId(id);
     }
 
     @JsonSetter("balAcc")
     public void setBalAccount(int balAcc){
-        this.balAccount.set("" + balAcc);
-        if (balAccountObj.isNotNull().get()){
-            this.balAccountObj.get().setBalAcc(balAcc);
-        }
+        this.balAccountObj.get().setBalAcc(balAcc);
     }
     
     @JsonProperty
     public void setBalAccountDescrip(String balAccDescrip){
-        this.balAccDescrip.set(balAccDescrip);
+        balAccountObj.get().setDescrip(balAccDescrip);
     }
     
     public void setDescrip(String descrip){
@@ -197,17 +176,12 @@ public class Account extends EditorPanelable {
     }
     
     public void setClientId(int clientId){
-        this.clientId.set((clientId == 0) ? "" : "" + clientId);
-        if (clientObj.isNotNull().get()){
-            clientObj.get().setRecId(clientId);
-        }
+        clientObj.get().setRecId(clientId);
     }
     
     @JsonProperty
     public void setClientDescrip(String descrip){
-        if (clientObj.isNotNull().get()){
-            clientObj.get().setFirstName(descrip);
-        }
+        clientObj.get().setFirstName(descrip);
     }
     
     public void setDateOpen(String date){
@@ -243,7 +217,7 @@ public class Account extends EditorPanelable {
         Account otherAccount = (Account)other;
         setAccount(otherAccount.getAccount());
         setIso(otherAccount.getIso());
-        setBalAccount(otherAccount.getBalAccount());
+        balAccountObj.set(otherAccount.balAccProperty().get().cloneWithID());
         setDescrip(otherAccount.getDescrip());
         setClientId(otherAccount.getClientId());
         setClientDescrip(otherAccount.getClientDescrip());
@@ -315,5 +289,36 @@ public class Account extends EditorPanelable {
             }
         }
         return result;
+    }
+    
+    
+    public static class BalAccountCellFactory implements Callback<TableColumn<Account, BalanceAccount>, TableCell<Account, BalanceAccount>> {
+
+        @Override
+        public TableCell<Account, BalanceAccount> call(TableColumn<Account, BalanceAccount> param) {
+            return new TableCell<Account, BalanceAccount>() {
+                @Override
+                protected void updateItem(BalanceAccount item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText((item == null || empty) ? null : "" + item.getBalAcc());
+                }
+            };
+        }
+    }
+    
+    
+    public static class ClientCellFactory implements Callback<TableColumn<Account, Client>, TableCell<Account, Client>> {
+
+        @Override
+        public TableCell<Account, Client> call(TableColumn<Account, Client> param) {
+            return new TableCell<Account, Client>() {
+                @Override
+                protected void updateItem(Client item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText((item == null || item.getRecId() == 0 || empty) ? null : "" + item.getRecId());
+                }
+                
+            };
+        }
     }
 }
