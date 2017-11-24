@@ -40,7 +40,8 @@ public class BalanceAccount extends EditorPanelable {
     
     private final BooleanProperty indeterminateProperty;
     private final BooleanProperty activeProperty;
-    private final IntegerProperty levelProperty;
+    private final IntegerProperty level;
+    private int parentRecId;
     
     
     @AFilterableTreeTableView.Children
@@ -62,7 +63,7 @@ public class BalanceAccount extends EditorPanelable {
         actPas = new SimpleIntegerProperty(0);
         indeterminateProperty = new SimpleBooleanProperty();
         activeProperty = new SimpleBooleanProperty();
-        levelProperty = new SimpleIntegerProperty();
+        level = new SimpleIntegerProperty();
         
         actPasExpression = Bindings.when(indeterminateProperty).then(Names.BAL_ACCOUNT_ACT_PAS).
                             otherwise(Bindings.when(activeProperty).then(Names.BAL_ACCOUNT_ACT)
@@ -98,7 +99,7 @@ public class BalanceAccount extends EditorPanelable {
     }
     
     public IntegerProperty levelProperty(){
-        return levelProperty;
+        return level;
     }
     
 
@@ -117,7 +118,12 @@ public class BalanceAccount extends EditorPanelable {
     
     @JsonIgnore
     public int getLevel(){
-        return levelProperty.get();
+        return level.get();
+    }
+    
+    @JsonIgnore
+    public int getParentRecId(){
+        return parentRecId;
     }
     
     
@@ -142,8 +148,14 @@ public class BalanceAccount extends EditorPanelable {
     
     @JsonProperty
     public void setLevel(int level){
-        levelProperty.set(level);
+        this.level.set(level);
     }
+    
+    @JsonProperty
+    public void setParentRecId(int parentRecId){
+        this.parentRecId = parentRecId;
+    }
+            
     
     @Override
     public BalanceAccount cloneWithoutID() {
