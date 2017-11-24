@@ -10,7 +10,6 @@ import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
-import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -49,12 +48,5 @@ public class DiscountOnCountDialog extends UserInteractiveDialogStage implements
     protected DiscountOnCount getSceneObject() {
         return discountOnCount;
     }
-
-    @Override
-    protected Consumer<Object> getAddSuccessAction() {
-        return (obj) -> discountOnCount = (DiscountOnCount)obj;
-    }
-    
-    
 
 }

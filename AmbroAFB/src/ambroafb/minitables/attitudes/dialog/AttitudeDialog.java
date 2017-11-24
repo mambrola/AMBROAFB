@@ -10,7 +10,6 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.minitables.attitudes.Attitude;
-import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -48,11 +47,6 @@ public class AttitudeDialog extends UserInteractiveDialogStage implements Dialog
     @Override
     protected EditorPanelable getSceneObject() {
         return attitude;
-    }
-
-    @Override
-    protected Consumer<Object> getAddSuccessAction() {
-        return (obj) -> attitude = (Attitude)obj;
     }
 
     

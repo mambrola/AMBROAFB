@@ -162,7 +162,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     
     @JsonIgnore // Discounts must need "sets_separate_saving" parameter. So ProductDataChangeProvider provides to send accounts to DB.
     public List<ProductDiscount> getDiscounts() {
-        System.out.println("-- discount list class: " + discountsObj.get().getClass().getCanonicalName());
         return discountsObj.get();
     }
     
@@ -331,10 +330,8 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
                     setEditable(false);
                     if (discounts == null || discounts.isEmpty() || empty){
                         setGraphic(null);
-                        System.out.println("----- if oooooooo----- shemovediiii");
                     }
                     else {
-                        System.out.println("----- else oooooooo----- shemovediiii");
                         ANodeSlider<Label> nodeSlider = new ANodeSlider<>();
                         discounts.stream().forEach((dis) -> {
                             nodeSlider.getItems().add(new Label(dis.toString()));

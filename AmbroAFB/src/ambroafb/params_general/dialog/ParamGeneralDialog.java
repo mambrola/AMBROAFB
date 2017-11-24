@@ -14,7 +14,6 @@ import authclient.db.ConditionBuilder;
 import authclient.db.WhereBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
@@ -55,10 +54,6 @@ public class ParamGeneralDialog extends UserInteractiveDialogStage implements Di
         return paramGeneral;
     }
 
-    @Override
-    protected Consumer<Object> getAddSuccessAction() {
-        return (obj) -> paramGeneral = (ParamGeneral)obj;
-    }
 
 //    @Override
 //    protected Consumer<Exception> getErrorAction() {

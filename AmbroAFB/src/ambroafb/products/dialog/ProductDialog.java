@@ -10,7 +10,6 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.products.Product;
-import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -50,20 +49,4 @@ public class ProductDialog extends UserInteractiveDialogStage implements Dialoga
         return product;
     }
 
-    @Override
-    protected Consumer<Object> getEditSuccessAction() {
-        return (obj) -> { 
-            product.copyFrom((Product)obj);
-        };
-    }
-    
-    @Override
-    protected Consumer<Object> getAddSuccessAction() {
-        return (obj) -> { 
-            product.setRecId(((Product)obj).getRecId());
-            product.copyFrom((Product)obj);
-        };
-    }
-
-    
 }

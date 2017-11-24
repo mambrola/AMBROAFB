@@ -10,7 +10,6 @@ import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
 import ambroafb.minitables.merchandises.Merchandise;
-import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -50,10 +49,4 @@ public class MerchandiseDialog extends UserInteractiveDialogStage implements Dia
         return merchandise;
     }
 
-    @Override
-    protected Consumer<Object> getAddSuccessAction() {
-        return (obj) -> merchandise = (Merchandise)obj;
-    }
-
-    
 }

@@ -31,7 +31,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     private boolean permissionToClose = true;
     private EditorPanel.EDITOR_BUTTON_TYPE editorButtonType;
     private DataChangeProvider dataChangeProvider;
-    Consumer<Object> closeFn;
+    private Consumer<Object> closeAction, editAction, addAction;
     
     public UserInteractiveDialogStage(Stage owner, String sceneFXMLFilePath, String stageTitleBundleKey){
         super(owner, Names.LEVEL_FOR_PATH, stageTitleBundleKey, "/images/dialog.png");
@@ -45,9 +45,14 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
             if (event != null) event.consume();
         });
         
-        closeFn = (Object t) -> {
-            close();
-        };
+        closeAction = (Object t) -> close();
+        Consumer<Object> editFn = (Object obj) -> getSceneObject().copyFrom((EditorPanelable)obj);
+        Consumer<Object> addFn = (Object obj) -> {
+                                        getSceneObject().setRecId(((EditorPanelable)obj).getRecId());
+                                        getSceneObject().copyFrom((EditorPanelable)obj);
+                                    };
+        editAction = editFn.andThen(closeAction);
+        addAction = addFn.andThen(closeAction);
     }
     
     public UserInteractiveDialogStage(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE buttonType, String sceneFXMLFilePath){
@@ -135,17 +140,17 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     
     private Consumer<Object> builDeleteSuccessAction(){
         Consumer<Object> successFn = getDeleteSuccessAction();
-        return (successFn == null) ? closeFn : successFn.andThen(closeFn);
+        return (successFn == null) ? closeAction : successFn.andThen(closeAction);
     }
     
     private Consumer<Object> builEditSuccessAction(){
         Consumer<Object> successFn = getEditSuccessAction();
-        return (successFn == null) ? closeFn : successFn.andThen(closeFn);
+        return (successFn == null) ? editAction : successFn.andThen(closeAction);
     }
     
     private Consumer<Object> builAddSuccessAction(){
         Consumer<Object> successFn = getAddSuccessAction();
-        return (successFn == null) ? closeFn : successFn.andThen(closeFn);
+        return (successFn == null) ? addAction : successFn.andThen(closeAction);
     }
     
     /**

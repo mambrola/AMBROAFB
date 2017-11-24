@@ -10,7 +10,6 @@ import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
-import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -48,11 +47,6 @@ public class BalanceAccountDialog extends UserInteractiveDialogStage implements 
     @Override
     protected EditorPanelable getSceneObject() {
         return balAccount;
-    }
-
-    @Override
-    protected Consumer<Object> getAddSuccessAction() {
-        return (obj) -> balAccount = (BalanceAccount)obj;
     }
 
     

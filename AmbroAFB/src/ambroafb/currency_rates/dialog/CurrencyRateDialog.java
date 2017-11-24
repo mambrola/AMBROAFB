@@ -10,7 +10,6 @@ import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.UserInteractiveDialogStage;
-import java.util.function.Consumer;
 import javafx.stage.Stage;
 
 /**
@@ -50,10 +49,4 @@ public class CurrencyRateDialog extends UserInteractiveDialogStage implements Di
         return currRate;
     }
 
-    @Override
-    protected Consumer<Object> getAddSuccessAction() {
-        return (obj) -> currRate = (CurrencyRate)obj;
-    }
-    
-    
 }
