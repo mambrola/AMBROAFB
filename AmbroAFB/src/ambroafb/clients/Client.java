@@ -320,8 +320,13 @@ public class Client extends EditorPanelable{
         return remark.get();
     }
     
+    @JsonIgnore
     public String getCountryCode(){
         return country.get().getCode();
+    }
+    
+    public int getCountryId(){
+        return country.get().getRecId();
     }
 
     public ObservableList<Phone> getPhones() {
@@ -357,8 +362,13 @@ public class Client extends EditorPanelable{
         this.remark.set(remark);
     }
     
+    @JsonProperty
     public void setCountryCode(String countryCode){
         this.country.get().setCode(countryCode);
+    }
+    
+    public void setCountryId(int countryId){
+        this.country.get().setRecId(countryId);
     }
     
     public ObservableList<Document> getDocuments(){

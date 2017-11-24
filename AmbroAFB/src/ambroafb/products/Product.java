@@ -10,6 +10,7 @@ import ambro.AView;
 import ambroafb.currencies.Currency;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.NumberConverter;
+import ambroafb.general.Printer;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -27,6 +28,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -83,33 +85,13 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         price = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>(new Currency());
         discountsObj = new SimpleObjectProperty<>(new ArrayList<>());
-//        discounts = FXCollections.observableArrayList();
-//        discountsForMapEditor = FXCollections.observableArrayList();
         isActive = new SimpleBooleanProperty();
         notJurMaxCount = new SimpleStringProperty("");
         testingDays = new SimpleStringProperty("");
         
-//        discountsForMapEditor.addListener((ListChangeListener.Change<? extends Object> c) -> {
-//            c.next();
-//            if (c.wasAdded() ){
-//                List<? extends Object> adds = c.getAddedSubList();
-//                adds.stream().forEach((elem) -> {
-//                    ProductDiscount disc = (ProductDiscount) elem;
-//                    if (disc != null && !discounts.contains(disc)){
-//                        discounts.add(disc);
-//                    }
-//                });
-//            }
-//            else if (c.wasRemoved()){
-//                List<? extends Object> removes = c.getRemoved();
-//                removes.stream().forEach((elem) -> {
-//                    ProductDiscount disc = (ProductDiscount) elem;
-//                    if (disc != null && discounts.contains(disc)){
-//                        discounts.remove(disc);
-//                    }
-//                });
-//            }
-//        });
+        discountsObj.addListener((ObservableValue<? extends List<ProductDiscount>> observable, List<ProductDiscount> oldValue, List<ProductDiscount> newValue) -> {
+            System.out.println("sheicvala list");
+        });
     }
     
     
@@ -182,19 +164,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return this.currency.get().getIso();
     }
     
-//    @JsonIgnore
-//    public ObservableList<ProductDiscount> getDiscounts() {
-//        return discounts;
-//    }
-    @JsonIgnore
+    @JsonIgnore // Discounts must need "sets_separate_saving" parameter. So ProductDataChangeProvider provides to send accounts to DB.
     public List<ProductDiscount> getDiscounts() {
         return discountsObj.get();
     }
-    
-//    @JsonIgnore
-//    public ObservableList<MapEditorElement> getDiscountsForMapEditor(){
-//        return discountsForMapEditor;
-//    }
     
     public boolean getIsActive() {
         return isActive.get();
@@ -241,10 +214,9 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     
     @JsonProperty
     public void setDiscounts(Collection<ProductDiscount> discounts) {
-//        this.discountsObj.get().clear();
+        Printer.printInfo("Product", "setDiscounts", "Collection<ProductDiscount> discounts");
+        
         this.discountsObj.set(new ArrayList(discounts));
-//        this.discounts.setAll(discounts);
-//        discountsForMapEditor.setAll(discounts);
     }
 
     public void setIsActive(boolean isActive) {
@@ -282,22 +254,13 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         setFormer(product.getFormer());
         setDescrip(product.getDescrip());
         
-        System.out.println("------------ specific scene: " + specificProperty().get());
-        System.out.println("------------ specific backup: " + product.specificProperty().get());
-        
         productSpecific.get().copyFrom(product.specificProperty().get());
         setPrice(product.getPrice());
         setIso(product.getIso());
         setIsActive(product.getIsActive());
         setNotJurMaxCount(product.getNotJurMaxCount());
         setTestingDays(product.getTestingDays());
-
         setDiscounts(product.getDiscounts());
-        
-//        discounts.clear();
-//        discountsForMapEditor.clear();
-//        discountsForMapEditor.addAll(product.getDiscountsForMapEditor());
-////        discounts.addAll(product.getDiscounts());
     }
 
     @Override

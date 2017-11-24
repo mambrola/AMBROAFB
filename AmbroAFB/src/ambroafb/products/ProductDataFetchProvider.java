@@ -29,7 +29,6 @@ public class ProductDataFetchProvider extends DataFetchProvider {
     @Override
     public List<Product> getFilteredBy(JSONObject params) throws Exception {
         List<Product> products = getObjectsListFromDBTable(Product.class, DB_VIEW_NAME, params);
-        products.sort((Product p1, Product p2) -> p1.compareById(p2));
         return products;
     }
 
