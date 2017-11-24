@@ -10,7 +10,6 @@ import ambro.AView;
 import ambroafb.currencies.Currency;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.NumberConverter;
-import ambroafb.general.Printer;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.CountComboBoxItem;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -210,8 +209,6 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     
     @JsonProperty
     public void setDiscounts(Collection<ProductDiscount> discounts) {
-        Printer.printInfo("Product", "setDiscounts", "Collection<ProductDiscount> discounts");
-        
         this.discountsObj.set(FXCollections.observableArrayList(discounts));
     }
 
@@ -250,7 +247,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         setFormer(product.getFormer());
         setDescrip(product.getDescrip());
         
-        productSpecific.get().copyFrom(product.specificProperty().get());
+        ProductSpecific clone = new ProductSpecific();
+        clone.copyFrom(product.specificProperty().get());
+        productSpecific.set(clone);
+        
         setPrice(product.getPrice());
         setIso(product.getIso());
         setIsActive(product.getIsActive());

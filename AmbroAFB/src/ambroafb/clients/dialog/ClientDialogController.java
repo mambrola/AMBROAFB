@@ -112,7 +112,6 @@ public class ClientDialogController extends DialogController {
         });
         country.fillComboBoxWithouyALL(null);
         statuses.fillComboBox(null);
-//        statuses.getItems().setAll(Client.getAllStatusFromDB());
     }
 
     private void switchJuridical(ActionEvent e) {
