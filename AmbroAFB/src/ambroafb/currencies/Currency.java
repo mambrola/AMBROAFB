@@ -7,6 +7,7 @@ package ambroafb.currencies;
 
 import ambro.AView;
 import ambroafb.general.DateConverter;
+import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnFeatures;
 import java.time.LocalDate;
@@ -74,10 +75,6 @@ public class Currency extends EditorPanelable {
     
     
     // Getters:
-//    public String getCreatedDate(){
-//        return createdDate.get();
-//    }
-    
     public String getIso(){
         return iso.get();
     }
@@ -129,6 +126,7 @@ public class Currency extends EditorPanelable {
         setIso(otherCurrency.getIso());
         setDescrip(otherCurrency.getDescrip());
         setSymbol(otherCurrency.getSymbol());
+        dateProperty.set(otherCurrency.dateProperty().get());
     }
 
     @Override
@@ -161,7 +159,8 @@ public class Currency extends EditorPanelable {
         Currency currencyBackup = (Currency) backup;
         return  this.getIso().equals(currencyBackup.getIso()) &&
                 this.getDescrip().equals(currencyBackup.getDescrip()) &&
-                this.getSymbol().equals(currencyBackup.getSymbol());
+                this.getSymbol().equals(currencyBackup.getSymbol()) &&
+                Utils.dateEquals(dateProperty.get(), currencyBackup.dateProperty().get());
     }
     
     /**
