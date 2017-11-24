@@ -45,7 +45,7 @@ public class DBActionException extends Exception {
      * @return If there is value for  key (AuthServer  code)  returns value. Otherwise returns original message text from AuthServer message.
      */
     @Override
-    public String getLocalizedMessage(){
+    public String getLocalizedMessage() {
         return (bundle.containsKey("" + code)) ? bundle.getString("" + code) : getMessage();
     }
 

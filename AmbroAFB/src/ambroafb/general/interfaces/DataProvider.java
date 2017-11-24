@@ -126,15 +126,11 @@ public abstract class DataProvider {
     
     
     private static <T> T saveObjectByProcedureHelper(Class target, JSONObject sendingJson, String procName) throws Exception{
-        System.out.println("----------- sendingJson: " + sendingJson);
-        
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONArray newSourceFromDB;
         try {
             newSourceFromDB = dbClient.callProcedureAndGetAsJson(procName, dbClient.getLang(), sendingJson); // insertUpdate(tableName, targetJson); -> old version
         } catch (AuthServerException ex) {
-            System.err.println("--- error in saveObjectByProcedureHelper ---");
-            System.err.println(ex.getMessage());
             throw ExceptionsFactory.getAppropriateException(ex);
         }
 

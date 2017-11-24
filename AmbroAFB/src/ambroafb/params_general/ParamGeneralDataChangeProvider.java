@@ -7,11 +7,9 @@ package ambroafb.params_general;
 
 import ambroafb.general.DBUtils;
 import ambroafb.general.exceptions.DBActionException;
-import ambroafb.general.exceptions.ExceptionsFactory;
 import ambroafb.general.interfaces.DataChangeProvider;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
 import authclient.db.WhereBuilder;
 import java.io.IOException;
@@ -55,16 +53,14 @@ public class ParamGeneralDataChangeProvider extends DataChangeProvider {
             result = saveObjectByProcedure((ParamGeneral)object, DB_INSERT_UPDATE_PROC_NAME);
         } catch (IOException | JSONException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (AuthServerException ex) {
-            Exception exception = ExceptionsFactory.getAppropriateException(ex);
-            if (exception instanceof DBActionException) {
-                String[] ids = getConflictedIds(exception.getMessage());
-                JSONObject entryForParamGenerals = getAskForDB(ids);
-                List<ParamGeneral> conflicteds = dataFetchProvider.getFilteredBy(entryForParamGenerals);
-                String newMassage = exception.getLocalizedMessage();
-                newMassage += conflicteds.stream().map((paramGeneral) -> paramGeneral.toString()).reduce("", (t, u) -> t += ("\n" + u));
-                ((DBActionException) exception).setMessage(newMassage);
-            }
+        } catch (DBActionException exception) {
+            System.out.println("--- exception ---" + ((DBActionException) exception).getMessage());
+
+            String[] ids = getConflictedIds(exception.getMessage());
+            JSONObject entryForParamGenerals = getAskForDB(ids);
+            List<ParamGeneral> conflicteds = dataFetchProvider.getFilteredBy(entryForParamGenerals);
+            String conflictedEntriesInfo = conflicteds.stream().map((paramGeneral) -> paramGeneral.toString()).reduce("", (t, u) -> t += ("\n" + u));
+            ((DBActionException) exception).setMessage(conflictedEntriesInfo);
             throw exception;
         }
         return result;
@@ -82,7 +78,7 @@ public class ParamGeneralDataChangeProvider extends DataChangeProvider {
     // Creates JSON that will use to fetch ParamGeneral object properties.
     private JSONObject getAskForDB(String[] ids){
         WhereBuilder whereBuilder = new ConditionBuilder().where();
-        for (int i = 0; i < ids.length - 1; i++) {
+        for (int i = 0; i < ids.length; i++) {
             whereBuilder.or(DB_ID, "=", ids[i]);
         }
         return whereBuilder.condition().build();
