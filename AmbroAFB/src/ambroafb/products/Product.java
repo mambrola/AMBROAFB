@@ -19,7 +19,6 @@ import ambroafb.products.helpers.ProductDiscount;
 import ambroafb.products.helpers.ProductSpecific;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javafx.beans.property.BooleanProperty;
@@ -28,7 +27,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -62,7 +60,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%discounts", width = "90", cellFactory = DiscountCellFactory.class)
-    private final ObjectProperty<ObservableList<ProductDiscount>> discountsObj;
+    private final ObjectProperty<ObservableList<ProductDiscount>> discountsObj; // List may is not Observable. The discounts runtime update result is the same.
 //    private final ObjectProperty<List<ProductDiscount>> discountsObj;
     
     @AView.Column(width = "35", cellFactory = ActPasCellFactory.class)

@@ -51,7 +51,7 @@ public class TableMasterDetailController extends ListingController {
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        
+        aview.setBundle(rb);
     }
     
     public void setDetailNode(Node node){
