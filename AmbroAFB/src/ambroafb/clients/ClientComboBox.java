@@ -5,9 +5,7 @@
  */
 package ambroafb.clients;
 
-import authclient.AuthServerException;
 import authclient.db.ConditionBuilder;
-import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -61,7 +59,7 @@ public class ClientComboBox extends AnchorPane {
         });
         
         clientsBox.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
-//            System.out.println("2   box.valueProperty oldValue, newValue: " + oldValue + ", " + newValue);
+            System.out.println("2   box.valueProperty oldValue, newValue: " + oldValue + ", " + newValue);
             valueSelected = 1;
             movedInField = 0;
             if (newValue != null) {
@@ -234,11 +232,13 @@ public class ClientComboBox extends AnchorPane {
 
         @Override
         public String toString(Client c) {
+            System.out.println("Converter toString! c: " + c);
             return (c == null) ? "" : c.getShortDescrip(separator).get();
         }
 
         @Override
         public Client fromString(String input) {
+            System.out.println("client comboBox input: [" + input + "]");
             if (input.isEmpty()){
                 return null;
             }

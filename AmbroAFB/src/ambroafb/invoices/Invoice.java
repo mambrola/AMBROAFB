@@ -133,20 +133,21 @@ public class Invoice extends EditorPanelable {
         reissuingObj = new SimpleObjectProperty<>(new InvoiceReissuing());
         clarifyObj = new SimpleObjectProperty<>(new InvoiceStatusClarify());
         statusObj = new SimpleObjectProperty<>(new InvoiceStatus());
-        months = new SimpleObjectProperty<>(new MonthCounterItem("1"));
+        months = new SimpleObjectProperty<>(new MonthCounterItem());
         isLogined = new SimpleBooleanProperty(false);
         isPaid = new SimpleBooleanProperty(false);
         isAllowToModify = new SimpleBooleanProperty(true);
         
         beginDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            if (months.get() != null && months.get().getMonthCount() != -1 && newValue != null){
-                rebindEndDate();
-            }
+            System.out.println("begin date in invoice: " + newValue);
+//            if (months.get() != null && months.get().getMonthCount() != -1 && newValue != null){
+                resetEndDate();
+//            }
         });
         months.addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
-            if (beginDateObj.get() != null && newValue != null){
-                rebindEndDate();
-            }
+//            if (beginDateObj.get() != null && newValue != null){
+                resetEndDate();
+//            }
         });
         
         licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
@@ -187,10 +188,14 @@ public class Invoice extends EditorPanelable {
         licensesDescrip.set(licensesNumersDescrip);
     }
     
-    private void rebindEndDate(){
-        long monthValue = months.get().getMonthCount();
-        long dayValue = months.get().getDayCount();
-        endDateObj.set(beginDateObj.get().plusMonths(monthValue).plusDays(dayValue));
+    private void resetEndDate(){
+        if (beginDateObj.isNull().get() || months.isNull().get()) {
+            endDateObj.set(null);
+        } else {
+            long monthValue = months.get().getMonthCount();
+            long dayValue = months.get().getDayCount();
+            endDateObj.set(beginDateObj.get().plusMonths(monthValue).plusDays(dayValue));
+        }
     }
     
     // Properties getters:
@@ -295,8 +300,8 @@ public class Invoice extends EditorPanelable {
         return invoiceFinace;
     }
     
-    public int getClientId(){
-        return (clientObj.isNull().get()) ? -1 : clientObj.get().getRecId();
+    public Integer getClientId(){
+        return (clientObj.isNull().get()) ? null : clientObj.get().getRecId();
     }
     
     @JsonIgnore
@@ -377,7 +382,7 @@ public class Invoice extends EditorPanelable {
     
     @JsonIgnore
     public String getMonths(){
-        return "" + months.get().getMonthCount();
+        return (months.isNull().get()) ? "" : "" + months.get().getMonthCount();
     }
     
     
@@ -435,7 +440,7 @@ public class Invoice extends EditorPanelable {
         }
     }
     
-    public void setClientId(int recId){
+    public void setClientId(Integer recId){
         clientObj.get().setRecId(recId);
     }
 
@@ -559,9 +564,12 @@ public class Invoice extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         Invoice invoice = (Invoice) other;
+        //  ?? კლიენტის ინფოს მეთოდების ცალ-ცალკე კოპირებას clientObj დავსეტოთ other_ის clientObj-ის clone-ით, ხომ არ აჯობებს... თუმცა ბევრი ისეთი მნიშვნელობის copy მოგვიწევს რომლებიც ცარიელები იქნებიან..
+        setClientId(invoice.getClientId());
         setFirstName(invoice.getFirstName());
         setLastName(invoice.getLastName());
         setEmail(invoice.getEmail());
+        
         setInvoiceNumber(invoice.getInvoiceNumber());
         
         licenses.clear();
@@ -614,6 +622,9 @@ public class Invoice extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         Invoice otherInvoice = (Invoice) backup;
         
+        //  ?? კლიენტის ინფოს მეთოდების შედარებას clientObj შევადაროთ ხომ არ აჯობებს, თუმცა ბევრი ისეთი მნიშვნელობა ექნება რომელსაც ინვოისი საერთოდ არ ცვლის.
+        
+        System.out.println("getClientId().equals(otherInvoice.getClientId()): " + (getClientId().equals(otherInvoice.getClientId())));
         System.out.println("getFirstName().equals(otherInvoice.getFirstName()): " + (getFirstName().equals(otherInvoice.getFirstName())));
         System.out.println("getLastName().equals(otherInvoice.getLastName()): " + (getLastName().equals(otherInvoice.getLastName())));
         System.out.println("getEmail().equals(otherInvoice.getEmail()): " + (getEmail().equals(otherInvoice.getEmail())));
@@ -628,9 +639,11 @@ public class Invoice extends EditorPanelable {
         System.out.println("Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses()): " + (Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())));
         System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (Utils.compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
         
-        return  getFirstName().equals(otherInvoice.getFirstName())  &&
+        return  getClientId().equals(otherInvoice.getClientId()) &&
+                getFirstName().equals(otherInvoice.getFirstName())  &&
                 getLastName().equals(otherInvoice.getLastName())    &&
                 getEmail().equals(otherInvoice.getEmail())          &&
+                
                 getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())  &&
                 Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())    &&
                 Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()) &&

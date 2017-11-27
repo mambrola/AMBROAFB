@@ -27,10 +27,11 @@ import javafx.stage.WindowEvent;
 public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     
     protected DialogController dialogController;
-
+    protected DataChangeProvider dataChangeProvider;
+    protected DataFetchProvider dataFetchProvider;
+    
     private boolean permissionToClose = true;
     private EditorPanel.EDITOR_BUTTON_TYPE editorButtonType;
-    private DataChangeProvider dataChangeProvider;
     private Consumer<Object> closeAction, editAction, addAction;
     
     public UserInteractiveDialogStage(Stage owner, String sceneFXMLFilePath, String stageTitleBundleKey){
@@ -92,6 +93,14 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     
     public void setDataChangeProvider(DataChangeProvider provider){
         this.dataChangeProvider = provider;
+    }
+    
+    public void setDataFetchProvider(DataFetchProvider provider){
+        this.dataFetchProvider = provider;
+    }
+    
+    public DataFetchProvider getDataFetchProvider(){
+        return dataFetchProvider;
     }
     
     public void changePermissionForClose(boolean value){

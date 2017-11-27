@@ -33,6 +33,13 @@ public class MonthCounterItem {
         proccess(counter);
     }
     
+    /**
+     * The value of month will be zero.
+     */
+    public MonthCounterItem(){
+        proccess("0");
+    }
+    
     public int getMonthCount(){
         return Utils.getIntValueFor(monthCount);
     }

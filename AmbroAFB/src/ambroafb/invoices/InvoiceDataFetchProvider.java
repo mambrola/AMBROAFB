@@ -6,8 +6,11 @@
 package ambroafb.invoices;
 
 import ambroafb.clients.Client;
+import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
+import ambroafb.general.countcombobox.Basket;
+import ambroafb.general.exceptions.ExceptionsFactory;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.invoices.filter.InvoiceFilterModel;
@@ -22,6 +25,7 @@ import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -135,5 +139,56 @@ public class InvoiceDataFetchProvider extends DataFetchProvider {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONObject params = new ConditionBuilder().where().and("language", "=", dbClient.getLang()).condition().build();
         return getObjectsListFromDBTable(InvoiceStatusClarify.class, DB_CLARIFIES_TABLE, params);
+    }
+    
+    public void callInvoiceSuitedLicenses(Invoice invoice, Basket basket,
+                                                    Consumer<List<PartOfLicense>> licensesCnsm,
+                                                    Consumer<List<LicenseFinance>> licenseFinancesCnsm,
+                                                    Consumer<InvoiceFinance> invoiceFinanceDataCnsm) throws Exception {
+        DBClient dbClient = GeneralConfig.getInstance().getDBClient();
+        try {
+            Integer invoiceId = (invoice.getRecId() == 0) ? null : invoice.getRecId();
+            
+            JSONArray productsArray = new JSONArray();
+            Iterator<String> itr = basket.getIterator();
+            while(itr.hasNext()){
+                String uniqueId = itr.next();
+                JSONObject json = Utils.getJsonFrom(null, "product_id", uniqueId);
+                productsArray.put(Utils.getJsonFrom(json, "count", basket.getCountFor(uniqueId)));
+            }
+            
+            JSONArray licensesIds = new JSONArray();
+            invoice.getLicenses().forEach((licenseShortData) -> {
+                licensesIds.put(Utils.getJsonFrom(null, "license_id", licenseShortData.getLicense_id()));
+            });
+            
+            JSONArray licensesArray;
+            try {
+                licensesArray = dbClient.callProcedureAndGetAsJson("invoice_get_suited_licenses",
+                                                                                dbClient.getLang(),
+                                                                                invoiceId, invoice.getClientId(),
+                                                                                invoice.beginDateProperty().get(),
+                                                                                invoice.endDateProperty().get(),
+                                                                                productsArray, invoice.getAdditionalDiscountRate(),
+                                                                                licensesIds);
+                    System.out.println("licenses array from DB: " + licensesArray);
+                    if (licensesCnsm != null){
+                        licensesCnsm.accept(Utils.getListFromJSONArray(PartOfLicense.class, licensesArray.getJSONArray(0)));
+                    }
+                    if (licenseFinancesCnsm != null){
+                        licenseFinancesCnsm.accept(Utils.getListFromJSONArray(LicenseFinance.class, licensesArray.getJSONArray(1)));
+                    }
+                    if (invoiceFinanceDataCnsm != null){
+                        ArrayList<InvoiceFinance> invFinances = Utils.getListFromJSONArray(InvoiceFinance.class, licensesArray.getJSONArray(2));
+                        invoiceFinanceDataCnsm.accept(invFinances.get(0)); // There is always one entry in it.
+                    }
+            } catch (AuthServerException ex) {
+                throw ExceptionsFactory.getAppropriateException(ex);
+            }
+            
+            
+        } catch (IOException | JSONException ex) {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

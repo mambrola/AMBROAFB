@@ -28,6 +28,7 @@ public class InvoiceManager extends EditorPanelableManager {
     @Override
     public Dialogable getDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         InvoiceDialog dialog = new InvoiceDialog(object, type, owner);
+        dialog.setDataFetchProvider(dataFetchProvider);
         dialog.setDataChangeProvider(dataChangeProvider);
         dialog.setFrameFeatures(type, "invoice_dialog_title");
         return dialog;

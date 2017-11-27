@@ -9,7 +9,6 @@ import ambro.ADatePicker;
 import ambroafb.clients.Client;
 import ambroafb.clients.ClientComboBox;
 import ambroafb.general.AlertMessage;
-import ambroafb.general.DBUtils;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Utils;
 import ambroafb.general.countcombobox.Basket;
@@ -26,21 +25,19 @@ import ambroafb.general.monthcountercombobox.MonthCounterItem;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.invoices.Invoice;
+import ambroafb.invoices.InvoiceDataFetchProvider;
 import ambroafb.invoices.helper.InvoiceFinance;
 import ambroafb.invoices.helper.InvoiceReissuing;
 import ambroafb.invoices.helper.InvoiceReissuingComboBox;
 import ambroafb.invoices.helper.PartOfLicense;
 import ambroafb.licenses.helper.LicenseFinance;
-import ambroafb.products.Product;
 import ambroafb.products.ProductDataFetchProvider;
-import authclient.AuthServerException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.StringTokenizer;
 import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -57,9 +54,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.MaskerPane;
-import org.json.JSONObject;
 
 /**
  *
@@ -101,8 +96,10 @@ public class InvoiceDialogController extends DialogController {
     
     private String colonDelimiter = ":";
     private String percentDelimiter = "%";
-    private Runnable financesFromSuitedLicense;
+    private RecalcFinancesInBackground financesFromSuitedLicense;
     
+    private final String errorMessageBundleKey = "error";
+    private Consumer<Exception> commonErrorAction;
     private final ProductDataFetchProvider productFetcher = new ProductDataFetchProvider();
 
     @Override
@@ -110,41 +107,11 @@ public class InvoiceDialogController extends DialogController {
         clients.fillComboBoxOnlyClients(null);
 
         financesFromSuitedLicense = new RecalcFinancesInBackground();
-        clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
-            if (oldValue != null && newValue != null){
-                System.out.println("+++ rebindFinance from clients");
-                rebindFinanceData();
-            }
-        });
-        Basket prevBasket = new Basket();
-        products.showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (newValue){
-                prevBasket.clearAndCopy(products.getBasket());
-            }
-            else if (!prevBasket.equals(products.getBasket())) {
-                System.out.println("+++ rebindFinance from products");
-                rebindFinanceData();
-            }
-        });
-        beginDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            if (oldValue != null && newValue != null){
-                System.out.println("+++ rebindFinance from beginDate");
-                rebindFinanceData();
-            }
-        });
-        monthCounter.valueProperty().addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
-            if (oldValue != null && newValue != null){
-                System.out.println("+++ rebindFinance from monthCounter");
-                rebindFinanceData();
-            }
-        });
-        additionalDiscount.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            double discount = Utils.getDoubleValueFor(additionalDiscount.getText());
-            if (discount > 0 && !discountText.getText().contains(additionalDiscount.getText()) && !newValue){
-                System.out.println("+++ rebindFinance from additionalDiscount");
-                rebindFinanceData();
-            }
-        });
+        commonErrorAction = (ex) -> {
+            String errorHeader = GeneralConfig.getInstance().getTitleFor(errorMessageBundleKey);
+            new AlertMessage((Stage)formPane.getScene().getWindow(), Alert.AlertType.ERROR, errorHeader, ex.getLocalizedMessage(), ex).showAndWait();
+            System.out.println("<-- in commonErrorAction consumer -->");
+        };
         
         setFinanceDataToDefaultText();
     }
@@ -156,6 +123,11 @@ public class InvoiceDialogController extends DialogController {
         netoText.setText(config.getTitleFor("neto") + colonDelimiter);
         vatText.setText(config.getTitleFor("vat_percent") + percentDelimiter + colonDelimiter);
         payText.setText(config.getTitleFor("money_paid") + colonDelimiter);
+//        changeFinanceNumbersInfoVisibility(false);
+    }
+    
+    private void changeFinanceNumbersInfoVisibility(boolean visibility){
+        changeFinanceInfoVisibility(true, visibility);
     }
     
     private void changeFinanceInfoVisibility(boolean visibleTextData, boolean visibleNumberData){
@@ -163,28 +135,29 @@ public class InvoiceDialogController extends DialogController {
         financesLabelNumberContainer.setVisible(visibleNumberData);
     }
     
-    private void changeFinanceNumbersInfoVisibility(boolean visibility){
-        changeFinanceInfoVisibility(true, visibility);
-    }
+//    /**
+//     * The method starts new finance calculate thread if every required field is filled.
+//     * Otherwise sets numeric label to default values.
+//     * Starts new thread in every listener, because start thread which 
+//     * is already started is incorrect for java.
+//     * */
+//    @Deprecated
+//    private void rebindFinanceData(){
+//        if (isEveryNessesaryFieldValid()){
+//            new Thread(financesFromSuitedLicense).start();
+//        }
+//        else {
+//            setFinanceDataToDefaultText();
+//            changeFinanceInfoVisibility(true, false);
+//        }
+//    }
     
     /**
-     * The method starts new finance calculate thread if every required field is filled.
-     * Otherwise sets numeric label to default values.
-     * Starts new thread in every listener, because start thread which 
-     * is already started is incorrect for java.
-     * */
-    private void rebindFinanceData(){
-        if (isEveryNessesaryFieldValid()){
-            new Thread(financesFromSuitedLicense).start();
-        }
-        else {
-            setFinanceDataToDefaultText();
-            changeFinanceInfoVisibility(true, false);
-        }
-    }
-    
+     * The method shows invoice finance data on the scene in appropriate labels.
+     * @param invoiceFinances The object that contains information on the invoice finance state.
+     */
     private void processFinanceData(InvoiceFinance invoiceFinances){
-        changeFinanceNumbersInfoVisibility(!invoiceFinances.dataIsEmpty()); // ---
+//        changeFinanceNumbersInfoVisibility(!invoiceFinances.dataIsEmpty()); // ---
         if (invoiceFinances.dataIsEmpty()) {
             setFinanceDataToDefaultText();
         } else {
@@ -261,6 +234,7 @@ public class InvoiceDialogController extends DialogController {
             makeActionsForDialogTypeAddBySample();
         }
         processFinanceData(((Invoice)sceneObj).getInvoiceFinance());
+        listenToComponentsChange();
     }
     
     private Basket convertMapToBasket(Map<CountComboBoxItem, Integer> data){
@@ -273,13 +247,18 @@ public class InvoiceDialogController extends DialogController {
     
     private void makeActionasForDialogTypeADD(){
         // Note: We changed objects field but is also change scene field values because of bidirectional binding.
-        ((Invoice)sceneObj).beginDateProperty().set(null); // It is needed for beginDate valuePropety listener, that it does not go to DB for finances.
-        ((Invoice)sceneObj).beginDateProperty().set(LocalDate.now());
+//        ((Invoice)sceneObj).beginDateProperty().set(null); // It is needed for beginDate valuePropety listener, that it does not go to DB for finances.
+        Invoice sceneInv = (Invoice)sceneObj;
+        Invoice backupInv = (Invoice)backupObj;
+        
+        System.out.println("before beginDate Change ...");
+        sceneInv.beginDateProperty().set(LocalDate.now());
+        sceneInv.monthsProperty().set(new MonthCounterItem("1"));
         
         Consumer<ObservableList<InvoiceReissuing>> selectDefaultReissuing = (reissuingList) -> {
             InvoiceReissuing defaultReissuing = reissuingList.stream().filter((reissuing) -> reissuing.getRecId() == InvoiceReissuing.DEFAULT_REISSUING_ID).collect(Collectors.toList()).get(0);
-            ((Invoice)sceneObj).reissuingProperty().set(defaultReissuing);
-            ((Invoice)backupObj).reissuingProperty().set(defaultReissuing);
+            sceneInv.reissuingProperty().set(defaultReissuing);
+            backupInv.reissuingProperty().set(defaultReissuing);
         };
         invoiceReissuings.fillComboBox(selectDefaultReissuing);
         backupObj.copyFrom(sceneObj);
@@ -287,15 +266,83 @@ public class InvoiceDialogController extends DialogController {
     
     private void makeActionsForDialogTypeAddBySample(){
         makeActionasForDialogTypeADD();
-        ((Invoice)sceneObj).setInvoiceNumber("");
-        ((Invoice)sceneObj).getInvoiceStatus().setDescrip(""); // set empty status
-        ((Invoice)sceneObj).setLicenseFinances(new ArrayList<>()); // empty list cause to clear the products map.
-        ((Invoice)sceneObj).setInvoiceFinances(new InvoiceFinance());
+        Invoice sceneInv = (Invoice)sceneObj;
+        sceneInv.setInvoiceNumber("");
+        sceneInv.getInvoiceStatus().setDescrip(""); // set empty status
+        sceneInv.setLicenseFinances(new ArrayList<>()); // empty list cause to clear the products map.
+        sceneInv.setInvoiceFinances(new InvoiceFinance());
         products.setBasket(convertMapToBasket(((Invoice)sceneObj).getProductsWithCounts()));
-        ((Invoice)sceneObj).getLicenses().clear();
-        ((Invoice)sceneObj).setRevokedDate("");
+        sceneInv.getLicenses().clear();
+        sceneInv.setRevokedDate("");
         backupObj.copyFrom(sceneObj);
     }
+    
+    /**
+     *  The method listens components change that cause to recalculate invoice finance data.
+     * It has specific error actions according to changed components. Calculation process will run in separate thread.
+     */
+    private void listenToComponentsChange(){
+        
+        Client[] clientsPrevContainer = new Client[1];
+        clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
+            System.out.println("new Value: " + newValue);
+            if (clientsPrevContainer[0] == null || !clientsPrevContainer[0].equals(newValue)) {
+                System.out.println("+++ rebindFinance from clients");
+                Consumer<Exception> errorFromClients = (ex) -> {
+                    clientsPrevContainer[0] = oldValue;
+                    clients.valueProperty().set(oldValue);
+                };
+                financesFromSuitedLicense.setErrorAction(commonErrorAction.andThen(errorFromClients));
+                new Thread(financesFromSuitedLicense).start(); // created new Thread instance in each listener because thread that started once, it can not restart. So it is need to create new instacne for all action.
+            }
+        });
+        
+        Basket prevBasket = new Basket();
+        products.showingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue){
+                prevBasket.clearAndCopy(products.getBasket());
+            }
+            else if (!prevBasket.equals(products.getBasket())) {
+                System.out.println("+++ rebindFinance from products");
+                Consumer<Exception> errorFromProducts = (ex) -> {
+                    products.setBasket(prevBasket);
+                };
+                financesFromSuitedLicense.setErrorAction(commonErrorAction.andThen(errorFromProducts));
+                new Thread(financesFromSuitedLicense).start();
+            }
+        });
+        
+        LocalDate[] beginDatePrevContainer = new LocalDate[1];
+        beginDate.valueProperty().addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
+            if (beginDatePrevContainer[0] == null || !beginDatePrevContainer[0].equals(newValue)) {
+                System.out.println("+++ rebindFinance from beginDate");
+                Consumer<Exception> errorFromBeginDate = (ex) -> {
+                    beginDatePrevContainer[0] = oldValue;
+                    beginDate.setValue(oldValue);
+                };
+                financesFromSuitedLicense.setErrorAction(commonErrorAction.andThen(errorFromBeginDate));
+                new Thread(financesFromSuitedLicense).start();
+            }
+        });
+        monthCounter.valueProperty().addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
+            System.out.println("newValue: " + newValue.toString());
+            System.out.println("+++ rebindFinance from monthCounter");
+            Consumer<Exception> errorFromMonthCounter = (ex) -> {
+                monthCounter.setValue(oldValue);
+            };
+            financesFromSuitedLicense.setErrorAction(commonErrorAction.andThen(errorFromMonthCounter));
+            new Thread(financesFromSuitedLicense).start();
+        });
+        additionalDiscount.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            double discount = Utils.getDoubleValueFor(additionalDiscount.getText());
+            if (discount > 0 && !discountText.getText().contains(additionalDiscount.getText()) && !newValue){
+                System.out.println("+++ rebindFinance from additionalDiscount");
+                financesFromSuitedLicense.setErrorAction(commonErrorAction);
+                new Thread(financesFromSuitedLicense).start();
+            }
+        });
+    }
+    
     
     @Override
     public DialogOkayCancelController getOkayCancelController() {
@@ -312,6 +359,7 @@ public class InvoiceDialogController extends DialogController {
 
         private final Semaphore semLock;
         private Consumer<Invoice> callBack;
+        private Consumer<Exception> errorAction;
         
         public RecalcFinancesInBackground(Consumer<Invoice> callBack){
             this();
@@ -325,6 +373,10 @@ public class InvoiceDialogController extends DialogController {
         @Override
         public void run() {
             callSuitedLicenseFromDB();
+        }
+        
+        public void setErrorAction(Consumer<Exception> errorAction) {
+            this.errorAction = errorAction;
         }
         
         private void callSuitedLicenseFromDB(){
@@ -369,22 +421,26 @@ public class InvoiceDialogController extends DialogController {
                 Consumer<InvoiceFinance> invoiceFianceConsumer = (InvoiceFinance invoiceFinanaceData) -> {
                     ((Invoice)sceneObj).setInvoiceFinances(invoiceFinanaceData);
                 };
-                
-                DBUtils.callInvoiceSuitedLicenses((Invoice)sceneObj, products.getBasket(), licensesConsumer, licenseFinanceConsumer, invoiceFianceConsumer);
-            } catch (AuthServerException ex) {
-                JSONObject json = Utils.getJsonFrom(ex.getMessage());
-                if (json == null) return;
-                if (json.optInt("code") == 4020){
-                    String message = processManyProductChoiceException(json.optString("message"));
-                    String title = GeneralConfig.getInstance().getTitleFor("many_product_warning");
-                    Platform.runLater(() -> {
-                        new AlertMessage((Stage)formPane.getScene().getWindow(), Alert.AlertType.WARNING, message, "").showAndWait();
-                    });
+                DataFetchProvider fetcher = ((InvoiceDialog)formPane.getScene().getWindow()).getDataFetchProvider();
+                ((InvoiceDataFetchProvider)fetcher).callInvoiceSuitedLicenses((Invoice)sceneObj, products.getBasket(), licensesConsumer, licenseFinanceConsumer, invoiceFianceConsumer);
+//                DBUtils.callInvoiceSuitedLicenses((Invoice)sceneObj, products.getBasket(), licensesConsumer, licenseFinanceConsumer, invoiceFianceConsumer);
+            } catch (Exception ex) {
+                if (errorAction != null){
+                    Platform.runLater(() -> errorAction.accept(ex));
                 }
-                else {
-                    Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                return;
+//                JSONObject json = Utils.getJsonFrom(ex.getMessage());
+//                if (json == null) return;
+//                if (json.optInt("code") == 4020){
+//                    String message = processManyProductChoiceException(json.optString("message"));
+//                    String title = GeneralConfig.getInstance().getTitleFor("many_product_warning");
+//                    Platform.runLater(() -> {
+//                        new AlertMessage((Stage)formPane.getScene().getWindow(), Alert.AlertType.WARNING, message, "").showAndWait();
+//                    });
+//                }
+//                else {
+//                    Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                return;
             }
             
             if (callBack != null){
@@ -392,20 +448,20 @@ public class InvoiceDialogController extends DialogController {
             }
         }
         
-        private String processManyProductChoiceException(String exceptionMessage) {
-            String msg = "";
-            StringTokenizer tok = new StringTokenizer(exceptionMessage, ",");
-            while (tok.hasMoreTokens()) {
-                String currErrorText = tok.nextToken();
-                String prodId = StringUtils.substringBetween(currErrorText, "product:", "count:").trim();
-                String prodCurrCount = StringUtils.substringBetween(currErrorText, "count:", "max:").trim();
-                String prodMaxCount = StringUtils.substringAfter(currErrorText, "max:").trim();
-                Product appProduct = (Product)((Invoice)sceneObj).getProductsWithCounts().keySet().stream().filter((CountComboBoxItem p) -> ((Product)p).getRecId() == Integer.parseInt(prodId)).collect(Collectors.toList()).get(0);
-                if (appProduct != null) {
-                    msg += appProduct.getDescrip() + " -> " + GeneralConfig.getInstance().getTitleFor("max_count") + ": " + prodMaxCount + "\n";
-                }
-            }
-            return msg;
-        }
+//        private String processManyProductChoiceException(String exceptionMessage) {
+//            String msg = "";
+//            StringTokenizer tok = new StringTokenizer(exceptionMessage, ",");
+//            while (tok.hasMoreTokens()) {
+//                String currErrorText = tok.nextToken();
+//                String prodId = StringUtils.substringBetween(currErrorText, "product:", "count:").trim();
+//                String prodCurrCount = StringUtils.substringBetween(currErrorText, "count:", "max:").trim();
+//                String prodMaxCount = StringUtils.substringAfter(currErrorText, "max:").trim();
+//                Product appProduct = (Product)((Invoice)sceneObj).getProductsWithCounts().keySet().stream().filter((CountComboBoxItem p) -> ((Product)p).getRecId() == Integer.parseInt(prodId)).collect(Collectors.toList()).get(0);
+//                if (appProduct != null) {
+//                    msg += appProduct.getDescrip() + " -> " + GeneralConfig.getInstance().getTitleFor("max_count") + ": " + prodMaxCount + "\n";
+//                }
+//            }
+//            return msg;
+//        }
     }
 }
