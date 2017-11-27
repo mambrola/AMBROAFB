@@ -110,7 +110,7 @@ public class Invoice extends EditorPanelable {
     private static int clarifyStatus;
     private BooleanProperty isAllowToModify;
     
-    private final float additionalDiscRateDefaultValue = -1;
+    private final float additionalDiscRateDefaultValue = 0;
     
     public Invoice(){
         invoiceNumber = new SimpleStringProperty("");

@@ -285,7 +285,6 @@ public class InvoiceDialogController extends DialogController {
         
         Client[] clientsPrevContainer = new Client[1];
         clients.valueProperty().addListener((ObservableValue<? extends Client> observable, Client oldValue, Client newValue) -> {
-            System.out.println("new Value: " + newValue);
             if (clientsPrevContainer[0] == null || !clientsPrevContainer[0].equals(newValue)) {
                 System.out.println("+++ rebindFinance from clients");
                 Consumer<Exception> errorFromClients = (ex) -> {
@@ -305,6 +304,7 @@ public class InvoiceDialogController extends DialogController {
             else if (!prevBasket.equals(products.getBasket())) {
                 System.out.println("+++ rebindFinance from products");
                 Consumer<Exception> errorFromProducts = (ex) -> {
+                    System.out.println("prevBasket: " + prevBasket.size());
                     products.setBasket(prevBasket);
                 };
                 financesFromSuitedLicense.setErrorAction(commonErrorAction.andThen(errorFromProducts));
@@ -324,14 +324,18 @@ public class InvoiceDialogController extends DialogController {
                 new Thread(financesFromSuitedLicense).start();
             }
         });
+        
+        MonthCounterItem[] monthPrevContainer = new MonthCounterItem[1];
         monthCounter.valueProperty().addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
-            System.out.println("newValue: " + newValue.toString());
-            System.out.println("+++ rebindFinance from monthCounter");
-            Consumer<Exception> errorFromMonthCounter = (ex) -> {
-                monthCounter.setValue(oldValue);
-            };
-            financesFromSuitedLicense.setErrorAction(commonErrorAction.andThen(errorFromMonthCounter));
-            new Thread(financesFromSuitedLicense).start();
+            if (monthPrevContainer[0] == null || !monthPrevContainer[0].equals(newValue)) {
+                System.out.println("+++ rebindFinance from monthCounter");
+                Consumer<Exception> errorFromMonthCounter = (ex) -> {
+                    monthPrevContainer[0] = oldValue;
+                    monthCounter.setValue(oldValue);
+                };
+                financesFromSuitedLicense.setErrorAction(commonErrorAction.andThen(errorFromMonthCounter));
+                new Thread(financesFromSuitedLicense).start();
+            }
         });
         additionalDiscount.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             double discount = Utils.getDoubleValueFor(additionalDiscount.getText());
