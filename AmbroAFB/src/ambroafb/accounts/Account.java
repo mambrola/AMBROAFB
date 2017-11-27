@@ -51,8 +51,6 @@ public class Account extends EditorPanelable {
     private final ObjectProperty<LocalDate> dateOpenedObj, dateClosedObj;
     private final StringProperty remark;
     
-    private final int clientIdDefaultValue = 0;
-    
     public Account(){
         dateOpenedObj = new SimpleObjectProperty<>(LocalDate.now());
         accountNumber = new SimpleStringProperty("");
@@ -99,8 +97,8 @@ public class Account extends EditorPanelable {
     
     
     // Getters:
-    public long getAccount(){
-        return (accountNumber.get().isEmpty()) ? -1 : Long.parseLong(accountNumber.get());
+    public Long getAccount(){
+        return (accountNumber.get().isEmpty()) ? null : Long.parseLong(accountNumber.get());
     }
     
     public String getIso(){
@@ -120,8 +118,8 @@ public class Account extends EditorPanelable {
         return descrip.get();
     }
     
-    public int getClientId(){
-        return (clientObj.isNull().get()) ? clientIdDefaultValue : clientObj.get().getRecId();
+    public Integer getClientId(){
+        return (clientObj.isNull().get()) ? null : clientObj.get().getRecId();
     }
     
     @JsonIgnore
@@ -148,7 +146,7 @@ public class Account extends EditorPanelable {
     
     
     // Setters:
-    public void setAccount(long account){
+    public void setAccount(Long account){
         this.accountNumber.set("" + account);
     }
     
@@ -175,7 +173,7 @@ public class Account extends EditorPanelable {
         this.descrip.set(descrip);
     }
     
-    public void setClientId(int clientId){
+    public void setClientId(Integer clientId){
         clientObj.get().setRecId(clientId);
     }
     
@@ -234,7 +232,7 @@ public class Account extends EditorPanelable {
      */
     @JsonIgnore
     public boolean partlyCompare(Account other){
-        return  getAccount() == other.getAccount() &&
+        return  Utils.objectEquals(accountNumber.get(), other.accountNumberProperty()) &&
                 getIso().equals(other.getIso());
     }
 
@@ -243,17 +241,17 @@ public class Account extends EditorPanelable {
         if (other == null) return false;
         Account otherAccount = (Account)other;
         return  getRecId() == otherAccount.getRecId() ||
-                (getAccount() == otherAccount.getAccount() && getIso().equals(otherAccount.getIso()));
+                (getAccount().equals(otherAccount.getAccount()) && getIso().equals(otherAccount.getIso()));
     }
     
     @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
-        return  getAccount() == other.getAccount() &&
+        return  Utils.objectEquals(accountNumber.get(), other.accountNumberProperty().get()) &&
                 getIso().equals(other.getIso()) &&
                 getBalAccount() == other.getBalAccount() &&
                 getDescrip().equals(other.getDescrip()) &&
-                getClientId() == other.getClientId() &&
+                Utils.objectEquals(clientProperty().get(), other.clientProperty().get()) &&
                 Utils.objectEquals(openedProperty().get(), other.openedProperty().get()) &&
                 getRemark().equals(other.getRemark()) &&
                 Utils.objectEquals(closedProperty().get(), other.closedProperty().get());

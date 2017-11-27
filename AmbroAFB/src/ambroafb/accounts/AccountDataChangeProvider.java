@@ -41,7 +41,7 @@ public class AccountDataChangeProvider extends DataChangeProvider {
     public Account saveOneToDB(EditorPanelable object) throws Exception {
         Account acc = (Account) object;
         Integer id = (acc.getRecId() == 0) ? null : acc.getRecId();
-        callProcedure(ACCOUNT_CHECK_PROCEDURE, id, (int)acc.getAccount(), acc.getClientId(), acc.getBalAccount(), acc.getIso());
+        callProcedure(ACCOUNT_CHECK_PROCEDURE, id, acc.getAccount(), acc.getClientId(), acc.getBalAccount(), acc.getIso());
         return saveSimple(acc, ACCOUNT_TABLE, true);
     }
 

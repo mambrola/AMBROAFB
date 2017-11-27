@@ -262,7 +262,7 @@ public class Doc extends EditorPanelable {
         debitObj.get().setRecId(debitId);
     }
     
-    public void setDebitAccount(int accountNumber){
+    public void setDebitAccount(Long accountNumber){
         debitObj.get().setAccount(accountNumber);
     }
     
@@ -275,7 +275,7 @@ public class Doc extends EditorPanelable {
         creditObj.get().setRecId(creditId);
     }
     
-    public void setCreditAccount(int accountNumber){
+    public void setCreditAccount(Long accountNumber){
         creditObj.get().setAccount(accountNumber);
     }
     
