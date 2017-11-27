@@ -63,12 +63,27 @@ public class NumberConverter {
      *  The method converts string to Integer. If conversation is impossible, returns 'defaultValue' parameter.
      * @param intStr The number in string.
      * @param defaultValue The default value if conversation is not possible.
-     * @return 
+     * @return Null if converation is not possible. Integer value - otherwise.
      */
     public static Integer stringToInteger(String intStr, Integer defaultValue) {
         Integer result = defaultValue;
         try {
             result = Integer.parseInt(intStr);
+        } catch (NumberFormatException ex){
+        }
+        return result;
+    }
+    
+    /**
+     *  The method converts string to Long. If conversation is impossible, returns 'defaultValue' parameter.
+     * @param intStr The number in string.
+     * @param defaultValue The default value if conversation is not possible.
+     * @return Null if converation is not possible. Long value - otherwise.
+     */
+    public static Long stringToLong(String intStr, Long defaultValue) {
+        Long result = defaultValue;
+        try {
+            result = Long.parseLong(intStr);
         } catch (NumberFormatException ex){
         }
         return result;

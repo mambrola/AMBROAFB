@@ -9,6 +9,7 @@ import ambro.AView;
 import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.clients.Client;
 import ambroafb.general.DateConverter;
+import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnFeatures;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import java.time.LocalDate;
+import java.util.Objects;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.binding.StringExpression;
@@ -98,24 +100,24 @@ public class Account extends EditorPanelable {
     
     // Getters:
     public Long getAccount(){
-        return (accountNumber.get().isEmpty()) ? null : Long.parseLong(accountNumber.get());
+        return (accountNumber.isNull().get()) ? null : NumberConverter.stringToLong(accountNumber.get(), null);
     }
     
     public String getIso(){
-        return iso.get();
+        return (iso.isNull().get()) ? null : iso.get();
     }
     
-    public int getBalAccountId(){
-        return (balAccountObj.isNull().get()) ? -1 : balAccountObj.get().getRecId();
+    public Integer getBalAccountId(){
+        return (balAccountObj.isNull().get()) ? null : balAccountObj.get().getRecId();
     }
     
     @JsonIgnore
-    public int getBalAccount(){
-        return (balAccountObj.isNull().get()) ? -1 : balAccountObj.get().getBalAcc();
+    public Integer getBalAccount(){
+        return (balAccountObj.isNull().get()) ? null : balAccountObj.get().getBalAcc();
     }
     
     public String getDescrip(){
-        return descrip.get();
+        return (descrip.isNull().get()) ? null : descrip.get();
     }
     
     public Integer getClientId(){
@@ -124,7 +126,7 @@ public class Account extends EditorPanelable {
     
     @JsonIgnore
     public String getClientDescrip(){
-        return (clientObj.isNull().get()) ? "" : clientObj.get().getFirstName();
+        return (clientObj.isNull().get()) ? null : clientObj.get().getFirstName();
     }
     
     public String getDateOpen(){
@@ -132,12 +134,12 @@ public class Account extends EditorPanelable {
     }
     
     public String getRemark(){
-        return remark.get();
+        return (remark.isNull().get()) ? null : remark.get();
     }
     
     @JsonIgnore
     public String getBalAccountDescrip(){
-        return balAccountObj.get().getDescrip();
+        return (balAccountObj.isNull().get()) ? null : balAccountObj.get().getDescrip();
     }
     
     public String getDateClose(){
@@ -155,12 +157,12 @@ public class Account extends EditorPanelable {
     }
     
     @JsonProperty
-    public void setBalAccountId(int id){
+    public void setBalAccountId(Integer id){
         this.balAccountObj.get().setRecId(id);
     }
 
     @JsonSetter("balAcc")
-    public void setBalAccount(int balAcc){
+    public void setBalAccount(Integer balAcc){
         this.balAccountObj.get().setBalAcc(balAcc);
     }
     
@@ -241,20 +243,20 @@ public class Account extends EditorPanelable {
         if (other == null) return false;
         Account otherAccount = (Account)other;
         return  getRecId() == otherAccount.getRecId() ||
-                (getAccount().equals(otherAccount.getAccount()) && getIso().equals(otherAccount.getIso()));
+                (Objects.equals(getAccount(), otherAccount.getAccount()) && Objects.equals(getIso(), otherAccount.getIso()));
     }
     
     @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
-        return  Utils.objectEquals(accountNumber.get(), other.accountNumberProperty().get()) &&
-                getIso().equals(other.getIso()) &&
-                getBalAccount() == other.getBalAccount() &&
-                getDescrip().equals(other.getDescrip()) &&
-                Utils.objectEquals(clientProperty().get(), other.clientProperty().get()) &&
-                Utils.objectEquals(openedProperty().get(), other.openedProperty().get()) &&
-                getRemark().equals(other.getRemark()) &&
-                Utils.objectEquals(closedProperty().get(), other.closedProperty().get());
+        return  Objects.equals(accountNumber.get(), other.accountNumberProperty().get()) &&
+                Objects.equals(getIso(), other.getIso()) &&
+                Objects.equals(balAccountObj.get(), other.balAccProperty().get()) &&
+                Objects.equals(getDescrip(), other.getDescrip()) &&
+                Objects.equals(clientProperty().get(), other.clientProperty().get()) &&
+                Objects.equals(openedProperty().get(), other.openedProperty().get()) &&
+                Objects.equals(getRemark(), other.getRemark()) &&
+                Objects.equals(closedProperty().get(), other.closedProperty().get());
     }
     
     @Override

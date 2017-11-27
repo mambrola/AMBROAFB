@@ -165,7 +165,7 @@ public class AccountDialogController extends DialogController {
     @Override
     protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
         Consumer<ObservableList<BalanceAccount>> setBalAccByNumber = (balAccList) -> {
-            int balAccountNumber = ((Account)sceneObj).getBalAccount();
+            Integer balAccountNumber = ((Account)sceneObj).getBalAccount();
             Optional<BalanceAccount> optBalAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == balAccountNumber).findFirst();
             if (optBalAcc.isPresent()){
                 balAccounts.setValue(null); // რადგან balAccount_ებისთვის მხოლოდ Number მოდის ბაზიდან buttonCell-ში ჩნდება მარტო Number. ამიტომ ვაკეთებთ ამ ერთგვარ "refresh"-ს.

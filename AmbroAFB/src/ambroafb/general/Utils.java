@@ -38,6 +38,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -242,6 +243,25 @@ public class Utils {
 
     public static StringBinding avoidNull(StringProperty prop) {
         return Bindings.when(prop.isNull()).then("").otherwise(prop);
+    }
+    
+    /**
+     *  The method checks property value on null and returns appropriate object.
+     * @param prop The Strings property that may be null.
+     * @return Null if property value is null. String value - otherwise.
+     */
+    public static String getValueFrom(StringProperty prop){
+        return (prop.isNull().get()) ? null : prop.get();
+    }
+    
+    /**
+     *  The method checks property value 
+     * @param <T>
+     * @param prop
+     * @return 
+     */
+    public static <T> T getValueFrom(ObjectProperty<T> prop){
+        return (prop.isNull().get()) ? null : prop.get();
     }
     
     
