@@ -139,15 +139,10 @@ public class Invoice extends EditorPanelable {
         isAllowToModify = new SimpleBooleanProperty(true);
         
         beginDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            System.out.println("begin date in invoice: " + newValue);
-//            if (months.get() != null && months.get().getMonthCount() != -1 && newValue != null){
-                resetEndDate();
-//            }
+            resetEndDate();
         });
         months.addListener((ObservableValue<? extends MonthCounterItem> observable, MonthCounterItem oldValue, MonthCounterItem newValue) -> {
-//            if (beginDateObj.get() != null && newValue != null){
-                resetEndDate();
-//            }
+            resetEndDate();
         });
         
         licenses.addListener((ListChangeListener.Change<? extends LicenseShortData> c) -> {
@@ -570,6 +565,8 @@ public class Invoice extends EditorPanelable {
         setLastName(invoice.getLastName());
         setEmail(invoice.getEmail());
         
+        clientObj.set((invoice.clientProperty().isNull().get()) ? null : invoice.clientProperty().get().cloneWithID());
+        
         setInvoiceNumber(invoice.getInvoiceNumber());
         
         licenses.clear();
@@ -629,9 +626,9 @@ public class Invoice extends EditorPanelable {
         System.out.println("getLastName().equals(otherInvoice.getLastName()): " + (getLastName().equals(otherInvoice.getLastName())));
         System.out.println("getEmail().equals(otherInvoice.getEmail()): " + (getEmail().equals(otherInvoice.getEmail())));
         System.out.println("getInvoiceNumber().equals(otherInvoice.getInvoiceNumber()): " + (getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())));
-        System.out.println("Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()): " + (Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get())));
-        System.out.println("Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()): " + (Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get())));
-        System.out.println("Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()): " + (Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get())));
+        System.out.println("Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()): " + (Utils.objectEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get())));
+        System.out.println("Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()): " + (Utils.objectEquals(endDateProperty().get(), otherInvoice.endDateProperty().get())));
+        System.out.println("Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()): " + (Utils.objectEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get())));
         System.out.println("getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate()): " + (getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate())));
         System.out.println("reissuingObj.get().compares(otherInvoice.reissuingProperty().get()): " + (reissuingObj.get().compares(otherInvoice.reissuingProperty().get())));
         System.out.println("statusObj.get().compares(otherInvoice.getInvoiceStatus()): " + (statusObj.get().compares(otherInvoice.getInvoiceStatus())));
@@ -639,16 +636,14 @@ public class Invoice extends EditorPanelable {
         System.out.println("Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses()): " + (Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())));
         System.out.println("compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts()): " + (Utils.compareProductsCounter(productsCounter, otherInvoice.getProductsWithCounts())));
         
-        return  getClientId().equals(otherInvoice.getClientId()) &&
-                getFirstName().equals(otherInvoice.getFirstName())  &&
-                getLastName().equals(otherInvoice.getLastName())    &&
-                getEmail().equals(otherInvoice.getEmail())          &&
-                
+        
+        return  Utils.objectEquals(clientObj.get(), otherInvoice.clientProperty().get()) &&
+
                 getInvoiceNumber().equals(otherInvoice.getInvoiceNumber())  &&
                 Utils.compareListsByElemOrder(licenses, otherInvoice.getLicenses())    &&
-                Utils.dateEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()) &&
-                Utils.dateEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()) &&
-                Utils.dateEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()) &&
+                Utils.objectEquals(beginDateProperty().get(), otherInvoice.beginDateProperty().get()) &&
+                Utils.objectEquals(endDateProperty().get(), otherInvoice.endDateProperty().get()) &&
+                Utils.objectEquals(revokedDateProperty().get(), otherInvoice.revokedDateProperty().get()) &&
                 getAdditionalDiscountRate().equals(otherInvoice.getAdditionalDiscountRate()) &&
                 
                 getMoneyToPay().equals(otherInvoice.getMoneyToPay()) &&

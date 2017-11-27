@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -173,7 +172,7 @@ public class Utils {
     }
     
     
-    public static boolean dateEquals(LocalDate date1, LocalDate date2){
+    public static boolean objectEquals(Object date1, Object date2){
         if (date1 == null && date2 == null) return true;
         else if (date1 == null && date2 != null) return false;
         else if (date1 != null && date2 == null) return false;

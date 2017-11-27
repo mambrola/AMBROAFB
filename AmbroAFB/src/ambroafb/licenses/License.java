@@ -445,9 +445,9 @@ public class License extends EditorPanelable {
                 getLicenseNumber() == otherLicense.getLicenseNumber()   &&
                 
                 // The dialog buttons does not allow for licenses, so they don't be null:
-                Utils.dateEquals(firstDateProperty().get(), otherLicense.firstDateProperty().get()) &&
-                Utils.dateEquals(lastDateProperty().get(), otherLicense.lastDateProperty().get()) &&
-                Utils.dateEquals(lastLoginTimeProperty().get(), otherLicense.lastLoginTimeProperty().get());
+Utils.objectEquals(firstDateProperty().get(), otherLicense.firstDateProperty().get()) &&
+                Utils.objectEquals(lastDateProperty().get(), otherLicense.lastDateProperty().get()) &&
+                Utils.objectEquals(lastLoginTimeProperty().get(), otherLicense.lastLoginTimeProperty().get());
 //                firstDateProperty().get().equals(otherLicense.firstDateProperty().get()) &&
 //                lastDateProperty().get().equals(otherLicense.lastDateProperty().get()) &&
 //                lastLoginTimeProperty().get().equals(lastLoginTimeProperty().get());

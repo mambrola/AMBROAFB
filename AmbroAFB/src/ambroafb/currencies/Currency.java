@@ -160,7 +160,7 @@ public class Currency extends EditorPanelable {
         return  this.getIso().equals(currencyBackup.getIso()) &&
                 this.getDescrip().equals(currencyBackup.getDescrip()) &&
                 this.getSymbol().equals(currencyBackup.getSymbol()) &&
-                Utils.dateEquals(dateProperty.get(), currencyBackup.dateProperty().get());
+                Utils.objectEquals(dateProperty.get(), currencyBackup.dateProperty().get());
     }
     
     /**

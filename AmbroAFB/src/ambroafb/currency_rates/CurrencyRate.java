@@ -165,7 +165,7 @@ public class CurrencyRate extends EditorPanelable {
     public boolean compares(EditorPanelable backup) {
         CurrencyRate currencyRateBackup = (CurrencyRate) backup;
         
-        return  Utils.dateEquals(dateProperty().get(), currencyRateBackup.dateProperty().get()) &&
+        return  Utils.objectEquals(dateProperty().get(), currencyRateBackup.dateProperty().get()) &&
                 getCount() == currencyRateBackup.getCount()    &&
                 getIso().equals(currencyRateBackup.getIso())   &&
                 getRate() == currencyRateBackup.getRate();

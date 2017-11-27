@@ -254,9 +254,9 @@ public class Account extends EditorPanelable {
                 getBalAccount() == other.getBalAccount() &&
                 getDescrip().equals(other.getDescrip()) &&
                 getClientId() == other.getClientId() &&
-                Utils.dateEquals(openedProperty().get(), other.openedProperty().get()) &&
+                Utils.objectEquals(openedProperty().get(), other.openedProperty().get()) &&
                 getRemark().equals(other.getRemark()) &&
-                Utils.dateEquals(closedProperty().get(), other.closedProperty().get());
+                Utils.objectEquals(closedProperty().get(), other.closedProperty().get());
     }
     
     @Override

@@ -99,7 +99,7 @@ public class CountComboBox extends ComboBox<CountComboBoxItem> {
             containers.keySet().stream().forEach((key) -> containers.get(key).numberProperty().set(0));
         }
         else {
-            // Firstly reset all oldValues (change number value to 0).
+            // Firstly reset all oldValue (change number value to 0).
             containers.values().forEach((countContainer) -> countContainer.numberProperty().set(0));
             
             Iterator<String> itr = b.getIterator();
