@@ -190,7 +190,7 @@ public class AccountDetailPane extends VBox implements SelectionObserver  {
         balAccNumber.setText("" + selectedAccount.getBalAccount());
         balAccDescrip.setText(selectedAccount.getBalAccountDescrip());
 
-        String clientIdText = (selectedAccount.getClientId() == 0) ? "" : "" + selectedAccount.getClientId();
+        String clientIdText = (selectedAccount.getClientId() == null) ? "" : "" + selectedAccount.getClientId();
         clientId.setText(clientIdText);
         clientDescrip.setText(selectedAccount.getClientDescrip());
     }

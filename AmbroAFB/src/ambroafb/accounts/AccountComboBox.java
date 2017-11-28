@@ -5,6 +5,7 @@
  */
 package ambroafb.accounts;
 
+import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.DataProvider;
 import java.util.List;
 import java.util.Optional;
@@ -25,13 +26,24 @@ public class AccountComboBox extends ComboBox<Account> {
     private final Account accountALL = new Account();
     private final ObservableList<Account> items = FXCollections.observableArrayList();
     private final FilteredList<Account> filteredList = new FilteredList(items);
-    private final AccountDataFetchProvider dataFetchProvider = new AccountDataFetchProvider();
+    private final DataFetchProvider dataFetchProvider;
     
     public AccountComboBox(){
         super();
         this.setItems(filteredList);
-        
         accountALL.setDescrip(categoryALL);
+        
+        dataFetchProvider = getConcreteProvider();
+    }
+    
+    
+    /**
+     * Gets concrete provider.
+     * Note: The method is useful for testing. When this class tests, the method will be override and returns appropriate DataFetchProvider for testing.
+     * @return The class object that is DataFetchProvider implementor.
+     */
+    protected DataFetchProvider getConcreteProvider(){
+        return new AccountDataFetchProvider();
     }
     
     /**
@@ -71,7 +83,7 @@ public class AccountComboBox extends ComboBox<Account> {
             return acc.getIso().equals(iso);
         });
         if (old != null){
-            Optional<Account> opt = filteredList.stream().filter((acc) -> acc.getAccount() == old.getAccount()).findFirst();
+            Optional<Account> opt = filteredList.stream().filter((acc) -> acc.getAccount().equals(old.getAccount())).findFirst();
             setValue((opt.isPresent()) ? opt.get() : null);
         }
         if (iso == null) {

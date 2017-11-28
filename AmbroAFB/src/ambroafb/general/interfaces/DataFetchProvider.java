@@ -6,6 +6,7 @@
 package ambroafb.general.interfaces;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 import org.json.JSONObject;
@@ -15,6 +16,12 @@ import org.json.JSONObject;
  * @author dkobuladze
  */
 public abstract class DataFetchProvider extends DataProvider {
+    
+    protected CountDownLatch latch = new CountDownLatch(getLatchValue());
+    
+    protected int getLatchValue(){
+        return 0;
+    }
     
     /**
      *  The method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list by condition.
@@ -35,10 +42,13 @@ public abstract class DataFetchProvider extends DataProvider {
      * @param errorAction The action executes if list returning from DB was not successful.  It will call in Platform.runLater.
      *                                      If you want to nothing will be executed, please give the null value for it.
      */
-    public <T> void getFilteredBy(JSONObject params, Consumer<List<T>> successAction, Consumer<Exception> errorAction){
+    public <T> void filteredBy(JSONObject params, Consumer<List<T>> successAction, Consumer<Exception> errorAction){
         new Thread(() -> {
             try {
                 List<T> list = getFilteredBy(params);
+                latch.await();
+                Consumer<List<T>> influenceAction = getInfluenceAction();
+                if (influenceAction != null) influenceAction.accept(list);
                 Platform.runLater(() -> {
                     if (successAction != null) successAction.accept(list);
                 });
@@ -70,10 +80,15 @@ public abstract class DataFetchProvider extends DataProvider {
      * @param errorAction The action executes if list returning from DB was not successful.  It will call in Platform.runLater.
      *                                      If you want to nothing will be executed, please give the null value for it.
      */
-    public <T> void getFilteredBy(FilterModel model, Consumer<List<T>> successAction, Consumer<Exception> errorAction) {
+    public <T> void filteredBy(FilterModel model, Consumer<List<T>> successAction, Consumer<Exception> errorAction) {
         new Thread(() -> {
             try {
                 List<T> list = getFilteredBy(model);
+                System.out.println("model: " + latch.getCount());
+                latch.await();
+                Consumer<List<T>> influenceAction = getInfluenceAction();
+                System.out.println("influenceAction: " + influenceAction);
+                if (influenceAction != null) influenceAction.accept(list);
                 Platform.runLater(() -> {
                     if (successAction != null) successAction.accept(list);
                 });
@@ -83,6 +98,10 @@ public abstract class DataFetchProvider extends DataProvider {
                 });
             }
         }).start();
+    }
+    
+    protected <T> Consumer<List<T>> getInfluenceAction(){
+        return null;
     }
     
     

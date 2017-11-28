@@ -6,14 +6,14 @@
 package ambroafb.general_scene.table_list;
 
 import ambro.AFilterableTableView;
-import ambroafb.general.interfaces.DataProvider;
+import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
+import java.util.function.Consumer;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,28 +45,55 @@ public class TableListController extends ListingController {
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         contents.clear();
         
-        new Thread(() -> {
-            Platform.runLater(() -> {
-                masker.setVisible(true);
-            });
-            
-            try {
-                List<EditorPanelable> list = (model == null) ? dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL)
-                                                             : dataFetchProvider.getFilteredBy(model);
-                contents.setAll(list);
-            } catch (Exception ex) {
+        masker.setVisible(true);
+        
+        Consumer<List<EditorPanelable>> successAction = (editorPanelables) -> {
+            contents.setAll(editorPanelables);
+            masker.setVisible(false);
+            if (selectedIndex >= 0){
+                aview.getSelectionModel().select(selectedIndex);
             }
-            
-            Platform.runLater(() -> {
-                masker.setVisible(false);
-                if (selectedIndex >= 0){
-                    aview.getSelectionModel().select(selectedIndex);
-                }
-            });
-        }).start();
+        };
+        
+        if (model == null){
+            dataFetchProvider.filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, null);
+        }
+        else {
+            Consumer<Exception> error = (ex) -> {
+                System.err.println("ex: " + ex.getMessage());
+            };
+            dataFetchProvider.filteredBy(model, successAction, error);
+        }
         
     }
     
+//    @Override
+//    public void reAssignTable(FilterModel model){
+//        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+//        contents.clear();
+//        
+//        new Thread(() -> {
+//            Platform.runLater(() -> {
+//                masker.setVisible(true);
+//            });
+//            
+//            try {
+//                List<EditorPanelable> list = (model == null) ? dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL)
+//                                                             : dataFetchProvider.getFilteredBy(model);
+//                contents.setAll(list);
+//            } catch (Exception ex) {
+//            }
+//            
+//            Platform.runLater(() -> {
+//                masker.setVisible(false);
+//                if (selectedIndex >= 0){
+//                    aview.getSelectionModel().select(selectedIndex);
+//                }
+//            });
+//        }).start();
+//        
+//    }
+//    
     @Override
     public void addListWith(Class content) {
         aview.initialize(content);

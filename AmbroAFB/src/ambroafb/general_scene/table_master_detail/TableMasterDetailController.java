@@ -6,7 +6,7 @@
 package ambroafb.general_scene.table_master_detail;
 
 import ambro.AFilterableTableView;
-import ambroafb.general.interfaces.DataProvider;
+import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.ListingController;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import javafx.application.Platform;
+import java.util.function.Consumer;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,9 +33,6 @@ public class TableMasterDetailController extends ListingController {
 
     @FXML
     private AFilterableTableView<EditorPanelable> aview;
-    
-//    @FXML
-//    private MasterDetailPane masterDetailPane;
     
     @FXML
     private SplitPane splitPane;
@@ -60,29 +57,30 @@ public class TableMasterDetailController extends ListingController {
     }
     
     @Override
-    public void reAssignTable(FilterModel model) {
+    public void reAssignTable(FilterModel model){
         int selectedIndex = aview.getSelectionModel().getSelectedIndex();
         contents.clear();
         
-        new Thread(() -> {
-            Platform.runLater(() -> {
-                masterMasker.setVisible(true);
-            });
-            
-            try {
-                List<EditorPanelable> list = (model == null) ? dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL)
-                                                             : dataFetchProvider.getFilteredBy(model);
-                contents.setAll(list);
-            } catch (Exception ex) {
+        masterMasker.setVisible(true);
+        
+        Consumer<List<EditorPanelable>> successAction = (editorPanelables) -> {
+            contents.setAll(editorPanelables);
+            masterMasker.setVisible(false);
+            if (selectedIndex >= 0){
+                aview.getSelectionModel().select(selectedIndex);
             }
-            
-            Platform.runLater(() -> {
-                masterMasker.setVisible(false);
-                if (selectedIndex >= 0){
-                    aview.getSelectionModel().select(selectedIndex);
-                }
-            });
-        }).start();
+        };
+        
+        if (model == null){
+            dataFetchProvider.filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, null);
+        }
+        else {
+            Consumer<Exception> error = (ex) -> {
+                System.err.println("ex: " + ex.getMessage());
+            };
+            dataFetchProvider.filteredBy(model, successAction, error);
+        }
+        
     }
 
     @Override

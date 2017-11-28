@@ -53,6 +53,9 @@ public class Account extends EditorPanelable {
     private final ObjectProperty<LocalDate> dateOpenedObj, dateClosedObj;
     private final StringProperty remark;
     
+    
+    private Integer balAccId, clientId;
+    
     public Account(){
         dateOpenedObj = new SimpleObjectProperty<>(LocalDate.now());
         accountNumber = new SimpleStringProperty("");
@@ -108,7 +111,8 @@ public class Account extends EditorPanelable {
     }
     
     public Integer getBalAccountId(){
-        return (balAccountObj.isNull().get()) ? null : balAccountObj.get().getRecId();
+        return balAccId;
+//        return (balAccountObj.isNull().get()) ? null : balAccountObj.get().getRecId();
     }
     
     @JsonIgnore
@@ -121,7 +125,8 @@ public class Account extends EditorPanelable {
     }
     
     public Integer getClientId(){
-        return (clientObj.isNull().get()) ? null : clientObj.get().getRecId();
+        return clientId;
+//        return (clientObj.isNull().get()) ? null : clientObj.get().getRecId();
     }
     
     @JsonIgnore
@@ -157,8 +162,9 @@ public class Account extends EditorPanelable {
     }
     
     @JsonProperty
-    public void setBalAccountId(Integer id){
-        this.balAccountObj.get().setRecId(id);
+    public void setBalAccountId(Integer recId){
+        balAccId = recId;
+//        this.balAccountObj.get().setRecId(id);
     }
 
     @JsonSetter("balAcc")
@@ -175,8 +181,9 @@ public class Account extends EditorPanelable {
         this.descrip.set(descrip);
     }
     
-    public void setClientId(Integer clientId){
-        clientObj.get().setRecId(clientId);
+    public void setClientId(Integer recId){
+        clientId = recId;
+//        clientObj.get().setRecId(clientId);
     }
     
     @JsonProperty
