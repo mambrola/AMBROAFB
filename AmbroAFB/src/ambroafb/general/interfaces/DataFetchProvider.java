@@ -84,10 +84,8 @@ public abstract class DataFetchProvider extends DataProvider {
         new Thread(() -> {
             try {
                 List<T> list = getFilteredBy(model);
-                System.out.println("model: " + latch.getCount());
                 latch.await();
                 Consumer<List<T>> influenceAction = getInfluenceAction();
-                System.out.println("influenceAction: " + influenceAction);
                 if (influenceAction != null) influenceAction.accept(list);
                 Platform.runLater(() -> {
                     if (successAction != null) successAction.accept(list);

@@ -50,17 +50,13 @@ public class AccountDataFetchProvider extends DataFetchProvider {
         DB_VIEW_NAME = "accounts_whole";
         
         Consumer<List<BalanceAccount>> balAccountsFetchSuccess = (balAccounts) -> {
-            System.out.println("<-- balAccountsFetchSuccess -->");
             balAccounts.forEach((balAccount) -> balAccountsReflection.put(balAccount.getRecId(), balAccount));
-            System.out.println(": " + latch.getCount());
             latch.countDown();
         };
         balAccountFetcher.filteredBy(PARAM_FOR_ALL, balAccountsFetchSuccess, null);
         
         Consumer<List<Client>> clientsFetchSuccess = (clients) -> {
-            System.out.println("<-- clientsFetchSuccess -->");
             clients.forEach((client) -> clientsReflection.put(client.getRecId(), client));
-            System.out.println(": " + latch.getCount());
             latch.countDown();
         };
         clientsFetcher.filteredBy(PARAM_FOR_ALL, clientsFetchSuccess, null);
@@ -76,7 +72,6 @@ public class AccountDataFetchProvider extends DataFetchProvider {
         return (accounts) -> {
                         accounts.forEach((account) -> {
                                     account.balAccProperty().set(balAccountsReflection.get(account.getBalAccountId()));
-                                    System.out.println("account.getClientId(): " + account.getClientId());
                                     account.clientProperty().set(clientsReflection.get(account.getClientId()));
                                 });
                 };

@@ -86,7 +86,6 @@ public class TableMasterDetailController extends ListingController {
     @Override
     public void addListWith(Class content) {
         aview.initialize(content);
-//        editorPanel.buttonsMainPropertiesBinder(aview);
         editorPanel.setTableDataList(aview, contents);
         
         aview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
