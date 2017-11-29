@@ -71,15 +71,10 @@ public class TableMasterDetailController extends ListingController {
             }
         };
         
-        if (model == null){
+        if (model == null)
             dataFetchProvider.filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, null);
-        }
-        else {
-            Consumer<Exception> error = (ex) -> {
-                System.err.println("ex: " + ex.getMessage());
-            };
-            dataFetchProvider.filteredBy(model, successAction, error);
-        }
+        else
+            dataFetchProvider.filteredBy(model, successAction, null);
         
     }
 

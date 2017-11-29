@@ -157,7 +157,7 @@ public class AccountDetailPane extends VBox implements SelectionObserver  {
         };
         if (dataFetchProvider != null){
             masker.setVisible(true);
-            dataFetchProvider.getAccountEntries(selectedAccount.getRecId(), beginDate.getValue(), endDate.getValue(), successAction, null);
+            dataFetchProvider.getAccountRecords(selectedAccount.getRecId(), beginDate.getValue(), endDate.getValue(), successAction, null);
         }
     }
     

@@ -20,8 +20,11 @@ import javafx.stage.Stage;
  */
 public class AccountManager extends EditorPanelableManager {
 
+    private final AccountDataFetchProvider accountDataFetchProvider;
+    
     public AccountManager(){
-        dataFetchProvider = new AccountDataFetchProvider();
+        accountDataFetchProvider = new AccountDataFetchProvider();
+        dataFetchProvider = new AccountDecoratorDataFetchProvider(accountDataFetchProvider);
         dataChangeProvider = new AccountDataChangeProvider();
     }
     
@@ -29,6 +32,7 @@ public class AccountManager extends EditorPanelableManager {
     public Dialogable getDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         AccountDialog dialog = new AccountDialog(owner, type, object);
         dialog.setDataChangeProvider(dataChangeProvider);
+        dialog.setDataFetchProvider(accountDataFetchProvider);
         dialog.setFrameFeatures(type, "account_dialog_title");
         return dialog;
     }
@@ -38,4 +42,7 @@ public class AccountManager extends EditorPanelableManager {
         return new AccountFilter(owner);
     }
     
+    public AccountDataFetchProvider getAccountDataFetchProvider(){
+        return accountDataFetchProvider;
+    }
 }

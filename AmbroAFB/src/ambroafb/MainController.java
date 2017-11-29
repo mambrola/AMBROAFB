@@ -6,7 +6,6 @@
 package ambroafb;
 
 import ambroafb.accounts.Account;
-import ambroafb.accounts.AccountDataFetchProvider;
 import ambroafb.accounts.AccountManager;
 import ambroafb.accounts.detail_pane.AccountDetailPane;
 import ambroafb.accounts.filter.AccountFilter;
@@ -127,7 +126,7 @@ public class MainController implements Initializable {
             AccountManager manager = new AccountManager();
             accounts.setEPManager(manager);
             AccountDetailPane detailPane = new AccountDetailPane();
-            detailPane.setDataFetchProvider((AccountDataFetchProvider)manager.getDataFetchProvider());
+            detailPane.setDataFetchProvider(manager.getAccountDataFetchProvider());
             ((TableMasterDetailController)accounts.getController()).setDetailNode(detailPane);
             accounts.getController().registerObserver(detailPane);
             accounts.show();

@@ -6,11 +6,9 @@
 package ambroafb.accounts;
 
 import ambroafb.general.interfaces.DataFetchProvider;
-import ambroafb.general.interfaces.DataProvider;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -67,7 +65,11 @@ public class AccountComboBox extends ComboBox<Account> {
      * @param extraAction The extra action on comboBox filling. If there is no extra action exists, gives null value.
      */
     public void fillComboBoxWithoutALL(Consumer<ObservableList<Account>> extraAction){
-        new Thread(new FetchDataFromDB(extraAction)).start();
+        Consumer<List<Account>> successAction = (accounts) -> {
+            items.setAll(accounts);
+            if (extraAction != null) extraAction.accept(items);
+        };
+        dataFetchProvider.filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, null);
     }
     
     
@@ -107,27 +109,4 @@ public class AccountComboBox extends ComboBox<Account> {
         return items;
     }
     
-    private class FetchDataFromDB implements Runnable {
-
-        private final Consumer<ObservableList<Account>> consumer;
-        
-        public FetchDataFromDB(Consumer<ObservableList<Account>> consumer){
-            this.consumer = consumer;
-        }
-        
-        @Override
-        public void run() {
-            try {
-                List<Account> accountFromDB = dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL);
-                Platform.runLater(() -> {
-                    items.setAll(accountFromDB);
-                    if (consumer != null){
-                        consumer.accept(items);
-                    }
-                });
-            } catch (Exception ex) {
-            }
-        }
-        
-    }
 }

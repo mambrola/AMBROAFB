@@ -6,7 +6,6 @@
 package ambroafb.general.interfaces;
 
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 import org.json.JSONObject;
@@ -16,12 +15,6 @@ import org.json.JSONObject;
  * @author dkobuladze
  */
 public abstract class DataFetchProvider extends DataProvider {
-    
-    protected CountDownLatch latch = new CountDownLatch(getLatchValue());
-    
-    protected int getLatchValue(){
-        return 0;
-    }
     
     /**
      *  The method returns {@link ambroafb.general.interfaces.EditorPanelable EditorPanelable} list by condition.
@@ -46,9 +39,6 @@ public abstract class DataFetchProvider extends DataProvider {
         new Thread(() -> {
             try {
                 List<T> list = getFilteredBy(params);
-                latch.await();
-                Consumer<List<T>> influenceAction = getInfluenceAction();
-                if (influenceAction != null) influenceAction.accept(list);
                 Platform.runLater(() -> {
                     if (successAction != null) successAction.accept(list);
                 });
@@ -84,9 +74,6 @@ public abstract class DataFetchProvider extends DataProvider {
         new Thread(() -> {
             try {
                 List<T> list = getFilteredBy(model);
-                latch.await();
-                Consumer<List<T>> influenceAction = getInfluenceAction();
-                if (influenceAction != null) influenceAction.accept(list);
                 Platform.runLater(() -> {
                     if (successAction != null) successAction.accept(list);
                 });

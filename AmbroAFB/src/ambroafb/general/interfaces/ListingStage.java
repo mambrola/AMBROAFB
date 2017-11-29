@@ -73,6 +73,10 @@ public abstract class ListingStage extends UserInteractiveStage {
         StagesContainer.setSizeFor((Stage)this);
     }
     
+    /**
+     *  The method save given EditorPanelableManager instance and sets its dataFetchProvider to ListingController dataFetchProvider.
+     * @param manager The manager for concrete package.
+     */
     public void setEPManager(EditorPanelableManager manager){
         if (manager != null){
             this.editorPanelableManager = manager;

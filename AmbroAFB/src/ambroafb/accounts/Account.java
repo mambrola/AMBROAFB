@@ -112,7 +112,6 @@ public class Account extends EditorPanelable {
     
     public Integer getBalAccountId(){
         return balAccId;
-//        return (balAccountObj.isNull().get()) ? null : balAccountObj.get().getRecId();
     }
     
     @JsonIgnore
@@ -126,7 +125,6 @@ public class Account extends EditorPanelable {
     
     public Integer getClientId(){
         return clientId;
-//        return (clientObj.isNull().get()) ? null : clientObj.get().getRecId();
     }
     
     @JsonIgnore
@@ -164,7 +162,6 @@ public class Account extends EditorPanelable {
     @JsonProperty
     public void setBalAccountId(Integer recId){
         balAccId = recId;
-//        this.balAccountObj.get().setRecId(id);
     }
 
     @JsonSetter("balAcc")
@@ -183,7 +180,6 @@ public class Account extends EditorPanelable {
     
     public void setClientId(Integer recId){
         clientId = recId;
-//        clientObj.get().setRecId(clientId);
     }
     
     @JsonProperty

@@ -5,12 +5,7 @@
  */
 package ambroafb.accounts;
 
-import ambroafb.accounts.detail_pane.helper.AccountCommonInfo;
 import ambroafb.accounts.filter.AccountFilterModel;
-import ambroafb.balance_accounts.BalAccountDataFetchProvider;
-import ambroafb.balance_accounts.BalanceAccount;
-import ambroafb.clients.Client;
-import ambroafb.clients.ClientDataFetchProvider;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
@@ -20,10 +15,7 @@ import authclient.db.DBClient;
 import authclient.db.WhereBuilder;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 import org.json.JSONArray;
@@ -35,46 +27,10 @@ import org.json.JSONObject;
  */
 public class AccountDataFetchProvider extends DataFetchProvider {
 
-    private final String ACCOUNT_INFO_PROCEDURE = "account_get_info";
     private final String ACCOUNT_DEBIT_CREDIT_ENTRIES_PROCEDURE = "account_get_turnover";
-    
-    private final int separateFetchersCount = 2;
-    
-    private final BalAccountDataFetchProvider balAccountFetcher = new BalAccountDataFetchProvider();
-    private final Map<Integer, BalanceAccount> balAccountsReflection = new HashMap<>();
-    
-    private final ClientDataFetchProvider clientsFetcher = new ClientDataFetchProvider();
-    private final Map<Integer, Client> clientsReflection = new HashMap<>();
     
     public AccountDataFetchProvider(){
         DB_VIEW_NAME = "accounts_whole";
-        
-        Consumer<List<BalanceAccount>> balAccountsFetchSuccess = (balAccounts) -> {
-            balAccounts.forEach((balAccount) -> balAccountsReflection.put(balAccount.getRecId(), balAccount));
-            latch.countDown();
-        };
-        balAccountFetcher.filteredBy(PARAM_FOR_ALL, balAccountsFetchSuccess, null);
-        
-        Consumer<List<Client>> clientsFetchSuccess = (clients) -> {
-            clients.forEach((client) -> clientsReflection.put(client.getRecId(), client));
-            latch.countDown();
-        };
-        clientsFetcher.filteredBy(PARAM_FOR_ALL, clientsFetchSuccess, null);
-    }
-
-    @Override
-    protected int getLatchValue() {
-        return separateFetchersCount;
-    }
-
-    @Override
-    protected Consumer<List<Account>> getInfluenceAction() {
-        return (accounts) -> {
-                        accounts.forEach((account) -> {
-                                    account.balAccProperty().set(balAccountsReflection.get(account.getBalAccountId()));
-                                    account.clientProperty().set(clientsReflection.get(account.getClientId()));
-                                });
-                };
     }
 
     @Override
@@ -112,24 +68,16 @@ public class AccountDataFetchProvider extends DataFetchProvider {
         return getObjectFromDB(Account.class, DB_VIEW_NAME, params);
     }
 
-    public void fetchAccountInfo(int accountId, Consumer<AccountCommonInfo> successAction, Consumer<Exception> errorAction) {
-        new Thread(() -> {
-            AccountCommonInfo accInfo = null;
-            DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-            try {
-                ArrayList<AccountCommonInfo> data = callProcedure(AccountCommonInfo.class, ACCOUNT_INFO_PROCEDURE, dbClient.getLang(), accountId);
-                Platform.runLater(() -> {
-                    if (successAction != null && data != null) successAction.accept(data.get(0));
-                });
-            } catch (Exception ex) {
-                Platform.runLater(() -> {
-                    if (errorAction != null) errorAction.accept(ex);
-                });
-            }
-        }).start();
-    }
     
-    public void getAccountEntries(int accountId, LocalDate from, LocalDate to, Consumer<JSONArray> successAction, Consumer<Exception> errorAction) {
+    /**
+     * The function gets accounts for finances.
+     * @param accountId The DB id of account.
+     * @param from The interested information begin date.
+     * @param to The interested information final date.
+     * @param successAction The action if fetching was success.
+     * @param errorAction  The action if fetching was not success.
+     */
+    public void getAccountRecords(int accountId, LocalDate from, LocalDate to, Consumer<JSONArray> successAction, Consumer<Exception> errorAction) {
         new Thread(() -> {
             try {
                 DBClient dbClient = GeneralConfig.getInstance().getDBClient();
