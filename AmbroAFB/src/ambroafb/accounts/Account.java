@@ -53,18 +53,17 @@ public class Account extends EditorPanelable {
     private final ObjectProperty<LocalDate> dateOpenedObj, dateClosedObj;
     private final StringProperty remark;
     
-    
     private Integer balAccId, clientId;
     
     public Account(){
         dateOpenedObj = new SimpleObjectProperty<>(LocalDate.now());
-        accountNumber = new SimpleStringProperty("");
-        iso = new SimpleStringProperty("");
-        balAccountObj = new SimpleObjectProperty<>(new BalanceAccount());
-        descrip = new SimpleStringProperty("");
-        clientObj = new SimpleObjectProperty<>(new Client());
+        accountNumber = new SimpleStringProperty();
+        iso = new SimpleStringProperty();
+        balAccountObj = new SimpleObjectProperty<>();
+        descrip = new SimpleStringProperty();
+        clientObj = new SimpleObjectProperty<>();
         dateClosedObj = new SimpleObjectProperty<>();
-        remark = new SimpleStringProperty("");
+        remark = new SimpleStringProperty();
         
     }
     
@@ -103,11 +102,11 @@ public class Account extends EditorPanelable {
     
     // Getters:
     public Long getAccount(){
-        return (accountNumber.isNull().get()) ? null : NumberConverter.stringToLong(accountNumber.get(), null);
+        return NumberConverter.stringToLong(accountNumber.get(), null);
     }
     
     public String getIso(){
-        return (iso.isNull().get()) ? null : iso.get();
+        return iso.get();
     }
     
     public Integer getBalAccountId(){
@@ -116,11 +115,11 @@ public class Account extends EditorPanelable {
     
     @JsonIgnore
     public Integer getBalAccount(){
-        return (balAccountObj.isNull().get()) ? null : balAccountObj.get().getBalAcc();
+        return (balAccountObj.get() == null) ? null : balAccountObj.get().getBalAcc();
     }
     
     public String getDescrip(){
-        return (descrip.isNull().get()) ? null : descrip.get();
+        return descrip.get();
     }
     
     public Integer getClientId(){
@@ -129,30 +128,30 @@ public class Account extends EditorPanelable {
     
     @JsonIgnore
     public String getClientDescrip(){
-        return (clientObj.isNull().get()) ? null : clientObj.get().getFirstName();
+        return (clientObj.get() == null) ? null : clientObj.get().getFirstName();
     }
     
     public String getDateOpen(){
-        return (dateOpenedObj.isNull().get()) ? null : dateOpenedObj.get().toString();
+        return (dateOpenedObj.get() == null) ? null : dateOpenedObj.get().toString();
     }
     
     public String getRemark(){
-        return (remark.isNull().get()) ? null : remark.get();
+        return remark.get();
     }
     
     @JsonIgnore
     public String getBalAccountDescrip(){
-        return (balAccountObj.isNull().get()) ? null : balAccountObj.get().getDescrip();
+        return (balAccountObj.get() == null) ? null : balAccountObj.get().getDescrip();
     }
     
     public String getDateClose(){
-        return (dateClosedObj.isNull().get()) ? null : dateClosedObj.get().toString();
+        return (dateClosedObj.get() == null) ? null : dateClosedObj.get().toString();
     }
     
     
     // Setters:
     public void setAccount(Long account){
-        this.accountNumber.set("" + account);
+        accountNumber.set((account == null) ? null : account.toString());
     }
     
     public void setIso(String iso){
@@ -166,12 +165,12 @@ public class Account extends EditorPanelable {
 
     @JsonSetter("balAcc")
     public void setBalAccount(Integer balAcc){
-        this.balAccountObj.get().setBalAcc(balAcc);
+        if (balAccountObj.get() != null) balAccountObj.get().setBalAcc(balAcc);
     }
     
     @JsonProperty
     public void setBalAccountDescrip(String balAccDescrip){
-        balAccountObj.get().setDescrip(balAccDescrip);
+        if (balAccountObj.get() != null) balAccountObj.get().setDescrip(balAccDescrip);
     }
     
     public void setDescrip(String descrip){
@@ -184,11 +183,11 @@ public class Account extends EditorPanelable {
     
     @JsonProperty
     public void setClientDescrip(String descrip){
-        clientObj.get().setFirstName(descrip);
+        if (clientObj.get() != null) clientObj.get().setFirstName(descrip);
     }
     
     public void setDateOpen(String date){
-        this.dateOpenedObj.set(DateConverter.getInstance().parseDate(date));
+        dateOpenedObj.set(DateConverter.getInstance().parseDate(date));
     }
     
     public void setRemark(String remark){
@@ -220,10 +219,13 @@ public class Account extends EditorPanelable {
         Account otherAccount = (Account)other;
         setAccount(otherAccount.getAccount());
         setIso(otherAccount.getIso());
-        balAccountObj.set(otherAccount.balAccProperty().get().cloneWithID());
+        if (otherAccount.balAccProperty().get() != null) {
+            balAccountObj.set(otherAccount.balAccProperty().get().cloneWithID());
+        }
+        if (otherAccount.clientProperty().get() != null) {
+            clientObj.set(otherAccount.clientProperty().get().cloneWithID());
+        }
         setDescrip(otherAccount.getDescrip());
-        setClientId(otherAccount.getClientId());
-        setClientDescrip(otherAccount.getClientDescrip());
         setDateOpen(otherAccount.getDateOpen());
         setRemark(otherAccount.getRemark());
         setDateClose(otherAccount.getDateClose());
@@ -252,9 +254,9 @@ public class Account extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Account other = (Account)backup;
-        return  Objects.equals(accountNumber.get(), other.accountNumberProperty().get()) &&
+        return  Objects.equals(accountNumberProperty().get(), other.accountNumberProperty().get()) &&
                 Objects.equals(getIso(), other.getIso()) &&
-                Objects.equals(balAccountObj.get(), other.balAccProperty().get()) &&
+                Objects.equals(balAccProperty().get(), other.balAccProperty().get()) &&
                 Objects.equals(getDescrip(), other.getDescrip()) &&
                 Objects.equals(clientProperty().get(), other.clientProperty().get()) &&
                 Objects.equals(openedProperty().get(), other.openedProperty().get()) &&
@@ -280,20 +282,6 @@ public class Account extends EditorPanelable {
                             then(descrip.get()).
                         otherwise(accountNumber.get() + numberIsoDlmt + isoDescripBinding.get());
     }
-    
-    private final int max_account_num_length = 10;
-    
-    private String getSpaces(int accountNumLength){
-        String result = "";
-        int diff = max_account_num_length - accountNumLength;
-        if (diff > 0){
-            for (int i = 0; i < diff; i++) {
-                result += " ";
-            }
-        }
-        return result;
-    }
-    
     
     public static class BalAccountCellFactory implements Callback<TableColumn<Account, BalanceAccount>, TableCell<Account, BalanceAccount>> {
 

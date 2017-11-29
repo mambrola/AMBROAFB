@@ -7,6 +7,7 @@ package ambroafb.accounts;
 
 import ambroafb.general.interfaces.DataFetchProvider;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import javafx.collections.FXCollections;
@@ -85,7 +86,7 @@ public class AccountComboBox extends ComboBox<Account> {
             return acc.getIso().equals(iso);
         });
         if (old != null){
-            Optional<Account> opt = filteredList.stream().filter((acc) -> acc.getAccount().equals(old.getAccount())).findFirst();
+            Optional<Account> opt = filteredList.stream().filter((acc) -> Objects.equals(acc.getAccount(), old.getAccount())).findFirst();
             setValue((opt.isPresent()) ? opt.get() : null);
         }
         if (iso == null) {

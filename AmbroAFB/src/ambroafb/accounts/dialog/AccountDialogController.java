@@ -166,7 +166,7 @@ public class AccountDialogController extends DialogController {
     protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
         Consumer<ObservableList<BalanceAccount>> setBalAccByNumber = (balAccList) -> {
             Integer balAccountNumber = ((Account)sceneObj).getBalAccount();
-            Optional<BalanceAccount> optBalAcc = balAccList.stream().filter((balAcc) -> balAcc.getBalAcc() == balAccountNumber).findFirst();
+            Optional<BalanceAccount> optBalAcc = balAccList.stream().filter((balAcc) -> new Integer(balAcc.getBalAcc()).equals(balAccountNumber)).findFirst();
             if (optBalAcc.isPresent()){
                 balAccounts.setValue(null); // რადგან balAccount_ებისთვის მხოლოდ Number მოდის ბაზიდან buttonCell-ში ჩნდება მარტო Number. ამიტომ ვაკეთებთ ამ ერთგვარ "refresh"-ს.
                 balAccounts.setValue(optBalAcc.get());
@@ -175,8 +175,8 @@ public class AccountDialogController extends DialogController {
         balAccounts.fillComboBoxWithoutALL(setBalAccByNumber);
         
         Consumer<ObservableList<Client>> setClientbyId = (clientsList) -> {
-            int clientId = ((Account)sceneObj).getClientId();
-            Optional<Client> optClient = clientsList.stream().filter((client) -> client.getRecId() == clientId).findFirst();
+            Integer clientId = ((Account)sceneObj).getClientId();
+            Optional<Client> optClient = clientsList.stream().filter((client) -> new Integer(client.getRecId()).equals(clientId)).findFirst();
             if (optClient.isPresent()){
                 clients.valueProperty().set(null);
                 clients.valueProperty().set(optClient.get());

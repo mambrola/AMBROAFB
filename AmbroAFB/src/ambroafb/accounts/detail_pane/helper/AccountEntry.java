@@ -6,6 +6,7 @@
 package ambroafb.accounts.detail_pane.helper;
 
 import ambro.AView;
+import ambroafb.general.DateCellFactory;
 import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.interfaces.TableColumnFeatures;
@@ -22,8 +23,7 @@ import javafx.beans.property.StringProperty;
  */
 public class AccountEntry {
     
-    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE)
-    private final StringProperty dateDescrip = new SimpleStringProperty("");
+    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE, cellFactory = DateCellFactory.class)
     private final ObjectProperty<LocalDate> dateObj = new SimpleObjectProperty<>();
     
     @AView.Column(title = "%correspondent", width = "280")
@@ -69,7 +69,6 @@ public class AccountEntry {
     
     public void setDocDate(String date){
         dateObj.set(DateConverter.getInstance().parseDate(date));
-        dateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(dateObj.get()));
     }
     
     public void setDocId(int id){
@@ -88,18 +87,15 @@ public class AccountEntry {
     
     public void setIsDebit(boolean isDebit) {
         isDebitEntry = isDebit;
-        if (isDebit){
+        if (isDebit)
             credit.set(""); // If amunt is debit, credit value must be empty.
-        }
-        else {
+        else 
             debit.set(""); // If amunt is credit, debit value must be empty.
-        }
     }
 
     @Override
     public String toString() {
-        return "AccountEntry{" + "dateDescrip=" + dateDescrip + ", dateObj=" + dateObj + ", correspondent=" + correspondent + ", debit=" + debit + ", credit=" + credit + ", docId=" + docId + ", isDebitEntry=" + isDebitEntry + '}';
+        return "AccountEntry{" + "dateObj=" + dateObj.get() + ", correspondent=" + correspondent + ", debit=" + debit + ", credit=" + credit + ", docId=" + docId + ", isDebitEntry=" + isDebitEntry + '}';
     }
-    
     
 }

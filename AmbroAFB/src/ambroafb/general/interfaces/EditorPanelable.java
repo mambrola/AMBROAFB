@@ -16,8 +16,7 @@ import javafx.beans.property.SimpleBooleanProperty;
  * @author mambroladze
  */
 public abstract class EditorPanelable {
-    @JsonProperty("recId")
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonProperty("recId") @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public int recId;
     
     public abstract EditorPanelable cloneWithoutID();
