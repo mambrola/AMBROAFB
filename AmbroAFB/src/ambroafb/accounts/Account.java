@@ -56,7 +56,7 @@ public class Account extends EditorPanelable {
     private Integer balAccId, clientId;
     
     public Account(){
-        dateOpenedObj = new SimpleObjectProperty<>(LocalDate.now());
+        dateOpenedObj = new SimpleObjectProperty<>();
         accountNumber = new SimpleStringProperty();
         iso = new SimpleStringProperty();
         balAccountObj = new SimpleObjectProperty<>();
