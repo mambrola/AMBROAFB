@@ -32,7 +32,6 @@ public class AccountManager extends EditorPanelableManager {
     public Dialogable getDialogFor(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE type, EditorPanelable object) {
         AccountDialog dialog = new AccountDialog(owner, type, object);
         dialog.setDataChangeProvider(dataChangeProvider);
-        dialog.setDataFetchProvider(accountDataFetchProvider);
         dialog.setFrameFeatures(type, "account_dialog_title");
         return dialog;
     }
