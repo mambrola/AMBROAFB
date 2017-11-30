@@ -30,6 +30,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -40,6 +42,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -154,8 +157,6 @@ public class AccountDialogController extends DialogController {
             Account account = (Account)object;
             openDate.valueProperty().bindBidirectional(account.openedProperty());
             currencies.valueProperty().bindBidirectional(account.isoProperty());
-            balAccounts.valueProperty().bindBidirectional(account.balAccProperty());
-            clients.valueProperty().bindBidirectional(account.clientProperty());
             accountNumber.valueProperty().bindBidirectional(account.accountNumberProperty());
             descrip.textProperty().bindBidirectional(account.descripProperty());
             closeDate.valueProperty().bindBidirectional(account.closedProperty());
@@ -170,22 +171,28 @@ public class AccountDialogController extends DialogController {
         }
         
         Consumer<ObservableList<BalanceAccount>> setBalAccByNumber = (balAccList) -> {
-            Integer balAccountNumber = ((Account)sceneObj).getBalAccount();
-            Optional<BalanceAccount> optBalAcc = balAccList.stream().filter((balAcc) -> new Integer(balAcc.getBalAcc()).equals(balAccountNumber)).findFirst();
-            if (optBalAcc.isPresent()){
-                balAccounts.setValue(null); // რადგან balAccount_ებისთვის მხოლოდ Number მოდის ბაზიდან buttonCell-ში ჩნდება მარტო Number. ამიტომ ვაკეთებთ ამ ერთგვარ "refresh"-ს.
-                balAccounts.setValue(optBalAcc.get());
-            }
+            Account accOnScene = ((Account)sceneObj);
+            Integer balAccountId = accOnScene.getBalAccountId();
+            Bindings.bindBidirectional(accOnScene.balAccountIdProperty(), balAccounts.valueProperty(), new BalAccountToIdBiConverter());
+            StringBinding balAccBinding = new StringBinding() {
+                {
+                    super.bind(balAccounts.valueProperty());
+                }
+                @Override
+                protected String computeValue() {
+                    return (balAccounts.getValue() == null) ? null : "" + balAccounts.getValue().getBalAcc();
+                }
+            };
+            accOnScene.balAccountProperty().bind(balAccBinding);
+            accOnScene.balAccountIdProperty().set(balAccountId.toString());
         };
         balAccounts.fillComboBoxWithoutALL(setBalAccByNumber);
         
         Consumer<ObservableList<Client>> setClientbyId = (clientsList) -> {
-            Integer clientId = ((Account)sceneObj).getClientId();
-            Optional<Client> optClient = clientsList.stream().filter((client) -> new Integer(client.getRecId()).equals(clientId)).findFirst();
-            if (optClient.isPresent()){
-                clients.valueProperty().set(null);
-                clients.valueProperty().set(optClient.get());
-            }
+            Account accOnScene = ((Account)sceneObj);
+            Integer clientId = accOnScene.getClientId();
+            Bindings.bindBidirectional(accOnScene.clientIdProperty(), clients.valueProperty(), new ClientToIdBiConverter());
+            accOnScene.clientIdProperty().set(clientId.toString());
         };
         clients.fillComboBoxWithClientsAndPartners(setClientbyId);
         
@@ -196,6 +203,58 @@ public class AccountDialogController extends DialogController {
             ((Account)sceneObj).setRemark("");
             backupObj.copyFrom(sceneObj);
         }
+    }
+    
+    
+    /**
+     *  The class provide to convert Client to its recId as String and vice verse - recId to appropriate Client from comboBox.
+     */
+    private class ClientToIdBiConverter extends StringConverter<Client> {
+        
+        @Override
+        public String toString(Client client) {
+            String result = null;
+            if (client != null) {
+                result = "" + client.getRecId();
+            }
+            return result;
+        }
+
+        @Override
+        public Client fromString(String recId) {
+            Client result = null;
+            Optional<Client> optClient = clients.getItems().stream().filter(client -> ("" + client.getRecId()).equals(recId)).findFirst();
+            if (optClient.isPresent()){
+                result = optClient.get();
+            }
+            return result;
+        }
+    }
+    
+    /**
+     *  The class provide to convert BalanceAccount to its recId as String and vice verse - recId to appropriate BalanceAccount from comboBox.
+     */
+    private class BalAccountToIdBiConverter extends StringConverter<BalanceAccount> {
+
+        @Override
+        public String toString(BalanceAccount balAcc) {
+            String result = null;
+            if (balAcc != null){
+                result = "" + balAcc.getRecId();
+            }
+            return result;
+        }
+
+        @Override
+        public BalanceAccount fromString(String recId) {
+            BalanceAccount result = null;
+            Optional<BalanceAccount> optBalAcc = balAccounts.getItems().stream().filter(balanceAccount -> ("" + balanceAccount.getRecId()).equals(recId)).findFirst();
+            if (optBalAcc.isPresent()){
+                result = optBalAcc.get();
+            }
+            return result;
+        }
+        
     }
     
     

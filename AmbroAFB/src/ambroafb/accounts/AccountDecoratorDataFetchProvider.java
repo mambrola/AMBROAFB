@@ -93,8 +93,8 @@ public class AccountDecoratorDataFetchProvider extends DataFetchProvider {
     private void fillAccountsObjectProperties(List<Account> accounts) throws InterruptedException {
         latch.await(); // not wait if latch value is 0.
         accounts.forEach((account) ->  {
-                    account.balAccProperty().set(balAccountsReflection.get(account.getBalAccountId()));
-                    account.clientProperty().set(clientsReflection.get(account.getClientId()));
+//                    account.balAccProperty().set(balAccountsReflection.get(account.getBalAccountId()));
+//                    account.clientProperty().set(clientsReflection.get(account.getClientId()));
                 });
     }
     
