@@ -7,7 +7,6 @@ package ambroafb.general.editor_panel;
 
 import ambro.AFilterableTableView;
 import ambro.AFilterableTreeTableView;
-import ambro.ATableView;
 import ambroafb.AmbroAFB;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.GeneralConfig;
@@ -22,6 +21,8 @@ import ambroafb.general.interfaces.ListingStage;
 import ambroafb.general_scene.SelectionObserver;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,9 +68,8 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
     protected Region region;
     
     protected ObservableList<EditorPanelable> tableData;
-    
     protected Initializable outerController; // ----
-    
+    protected final List<EditorPanelActionObserver> observers = new ArrayList<>();
     protected EditorPanelable selectedItem;
     
     
@@ -130,7 +130,19 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
         });
     }
     
-        /**
+    public void registerObserver(EditorPanelActionObserver observer){
+        if (observer != null){
+            observers.add(observer);
+        }
+    }
+    
+    public void removeObserver(EditorPanelActionObserver observer){
+        if (observer != null){
+            observers.remove(observer);
+        }
+    }
+    
+    /**
      *  Removes Buttons from editor panel.
      * @param fxIds fx:ids array which must be removed.
      */
@@ -184,13 +196,19 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
      * @param table Table component on scene.
      * @param list  Data list of given table (At the beginning, it may be empty).
      */
-    public void setTableDataList(ATableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
-        tableData = list;
-        table.setItems(list);
-        if (table instanceof AFilterableTableView){
-            AFilterableTableView<EditorPanelable> filterableTable = (AFilterableTableView) table;
-            filterableTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
-        }
+    @Deprecated
+    public void setTableDataList(AFilterableTableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
+        table.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
+//        tableData = list;
+//        table.setItems(list);
+//        if (table instanceof AFilterableTableView){
+//            AFilterableTableView<EditorPanelable> filterableTable = (AFilterableTableView) table;
+//            filterableTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
+//        }
+    }
+    
+    public void setTableDataList(AFilterableTableView<EditorPanelable> table){
+        table.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
     }
     
     public void setTreeTable(AFilterableTreeTableView<EditorPanelable> treeTable){

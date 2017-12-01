@@ -6,6 +6,7 @@
 package ambroafb.general_scene.table_master_detail;
 
 import ambro.AFilterableTableView;
+import ambroafb.general.editor_panel.EditorPanelActionObserver;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
@@ -29,7 +30,7 @@ import org.controlsfx.control.MaskerPane;
  *
  * @author dkobuladze
  */
-public class TableMasterDetailController extends ListingController {
+public class TableMasterDetailController extends ListingController implements EditorPanelActionObserver {
 
     @FXML
     private AFilterableTableView<EditorPanelable> aview;
@@ -49,6 +50,7 @@ public class TableMasterDetailController extends ListingController {
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
         aview.setBundle(rb);
+        aview.setItems(contents);
     }
     
     public void setDetailNode(Node node){
@@ -81,7 +83,8 @@ public class TableMasterDetailController extends ListingController {
     @Override
     public void addListWith(Class content) {
         aview.initialize(content);
-        editorPanel.setTableDataList(aview, contents);
+        editorPanel.setTableDataList(aview);
+        editorPanel.registerObserver(this);
         
         aview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
             if (newValue != null){
@@ -112,5 +115,27 @@ public class TableMasterDetailController extends ListingController {
             }
         }
         
+    }
+    
+    
+    @Override
+    public void notifyDelete(EditorPanelable deleted) {
+        contents.remove(deleted);
+    }
+
+    @Override
+    public void notifyEdit(EditorPanelable edited) {
+        aview.getSelectionModel().select(null);
+        aview.getSelectionModel().select(edited);
+    }
+
+    @Override
+    public void notifyAdd(EditorPanelable added) {
+        contents.add(added);
+    }
+
+    @Override
+    public void notifyAddBySample(EditorPanelable addedBySample) {
+        contents.add(addedBySample);
     }
 }

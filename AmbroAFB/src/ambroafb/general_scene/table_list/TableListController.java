@@ -6,6 +6,7 @@
 package ambroafb.general_scene.table_list;
 
 import ambro.AFilterableTableView;
+import ambroafb.general.editor_panel.EditorPanelActionObserver;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
@@ -25,7 +26,7 @@ import org.controlsfx.control.MaskerPane;
  *
  * @author dato
  */
-public class TableListController extends ListingController {
+public class TableListController extends ListingController implements EditorPanelActionObserver {
 
     @FXML
     private AFilterableTableView<EditorPanelable> aview;
@@ -38,6 +39,7 @@ public class TableListController extends ListingController {
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
         aview.setBundle(rb);
+        aview.setItems(contents);
     }
     
     @Override
@@ -67,44 +69,37 @@ public class TableListController extends ListingController {
         
     }
     
-//    @Override
-//    public void reAssignTable(FilterModel model){
-//        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
-//        contents.clear();
-//        
-//        new Thread(() -> {
-//            Platform.runLater(() -> {
-//                masker.setVisible(true);
-//            });
-//            
-//            try {
-//                List<EditorPanelable> list = (model == null) ? dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL)
-//                                                             : dataFetchProvider.getFilteredBy(model);
-//                contents.setAll(list);
-//            } catch (Exception ex) {
-//            }
-//            
-//            Platform.runLater(() -> {
-//                masker.setVisible(false);
-//                if (selectedIndex >= 0){
-//                    aview.getSelectionModel().select(selectedIndex);
-//                }
-//            });
-//        }).start();
-//        
-//    }
-//    
     @Override
     public void addListWith(Class content) {
         aview.initialize(content);
-//        editorPanel.buttonsMainPropertiesBinder(aview);
-        editorPanel.setTableDataList(aview, contents);
+        editorPanel.setTableDataList(aview);
+        editorPanel.registerObserver(this);
         
         aview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
             if (newValue != null){
                 observers.stream().forEach((observer) -> observer.notify(newValue));
             }
         });
+    }
+
+    @Override
+    public void notifyDelete(EditorPanelable deleted) {
+        contents.remove(deleted);
+    }
+
+    @Override
+    public void notifyEdit(EditorPanelable edited) {
+        
+    }
+
+    @Override
+    public void notifyAdd(EditorPanelable added) {
+        contents.add(added);
+    }
+
+    @Override
+    public void notifyAddBySample(EditorPanelable addedBySample) {
+        contents.add(addedBySample);
     }
     
 }

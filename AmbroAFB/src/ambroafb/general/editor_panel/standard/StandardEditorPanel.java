@@ -41,7 +41,7 @@ public class StandardEditorPanel extends EditorPanel {
             Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.DELETE, selected);
             EditorPanelable result = dialog.getResult();
             if (result != null){
-                tableData.remove(selected);
+                observers.forEach((observer) -> observer.notifyDelete(result));
             }
         };
         manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);
@@ -61,6 +61,9 @@ public class StandardEditorPanel extends EditorPanel {
             EditorPanelable result = dialog.getResult();
             if (result == null){
                 selected.copyFrom(backup);
+            }
+            else {
+                observers.forEach((observer) -> observer.notifyEdit(result));
             }
         };
         manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);
@@ -89,7 +92,7 @@ public class StandardEditorPanel extends EditorPanel {
 
         EditorPanelable result = dialog.getResult();
         if (result != null) {
-            tableData.add(result);
+            observers.forEach((observer) -> observer.notifyAdd(result));
         }
     }
 
@@ -110,7 +113,7 @@ public class StandardEditorPanel extends EditorPanel {
             Dialogable dialog = manager.getDialogFor(editorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE, cloneOfSelected);
             EditorPanelable result = dialog.getResult();
             if (result != null) {
-                tableData.add(result);
+                observers.forEach((observer) -> observer.notifyAddBySample(result));
             }
         };
         manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);
