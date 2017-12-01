@@ -12,6 +12,7 @@ import ambroafb.AmbroAFB;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
+import ambroafb.general.Printer;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -196,30 +197,6 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
         treeTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
     }
     
-//    public void buttonsMainPropertiesBinder (AView<EditorPanelable> aView){
-//        BooleanBinding allowModify = Bindings.createBooleanBinding(() -> {
-//                                                                    if (aView.getCustomSelectedItem() == null){
-//                                                                        return true;
-//                                                                    }
-//                                                                    return aView.getCustomSelectedItem().isAllowToModify().not().get();
-//                                                                }, aView.getCustomSelectionModel().selectedItemProperty());
-//        if (aView instanceof AFilterableTreeTableView){
-//            AFilterableTreeTableView<EditorPanelable> treeTable = (AFilterableTreeTableView)aView;
-//            delete.disableProperty().bind(Bindings.createBooleanBinding(() -> {
-//                if (aView.getCustomSelectionModel().selectedItemProperty().isNull().get()) {
-//                    return true;
-//                }
-//                return !treeTable.getSelectionModel().getSelectedItem().isLeaf();
-//            }, aView.getCustomSelectionModel().selectedItemProperty()));
-//        }
-//        else if (aView instanceof ATableView){
-//            delete.disableProperty().bind(allowModify);
-//        }
-//        edit.disableProperty().bind(allowModify);
-//        view.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
-//        addBySample.disableProperty().bind(aView.getCustomSelectionModel().selectedItemProperty().isNull());
-//    }
-    
     public void setOuterController(Initializable controller){
         outerController = controller;
     }
@@ -249,6 +226,10 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
         boolean allow = true;
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
+        
+        Printer.printInfo("EditorPanel", "allowToOpenDialogOrFilter", "");
+        Printer.printIsNull("dialogStage", dialogStage);
+        
         if(dialogStage != null && dialogStage.isShowing()){
             dialogStage.requestFocus();
             StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);

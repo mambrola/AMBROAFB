@@ -24,7 +24,7 @@ import javafx.stage.WindowEvent;
  *
  * @author dkobuladze
  */
-public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
+public abstract class UserInteractiveDialogStage extends UserInteractiveStage implements DialogCloseObserver {
     
     protected DialogController dialogController;
     protected DataChangeProvider dataChangeProvider;
@@ -40,6 +40,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
         Scene currentScene = SceneUtils.createScene(sceneFXMLFilePath, null);
         setScene(currentScene);
         dialogController = (DialogController) currentScene.getProperties().get("controller");
+        dialogController.getOkayCancelController().registerObserver(this);
         
         onCloseRequestProperty().set((EventHandler<WindowEvent>) (WindowEvent event) -> {
             dialogController.getOkayCancelController().getCancelButton().getOnAction().handle(null);
@@ -118,6 +119,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     /**
      *  According to dialog type (DELETE, EDIT, VIEW, ADD, ADD_SMAPLE), the method execute okay actions.
      */
+    @Override
     public final void okayAction(){
         if (dataChangeProvider != null){
             switch(editorButtonType){
@@ -199,6 +201,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage {
     /**
      * According to dialog type (DELETE, EDIT, VIEW, ADD, ADD_SMAPLE), the method execute cancel actions.
      */
+    @Override
     public final void cancelAction(){
         switch(editorButtonType){
             case EDIT: 

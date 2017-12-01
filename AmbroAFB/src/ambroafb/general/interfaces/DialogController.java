@@ -11,6 +11,7 @@ import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -24,6 +25,9 @@ public abstract class DialogController implements Initializable {
     private ArrayList<Node> focusTraversableNodes;
     
     protected EditorPanelable sceneObj, backupObj;
+    
+    @FXML
+    protected DialogOkayCancelController okayCancelController;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -56,7 +60,9 @@ public abstract class DialogController implements Initializable {
     protected abstract void bindObjectToSceneComponents(EditorPanelable object);
     protected abstract void makeExtraActions(EDITOR_BUTTON_TYPE buttonType);
     
-    public abstract DialogOkayCancelController getOkayCancelController();
+    public DialogOkayCancelController getOkayCancelController(){
+        return okayCancelController;
+    }
     
     public boolean anySceneComponentChanged() {
         return !sceneObj.compares(backupObj);

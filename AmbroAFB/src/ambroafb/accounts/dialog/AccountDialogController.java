@@ -17,9 +17,9 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.DialogCloseObserver;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.account_number.AccountNumber;
 import authclient.AuthServerException;
 import authclient.db.DBClient;
@@ -52,7 +52,7 @@ import org.json.JSONObject;
  *
  * @author dkobuladze
  */
-public class AccountDialogController extends DialogController {
+public class AccountDialogController extends DialogController implements DialogCloseObserver {
 
     @FXML
     private VBox formPane;
@@ -73,10 +73,6 @@ public class AccountDialogController extends DialogController {
     private TextField descrip, remark;
     @FXML
     private ADatePicker closeDate;
-    
-    @FXML
-    private DialogOkayCancelController okayCancelController;
-    
     
     CustomNumberGenerator customGenerator = new CustomNumberGenerator();
     
@@ -102,6 +98,8 @@ public class AccountDialogController extends DialogController {
         accountNumber.getNext().setOnAction(this::accountNextAction);
         
         currencies.fillComboBox(null);
+        
+        okayCancelController.registerObserver(this);
     }
     
     private void accountKeyAction(ActionEvent event){
@@ -147,11 +145,6 @@ public class AccountDialogController extends DialogController {
     
 
     @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
-
-    @Override
     protected void bindObjectToSceneComponents(EditorPanelable object) {
         if (object != null){
             Account account = (Account)object;
@@ -170,8 +163,9 @@ public class AccountDialogController extends DialogController {
             openDate.setValue(LocalDate.now());
         }
         
+        Account accOnScene = ((Account)sceneObj);
+        
         Consumer<ObservableList<BalanceAccount>> setBalAccByNumber = (balAccList) -> {
-            Account accOnScene = ((Account)sceneObj);
             Integer balAccountId = accOnScene.getBalAccountId();
             Bindings.bindBidirectional(accOnScene.balAccountIdProperty(), balAccounts.valueProperty(), new BalAccountToIdBiConverter());
             StringBinding balAccBinding = new StringBinding() {
@@ -189,7 +183,6 @@ public class AccountDialogController extends DialogController {
         balAccounts.fillComboBoxWithoutALL(setBalAccByNumber);
         
         Consumer<ObservableList<Client>> setClientbyId = (clientsList) -> {
-            Account accOnScene = ((Account)sceneObj);
             Integer clientId = accOnScene.getClientId();
             Bindings.bindBidirectional(accOnScene.clientIdProperty(), clients.valueProperty(), new ClientToIdBiConverter());
             accOnScene.clientIdProperty().set(clientId.toString());
@@ -197,14 +190,36 @@ public class AccountDialogController extends DialogController {
         clients.fillComboBoxWithClientsAndPartners(setClientbyId);
         
         if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
-            ((Account)sceneObj).setDateOpen(LocalDate.now().toString());
-            ((Account)sceneObj).setDateClose("");
-            ((Account)sceneObj).accountNumberProperty().set("");
-            ((Account)sceneObj).setRemark("");
-            backupObj.copyFrom(sceneObj);
+            accOnScene.setDateOpen(LocalDate.now().toString());
+            accOnScene.setDateClose("");
+            accOnScene.accountNumberProperty().set("");
+            accOnScene.setRemark("");
+            backupObj.copyFrom(accOnScene);
         }
     }
+
+    @Override
+    public void okayAction() {
+        removeBinds();
+        removeListeners();
+    }
+
+    @Override
+    public void cancelAction() {
+        removeBinds();
+        removeListeners();
+    }
+
+    private void removeBinds(){
+        Account accOnScene  = (Account)sceneObj;
+        Bindings.unbindBidirectional(accOnScene.clientIdProperty(), clients.valueProperty());
+        Bindings.unbindBidirectional(accOnScene.balAccountIdProperty(), balAccounts.valueProperty());
+        accOnScene.balAccountProperty().unbind();
+    }
     
+    private void removeListeners(){
+        
+    }
     
     /**
      *  The class provide to convert Client to its recId as String and vice verse - recId to appropriate Client from comboBox.

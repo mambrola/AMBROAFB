@@ -35,6 +35,12 @@ public class StagesContainer {
         return bidmap.size();
     }
 
+    public static void printContent(){
+        for (Object key : bidmap.keySet()) {
+            System.out.println("key: " + key + ", value: " + bidmap.get(key));
+        }
+    }
+    
     /**
      * The function saves child stage with path  ( path(owner).concat(childName) ). 
      * @param owner The Owner stage
