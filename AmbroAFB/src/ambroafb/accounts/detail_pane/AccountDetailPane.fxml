@@ -71,7 +71,11 @@
                                 </HBox>
                             </children>
                         </HBox>
-                        <ATableView fx:id="accountEntries" VBox.vgrow="ALWAYS" />
+                        <ATableView fx:id="accountEntries" VBox.vgrow="ALWAYS" >
+                            <placeholder>
+                                <Label text="" />
+                            </placeholder>
+                        </ATableView>
                         <HBox >
                             <children>
                                 <VBox>

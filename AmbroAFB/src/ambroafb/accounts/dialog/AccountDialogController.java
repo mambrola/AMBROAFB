@@ -178,14 +178,14 @@ public class AccountDialogController extends DialogController implements DialogC
                 }
             };
             accOnScene.balAccountProperty().bind(balAccBinding);
-            accOnScene.balAccountIdProperty().set(balAccountId.toString());
+            accOnScene.setBalAccountId(balAccountId);
         };
         balAccounts.fillComboBoxWithoutALL(setBalAccByNumber);
         
         Consumer<ObservableList<Client>> setClientbyId = (clientsList) -> {
             Integer clientId = accOnScene.getClientId();
             Bindings.bindBidirectional(accOnScene.clientIdProperty(), clients.valueProperty(), new ClientToIdBiConverter());
-            accOnScene.clientIdProperty().set(clientId.toString());
+            accOnScene.setClientId(clientId);
         };
         clients.fillComboBoxWithClientsAndPartners(setClientbyId);
         

@@ -29,10 +29,10 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage im
     protected DialogController dialogController;
     protected DataChangeProvider dataChangeProvider;
     protected DataFetchProvider dataFetchProvider;
+    protected Consumer<Object> closeAction, editAction, addAction;
     
     private boolean permissionToClose = true;
     private EditorPanel.EDITOR_BUTTON_TYPE editorButtonType;
-    private Consumer<Object> closeAction, editAction, addAction;
     
     public UserInteractiveDialogStage(Stage owner, String sceneFXMLFilePath, String stageTitleBundleKey){
         super(owner, Names.LEVEL_FOR_PATH, stageTitleBundleKey, "/images/dialog.png");
