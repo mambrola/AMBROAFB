@@ -103,7 +103,7 @@ public class AccountDetailPane extends VBox implements SelectionObserver  {
         startingCreditPane.setMinWidth(moneyWidth);
         startingCreditPane.setMaxWidth(moneyWidth);
         
-        // find out right edge empty regions width:
+        // find out right edge empty regions widthes:
         widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             double fullWidth = accountEntries.getColumns().stream().map((column) -> column.getWidth()).reduce(0d, (accumulator, columnWidth) -> accumulator + columnWidth);
             double emptySpaceWidth = getWidth() - fullWidth - 2 * getPadding().getLeft();
@@ -184,11 +184,19 @@ public class AccountDetailPane extends VBox implements SelectionObserver  {
     @Override
     public void notify(EditorPanelable selected) {
         selectedAccount = (Account) selected;
+        
         accountNumberIso.setText(selectedAccount.getAccount() + " / " + selectedAccount.getIso());
-        accountDescrip.setText(selectedAccount.getDescrip());
 
-        balAccNumber.setText("" + selectedAccount.getBalAccount());
-        balAccDescrip.setText(selectedAccount.getBalAccountDescrip());
+//        accountDescrip.setText(selectedAccount.getDescrip());
+        accountDescrip.textProperty().unbind();
+        accountDescrip.textProperty().bind(selectedAccount.descripProperty());
+
+//        balAccNumber.setText("" + selectedAccount.getBalAccount());
+//        balAccDescrip.setText(selectedAccount.getBalAccountDescrip());
+        balAccNumber.textProperty().unbind(); 
+        balAccNumber.textProperty().bind(selectedAccount.balAccountProperty());
+        balAccDescrip.textProperty().unbind();
+        balAccDescrip.textProperty().bind(selectedAccount.balAccountDescripProperty());
 
         String clientIdText = (selectedAccount.getClientId() == null) ? "" : selectedAccount.getClientId().toString();
         clientId.setText(clientIdText);
