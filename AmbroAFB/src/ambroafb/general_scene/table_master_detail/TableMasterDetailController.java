@@ -84,7 +84,7 @@ public class TableMasterDetailController extends ListingController implements Ed
     public void addListWith(Class content) {
         tableView.initialize(content);
         editorPanel.setTableDataList(tableView);
-        editorPanel.registerObserver(this);
+        editorPanel.registerObserver(this); // editorPanel will be setted for this line.
         
         tableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
             if (newValue != null){

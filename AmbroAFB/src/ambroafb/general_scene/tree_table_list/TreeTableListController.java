@@ -6,6 +6,7 @@
 package ambroafb.general_scene.tree_table_list;
 
 import ambro.AFilterableTreeTableView;
+import ambroafb.general.editor_panel.EditorPanelActionObserver;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
@@ -27,7 +28,7 @@ import org.controlsfx.control.MaskerPane;
  *
  * @author dato
  */
-public class TreeTableListController extends ListingController {
+public class TreeTableListController extends ListingController implements EditorPanelActionObserver {
 
     @FXML
     private AFilterableTreeTableView<EditorPanelable> aview;
@@ -74,6 +75,7 @@ public class TreeTableListController extends ListingController {
     public void addListWith(Class content) {
         aview.initialize(content);
         editorPanel.setTreeTable(aview);
+        editorPanel.registerObserver(this);
         
         aview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends TreeItem<EditorPanelable>> observable, TreeItem<EditorPanelable> oldValue, TreeItem<EditorPanelable> newValue) -> {
             if (newValue != null && newValue.getValue() != null){
@@ -85,6 +87,26 @@ public class TreeTableListController extends ListingController {
     public void setTreeFeatures(Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn, int depth){
         this.treeMakerFn = treeMakerFn;
         expandDepth = depth;
+    }
+
+    @Override
+    public void notifyDelete(EditorPanelable deleted) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void notifyEdit(EditorPanelable edited) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void notifyAdd(EditorPanelable added) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void notifyAddBySample(EditorPanelable addedBySample) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

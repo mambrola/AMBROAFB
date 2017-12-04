@@ -10,8 +10,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<!--fx:controller="ambroafb.general.editor_panel.EditorPanelController"-->
-
 <fx:root   type="javafx.scene.layout.HBox"
            fx:id = "formNode"
            alignment="CENTER_LEFT" 
@@ -90,6 +88,6 @@
             </graphic>
         </ToggleButton>
         <Region fx:id="region" HBox.hgrow="ALWAYS" />
-        <TextField fx:id="search" promptText="%search" />
+        <TextField fx:id="filter" promptText="%filter" />
     </children>
 </fx:root>

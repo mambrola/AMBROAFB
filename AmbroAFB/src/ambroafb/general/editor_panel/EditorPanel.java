@@ -11,7 +11,6 @@ import ambroafb.AmbroAFB;
 import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.Names;
-import ambroafb.general.Printer;
 import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -62,7 +61,7 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
     protected ToggleButton refresh;
     
     @FXML
-    protected TextField search;
+    protected TextField filter;
 
     @FXML
     protected Region region;
@@ -79,7 +78,7 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
     public static final String ADD_FXID = "#add";
     public static final String ADD_BY_SAMPLE_FXID = "#addBySample";
     public static final String REFRESH_FXID = "#refresh";
-    public static final String SEARCH_FXID = "#search";
+    public static final String SEARCH_FXID = "#filter";
     
     public static enum EDITOR_BUTTON_TYPE {
         DELETE, EDIT, VIEW, ADD, ADD_BY_SAMPLE
@@ -159,7 +158,7 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
      */
     public void addComponent(int onIndex, Node node){
         if (onIndex >= 0){
-            getChildren().add(onIndex, node);
+            this.getChildren().add(onIndex, node);
         }
     }
     
@@ -192,29 +191,30 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
     }
     
     /**
-     * The method saves table data list and also provides to search element in table.
+     * The method saves table data list and also provides to filter element in table.
      * @param table Table component on scene.
      * @param list  Data list of given table (At the beginning, it may be empty).
      */
     @Deprecated
     public void setTableDataList(AFilterableTableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
-        table.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
+        table.makeBindingsForFilterOn(filter, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(filter.getText().toLowerCase()));
 //        tableData = list;
 //        table.setItems(list);
 //        if (table instanceof AFilterableTableView){
 //            AFilterableTableView<EditorPanelable> filterableTable = (AFilterableTableView) table;
-//            filterableTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
+//            filterableTable.makeBindingsForFilterOn(filter, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(filter.getText().toLowerCase()));
 //        }
     }
     
     public void setTableDataList(AFilterableTableView<EditorPanelable> table){
-        table.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
+        table.makeBindingsForFilterOn(filter, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(filter.getText().toLowerCase()));
     }
     
     public void setTreeTable(AFilterableTreeTableView<EditorPanelable> treeTable){
-        treeTable.makeBindingsForFilterOn(search, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(search.getText().toLowerCase()));
+        treeTable.makeBindingsForFilterOn(filter, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(filter.getText().toLowerCase()));
     }
     
+    @Deprecated
     public void setOuterController(Initializable controller){
         outerController = controller;
     }
@@ -244,10 +244,6 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
         boolean allow = true;
         Stage editorPanelSceneStage = (Stage) exit.getScene().getWindow();
         Stage dialogStage = StagesContainer.getStageFor(editorPanelSceneStage, Names.LEVEL_FOR_PATH);
-        
-        Printer.printInfo("EditorPanel", "allowToOpenDialogOrFilter", "");
-        Printer.printIsNull("dialogStage", dialogStage);
-        
         if(dialogStage != null && dialogStage.isShowing()){
             dialogStage.requestFocus();
             StageUtils.centerChildOf(editorPanelSceneStage, dialogStage);
@@ -279,8 +275,8 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
     private void refreshAction(ActionEvent event){
         if (allowToOpenDialogOrFilter()) {
             ListingStage editorPanelSceneStage = (ListingStage) exit.getScene().getWindow();
-            Filterable filter = editorPanelSceneStage.getEPManager().getFilterFor(editorPanelSceneStage);
-            FilterModel model = (filter != null) ? filter.getResult() : null;
+            Filterable filterStage = editorPanelSceneStage.getEPManager().getFilterFor(editorPanelSceneStage);
+            FilterModel model = (filterStage != null) ? filterStage.getResult() : null;
             if (model == null || !model.isCanceled()){
                 editorPanelSceneStage.getController().reAssignTable(model);
             }

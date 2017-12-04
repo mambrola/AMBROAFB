@@ -46,7 +46,6 @@ public class TableListController extends ListingController implements EditorPane
     public void reAssignTable(FilterModel model){
         int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
         contents.clear();
-        
         masker.setVisible(true);
         
         Consumer<List<EditorPanelable>> successAction = (editorPanelables) -> {
@@ -73,7 +72,7 @@ public class TableListController extends ListingController implements EditorPane
     public void addListWith(Class content) {
         tableView.initialize(content);
         editorPanel.setTableDataList(tableView);
-        editorPanel.registerObserver(this);
+        editorPanel.registerObserver(this); // editorPanel will be setted for this line.
         
         tableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
             if (newValue != null){

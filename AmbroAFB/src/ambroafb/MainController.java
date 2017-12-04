@@ -11,7 +11,6 @@ import ambroafb.accounts.detail_pane.AccountDetailPane;
 import ambroafb.accounts.filter.AccountFilter;
 import ambroafb.balance_accounts.BalAccountManager;
 import ambroafb.balance_accounts.BalanceAccount;
-import ambroafb.balance_accounts.BalanceAccountEditorPanel;
 import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.balances.Balance;
 import ambroafb.balances.BalanceManager;
@@ -36,6 +35,8 @@ import ambroafb.general.StageUtils;
 import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.EditorPanel;
+import ambroafb.general.editor_panel.balance.BalanceEditorPanel;
+import ambroafb.general.editor_panel.balance_account.BalanceAccountEditorPanel;
 import ambroafb.general.editor_panel.doc.DocEditorPanel;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
@@ -439,9 +440,7 @@ public class MainController implements Initializable {
         String stageTitle = "balances";
         Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Balance.class.getSimpleName());
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
-            TreeTableList balances = new TreeTableList(AmbroAFB.mainStage, Balance.class, stageTitle);
-            // Change to SpectatorPanel ---
-            balances.getController().getEditorPanel().removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID, EditorPanel.SEARCH_FXID);
+            TreeTableList balances = new TreeTableList(AmbroAFB.mainStage, Balance.class, stageTitle, new BalanceEditorPanel());
             
             Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMaker = (balanseList) -> {
                 ObservableList<EditorPanelable> roots = FXCollections.observableArrayList();
@@ -471,10 +470,7 @@ public class MainController implements Initializable {
             root.getChildren().add(elem);
             return true;
         }
-        for (Balance balance : root.getChildren()) {
-            if (addElem(balance, elem)) return true;
-        }
-        return false;
+        return root.getChildren().stream().anyMatch((balance) -> (addElem(balance, elem)));
     }
     
     @FXML private void income_statement(ActionEvent event) {}
