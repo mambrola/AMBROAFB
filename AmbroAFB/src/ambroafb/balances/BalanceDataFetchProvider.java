@@ -5,6 +5,7 @@
  */
 package ambroafb.balances;
 
+import ambroafb.balances.filter.BalanceFilterModel;
 import ambroafb.currencies.CurrencyDataFetchProvider;
 import ambroafb.general.DateConverter;
 import ambroafb.general.GeneralConfig;
@@ -12,7 +13,6 @@ import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
 import authclient.db.DBClient;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -42,7 +42,16 @@ public class BalanceDataFetchProvider extends DataFetchProvider {
 
     @Override
     public List<Balance> getFilteredBy(FilterModel model) throws Exception {
-        return new ArrayList<>();
+        BalanceFilterModel filtereModel = (BalanceFilterModel) model;
+        JSONObject params = new JSONObject();
+        LocalDate dateParam = filtereModel.getDate();
+        if (dateParam != null){
+            params.put(DATE_JSON_KEY, dateParam);
+        }
+        if (filtereModel.isSelectedConcreteCurrency()){
+            params.put(ISO_JSON_KEY, filtereModel.getCurrencyIso());
+        }
+        return getFilteredBy(params);
     }
 
     @Override

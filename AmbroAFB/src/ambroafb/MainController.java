@@ -6,6 +6,7 @@
 package ambroafb;
 
 import ambroafb.accounts.Account;
+import ambroafb.accounts.AccountDataFetchProvider;
 import ambroafb.accounts.AccountManager;
 import ambroafb.accounts.detail_pane.AccountDetailPane;
 import ambroafb.accounts.filter.AccountFilter;
@@ -14,6 +15,7 @@ import ambroafb.balance_accounts.BalanceAccount;
 import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.balances.Balance;
 import ambroafb.balances.BalanceManager;
+import ambroafb.balances.filter.BalanceFilter;
 import ambroafb.clients.Client;
 import ambroafb.clients.ClientManager;
 import ambroafb.clients.filter.ClientFilter;
@@ -127,7 +129,7 @@ public class MainController implements Initializable {
             AccountManager manager = new AccountManager();
             accounts.setEPManager(manager);
             AccountDetailPane detailPane = new AccountDetailPane();
-            detailPane.setDataFetchProvider(manager.getAccountDataFetchProvider());
+            detailPane.setDataFetchProvider((AccountDataFetchProvider)manager.getDataFetchProvider());
             ((TableMasterDetailController)accounts.getController()).setDetailNode(detailPane);
             accounts.getController().registerObserver(detailPane);
             accounts.show();
@@ -438,10 +440,11 @@ public class MainController implements Initializable {
     
     @FXML private void balance(ActionEvent event) {
         String stageTitle = "balances";
-        Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Balance.class.getSimpleName());
-        if (balAccountsStage == null || !balAccountsStage.isShowing()){
+        Stage balanceStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Balance.class.getSimpleName());
+        if (balanceStage == null || !balanceStage.isShowing()){
             BalanceEditorPanel balancePanel = new BalanceEditorPanel();
             TreeTableList balances = new TreeTableList(AmbroAFB.mainStage, Balance.class, stageTitle, balancePanel);
+            balances.setEPManager(new BalanceManager());
             
             Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMaker = (balanseList) -> {
                 ObservableList<EditorPanelable> roots = FXCollections.observableArrayList();
@@ -453,16 +456,24 @@ public class MainController implements Initializable {
                 });
                 return roots;
             };
-            
-            balances.setEPManager(new BalanceManager());
-            ((TreeTableListController)balances.getController()).setTreeFeatures(treeMaker, 2);
-            ((TreeTableListController)balances.getController()).setListFilterConditions(balancePanel.getPredicate(), balancePanel.getChangeableComponents());
-            balances.getController().reAssignTable(null);
+            ((TreeTableListController)balances.getController()).setTreeFeatures(treeMaker);
             balances.show();
+            
+            BalanceFilter filter = new BalanceFilter(balances);
+            FilterModel model = filter.getResult();
+            
+            if (model.isCanceled()){
+                balances.close();
+            }
+            else {
+                balances.getController().reAssignTable(model);
+            }
+            ((TreeTableListController)balances.getController()).setListFilterConditions(balancePanel.getPredicate(), balancePanel.getChangeableComponents());
+            balancePanel.setExpandFn(((TreeTableListController)balances.getController()).getExpandAction());
         }
         else {
-            balAccountsStage.requestFocus();
-            StageUtils.centerChildOf(AmbroAFB.mainStage, balAccountsStage);
+            balanceStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, balanceStage);
         }
     }
     

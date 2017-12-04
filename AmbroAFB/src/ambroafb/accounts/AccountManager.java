@@ -20,11 +20,9 @@ import javafx.stage.Stage;
  */
 public class AccountManager extends EditorPanelableManager {
 
-    private final AccountDataFetchProvider accountDataFetchProvider;
     
     public AccountManager(){
-        accountDataFetchProvider = new AccountDataFetchProvider();
-        dataFetchProvider = new AccountDecoratorDataFetchProvider(accountDataFetchProvider);
+        dataFetchProvider = new AccountDataFetchProvider();
         dataChangeProvider = new AccountDataChangeProvider();
     }
     
@@ -39,9 +37,5 @@ public class AccountManager extends EditorPanelableManager {
     @Override
     public Filterable getFilterFor(Stage owner) {
         return new AccountFilter(owner);
-    }
-    
-    public AccountDataFetchProvider getAccountDataFetchProvider(){
-        return accountDataFetchProvider;
     }
 }

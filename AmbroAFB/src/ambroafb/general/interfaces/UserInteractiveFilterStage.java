@@ -19,7 +19,7 @@ import javafx.stage.WindowEvent;
  */
 public abstract class UserInteractiveFilterStage extends UserInteractiveStage {
     
-    protected final int comboBoxCount = 3;
+    protected int comboBoxCount = 0;
     protected int counter = 0;
     protected final Semaphore sem = new Semaphore(1);
     protected final Consumer<Object> increaseCounter;
@@ -38,7 +38,7 @@ public abstract class UserInteractiveFilterStage extends UserInteractiveStage {
                 counter = counter + 1;
                 sem.release();
                 if (counter == comboBoxCount){
-                    getOkayCancelController().setOkaydisable(false);
+                    getOkayCancelController().setOkayDisable(false);
                 }
             } catch (InterruptedException ex) {
             }

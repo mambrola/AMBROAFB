@@ -34,7 +34,7 @@ public class FilterOkayCancelController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        setOkaydisable(true);
+//        setOkayDisable(true);
 //        okay.disableProperty().bind(disableProperty);
     }    
     
@@ -55,7 +55,7 @@ public class FilterOkayCancelController implements Initializable {
 //        return disableProperty;
 //    }
     
-    public void setOkaydisable(boolean disable){
+    public void setOkayDisable(boolean disable){
         okay.setDisable(disable);
     }
 }

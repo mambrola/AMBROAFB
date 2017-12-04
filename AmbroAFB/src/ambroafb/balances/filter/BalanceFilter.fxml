@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ambro.*?>
+<?import ambroafb.clients.*?>
+<?import ambroafb.countries.*?>
+<?import ambroafb.currencies.*?>
+<?import ambroafb.balance_accounts.*?>
+
+<ambroafb.general.DialogPanel stylesheets="/styles/css/BalanceFilter.css" 
+                              xmlns:fx="http://javafx.com/fxml/1" >
+    <VBox   fx:id="formPane" >
+        <HBox styleClass="w2" >
+            <children>
+                <VBox >
+                    <children>
+                        <Label text="%created_date" /> 
+                        <ADatePicker fx:id="date" />
+                    </children>
+                </VBox>
+                <VBox >
+                    <children>
+                        <Label text="%currency" /> 
+                        <CurrencyComboBox fx:id="currencies" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" >
+            <fx:include fx:id="okayCancel" source="/ambroafb/general/okay_cancel/FilterOkayCancel.fxml"/>
+        </HBox>
+    </VBox>
+</ambroafb.general.DialogPanel>

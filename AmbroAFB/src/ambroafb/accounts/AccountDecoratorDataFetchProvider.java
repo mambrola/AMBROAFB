@@ -25,6 +25,7 @@ import org.json.JSONObject;
  *  So it provides to implement abstract methods. In these methods it executes AccountDataFetchProvider appropriate method and adds extra actions.
  * @author dkobuladze
  */
+@Deprecated
 public class AccountDecoratorDataFetchProvider extends DataFetchProvider {
 
     private final AccountDataFetchProvider fetcher;
@@ -35,7 +36,7 @@ public class AccountDecoratorDataFetchProvider extends DataFetchProvider {
     private final ClientDataFetchProvider clientsFetcher = new ClientDataFetchProvider();
     private final Map<Integer, Client> clientsReflection = new HashMap<>();
     
-    private CountDownLatch latch = new CountDownLatch(0);
+    private CountDownLatch latch = new CountDownLatch(2);
     
     public AccountDecoratorDataFetchProvider(AccountDataFetchProvider fetchProvider){
         fetcher = fetchProvider;

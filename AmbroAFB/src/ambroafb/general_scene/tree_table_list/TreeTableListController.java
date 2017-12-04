@@ -15,6 +15,7 @@ import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javafx.application.Platform;
@@ -64,9 +65,8 @@ public class TreeTableListController extends ListingController implements Editor
                 roots.stream().forEach((elem) -> {
                     treeTableView.append(elem);
                 });
-                treeTableView.expand(expandDepth);
             } catch (Exception ex) {
-                System.err.println(ex.getMessage());
+                System.err.println("TreeTableController! Exception message: " + ex.getMessage());
             }
             
             Platform.runLater(() -> {
@@ -95,9 +95,16 @@ public class TreeTableListController extends ListingController implements Editor
         }, dependencies));
     }
     
-    public void setTreeFeatures(Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn, int depth){
+    public void setTreeFeatures(Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn){
         this.treeMakerFn = treeMakerFn;
-        expandDepth = depth;
+    }
+    
+    
+    public Consumer<Integer> getExpandAction() {
+        return (depth) -> {
+            System.out.println("depth: " + depth);
+                treeTableView.expand(depth);
+        };
     }
 
     
@@ -120,6 +127,5 @@ public class TreeTableListController extends ListingController implements Editor
     public void notifyAddBySample(EditorPanelable addedBySample) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
     
 }

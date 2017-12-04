@@ -5,6 +5,7 @@
  */
 package ambroafb.balances;
 
+import ambroafb.balances.filter.BalanceFilter;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -29,7 +30,7 @@ public class BalanceManager extends EditorPanelableManager {
 
     @Override
     public Filterable getFilterFor(Stage owner) {
-        return null;
+        return new BalanceFilter(owner);
     }
     
 }
