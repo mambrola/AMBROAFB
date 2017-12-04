@@ -33,7 +33,7 @@ import org.controlsfx.control.MaskerPane;
 public class TableMasterDetailController extends ListingController implements EditorPanelActionObserver {
 
     @FXML
-    private AFilterableTableView<EditorPanelable> aview;
+    private AFilterableTableView<EditorPanelable> tableView;
     
     @FXML
     private SplitPane splitPane;
@@ -49,8 +49,8 @@ public class TableMasterDetailController extends ListingController implements Ed
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        aview.setBundle(rb);
-        aview.setItems(contents);
+        tableView.setBundle(rb);
+        tableView.setItems(contents);
     }
     
     public void setDetailNode(Node node){
@@ -60,7 +60,7 @@ public class TableMasterDetailController extends ListingController implements Ed
     
     @Override
     public void reAssignTable(FilterModel model){
-        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+        int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
         contents.clear();
         
         masterMasker.setVisible(true);
@@ -69,7 +69,7 @@ public class TableMasterDetailController extends ListingController implements Ed
             contents.setAll(editorPanelables);
             masterMasker.setVisible(false);
             if (selectedIndex >= 0){
-                aview.getSelectionModel().select(selectedIndex);
+                tableView.getSelectionModel().select(selectedIndex);
             }
         };
         
@@ -82,11 +82,11 @@ public class TableMasterDetailController extends ListingController implements Ed
 
     @Override
     public void addListWith(Class content) {
-        aview.initialize(content);
-        editorPanel.setTableDataList(aview);
+        tableView.initialize(content);
+        editorPanel.setTableDataList(tableView);
         editorPanel.registerObserver(this);
         
-        aview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
+        tableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
             if (newValue != null){
                 if (splitPane.getItems().size() > 1){
                     splitPane.getItems().get(1).setDisable(false);
@@ -120,22 +120,30 @@ public class TableMasterDetailController extends ListingController implements Ed
     
     @Override
     public void notifyDelete(EditorPanelable deleted) {
+        int row = contents.indexOf(deleted);
         contents.remove(deleted);
+        if (row >= contents.size()){
+            row = contents.size() - 1;
+        }
+        tableView.getSelectionModel().select(row);
     }
 
     @Override
     public void notifyEdit(EditorPanelable edited) {
-        aview.getSelectionModel().select(null);
-        aview.getSelectionModel().select(edited);
+        // Refresh selected row because of notify and update datail.
+        tableView.getSelectionModel().select(null);
+        tableView.getSelectionModel().select(edited);
     }
 
     @Override
     public void notifyAdd(EditorPanelable added) {
         contents.add(added);
+        tableView.getSelectionModel().select(contents.indexOf(added));
     }
 
     @Override
     public void notifyAddBySample(EditorPanelable addedBySample) {
         contents.add(addedBySample);
+        tableView.getSelectionModel().select(contents.indexOf(addedBySample));
     }
 }

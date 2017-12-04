@@ -29,7 +29,7 @@ import org.controlsfx.control.MaskerPane;
 public class TableListController extends ListingController implements EditorPanelActionObserver {
 
     @FXML
-    private AFilterableTableView<EditorPanelable> aview;
+    private AFilterableTableView<EditorPanelable> tableView;
     
     @FXML
     private MaskerPane masker;
@@ -38,13 +38,13 @@ public class TableListController extends ListingController implements EditorPane
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        aview.setBundle(rb);
-        aview.setItems(contents);
+        tableView.setBundle(rb);
+        tableView.setItems(contents);
     }
     
     @Override
     public void reAssignTable(FilterModel model){
-        int selectedIndex = aview.getSelectionModel().getSelectedIndex();
+        int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
         contents.clear();
         
         masker.setVisible(true);
@@ -53,7 +53,7 @@ public class TableListController extends ListingController implements EditorPane
             contents.setAll(editorPanelables);
             masker.setVisible(false);
             if (selectedIndex >= 0){
-                aview.getSelectionModel().select(selectedIndex);
+                tableView.getSelectionModel().select(selectedIndex);
             }
         };
         
@@ -71,11 +71,11 @@ public class TableListController extends ListingController implements EditorPane
     
     @Override
     public void addListWith(Class content) {
-        aview.initialize(content);
-        editorPanel.setTableDataList(aview);
+        tableView.initialize(content);
+        editorPanel.setTableDataList(tableView);
         editorPanel.registerObserver(this);
         
-        aview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
+        tableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
             if (newValue != null){
                 observers.stream().forEach((observer) -> observer.notify(newValue));
             }
@@ -84,22 +84,29 @@ public class TableListController extends ListingController implements EditorPane
 
     @Override
     public void notifyDelete(EditorPanelable deleted) {
+        int row = contents.indexOf(deleted);
         contents.remove(deleted);
+        if (row >= contents.size()){
+            row = contents.size() - 1;
+        }
+        tableView.getSelectionModel().select(row);
     }
 
     @Override
     public void notifyEdit(EditorPanelable edited) {
-        
+        tableView.getSelectionModel().select(contents.indexOf(edited));
     }
 
     @Override
     public void notifyAdd(EditorPanelable added) {
         contents.add(added);
+        tableView.getSelectionModel().select(contents.indexOf(added));
     }
 
     @Override
     public void notifyAddBySample(EditorPanelable addedBySample) {
         contents.add(addedBySample);
+        tableView.getSelectionModel().select(contents.indexOf(addedBySample));
     }
     
 }

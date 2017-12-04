@@ -18,7 +18,7 @@
     <center>
         <StackPane fx:id="containerPane" >
             <children>
-                <AFilterableTableView fx:id="aview" styleClass="unicode" /> 
+                <AFilterableTableView fx:id="tableView" styleClass="unicode" /> 
                 <MaskerPane fx:id="masker" visible="false" text="%loading"/>
             </children>
         </StackPane>

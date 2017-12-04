@@ -20,7 +20,7 @@
             <items>
                 <StackPane >
                     <children>
-                        <AFilterableTableView fx:id="aview" styleClass="unicode" /> 
+                        <AFilterableTableView fx:id="tableView" styleClass="unicode" /> 
                         <MaskerPane fx:id="masterMasker" visible="false" text="%loading" />
                     </children>
                 </StackPane>
