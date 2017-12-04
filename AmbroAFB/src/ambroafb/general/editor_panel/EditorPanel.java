@@ -67,7 +67,6 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
     protected Region region;
     
     protected ObservableList<EditorPanelable> tableData;
-    protected Initializable outerController; // ----
     protected final List<EditorPanelActionObserver> observers = new ArrayList<>();
     protected EditorPanelable selectedItem;
     
@@ -190,20 +189,8 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
         return exit;
     }
     
-    /**
-     * The method saves table data list and also provides to filter element in table.
-     * @param table Table component on scene.
-     * @param list  Data list of given table (At the beginning, it may be empty).
-     */
-    @Deprecated
-    public void setTableDataList(AFilterableTableView<EditorPanelable> table, ObservableList<EditorPanelable> list){
-        table.makeBindingsForFilterOn(filter, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(filter.getText().toLowerCase()));
-//        tableData = list;
-//        table.setItems(list);
-//        if (table instanceof AFilterableTableView){
-//            AFilterableTableView<EditorPanelable> filterableTable = (AFilterableTableView) table;
-//            filterableTable.makeBindingsForFilterOn(filter, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(filter.getText().toLowerCase()));
-//        }
+    public TextField getFilterField(){
+        return filter;
     }
     
     public void setTableDataList(AFilterableTableView<EditorPanelable> table){
@@ -214,11 +201,6 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
         treeTable.makeBindingsForFilterOn(filter, (EditorPanelable panelable) -> panelable.toStringForSearch().toLowerCase().contains(filter.getText().toLowerCase()));
     }
     
-    @Deprecated
-    public void setOuterController(Initializable controller){
-        outerController = controller;
-    }
-
     @Override
     public void notify(EditorPanelable selected) {
         selectedItem = selected;

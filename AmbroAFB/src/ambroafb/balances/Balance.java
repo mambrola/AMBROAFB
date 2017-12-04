@@ -210,6 +210,11 @@ public class Balance extends EditorPanelable {
     public String toString() {
         return "Balance{" + "id: " + getRecId() + ", accountId=" + accountId + ", balAcc=" + balAcc + ", parentRecId=" + parentRecId + ", level=" + level + ", descrip=" + descrip.get() + ", accountIso=" + accountIso.get() + ", active=" + active.get() + ", passive=" + passive.get() + ", activeIsRed=" + activeIsRed + ", passiveIsRed=" + passiveIsRed + '}';
     }
+
+    @JsonIgnore
+    public boolean isAccount() {
+        return getLevel() == 1;
+    }
     
     
 }

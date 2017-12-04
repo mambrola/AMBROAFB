@@ -15,7 +15,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -159,6 +161,11 @@ public class BalanceAccountsController extends ListingController {
         return currAccCodeAfterPrefix.length() > 1 && 
                currAccCodeAfterPrefix.charAt(0) == '0' && 
                searchCodeAfterPrefix.charAt(0) != '0';
+    }
+
+    @Override
+    public void setListFilterConditions(Predicate<EditorPanelable> predicate, Observable... dependencies) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

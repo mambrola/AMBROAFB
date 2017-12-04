@@ -17,6 +17,8 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import javafx.beans.Observable;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -96,6 +98,11 @@ public class TableMasterDetailController extends ListingController implements Ed
                 newSelected = newValue;
             }
         });
+    }
+    
+    @Override
+    public void setListFilterConditions(Predicate<EditorPanelable> predicate, Observable... dependencies) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

@@ -18,7 +18,7 @@
     <center>
         <StackPane fx:id="containerPane" >
             <children>
-                <AFilterableTreeTableView fx:id="aview" styleClass="unicode" /> 
+                <AFilterableTreeTableView fx:id="treeTableView" styleClass="unicode" /> 
                 <MaskerPane fx:id="masker" visible="false" text="%loading"/>
             </children>
         </StackPane>

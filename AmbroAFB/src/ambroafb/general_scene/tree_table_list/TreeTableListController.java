@@ -5,6 +5,7 @@
  */
 package ambroafb.general_scene.tree_table_list;
 
+import ambro.AFilterableTreeItem;
 import ambro.AFilterableTreeTableView;
 import ambroafb.general.editor_panel.EditorPanelActionObserver;
 import ambroafb.general.interfaces.DataFetchProvider;
@@ -15,7 +16,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import javafx.application.Platform;
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,7 +35,7 @@ import org.controlsfx.control.MaskerPane;
 public class TreeTableListController extends ListingController implements EditorPanelActionObserver {
 
     @FXML
-    private AFilterableTreeTableView<EditorPanelable> aview;
+    private AFilterableTreeTableView<EditorPanelable> treeTableView;
     
     @FXML
     private MaskerPane masker;
@@ -42,8 +46,8 @@ public class TreeTableListController extends ListingController implements Editor
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        aview.setBundle(rb);
-        aview.getColumns().stream().forEach((column) -> {
+        treeTableView.setBundle(rb);
+        treeTableView.getColumns().stream().forEach((column) -> {
             column.setSortable(false);
         });
     }
@@ -51,16 +55,16 @@ public class TreeTableListController extends ListingController implements Editor
     @Override
     public void reAssignTable(FilterModel model){
         masker.setVisible(true);
-        aview.removeAll();
+        treeTableView.removeAll();
         new Thread(() -> {
             try {
                 List<EditorPanelable> data = (model == null) ? dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL) 
                                                              : dataFetchProvider.getFilteredBy(model);
                 roots.setAll(treeMakerFn.apply(data));
                 roots.stream().forEach((elem) -> {
-                    aview.append(elem);
+                    treeTableView.append(elem);
                 });
-                aview.expand(expandDepth);
+                treeTableView.expand(expandDepth);
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
             }
@@ -73,15 +77,22 @@ public class TreeTableListController extends ListingController implements Editor
     
     @Override
     public void addListWith(Class content) {
-        aview.initialize(content);
-        editorPanel.setTreeTable(aview);
+        treeTableView.initialize(content);
+        editorPanel.setTreeTable(treeTableView); // **
         editorPanel.registerObserver(this);
         
-        aview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends TreeItem<EditorPanelable>> observable, TreeItem<EditorPanelable> oldValue, TreeItem<EditorPanelable> newValue) -> {
+        treeTableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends TreeItem<EditorPanelable>> observable, TreeItem<EditorPanelable> oldValue, TreeItem<EditorPanelable> newValue) -> {
             if (newValue != null && newValue.getValue() != null){
                 observers.stream().forEach((observer) -> observer.notify(newValue.getValue()));
             }
         });
+    }
+    
+    @Override
+    public void setListFilterConditions(Predicate<EditorPanelable> predicate, Observable... dependencies) {
+        treeTableView.predicateProperty().bind(Bindings.createObjectBinding(() -> {
+            return AFilterableTreeItem.TreeItemPredicate.create(predicate);
+        }, dependencies));
     }
     
     public void setTreeFeatures(Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn, int depth){
@@ -89,6 +100,7 @@ public class TreeTableListController extends ListingController implements Editor
         expandDepth = depth;
     }
 
+    
     @Override
     public void notifyDelete(EditorPanelable deleted) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

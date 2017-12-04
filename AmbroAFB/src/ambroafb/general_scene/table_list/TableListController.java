@@ -15,6 +15,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import javafx.beans.Observable;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -80,6 +82,11 @@ public class TableListController extends ListingController implements EditorPane
             }
         });
     }
+    
+    @Override
+    public void setListFilterConditions(Predicate<EditorPanelable> predicate, Observable... dependencies) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Override
     public void notifyDelete(EditorPanelable deleted) {
@@ -107,5 +114,5 @@ public class TableListController extends ListingController implements EditorPane
         contents.add(addedBySample);
         tableView.getSelectionModel().select(contents.indexOf(addedBySample));
     }
-    
+
 }

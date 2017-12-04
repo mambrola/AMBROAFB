@@ -5,13 +5,15 @@
  */
 package ambroafb.general.editor_panel.balance;
 
-import ambro.ADatePicker;
-import ambroafb.currencies.CurrencyComboBox;
+import ambroafb.balances.Balance;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.editor_panel.standard.StandardEditorPanel;
+import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import javafx.beans.Observable;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
@@ -25,8 +27,8 @@ public class BalanceEditorPanel extends StandardEditorPanel {
 
     private Slider depthSlider;
     private CheckBox nonZero, onlyBalances;
-    private ADatePicker date;
-    private CurrencyComboBox currencies;
+//    private ADatePicker date;
+//    private CurrencyComboBox currencies;
     private TextField search;
     
     private final int sliderMin = 25, sliderMax = 100, sliderValue = 50;
@@ -35,12 +37,12 @@ public class BalanceEditorPanel extends StandardEditorPanel {
     protected void componentsInitialize(URL location, ResourceBundle resources) {
         removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID, EditorPanel.SEARCH_FXID);
     
-        // initialize method call first than class instance variables initialization, so initializetion executes here:
+        // Initialize method call first than class instance variables initialization, so initializetion executes here:
         depthSlider = new Slider();
         nonZero = new CheckBox();
         onlyBalances = new CheckBox();
-        date = new ADatePicker();
-        currencies = new CurrencyComboBox();
+//        date = new ADatePicker();
+//        currencies = new CurrencyComboBox();
         search = new TextField();
 
         setComponentsFeatures();
@@ -48,8 +50,8 @@ public class BalanceEditorPanel extends StandardEditorPanel {
         addComponent(2, depthSlider);
         addComponent(3, nonZero);
         addComponent(4, onlyBalances);
-        addComponent(5, date);
-        addComponent(6, currencies);
+//        addComponent(5, date);
+//        addComponent(6, currencies);
         addComponent(getChildren().size(), search); // adds after 'region' component.
     }
 
@@ -68,10 +70,22 @@ public class BalanceEditorPanel extends StandardEditorPanel {
         nonZero.setText(GeneralConfig.getInstance().getTitleFor("non_zero_acc"));
         onlyBalances.setText(GeneralConfig.getInstance().getTitleFor("only_balances"));
         
-        currencies.fillComboBoxWithoutALL(null);
+//        currencies.fillComboBoxWithoutALL(null);
         
         search.setPromptText(GeneralConfig.getInstance().getTitleFor("search"));
     }
     
     
+    public Predicate<EditorPanelable> getPredicate(){
+        return (elem) -> {
+            Balance balance = (Balance) elem;
+            boolean nonZeroCond = nonZero.isSelected() ? balance.getActive() > 0 || balance.getPassive() > 0 : true;
+            boolean onlyBalsCond = onlyBalances.isSelected() ? balance.isAccount() : true;
+            return nonZeroCond && onlyBalsCond; // შეიძლება Fluent API_ის და Factory Method_ის გაერთიანებით უკეთესი ჩანაწერი გამოვიდეს
+        };
+    }
+    
+    public Observable[] getChangeableComponents(){
+        return new Observable[] {nonZero.selectedProperty(), onlyBalances.selectedProperty()};
+    }
 }

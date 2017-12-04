@@ -11,6 +11,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
@@ -40,8 +42,19 @@ public abstract class ListingController implements Initializable {
     
     protected abstract void componentsInitialize(URL url, ResourceBundle rb);
     
+    /**
+     *  The method assign list content according to FilterModel object.
+     * @param model 
+     */
     public abstract void reAssignTable(FilterModel model);
     public abstract void addListWith(Class content);
+    
+    /**
+     *  The method sets list predicate and list filters by this.
+     * @param predicate 
+     * @param dependencies 
+     */
+    public abstract void setListFilterConditions(Predicate<EditorPanelable> predicate, Observable... dependencies);
     
     public void setEditorPanel(EditorPanel editorPanel){
         this.editorPanel = editorPanel;

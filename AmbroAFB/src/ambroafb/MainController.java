@@ -440,7 +440,8 @@ public class MainController implements Initializable {
         String stageTitle = "balances";
         Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, Balance.class.getSimpleName());
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
-            TreeTableList balances = new TreeTableList(AmbroAFB.mainStage, Balance.class, stageTitle, new BalanceEditorPanel());
+            BalanceEditorPanel balancePanel = new BalanceEditorPanel();
+            TreeTableList balances = new TreeTableList(AmbroAFB.mainStage, Balance.class, stageTitle, balancePanel);
             
             Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMaker = (balanseList) -> {
                 ObservableList<EditorPanelable> roots = FXCollections.observableArrayList();
@@ -452,8 +453,10 @@ public class MainController implements Initializable {
                 });
                 return roots;
             };
+            
             balances.setEPManager(new BalanceManager());
             ((TreeTableListController)balances.getController()).setTreeFeatures(treeMaker, 2);
+            ((TreeTableListController)balances.getController()).setListFilterConditions(balancePanel.getPredicate(), balancePanel.getChangeableComponents());
             balances.getController().reAssignTable(null);
             balances.show();
         }
