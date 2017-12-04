@@ -17,6 +17,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TreeTableCell;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableRow;
+import javafx.scene.text.Font;
+import javafx.util.Callback;
 
 /**
  *
@@ -32,7 +37,7 @@ public class Balance extends EditorPanelable {
     @AView.Column(title = "%account", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty accountIso;
     
-    @AView.Column(title = "%active", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
+    @AView.Column(title = "%active", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = MoneyCellFactory.class)
     private final FloatProperty active;
     
     @AView.Column(title = "%passive", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
@@ -216,5 +221,56 @@ public class Balance extends EditorPanelable {
         return getLevel() == 1;
     }
     
+
+    public static class PassiveCellFactory implements Callback<TreeTableColumn<Balance, Float>, TreeTableRow<Balance>>{
+
+        @Override
+        public TreeTableRow<Balance> call(TreeTableColumn<Balance, Float> param) {
+            return new TreeTableRow<Balance>() {
+                @Override
+                protected void updateItem(Balance item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty){
+                        setText(null);
+                    }
+                    else {
+                        setText("b");
+                    }
+                }
+                
+            };
+        }
+        
+    }
     
+    public static class MoneyCellFactory implements Callback<TreeTableColumn<Balance, Float>, TreeTableCell<Balance, Float>> {
+
+        @Override
+        public TreeTableCell<Balance, Float> call(TreeTableColumn<Balance, Float> param) {
+            return new TreeTableCell<Balance, Float>(){
+                @Override
+                protected void updateItem(Float money, boolean empty) {
+                    super.updateItem(money, empty);
+                    if (money == null || empty){
+                        setText(null);
+                    }
+                    else {
+                        Balance b = getTreeTableRow().getItem();
+                        if (b != null) {
+                            int level = b.getLevel();
+                            String monyText = "" + money;
+                            for (int i = 0; i < level; i++) {
+                                monyText += " ";
+                            }
+                            setText(monyText);
+                            double defFontSize = 4.5;
+                            setFont(Font.font((level == 0) ? 2*defFontSize : level * defFontSize));
+                        }
+                    }
+                }
+              
+            };
+        }
+        
+    }
 }
