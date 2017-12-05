@@ -36,10 +36,10 @@ public class Balance extends EditorPanelable {
     @AView.Column(title = "%account", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty accountIso;
     
-    @AView.Column(title = "%active", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = MoneyCellFactory.class)
+    @AView.Column(title = "%active", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final FloatProperty active;
     
-    @AView.Column(title = "%passive", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = MoneyCellFactory.class)
+    @AView.Column(title = "%passive", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final FloatProperty passive;
     
     private boolean activeIsRed, passiveIsRed;
@@ -283,6 +283,7 @@ public class Balance extends EditorPanelable {
 //                            label.setFont(Font.font(fontSize));
 //                            System.out.println("label change font: " + label.getFont() + "\n");
 //                            setGraphic(label);
+
                             setText(moneyText);
                             if (b.getDefaultFont() == null){
                                 b.saveDefaultFont(getFont());

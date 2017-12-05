@@ -12,13 +12,14 @@ import ambroafb.general.editor_panel.standard.StandardEditorPanel;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
 
 /**
  *
@@ -28,9 +29,10 @@ public class BalanceEditorPanel extends StandardEditorPanel {
 
     private Slider slider;
     private CheckBox nonZero, onlyBalances;
-    private TextField search;
     
     private final int sliderMin = 25, sliderMax = 100, blockValue = 25;
+    
+    private IntegerProperty sliderValue;
     
     @Override
     protected void componentsInitialize(URL location, ResourceBundle resources) {
@@ -40,20 +42,24 @@ public class BalanceEditorPanel extends StandardEditorPanel {
         slider = new Slider();
         nonZero = new CheckBox();
         onlyBalances = new CheckBox();
-        search = new TextField();
 
         setComponentsFeatures();
         
         addComponent(1, slider);
         addComponent(2, nonZero);
         addComponent(3, onlyBalances);
-        addComponent(getChildren().size(), search); // adds after 'region' component.
+        
+        sliderValue = new SimpleIntegerProperty();
+        sliderValue.bind(Bindings.createIntegerBinding(() -> (int)(slider.getValue() / blockValue), slider.valueProperty()));
+        
+        sliderValue.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            System.out.println("change: aaaaaa");
+        });
     }
 
     private void setComponentsFeatures(){
         slider.setMin(sliderMin);
         slider.setMax(sliderMax);
-        slider.setValue(sliderMax);
         slider.setMajorTickUnit(blockValue);
         slider.setMinorTickCount(0);
         slider.setShowTickMarks(true);
@@ -64,8 +70,6 @@ public class BalanceEditorPanel extends StandardEditorPanel {
         
         nonZero.setText(GeneralConfig.getInstance().getTitleFor("non_zero_acc"));
         onlyBalances.setText(GeneralConfig.getInstance().getTitleFor("only_balances"));
-        
-        search.setPromptText(GeneralConfig.getInstance().getTitleFor("search"));
     }
     
     
@@ -82,12 +86,13 @@ public class BalanceEditorPanel extends StandardEditorPanel {
         return new Observable[] {nonZero.selectedProperty(), onlyBalances.selectedProperty()};
     }
     
-    public void setExpandFn(Consumer<Integer> expandTreeFn){
-        slider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (newValue != null) {
-                expandTreeFn.accept((int)(newValue.doubleValue() / blockValue));
-            }
-        });
+    
+    /**
+     *  The method return IntegerProerty for slider value. This s modification of slider real property that is DoubleProperty. So because of bind the IntegerProperty must not be change from outside (avoid to runtime exception).
+     * @return IntegerProperty That is read only.
+     */
+    public IntegerProperty sliderValueProperty(){
+        return sliderValue;
     }
-
+    
 }

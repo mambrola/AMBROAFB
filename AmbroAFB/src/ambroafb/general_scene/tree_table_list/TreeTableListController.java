@@ -15,12 +15,13 @@ import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,11 +46,18 @@ public class TreeTableListController extends ListingController implements Editor
     private Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn;
     private int expandDepth = 1;
     
+    private IntegerProperty expand;
+    
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
         treeTableView.setBundle(rb);
         treeTableView.getColumns().stream().forEach((column) -> {
             column.setSortable(false);
+        });
+        
+        expand = new SimpleIntegerProperty();
+        expand.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if (newValue != null) treeTableView.expand(newValue.intValue());
         });
     }
     
@@ -65,6 +73,7 @@ public class TreeTableListController extends ListingController implements Editor
                 roots.stream().forEach((elem) -> {
                     treeTableView.append(elem);
                 });
+                treeTableView.expand(expand.get());
             } catch (Exception ex) {
                 System.err.println("TreeTableController! Exception message: " + ex.getMessage());
             }
@@ -95,18 +104,23 @@ public class TreeTableListController extends ListingController implements Editor
         }, dependencies));
     }
     
+    @Deprecated
     public void setTreeFeatures(Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn){
         this.treeMakerFn = treeMakerFn;
     }
     
-    
-    public Consumer<Integer> getExpandAction() {
-        return (depth) -> {
-            System.out.println("depth: " + depth);
-                treeTableView.expand(depth);
-        };
+    public IntegerProperty expandProperty(){
+        return expand;
     }
-
+    
+    public void setExpand(int newExpand){
+        expand.set(newExpand);
+    }
+    
+    public int getExpand(){
+        return expand.get();
+    }
+    
     
     @Override
     public void notifyDelete(EditorPanelable deleted) {

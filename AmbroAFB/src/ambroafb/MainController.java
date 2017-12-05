@@ -457,6 +457,8 @@ public class MainController implements Initializable {
                 return roots;
             };
             ((TreeTableListController)balances.getController()).setTreeFeatures(treeMaker);
+            ((TreeTableListController)balances.getController()).expandProperty().bind(balancePanel.sliderValueProperty());
+            ((TreeTableListController)balances.getController()).setListFilterConditions(balancePanel.getPredicate(), balancePanel.getChangeableComponents());
             balances.show();
             
             BalanceFilter filter = new BalanceFilter(balances);
@@ -468,8 +470,6 @@ public class MainController implements Initializable {
             else {
                 balances.getController().reAssignTable(model);
             }
-            ((TreeTableListController)balances.getController()).setListFilterConditions(balancePanel.getPredicate(), balancePanel.getChangeableComponents());
-            balancePanel.setExpandFn(((TreeTableListController)balances.getController()).getExpandAction());
         }
         else {
             balanceStage.requestFocus();
