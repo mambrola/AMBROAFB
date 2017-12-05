@@ -52,9 +52,6 @@ public class BalanceEditorPanel extends StandardEditorPanel {
         sliderValue = new SimpleIntegerProperty();
         sliderValue.bind(Bindings.createIntegerBinding(() -> (int)(slider.getValue() / blockValue), slider.valueProperty()));
         
-        sliderValue.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            System.out.println("change: aaaaaa");
-        });
     }
 
     private void setComponentsFeatures(){
