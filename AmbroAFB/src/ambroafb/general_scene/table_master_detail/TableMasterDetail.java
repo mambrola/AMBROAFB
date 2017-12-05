@@ -23,5 +23,10 @@ public class TableMasterDetail extends ListingStage {
     public TableMasterDetail(Stage owner, Class tableContent, String stageTitleBundleKey, EditorPanel editorPanel){
         super(owner, "/ambroafb/general_scene/table_master_detail/TableMasterDetail.fxml", tableContent, stageTitleBundleKey, editorPanel);
     }
+
+    @Override
+    public TableMasterDetailController getController() {
+        return (TableMasterDetailController) controller;
+    }
     
 }

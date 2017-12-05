@@ -21,8 +21,8 @@ import javafx.stage.WindowEvent;
  */
 public abstract class ListingStage extends UserInteractiveStage {
     
-    private EditorPanelableManager editorPanelableManager;
-    private ListingController controller;
+    protected EditorPanelableManager editorPanelableManager;
+    protected ListingController controller;
     
     /**
      * @param owner The owner stage.
@@ -88,7 +88,5 @@ public abstract class ListingStage extends UserInteractiveStage {
         return editorPanelableManager;
     }
     
-    public ListingController getController(){
-        return controller;
-    }
+    public abstract ListingController getController();
 }

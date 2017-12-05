@@ -23,5 +23,10 @@ public class TableList extends ListingStage {
     public TableList(Stage owner, Class tableContent, String stageTitleBundleKey, EditorPanel editorPanel){
         super(owner, "/ambroafb/general_scene/table_list/TableList.fxml", tableContent, stageTitleBundleKey, editorPanel);
     }
-    
+
+    @Override
+    public TableListController getController() {
+        return (TableListController) controller;
+    }
+
 }

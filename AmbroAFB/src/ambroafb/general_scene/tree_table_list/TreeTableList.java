@@ -23,4 +23,11 @@ public class TreeTableList extends ListingStage {
     public TreeTableList(Stage owner, Class treeContent, String stageTitleBundleKey, EditorPanel editorPanel){
         super(owner, "/ambroafb/general_scene/tree_table_list/TreeTableList.fxml", treeContent, stageTitleBundleKey, editorPanel);
     }
+
+    @Override
+    public TreeTableListController getController() {
+        return (TreeTableListController) controller;
+    }
+    
+    
 }

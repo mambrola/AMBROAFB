@@ -45,9 +45,7 @@ import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general_scene.table_list.TableList;
 import ambroafb.general_scene.table_master_detail.TableMasterDetail;
-import ambroafb.general_scene.table_master_detail.TableMasterDetailController;
 import ambroafb.general_scene.tree_table_list.TreeTableList;
-import ambroafb.general_scene.tree_table_list.TreeTableListController;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.InvoiceManager;
 import ambroafb.invoices.filter.InvoiceFilter;
@@ -130,7 +128,7 @@ public class MainController implements Initializable {
             accounts.setEPManager(manager);
             AccountDetailPane detailPane = new AccountDetailPane();
             detailPane.setDataFetchProvider((AccountDataFetchProvider)manager.getDataFetchProvider());
-            ((TableMasterDetailController)accounts.getController()).setDetailNode(detailPane);
+            accounts.getController().setDetailNode(detailPane);
             accounts.getController().registerObserver(detailPane);
             accounts.show();
             
@@ -456,9 +454,9 @@ public class MainController implements Initializable {
                 });
                 return roots;
             };
-            ((TreeTableListController)balances.getController()).setTreeFeatures(treeMaker);
-            ((TreeTableListController)balances.getController()).expandProperty().bind(balancePanel.sliderValueProperty());
-            ((TreeTableListController)balances.getController()).setListFilterConditions(balancePanel.getPredicate(), balancePanel.getChangeableComponents());
+            balances.getController().setTreeFeatures(treeMaker);
+            balances.getController().expandProperty().bind(balancePanel.sliderValueProperty());
+            balances.getController().setListFilterConditions(balancePanel.getPredicate(), balancePanel.getChangeableComponents());
             balances.show();
             
             BalanceFilter filter = new BalanceFilter(balances);
