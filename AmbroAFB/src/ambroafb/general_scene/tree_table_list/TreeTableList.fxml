@@ -9,7 +9,7 @@
 <?import org.controlsfx.control.*?>
 
 <BorderPane fx:id="formPane" 
-            stylesheets="/styles/css/balanceaccounts.css" 
+            stylesheets="/styles/css/TreeTableList.css" 
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="ambroafb.general_scene.tree_table_list.TreeTableListController">
     <top>
