@@ -17,10 +17,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TreeTableCell;
-import javafx.scene.control.TreeTableColumn;
-import javafx.scene.text.Font;
-import javafx.util.Callback;
 
 /**
  *
@@ -50,6 +46,7 @@ public class Balance extends EditorPanelable {
     @AView.RowStyles
     private final ObservableList<String> rowStyleClasses = FXCollections.observableArrayList();
     
+    // StyleClasses are in TreeTableList.css file
     private static final String paleBackground = "pale_background";
     private static final String lightBackground = "light_background";
     private static final String mediumBackground = "medium_background";
@@ -166,6 +163,9 @@ public class Balance extends EditorPanelable {
 
     public void setLevel(int level) {
         this.level = level;
+        if (level == 1){
+            rowStyleClasses.add(lightBackground);
+        }
     }
     
     
@@ -233,99 +233,4 @@ public class Balance extends EditorPanelable {
         return rowStyleClasses;
     }
     
-    private Font defaultFont;
-    
-    @JsonIgnore
-    public Font getDefaultFont(){
-        return defaultFont;
-    }
-    
-    @JsonIgnore
-    public void saveDefaultFont(Font font){
-        defaultFont = font;
-    
-    }
-
-    
-    /**
-     * 
-     */
-    public static class MoneyCellFactory implements Callback<TreeTableColumn<Balance, Float>, TreeTableCell<Balance, Float>> {
-
-        @Override
-        public TreeTableCell<Balance, Float> call(TreeTableColumn<Balance, Float> param) {
-            return new TreeTableCell<Balance, Float>(){
-                @Override
-                protected void updateItem(Float money, boolean empty) {
-                    super.updateItem(money, empty);
-                    if (money == null || empty){
-                        // Removes add style classes if exists (it is implemented in reomve method). In here appropriate balance object is null.
-//                        getTreeTableRow().getStyleClass().remove(lightBackground);
-//                        getTreeTableRow().getStyleClass().remove(mediumBackground);
-//                        getTreeTableRow().getStyleClass().remove(darkBackground);
-//                        setGraphic(null);
-
-                        setText(null);
-                    }
-                    else {
-                        Balance b = getTreeTableRow().getItem();
-                        if (b != null) {
-                            int level = b.getLevel();
-//                            String styleClassForColor = getBackgroundColorClassBy(level);
-//                            b.getRowStyles().add(styleClassForColor);
-                            String moneyText = "" + money;
-//                            for (int i = 0; i < level; i++) {
-//                                monyText += " ";
-//                            }
-//                            Label label = new Label(moneyText);
-//                            System.out.println("label default font: " + label.getFont());
-//                            double fontSize = getCoeficientFor(b.getLevel()) * label.getFont().getSize();
-//                            label.setFont(Font.font(fontSize));
-//                            System.out.println("label change font: " + label.getFont() + "\n");
-//                            setGraphic(label);
-
-                            setText(moneyText);
-                            if (b.getDefaultFont() == null){
-                                b.saveDefaultFont(getFont());
-                            }
-                            double fontSize = getCoeficientFor(b.getLevel()) * b.getDefaultFont().getSize();
-                            setFont(Font.font(fontSize));
-                        }
-                    }
-                }
-              
-            };
-        }
-        
-        private String getBackgroundColorClassBy(int level){
-            String color;
-            switch(level){
-                case 1:
-                    color = lightBackground;
-                    break;
-                case 2:
-                    color = mediumBackground;
-                    break;
-                case 3:
-                    color = darkBackground;
-                    break;
-                default:
-                    color = paleBackground;
-            }
-            return color;
-        }
-        
-        private double getCoeficientFor(int level){
-            switch(level){
-                case 1:
-                    return 1.1;
-                case 2:
-                    return 1.3;
-                case 3:
-                    return 1.5;
-                default:
-                    return 1;
-            }
-        }
-    }
 }
