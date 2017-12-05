@@ -11,7 +11,7 @@
 <?import ambroafb.currencies.*?>
 <?import ambroafb.balance_accounts.*?>
 
-<ambroafb.general.DialogPanel stylesheets="/styles/css/accountfilter.css" 
+<ambroafb.general.DialogPanel stylesheets="/styles/css/AccountFilter.css" 
                               xmlns:fx="http://javafx.com/fxml/1" >
     <VBox   fx:id="formPane" >
         <HBox styleClass="w2_3" >
