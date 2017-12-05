@@ -17,6 +17,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
+import javafx.scene.control.TreeTableCell;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 
 /**
  *
@@ -32,10 +37,10 @@ public class Balance extends EditorPanelable {
     @AView.Column(title = "%account", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty accountIso;
     
-    @AView.Column(title = "%active", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
+    @AView.Column(title = "%active", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = ActiveCellFactory.class)
     private final FloatProperty active;
     
-    @AView.Column(title = "%passive", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
+    @AView.Column(title = "%passive", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = PassiveCellFactory.class)
     private final FloatProperty passive;
     
     private boolean activeIsRed, passiveIsRed;
@@ -232,5 +237,60 @@ public class Balance extends EditorPanelable {
     public ObservableList<String> getRowStyles(){
         return rowStyleClasses;
     }
+    
+    
+    public static class ActiveCellFactory implements Callback<TreeTableColumn<Balance, Float>, TreeTableCell<Balance, Float>> {
+
+        @Override
+        public TreeTableCell<Balance, Float> call(TreeTableColumn<Balance, Float> param) {
+            return new TreeTableCell<Balance, Float>() {
+                @Override
+                protected void updateItem(Float item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty){
+                        setGraphic(null);
+                    }
+                    else {
+                        Label active = new Label("" + item.toString());
+                        Balance b = getTreeTableRow().getItem();
+                        if (b != null){
+                            if (b.isActiveRed()) active.setTextFill(Color.RED);
+                        }
+                        setGraphic(active);
+                    }
+                }
+                
+            };
+        }
+        
+    }
+    
+    
+    public static class PassiveCellFactory implements Callback<TreeTableColumn<Balance, Float>, TreeTableCell<Balance, Float>> {
+
+        @Override
+        public TreeTableCell<Balance, Float> call(TreeTableColumn<Balance, Float> param) {
+            return new TreeTableCell<Balance, Float>() {
+                @Override
+                protected void updateItem(Float item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty){
+                        setGraphic(null);
+                    }
+                    else {
+                        Label passive = new Label("" + item.toString());
+                        Balance b = getTreeTableRow().getItem();
+                        if (b != null){
+                            if (b.isPassiveRed()) passive.setTextFill(Color.RED);
+                        }
+                        setGraphic(passive);
+                    }
+                }
+                
+            };
+        }
+        
+    }
+    
     
 }
