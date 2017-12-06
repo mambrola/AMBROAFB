@@ -6,6 +6,8 @@
 package ambroafb.general_scene.table_list;
 
 import ambro.AFilterableTableView;
+import ambroafb.general.AlertMessage;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.editor_panel.EditorPanelActionObserver;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -21,6 +23,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 import org.controlsfx.control.MaskerPane;
 
 /**
@@ -63,7 +67,8 @@ public class TableListController extends ListingController implements EditorPane
         }
         else {
             Consumer<Exception> error = (ex) -> {
-                System.err.println("ex: " + ex.getMessage());
+                String errorHeaderText = GeneralConfig.getInstance().getTitleFor("error");
+                new AlertMessage((Stage) tableView.getScene().getWindow(), Alert.AlertType.ERROR, errorHeaderText, ex.getMessage(), ex).showAndWait();
             };
             dataFetchProvider.filteredBy(model, successAction, error);
         }

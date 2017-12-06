@@ -19,7 +19,7 @@ import javafx.stage.WindowEvent;
  */
 public abstract class UserInteractiveFilterStage extends UserInteractiveStage {
     
-    protected int comboBoxCount = 0;
+    protected int fetcherInThreadCount = 0; // count, how many objects fetch its data in thread.
     protected int counter = 0;
     protected final Semaphore sem = new Semaphore(1);
     protected final Consumer<Object> increaseCounter;
@@ -37,7 +37,7 @@ public abstract class UserInteractiveFilterStage extends UserInteractiveStage {
                 sem.acquire();
                 counter = counter + 1;
                 sem.release();
-                if (counter == comboBoxCount){
+                if (counter == fetcherInThreadCount){
                     getOkayCancelController().setOkayDisable(false);
                 }
             } catch (InterruptedException ex) {

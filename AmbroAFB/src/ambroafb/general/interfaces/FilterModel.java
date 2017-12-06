@@ -29,6 +29,12 @@ public abstract class FilterModel {
         modelCanceled = true;
     }
     
+    /**
+     * The method saves String value into preference on specific key.
+     * Note: key and value must not be null.
+     * @param key
+     * @param value 
+     */
     public void saveIntoPref(String key, String value){
         GeneralConfig.prefs.put(key, value);
     }
@@ -53,7 +59,7 @@ public abstract class FilterModel {
     
     /**
      * @param key Preference key
-     * @return If preferences do not contains key then -1, otherwise - appropriate value from preferences.
+     * @return If preferences do not contains key then 0, otherwise - appropriate value from preferences.
      */
     public int getIntFromPref(String key){
         return GeneralConfig.prefs.getInt(key, 0);

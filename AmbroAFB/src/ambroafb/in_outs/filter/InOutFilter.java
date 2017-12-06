@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.balances.filter;
+package ambroafb.in_outs.filter;
 
 import ambro.ADatePicker;
 import ambroafb.currencies.Currency;
@@ -27,21 +27,21 @@ import javafx.stage.Stage;
  *
  * @author dkobuladze
  */
-public class BalanceFilter extends UserInteractiveFilterStage implements Filterable, Initializable {
-    
+public class InOutFilter extends UserInteractiveFilterStage implements Filterable, Initializable {
+
     @FXML
-    private ADatePicker date;
+    private ADatePicker fromDate, toDate;
     @FXML
     private CurrencyComboBox currencies;
     @FXML
     private FilterOkayCancelController okayCancelController;
     
-    private final BalanceFilterModel model = new BalanceFilterModel();
+    private final InOutFilterModel model = new InOutFilterModel();
     
-    public BalanceFilter(Stage owner, String titleBundleKey){
-        super(owner, titleBundleKey);
+    public InOutFilter(Stage owner) {
+        super(owner, "income_statement");
         
-        Scene scene = SceneUtils.createScene("/ambroafb/balances/filter/BalanceFilter.fxml", (BalanceFilter)this);
+        Scene scene = SceneUtils.createScene("/ambroafb/in_outs/filter/InOutFilter.fxml", (InOutFilter)this);
         this.setScene(scene);
         
         fetcherInThreadCount = 1;
@@ -65,14 +65,16 @@ public class BalanceFilter extends UserInteractiveFilterStage implements Filtera
             model.changeModelAsEmpty();
         }
         else {
-            model.setDate(date.getValue());
+            model.setFromDate(fromDate.getValue());
+            model.setToDate(toDate.getValue());
             model.setCurrency(currencies.getValue());
         }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        date.setValue(model.getDate());
+        fromDate.setValue(model.getFromDate());
+        toDate.setValue(model.getToDate());
         
         Consumer<ObservableList<Currency>> selectCurrency = (currencyList) -> {
             Optional<Currency> optCurrency = currencyList.stream().filter((curr) -> curr.getIso().equals(model.getCurrencyIso())).findFirst();
@@ -84,7 +86,7 @@ public class BalanceFilter extends UserInteractiveFilterStage implements Filtera
             increaseCounter.accept(null);
         };
         currencies.fillComboBoxWithoutALL(selectCurrency.andThen(increaseFromCurrency));
+        
     }
     
 }
- 

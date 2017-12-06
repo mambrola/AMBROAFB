@@ -17,15 +17,15 @@ import java.time.LocalDate;
  */
 public class BalanceFilterModel extends FilterModel {
 
-    private static final String PREF_DATE_KEY = "balance/filter/date";
-    private static final String PREF_CURRENCY_KEY = "balance/filter/currency";
+    private static final String PREF_DATE_KEY = "report/filter/date";
+    private static final String PREF_CURRENCY_KEY = "report/filter/currency";
     
     public void setDate(LocalDate date) {
         saveIntoPref(PREF_DATE_KEY, (date == null) ? "" : date.toString());
     }
 
     public void setCurrency(Currency currency) {
-        saveIntoPref(PREF_CURRENCY_KEY, (currency != null) ? currency.getIso() : null);
+        saveIntoPref(PREF_CURRENCY_KEY, (currency == null) ? "" : currency.getIso());
     }
     
     

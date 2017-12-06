@@ -53,7 +53,7 @@ public class CurrencyComboBox extends ComboBox<Currency>{
     
     public void fillComboBoxWithALLAndWithoutRatesBasicIso(Consumer<ObservableList<Currency>> extraAction){
         Consumer<ObservableList<Currency>> removeRatesBasicIso = (currencies) -> {
-            new Thread(new FetchRatesBasicIso()).start();
+            new Thread(new FetchRatesBasicIso((basicIso) -> removeCurrency(basicIso))).start();
         };
         Consumer<ObservableList<Currency>> consumer = (extraAction == null) ? removeRatesBasicIso : removeRatesBasicIso.andThen(extraAction);
         fillComboBoxWithALL(consumer);
@@ -62,7 +62,7 @@ public class CurrencyComboBox extends ComboBox<Currency>{
     
     public void fillComboBoxWithoutALLAndWithoutRatesBasicIso(Consumer<ObservableList<Currency>> extraAction){
         Consumer<ObservableList<Currency>> removeRatesBasicIso = (currencies) -> {
-            new Thread(new FetchRatesBasicIso()).start();
+            new Thread(new FetchRatesBasicIso((basicIso) -> removeCurrency(basicIso))).start();
         };
         Consumer<ObservableList<Currency>> consumer = (extraAction == null) ? removeRatesBasicIso : removeRatesBasicIso.andThen(extraAction);
         fillComboBoxWithoutALL(consumer);
@@ -123,13 +123,19 @@ public class CurrencyComboBox extends ComboBox<Currency>{
 
     private class FetchRatesBasicIso implements Runnable {
 
-        public FetchRatesBasicIso() {
+        private Consumer<String> consumer;
+        
+        public FetchRatesBasicIso(Consumer<String> consumer) {
+            this.consumer = consumer;
         }
 
         @Override
         public void run() {
             try {
-                removeCurrency(dataFetchProvider.getBasicIso());
+                String basicIso = dataFetchProvider.getBasicIso();
+                Platform.runLater(() -> {
+                    if (consumer != null) consumer.accept(basicIso);
+                });
             } catch (Exception ex) {
                 Logger.getLogger(CurrencyComboBox.class.getName()).log(Level.SEVERE, null, ex);
             }

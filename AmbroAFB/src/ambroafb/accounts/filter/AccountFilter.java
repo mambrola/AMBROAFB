@@ -52,7 +52,7 @@ public class AccountFilter extends UserInteractiveFilterStage implements Filtera
         Scene scene = SceneUtils.createScene("/ambroafb/accounts/filter/AccountFilter.fxml", (AccountFilter)this);
         this.setScene(scene);
         
-        comboBoxCount = 3;
+        fetcherInThreadCount = 3;
         okayCancelController.setOkayDisable(true);
     }
     

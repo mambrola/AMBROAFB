@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.balances;
+package ambroafb.in_outs;
 
 import ambroafb.currencies.CurrencyDataFetchProvider;
-import ambroafb.general.DateConverter;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
-import ambroafb.balances.filter.BalanceFilterModel;
+import ambroafb.in_outs.filter.InOutFilterModel;
 import authclient.db.DBClient;
 import java.time.LocalDate;
 import java.util.List;
@@ -20,36 +19,32 @@ import org.json.JSONObject;
  *
  * @author dkobuladze
  */
-public class BalanceDataFetchProvider extends DataFetchProvider {
+public class InOutDataFetchProvider extends DataFetchProvider {
 
     // If it will be needed to set JSONObject from outside, must use this static variables:
-    public static final String DATE_JSON_KEY = "date";
+    public static final String FROM_DATE_JSON_KEY = "from_date";
+    public static final String TO_DATE_JSON_KEY = "to_date";
     public static final String ISO_JSON_KEY = "iso";
     
-    private final String DB_FETCH_BALANCES_PROCEDURE = "balance_get";
+    private final String DB_FETCH_BALANCES_PROCEDURE = "inout_get";
     private final CurrencyDataFetchProvider currencyDataFetchProvider = new CurrencyDataFetchProvider();
     
     @Override
-    public List<Balance> getFilteredBy(JSONObject params) throws Exception {
+    public List<InOut> getFilteredBy(JSONObject params) throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        LocalDate date = LocalDate.now();
-        String iso = currencyDataFetchProvider.getBasicIso();
-        if (params.length() != 0){
-            date = DateConverter.getInstance().parseDate(params.optString(DATE_JSON_KEY));
-            iso = params.optString(ISO_JSON_KEY);
-        }
-        System.out.println(String.format("dbClient.getLang(): %s, date: %s, iso: %s", dbClient.getLang(), date.toString(), iso));
-        return callProcedure(Balance.class, DB_FETCH_BALANCES_PROCEDURE, dbClient.getLang(), date, iso);
+        LocalDate fromDate = (LocalDate) params.opt(FROM_DATE_JSON_KEY);
+        LocalDate toDate = (LocalDate) params.opt(TO_DATE_JSON_KEY);
+        String iso = (params.getString(ISO_JSON_KEY) == null) ? currencyDataFetchProvider.getBasicIso() : params.getString(ISO_JSON_KEY);
+        System.out.println("params: " + fromDate + " " + toDate + " " + iso);
+        return callProcedure(InOut.class, DB_FETCH_BALANCES_PROCEDURE, dbClient.getLang(), fromDate, toDate, iso);
     }
 
     @Override
-    public List<Balance> getFilteredBy(FilterModel model) throws Exception {
-        BalanceFilterModel filtereModel = (BalanceFilterModel) model;
+    public List<InOut> getFilteredBy(FilterModel model) throws Exception {
+        InOutFilterModel filtereModel = (InOutFilterModel) model;
         JSONObject params = new JSONObject();
-        LocalDate dateParam = filtereModel.getDate();
-        if (dateParam != null){
-            params.put(DATE_JSON_KEY, dateParam);
-        }
+        params.put(FROM_DATE_JSON_KEY, filtereModel.getFromDateForDB());
+        params.put(TO_DATE_JSON_KEY, filtereModel.getToDateForDB());
         if (filtereModel.isSelectedConcreteCurrency()){
             params.put(ISO_JSON_KEY, filtereModel.getCurrencyIso());
         }
@@ -57,9 +52,8 @@ public class BalanceDataFetchProvider extends DataFetchProvider {
     }
 
     @Override
-    public Balance getOneFromDB(int recId) throws Exception {
+    public InOut getOneFromDB(int recId) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
     
 }

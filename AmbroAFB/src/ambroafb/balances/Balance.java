@@ -10,6 +10,7 @@ import ambro.AView;
 import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnFeatures;
+import ambroafb.general.interfaces.TreeItemable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -27,7 +28,7 @@ import javafx.util.Callback;
  *
  * @author dkobuladze
  */
-public class Balance extends EditorPanelable {
+public class Balance extends EditorPanelable implements TreeItemable {
 
     private int accountId, balAcc, parentRecId, level;
     
@@ -37,10 +38,10 @@ public class Balance extends EditorPanelable {
     @AView.Column(title = "%account", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty accountIso;
     
-    @AView.Column(title = "%active", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = ActiveCellFactory.class)
+    @AView.Column(title = "%active", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = ActiveCellFactory.class)
     private final FloatProperty active;
     
-    @AView.Column(title = "%passive", width = "100", styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = PassiveCellFactory.class)
+    @AView.Column(title = "%passive", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = PassiveCellFactory.class)
     private final FloatProperty passive;
     
     private boolean activeIsRed, passiveIsRed;
@@ -123,11 +124,6 @@ public class Balance extends EditorPanelable {
         return level;
     }
     
-    @JsonIgnore
-    public ObservableList<Balance> getChildren(){
-        return children;
-    }
-
     
     // Setters:
     public void setAccountId(int accountId) {
@@ -227,6 +223,23 @@ public class Balance extends EditorPanelable {
     public String toString() {
         return "Balance{" + "id: " + getRecId() + ", accountId=" + accountId + ", balAcc=" + balAcc + ", parentRecId=" + parentRecId + ", level=" + level + ", descrip=" + descrip.get() + ", accountIso=" + accountIso.get() + ", active=" + active.get() + ", passive=" + passive.get() + ", activeIsRed=" + activeIsRed + ", passiveIsRed=" + passiveIsRed + '}';
     }
+    
+    @Override @JsonIgnore
+    public ObservableList<Balance> getChildren(){
+        return children;
+    }
+
+    @Override
+    public int getIdentificator() {
+        return getRecId();
+    }
+
+    @Override
+    public int getParentIdentificator() {
+        return getParentRecId();
+    }
+    
+    
 
     @JsonIgnore
     public boolean isAccount() {

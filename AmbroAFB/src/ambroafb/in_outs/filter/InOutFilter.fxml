@@ -14,12 +14,18 @@
 <ambroafb.general.DialogPanel stylesheets="/styles/css/BalanceFilter.css" 
                               xmlns:fx="http://javafx.com/fxml/1" >
     <VBox   fx:id="formPane" >
-        <HBox styleClass="w2" >
+        <HBox styleClass="w3" >
             <children>
                 <VBox >
                     <children>
-                        <Label text="%date" /> 
-                        <ADatePicker fx:id="date" />
+                        <Label text="%begin_date" /> 
+                        <ADatePicker fx:id="fromDate" />
+                    </children>
+                </VBox>
+                <VBox >
+                    <children>
+                        <Label text="%end_date" /> 
+                        <ADatePicker fx:id="toDate" />
                     </children>
                 </VBox>
                 <VBox >

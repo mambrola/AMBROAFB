@@ -43,9 +43,13 @@ import ambroafb.general.editor_panel.doc.DocEditorPanel;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
+import ambroafb.general.interfaces.TreeItemable;
 import ambroafb.general_scene.table_list.TableList;
 import ambroafb.general_scene.table_master_detail.TableMasterDetail;
 import ambroafb.general_scene.tree_table_list.TreeTableList;
+import ambroafb.in_outs.InOut;
+import ambroafb.in_outs.InOutManager;
+import ambroafb.in_outs.filter.InOutFilter;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.InvoiceManager;
 import ambroafb.invoices.filter.InvoiceFilter;
@@ -459,7 +463,7 @@ public class MainController implements Initializable {
             balances.getController().setListFilterConditions(balancePanel.getPredicate(), balancePanel.getChangeableComponents());
             balances.show();
             
-            BalanceFilter filter = new BalanceFilter(balances);
+            BalanceFilter filter = new BalanceFilter(balances, stageTitle);
             FilterModel model = filter.getResult();
             
             if (model.isCanceled()){
@@ -475,17 +479,56 @@ public class MainController implements Initializable {
         }
     }
     
+    @FXML 
+    private void income_statement(ActionEvent event) {
+        String stageTitle = "income_statement";
+        Stage inOutStage = StagesContainer.getStageFor(AmbroAFB.mainStage, InOut.class.getSimpleName());
+        if (inOutStage == null || !inOutStage.isShowing()){
+            BalanceEditorPanel balancePanel = new BalanceEditorPanel();
+            TreeTableList inouts = new TreeTableList(AmbroAFB.mainStage, InOut.class, stageTitle, balancePanel);
+            inouts.setEPManager(new InOutManager());
+            
+            Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMaker = (inOutsList) -> {
+                ObservableList<EditorPanelable> roots = FXCollections.observableArrayList();
+                InOut root = (InOut)inOutsList.get(0);
+                root.setDescrip(GeneralConfig.getInstance().getTitleFor("balance"));
+                roots.add(root);
+                inOutsList.stream().map((elem) -> (InOut)elem).forEach((inOut) -> {
+                    addElem(root, inOut);
+                });
+                return roots;
+            };
+            inouts.getController().setTreeFeatures(treeMaker);
+            inouts.getController().expandProperty().bind(balancePanel.sliderValueProperty());
+            inouts.getController().setListFilterConditions(balancePanel.getPredicate(), balancePanel.getChangeableComponents());
+            inouts.show();
+            
+            InOutFilter filter = new InOutFilter(inouts);
+            FilterModel model = filter.getResult();
+            
+            if (model.isCanceled()){
+                inouts.close();
+            }
+            else {
+                inouts.getController().reAssignTable(model);
+            }
+        }
+        else {
+            inOutStage.requestFocus();
+            StageUtils.centerChildOf(AmbroAFB.mainStage, inOutStage);
+        }
+    }
+    
     // Adds new balance into Balances tree. Returns true if add was success, false - otherwise.
-    private boolean addElem(Balance root, Balance elem){
+    private boolean addElem(TreeItemable root, TreeItemable elem){
         if (root == null) return false;
-        if (root.getRecId() == elem.getParentRecId()){
+        if (root.getIdentificator() == elem.getParentIdentificator()){
             root.getChildren().add(elem);
             return true;
         }
-        return root.getChildren().stream().anyMatch((balance) -> (addElem(balance, elem)));
+        return root.getChildren().stream().anyMatch((item) -> (addElem((TreeItemable)item, elem)));
     }
     
-    @FXML private void income_statement(ActionEvent event) {}
     @FXML private void other(ActionEvent event) {}
     
     
