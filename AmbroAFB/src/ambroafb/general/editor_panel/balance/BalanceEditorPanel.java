@@ -27,6 +27,9 @@ import javafx.scene.control.Slider;
  */
 public class BalanceEditorPanel extends StandardEditorPanel {
 
+    public static final String NON_ZERO_CHECK_BOX_FXID = "nonZero";
+    public static final String ONLY_BALLANCE_CHECK_BOX_FXID = "onlyBalance";
+    
     private Slider slider;
     private CheckBox nonZero, onlyBalances;
     
@@ -65,7 +68,9 @@ public class BalanceEditorPanel extends StandardEditorPanel {
             slider.setValue((newValue.intValue() / blockValue) * blockValue);
         });
         
+        nonZero.setId(NON_ZERO_CHECK_BOX_FXID);
         nonZero.setText(GeneralConfig.getInstance().getTitleFor("non_zero_acc"));
+        onlyBalances.setId(ONLY_BALLANCE_CHECK_BOX_FXID);
         onlyBalances.setText(GeneralConfig.getInstance().getTitleFor("only_balances"));
     }
     

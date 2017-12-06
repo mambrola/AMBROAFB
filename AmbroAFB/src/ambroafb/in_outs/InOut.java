@@ -36,7 +36,7 @@ public class InOut extends EditorPanelable implements TreeItemable {
     @AView.Column(title = "%amount", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final FloatProperty amount;
     
-    private Integer parentRecId, level;
+    private int parentRecId, level;
     
     @AFilterableTreeTableView.Children
     private final ObservableList<InOut> children = FXCollections.observableArrayList();
@@ -64,19 +64,19 @@ public class InOut extends EditorPanelable implements TreeItemable {
         return descrip.get();
     }
     
-    public Integer getBalAcc(){
-        return balAcc.getValue();
+    public int getBalAcc(){
+        return balAcc.get();
     }
     
-    public Float getAmount(){
+    public float getAmount(){
         return amount.getValue();
     }
     
-    public Integer getParentRecId(){
+    public int getParentRecId(){
         return parentRecId;
     }
     
-    public Integer getLevel(){
+    public int getLevel(){
         return level;
     }
     
@@ -85,19 +85,19 @@ public class InOut extends EditorPanelable implements TreeItemable {
         this.descrip.set(descrip);
     }
     
-    public void setBalAcc(Integer balAcc){
+    public void setBalAcc(int balAcc){
         this.balAcc.setValue(balAcc);
     }
     
-    public void setAmount(Float amount){
+    public void setAmount(float amount){
         this.amount.setValue(amount);
     }
     
-    public void setParentRecId(Integer parentRecId){
+    public void setParentRecId(int parentRecId){
         this.parentRecId = parentRecId;
     }
     
-    public void setLevel(Integer level){
+    public void setLevel(int level){
         this.level = level;
     }
     
@@ -147,12 +147,12 @@ public class InOut extends EditorPanelable implements TreeItemable {
         return children;
     }
 
-    @Override
+    @Override @JsonIgnore
     public int getIdentificator() {
         return getRecId();
     }
     
-    @Override
+    @Override @JsonIgnore
     public int getParentIdentificator() {
         return getParentRecId();
     }

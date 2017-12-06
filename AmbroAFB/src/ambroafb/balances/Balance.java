@@ -229,12 +229,12 @@ public class Balance extends EditorPanelable implements TreeItemable {
         return children;
     }
 
-    @Override
+    @Override @JsonIgnore
     public int getIdentificator() {
         return getRecId();
     }
 
-    @Override
+    @Override @JsonIgnore
     public int getParentIdentificator() {
         return getParentRecId();
     }

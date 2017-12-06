@@ -500,7 +500,6 @@ public class MainController implements Initializable {
             };
             inouts.getController().setTreeFeatures(treeMaker);
             inouts.getController().expandProperty().bind(balancePanel.sliderValueProperty());
-            inouts.getController().setListFilterConditions(balancePanel.getPredicate(), balancePanel.getChangeableComponents());
             inouts.show();
             
             InOutFilter filter = new InOutFilter(inouts);
