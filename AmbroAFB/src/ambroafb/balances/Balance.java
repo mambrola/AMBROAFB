@@ -251,12 +251,12 @@ public class Balance extends EditorPanelable {
                         setGraphic(null);
                     }
                     else {
-                        Label active = new Label("" + item.toString());
                         Balance b = getTreeTableRow().getItem();
                         if (b != null){
+                            Label active = new Label("" + item.toString());
                             if (b.isActiveRed()) active.setTextFill(Color.RED);
+                            setGraphic(active);
                         }
-                        setGraphic(active);
                     }
                 }
                 
@@ -278,12 +278,12 @@ public class Balance extends EditorPanelable {
                         setGraphic(null);
                     }
                     else {
-                        Label passive = new Label("" + item.toString());
                         Balance b = getTreeTableRow().getItem();
                         if (b != null){
+                            Label passive = new Label("" + item.toString());
                             if (b.isPassiveRed()) passive.setTextFill(Color.RED);
+                            setGraphic(passive);
                         }
-                        setGraphic(passive);
                     }
                 }
                 
