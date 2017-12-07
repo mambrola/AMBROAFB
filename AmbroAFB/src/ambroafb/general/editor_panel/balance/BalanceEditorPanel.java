@@ -60,6 +60,7 @@ public class BalanceEditorPanel extends StandardEditorPanel {
     private void setComponentsFeatures(){
         slider.setMin(sliderMin);
         slider.setMax(sliderMax);
+        slider.setValue(3 * blockValue);
         slider.setMajorTickUnit(blockValue);
         slider.setMinorTickCount(0);
         slider.setShowTickMarks(true);
@@ -70,6 +71,7 @@ public class BalanceEditorPanel extends StandardEditorPanel {
         
         nonZero.setId(NON_ZERO_CHECK_BOX_FXID);
         nonZero.setText(GeneralConfig.getInstance().getTitleFor("non_zero_acc"));
+        nonZero.setSelected(true);
         onlyBalances.setId(ONLY_BALLANCE_CHECK_BOX_FXID);
         onlyBalances.setText(GeneralConfig.getInstance().getTitleFor("only_balances"));
     }
