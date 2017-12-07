@@ -62,15 +62,17 @@ public class TableListController extends ListingController implements EditorPane
             }
         };
         
+        Consumer<Exception> errorAction = (ex) -> {
+            String errorHeaderText = GeneralConfig.getInstance().getTitleFor("error");
+            new AlertMessage((Stage) tableView.getScene().getWindow(), Alert.AlertType.ERROR, errorHeaderText, ex.getMessage(), ex).showAndWait();
+        };
+        
         if (model == null){
-            dataFetchProvider.filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, null);
+            dataFetchProvider.filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, errorAction);
         }
         else {
-            Consumer<Exception> error = (ex) -> {
-                String errorHeaderText = GeneralConfig.getInstance().getTitleFor("error");
-                new AlertMessage((Stage) tableView.getScene().getWindow(), Alert.AlertType.ERROR, errorHeaderText, ex.getMessage(), ex).showAndWait();
-            };
-            dataFetchProvider.filteredBy(model, successAction, error);
+            
+            dataFetchProvider.filteredBy(model, successAction, errorAction);
         }
         
     }

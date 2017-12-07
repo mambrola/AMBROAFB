@@ -6,6 +6,8 @@
 package ambroafb.general_scene.table_master_detail;
 
 import ambro.AFilterableTableView;
+import ambroafb.general.AlertMessage;
+import ambroafb.general.GeneralConfig;
 import ambroafb.general.editor_panel.EditorPanelActionObserver;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.EditorPanelable;
@@ -24,7 +26,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.SplitPane;
+import javafx.stage.Stage;
 import org.controlsfx.control.MaskerPane;
 
 /**
@@ -75,10 +79,16 @@ public class TableMasterDetailController extends ListingController implements Ed
             }
         };
         
+        Consumer<Exception> errorAction = (ex) -> {
+            String errorHeaderText = GeneralConfig.getInstance().getTitleFor("error");
+            new AlertMessage((Stage)tableView.getScene().getWindow(), Alert.AlertType.ERROR, errorHeaderText, ex.getMessage(), ex).showAndWait();
+            masterMasker.setVisible(false);
+        };
+        
         if (model == null)
-            dataFetchProvider.filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, null);
+            dataFetchProvider.filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, errorAction);
         else
-            dataFetchProvider.filteredBy(model, successAction, null);
+            dataFetchProvider.filteredBy(model, successAction, errorAction);
         
     }
 

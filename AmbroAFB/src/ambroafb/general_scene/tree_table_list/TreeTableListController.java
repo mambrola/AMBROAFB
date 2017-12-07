@@ -11,15 +11,16 @@ import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.editor_panel.EditorPanelActionObserver;
 import ambroafb.general.interfaces.DataFetchProvider;
+import ambroafb.general.interfaces.DataProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.ListingController;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
@@ -48,7 +49,6 @@ public class TreeTableListController extends ListingController implements Editor
     
     private final ObservableList<EditorPanelable> roots = FXCollections.observableArrayList();
     private Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMakerFn;
-    private int expandDepth = 1;
     
     private IntegerProperty expand;
     
@@ -69,27 +69,28 @@ public class TreeTableListController extends ListingController implements Editor
     public void reAssignTable(FilterModel model){
         masker.setVisible(true);
         treeTableView.removeAll();
-        new Thread(() -> {
-            try {
-                List<EditorPanelable> data = (model == null) ? dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL) 
-                                                             : dataFetchProvider.getFilteredBy(model);
-                roots.setAll(treeMakerFn.apply(data));
-                roots.stream().forEach((elem) -> {
-                    treeTableView.append(elem);
-                });
-                treeTableView.expand(expand.get());
-            } catch (Exception ex) {
-                System.err.println("TreeTableController! Exception message: " + ex.getMessage());
-                Platform.runLater(() -> {
-                    String errorHeaderText = GeneralConfig.getInstance().getTitleFor("error");
-                    new AlertMessage((Stage)treeTableView.getScene().getWindow(), Alert.AlertType.ERROR, errorHeaderText, ex.getMessage(), ex).showAndWait();
-                });
-            }
-            
-            Platform.runLater(() -> {
-                masker.setVisible(false);
+        
+        Consumer<List<EditorPanelable>> successAction = (data) -> {
+            roots.setAll(treeMakerFn.apply(data));
+            roots.stream().forEach((elem) -> {
+                treeTableView.append(elem);
             });
-        }).start();
+            treeTableView.expand(expand.get());
+            masker.setVisible(false);
+        };
+                
+        Consumer<Exception> errorAction = (ex) -> {
+            System.err.println("TreeTableController! Exception message: " + ex.getMessage());
+            String errorHeaderText = GeneralConfig.getInstance().getTitleFor("error");
+            new AlertMessage((Stage)treeTableView.getScene().getWindow(), Alert.AlertType.ERROR, errorHeaderText, ex.getMessage(), ex).showAndWait();
+            masker.setVisible(false);
+        };
+        
+        if (model == null)
+            dataFetchProvider.filteredBy(DataProvider.PARAM_FOR_ALL, successAction, errorAction);
+        else
+            dataFetchProvider.filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, errorAction);
+        
     }
     
     @Override
