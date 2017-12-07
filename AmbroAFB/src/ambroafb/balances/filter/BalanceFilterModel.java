@@ -16,7 +16,7 @@ import java.time.LocalDate;
  */
 public class BalanceFilterModel extends FilterModel {
 
-    private static final String PREF_CURRENCY_KEY = "report/filter/currency";
+    private static final String PREF_CURRENCY_KEY = "balance/filter/currency";
     
     private LocalDate date; // Local date does not save into preferences, so class use private instance for return selected localDate from dialog.
     

@@ -41,7 +41,6 @@ public class CurrencyDataFetchProvider extends DataFetchProvider {
         return getOneFromDBHelper(conditionBuilder);
     }
     
-    
     public Currency getOneFromDB (String iso) throws Exception {
         ConditionBuilder conditionBuilder = new ConditionBuilder().where().and("iso", "=", iso).condition();
         return getOneFromDBHelper(conditionBuilder);
@@ -64,5 +63,9 @@ public class CurrencyDataFetchProvider extends DataFetchProvider {
         } catch (AuthServerException ex) {
             throw ExceptionsFactory.getAppropriateException(ex);
         }
+    }
+    
+    public List<Currency> getCurrenciesWithoutBasic() throws Exception {
+        return getFilteredBy(new ConditionBuilder().where().and("iso", "!=", getBasicIso()).condition().build());
     }
 }

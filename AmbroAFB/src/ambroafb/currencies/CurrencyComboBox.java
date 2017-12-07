@@ -5,7 +5,7 @@
  */
 package ambroafb.currencies;
 
-import ambroafb.general.interfaces.DataFetchProvider;
+import ambroafb.general.interfaces.DataProvider;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -26,59 +26,50 @@ public class CurrencyComboBox extends ComboBox<Currency>{
     private final ObservableList<Currency> items = FXCollections.observableArrayList();
     private final FilteredList<Currency> filteredList = new FilteredList<>(items);
     private final Currency currencyALL = new Currency();
-    private final CurrencyDataFetchProvider dataFetchProvider = new CurrencyDataFetchProvider();
+    private final Consumer<ObservableList<Currency>> addALLCategory;
+    private final CurrencyDataFetchProvider dataFetchProvider;
     
     public CurrencyComboBox(){
         super();
         this.setItems(filteredList);
         currencyALL.setIso(categoryALL);
-    }
-    
-    public void fillComboBoxWithALL(Consumer<ObservableList<Currency>> extraAction){
-        Consumer<ObservableList<Currency>> addALLCategory = (currencies) -> {
+        
+        addALLCategory = (currencies) -> {
             if (!currencies.contains(currencyALL)){
                 currencies.add(0, currencyALL);
                 setValue(currencyALL);
             }
         };
-        Consumer<ObservableList<Currency>> consumer = (extraAction == null) ? addALLCategory : addALLCategory.andThen(extraAction);
-        new Thread(new FetchDataFromDB(consumer)).start();
+        dataFetchProvider = getDataFetchProvider();
     }
     
-    
-    public void fillComboBoxWithoutALL(Consumer<ObservableList<Currency>> extraAction){
-        new Thread(new FetchDataFromDB(extraAction)).start();
+    protected CurrencyDataFetchProvider getDataFetchProvider(){
+        return new CurrencyDataFetchProvider();
     }
-    
-    
-    public void fillComboBoxWithALLAndWithoutRatesBasicIso(Consumer<ObservableList<Currency>> extraAction){
-        Consumer<ObservableList<Currency>> removeRatesBasicIso = (currencies) -> {
-            new Thread(new FetchRatesBasicIso((basicIso) -> removeCurrency(basicIso))).start();
-        };
-        Consumer<ObservableList<Currency>> consumer = (extraAction == null) ? removeRatesBasicIso : removeRatesBasicIso.andThen(extraAction);
-        fillComboBoxWithALL(consumer);
-    }
-    
     
     public void fillComboBoxWithoutALLAndWithoutRatesBasicIso(Consumer<ObservableList<Currency>> extraAction){
-        Consumer<ObservableList<Currency>> removeRatesBasicIso = (currencies) -> {
-            new Thread(new FetchRatesBasicIso((basicIso) -> removeCurrency(basicIso))).start();
-        };
-        Consumer<ObservableList<Currency>> consumer = (extraAction == null) ? removeRatesBasicIso : removeRatesBasicIso.andThen(extraAction);
-        fillComboBoxWithoutALL(consumer);
+        new Thread(new FetchDataFromDB(false, extraAction)).start();
     }
     
-//    private void setShowCategoryALL(boolean showCategoryALL) {
-//        if (!showCategoryALL){
-//            if (getItems().contains(currencyALL))
-//                items.remove(currencyALL);
-//        }
-//        else {
-//            if (!getItems().contains(currencyALL))
-//                items.add(0, currencyALL);
-//        }
-//    }
+    public void fillComboBoxWithoutALLAndWithBasicIso(Consumer<ObservableList<Currency>> extraAction){
+        new Thread(new FetchDataFromDB(true, extraAction)).start();
+    }
     
+    public void fillComboBoxWithALLAndWithoutRatesBasicIso(Consumer<ObservableList<Currency>> extraAction){
+        Consumer<ObservableList<Currency>> consumer = (extraAction == null) ? addALLCategory : addALLCategory.andThen(extraAction);
+        fillComboBoxWithoutALLAndWithoutRatesBasicIso(consumer);
+    }
+    
+    public void fillComboBoxWithALL(Consumer<ObservableList<Currency>> extraAction){
+        Consumer<ObservableList<Currency>> consumer = (extraAction == null) ? addALLCategory : addALLCategory.andThen(extraAction);
+        fillComboBoxWithoutALLAndWithBasicIso(consumer);
+    }
+    
+    
+    /**
+     * The method removes appropriate currency on given iso from items.
+     * @param iso The iso that currency must be removed.
+     */
     public void removeCurrency(String iso){
         Currency target = null;
         for (Currency item : items) {
@@ -142,23 +133,26 @@ public class CurrencyComboBox extends ComboBox<Currency>{
         }
     }
 
+    
     private class FetchDataFromDB implements Runnable {
 
         private final Consumer<ObservableList<Currency>> consumer;
+        private final boolean containsBasicIso;
         
-        public FetchDataFromDB(Consumer<ObservableList<Currency>> consumer) {
+        public FetchDataFromDB(boolean containsBasicIso, Consumer<ObservableList<Currency>> consumer) {
             this.consumer = consumer;
+            this.containsBasicIso = containsBasicIso;
         }
-
+        
         @Override
         public void run() {
             try {
-                List<Currency> currencies = dataFetchProvider.getFilteredBy(DataFetchProvider.PARAM_FOR_ALL);
+                List<Currency> currencies = (containsBasicIso) ? dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL) : dataFetchProvider.getCurrenciesWithoutBasic();
+                String basicIso = (containsBasicIso) ? dataFetchProvider.getBasicIso() : "";
                 Platform.runLater(() -> {
                     items.setAll(currencies);
-                    if (consumer != null){
-                        consumer.accept(items);
-                    }
+                    if (containsBasicIso) changeValue(basicIso);
+                    if (consumer != null) consumer.accept(items);
                 });
             } catch (Exception ex) {
             }

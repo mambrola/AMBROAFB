@@ -84,7 +84,7 @@ public class BalanceFilter extends UserInteractiveFilterStage implements Filtera
         Consumer<ObservableList<Currency>> increaseFromCurrency = (balAccList) -> {
             increaseCounter.accept(null);
         };
-        currencies.fillComboBoxWithoutALL(selectCurrency.andThen(increaseFromCurrency));
+        currencies.fillComboBoxWithoutALLAndWithBasicIso(selectCurrency.andThen(increaseFromCurrency));
     }
     
 }

@@ -88,7 +88,7 @@ public class InOutFilter extends UserInteractiveFilterStage implements Filterabl
         Consumer<ObservableList<Currency>> increaseFromCurrency = (balAccList) -> {
             increaseCounter.accept(null);
         };
-        currencies.fillComboBoxWithoutALL(selectCurrency.andThen(increaseFromCurrency));
+        currencies.fillComboBoxWithoutALLAndWithBasicIso(selectCurrency.andThen(increaseFromCurrency));
         
     }
     
