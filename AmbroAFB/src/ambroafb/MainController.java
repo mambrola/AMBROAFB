@@ -492,7 +492,7 @@ public class MainController implements Initializable {
             Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMaker = (inOutsList) -> {
                 ObservableList<EditorPanelable> roots = FXCollections.observableArrayList();
                 InOut root = (InOut)inOutsList.get(0);
-                root.setDescrip(GeneralConfig.getInstance().getTitleFor("balance"));
+                root.setDescrip(GeneralConfig.getInstance().getTitleFor("profits_losses"));
                 roots.add(root);
                 inOutsList.stream().map((elem) -> (InOut)elem).forEach((inOut) -> {
                     addElem(root, inOut);

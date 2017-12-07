@@ -10,7 +10,6 @@ import ambro.AFilterableTreeTableView;
 import ambroafb.general.AlertMessage;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.editor_panel.EditorPanelActionObserver;
-import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.DataProvider;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
@@ -78,7 +77,7 @@ public class TreeTableListController extends ListingController implements Editor
             treeTableView.expand(expand.get());
             masker.setVisible(false);
         };
-                
+
         Consumer<Exception> errorAction = (ex) -> {
             System.err.println("TreeTableController! Exception message: " + ex.getMessage());
             String errorHeaderText = GeneralConfig.getInstance().getTitleFor("error");
@@ -89,7 +88,7 @@ public class TreeTableListController extends ListingController implements Editor
         if (model == null)
             dataFetchProvider.filteredBy(DataProvider.PARAM_FOR_ALL, successAction, errorAction);
         else
-            dataFetchProvider.filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, errorAction);
+            dataFetchProvider.filteredBy(model, successAction, errorAction);
         
     }
     

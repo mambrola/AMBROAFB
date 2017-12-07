@@ -22,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.util.Callback;
 
 /**
@@ -251,6 +252,23 @@ public class Balance extends EditorPanelable implements TreeItemable {
         return rowStyleClasses;
     }
     
+    // Returns coeficient on balance level. Using in fonts.
+    @JsonIgnore
+    private static double getCoefOnLevel(int level){
+        switch(level){
+            case 1:
+                return 1.1;
+            case 2:
+                return 1.2;
+            case 3:
+                return 1.4;
+            case 4:
+                return 1.5;
+            default:
+                return 1;
+        }
+    }
+    
     
     public static class ActiveCellFactory implements Callback<TreeTableColumn<Balance, Float>, TreeTableCell<Balance, Float>> {
 
@@ -261,12 +279,19 @@ public class Balance extends EditorPanelable implements TreeItemable {
                 protected void updateItem(Float item, boolean empty) {
                     super.updateItem(item, empty);
                     if (item == null || empty){
+//                        setText(null);
                         setGraphic(null);
                     }
                     else {
                         Balance b = getTreeTableRow().getItem();
                         if (b != null){
+                            double defFont = Font.getDefault().getSize();
+//                            setText("" + item);
+//                            setFont(Font.font(getCoefOnLevel(b.getLevel()) * defFont));
+//                            if (b.isActiveRed()) setTextFill(Color.RED);
+
                             Label active = new Label("" + item.toString());
+                            active.setFont(Font.font(getCoefOnLevel(b.getLevel()) * defFont));
                             if (b.isActiveRed()) active.setTextFill(Color.RED);
                             setGraphic(active);
                         }
@@ -288,12 +313,22 @@ public class Balance extends EditorPanelable implements TreeItemable {
                 protected void updateItem(Float item, boolean empty) {
                     super.updateItem(item, empty);
                     if (item == null || empty){
+//                        setText(null);
                         setGraphic(null);
                     }
                     else {
                         Balance b = getTreeTableRow().getItem();
+                        
+                        System.out.println("b: " + b);
+                        
                         if (b != null){
+                            double defFont = Font.getDefault().getSize();
+//                            setText("" + item);
+//                            setFont(Font.font(getCoefOnLevel(b.getLevel()) * defFont));
+//                            if (b.isPassiveRed()) setTextFill(Color.RED);
+                            
                             Label passive = new Label("" + item.toString());
+                            passive.setFont(Font.font(getCoefOnLevel(b.getLevel()) * defFont));
                             if (b.isPassiveRed()) passive.setTextFill(Color.RED);
                             setGraphic(passive);
                         }
