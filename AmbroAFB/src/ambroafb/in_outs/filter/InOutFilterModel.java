@@ -3,7 +3,6 @@ package ambroafb.in_outs.filter;
 
 import ambroafb.currencies.Currency;
 import ambroafb.currencies.CurrencyComboBox;
-import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.DateFilterModel;
 import java.time.LocalDate;
 
@@ -19,16 +18,16 @@ import java.time.LocalDate;
  */
 public class InOutFilterModel extends DateFilterModel {
 
-    private static final String PREF_FROM_DATE_KEY = "inout/filter/from_date";
-    private static final String PREF_TO_DATE_KEY = "inout/filter/to_date";
     private static final String PREF_CURRENCY_KEY = "inout/filter/currency";
     
+    private LocalDate fromDate, toDate; // LocalDates do not save into preferences, so private instances use to return selected localDates values from dialog.
+    
     public void setFromDate(LocalDate date) {
-        saveIntoPref(PREF_FROM_DATE_KEY, (date == null) ? "" : date.toString());
+        fromDate = date;
     }
     
     public void setToDate(LocalDate date) {
-        saveIntoPref(PREF_TO_DATE_KEY, (date == null) ? "" : date.toString());
+        toDate = date;
     }
 
     public void setCurrency(Currency currency) {
@@ -38,14 +37,12 @@ public class InOutFilterModel extends DateFilterModel {
     
     @Override
     public LocalDate getFromDate() {
-        String date = getStringFromPref(PREF_FROM_DATE_KEY);
-        return DateConverter.getInstance().parseDate(date);
+        return fromDate;
     }
 
     @Override
     public LocalDate getToDate() {
-        String date = getStringFromPref(PREF_TO_DATE_KEY);
-        return DateConverter.getInstance().parseDate(date);
+        return toDate;
     }
     
     public boolean isSelectedConcreteCurrency(){

@@ -32,10 +32,9 @@ public class InOutDataFetchProvider extends DataFetchProvider {
     @Override
     public List<InOut> getFilteredBy(JSONObject params) throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        LocalDate fromDate = (LocalDate) params.opt(FROM_DATE_JSON_KEY);
-        LocalDate toDate = (LocalDate) params.opt(TO_DATE_JSON_KEY);
-        String iso = (params.getString(ISO_JSON_KEY) == null) ? currencyDataFetchProvider.getBasicIso() : params.getString(ISO_JSON_KEY);
-        System.out.println("params: " + fromDate + " " + toDate + " " + iso);
+        LocalDate fromDate = (params.has(FROM_DATE_JSON_KEY)) ? (LocalDate) params.opt(FROM_DATE_JSON_KEY) : null;
+        LocalDate toDate = (params.has(TO_DATE_JSON_KEY)) ? (LocalDate) params.opt(TO_DATE_JSON_KEY) : null;
+        String iso = (params.has(ISO_JSON_KEY)) ? params.getString(ISO_JSON_KEY) : currencyDataFetchProvider.getBasicIso();
         return callProcedure(InOut.class, DB_FETCH_BALANCES_PROCEDURE, dbClient.getLang(), fromDate, toDate, iso);
     }
 
