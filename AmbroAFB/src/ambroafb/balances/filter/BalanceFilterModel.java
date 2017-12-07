@@ -7,7 +7,6 @@ package ambroafb.balances.filter;
 
 import ambroafb.currencies.Currency;
 import ambroafb.currencies.CurrencyComboBox;
-import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.FilterModel;
 import java.time.LocalDate;
 
@@ -17,11 +16,12 @@ import java.time.LocalDate;
  */
 public class BalanceFilterModel extends FilterModel {
 
-    private static final String PREF_DATE_KEY = "report/filter/date";
     private static final String PREF_CURRENCY_KEY = "report/filter/currency";
     
+    private LocalDate date; // Local date does not save into preferences, so class use private instance for return selected localDate from dialog.
+    
     public void setDate(LocalDate date) {
-        saveIntoPref(PREF_DATE_KEY, (date == null) ? "" : date.toString());
+        this.date = date;
     }
 
     public void setCurrency(Currency currency) {
@@ -30,8 +30,7 @@ public class BalanceFilterModel extends FilterModel {
     
     
     public LocalDate getDate(){
-        String date = getStringFromPref(PREF_DATE_KEY);
-        return DateConverter.getInstance().parseDate(date);
+        return date;
     }
     
     public boolean isSelectedConcreteCurrency(){

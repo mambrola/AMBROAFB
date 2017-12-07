@@ -5,12 +5,11 @@
  */
 package ambroafb.balances;
 
+import ambroafb.balances.filter.BalanceFilterModel;
 import ambroafb.currencies.CurrencyDataFetchProvider;
-import ambroafb.general.DateConverter;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
-import ambroafb.balances.filter.BalanceFilterModel;
 import authclient.db.DBClient;
 import java.time.LocalDate;
 import java.util.List;
@@ -32,27 +31,19 @@ public class BalanceDataFetchProvider extends DataFetchProvider {
     @Override
     public List<Balance> getFilteredBy(JSONObject params) throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        LocalDate date = LocalDate.now();
-        String iso = currencyDataFetchProvider.getBasicIso();
-        if (params.length() != 0){
-            date = DateConverter.getInstance().parseDate(params.optString(DATE_JSON_KEY));
-            iso = params.optString(ISO_JSON_KEY);
-        }
-        System.out.println(String.format("dbClient.getLang(): %s, date: %s, iso: %s", dbClient.getLang(), date.toString(), iso));
-        return callProcedure(Balance.class, DB_FETCH_BALANCES_PROCEDURE, dbClient.getLang(), date, iso);
+        return callProcedure(Balance.class, DB_FETCH_BALANCES_PROCEDURE, dbClient.getLang(), params.get(DATE_JSON_KEY), params.getString(ISO_JSON_KEY));
     }
 
     @Override
     public List<Balance> getFilteredBy(FilterModel model) throws Exception {
         BalanceFilterModel filtereModel = (BalanceFilterModel) model;
         JSONObject params = new JSONObject();
-        LocalDate dateParam = filtereModel.getDate();
-        if (dateParam != null){
-            params.put(DATE_JSON_KEY, dateParam);
-        }
-        if (filtereModel.isSelectedConcreteCurrency()){
-            params.put(ISO_JSON_KEY, filtereModel.getCurrencyIso());
-        }
+        
+        LocalDate date = (filtereModel.getDate() == null) ? LocalDate.now() : filtereModel.getDate();
+        String iso = (filtereModel.isSelectedConcreteCurrency()) ? filtereModel.getCurrencyIso() : currencyDataFetchProvider.getBasicIso();
+        params.put(DATE_JSON_KEY, date);
+        params.put(ISO_JSON_KEY, iso);
+        
         return getFilteredBy(params);
     }
 
