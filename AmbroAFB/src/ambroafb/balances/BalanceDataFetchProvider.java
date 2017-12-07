@@ -31,19 +31,17 @@ public class BalanceDataFetchProvider extends DataFetchProvider {
     @Override
     public List<Balance> getFilteredBy(JSONObject params) throws Exception {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
-        return callProcedure(Balance.class, DB_FETCH_BALANCES_PROCEDURE, dbClient.getLang(), params.get(DATE_JSON_KEY), params.getString(ISO_JSON_KEY));
+        LocalDate date = (params.has(DATE_JSON_KEY)) ? (LocalDate)params.get(DATE_JSON_KEY) : LocalDate.now();
+        String iso = (params.has(ISO_JSON_KEY)) ? params.optString(ISO_JSON_KEY) : currencyDataFetchProvider.getBasicIso();
+        return callProcedure(Balance.class, DB_FETCH_BALANCES_PROCEDURE, dbClient.getLang(), date, iso);
     }
 
     @Override
     public List<Balance> getFilteredBy(FilterModel model) throws Exception {
         BalanceFilterModel filtereModel = (BalanceFilterModel) model;
         JSONObject params = new JSONObject();
-        
-        LocalDate date = (filtereModel.getDate() == null) ? LocalDate.now() : filtereModel.getDate();
-        String iso = (filtereModel.isSelectedConcreteCurrency()) ? filtereModel.getCurrencyIso() : currencyDataFetchProvider.getBasicIso();
-        params.put(DATE_JSON_KEY, date);
-        params.put(ISO_JSON_KEY, iso);
-        
+        params.put(DATE_JSON_KEY, filtereModel.getDate()); // if getDate() returns null, JSONObject remove entry on DATE_JSON_KEY if it exists and does not put.
+        params.put(ISO_JSON_KEY, filtereModel.getCurrencyIso()); // if getCurrencyIso() returns null, JSONObject removes entry on ISO_JSON_KEY if it exists and does not put.
         return getFilteredBy(params);
     }
 
