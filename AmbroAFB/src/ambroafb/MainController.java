@@ -40,6 +40,7 @@ import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.editor_panel.balance.BalanceEditorPanel;
 import ambroafb.general.editor_panel.balance_account.BalanceAccountEditorPanel;
 import ambroafb.general.editor_panel.doc.DocEditorPanel;
+import ambroafb.general.editor_panel.in_out.InOutEditorPanel;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
@@ -484,8 +485,8 @@ public class MainController implements Initializable {
         String stageTitle = "income_statement";
         Stage inOutStage = StagesContainer.getStageFor(AmbroAFB.mainStage, InOut.class.getSimpleName());
         if (inOutStage == null || !inOutStage.isShowing()){
-            BalanceEditorPanel balancePanel = new BalanceEditorPanel();
-            TreeTableList inouts = new TreeTableList(AmbroAFB.mainStage, InOut.class, stageTitle, balancePanel);
+            InOutEditorPanel inoutPanel = new InOutEditorPanel();
+            TreeTableList inouts = new TreeTableList(AmbroAFB.mainStage, InOut.class, stageTitle, inoutPanel);
             inouts.setEPManager(new InOutManager());
             
             Function<List<EditorPanelable>, ObservableList<EditorPanelable>> treeMaker = (inOutsList) -> {
@@ -499,7 +500,8 @@ public class MainController implements Initializable {
                 return roots;
             };
             inouts.getController().setTreeFeatures(treeMaker);
-            inouts.getController().expandProperty().bind(balancePanel.sliderValueProperty());
+            inouts.getController().expandProperty().bind(inoutPanel.sliderValueProperty());
+            inouts.getController().setListFilterConditions(inoutPanel.getPredicate(), inoutPanel.getChangeableComponents());
             inouts.show();
             
             InOutFilter filter = new InOutFilter(inouts);

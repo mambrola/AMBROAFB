@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ambroafb.general.editor_panel.balance;
+package ambroafb.general.editor_panel.in_out;
 
-import ambroafb.balances.Balance;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.editor_panel.EditorPanel;
+import static ambroafb.general.editor_panel.balance.BalanceEditorPanel.NON_ZERO_CHECK_BOX_FXID;
 import ambroafb.general.editor_panel.standard.StandardEditorPanel;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.in_outs.InOut;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -25,39 +26,34 @@ import javafx.scene.control.Slider;
  *
  * @author dkobuladze
  */
-public class BalanceEditorPanel extends StandardEditorPanel {
-
-    public static final String NON_ZERO_CHECK_BOX_FXID = "nonZero";
-    public static final String ONLY_BALLANCE_CHECK_BOX_FXID = "onlyBalance";
+public class InOutEditorPanel extends StandardEditorPanel {
     
     private Slider slider;
-    private CheckBox nonZero, onlyBalances;
-    private final String nonZeroTextBundleKey = "non_zero_acc", onlyBalancesTextBundleKey = "only_balances";
+    private CheckBox nonZero;
+    private final String nonZeroTextBundleKey = "non_zero_bal";
+
+    private final int sliderMin = 25, sliderMax = 75, blockValue = 25;
     
-    private final int sliderMin = 25, sliderMax = 100, blockValue = 25;
     
     private IntegerProperty sliderValue;
     
     @Override
     protected void componentsInitialize(URL location, ResourceBundle resources) {
         removeComponents(EditorPanel.DELETE_FXID, EditorPanel.EDIT_FXID, EditorPanel.VIEW_FXID, EditorPanel.ADD_FXID, EditorPanel.SEARCH_FXID);
-    
+        
         // Initialize method call first than class instance variables initialization, so initializetion executes here:
         slider = new Slider();
         nonZero = new CheckBox();
-        onlyBalances = new CheckBox();
-
+        
         setComponentsFeatures();
         
         addComponent(1, slider);
         addComponent(2, nonZero);
-        addComponent(3, onlyBalances);
         
         sliderValue = new SimpleIntegerProperty();
         sliderValue.bind(Bindings.createIntegerBinding(() -> (int)(slider.getValue() / blockValue), slider.valueProperty()));
-        
     }
-
+    
     private void setComponentsFeatures(){
         slider.setMin(sliderMin);
         slider.setMax(sliderMax);
@@ -73,22 +69,14 @@ public class BalanceEditorPanel extends StandardEditorPanel {
         nonZero.setId(NON_ZERO_CHECK_BOX_FXID);
         nonZero.setText(GeneralConfig.getInstance().getTitleFor(nonZeroTextBundleKey));
         nonZero.setSelected(true);
-        onlyBalances.setId(ONLY_BALLANCE_CHECK_BOX_FXID);
-        onlyBalances.setText(GeneralConfig.getInstance().getTitleFor(onlyBalancesTextBundleKey));
     }
     
-    
     public Predicate<EditorPanelable> getPredicate(){
-        return (elem) -> {
-            Balance balance = (Balance) elem;
-            boolean nonZeroCond = nonZero.isSelected() ? balance.getActive() > 0 || balance.getPassive() > 0 : true;
-            boolean onlyBalsCond = onlyBalances.isSelected() ? balance.isAccount() : true;
-            return nonZeroCond && onlyBalsCond; // შეიძლება Fluent API_ის და Factory Method_ის გაერთიანებით უკეთესი ჩანაწერი გამოვიდეს
-        };
+        return (elem) -> nonZero.isSelected() ? ((InOut)elem).getAmount() > 0 : true;
     }
     
     public Observable[] getChangeableComponents(){
-        return new Observable[] {nonZero.selectedProperty(), onlyBalances.selectedProperty()};
+        return new Observable[] {nonZero.selectedProperty()};
     }
     
     
@@ -99,5 +87,4 @@ public class BalanceEditorPanel extends StandardEditorPanel {
     public IntegerProperty sliderValueProperty(){
         return sliderValue;
     }
-    
 }
