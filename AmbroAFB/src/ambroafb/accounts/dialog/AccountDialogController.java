@@ -97,8 +97,6 @@ public class AccountDialogController extends DialogController implements DialogC
         accountNumber.getNext().setOnAction(this::accountNextAction);
         
         currencies.fillComboBox(null);
-        
-        okayCancelController.registerObserver(this);
     }
     
     private void accountKeyAction(ActionEvent event){

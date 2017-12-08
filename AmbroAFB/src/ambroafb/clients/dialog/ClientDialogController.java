@@ -109,7 +109,6 @@ public class ClientDialogController extends DialogController implements DialogCl
         juridical.setOnAction(this::switchJuridical);
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
-        okayCancelController.registerObserver(this);
         country.valueProperty().addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
             if (newValue != null && oldValue != null && !newValue.equals(oldValue)){
                 rezident.setSelected(newValue.getCode().equals("GE"));

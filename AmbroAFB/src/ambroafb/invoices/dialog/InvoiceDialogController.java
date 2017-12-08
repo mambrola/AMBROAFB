@@ -352,6 +352,16 @@ public class InvoiceDialogController extends DialogController {
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }
+
+    @Override
+    public void okayAction() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void cancelAction() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     
     /**

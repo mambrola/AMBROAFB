@@ -20,7 +20,7 @@ import javafx.scene.Parent;
  *
  * @author dkobuladze
  */
-public abstract class DialogController implements Initializable {
+public abstract class DialogController implements Initializable, DialogCloseObserver {
     
     private ArrayList<Node> focusTraversableNodes;
     
@@ -32,6 +32,7 @@ public abstract class DialogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(getSceneRoot());
+        okayCancelController.registerObserver(this);
         componentsInitialize(url, rb);
     }
     
@@ -59,6 +60,13 @@ public abstract class DialogController implements Initializable {
     
     protected abstract void bindObjectToSceneComponents(EditorPanelable object);
     protected abstract void makeExtraActions(EDITOR_BUTTON_TYPE buttonType);
+    
+    // DialogcloseObserver methods:
+    @Override
+    public abstract void okayAction();
+    @Override
+    public abstract void cancelAction();
+    
     
     public DialogOkayCancelController getOkayCancelController(){
         return okayCancelController;
