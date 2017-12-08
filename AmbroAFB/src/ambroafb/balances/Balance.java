@@ -59,6 +59,12 @@ public class Balance extends EditorPanelable implements TreeItemable {
     private static final String mediumBackground = "medium_background";
     private static final String darkBackground = "dark_background";
     
+    private static final int level_0 = 0;
+    private static final int level_1 = 1;
+    private static final int level_2 = 2;
+    private static final int level_3 = 3;
+    private static final int level_4 = 4;
+    
     public Balance(){
         accountIso = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
@@ -165,9 +171,6 @@ public class Balance extends EditorPanelable implements TreeItemable {
 
     public void setLevel(int level) {
         this.level = level;
-        if (level == 1){
-            rowStyleClasses.add(lightBackground);
-        }
     }
     
     
@@ -244,7 +247,16 @@ public class Balance extends EditorPanelable implements TreeItemable {
 
     @JsonIgnore
     public boolean isAccount() {
-        return getLevel() == 1;
+        return getLevel() == level_0;
+    }
+    
+    /**
+     *  The method check its active and passive amounts.
+     * @return True - active and passive, both are 0. False - otherwise.
+     */
+    @JsonIgnore
+    public boolean hasEmptyAmounts(){
+        return getActive() == 0 && getPassive() == 0;
     }
     
     @JsonIgnore
@@ -254,18 +266,18 @@ public class Balance extends EditorPanelable implements TreeItemable {
     
     // Returns coeficient on balance level. Using in fonts.
     @JsonIgnore
-    private static double getCoefOnLevel(int level){
+    private static double getCoeficientOn(int level){
         switch(level){
-            case 1:
-                return 1.1;
-            case 2:
+            case level_1:
                 return 1.2;
-            case 3:
+            case level_2:
+                return 1.3;
+            case level_3:
                 return 1.4;
-            case 4:
+            case level_4:
                 return 1.5;
             default:
-                return 1;
+                return 1.1;
         }
     }
     
@@ -284,14 +296,16 @@ public class Balance extends EditorPanelable implements TreeItemable {
                     }
                     else {
                         Balance b = getTreeTableRow().getItem();
+                        
                         if (b != null){
                             double defFont = Font.getDefault().getSize();
+                            double coeficient = getCoeficientOn(b.getLevel());
 //                            setText("" + item);
-//                            setFont(Font.font(getCoefOnLevel(b.getLevel()) * defFont));
+//                            setFont(Font.font(coeficient * defFont));
 //                            if (b.isActiveRed()) setTextFill(Color.RED);
 
                             Label active = new Label("" + item.toString());
-                            active.setFont(Font.font(getCoefOnLevel(b.getLevel()) * defFont));
+                            active.setFont(Font.font(coeficient * defFont));
                             if (b.isActiveRed()) active.setTextFill(Color.RED);
                             setGraphic(active);
                         }
@@ -318,17 +332,15 @@ public class Balance extends EditorPanelable implements TreeItemable {
                     }
                     else {
                         Balance b = getTreeTableRow().getItem();
-                        
-                        System.out.println("b: " + b);
-                        
                         if (b != null){
                             double defFont = Font.getDefault().getSize();
+                            double coeficient = getCoeficientOn(b.getLevel());
 //                            setText("" + item);
-//                            setFont(Font.font(getCoefOnLevel(b.getLevel()) * defFont));
+//                            setFont(Font.font(coeficient* defFont));
 //                            if (b.isPassiveRed()) setTextFill(Color.RED);
                             
                             Label passive = new Label("" + item.toString());
-                            passive.setFont(Font.font(getCoefOnLevel(b.getLevel()) * defFont));
+                            passive.setFont(Font.font(coeficient * defFont));
                             if (b.isPassiveRed()) passive.setTextFill(Color.RED);
                             setGraphic(passive);
                         }

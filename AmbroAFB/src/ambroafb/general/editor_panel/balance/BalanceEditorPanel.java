@@ -81,9 +81,21 @@ public class BalanceEditorPanel extends StandardEditorPanel {
     public Predicate<EditorPanelable> getPredicate(){
         return (elem) -> {
             Balance balance = (Balance) elem;
-            boolean nonZeroCond = nonZero.isSelected() ? balance.getActive() > 0 || balance.getPassive() > 0 : true;
-            boolean onlyBalsCond = onlyBalances.isSelected() ? balance.isAccount() : true;
-            return nonZeroCond && onlyBalsCond; // შეიძლება Fluent API_ის და Factory Method_ის გაერთიანებით უკეთესი ჩანაწერი გამოვიდეს
+            boolean nonZeroCond = true;
+            if (nonZero.isSelected()){
+                if (balance.isAccount()){
+                    nonZeroCond = !balance.hasEmptyAmounts();
+                } else if (balance.getActive() == 0 && balance.getPassive() == 0) {
+                    for (Balance childBalance : balance.getChildren()) {
+                        if (!childBalance.hasEmptyAmounts()) { // May balance amounts are 0, because of its children appropriate amounts sum is 0, but is not 0 seperately (for ex. -10    +10).
+                            nonZeroCond = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            boolean onlyBalsCond = onlyBalances.isSelected() ? !balance.isAccount() : true;
+            return nonZeroCond && onlyBalsCond;
         };
     }
     
