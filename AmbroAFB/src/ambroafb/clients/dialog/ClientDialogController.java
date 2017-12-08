@@ -11,11 +11,11 @@ import ambroafb.clients.helper.ClientStatus;
 import ambroafb.clients.helper.ClientStatusComboBox;
 import ambroafb.countries.*;
 import ambroafb.general.GeneralConfig;
-import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.Annotations.ContentMail;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
+import ambroafb.general.interfaces.DialogCloseObserver;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.okay_cancel.DialogOkayCancelController;
@@ -26,14 +26,18 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -55,7 +59,7 @@ import org.json.JSONException;
  *
  * @author mambroladze
  */
-public class ClientDialogController extends DialogController {
+public class ClientDialogController extends DialogController implements DialogCloseObserver {
     @FXML
     private VBox formPane, phonesContainer;
     @FXML
@@ -105,13 +109,12 @@ public class ClientDialogController extends DialogController {
         juridical.setOnAction(this::switchJuridical);
         Thread accessCities = new Thread(new BackgroundAccessToDB("/generic/cities"));
         accessCities.start();
+        okayCancelController.registerObserver(this);
         country.valueProperty().addListener((ObservableValue<? extends Country> observable, Country oldValue, Country newValue) -> {
             if (newValue != null && oldValue != null && !newValue.equals(oldValue)){
-                rezident.setSelected(newValue.getDescrip().equals("Georgia"));
+                rezident.setSelected(newValue.getCode().equals("GE"));
             }
         });
-        country.fillComboBoxWithouyALL(null);
-        statuses.fillComboBox(null);
     }
 
     private void switchJuridical(ActionEvent e) {
@@ -183,8 +186,8 @@ public class ClientDialogController extends DialogController {
             address.      textProperty().bindBidirectional(client.addressProperty());
             zipCode.      textProperty().bindBidirectional(client.zipCodeProperty());
             city.         textProperty().bindBidirectional(client.cityProperty());
-            country.     valueProperty().bindBidirectional(client.countryProperty());
-            statuses.      valueProperty().bindBidirectional(client.statusProperty());
+//            country.     valueProperty().bindBidirectional(client.countryCodeProperty());
+//            statuses.      valueProperty().bindBidirectional(client.statusDescripProperty());
         }
     }
     
@@ -196,31 +199,69 @@ public class ClientDialogController extends DialogController {
             editable = false;
         }
         Client client = (Client)sceneObj;
-        if (client != null){
-            PhoneComboBox phonesCombobox = new PhoneComboBox(client.getPhones(), editable);
-            phonesContainer.getChildren().add(phonesCombobox);
-            if (!buttonType.equals(EDITOR_BUTTON_TYPE.ADD) && (client.getEmail() == null || client.getEmail().isEmpty())){
-                email.setDisable(true);
-            }
-            if (client.getIsJur()){
-                changeSceneVisualAsFirm(" ");
-            }
-            imageGalleryController.setURLData(serviceURLPrefix, client.getRecId() + "/", client.getRecId() + "/all");
-            List<String> imageNames = client.getDocuments().stream().map((Client.Document doc) -> doc.path).collect(Collectors.toList());
-            imageGalleryController.downloadData(imageNames);
-
-            client.setClientImageGallery(imageGalleryController);
-            statusProperty.bind(client.statusProperty()); // static variable ???????????????
+//        if (client != null){
+        PhoneComboBox phonesCombobox = new PhoneComboBox(client.getPhones(), editable);
+        phonesContainer.getChildren().add(phonesCombobox);
+        if (!buttonType.equals(EDITOR_BUTTON_TYPE.ADD) && (client.getEmail() == null || client.getEmail().isEmpty())){
+            email.setDisable(true);
         }
+        if (client.getIsJur()){
+            changeSceneVisualAsFirm(" ");
+        }
+        imageGalleryController.setURLData(serviceURLPrefix, client.getRecId() + "/", client.getRecId() + "/all");
+        List<String> imageNames = client.getDocuments().stream().map((Client.Document doc) -> doc.path).collect(Collectors.toList());
+        imageGalleryController.downloadData(imageNames);
+        client.setClientImageGallery(imageGalleryController);
         
-        if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
-            
-        }
+        Consumer<ObservableList<ClientStatus>> setStatusById = (statusList) -> {
+            Integer statusId = client.getStatusId();
+            System.out.println("statusId: " + statusId);
+            Bindings.bindBidirectional(client.statusIdProperty(), statuses.valueProperty(), new StatusToIdBiConverter());
+            client.statusDescripProperty().bind(Bindings.createStringBinding(() -> (statuses.getValue() == null) ? null : "" + statuses.getValue().getDescrip(), statuses.valueProperty()));
+            statusProperty.bind(statuses.valueProperty());
+            client.setStatusId(statusId);
+        };
+        statuses.fillComboBox(setStatusById);
+
+        Consumer<ObservableList<Country>> setCountryById = (countryList) -> {
+            Integer countryId = client.getCountryId();
+            System.out.println("countryId: " + countryId);
+            Bindings.bindBidirectional(client.countryIdProperty(), country.valueProperty(), new CountryToIdBiConverter());
+            client.countryCodeProperty().bind(Bindings.createStringBinding(() -> (country.getValue()== null) ? null : "" + country.getValue().getCode(), country.valueProperty()));
+            client.setCountryId(countryId);
+        };
+        country.fillComboBoxWithoutALL(setCountryById);
+//        }
+        
     }
 
     @Override
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
+    }
+
+    @Override
+    public void okayAction() {
+        removeBinds();
+        removeListeners();
+    }
+
+    @Override
+    public void cancelAction() {
+        removeBinds();
+        removeListeners();
+    }
+    
+    private void removeBinds(){
+        Client clientOnScene  = (Client)sceneObj;
+        Bindings.unbindBidirectional(clientOnScene.statusIdProperty(), statuses.valueProperty());
+        clientOnScene.statusDescripProperty().unbind();
+        Bindings.unbindBidirectional(clientOnScene.countryIdProperty(), country.valueProperty());
+        clientOnScene.countryCodeProperty().unbind();
+    }
+    
+    private void removeListeners(){
+        
     }
     
     
@@ -275,7 +316,7 @@ public class ClientDialogController extends DialogController {
         }
     }
     
-    
+
     public static class CustomPredicate implements Predicate<String> {
 
         public CustomPredicate(){}
@@ -298,6 +339,58 @@ public class ClientDialogController extends DialogController {
         @Override
         public Predicate<String> or(Predicate<? super String> other) {
             return Predicate.super.or(other);
+        }
+        
+    }
+    
+    /**
+     *  The class provide to convert BalanceAccount to its recId as String and vice verse - recId to appropriate BalanceAccount from comboBox.
+     */
+    private class StatusToIdBiConverter extends StringConverter<ClientStatus> {
+
+        @Override
+        public String toString(ClientStatus status) {
+            String result = null;
+            if (status != null){
+                result = "" + status.getRecId();
+            }
+            return result;
+        }
+
+        @Override
+        public ClientStatus fromString(String recId) {
+            ClientStatus result = null;
+            Optional<ClientStatus> optStatus = statuses.getItems().stream().filter(status -> ("" + status.getClientStatusId()).equals(recId)).findFirst();
+            if (optStatus.isPresent()){
+                result = optStatus.get();
+            }
+            return result;
+        }
+        
+    }
+    
+    /**
+     *  The class provide to convert BalanceAccount to its recId as String and vice verse - recId to appropriate BalanceAccount from comboBox.
+     */
+    private class CountryToIdBiConverter extends StringConverter<Country> {
+
+        @Override
+        public String toString(Country country) {
+            String result = null;
+            if (country != null){
+                result = "" + country.getRecId();
+            }
+            return result;
+        }
+
+        @Override
+        public Country fromString(String recId) {
+            Country result = null;
+            Optional<Country> optCountry = country.getItems().stream().filter(c -> ("" + c.getRecId()).equals(recId)).findFirst();
+            if (optCountry.isPresent()){
+                result = optCountry.get();
+            }
+            return result;
         }
         
     }

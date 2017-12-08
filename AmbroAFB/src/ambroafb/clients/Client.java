@@ -10,24 +10,27 @@ import ambroafb.clients.helper.ClientStatus;
 import ambroafb.countries.Country;
 import ambroafb.general.DBUtils;
 import ambroafb.general.DateConverter;
+import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnFeatures;
 import ambroafb.phones.Phone;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -72,18 +75,22 @@ public class Client extends EditorPanelable{
 
     private final ObservableList<Phone> phones;
     
-    @AView.Column(title = "%client_status", width = "100", cellFactory = StatusCellFactory.class)
+    @AView.Column(title = "%client_status", width = "100")
 //    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    private final ObjectProperty<ClientStatus> clientStatus;
+    private final StringProperty statusDescrip;
+    private final StringProperty statusId;
+//    private final ObjectProperty<ClientStatus> clientStatus;
     
     private final SimpleStringProperty address, zipCode, city;
 
     @AView.Column(title = "%full_address", width = "250")
     private final StringExpression fullAddress;
 
-    @AView.Column(title = "%country", width = "50", styleClass = TableColumnFeatures.Style.TEXT_CENTER, cellFactory = CountryCellFactory.class)
+    @AView.Column(title = "%country", width = "50", styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    private final ObjectProperty<Country> country;
+    private final StringProperty countryCode;
+    private final StringProperty countryId;
+//    private final ObjectProperty<Country> country;
 
     @AView.Column(title = "%fax", width = TableColumnFeatures.Width.PHONE)
     private final SimpleStringProperty fax;
@@ -107,22 +114,25 @@ public class Client extends EditorPanelable{
         createdDate = new SimpleStringProperty("");
         isJurBool = new SimpleBooleanProperty();
         isRezidentBool = new SimpleBooleanProperty();
-        firstName =         new SimpleStringProperty("");
-        lastName =          new SimpleStringProperty("");
+        firstName = new SimpleStringProperty("");
+        lastName = new SimpleStringProperty("");
         descrip = Utils.avoidNull(firstName).concat(" ").concat(Utils.avoidNull(lastName));
-        email =             new SimpleStringProperty("");
-        address =           new SimpleStringProperty("");
-        zipCode =           new SimpleStringProperty("");
-        city =              new SimpleStringProperty("");
+        email = new SimpleStringProperty("");
+        address = new SimpleStringProperty("");
+        zipCode = new SimpleStringProperty("");
+        city = new SimpleStringProperty("");
         fullAddress = Utils.avoidNull(address).concat(Utils.getDelimiterAfter(address, ", ")).
                             concat(Utils.avoidNull(zipCode)).concat(Utils.getDelimiterAfter(zipCode, ", ")).
                             concat(Utils.avoidNull(city));
-        country =           new SimpleObjectProperty<>(new Country());
-        IDNumber =          new SimpleStringProperty("");
+        countryCode = new SimpleStringProperty();
+        countryId = new SimpleStringProperty();
+//        country =           new SimpleObjectProperty<>(new Country());
+        IDNumber = new SimpleStringProperty("");
         phones = FXCollections.observableArrayList();
-        phoneNumbers =      new SimpleStringProperty("");
-        fax =               new SimpleStringProperty("");
-        clientStatus = new SimpleObjectProperty(new ClientStatus());
+        phoneNumbers = new SimpleStringProperty("");
+        fax = new SimpleStringProperty("");
+        statusDescrip = new SimpleStringProperty();
+        statusId = new SimpleStringProperty();
         www = new SimpleStringProperty("");
         remark = new SimpleStringProperty("");
         documents = FXCollections.observableArrayList();
@@ -133,9 +143,37 @@ public class Client extends EditorPanelable{
 //        rebindPhoneNumbers(); // not needed. setPhones(..) methods and above list listener provides phonesNumbers changing.
 
 
-        clientStatus.addListener((ObservableValue<? extends ClientStatus> observable, ClientStatus oldValue, ClientStatus newValue) -> {
-            System.out.println("client status: " + newValue.getRecId());
-            System.out.println("client status: " + newValue.getClientStatusId());
+//        clientStatus.addListener((ObservableValue<? extends ClientStatus> observable, ClientStatus oldValue, ClientStatus newValue) -> {
+//            System.out.println("client status: " + newValue.getRecId());
+//            System.out.println("client status: " + newValue.getClientStatusId());
+//        });
+
+        statusDescrip.addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("change status descrip");
+            }
+        });
+        
+        statusId.addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("change status id");
+            }
+        });
+        
+        countryCode.addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("change country code");
+            }
+        });
+        
+        countryId.addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("change country id");
+            }
         });
     }
     
@@ -196,8 +234,12 @@ public class Client extends EditorPanelable{
         return fullAddress;
     }
 
-    public ObjectProperty<Country> countryProperty() {
-        return country;
+    public StringProperty countryCodeProperty() {
+        return countryCode;
+    }
+
+    public StringProperty countryIdProperty() {
+        return countryId;
     }
 
     public SimpleStringProperty IDNumberProperty() {
@@ -220,8 +262,12 @@ public class Client extends EditorPanelable{
         return remark;
     }
     
-    public ObjectProperty<ClientStatus> statusProperty(){
-        return clientStatus;
+    public StringProperty statusDescripProperty(){
+        return statusDescrip;
+    }
+    
+    public StringProperty statusIdProperty(){
+        return statusId;
     }
     
     
@@ -260,16 +306,17 @@ public class Client extends EditorPanelable{
         return fullAddress.get();
     }
     
-    public int getStatus() {
-        System.out.println("clientStatus.get().getClientStatusId();: " + clientStatus.get().getClientStatusId());
-        return clientStatus.get().getClientStatusId();
+    @JsonGetter(value = "status")
+    public Integer getStatusId() {
+        return NumberConverter.stringToInteger(statusId.get(), null);
     }
     
     // for sending: DB json need key name 'descrip' statusDescrip
     // for receiving: json contains key name 'statusDescrip', so we need setStatusDescrip method.
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    public String getDescrip(){
-        return clientStatus.get().getDescrip();
+    @JsonGetter(value = "descrip")
+    public String getStatusDescrip(){
+        return statusDescrip.get();
     }
     
     public String getRemark(){
@@ -278,11 +325,11 @@ public class Client extends EditorPanelable{
     
     @JsonIgnore
     public String getCountryCode(){
-        return country.get().getCode();
+        return countryCode.get();
     }
     
-    public int getCountryId(){
-        return country.get().getRecId();
+    public Integer getCountryId(){
+        return NumberConverter.stringToInteger(countryId.get(), null);
     }
 
     public ObservableList<Phone> getPhones() {
@@ -374,12 +421,14 @@ public class Client extends EditorPanelable{
         this.city.set(city);
     }
     
-    public void setStatus(int status) {
-        this.clientStatus.get().setClientStatusId(status);
+    @JsonSetter(value = "status")
+    public void setStatusId(Integer status) {
+        this.statusId.set((status == null) ? null : status.toString());
     }
     
+    @JsonSetter(value = "statusDescrip")
     public void setStatusDescrip(String statusDescrip){
-        this.clientStatus.get().setDescrip(statusDescrip);
+        this.statusDescrip.set(statusDescrip);
     }
 
     @JsonProperty("passNumber")
@@ -397,11 +446,11 @@ public class Client extends EditorPanelable{
     
     @JsonProperty
     public void setCountryCode(String countryCode){
-        this.country.get().setCode(countryCode);
+        this.countryCode.set(countryCode);
     }
     
-    public void setCountryId(int countryId){
-        this.country.get().setRecId(countryId);
+    public void setCountryId(Integer countryId){
+        this.countryId.set((countryId == null) ? null : countryId.toString());
     }
 
     public final void setFax(String fax) {
@@ -424,21 +473,28 @@ public class Client extends EditorPanelable{
     @Override
     public boolean compares(EditorPanelable backup){
         Client otherClient = (Client) backup;
+        
+        System.out.println("Objects.equals(getCountryCode(), otherClient.getCountryCode()): " + (Objects.equals(getCountryCode(), otherClient.getCountryCode())));
+        System.out.println("Objects.equals(getCountryId(), otherClient.getCountryId()): " + (Objects.equals(getCountryId(), otherClient.getCountryId())));
+        System.out.println("Objects.equals(getStatusDescrip(), otherClient.getStatusDescrip()): " + (Objects.equals(getStatusDescrip(), otherClient.getStatusDescrip())));
+        System.out.println("Objects.equals(getStatusId(), otherClient.getStatusId()): " + (Objects.equals(getStatusId(), otherClient.getStatusId())));
+        
         boolean fieldsCompareResult =   getIsJur() == otherClient.getIsJur() &&
                                         getIsRezident() == otherClient.getIsRezident() && 
-                                        getFirstName().equals(otherClient.getFirstName()) &&
-                                        Utils.avoidNull(this.lastNameProperty()).get().equals(Utils.avoidNull(otherClient.lastNameProperty()).get()) &&
-                                        getEmail().equals(otherClient.getEmail())    &&
-                                        getAddress().equals(otherClient.getAddress()) &&
-                                        getZipCode().equals(otherClient.getZipCode()) &&
-                                        getCity().equals(otherClient.getCity()) &&
-                                        getCountryCode().equals(otherClient.getCountryCode()) &&
-                                        getIDNumber().equals(otherClient.getIDNumber()) &&
-                                        getFax().equals(otherClient.getFax()) &&
-                                        getWww().equals(otherClient.getWww()) &&
-                                        statusProperty().get().compares(otherClient.statusProperty().get()) &&
-                                        getRemark().equals(otherClient.getRemark());
-//                                        getCreatedDate().equals(otherClient.getCreatedDate());
+                                        Objects.equals(getFirstName(), otherClient.getFirstName()) &&
+                                        Objects.equals(lastNameProperty().get(), otherClient.lastNameProperty().get()) &&
+                                        Objects.equals(getEmail(), otherClient.getEmail())    &&
+                                        Objects.equals(getAddress(), otherClient.getAddress()) &&
+                                        Objects.equals(getZipCode(), otherClient.getZipCode()) &&
+                                        Objects.equals(getCity(), otherClient.getCity()) &&
+                                        Objects.equals(getCountryCode(), otherClient.getCountryCode()) &&
+                                        Objects.equals(getCountryId(), otherClient.getCountryId()) &&
+                                        Objects.equals(getIDNumber(), otherClient.getIDNumber()) &&
+                                        Objects.equals(getFax(), otherClient.getFax()) &&
+                                        Objects.equals(getWww(), otherClient.getWww()) &&
+                                        Objects.equals(getStatusDescrip(), otherClient.getStatusDescrip()) &&
+                                        Objects.equals(getStatusId(), otherClient.getStatusId()) &&
+                                        Objects.equals(getRemark(), otherClient.getRemark());
         boolean equalsPhones = Utils.compareListsByElemOrder(phones, otherClient.getPhones());
         return fieldsCompareResult && equalsPhones;
     }
@@ -491,10 +547,14 @@ public class Client extends EditorPanelable{
         getDocuments().clear();
         getDocuments().addAll(other.getDocuments());
         
-        this.country.set(other.countryProperty().get().cloneWithID());
-        ClientStatus statusClone = new ClientStatus();
-        statusClone.copyFrom(other.statusProperty().get());
-        clientStatus.set(statusClone);
+//        this.countryCode.set(other.countryCodeProperty().get().cloneWithID());
+//        ClientStatus statusClone = new ClientStatus();
+//        statusClone.copyFrom(other.statusDescripProperty().get());
+//        status.set(statusClone);
+        setStatusId(other.getStatusId());
+        setStatusDescrip(other.getStatusDescrip());
+        setCountryId(other.getCountryId());
+        setCountryCode(other.getCountryCode());
     }
 
     @Override
@@ -571,6 +631,7 @@ public class Client extends EditorPanelable{
         }
     }
     
+    @Deprecated
     public static class StatusCellFactory implements Callback<TableColumn<Client, ClientStatus>, TableCell<Client, ClientStatus>> {
 
         @Override
@@ -587,6 +648,7 @@ public class Client extends EditorPanelable{
         
     }
     
+    @Deprecated
     public static class CountryCellFactory implements Callback<TableColumn<Client, Country>, TableCell<Client, Country>> {
 
         @Override

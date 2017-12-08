@@ -31,7 +31,6 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -168,16 +167,7 @@ public class AccountDialogController extends DialogController implements DialogC
         Consumer<ObservableList<BalanceAccount>> setBalAccByNumber = (balAccList) -> {
             Integer balAccountId = accOnScene.getBalAccountId();
             Bindings.bindBidirectional(accOnScene.balAccountIdProperty(), balAccounts.valueProperty(), new BalAccountToIdBiConverter());
-            StringBinding balAccBinding = new StringBinding() {
-                {
-                    super.bind(balAccounts.valueProperty());
-                }
-                @Override
-                protected String computeValue() {
-                    return (balAccounts.getValue() == null) ? null : "" + balAccounts.getValue().getBalAcc();
-                }
-            };
-            accOnScene.balAccountProperty().bind(balAccBinding);
+            accOnScene.balAccountProperty().bind(Bindings.createStringBinding(() -> (balAccounts.getValue() == null) ? null : "" + balAccounts.getValue().getBalAcc(), balAccounts.valueProperty()));
             accOnScene.setBalAccountId(balAccountId);
         };
         balAccounts.fillComboBoxWithoutALL(setBalAccByNumber);

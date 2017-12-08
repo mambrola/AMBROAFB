@@ -462,7 +462,7 @@ public class InvoiceDialogController extends DialogController {
 //                String prodMaxCount = StringUtils.substringAfter(currErrorText, "max:").trim();
 //                Product appProduct = (Product)((Invoice)sceneObj).getProductsWithCounts().keySet().stream().filter((CountComboBoxItem p) -> ((Product)p).getRecId() == Integer.parseInt(prodId)).collect(Collectors.toList()).get(0);
 //                if (appProduct != null) {
-//                    msg += appProduct.getDescrip() + " -> " + GeneralConfig.getInstance().getTitleFor("max_count") + ": " + prodMaxCount + "\n";
+//                    msg += appProduct.getStatusDescrip() + " -> " + GeneralConfig.getInstance().getTitleFor("max_count") + ": " + prodMaxCount + "\n";
 //                }
 //            }
 //            return msg;

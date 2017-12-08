@@ -55,14 +55,14 @@ public class CountryComboBox extends ComboBox<Country> {
             setValue(countryALL);
         };
         Consumer<ObservableList<Country>> consumer = (extraAction == null) ? addCategoryALL : addCategoryALL.andThen(extraAction);
-        fillComboBoxWithouyALL(consumer);
+        fillComboBoxWithoutALL(consumer);
     }
     
     /**
      *  The method fills comboBox by countries.
      * @param extraAction The action that executes after comboBox filling. If there is no extra action exists, gives null value. 
      */
-    public void fillComboBoxWithouyALL(Consumer<ObservableList<Country>> extraAction){
+    public void fillComboBoxWithoutALL(Consumer<ObservableList<Country>> extraAction){
         new Thread(new FetchDataFromDB(extraAction)).start();
     }
     
