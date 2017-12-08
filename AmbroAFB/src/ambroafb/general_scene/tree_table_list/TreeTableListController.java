@@ -66,6 +66,7 @@ public class TreeTableListController extends ListingController implements Editor
     
     @Override
     public void reAssignTable(FilterModel model){
+        int selectedIndex = treeTableView.getSelectionModel().getSelectedIndex();
         masker.setVisible(true);
         treeTableView.removeAll();
         
@@ -76,10 +77,12 @@ public class TreeTableListController extends ListingController implements Editor
             });
             treeTableView.expand(expand.get());
             masker.setVisible(false);
+            if (selectedIndex >= 0){
+                treeTableView.getSelectionModel().select(selectedIndex);
+            }
         };
 
         Consumer<Exception> errorAction = (ex) -> {
-            System.err.println("TreeTableController! Exception message: " + ex.getMessage());
             String errorHeaderText = GeneralConfig.getInstance().getTitleFor("error");
             new AlertMessage((Stage)treeTableView.getScene().getWindow(), Alert.AlertType.ERROR, errorHeaderText, ex.getMessage(), ex).showAndWait();
             masker.setVisible(false);
