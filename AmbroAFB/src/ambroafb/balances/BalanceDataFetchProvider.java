@@ -40,8 +40,8 @@ public class BalanceDataFetchProvider extends DataFetchProvider {
     public List<Balance> getFilteredBy(FilterModel model) throws Exception {
         BalanceFilterModel filtereModel = (BalanceFilterModel) model;
         JSONObject params = new JSONObject();
-        params.put(DATE_JSON_KEY, filtereModel.getDate()); // if getDate() returns null, JSONObject remove entry on DATE_JSON_KEY if it exists and does not put.
-        params.put(ISO_JSON_KEY, filtereModel.getCurrencyIso()); // if getCurrencyIso() returns null, JSONObject removes entry on ISO_JSON_KEY if it exists and does not put.
+        params.put(DATE_JSON_KEY, filtereModel.getDate());          // if getDate() returns null, JSONObject remove entry on DATE_JSON_KEY if it exists and does not put.
+        params.put(ISO_JSON_KEY, filtereModel.getCurrencyIso());    // if getCurrencyIso() returns null, JSONObject removes entry on ISO_JSON_KEY if it exists and does not put.
         return getFilteredBy(params);
     }
 

@@ -148,10 +148,8 @@ public class CurrencyComboBox extends ComboBox<Currency>{
         public void run() {
             try {
                 List<Currency> currencies = (containsBasicIso) ? dataFetchProvider.getFilteredBy(DataProvider.PARAM_FOR_ALL) : dataFetchProvider.getCurrenciesWithoutBasic();
-                String basicIso = (containsBasicIso) ? dataFetchProvider.getBasicIso() : "";
                 Platform.runLater(() -> {
                     items.setAll(currencies);
-                    if (containsBasicIso) changeValue(basicIso);
                     if (consumer != null) consumer.accept(items);
                 });
             } catch (Exception ex) {

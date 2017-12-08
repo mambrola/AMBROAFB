@@ -31,7 +31,9 @@ public class InOutFilterModel extends DateFilterModel {
     }
 
     public void setCurrency(Currency currency) {
-        saveIntoPref(PREF_CURRENCY_KEY, (currency == null) ? "" : currency.getIso());
+        if (currency != null){
+            saveIntoPref(PREF_CURRENCY_KEY, currency.getIso());
+        }
     }
     
     
