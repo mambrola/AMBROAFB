@@ -67,12 +67,13 @@ public class DiscountOnCountDialogController extends DialogController {
     }
 
     @Override
-    public void okayAction() {
+    protected void removeBinds() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void cancelAction() {
+    protected void removeListeners() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
 }

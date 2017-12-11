@@ -63,9 +63,19 @@ public abstract class DialogController implements Initializable, DialogCloseObse
     
     // DialogcloseObserver methods:
     @Override
-    public abstract void okayAction();
+    public void okayAction() {
+        removeBinds();
+        removeListeners();
+    }
+    
     @Override
-    public abstract void cancelAction();
+    public void cancelAction(){
+        removeBinds();
+        removeListeners();
+    }
+    
+    protected abstract void removeBinds();
+    protected abstract void removeListeners();
     
     
     public DialogOkayCancelController getOkayCancelController(){

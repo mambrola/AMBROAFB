@@ -77,12 +77,16 @@ public class CurrencyDialogController extends DialogController {
     }
 
     @Override
-    public void okayAction() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected void removeBinds(){
+        Currency currency = (Currency)sceneObj;
+        openDate.valueProperty().unbindBidirectional(currency.dateProperty());
+        iso.valueProperty().unbindBidirectional(currency.isoProperty());
+        descrip.textProperty().unbindBidirectional(currency.descripProperty());
+        symbol.textProperty().unbindBidirectional(currency.symbolProperty());
     }
-
+    
     @Override
-    public void cancelAction() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected void removeListeners(){
+        
     }
 }

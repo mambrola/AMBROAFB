@@ -187,25 +187,15 @@ public class AccountDialogController extends DialogController implements DialogC
     }
 
     @Override
-    public void okayAction() {
-        removeBinds();
-        removeListeners();
-    }
-
-    @Override
-    public void cancelAction() {
-        removeBinds();
-        removeListeners();
-    }
-
-    private void removeBinds(){
+    protected void removeBinds(){
         Account accOnScene  = (Account)sceneObj;
         Bindings.unbindBidirectional(accOnScene.clientIdProperty(), clients.valueProperty());
         Bindings.unbindBidirectional(accOnScene.balAccountIdProperty(), balAccounts.valueProperty());
         accOnScene.balAccountProperty().unbind();
     }
     
-    private void removeListeners(){
+    @Override
+    protected void removeListeners(){
         
     }
     

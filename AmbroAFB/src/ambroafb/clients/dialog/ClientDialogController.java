@@ -240,18 +240,7 @@ public class ClientDialogController extends DialogController implements DialogCl
     }
 
     @Override
-    public void okayAction() {
-        removeBinds();
-        removeListeners();
-    }
-
-    @Override
-    public void cancelAction() {
-        removeBinds();
-        removeListeners();
-    }
-    
-    private void removeBinds(){
+    protected void removeBinds(){
         Client clientOnScene  = (Client)sceneObj;
         Bindings.unbindBidirectional(clientOnScene.statusIdProperty(), statuses.valueProperty());
         clientOnScene.statusDescripProperty().unbind();
@@ -259,7 +248,8 @@ public class ClientDialogController extends DialogController implements DialogCl
         clientOnScene.countryCodeProperty().unbind();
     }
     
-    private void removeListeners(){
+    @Override
+    protected void removeListeners(){
         
     }
     
