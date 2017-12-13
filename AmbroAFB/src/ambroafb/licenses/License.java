@@ -7,6 +7,7 @@ package ambroafb.licenses;
 
 import ambro.AView;
 import ambroafb.clients.Client;
+import ambroafb.general.DateCellFactory;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnFeatures;
@@ -25,11 +26,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.util.Callback;
 
 /**
  *
@@ -39,9 +36,8 @@ public class License extends EditorPanelable {
 
     public String password;
     
-    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATETIME, styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = DateTimeCellFactory.class)
+    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATETIME, styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = DateCellFactory.LocalDateTimeCell.class)
     private final ObjectProperty<LocalDateTime> createdTimeObj;
-//    private final StringProperty createdTime;
     
     @AView.Column(title = "%license_N", width = TableColumnFeatures.Width.LICENSE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final IntegerProperty licenseNumber;
@@ -60,8 +56,6 @@ public class License extends EditorPanelable {
     
     @AView.Column(title = "%last_invoice", width = TableColumnFeatures.Width.INVOICE)
     private final StringProperty invoiceNumber;
-//    @JsonIgnore
-//    private final ObjectProperty<Invoice> invoiceObj;
     private final IntegerProperty cfCurrentInvoiceId;
     private final IntegerProperty cfFutureInvoiceId;
     
@@ -72,20 +66,16 @@ public class License extends EditorPanelable {
     
     private final StringProperty remark;
     
-    @AView.Column(title = "%begin_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
-    private final StringProperty firstDateDescrip;
+    @AView.Column(title = "%begin_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = DateCellFactory.LocalDateCell.class)
     private final ObjectProperty<LocalDate> firstDateObj;
-    private String firstDate; // for object mapper (case: class to json)
     
-    @AView.Column(title = "%end_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
-    private final StringProperty lastDateDescrip;
+    @AView.Column(title = "%end_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = DateCellFactory.LocalDateCell.class)
     private final ObjectProperty<LocalDate> lastDateObj;
-    private String lastDate; // for object mapper (case: class to json)
     
     @AView.Column(title = "%extra_days", width = "64", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final IntegerProperty additionalDays;
     
-    private final StringProperty lastLoginTime;
+//    private final StringProperty lastLoginTime;
     private final ObjectProperty<LocalDate> lastLoginTimeObj;
     
     private final BooleanProperty isNew;
@@ -95,14 +85,11 @@ public class License extends EditorPanelable {
     private static final String DB_STATUSES_TABLE_NAME = "license_status_descrips";
     
     public License(){
-//        createdTime = new SimpleStringProperty("");
         createdTimeObj = new SimpleObjectProperty<>(LocalDateTime.now());
         clientObj = new SimpleObjectProperty<>(new Client());
         clientDescrip = clientObj.get().getShortDescrip(", ");
         productObj = new SimpleObjectProperty<>(new Product());
         productDescrip = new SimpleStringProperty("");
-//        productDescrip = Utils.avoidNull(productObj.get().abbreviationProperty()).concat(Utils.avoidNull(productObj.get().formerProperty()));
-//        invoiceObj = new SimpleObjectProperty<>(new Invoice());
         invoiceNumber = new SimpleStringProperty("");
         cfCurrentInvoiceId = new SimpleIntegerProperty(0);
         cfFutureInvoiceId = new SimpleIntegerProperty(0);
@@ -112,11 +99,11 @@ public class License extends EditorPanelable {
         remark = new SimpleStringProperty("");
         additionalDays = new SimpleIntegerProperty(0);
         licenseNumber = new SimpleIntegerProperty(0);
-        firstDateDescrip = new SimpleStringProperty("");
+//        firstDateDescrip = new SimpleStringProperty("");
         firstDateObj = new SimpleObjectProperty<>();
-        lastDateDescrip = new SimpleStringProperty("");
+//        lastDateDescrip = new SimpleStringProperty("");
         lastDateObj = new SimpleObjectProperty<>();
-        lastLoginTime = new SimpleStringProperty("");
+//        lastLoginTime = new SimpleStringProperty("");
         lastLoginTimeObj = new SimpleObjectProperty<>();
         isNew = new SimpleBooleanProperty(false);
         
@@ -125,9 +112,9 @@ public class License extends EditorPanelable {
         });
         rebindStatus();
         
-        firstDateObj.addListener(new DateListener(firstDateDescrip));
-        lastDateObj.addListener(new DateListener(lastDateDescrip));
-        lastLoginTimeObj.addListener(new DateListener(lastLoginTime));
+//        firstDateObj.addListener(new DateListener(firstDateDescrip));
+//        lastDateObj.addListener(new DateListener(lastDateDescrip));
+//        lastLoginTimeObj.addListener(new DateListener(lastLoginTime));
     }
     
     private void rebindStatus(){
@@ -205,7 +192,6 @@ public class License extends EditorPanelable {
     @JsonIgnore
     public String getCreatedDateStr(){
         return DateConverter.getInstance().getDayMonthnameYearBySpace(createdTimeObj.get());
-//        return createdTime.get();
     }
     
     public int getClientId(){
@@ -269,17 +255,15 @@ public class License extends EditorPanelable {
     }
     
     public String getFirstDate(){
-        // Beacause firstDateDescrip contains user friendly view of date.
-        return firstDateDescrip.get();
+        return DateConverter.getInstance().getDayMonthnameYearBySpace(firstDateObj.get());
     }
     
     public String getLastDate(){
-        // Beacause lastDateDescrip contains user friendly view of date.
-        return lastDateDescrip.get();
+        return DateConverter.getInstance().getDayMonthnameYearBySpace(lastDateObj.get());
     }
     
     public String getLastLoginTime(){
-        return lastLoginTime.get();
+        return DateConverter.getInstance().getDayMonthnameYearBySpace(lastLoginTimeObj.get());
     }
     
     public String getProductDescrip(){
@@ -292,7 +276,6 @@ public class License extends EditorPanelable {
     // This method must not show in other class to avoid createdDate changing.
     private void setCreatedTime(String createdTime){
         this.createdTimeObj.set(DateConverter.getInstance().parseDateTime(createdTime));
-//        this.createdTime.set(DateConverter.getInstance().getDayMonthnameYearBySpace(createdTimeObj.get()));
     }
     
     public void setClientId(int clienId){
@@ -404,8 +387,6 @@ public class License extends EditorPanelable {
     @Override
     public void copyFrom(EditorPanelable other) {
         License otherLicense = (License) other;
-//        setCreatedDate(otherLicense.getCreatedDateStr());
-        // clientObj.set(otherLicense.clientObj.get()) -> copy reference and they always be equals! So copy every field.
         setClientId(otherLicense.getClientId());
         setFirstName(otherLicense.getFirstName());
         setLastName(otherLicense.getLastName());
@@ -457,38 +438,4 @@ public class License extends EditorPanelable {
         return getLicenseNumber() + " " + getEmail() + " " + getInvoiceNumber();
     }
     
-    private class DateListener implements ChangeListener<LocalDate> {
-
-        private final StringProperty target;
-        
-        public DateListener(StringProperty targetProperty){
-            target = targetProperty;
-        }
-        
-        @Override
-        public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
-            String dateStr = "";
-            if (newValue != null){
-                dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(newValue);
-            }
-            target.set(dateStr);
-        }
-        
-    }
-    
-    public static class DateTimeCellFactory implements Callback<TableColumn<License, LocalDateTime>, TableCell<License, LocalDateTime>> {
-
-        @Override
-        public TableCell<License, LocalDateTime> call(TableColumn<License, LocalDateTime> param) {
-            return new TableCell<License, LocalDateTime>(){
-                @Override
-                protected void updateItem(LocalDateTime item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText((item == null || empty) ? null : DateConverter.getInstance().getDayMonthnameYearBySpace(item));
-                }
-                
-            };
-        }
-        
-    }
 }
