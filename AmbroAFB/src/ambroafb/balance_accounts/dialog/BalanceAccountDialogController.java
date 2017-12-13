@@ -44,9 +44,7 @@ public class BalanceAccountDialogController extends DialogController {
     @FXML
     private CheckBox actPassChecker;
     
-    @FXML
-    private DialogOkayCancelController okayCancelController;
-    
+
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
     }
@@ -78,6 +76,7 @@ public class BalanceAccountDialogController extends DialogController {
     public DialogOkayCancelController getOkayCancelController() {
         return okayCancelController;
     }
+
     
     
     public Object getOwnerController(){
@@ -87,16 +86,6 @@ public class BalanceAccountDialogController extends DialogController {
     
     public EditorPanelable getNewEditorPanelable(){
         return sceneObj;
-    }
-
-    @Override
-    protected void removeBinds() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected void removeListeners() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

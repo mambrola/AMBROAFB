@@ -15,7 +15,6 @@ import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.net.URL;
 import java.time.LocalDate;
@@ -51,9 +50,6 @@ public class ChargeUtilityDialogController extends DialogController {
     @FXML @ContentNotEmpty @ContentAmount
     private AmountField vat;
     
-    
-    @FXML
-    private DialogOkayCancelController okayCancelController;
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
@@ -110,18 +106,7 @@ public class ChargeUtilityDialogController extends DialogController {
     }
 
     @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
-
-    @Override
-    protected void removeBinds() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     protected void removeListeners() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

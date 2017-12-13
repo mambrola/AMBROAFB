@@ -47,14 +47,19 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage im
             if (event != null) event.consume();
         });
         
-        closeAction = (Object t) -> close();
+        closeAction = (Object t) -> {
+                                        dialogController.removeBinds();
+                                        dialogController.removeListeners();
+                                        close();
+                                    };
+                
         Consumer<Object> editFn = (Object obj) -> getSceneObject().copyFrom((EditorPanelable)obj);
         Consumer<Object> addFn = (Object obj) -> {
                                         getSceneObject().setRecId(((EditorPanelable)obj).getRecId());
                                         getSceneObject().copyFrom((EditorPanelable)obj);
                                     };
-        editAction = editFn.andThen(closeAction);
-        addAction = addFn.andThen(closeAction);
+        editAction = closeAction.andThen(editFn);
+        addAction = closeAction.andThen(addFn);
     }
     
     public UserInteractiveDialogStage(Stage owner, EditorPanel.EDITOR_BUTTON_TYPE buttonType, String sceneFXMLFilePath){
@@ -140,7 +145,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage im
                     }
                     break;
                 case VIEW:
-                    close();
+                    closeAction.accept(dialogController.sceneObj);
                     break;
                 default:
                     break;
@@ -214,7 +219,7 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage im
                     if (buttonType.equals(ButtonType.OK)){
                         operationCanceled();
                         changePermissionForClose(true);
-                        close();
+                        closeAction.accept(dialogController.sceneObj);
                     }
                     else{
                         changePermissionForClose(false);
@@ -222,13 +227,13 @@ public abstract class UserInteractiveDialogStage extends UserInteractiveStage im
                 }else{ // This case is needed. If nothing change the real object must become null.
                     operationCanceled();
                     changePermissionForClose(true);
-                    close();
+                    closeAction.accept(dialogController.sceneObj);
                 }
                 break;
             case DELETE: 
             case VIEW:
                 operationCanceled();
-                close();
+                closeAction.accept(dialogController.sceneObj);
             default:
                 break;
         }

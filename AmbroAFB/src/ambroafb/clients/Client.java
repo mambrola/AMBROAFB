@@ -30,8 +30,6 @@ import javafx.beans.binding.StringExpression;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -142,39 +140,6 @@ public class Client extends EditorPanelable{
         });
 //        rebindPhoneNumbers(); // not needed. setPhones(..) methods and above list listener provides phonesNumbers changing.
 
-
-//        clientStatus.addListener((ObservableValue<? extends ClientStatus> observable, ClientStatus oldValue, ClientStatus newValue) -> {
-//            System.out.println("client status: " + newValue.getRecId());
-//            System.out.println("client status: " + newValue.getClientStatusId());
-//        });
-
-        statusDescrip.addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                System.out.println("change status descrip");
-            }
-        });
-        
-        statusId.addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                System.out.println("change status id");
-            }
-        });
-        
-        countryCode.addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                System.out.println("change country code");
-            }
-        });
-        
-        countryId.addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                System.out.println("change country id");
-            }
-        });
     }
     
     private void rebindPhoneNumbers() {
@@ -311,10 +276,7 @@ public class Client extends EditorPanelable{
         return NumberConverter.stringToInteger(statusId.get(), null);
     }
     
-    // for sending: DB json need key name 'descrip' statusDescrip
-    // for receiving: json contains key name 'statusDescrip', so we need setStatusDescrip method.
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    @JsonGetter(value = "descrip")
+    @JsonIgnore
     public String getStatusDescrip(){
         return statusDescrip.get();
     }
@@ -426,7 +388,7 @@ public class Client extends EditorPanelable{
         this.statusId.set((status == null) ? null : status.toString());
     }
     
-    @JsonSetter(value = "statusDescrip")
+    @JsonProperty
     public void setStatusDescrip(String statusDescrip){
         this.statusDescrip.set(statusDescrip);
     }

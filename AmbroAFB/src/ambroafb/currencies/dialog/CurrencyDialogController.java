@@ -14,7 +14,6 @@ import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -39,8 +38,6 @@ public class CurrencyDialogController extends DialogController {
     private TextField descrip;
     @FXML @ContentNotEmpty @ContentPattern(value = "\\p{Sc}", explain = "anot_currency_exp")
     private TextField symbol;
-    @FXML
-    private DialogOkayCancelController okayCancelController;
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
@@ -71,22 +68,4 @@ public class CurrencyDialogController extends DialogController {
         }
     }
 
-    @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
-
-    @Override
-    protected void removeBinds(){
-        Currency currency = (Currency)sceneObj;
-        openDate.valueProperty().unbindBidirectional(currency.dateProperty());
-        iso.valueProperty().unbindBidirectional(currency.isoProperty());
-        descrip.textProperty().unbindBidirectional(currency.descripProperty());
-        symbol.textProperty().unbindBidirectional(currency.symbolProperty());
-    }
-    
-    @Override
-    protected void removeListeners(){
-        
-    }
 }

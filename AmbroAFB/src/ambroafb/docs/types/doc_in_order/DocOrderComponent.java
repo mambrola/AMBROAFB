@@ -148,7 +148,7 @@ public class DocOrderComponent extends VBox {
      * The method binds (bidirectional) doc object to scene components.
      * @param doc Object from that must be show on scene.
      */
-    public void binTo(Doc doc){
+    public void bindBidirectTo(Doc doc){
         if (doc != null){
             if (!isDocDateRemoved){
                 docDate.valueProperty().bindBidirectional(doc.docDateProperty());

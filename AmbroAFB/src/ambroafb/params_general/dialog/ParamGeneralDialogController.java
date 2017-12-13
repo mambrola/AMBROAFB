@@ -8,7 +8,6 @@ package ambroafb.params_general.dialog;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.minitables.attitudes.AttitudeComboBox;
 import ambroafb.minitables.merchandises.MerchandiseComboBox;
 import ambroafb.params_general.ParamGeneral;
@@ -36,8 +35,6 @@ public class ParamGeneralDialogController extends DialogController {
     private TextField paramType;
     @FXML 
     private TextField param;
-    @FXML
-    private DialogOkayCancelController okayCancelController;
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
@@ -64,21 +61,5 @@ public class ParamGeneralDialogController extends DialogController {
     protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
         
     }
-    
-    @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
-
-    @Override
-    protected void removeBinds() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected void removeListeners() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     
 }

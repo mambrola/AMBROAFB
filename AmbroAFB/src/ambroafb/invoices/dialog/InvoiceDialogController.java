@@ -22,7 +22,6 @@ import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.monthcountercombobox.MonthCounterComboBox;
 import ambroafb.general.monthcountercombobox.MonthCounterItem;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.invoices.Invoice;
 import ambroafb.invoices.InvoiceDataFetchProvider;
@@ -85,8 +84,6 @@ public class InvoiceDialogController extends DialogController {
     private ADatePicker createdDate, endDate, revokedDate;
     @FXML
     private TextField invoiceNumber, status, licenses;
-    @FXML
-    private DialogOkayCancelController okayCancelController;
     @FXML
     private MaskerPane masker;
     @FXML
@@ -347,20 +344,8 @@ public class InvoiceDialogController extends DialogController {
         });
     }
     
-    
-    @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
-
-    @Override
-    protected void removeBinds() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
     protected void removeListeners() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

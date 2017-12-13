@@ -47,7 +47,7 @@ public class TableMasterDetailController extends ListingController implements Ed
     @FXML
     private MaskerPane masterMasker;
     
-    private final ObservableList<EditorPanelable> contents = FXCollections.observableArrayList();
+    private final ObservableList<EditorPanelable> entries = FXCollections.observableArrayList();
 
     private final Timer timer = new Timer();
     private EditorPanelable newSelected;
@@ -56,7 +56,7 @@ public class TableMasterDetailController extends ListingController implements Ed
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
         tableView.setBundle(rb);
-        tableView.setItems(contents);
+        tableView.setItems(entries);
     }
     
     public void setDetailNode(Node node){
@@ -67,12 +67,12 @@ public class TableMasterDetailController extends ListingController implements Ed
     @Override
     public void reAssignTable(FilterModel model){
         int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
-        contents.clear();
+        entries.clear();
         
         masterMasker.setVisible(true);
         
         Consumer<List<EditorPanelable>> successAction = (editorPanelables) -> {
-            contents.setAll(editorPanelables);
+            entries.setAll(editorPanelables);
             masterMasker.setVisible(false);
             if (selectedIndex >= 0){
                 tableView.getSelectionModel().select(selectedIndex);
@@ -137,10 +137,10 @@ public class TableMasterDetailController extends ListingController implements Ed
     
     @Override
     public void notifyDelete(EditorPanelable deleted) {
-        int row = contents.indexOf(deleted);
-        contents.remove(deleted);
-        if (row >= contents.size()){
-            row = contents.size() - 1;
+        int row = entries.indexOf(deleted);
+        entries.remove(deleted);
+        if (row >= entries.size()){
+            row = entries.size() - 1;
         }
         tableView.getSelectionModel().select(row);
     }
@@ -154,13 +154,13 @@ public class TableMasterDetailController extends ListingController implements Ed
 
     @Override
     public void notifyAdd(EditorPanelable added) {
-        contents.add(added);
-        tableView.getSelectionModel().select(contents.indexOf(added));
+        entries.add(added);
+        tableView.getSelectionModel().select(entries.indexOf(added));
     }
 
     @Override
     public void notifyAddBySample(EditorPanelable addedBySample) {
-        contents.add(addedBySample);
-        tableView.getSelectionModel().select(contents.indexOf(addedBySample));
+        entries.add(addedBySample);
+        tableView.getSelectionModel().select(entries.indexOf(addedBySample));
     }
 }

@@ -24,7 +24,6 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 
 /**
  *
@@ -68,9 +67,6 @@ public class Account extends EditorPanelable {
         dateClosedObj = new SimpleObjectProperty<>();
         remark = new SimpleStringProperty();
         
-        balAccount.addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            System.out.println("change change change");
-        });
     }
     
     public StringProperty accountNumberProperty(){

@@ -11,7 +11,6 @@ import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -31,8 +30,6 @@ public class DocInOrderDialogController extends DialogController {
     @FXML
     private ADatePicker docDate;
     
-    @FXML
-    private DialogOkayCancelController okayCancelController;
     
     @FXML
     private VBox listVBox;
@@ -64,7 +61,7 @@ public class DocInOrderDialogController extends DialogController {
             ((DocInOrder)sceneObj).getDocs().stream().forEach((doc) -> {
                 DocOrderComponent lsComp = new DocOrderComponent();
                 lsComp.removeDocDateComponent();
-                lsComp.binTo(doc);
+                lsComp.bindBidirectTo(doc);
                 lsComp.setDialogType(buttonType);
                 if ((buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD) || buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.EDIT)) 
                     && !doc.isParentDoc()){
@@ -76,20 +73,5 @@ public class DocInOrderDialogController extends DialogController {
         }
     }
     
-    @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
 
-    @Override
-    protected void removeBinds() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected void removeListeners() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
 }

@@ -11,13 +11,11 @@ import ambroafb.currencies.IsoComboBox;
 import ambroafb.docs.types.conversion.Conversion;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.NumberConverter;
-import ambroafb.general.Printer;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentAmount;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.net.URL;
 import java.time.LocalDate;
@@ -60,9 +58,6 @@ public class ConversionDialogController extends DialogController {
     private Label currentRateTitle;
     @FXML
     private Button currentRate;
-    
-    @FXML
-    private DialogOkayCancelController okayCancelController;
     
     private boolean rateTopToBottomDirection = true;
     private final String purchaseRateTitle = GeneralConfig.getInstance().getTitleFor("purchase_rate");
@@ -137,11 +132,6 @@ public class ConversionDialogController extends DialogController {
     @Override
     protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
         if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE)){
-            System.out.println("--------- ADD BY SAMPLE -----------");
-            Printer.printIsNull("((Conversion)sceneObj).getSellAccount()", ((Conversion)sceneObj).getSellAccount());
-            System.out.println(((Conversion)sceneObj).getSellAccount());
-            
-            
             ((Conversion)sceneObj).setDocDate(LocalDate.now().toString());
             ((Conversion)sceneObj).setDocInDocDate(LocalDate.now().toString());
             ((Conversion)sceneObj).sellAmountProperty().set(""); // for empty amount field.
@@ -151,18 +141,7 @@ public class ConversionDialogController extends DialogController {
     }
 
     @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
-
-    @Override
-    protected void removeBinds() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     protected void removeListeners() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

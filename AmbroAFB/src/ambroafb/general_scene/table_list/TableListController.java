@@ -40,22 +40,26 @@ public class TableListController extends ListingController implements EditorPane
     @FXML
     private MaskerPane masker;
     
-    private final ObservableList<EditorPanelable> contents = FXCollections.observableArrayList();
+    private final ObservableList<EditorPanelable> entries = FXCollections.observableArrayList();
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
         tableView.setBundle(rb);
-        tableView.setItems(contents);
+        tableView.setItems(entries);
+    }
+    
+    public ObservableList<EditorPanelable> getTableContent(){
+        return entries;
     }
     
     @Override
     public void reAssignTable(FilterModel model){
         int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
-        contents.clear();
+        entries.clear();
         masker.setVisible(true);
         
         Consumer<List<EditorPanelable>> successAction = (editorPanelables) -> {
-            contents.setAll(editorPanelables);
+            entries.setAll(editorPanelables);
             masker.setVisible(false);
             if (selectedIndex >= 0){
                 tableView.getSelectionModel().select(selectedIndex);
@@ -81,8 +85,8 @@ public class TableListController extends ListingController implements EditorPane
     public void addListWith(Class content) {
         tableView.initialize(content);
         editorPanel.setTableDataList(tableView);
-        editorPanel.registerObserver(this); // editorPanel will be setted for this line.
-        
+        editorPanel.registerObserver(this); // editorPanel will be setted at this time.
+
         tableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EditorPanelable> observable, EditorPanelable oldValue, EditorPanelable newValue) -> {
             if (newValue != null){
                 observers.stream().forEach((observer) -> observer.notify(newValue));
@@ -97,29 +101,29 @@ public class TableListController extends ListingController implements EditorPane
 
     @Override
     public void notifyDelete(EditorPanelable deleted) {
-        int row = contents.indexOf(deleted);
-        contents.remove(deleted);
-        if (row >= contents.size()){
-            row = contents.size() - 1;
+        int row = entries.indexOf(deleted);
+        entries.remove(deleted);
+        if (row >= entries.size()){
+            row = entries.size() - 1;
         }
         tableView.getSelectionModel().select(row);
     }
 
     @Override
     public void notifyEdit(EditorPanelable edited) {
-        tableView.getSelectionModel().select(contents.indexOf(edited));
+        tableView.getSelectionModel().select(entries.indexOf(edited));
     }
 
     @Override
     public void notifyAdd(EditorPanelable added) {
-        contents.add(added);
-        tableView.getSelectionModel().select(contents.indexOf(added));
+        entries.add(added);
+        tableView.getSelectionModel().select(entries.indexOf(added));
     }
 
     @Override
     public void notifyAddBySample(EditorPanelable addedBySample) {
-        contents.add(addedBySample);
-        tableView.getSelectionModel().select(contents.indexOf(addedBySample));
+        entries.add(addedBySample);
+        tableView.getSelectionModel().select(entries.indexOf(addedBySample));
     }
 
 }

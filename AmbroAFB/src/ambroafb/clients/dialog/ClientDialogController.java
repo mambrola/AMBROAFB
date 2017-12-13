@@ -15,10 +15,8 @@ import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.image_gallery.ImageGalleryController;
 import ambroafb.general.interfaces.Annotations.ContentMail;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.DialogCloseObserver;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.phones.PhoneComboBox;
 import authclient.AuthServerException;
 import authclient.db.DBClient;
@@ -59,7 +57,7 @@ import org.json.JSONException;
  *
  * @author mambroladze
  */
-public class ClientDialogController extends DialogController implements DialogCloseObserver {
+public class ClientDialogController extends DialogController {
     @FXML
     private VBox formPane, phonesContainer;
     @FXML
@@ -93,8 +91,6 @@ public class ClientDialogController extends DialogController implements DialogCl
     
     @FXML
     private TextField fax, zipCode, city, www;
-    @FXML
-    private DialogOkayCancelController okayCancelController;
     @FXML
     private HBox namesRootPane;
     
@@ -185,8 +181,6 @@ public class ClientDialogController extends DialogController implements DialogCl
             address.      textProperty().bindBidirectional(client.addressProperty());
             zipCode.      textProperty().bindBidirectional(client.zipCodeProperty());
             city.         textProperty().bindBidirectional(client.cityProperty());
-//            country.     valueProperty().bindBidirectional(client.countryCodeProperty());
-//            statuses.      valueProperty().bindBidirectional(client.statusDescripProperty());
         }
     }
     
@@ -214,7 +208,6 @@ public class ClientDialogController extends DialogController implements DialogCl
         
         Consumer<ObservableList<ClientStatus>> setStatusById = (statusList) -> {
             Integer statusId = client.getStatusId();
-            System.out.println("statusId: " + statusId);
             Bindings.bindBidirectional(client.statusIdProperty(), statuses.valueProperty(), new StatusToIdBiConverter());
             client.statusDescripProperty().bind(Bindings.createStringBinding(() -> (statuses.getValue() == null) ? null : "" + statuses.getValue().getDescrip(), statuses.valueProperty()));
             statusProperty.bind(statuses.valueProperty());
@@ -224,7 +217,6 @@ public class ClientDialogController extends DialogController implements DialogCl
 
         Consumer<ObservableList<Country>> setCountryById = (countryList) -> {
             Integer countryId = client.getCountryId();
-            System.out.println("countryId: " + countryId);
             Bindings.bindBidirectional(client.countryIdProperty(), country.valueProperty(), new CountryToIdBiConverter());
             client.countryCodeProperty().bind(Bindings.createStringBinding(() -> (country.getValue()== null) ? null : "" + country.getValue().getCode(), country.valueProperty()));
             client.setCountryId(countryId);
@@ -235,17 +227,10 @@ public class ClientDialogController extends DialogController implements DialogCl
     }
 
     @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
-
-    @Override
     protected void removeBinds(){
-        Client clientOnScene  = (Client)sceneObj;
-        Bindings.unbindBidirectional(clientOnScene.statusIdProperty(), statuses.valueProperty());
-        clientOnScene.statusDescripProperty().unbind();
-        Bindings.unbindBidirectional(clientOnScene.countryIdProperty(), country.valueProperty());
-        clientOnScene.countryCodeProperty().unbind();
+        Client client  = (Client)sceneObj;
+        client.statusDescripProperty().unbind();
+        client.countryCodeProperty().unbind();
     }
     
     @Override
@@ -312,7 +297,7 @@ public class ClientDialogController extends DialogController implements DialogCl
         
         @Override
         public boolean test(String fieldName) {
-            return statusProperty.get() != null && statusProperty.get().getClientStatusId() != 1;
+            return statusProperty.get() == null || statusProperty.get().getClientStatusId() != 1;
         }
 
         @Override

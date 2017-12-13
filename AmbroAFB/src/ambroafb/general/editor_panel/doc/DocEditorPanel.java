@@ -17,12 +17,14 @@ import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Dialogable;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.EditorPanelableManager;
+import ambroafb.general_scene.table_list.TableList;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -93,6 +95,10 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
         visual.setGraphic(hBox);
         return visual;
     }
+    
+    private ObservableList<EditorPanelable> getControllerTableContent(){
+        return ((TableList)exit.getScene().getWindow()).getController().getTableContent();
+    }
 
     @Override
     public void delete(ActionEvent event) {
@@ -102,6 +108,7 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
         Consumer<EditorPanelable> successAction = (obj) -> {
             Dialogable dialog = manager.getDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.DELETE, obj);
             List<Doc> result = dialog.getResult();
+            ObservableList<EditorPanelable> tableData = getControllerTableContent();
             List<Doc> removedDocs = new ArrayList<>();
             result.stream().forEach((doc) -> {
                 if (selected.isParentDoc() || selected.getRecId() == doc.getRecId()) { // Save every docs from bouquet or only it that was selected.
@@ -116,8 +123,6 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
                         optDoc.get().setMarker(doc.getMarker());
                     }
                 }
-                    
-
             });
             tableData.removeAll(removedDocs);
         };
@@ -132,6 +137,7 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
         Consumer<EditorPanelable> successAction = (obj) -> {
             Dialogable dialog = manager.getDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.EDIT, obj);
             List<Doc> result = dialog.getResult();
+            ObservableList<EditorPanelable> tableData = getControllerTableContent();
             result.stream().forEach((newDoc) -> {
                                 Optional<Doc> docFromAFBTable = tableData.stream().map((elem) -> (Doc)elem).
                                                                     filter((Doc doc) -> doc.getRecId() == newDoc.getRecId()).findFirst();
@@ -191,7 +197,7 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
         Dialogable dialog = manager.getDialogFor((Stage)getScene().getWindow(), EditorPanel.EDITOR_BUTTON_TYPE.ADD, null);
         List<Doc> docsFromDialog = dialog.getResult();
         if (docsFromDialog != null){
-            tableData.addAll(0, docsFromDialog);
+            getControllerTableContent().addAll(0, docsFromDialog);
         }
     }
 
@@ -205,7 +211,7 @@ public class DocEditorPanel extends EditorPanel implements Initializable {
             Dialogable dialog = manager.getDialogFor(docEditorPanelSceneStage, EditorPanel.EDITOR_BUTTON_TYPE.ADD_BY_SAMPLE, cloneFromReal);
             List<Doc> docsFromDialog = dialog.getResult();
             if (docsFromDialog != null && !docsFromDialog.isEmpty()){
-                    tableData.addAll(0, docsFromDialog);
+                    getControllerTableContent().addAll(0, docsFromDialog);
             }
         };
         manager.getDataFetchProvider().getOneFromDB(selected.getRecId(), successAction, null);

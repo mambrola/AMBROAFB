@@ -8,7 +8,6 @@ package ambroafb.minitables.merchandises.dialog;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.minitables.merchandises.Merchandise;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -29,9 +28,6 @@ public class MerchandiseDialogController extends DialogController {
     @FXML
     private TextField descrip;
     
-    @FXML
-    private DialogOkayCancelController okayCancelController;
-
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
 
@@ -55,20 +51,4 @@ public class MerchandiseDialogController extends DialogController {
         
     }
 
-    @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
-
-    @Override
-    protected void removeBinds() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected void removeListeners() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
 }

@@ -10,7 +10,6 @@ import ambroafb.docs.types.doc_in_order.DocOrderComponent;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -28,8 +27,6 @@ public class CustomDialogController extends DialogController {
     @FXML
     private VBox formPane;
     
-    @FXML
-    private DialogOkayCancelController okayCancelController;
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
@@ -47,7 +44,7 @@ public class CustomDialogController extends DialogController {
     @Override
     protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
         DocOrderComponent lsComp = new DocOrderComponent();
-        lsComp.binTo((Doc)sceneObj);
+        lsComp.bindBidirectTo((Doc)sceneObj);
         lsComp.setDialogType(buttonType);
         formPane.getChildren().add(0, lsComp);
         
@@ -59,20 +56,5 @@ public class CustomDialogController extends DialogController {
         }
     }
     
-    @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
-
-    @Override
-    protected void removeBinds() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected void removeListeners() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 
 }

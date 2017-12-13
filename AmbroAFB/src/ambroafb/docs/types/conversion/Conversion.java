@@ -112,11 +112,11 @@ public class Conversion extends EditorPanelable {
     }
     
     public Float getSellAmount(){
-        return NumberConverter.stringToFloat(sellAmount.get(), 2, amountDefaultValue);
+        return NumberConverter.stringToFloat(sellAmount.get(), 2, null);
     }
     
     public Float getBuyingAmount(){
-        return NumberConverter.stringToFloat(buyingAmount.get(), 2, amountDefaultValue);
+        return NumberConverter.stringToFloat(buyingAmount.get(), 2, null);
     }
     
     

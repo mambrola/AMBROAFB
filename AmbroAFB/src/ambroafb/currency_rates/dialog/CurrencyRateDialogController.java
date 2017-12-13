@@ -14,7 +14,6 @@ import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.Annotations.ContentRate;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.rate_field.RateField;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -46,9 +45,6 @@ public class CurrencyRateDialogController extends DialogController {
     @FXML @ContentNotEmpty @ContentRate
     private RateField rate;
     
-    @FXML
-    private DialogOkayCancelController okayCancelController;
-    
 
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
@@ -74,21 +70,6 @@ public class CurrencyRateDialogController extends DialogController {
     @Override
     protected void makeExtraActions(EDITOR_BUTTON_TYPE buttonType) {
 
-    }
-
-    @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
-
-    @Override
-    protected void removeBinds() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected void removeListeners() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

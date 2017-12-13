@@ -15,7 +15,6 @@ import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.mapeditor.MapEditor;
 import ambroafb.general.mapeditor.MapEditorElement;
-import ambroafb.general.okay_cancel.DialogOkayCancelController;
 import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import ambroafb.general.scene_components.number_fields.integer_field.IntegerField;
 import ambroafb.products.Product;
@@ -61,9 +60,6 @@ public class ProductDialogController extends DialogController {
     private IntegerField maxCount, testingDays;
     
     
-    @FXML
-    private DialogOkayCancelController okayCancelController;
-
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
         currencies.fillComboBoxWithoutALLAndWithBasicIso(null);
@@ -102,10 +98,6 @@ public class ProductDialogController extends DialogController {
         createListListener(discounts.getItems(), productDiscounts);
     }
 
-    @Override
-    public DialogOkayCancelController getOkayCancelController() {
-        return okayCancelController;
-    }
 
     private void createListListener(ObservableList<MapEditorElement> items, List<ProductDiscount> productDiscounts) {
         items.addListener((ListChangeListener.Change<? extends MapEditorElement> c) -> {
@@ -130,14 +122,9 @@ public class ProductDialogController extends DialogController {
         });
     }
 
-    @Override
-    protected void removeBinds() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     protected void removeListeners() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

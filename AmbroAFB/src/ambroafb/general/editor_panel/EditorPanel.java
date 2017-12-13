@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -66,7 +65,6 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
     @FXML
     protected Region region;
     
-    protected ObservableList<EditorPanelable> tableData;
     protected final List<EditorPanelActionObserver> observers = new ArrayList<>();
     protected EditorPanelable selectedItem;
     
@@ -213,6 +211,7 @@ public abstract class EditorPanel extends HBox implements Initializable, Selecti
 
     @Override
     public void update(EditorPanelable selected) {
+        selectedItem = selected;
     }
 
     

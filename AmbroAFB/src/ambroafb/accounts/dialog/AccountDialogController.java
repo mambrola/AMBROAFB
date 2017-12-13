@@ -17,7 +17,6 @@ import ambroafb.general.GeneralConfig;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.editor_panel.EditorPanel.EDITOR_BUTTON_TYPE;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.DialogCloseObserver;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.scene_components.account_number.AccountNumber;
@@ -51,7 +50,7 @@ import org.json.JSONObject;
  *
  * @author dkobuladze
  */
-public class AccountDialogController extends DialogController implements DialogCloseObserver {
+public class AccountDialogController extends DialogController {
 
     @FXML
     private VBox formPane;
@@ -188,16 +187,16 @@ public class AccountDialogController extends DialogController implements DialogC
 
     @Override
     protected void removeBinds(){
-        Account accOnScene  = (Account)sceneObj;
-        Bindings.unbindBidirectional(accOnScene.clientIdProperty(), clients.valueProperty());
-        Bindings.unbindBidirectional(accOnScene.balAccountIdProperty(), balAccounts.valueProperty());
-        accOnScene.balAccountProperty().unbind();
+        System.out.println("removeBinds in AccountDialogConroller ...");
+        Account account  = (Account)sceneObj;
+        account.balAccountProperty().unbind();
+    }
+
+    @Override
+    protected void removeListeners() {
     }
     
-    @Override
-    protected void removeListeners(){
-        
-    }
+    
     
     /**
      *  The class provide to convert Client to its recId as String and vice verse - recId to appropriate Client from comboBox.
