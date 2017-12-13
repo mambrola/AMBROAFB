@@ -18,10 +18,13 @@ import javafx.util.Callback;
  */
 public class DateCellFactory {
 
-    public static class LocalDateCell implements Callback<TableColumn<EditorPanelable, LocalDate>, TableCell<EditorPanelable, LocalDate>> {
+    /**
+     * The class is Object and LocalDate cell. In most cases Object will be EditorPanelable but in some cases it may be different, so this CellFactory is universal.
+     */
+    public static class LocalDateCell implements Callback<TableColumn<Object, LocalDate>, TableCell<EditorPanelable, LocalDate>> {
         
         @Override
-        public TableCell<EditorPanelable, LocalDate> call(TableColumn<EditorPanelable, LocalDate> param) {
+        public TableCell<EditorPanelable, LocalDate> call(TableColumn<Object, LocalDate> param) {
             return new TableCell<EditorPanelable, LocalDate>(){
                 @Override
                 protected void updateItem(LocalDate item, boolean empty) {
@@ -33,11 +36,13 @@ public class DateCellFactory {
         }
     }
     
-    
-    public static class LocalDateTimeCell implements Callback<TableColumn<EditorPanelable, LocalDateTime>, TableCell<EditorPanelable, LocalDateTime>> {
+    /**
+     * The class is Object and LocalDateTime cell. In most cases Object will be EditorPanelable but in some cases it may be different, so this CellFactory is universal.
+     */
+    public static class LocalDateTimeCell implements Callback<TableColumn<Object, LocalDateTime>, TableCell<EditorPanelable, LocalDateTime>> {
         
         @Override
-        public TableCell<EditorPanelable, LocalDateTime> call(TableColumn<EditorPanelable, LocalDateTime> param) {
+        public TableCell<EditorPanelable, LocalDateTime> call(TableColumn<Object, LocalDateTime> param) {
             return new TableCell<EditorPanelable, LocalDateTime>(){
                 @Override
                 protected void updateItem(LocalDateTime item, boolean empty) {

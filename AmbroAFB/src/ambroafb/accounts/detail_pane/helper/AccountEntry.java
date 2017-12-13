@@ -23,7 +23,7 @@ import javafx.beans.property.StringProperty;
  */
 public class AccountEntry {
     
-    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE, cellFactory = DateCellFactory.class)
+    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE, cellFactory = DateCellFactory.LocalDateCell.class)
     private final ObjectProperty<LocalDate> dateObj = new SimpleObjectProperty<>();
     
     @AView.Column(title = "%correspondent", width = "280")
