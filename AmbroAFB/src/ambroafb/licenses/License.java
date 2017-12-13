@@ -8,7 +8,6 @@ package ambroafb.licenses;
 import ambro.AView;
 import ambroafb.clients.Client;
 import ambroafb.general.DateConverter;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnFeatures;
 import ambroafb.licenses.helper.LicenseStatus;
@@ -16,6 +15,7 @@ import ambroafb.products.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -27,6 +27,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.util.Callback;
 
 /**
  *
@@ -36,9 +39,9 @@ public class License extends EditorPanelable {
 
     public String password;
     
-    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATETIME, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
-    private final StringProperty createdTime;
+    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATETIME, styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = DateTimeCellFactory.class)
     private final ObjectProperty<LocalDateTime> createdTimeObj;
+//    private final StringProperty createdTime;
     
     @AView.Column(title = "%license_N", width = TableColumnFeatures.Width.LICENSE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final IntegerProperty licenseNumber;
@@ -92,7 +95,7 @@ public class License extends EditorPanelable {
     private static final String DB_STATUSES_TABLE_NAME = "license_status_descrips";
     
     public License(){
-        createdTime = new SimpleStringProperty("");
+//        createdTime = new SimpleStringProperty("");
         createdTimeObj = new SimpleObjectProperty<>(LocalDateTime.now());
         clientObj = new SimpleObjectProperty<>(new Client());
         clientDescrip = clientObj.get().getShortDescrip(", ");
@@ -201,7 +204,8 @@ public class License extends EditorPanelable {
     // Getters:
     @JsonIgnore
     public String getCreatedDateStr(){
-        return createdTime.get();
+        return DateConverter.getInstance().getDayMonthnameYearBySpace(createdTimeObj.get());
+//        return createdTime.get();
     }
     
     public int getClientId(){
@@ -288,8 +292,7 @@ public class License extends EditorPanelable {
     // This method must not show in other class to avoid createdDate changing.
     private void setCreatedTime(String createdTime){
         this.createdTimeObj.set(DateConverter.getInstance().parseDateTime(createdTime));
-        this.createdTime.set(DateConverter.getInstance().getDayMonthnameYearBySpace(createdTimeObj.get()));
-        
+//        this.createdTime.set(DateConverter.getInstance().getDayMonthnameYearBySpace(createdTimeObj.get()));
     }
     
     public void setClientId(int clienId){
@@ -431,7 +434,6 @@ public class License extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup){
         License otherLicense = (License) backup;
-//        getCreatedDateStr().equals(otherLicense.getCreatedDateStr())  &&
         return  getClientId() == otherLicense.getClientId() &&
                 clientDescripExpression().equals(otherLicense.clientDescripExpression()) &&
                 getProductId() == otherLicense.getProductId()           &&
@@ -444,13 +446,9 @@ public class License extends EditorPanelable {
                 getAdditionalDays() == otherLicense.getAdditionalDays() &&
                 getLicenseNumber() == otherLicense.getLicenseNumber()   &&
                 
-                // The dialog buttons does not allow for licenses, so they don't be null:
-Utils.objectEquals(firstDateProperty().get(), otherLicense.firstDateProperty().get()) &&
-                Utils.objectEquals(lastDateProperty().get(), otherLicense.lastDateProperty().get()) &&
-                Utils.objectEquals(lastLoginTimeProperty().get(), otherLicense.lastLoginTimeProperty().get());
-//                firstDateProperty().get().equals(otherLicense.firstDateProperty().get()) &&
-//                lastDateProperty().get().equals(otherLicense.lastDateProperty().get()) &&
-//                lastLoginTimeProperty().get().equals(lastLoginTimeProperty().get());
+                Objects.equals(firstDateProperty().get(), otherLicense.firstDateProperty().get()) &&
+                Objects.equals(lastDateProperty().get(), otherLicense.lastDateProperty().get()) &&
+                Objects.equals(lastLoginTimeProperty().get(), otherLicense.lastLoginTimeProperty().get());
     }
     
 
@@ -474,6 +472,22 @@ Utils.objectEquals(firstDateProperty().get(), otherLicense.firstDateProperty().g
                 dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(newValue);
             }
             target.set(dateStr);
+        }
+        
+    }
+    
+    public static class DateTimeCellFactory implements Callback<TableColumn<License, LocalDateTime>, TableCell<License, LocalDateTime>> {
+
+        @Override
+        public TableCell<License, LocalDateTime> call(TableColumn<License, LocalDateTime> param) {
+            return new TableCell<License, LocalDateTime>(){
+                @Override
+                protected void updateItem(LocalDateTime item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText((item == null || empty) ? null : DateConverter.getInstance().getDayMonthnameYearBySpace(item));
+                }
+                
+            };
         }
         
     }
