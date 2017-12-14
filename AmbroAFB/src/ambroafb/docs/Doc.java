@@ -7,6 +7,7 @@ package ambroafb.docs;
 
 import ambro.AView;
 import ambroafb.accounts.Account;
+import ambroafb.general.DateCellFactory;
 import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
@@ -40,12 +41,10 @@ public class Doc extends EditorPanelable {
     private final IntegerProperty parentRecId;
     private final IntegerProperty processId;
     
-    @AView.Column(title = "%doc_date", width = TableColumnFeatures.Width.DATE)
-    private final StringProperty docDateDescrip;
+    @AView.Column(title = "%doc_date", width = TableColumnFeatures.Width.DATE, cellFactory = DateCellFactory.LocalDateCell.class)
     private final ObjectProperty<LocalDate> docDateObj;
 
-    @AView.Column(title = "%doc_in_doc_date", width = TableColumnFeatures.Width.DATE)
-    private final StringProperty docInDocDateDescrip;
+    @AView.Column(title = "%doc_in_doc_date", width = TableColumnFeatures.Width.DATE, cellFactory = DateCellFactory.LocalDateCell.class)
     private final ObjectProperty<LocalDate> docInDocDateObj;
     
     @AView.Column(title = "%debit", width = "260")
@@ -83,9 +82,7 @@ public class Doc extends EditorPanelable {
         marker = new SimpleIntegerProperty(markerDefaultValue);
         parentRecId = new SimpleIntegerProperty(parentRecIdDefaultValue);
         processId = new SimpleIntegerProperty();
-        docDateDescrip = new SimpleStringProperty("");
         docDateObj = new SimpleObjectProperty<>(LocalDate.now());
-        docInDocDateDescrip = new SimpleStringProperty("");
         docInDocDateObj = new SimpleObjectProperty<>(LocalDate.now());
         
         debitDescrip = new SimpleStringProperty("");
@@ -99,13 +96,6 @@ public class Doc extends EditorPanelable {
         docCode = new SimpleObjectProperty<>(new DocCode());
         descrip = new SimpleStringProperty("");
         ownerId = new SimpleIntegerProperty(ownerIdDefaultValue);
-        
-        docDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            docDateDescrip.set(newValue == null ? "" : DateConverter.getInstance().getDayMonthnameYearBySpace(newValue));
-        });
-        docInDocDateObj.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            docInDocDateDescrip.set(newValue == null ? "" : DateConverter.getInstance().getDayMonthnameYearBySpace(newValue));
-        });
         
         debitObj.addListener((ObservableValue<? extends Account> observable, Account oldValue, Account newValue) -> {
             if (newValue != null){
@@ -250,12 +240,10 @@ public class Doc extends EditorPanelable {
     
     public void setDocDate(String docDate){
         docDateObj.set(DateConverter.getInstance().parseDate(docDate));
-        docDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(docDateObj.get()));
     }
     
     public void setDocInDocDate(String docInDocDate){
         docInDocDateObj.set(DateConverter.getInstance().parseDate(docInDocDate));
-        docInDocDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(docInDocDateObj.get()));
     }
     
     public void setDebitId(int debitId){
