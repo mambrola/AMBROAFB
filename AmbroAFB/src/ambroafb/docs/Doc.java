@@ -42,10 +42,10 @@ public class Doc extends EditorPanelable {
     private final IntegerProperty processId;
     
     @AView.Column(title = "%doc_date", width = TableColumnFeatures.Width.DATE, cellFactory = DateCellFactory.LocalDateCell.class)
-    private final ObjectProperty<LocalDate> docDateObj;
+    private final ObjectProperty<LocalDate> docDate;
 
     @AView.Column(title = "%doc_in_doc_date", width = TableColumnFeatures.Width.DATE, cellFactory = DateCellFactory.LocalDateCell.class)
-    private final ObjectProperty<LocalDate> docInDocDateObj;
+    private final ObjectProperty<LocalDate> docInDocDate;
     
     @AView.Column(title = "%debit", width = "260")
     private final StringProperty debitDescrip;
@@ -82,8 +82,8 @@ public class Doc extends EditorPanelable {
         marker = new SimpleIntegerProperty(markerDefaultValue);
         parentRecId = new SimpleIntegerProperty(parentRecIdDefaultValue);
         processId = new SimpleIntegerProperty();
-        docDateObj = new SimpleObjectProperty<>(LocalDate.now());
-        docInDocDateObj = new SimpleObjectProperty<>(LocalDate.now());
+        docDate = new SimpleObjectProperty<>(LocalDate.now());
+        docInDocDate = new SimpleObjectProperty<>(LocalDate.now());
         
         debitDescrip = new SimpleStringProperty("");
         debitObj = new SimpleObjectProperty<>(new Account());
@@ -123,11 +123,11 @@ public class Doc extends EditorPanelable {
     }
     
     public ObjectProperty<LocalDate> docDateProperty(){
-        return docDateObj;
+        return docDate;
     }
     
     public ObjectProperty<LocalDate> docInDocDateProperty(){
-        return docInDocDateObj;
+        return docInDocDate;
     }
     
     public ObjectProperty<Account> debitProperty(){
@@ -174,11 +174,11 @@ public class Doc extends EditorPanelable {
     }
     
     public String getDocDate(){
-        return (docDateObj.isNull().get()) ? "" : docDateObj.get().toString();
+        return (docDate.isNull().get()) ? "" : docDate.get().toString();
     }
     
     public String getDocInDocDate(){
-        return (docInDocDateObj.isNull().get()) ? "" : docInDocDateObj.get().toString();
+        return (docInDocDate.isNull().get()) ? "" : docInDocDate.get().toString();
     }
     
     public String getIso(){
@@ -239,11 +239,11 @@ public class Doc extends EditorPanelable {
     }
     
     public void setDocDate(String docDate){
-        docDateObj.set(DateConverter.getInstance().parseDate(docDate));
+        docDate.set(DateConverter.getInstance().parseDate(docDate));
     }
     
     public void setDocInDocDate(String docInDocDate){
-        docInDocDateObj.set(DateConverter.getInstance().parseDate(docInDocDate));
+        docInDocDate.set(DateConverter.getInstance().parseDate(docInDocDate));
     }
     
     public void setDebitId(int debitId){
@@ -364,8 +364,8 @@ public class Doc extends EditorPanelable {
         return "Doc{" + "recId= " + getRecId() + 
                         ", marker=" + marker.get() + ", parentRecId=" + parentRecId.get() + 
                         ", processId=" + processId.get() + 
-                        ", docDateObj=" + docDateObj.get().toString() + 
-                        ", docInDocDateObj=" + docInDocDateObj.get().toString() + 
+                        ", docDateObj=" + docDate.get().toString() + 
+                        ", docInDocDateObj=" + docInDocDate.get().toString() + 
                         ", debitObj=" + debitObj.get().toString() + 
                         ", creditObj=" + creditObj.get().toString() + 
                         ", iso=" + iso.get() + ", amount=" + amount.get() + ", docCode=" + docCode.get() + 
