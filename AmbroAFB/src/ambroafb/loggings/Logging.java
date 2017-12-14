@@ -7,10 +7,12 @@ package ambroafb.loggings;
 
 import ambro.AView;
 import ambroafb.clients.Client;
+import ambroafb.general.DateCellFactory;
 import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnFeatures;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -32,8 +34,7 @@ public class Logging extends EditorPanelable {
     private final StringExpression clientDescrip;
     private final ObjectProperty<Client> clientObj;
     
-    @AView.Column(title = "%login_time", width = TableColumnFeatures.Width.DATETIME, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
-    private final StringProperty loginDateDescrip;
+    @AView.Column(title = "%login_time", width = TableColumnFeatures.Width.DATETIME, styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = DateCellFactory.LocalDateTimeCell.class)
     private final ObjectProperty<LocalDateTime> loginDateObj;
     
     @AView.Column(title = "%mac_address", width = TableColumnFeatures.Width.MAC_ADDRESS, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
@@ -53,7 +54,6 @@ public class Logging extends EditorPanelable {
         clientObj = new SimpleObjectProperty<>(new Client());
         clientDescrip = clientObj.get().getShortDescrip(", ");
         loginDateObj = new SimpleObjectProperty<>();
-        loginDateDescrip = new SimpleStringProperty("");
         macAddress = new SimpleStringProperty("");
         response = new SimpleStringProperty("");
         licenseId = new SimpleIntegerProperty(0);
@@ -106,7 +106,7 @@ public class Logging extends EditorPanelable {
     }
     
     public String getLoginTime(){
-        return loginDateDescrip.get();
+        return (loginDateObj.get() == null) ? null : loginDateObj.toString();
     }
     
     public String getMacAddress(){
@@ -154,7 +154,6 @@ public class Logging extends EditorPanelable {
     
     public void setLoginTime(String logginTime){
         loginDateObj.set(DateConverter.getInstance().parseDateTime(logginTime));
-        loginDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(loginDateObj.get()));
     }
     
     public void setResponseCode(String response){
@@ -208,9 +207,7 @@ public class Logging extends EditorPanelable {
         Logging logingBackup = (Logging) backup;
         return  getLicenseNumber().equals(logingBackup.getLicenseNumber()) &&
                 clientObj.get().equals(logingBackup.clientProperty().get()) &&
-                loginDateObj.get().equals(logingBackup.loginDateProperty().get()) &&
-//                Utils.dateEquals(loginDateProperty().get(), logingBackup.loginDateProperty().get()) &&
-//                getLoginTime().equals(loggingBackup.getLoginTime()) &&
+                Objects.equals(getLoginTime(), logingBackup.getLoginTime()) &&
                 getMacAddress().equals(logingBackup.getMacAddress()) &&
                 getResponseCode().equals(logingBackup.getResponseCode());
     }
