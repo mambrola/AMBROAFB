@@ -200,7 +200,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     }
     
     public void setPrice(Float price) {
-        this.price.set(NumberConverter.makeFloatStringBySpecificFraction(price, 2));
+        this.price.set(NumberConverter.convertNumberToStringBySpecificFraction(price, 2));
     }
     
     public void setIso(String iso){

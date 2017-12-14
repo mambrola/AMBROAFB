@@ -81,8 +81,8 @@ public class AccountEntry {
     }
     
     public void setAmount(float amount) {
-        debit.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
-        credit.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
+        debit.set(NumberConverter.convertNumberToStringBySpecificFraction(amount, 2));
+        credit.set(NumberConverter.convertNumberToStringBySpecificFraction(amount, 2));
     }
     
     public void setIsDebit(boolean isDebit) {

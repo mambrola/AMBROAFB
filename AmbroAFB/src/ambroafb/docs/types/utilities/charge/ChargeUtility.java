@@ -171,7 +171,7 @@ public class ChargeUtility extends EditorPanelable {
     }
 
     public void setAmount(Float amount) {
-        this.amount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
+        this.amount.set(NumberConverter.convertNumberToStringBySpecificFraction(amount, 2));
     }
 
     public void setDocCode(String docCode) {
@@ -214,7 +214,7 @@ public class ChargeUtility extends EditorPanelable {
     }
 
     public void setVat(Float vat) {
-        this.vat.set(NumberConverter.makeFloatStringBySpecificFraction(vat, 2));
+        this.vat.set(NumberConverter.convertNumberToStringBySpecificFraction(vat, 2));
     }
     
     

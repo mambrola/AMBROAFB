@@ -71,7 +71,7 @@ public class ChargeUtilityDialogController extends DialogController {
             if (utilities.getValue() != null && amountValue != null){
                 Float vatRate = utilities.getValue().getVatRate();
                 Float percentResult = (amountValue * vatRate / 100);
-                vatValue = NumberConverter.makeFloatStringBySpecificFraction(percentResult, 2);
+                vatValue = NumberConverter.convertNumberToStringBySpecificFraction(percentResult, 2);
             }
         }
         vat.setText(vatValue);

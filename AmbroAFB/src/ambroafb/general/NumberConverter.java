@@ -15,12 +15,12 @@ import java.text.ParseException;
 public class NumberConverter {
     
     /**
-     * The method make float number that has fractionDigitCount quantity number after point.
-     * @param number The float number that must be change.
+     * The method make string from number that has fractionDigitCount after point.
+     * @param number The number that must be convert.
      * @param fractionDigitCount The quantity of digits after point.
      * @return 
      */
-    public static String makeFloatStringBySpecificFraction(Float number, int fractionDigitCount){
+    public static String convertNumberToStringBySpecificFraction(Number number, int fractionDigitCount){
         NumberFormat nf = NumberFormat.getNumberInstance(); // It is not static variable, because it is ... on fractionDigitCount parameter. Is Static variable change this value, change result also in every place where it is used.
         nf.setMaximumFractionDigits(fractionDigitCount);
         nf.setMinimumFractionDigits(fractionDigitCount);
@@ -56,6 +56,25 @@ public class NumberConverter {
      */
     public static Float stringToFloat(String floatStr, int fractionDigitCount, Float defaultValue){
         Float result = stringToFloat(floatStr, fractionDigitCount);
+        return (result == null) ? defaultValue : result;
+    }
+    
+    /**
+     * The method converts string to double. If it is impossible, returns null.
+     * @param doubleStr The double value as string.
+     * @return Null if parsing is impossible, otherwise - appropriate double value.
+     */
+    public static Double stringToDouble(String doubleStr){
+        Double result = null;
+        try {
+            result = Double.parseDouble(doubleStr);
+        } catch (NumberFormatException ex){}
+        return result;
+    }
+    
+    
+    public static Double stringToDouble(String doubleStr, Double defaultValue){
+        Double result = stringToDouble(doubleStr);
         return (result == null) ? defaultValue : result;
     }
     

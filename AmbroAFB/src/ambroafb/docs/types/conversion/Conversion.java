@@ -146,11 +146,11 @@ public class Conversion extends EditorPanelable {
     }
     
     public void setSellAmount(Float amount){
-        this.sellAmount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
+        this.sellAmount.set(NumberConverter.convertNumberToStringBySpecificFraction(amount, 2));
     }
     
     public void setBuyingAmount(Float amount){
-        this.buyingAmount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
+        this.buyingAmount.set(NumberConverter.convertNumberToStringBySpecificFraction(amount, 2));
     }
     
     

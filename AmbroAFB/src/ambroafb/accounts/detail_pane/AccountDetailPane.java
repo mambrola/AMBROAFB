@@ -167,11 +167,11 @@ public class AccountDetailPane extends VBox implements SelectionObserver  {
         String creditText = "";
         Color creditColor = Color.BLACK;
         if (data.isDebit()){
-            debitText = NumberConverter.makeFloatStringBySpecificFraction(data.getAmount(), 2);
+            debitText = NumberConverter.convertNumberToStringBySpecificFraction(data.getAmount(), 2);
             if (data.isRed()) debitColor = Color.RED;
         }
         else {
-            creditText = NumberConverter.makeFloatStringBySpecificFraction(data.getAmount(), 2);
+            creditText = NumberConverter.convertNumberToStringBySpecificFraction(data.getAmount(), 2);
             if (data.isRed()) creditColor = Color.RED;
         }
         debit.setText(debitText);

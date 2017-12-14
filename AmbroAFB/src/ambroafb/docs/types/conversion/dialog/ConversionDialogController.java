@@ -121,7 +121,7 @@ public class ConversionDialogController extends DialogController {
             if (sellAmountFloat != null && buyingAmountFloat != null && 
                 sellAmountFloat > 0 && buyingAmountFloat > 0){
                 Float amountsRate = (rateTopToBottomDirection) ? buyingAmountFloat / sellAmountFloat : sellAmountFloat / buyingAmountFloat;
-                rateResult = NumberConverter.makeFloatStringBySpecificFraction(amountsRate, 4);
+                rateResult = NumberConverter.convertNumberToStringBySpecificFraction(amountsRate, 4);
             }
         }
         String rateTitle = (rateTopToBottomDirection) ? purchaseRateTitle : inverseRateTitle;

@@ -479,7 +479,7 @@ public class Invoice extends EditorPanelable {
     
     @JsonProperty
     public void setAdditionalDiscountRate(Float additDisc){
-        additionalDiscRate.set(NumberConverter.makeFloatStringBySpecificFraction(additDisc, 2));
+        additionalDiscRate.set(NumberConverter.convertNumberToStringBySpecificFraction(additDisc, 2));
     }
     
     @JsonProperty // Setter must be available from DB but getter not available to DB

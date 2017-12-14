@@ -7,12 +7,14 @@ package ambroafb.currency_rates;
 
 import ambro.AView;
 import ambroafb.currencies.Currency;
+import ambroafb.general.DateCellFactory;
 import ambroafb.general.DateConverter;
-import ambroafb.general.Utils;
+import ambroafb.general.NumberConverter;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnFeatures;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
+import java.util.Objects;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,9 +28,8 @@ import javafx.beans.value.ObservableValue;
  */
 public class CurrencyRate extends EditorPanelable {
     
-    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
-    private final StringProperty dateForColumn;
-    private final ObjectProperty<LocalDate> dateProperty;
+    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_CENTER, cellFactory = DateCellFactory.LocalDateCell.class)
+    private final ObjectProperty<LocalDate> date;
     
     @AView.Column(title = "%count", width = "50", styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final StringProperty count;
@@ -41,20 +42,11 @@ public class CurrencyRate extends EditorPanelable {
     private final StringProperty rate;
     
     public CurrencyRate(){
-        dateProperty = new SimpleObjectProperty<>();
-        dateForColumn = new SimpleStringProperty("");
+        date = new SimpleObjectProperty<>();
         count = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
         currency = new SimpleObjectProperty<>(new Currency());
         rate = new SimpleStringProperty("");
-        
-        dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            String dateStr = "";
-            if (newValue != null){
-                dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(newValue);
-            }
-            dateForColumn.set(dateStr);
-        });
         
         currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
             rebindIso();
@@ -72,7 +64,7 @@ public class CurrencyRate extends EditorPanelable {
     
     // Properties:
     public ObjectProperty<LocalDate> dateProperty(){
-        return dateProperty;
+        return date;
     }
     
     public StringProperty countProperty(){
@@ -91,40 +83,40 @@ public class CurrencyRate extends EditorPanelable {
     // Getters:
     @JsonIgnore
     public String getDateColumn(){
-        return dateForColumn.get();
+        return (date.get() == null) ? null : date.get().toString();
     }
     
     public String getDate() {
-        return (dateProperty.get() == null) ? "" : dateProperty.get().toString();
+        return (date.get() == null) ? null : date.get().toString();
     }
     
-    public int getCount(){
-        return Utils.getIntValueFor(count.get());
+    public Integer getCount(){
+        return NumberConverter.stringToInteger(count.get(), null);
     }
     
     public String getIso(){
         return currency.get().getIso();
     }
             
-    public double getRate(){
-        return Utils.getDoubleValueFor(rate.get());
+    public Double getRate(){
+        return NumberConverter.stringToDouble(rate.get(), null);
     }
     
     // Setters:
     public void setDate(String date) {
-        dateProperty.set(DateConverter.getInstance().parseDate(date));
+        this.date.set(DateConverter.getInstance().parseDate(date));
     }
     
-    public void setCount(int count){
-        this.count.set("" + count);
+    public void setCount(Integer count){
+        this.count.set((count == null) ? null : count.toString());
     }
     
     public void setIso(String iso) {
         this.currency.get().setIso(iso);
     }
     
-    public void setRate(double rate){
-        this.rate.set("" + rate);
+    public void setRate(Double rate){
+        this.rate.set((rate == null) ? null : NumberConverter.convertNumberToStringBySpecificFraction(rate, 4));
     }
     
     
@@ -164,11 +156,10 @@ public class CurrencyRate extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         CurrencyRate currencyRateBackup = (CurrencyRate) backup;
-        
-        return  Utils.objectEquals(dateProperty().get(), currencyRateBackup.dateProperty().get()) &&
-                getCount() == currencyRateBackup.getCount()    &&
-                getIso().equals(currencyRateBackup.getIso())   &&
-                getRate() == currencyRateBackup.getRate();
+        return  Objects.equals(getDate(), currencyRateBackup.getDate()) &&
+                Objects.equals(getCount(), currencyRateBackup.getCount())    &&
+                Objects.equals(getIso(), currencyRateBackup.getIso())   &&
+                Objects.equals(getRate(), currencyRateBackup.getRate());
     }
     
     /**

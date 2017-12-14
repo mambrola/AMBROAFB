@@ -291,7 +291,7 @@ public class Doc extends EditorPanelable {
     }
     
     public void setAmount(Float amount){
-        this.amount.set(NumberConverter.makeFloatStringBySpecificFraction(amount, 2));
+        this.amount.set(NumberConverter.convertNumberToStringBySpecificFraction(amount, 2));
     }
     
     public void setDocCode(String docCode){
