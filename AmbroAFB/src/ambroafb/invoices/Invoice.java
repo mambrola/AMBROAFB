@@ -8,6 +8,7 @@ package ambroafb.invoices;
 import ambro.AView;
 import ambroafb.clients.Client;
 import ambroafb.currencies.Currency;
+import ambroafb.general.DateCellFactory;
 import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
@@ -34,6 +35,7 @@ import java.util.Map;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -50,8 +52,9 @@ import javafx.collections.ObservableList;
  */
 public class Invoice extends EditorPanelable { 
 
-    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
-    private final StringProperty createdDate;
+    @AView.Column(title = "%created_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = DateCellFactory.LocalDateCell.class)
+    private final ObjectProperty<LocalDate> createdDate;
+//    private final StringProperty createdDate;
     
     @AView.Column(title = "%invoice_N", width = "100")
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
@@ -67,12 +70,10 @@ public class Invoice extends EditorPanelable {
     private final StringExpression clientDescrip;
     private final ObjectProperty<Client> clientObj;
     
-    @AView.Column(title = "%begin_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
-    private final StringProperty beginDateDescrip;
+    @AView.Column(title = "%begin_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = DateCellFactory.LocalDateCell.class)
     private final ObjectProperty<LocalDate> beginDateObj;
 
-    @AView.Column(title = "%end_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
-    private final StringProperty endDateDescrip;
+    @AView.Column(title = "%end_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT, cellFactory = DateCellFactory.LocalDateCell.class)
     private final ObjectProperty<LocalDate> endDateObj;
     
     @AView.Column(title = "%revoked_date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
@@ -114,14 +115,12 @@ public class Invoice extends EditorPanelable {
     
     public Invoice(){
         invoiceNumber = new SimpleStringProperty("");
-        createdDate = new SimpleStringProperty("");
+        createdDate = new SimpleObjectProperty("");
         licensesDescrip = new SimpleStringProperty("");
         licenses = FXCollections.observableArrayList();
         clientObj = new SimpleObjectProperty<>(new Client());
         clientDescrip = clientObj.get().getShortDescrip(", ");
-        beginDateDescrip = new SimpleStringProperty("");
         beginDateObj = new SimpleObjectProperty<>();
-        endDateDescrip = new SimpleStringProperty("");
         endDateObj = new SimpleObjectProperty();
         revokedDateDescrip = new SimpleStringProperty("");
         revokedDateObj = new SimpleObjectProperty<>();
@@ -194,6 +193,10 @@ public class Invoice extends EditorPanelable {
     }
     
     // Properties getters:
+    public ReadOnlyObjectProperty<LocalDate> createdDateProperty(){
+        return createdDate;
+    }
+    
     public ObjectProperty<Client> clientProperty(){
         return clientObj;
     }
@@ -262,8 +265,8 @@ public class Invoice extends EditorPanelable {
     
     // Getters:
     @JsonIgnore
-    public LocalDate getCreatedDateObj(){
-        return DateConverter.getInstance().parseDate(createdDate.get());
+    public String getCreatedDate(){
+        return (createdDate.get() == null) ? null : createdDate.get().toString();
     }
     
     @JsonIgnore
@@ -383,10 +386,9 @@ public class Invoice extends EditorPanelable {
     
     
     // Setters:
+    @JsonProperty
     private void setCreatedDate(String date){
-        LocalDate localDate = DateConverter.getInstance().parseDate(date);
-        String userFriendlyDateVisual = DateConverter.getInstance().getDayMonthnameYearBySpace(localDate);
-        createdDate.set(userFriendlyDateVisual);
+        createdDate.set(DateConverter.getInstance().parseDate(date));
     }
     
     @JsonProperty
@@ -462,12 +464,12 @@ public class Invoice extends EditorPanelable {
     
     public void setBeginDate(String date){
         beginDateObj.set(DateConverter.getInstance().parseDate(date));
-        beginDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(beginDateObj.get()));
+//        beginDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(beginDateObj.get()));
     }
     
     public void setEndDate(String date){
         endDateObj.set(DateConverter.getInstance().parseDate(date));
-        endDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(endDateObj.get()));
+//        endDateDescrip.set(DateConverter.getInstance().getDayMonthnameYearBySpace(endDateObj.get()));
     }
     
     @JsonProperty

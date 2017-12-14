@@ -193,7 +193,7 @@ public class InvoiceDialogController extends DialogController {
     protected void bindObjectToSceneComponents(EditorPanelable object) {
         if (object != null){
             Invoice invoice = (Invoice)object;
-            createdDate.setValue(invoice.getCreatedDateObj());
+            createdDate.valueProperty().bind(invoice.createdDateProperty());
             invoiceNumber.textProperty().bindBidirectional(invoice.invoiceNumberProperty());
             status.textProperty().bindBidirectional(invoice.getInvoiceStatus().descripProperty());
             clients.valueProperty().bindBidirectional(invoice.clientProperty());
