@@ -15,11 +15,11 @@
         <HBox styleClass="w3" >
             <children>
                 <VBox >
-                    <Label text="%open_date_bigger" /> 
+                    <Label text="%date_from" /> 
                     <ADatePicker fx:id="dateBigger" />
                 </VBox>
                 <VBox >
-                    <Label text="%open_date_less" /> 
+                    <Label text="%date_to" /> 
                     <ADatePicker fx:id="dateLess" />
                 </VBox >
                 <VBox >

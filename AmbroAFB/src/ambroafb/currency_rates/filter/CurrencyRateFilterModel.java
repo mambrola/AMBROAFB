@@ -7,7 +7,6 @@ package ambroafb.currency_rates.filter;
 
 import ambroafb.currencies.Currency;
 import ambroafb.currencies.CurrencyComboBox;
-import ambroafb.general.DateConverter;
 import ambroafb.general.interfaces.DateFilterModel;
 import java.time.LocalDate;
 
@@ -17,20 +16,20 @@ import java.time.LocalDate;
  */
 public class CurrencyRateFilterModel extends DateFilterModel {
     
-    private static final String PREF_BIGGER_DATE_KEY = "currency_rate/filter/dateBigger";
-    private static final String PREF_LESS_DATE_KEY = "currency_rate/filter/dateLess";
     private static final String PREF_CURRENCY_KEY = "currency_rate/filter/currency";
+    
+    private LocalDate fromDate, toDate; // The dates does not save into user preferences, so using private instances.
     
     public CurrencyRateFilterModel(){
         
     }
 
     public void setFromDate(LocalDate date) {
-        saveIntoPref(PREF_BIGGER_DATE_KEY, (date == null) ? "" : date.toString());
+        fromDate = date;
     }
 
     public void setToDate(LocalDate date) {
-        saveIntoPref(PREF_LESS_DATE_KEY, (date == null) ? "" : date.toString());
+        toDate = date;
     }
     
     public void setSelectedCurrency(Currency currency) {
@@ -44,8 +43,7 @@ public class CurrencyRateFilterModel extends DateFilterModel {
      */
     @Override
     public LocalDate getFromDate(){
-        String date = getStringFromPref(PREF_BIGGER_DATE_KEY);
-        return DateConverter.getInstance().parseDate(date);
+        return fromDate;
     }
     
     /**
@@ -53,13 +51,8 @@ public class CurrencyRateFilterModel extends DateFilterModel {
      */
     @Override
     public LocalDate getToDate(){
-        String date = getStringFromPref(PREF_LESS_DATE_KEY);
-        return DateConverter.getInstance().parseDate(date);
+        return toDate;
     }
-    
-//    public Currency getSelectedCurrency(){
-//        return selectedCurrency;
-//    }
     
     public String getSelectedCurrencyIso(){
         return getStringFromPref(PREF_CURRENCY_KEY);

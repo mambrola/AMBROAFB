@@ -69,6 +69,7 @@ public class TableListController extends ListingController implements EditorPane
         Consumer<Exception> errorAction = (ex) -> {
             String errorHeaderText = GeneralConfig.getInstance().getTitleFor("error");
             new AlertMessage((Stage) tableView.getScene().getWindow(), Alert.AlertType.ERROR, errorHeaderText, ex.getMessage(), ex).showAndWait();
+            masker.setVisible(false);
         };
         
         if (model == null){

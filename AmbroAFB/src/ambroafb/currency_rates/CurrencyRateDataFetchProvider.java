@@ -35,8 +35,11 @@ public class CurrencyRateDataFetchProvider extends DataFetchProvider {
         WhereBuilder whereBuilder = new ConditionBuilder().where()
                 .and("date", ">=", currencyRateFilterModel.getFromDateForDB())
                 .and("date", "<=", currencyRateFilterModel.getToDateForDB());
+//                .and("date", "order by", "desc");
         if (currencyRateFilterModel.isSelectedConcreteCurrency()) {
             whereBuilder.and("iso", "=", currencyRateFilterModel.getSelectedCurrencyIso());
+//                    .and("iso", "order by", "asc");
+            
         }
         return getFilteredBy(whereBuilder.condition().build());
     }

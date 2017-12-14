@@ -14,6 +14,7 @@ import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.UserInteractiveFilterStage;
 import ambroafb.general.okay_cancel.FilterOkayCancelController;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -77,8 +78,10 @@ public class CurrencyRateFilter extends UserInteractiveFilterStage implements Fi
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        dateBigger.setValue(currencyRateFilterModel.getFromDate());
-        dateLess.setValue(currencyRateFilterModel.getToDate());
+        LocalDate monthBeforeNow = LocalDate.now().minusMonths(1);
+        dateBigger.setValue(monthBeforeNow);
+        dateLess.setValue(null);
+        
         Consumer<ObservableList<Currency>> currencyConsumer = (currencyList) -> {
             Optional<Currency> optCurrency = currencyList.stream().filter((curr) -> curr.getIso().equals(currencyRateFilterModel.getSelectedCurrencyIso())).findFirst();
             if (optCurrency.isPresent()){
