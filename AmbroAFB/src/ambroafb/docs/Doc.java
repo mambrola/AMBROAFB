@@ -239,11 +239,11 @@ public class Doc extends EditorPanelable {
     }
     
     public void setDocDate(String docDate){
-        docDate.set(DateConverter.getInstance().parseDate(docDate));
+        this.docDate.set(DateConverter.getInstance().parseDate(docDate));
     }
     
     public void setDocInDocDate(String docInDocDate){
-        docInDocDate.set(DateConverter.getInstance().parseDate(docInDocDate));
+        this.docInDocDate.set(DateConverter.getInstance().parseDate(docInDocDate));
     }
     
     public void setDebitId(int debitId){
