@@ -11,7 +11,6 @@ import ambroafb.currencies.IsoComboBox;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentISO;
 import ambroafb.general.interfaces.Annotations.ContentNotEmpty;
-import ambroafb.general.interfaces.Annotations.ContentPattern;
 import ambroafb.general.interfaces.DialogController;
 import ambroafb.general.interfaces.EditorPanelable;
 import java.net.URL;
@@ -36,7 +35,7 @@ public class CurrencyDialogController extends DialogController {
     private IsoComboBox iso;
     @FXML @ContentNotEmpty
     private TextField descrip;
-    @FXML @ContentNotEmpty @ContentPattern(value = "\\p{Sc}", explain = "anot_currency_exp")
+    @FXML @ContentNotEmpty // @ContentPattern(value = "\\p{Sc}", explain = "anot_currency_exp")
     private TextField symbol;
 
     @Override
@@ -53,7 +52,7 @@ public class CurrencyDialogController extends DialogController {
     protected void bindObjectToSceneComponents(EditorPanelable object) {
         if (object != null){
             Currency currency = (Currency)object;
-            openDate.valueProperty().bindBidirectional(currency.dateProperty());
+            openDate.valueProperty().bind(currency.createdDateProperty());
             iso.valueProperty().bindBidirectional(currency.isoProperty());
             descrip.textProperty().bindBidirectional(currency.descripProperty());
             symbol.textProperty().bindBidirectional(currency.symbolProperty());
@@ -62,7 +61,6 @@ public class CurrencyDialogController extends DialogController {
 
     @Override
     protected void makeExtraActions(EditorPanel.EDITOR_BUTTON_TYPE buttonType) {
-        openDate.setDisable(true);
         if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.ADD)){
             iso.setEditable(true);
         }

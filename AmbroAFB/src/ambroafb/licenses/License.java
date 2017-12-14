@@ -75,7 +75,6 @@ public class License extends EditorPanelable {
     @AView.Column(title = "%extra_days", width = "64", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final IntegerProperty additionalDays;
     
-//    private final StringProperty lastLoginTime;
     private final ObjectProperty<LocalDate> lastLoginTimeObj;
     
     private final BooleanProperty isNew;
@@ -99,11 +98,8 @@ public class License extends EditorPanelable {
         remark = new SimpleStringProperty("");
         additionalDays = new SimpleIntegerProperty(0);
         licenseNumber = new SimpleIntegerProperty(0);
-//        firstDateDescrip = new SimpleStringProperty("");
         firstDateObj = new SimpleObjectProperty<>();
-//        lastDateDescrip = new SimpleStringProperty("");
         lastDateObj = new SimpleObjectProperty<>();
-//        lastLoginTime = new SimpleStringProperty("");
         lastLoginTimeObj = new SimpleObjectProperty<>();
         isNew = new SimpleBooleanProperty(false);
         
@@ -112,9 +108,6 @@ public class License extends EditorPanelable {
         });
         rebindStatus();
         
-//        firstDateObj.addListener(new DateListener(firstDateDescrip));
-//        lastDateObj.addListener(new DateListener(lastDateDescrip));
-//        lastLoginTimeObj.addListener(new DateListener(lastLoginTime));
     }
     
     private void rebindStatus(){

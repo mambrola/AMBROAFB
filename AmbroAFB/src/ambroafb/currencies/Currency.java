@@ -6,16 +6,19 @@
 package ambroafb.currencies;
 
 import ambro.AView;
+import ambroafb.general.DateCellFactory;
 import ambroafb.general.DateConverter;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnFeatures;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
+import java.util.Objects;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 
 /**
  *
@@ -25,9 +28,8 @@ import javafx.beans.value.ObservableValue;
 public class Currency extends EditorPanelable {
 
     
-    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
-    private final StringProperty createdDate;
-    private final ObjectProperty<LocalDate> dateProperty;
+    @AView.Column(title = "%date", width = TableColumnFeatures.Width.DATE, styleClass = TableColumnFeatures.Style.TEXT_CENTER, cellFactory = DateCellFactory.LocalDateCell.class)
+    private final ObjectProperty<LocalDate> createdDate;
     
     @AView.Column(title = "%currency_name", width = TableColumnFeatures.Width.ISO, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final StringProperty iso;
@@ -39,26 +41,17 @@ public class Currency extends EditorPanelable {
     private final StringProperty symbol;
     
     public Currency(){
-        createdDate = new SimpleStringProperty("");
-        dateProperty = new SimpleObjectProperty<>();
+        createdDate = new SimpleObjectProperty<>();
         iso = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
         symbol = new SimpleStringProperty("");
-        
-        dateProperty.addListener((ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) -> {
-            String dateStr = "";
-            if (newValue != null){
-                dateStr = DateConverter.getInstance().getDayMonthnameYearBySpace(newValue);
-            }
-            createdDate.set(dateStr);
-        });
         
     }
 
     
     // Properties:
-    public ObjectProperty<LocalDate> dateProperty(){
-        return dateProperty;
+    public ReadOnlyObjectProperty<LocalDate> createdDateProperty(){
+        return createdDate;
     }
     
     public StringProperty isoProperty(){
@@ -75,6 +68,11 @@ public class Currency extends EditorPanelable {
     
     
     // Getters:
+    @JsonIgnore
+    public String getCreatedDate(){
+        return (createdDate.get() == null) ? null : createdDate.get().toString();
+    }
+    
     public String getIso(){
         return iso.get();
     }
@@ -89,8 +87,9 @@ public class Currency extends EditorPanelable {
     
     
     // Setters:
+    @JsonProperty
     private void setCreatedDate(String date) {
-        this.dateProperty.set(DateConverter.getInstance().parseDate(date));
+        this.createdDate.set(DateConverter.getInstance().parseDate(date));
     }
     
     public void setIso(String iso){
@@ -126,7 +125,7 @@ public class Currency extends EditorPanelable {
         setIso(otherCurrency.getIso());
         setDescrip(otherCurrency.getDescrip());
         setSymbol(otherCurrency.getSymbol());
-        dateProperty.set(otherCurrency.dateProperty().get());
+        setCreatedDate(otherCurrency.getCreatedDate());
     }
 
     @Override
@@ -157,10 +156,10 @@ public class Currency extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup){
         Currency currencyBackup = (Currency) backup;
-        return  this.getIso().equals(currencyBackup.getIso()) &&
-                this.getDescrip().equals(currencyBackup.getDescrip()) &&
-                this.getSymbol().equals(currencyBackup.getSymbol()) &&
-                Utils.objectEquals(dateProperty.get(), currencyBackup.dateProperty().get());
+        return  Objects.equals(getIso(), currencyBackup.getIso()) &&
+                Objects.equals(getDescrip(), currencyBackup.getDescrip()) &&
+                Objects.equals(getSymbol(), currencyBackup.getSymbol()) &&
+                Objects.equals(getCreatedDate(), currencyBackup.getCreatedDate());
     }
     
     /**

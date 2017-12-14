@@ -19,7 +19,7 @@
                     <VBox styleClass="couple">
                         <children>
                             <Label text="%date" styleClass="validationMessage" />
-                            <ADatePicker fx:id="openDate" />
+                            <ADatePicker fx:id="openDate" disable="true" />
                         </children>
                     </VBox>
                     <VBox styleClass="couple">
