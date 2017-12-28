@@ -7,6 +7,7 @@ package ambroafb.countries;
 
 import ambro.AView;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TableColumnFeatures;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 import javafx.beans.binding.Bindings;
@@ -16,6 +17,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 
 /**
@@ -29,6 +32,9 @@ public class Country extends EditorPanelable{
     private static final String DB_TABLE_NAME = "countries";
     private static final String REZIDENT_COUNTRY_CODE = "GE";
     
+    @AView.Column(width = "50", cellFactory = FlagCellFactory.class, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
+    private final StringProperty flagSUrl;
+    
     @AView.Column(width = "30")
     private final StringProperty code;
 
@@ -40,9 +46,6 @@ public class Country extends EditorPanelable{
     
     @AView.Column(title = "%prefix_phone", width = "60")
     private final StringProperty phonePrefix;
-    
-    @AView.Column(width = "60", cellFactory = FlagCellFactory.class)
-    private final StringProperty flagSUrl;
     
     private String code3, flagUrl;
     
@@ -214,20 +217,24 @@ public class Country extends EditorPanelable{
     
     public static class FlagCellFactory implements Callback<TableColumn<Country, String>, TableCell<Country, String>> {
 
+        private final String url = "http://kfz-soft.com/public/images/CountryFlags/";
+        private final double fitWidth = 32;
+        private final double fitHeight = 16;
+        
+        
         @Override
         public TableCell<Country, String> call(TableColumn<Country, String> param) {
             return new TableCell<Country, String>() {
                 @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty){
+                protected void updateItem(String imgName, boolean empty) {
+                    super.updateItem(imgName, empty);
+                    if (imgName == null || empty){
                         setGraphic(null);
                     }
                     else {
-                        System.out.println("Download Flags Here ...");
-//                        new Thread(() -> {
-//                            Platform.runLater(() -> {});
-//                        }).start();
+                        Image flag = new Image(url + imgName, fitWidth, fitHeight, false, true, true);
+                        ImageView imgView = new ImageView(flag);
+                        setGraphic(imgView);
                     }
                 }
             };
