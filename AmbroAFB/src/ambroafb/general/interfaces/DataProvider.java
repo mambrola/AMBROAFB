@@ -25,6 +25,8 @@ import org.json.JSONObject;
 public abstract class DataProvider {
     
     public static final JSONObject PARAM_FOR_ALL = new ConditionBuilder().build();
+    public static final String GLOBAL_INSERT_UPDATE_SIMPLE = "simple_insert_update";
+    public static final String GLOBAL_DELETE = "simple_delete";
     
     protected final String DB_ID = "rec_id";
     
@@ -84,7 +86,7 @@ public abstract class DataProvider {
         DBClient dbClient = GeneralConfig.getInstance().getDBClient();
         JSONArray data;
         try {
-            data = dbClient.callProcedureAndGetAsJson("general_insert_update_simple", tableName, dbClient.getLang(), targetJson);
+            data = dbClient.callProcedureAndGetAsJson(GLOBAL_INSERT_UPDATE_SIMPLE, tableName, dbClient.getLang(), targetJson);
         } catch (AuthServerException ex) {
             throw ExceptionsFactory.getAppropriateException(ex);
         }
@@ -234,6 +236,6 @@ public abstract class DataProvider {
      * @throws Exception 
      */
     protected void generalDelete(String tableName, int recId) throws Exception {
-        callProcedure("general_delete", tableName, recId);
+        callProcedure(GLOBAL_DELETE, tableName, recId);
     }
 }
