@@ -59,11 +59,11 @@ public class Balance extends EditorPanelable implements TreeItemable {
     private static final String mediumBackground = "medium_background";
     private static final String darkBackground = "dark_background";
     
-    private static final int level_0 = 0;
-    private static final int level_1 = 1;
-    private static final int level_2 = 2;
-    private static final int level_3 = 3;
-    private static final int level_4 = 4;
+    private static final int LEVEL_0 = 0;
+    private static final int LEVEL_1 = 1;
+    private static final int LEVEL_2 = 2;
+    private static final int LEVEL_3 = 3;
+    private static final int LEVEL_4 = 4;
     
     public Balance(){
         accountIso = new SimpleStringProperty("");
@@ -247,7 +247,7 @@ public class Balance extends EditorPanelable implements TreeItemable {
 
     @JsonIgnore
     public boolean isAccount() {
-        return getLevel() == level_0;
+        return getLevel() == LEVEL_0;
     }
     
     /**
@@ -268,13 +268,13 @@ public class Balance extends EditorPanelable implements TreeItemable {
     @JsonIgnore
     private static double getCoeficientOn(int level){
         switch(level){
-            case level_1:
+            case LEVEL_1:
                 return 1.2;
-            case level_2:
+            case LEVEL_2:
                 return 1.3;
-            case level_3:
+            case LEVEL_3:
                 return 1.4;
-            case level_4:
+            case LEVEL_4:
                 return 1.5;
             default:
                 return 1.1;

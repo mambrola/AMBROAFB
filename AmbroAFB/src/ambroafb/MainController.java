@@ -12,7 +12,6 @@ import ambroafb.accounts.detail_pane.AccountDetailPane;
 import ambroafb.accounts.filter.AccountFilter;
 import ambroafb.balance_accounts.BalAccountManager;
 import ambroafb.balance_accounts.BalanceAccount;
-import ambroafb.balance_accounts.BalanceAccounts;
 import ambroafb.balances.Balance;
 import ambroafb.balances.BalanceManager;
 import ambroafb.balances.filter.BalanceFilter;
@@ -38,10 +37,10 @@ import ambroafb.general.StagesContainer;
 import ambroafb.general.Utils;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.editor_panel.balance.BalanceEditorPanel;
-import ambroafb.general.editor_panel.balance_account.BalanceAccountEditorPanel;
 import ambroafb.general.editor_panel.doc.DocEditorPanel;
 import ambroafb.general.editor_panel.in_out.InOutEditorPanel;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.EditorPanelableManager;
 import ambroafb.general.interfaces.FilterModel;
 import ambroafb.general.interfaces.Filterable;
 import ambroafb.general.interfaces.TreeItemable;
@@ -430,10 +429,29 @@ public class MainController implements Initializable {
         String stageTitle = "bal_accounts";
         Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BalanceAccount.class.getSimpleName());
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
-            BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage, BalanceAccount.class, stageTitle, new BalanceAccountEditorPanel());
-            balAccounts.setEPManager(new BalAccountManager());
-            balAccounts.getController().reAssignTable(null);
-            balAccounts.show();
+            TreeTableList balanceAccounts = new TreeTableList(AmbroAFB.mainStage, Balance.class, stageTitle);
+            EditorPanelableManager epManager = new BalAccountManager();
+            balanceAccounts.setEPManager(epManager);
+            
+            // function ...
+            Function<List<EditorPanelable>, ObservableList<EditorPanelable>> makeTreeFn = (balAccList) -> {
+                ObservableList<EditorPanelable> roots = FXCollections.observableArrayList();
+                balAccList.stream().map((elem) -> (BalanceAccount)elem).forEach((balAcc) -> System.out.println(balAcc));
+                return roots;
+            };
+            balanceAccounts.getController().setTreeFeatures(makeTreeFn);
+            Filterable filter = epManager.getFilterFor(balanceAccounts);
+            FilterModel model = null;
+            if (filter != null){
+                model = filter.getResult();
+            }
+            balanceAccounts.getController().reAssignTable(model);
+            balanceAccounts.show();
+            
+//            BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage, BalanceAccount.class, stageTitle, new BalanceAccountEditorPanel());
+//            balAccounts.setEPManager(new BalAccountManager());
+//            balAccounts.getController().reAssignTable(null);
+//            balAccounts.show();
         }
         else {
             balAccountsStage.requestFocus();
@@ -455,7 +473,7 @@ public class MainController implements Initializable {
                 root.setDescrip(GeneralConfig.getInstance().getTitleFor("balance"));
                 roots.add(root);
                 balanseList.stream().map((elem) -> (Balance)elem).forEach((balance) -> {
-                    addElem(root, balance);
+                    if(balance.getIdentificator() != root.getIdentificator()) addElem(root, balance);
                 });
                 return roots;
             };
@@ -495,7 +513,7 @@ public class MainController implements Initializable {
                 root.setDescrip(GeneralConfig.getInstance().getTitleFor("profits_losses"));
                 roots.add(root);
                 inOutsList.stream().map((elem) -> (InOut)elem).forEach((inOut) -> {
-                    addElem(root, inOut);
+                    if(inOut.getIdentificator() != root.getIdentificator()) addElem(root, inOut);
                 });
                 return roots;
             };

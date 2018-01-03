@@ -9,6 +9,7 @@ import ambro.AFilterableTreeTableView;
 import ambro.AView;
 import ambroafb.general.Names;
 import ambroafb.general.interfaces.EditorPanelable;
+import ambroafb.general.interfaces.TreeItemable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javafx.beans.binding.Bindings;
@@ -27,7 +28,7 @@ import javafx.collections.ObservableList;
  *
  * @author dato
  */
-public class BalanceAccount extends EditorPanelable {
+public class BalanceAccount extends EditorPanelable implements TreeItemable {
 
     private final StringProperty balAcc;
     private final IntegerProperty actPas;
@@ -220,6 +221,21 @@ public class BalanceAccount extends EditorPanelable {
     @JsonIgnore
     public boolean isLeaf(){
         return getLevel() == 0;
+    }
+
+    @Override
+    public ObservableList<BalanceAccount> getChildren() {
+        return childrenAccounts;
+    }
+
+    @Override
+    public int getIdentificator() {
+        return getRecId();
+    }
+
+    @Override
+    public int getParentIdentificator() {
+        return getParentRecId();
     }
     
 
