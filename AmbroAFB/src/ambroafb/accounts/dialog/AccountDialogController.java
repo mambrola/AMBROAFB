@@ -159,7 +159,7 @@ public class AccountDialogController extends DialogController {
             openDate.setValue(LocalDate.now());
         }
         
-        Account accOnScene = ((Account)sceneObj);
+        Account accOnScene = (Account)sceneObj;
         
         Consumer<ObservableList<BalanceAccount>> setBalAccByNumber = (balAccList) -> {
             Integer balAccountId = accOnScene.getBalAccountId();
@@ -187,7 +187,6 @@ public class AccountDialogController extends DialogController {
 
     @Override
     protected void removeBinds(){
-        System.out.println("removeBinds in AccountDialogConroller ...");
         Account account  = (Account)sceneObj;
         account.balAccountProperty().unbind();
     }

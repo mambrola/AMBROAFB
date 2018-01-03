@@ -6,7 +6,6 @@
 package ambroafb.currency_rates;
 
 import ambro.AView;
-import ambroafb.currencies.Currency;
 import ambroafb.general.DateCellFactory;
 import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
@@ -19,7 +18,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 
 
 /**
@@ -36,7 +34,6 @@ public class CurrencyRate extends EditorPanelable {
     
     @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final StringProperty iso;
-    private final ObjectProperty<Currency> currency;
     
     @AView.Column(title = "%rate", width = "80", styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final StringProperty rate;
@@ -45,20 +42,8 @@ public class CurrencyRate extends EditorPanelable {
         date = new SimpleObjectProperty<>();
         count = new SimpleStringProperty("");
         iso = new SimpleStringProperty("");
-        currency = new SimpleObjectProperty<>(new Currency());
         rate = new SimpleStringProperty("");
         
-        currency.addListener((ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) -> {
-            rebindIso();
-        });
-        rebindIso();
-    }
-    
-    private void rebindIso(){
-        iso.unbind();
-        if (currency.get() != null){
-            iso.bind(currency.get().isoProperty());
-        }
     }
     
     
@@ -71,8 +56,8 @@ public class CurrencyRate extends EditorPanelable {
         return count;
     }
     
-    public ObjectProperty<Currency> currencyProperty(){
-        return currency;
+    public StringProperty isoProperty() {
+        return iso;
     }
     
     public StringProperty rateProperty() {
@@ -95,7 +80,7 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public String getIso(){
-        return currency.get().getIso();
+        return iso.get();
     }
             
     public Double getRate(){
@@ -112,7 +97,7 @@ public class CurrencyRate extends EditorPanelable {
     }
     
     public void setIso(String iso) {
-        this.currency.get().setIso(iso);
+        this.iso.set(iso);
     }
     
     public void setRate(Double rate){
