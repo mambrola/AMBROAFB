@@ -223,17 +223,17 @@ public class BalanceAccount extends EditorPanelable implements TreeItemable {
         return getLevel() == 0;
     }
 
-    @Override
+    @Override @JsonIgnore
     public ObservableList<BalanceAccount> getChildren() {
         return childrenAccounts;
     }
 
-    @Override
+    @Override @JsonIgnore
     public int getIdentificator() {
         return getRecId();
     }
 
-    @Override
+    @Override @JsonIgnore
     public int getParentIdentificator() {
         return getParentRecId();
     }

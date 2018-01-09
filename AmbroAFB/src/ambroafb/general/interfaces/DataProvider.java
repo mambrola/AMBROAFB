@@ -201,6 +201,7 @@ public abstract class DataProvider {
         } catch (AuthServerException ex) {
             throw ExceptionsFactory.getAppropriateException(ex);
         }
+//        data.remove(0);
         return Utils.getListFromJSONArray(listElementClass, data);
     }
     

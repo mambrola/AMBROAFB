@@ -429,17 +429,22 @@ public class MainController implements Initializable {
         String stageTitle = "bal_accounts";
         Stage balAccountsStage = StagesContainer.getStageFor(AmbroAFB.mainStage, BalanceAccount.class.getSimpleName());
         if (balAccountsStage == null || !balAccountsStage.isShowing()){
-            TreeTableList balanceAccounts = new TreeTableList(AmbroAFB.mainStage, Balance.class, stageTitle);
+            TreeTableList balanceAccounts = new TreeTableList(AmbroAFB.mainStage, BalanceAccount.class, stageTitle);
             EditorPanelableManager epManager = new BalAccountManager();
             balanceAccounts.setEPManager(epManager);
             
             // function ...
             Function<List<EditorPanelable>, ObservableList<EditorPanelable>> makeTreeFn = (balAccList) -> {
                 ObservableList<EditorPanelable> roots = FXCollections.observableArrayList();
-                balAccList.stream().map((elem) -> (BalanceAccount)elem).forEach((balAcc) -> System.out.println(balAcc));
+                BalanceAccount root = (BalanceAccount)balAccList.get(0);
+                roots.add(root);
+                balAccList.stream().map((elem) -> (BalanceAccount)elem).forEach((balAcc) -> {
+                    if(balAcc.getIdentificator() != root.getIdentificator()) addElem(root, balAcc);
+                });
                 return roots;
             };
             balanceAccounts.getController().setTreeFeatures(makeTreeFn);
+            balanceAccounts.getController().setExpand(1);
             Filterable filter = epManager.getFilterFor(balanceAccounts);
             FilterModel model = null;
             if (filter != null){
@@ -447,11 +452,6 @@ public class MainController implements Initializable {
             }
             balanceAccounts.getController().reAssignTable(model);
             balanceAccounts.show();
-            
-//            BalanceAccounts balAccounts = new BalanceAccounts(AmbroAFB.mainStage, BalanceAccount.class, stageTitle, new BalanceAccountEditorPanel());
-//            balAccounts.setEPManager(new BalAccountManager());
-//            balAccounts.getController().reAssignTable(null);
-//            balAccounts.show();
         }
         else {
             balAccountsStage.requestFocus();

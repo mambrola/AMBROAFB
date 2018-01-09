@@ -170,12 +170,18 @@ public class Conversion extends EditorPanelable {
         parent.setRecId(getRecId());
         parent.setIso(getSellCurrency());
         parent.setAmount(getSellAmount());
-        parent.debitProperty().set(getSellAccount());
+//        parent.debitProperty().set(getSellAccount());
+        parent.setDebitId(getSellAccount().getRecId());
+        parent.setDebitDescrip(getSellAccount().getDescrip());
+        parent.setDebitAccount(getSellAccount().getAccount());
         
         child.setParentRecId(parent.getRecId());
         child.setIso(getBuyingCurrency());
-        child.debitProperty().set(getBuyingAccount());
         child.setAmount(getBuyingAmount());
+//        child.debitProperty().set(getBuyingAccount());
+        child.setCreditId(getBuyingAccount().getRecId());
+        child.setCreditDescrip(getBuyingAccount().getDescrip());
+        child.setCreditAccount(getBuyingAccount().getAccount());
         
         return result;
     }

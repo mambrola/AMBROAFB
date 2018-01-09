@@ -49,8 +49,8 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     @AView.Column(title = "%descrip", width = "200")
     private final SimpleStringProperty descrip;
     
-    @AView.Column(title = "%product_specific", width = "200", cellFactory = SpecificCellFactory.class)
-    private final ObjectProperty<ProductSpecific> productSpecific;
+//    @AView.Column(title = "%product_specific", width = "200", cellFactory = SpecificCellFactory.class)
+    private final ObjectProperty<ProductSpecific> productSpecific; // ---
     
     @AView.Column(title = "%monthly_price", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final SimpleStringProperty price;
@@ -146,10 +146,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return productSpecific.get().getProductSpecificId();
     }
     
-    @JsonIgnore
-    public String getSpecificDescrip(){
-        return productSpecific.get().getDescrip();
-    }
+//    @JsonIgnore
+//    public String getSpecificDescrip(){
+//        return productSpecific.get().getDescrip();
+//    }
     
     public Float getPrice() {
         return NumberConverter.stringToFloat(price.get(), 2, priceDefaultValue);
@@ -194,10 +194,10 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         this.productSpecific.get().setProductSpecificId(specific);
     }
     
-    @JsonProperty
-    public void setSpecificDescrip(String specificDescrip){
-        this.productSpecific.get().setDescrip(specificDescrip);
-    }
+//    @JsonProperty
+//    public void setSpecificDescrip(String specificDescrip){
+//        this.productSpecific.get().setDescrip(specificDescrip);
+//    }
     
     public void setPrice(Float price) {
         this.price.set(NumberConverter.convertNumberToStringBySpecificFraction(price, 2));

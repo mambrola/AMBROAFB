@@ -7,6 +7,7 @@ package ambroafb.docs.types.doc_in_order;
 
 import ambro.ADatePicker;
 import ambroafb.AmbroAFB;
+import ambroafb.accounts.Account;
 import ambroafb.accounts.AccountComboBox;
 import ambroafb.currencies.IsoComboBox;
 import ambroafb.docs.Doc;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -31,6 +33,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 /**
  *
@@ -155,11 +158,19 @@ public class DocOrderComponent extends VBox {
             }
             docInDocDate.valueProperty().bindBidirectional(doc.docInDocDateProperty());
             currency.valueProperty().bindBidirectional(doc.isoProperty());
-            debits.valueProperty().bindBidirectional(doc.debitProperty());
-            credits.valueProperty().bindBidirectional(doc.creditProperty());
+//            debits.valueProperty().bindBidirectional(doc.debitProperty());
+//            credits.valueProperty().bindBidirectional(doc.creditProperty());
             amount.textProperty().bindBidirectional(doc.amountProperty());
             docCodes.valueProperty().bindBidirectional(doc.docCodeProperty());
             descrip.textProperty().bindBidirectional(doc.descripProperty());
+            
+            Integer debitId = doc.getDebitId();
+            Bindings.bindBidirectional(doc.debitIdProperty(), debits.valueProperty(), new AccountToIdBiConverter(debits.getItems()));
+            if (debitId != null && debits.getValue() == null) doc.setDebitId(debitId);
+            
+            Integer creditId = doc.getCreditId();
+            Bindings.bindBidirectional(doc.creditIdProperty(), credits.valueProperty(), new AccountToIdBiConverter(credits.getItems()));
+            if (creditId != null && credits.getValue() == null) doc.setCreditId(creditId);
         }
     }
 
@@ -186,5 +197,35 @@ public class DocOrderComponent extends VBox {
                 optNode.get().setDisable(true);
             }
         }
+    }
+    
+    
+    private class AccountToIdBiConverter extends StringConverter<Account> {
+
+        private final ObservableList<Account> accounts;
+        
+        public AccountToIdBiConverter(ObservableList<Account> accounts){
+            this.accounts = accounts;
+        }
+        
+        @Override
+        public String toString(Account acc) {
+            String id = null;
+            if (acc != null){
+                id = "" + acc.getRecId();
+            }
+            return id;
+        }
+
+        @Override
+        public Account fromString(String id) {
+            Account account = null;
+            Optional<Account> optAcc = accounts.stream().filter((acc) -> id.equals("" + acc.getRecId())).findFirst();
+            if (optAcc.isPresent()){
+                account = optAcc.get();
+            }
+            return account;
+        }
+        
     }
 }

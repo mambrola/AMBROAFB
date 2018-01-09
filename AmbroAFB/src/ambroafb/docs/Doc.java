@@ -6,23 +6,21 @@
 package ambroafb.docs;
 
 import ambro.AView;
-import ambroafb.accounts.Account;
 import ambroafb.general.DateCellFactory;
 import ambroafb.general.DateConverter;
 import ambroafb.general.NumberConverter;
-import ambroafb.general.Utils;
 import ambroafb.general.interfaces.EditorPanelable;
 import ambroafb.general.interfaces.TableColumnFeatures;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
+import java.util.Objects;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.image.ImageView;
@@ -49,11 +47,15 @@ public class Doc extends EditorPanelable {
     
     @AView.Column(title = "%debit", width = "260")
     private final StringProperty debitDescrip;
-    private final ObjectProperty<Account> debitObj;
+    private final StringProperty debitId;
+    private Long debitAccountNumber;
+//    private final ObjectProperty<Account> debitObj;
     
     @AView.Column(title = "%credit", width = "260")
     private final StringProperty creditDescrip;
-    private final ObjectProperty<Account> creditObj;
+    private final StringProperty creditId;
+    private Long creditAccountNumber;
+//    private final ObjectProperty<Account> creditObj;
     
     @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
     private final StringProperty iso;
@@ -86,10 +88,12 @@ public class Doc extends EditorPanelable {
         docInDocDate = new SimpleObjectProperty<>(LocalDate.now());
         
         debitDescrip = new SimpleStringProperty("");
-        debitObj = new SimpleObjectProperty<>(new Account());
+        debitId = new SimpleStringProperty();
+//        debitObj = new SimpleObjectProperty<>(new Account());
         
         creditDescrip = new SimpleStringProperty("");
-        creditObj = new SimpleObjectProperty<>(new Account());
+        creditId = new SimpleStringProperty();
+//        creditObj = new SimpleObjectProperty<>(new Account());
         
         iso = new SimpleStringProperty(isoDefaultValue);
         amount = new SimpleStringProperty("");
@@ -97,20 +101,20 @@ public class Doc extends EditorPanelable {
         descrip = new SimpleStringProperty("");
         ownerId = new SimpleIntegerProperty(ownerIdDefaultValue);
         
-        debitObj.addListener((ObservableValue<? extends Account> observable, Account oldValue, Account newValue) -> {
-            if (newValue != null){
-                debitDescrip.set(newValue.getDescrip());
-            }
-        });
-        
-        creditObj.addListener((ObservableValue<? extends Account> observable, Account oldValue, Account newValue) -> {
-            if (newValue != null){
-                creditDescrip.set(newValue.getDescrip());
-            }
-        });
-        
-        debitObj.get().setIso(isoDefaultValue);
-        creditObj.get().setIso(isoDefaultValue);
+//        debitObj.addListener((ObservableValue<? extends Account> observable, Account oldValue, Account newValue) -> {
+//            if (newValue != null){
+//                debitDescrip.set(newValue.getDescrip());
+//            }
+//        });
+//        
+//        creditObj.addListener((ObservableValue<? extends Account> observable, Account oldValue, Account newValue) -> {
+//            if (newValue != null){
+//                creditDescrip.set(newValue.getDescrip());
+//            }
+//        });
+//        
+//        debitObj.get().setIso(isoDefaultValue);
+//        creditObj.get().setIso(isoDefaultValue);
     }
     
     
@@ -130,13 +134,21 @@ public class Doc extends EditorPanelable {
         return docInDocDate;
     }
     
-    public ObjectProperty<Account> debitProperty(){
-        return debitObj;
+    public StringProperty debitIdProperty(){
+        return debitId;
     }
     
-    public ObjectProperty<Account> creditProperty(){
-        return creditObj;
+    public StringProperty creditIdProperty(){
+        return creditId;
     }
+    
+//    public ObjectProperty<Account> debitProperty(){
+//        return debitObj;
+//    }
+    
+//    public ObjectProperty<Account> creditProperty(){
+//        return creditObj;
+//    }
     
     public StringProperty isoProperty(){
         return iso;
@@ -185,12 +197,34 @@ public class Doc extends EditorPanelable {
         return iso.get();
     }
     
-    public int getDebitId(){
-        return debitObj.get().getRecId();
+    public Integer getDebitId(){
+        return NumberConverter.stringToInteger(debitId.get(), null);
+//        return debitObj.get().getRecId();
     }
     
-    public int getCreditId(){
-        return creditObj.get().getRecId();
+    @JsonIgnore
+    public Long getDebitAccount(){
+        return debitAccountNumber;
+    }
+    
+    @JsonIgnore
+    public String getDebitDescrip(){
+        return debitDescrip.get();
+    }
+    
+    public Integer getCreditId(){
+        return NumberConverter.stringToInteger(creditId.get(), null);
+//        return creditObj.get().getRecId();
+    }
+    
+    @JsonIgnore
+    public Long getCreditAccount(){
+        return creditAccountNumber;
+    }
+    
+    @JsonIgnore
+    public String getCreditDescrip(){
+        return creditDescrip.get();
     }
     
     public Float getAmount(){
@@ -246,36 +280,44 @@ public class Doc extends EditorPanelable {
         this.docInDocDate.set(DateConverter.getInstance().parseDate(docInDocDate));
     }
     
-    public void setDebitId(int debitId){
-        debitObj.get().setRecId(debitId);
+    public void setDebitId(Integer debitId){
+        this.debitId.set((debitId == null) ? null : debitId.toString());
+//        debitObj.get().setRecId(debitId);
     }
     
+    @JsonProperty
     public void setDebitAccount(Long accountNumber){
-        debitObj.get().setAccount(accountNumber);
+        debitAccountNumber = accountNumber;
+//        debitObj.get().setAccount(accountNumber);
     }
     
+    @JsonProperty
     public void setDebitDescrip(String descrip){
-        debitObj.get().setDescrip(descrip);
+//        debitObj.get().setDescrip(descrip);
         debitDescrip.set(descrip);
     }
     
-    public void setCreditId(int creditId){
-        creditObj.get().setRecId(creditId);
+    public void setCreditId(Integer creditId){
+        this.creditId.set((creditId == null) ? null : creditId.toString());
+//        creditObj.get().setRecId(creditId);
     }
     
+    @JsonProperty
     public void setCreditAccount(Long accountNumber){
-        creditObj.get().setAccount(accountNumber);
+        creditAccountNumber = accountNumber;
+//        creditObj.get().setAccount(accountNumber);
     }
     
+    @JsonProperty
     public void setCreditDescrip(String descrip){
-        creditObj.get().setDescrip(descrip);
+//        creditObj.get().setDescrip(descrip);
         creditDescrip.set(descrip);
     }
     
     public void setIso(String iso){
         this.iso.set(iso);
-        debitObj.get().setIso(iso);
-        creditObj.get().setIso(iso);
+//        debitObj.get().setIso(iso);
+//        creditObj.get().setIso(iso);
     }
     
     public void setAmount(Float amount){
@@ -321,10 +363,18 @@ public class Doc extends EditorPanelable {
         setDocDate(otherDoc.getDocDate());
         setDocInDocDate(otherDoc.getDocInDocDate());
         setIso(otherDoc.getIso());
-        debitObj.set(otherDoc.debitProperty().get().cloneWithID());
-        debitDescrip.set(otherDoc.debitProperty().get().getDescrip());
-        creditObj.set(otherDoc.creditProperty().get().cloneWithID());
-        creditDescrip.set(otherDoc.creditProperty().get().getDescrip());
+//        debitObj.set(otherDoc.debitProperty().get().cloneWithID());
+//        debitDescrip.set(otherDoc.debitProperty().get().getDescrip());
+//        creditObj.set(otherDoc.creditProperty().get().cloneWithID());
+//        creditDescrip.set(otherDoc.creditProperty().get().getDescrip());
+
+        setDebitId(otherDoc.getDebitId());
+        setDebitDescrip(otherDoc.getDebitDescrip());
+        setDebitAccount(otherDoc.getDebitAccount());
+        setCreditId(otherDoc.getCreditId());
+        setCreditDescrip(otherDoc.getCreditDescrip());
+        setCreditAccount(otherDoc.getCreditAccount());
+        
         setAmount(otherDoc.getAmount());
         setDocCode(otherDoc.getDocCode());
         setDescrip(otherDoc.getDescrip());
@@ -336,16 +386,23 @@ public class Doc extends EditorPanelable {
     @Override
     public boolean compares(EditorPanelable backup) {
         Doc docBackup = (Doc) backup;
-        Account debitAcc = Utils.avoidNullAndReturnEmpty(debitObj.get());
-        Account creditAcc = Utils.avoidNullAndReturnEmpty(creditObj.get());
+//        Account debitAcc = Utils.avoidNullAndReturnEmpty(debitObj.get());
+//        Account creditAcc = Utils.avoidNullAndReturnEmpty(creditObj.get());
         
         return  getParentRecId() == docBackup.getParentRecId() &&
                 getProcessId() == docBackup.getProcessId() &&
                 getDocDate().equals(docBackup.getDocDate()) &&
                 getDocInDocDate().equals(docBackup.getDocInDocDate()) &&
                 getIso().equals(docBackup.getIso()) &&
-                debitAcc.partlyCompare(docBackup.debitProperty().get()) &&
-                creditAcc.partlyCompare(docBackup.creditProperty().get()) &&
+//                debitAcc.partlyCompare(docBackup.debitProperty().get()) &&
+//                creditAcc.partlyCompare(docBackup.creditProperty().get()) &&
+                Objects.equals(getDebitId(), docBackup.getDebitId()) &&
+                Objects.equals(getDebitDescrip(), docBackup.getDebitDescrip()) &&
+                Objects.equals(getDebitAccount(), docBackup.getDebitAccount()) &&
+                Objects.equals(getCreditId(), docBackup.getCreditId()) &&
+                Objects.equals(getCreditDescrip(), docBackup.getCreditDescrip()) &&
+                Objects.equals(getCreditAccount(), docBackup.getCreditAccount()) &&
+                
                 getAmount().equals(docBackup.getAmount()) &&
                 getDocCode().equals(docBackup.getDocCode()) &&
                 getDescrip().equals(docBackup.getDescrip()) &&
@@ -356,7 +413,7 @@ public class Doc extends EditorPanelable {
 
     @Override
     public String toStringForSearch() {
-        return  debitProperty().get().getDescrip() + " " + creditProperty().get().getDescrip() + " " + getDescrip();
+        return  getDebitDescrip() + " " + getCreditDescrip()+ " " + getDescrip();
     }
 
     @Override
@@ -366,8 +423,8 @@ public class Doc extends EditorPanelable {
                         ", processId=" + processId.get() + 
                         ", docDateObj=" + docDate.get().toString() + 
                         ", docInDocDateObj=" + docInDocDate.get().toString() + 
-                        ", debitObj=" + debitObj.get().toString() + 
-                        ", creditObj=" + creditObj.get().toString() + 
+                        ", debitObj=" + getDebitId() + 
+                        ", creditObj=" + getCreditId() + 
                         ", iso=" + iso.get() + ", amount=" + amount.get() + ", docCode=" + docCode.get() + 
                         ", descrip=" + descrip.get() + ", ownerId=" + ownerId.get() + 
                         ", docType=" + docType + ", markerDefaultValue=" + markerDefaultValue + '}';

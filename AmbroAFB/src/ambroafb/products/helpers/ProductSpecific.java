@@ -6,6 +6,7 @@
 package ambroafb.products.helpers;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -17,6 +18,7 @@ import javafx.beans.property.StringProperty;
  * @author dato
  */
 @SuppressWarnings("EqualsAndHashcode")
+@JsonIgnoreProperties({"productSpecificDescrip"})
 public class ProductSpecific {
 
     private int recId;

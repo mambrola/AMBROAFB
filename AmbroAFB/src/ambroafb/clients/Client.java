@@ -74,10 +74,8 @@ public class Client extends EditorPanelable{
     private final ObservableList<Phone> phones;
     
     @AView.Column(title = "%client_status", width = "100")
-//    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private final StringProperty statusDescrip;
     private final StringProperty statusId;
-//    private final ObjectProperty<ClientStatus> clientStatus;
     
     private final SimpleStringProperty address, zipCode, city;
 
@@ -88,8 +86,8 @@ public class Client extends EditorPanelable{
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private final StringProperty countryCode;
     private final StringProperty countryId;
-//    private final ObjectProperty<Country> country;
-
+    private final StringProperty countryDescrip;
+    
     @AView.Column(title = "%fax", width = TableColumnFeatures.Width.PHONE)
     private final SimpleStringProperty fax;
     
@@ -124,7 +122,7 @@ public class Client extends EditorPanelable{
                             concat(Utils.avoidNull(city));
         countryCode = new SimpleStringProperty();
         countryId = new SimpleStringProperty();
-//        country =           new SimpleObjectProperty<>(new Country());
+        countryDescrip = new SimpleStringProperty();
         IDNumber = new SimpleStringProperty("");
         phones = FXCollections.observableArrayList();
         phoneNumbers = new SimpleStringProperty("");
@@ -138,7 +136,6 @@ public class Client extends EditorPanelable{
         phones.addListener((ListChangeListener.Change<? extends Phone> c) -> {
             rebindPhoneNumbers();
         });
-//        rebindPhoneNumbers(); // not needed. setPhones(..) methods and above list listener provides phonesNumbers changing.
 
     }
     
@@ -293,6 +290,11 @@ public class Client extends EditorPanelable{
     public Integer getCountryId(){
         return NumberConverter.stringToInteger(countryId.get(), null);
     }
+    
+    @JsonIgnore
+    public String getCountryDescrip(){
+        return countryDescrip.get();
+    }
 
     public ObservableList<Phone> getPhones() {
         return phones;
@@ -414,6 +416,10 @@ public class Client extends EditorPanelable{
     public void setCountryId(Integer countryId){
         this.countryId.set((countryId == null) ? null : countryId.toString());
     }
+    
+    public void setCountryDescrip(String descrip){
+        this.countryDescrip.set(descrip);
+    }
 
     public final void setFax(String fax) {
         this.fax.set(fax);
@@ -451,6 +457,7 @@ public class Client extends EditorPanelable{
                                         Objects.equals(getCity(), otherClient.getCity()) &&
                                         Objects.equals(getCountryCode(), otherClient.getCountryCode()) &&
                                         Objects.equals(getCountryId(), otherClient.getCountryId()) &&
+                                        Objects.equals(getCountryDescrip(), otherClient.getCountryDescrip()) &&
                                         Objects.equals(getIDNumber(), otherClient.getIDNumber()) &&
                                         Objects.equals(getFax(), otherClient.getFax()) &&
                                         Objects.equals(getWww(), otherClient.getWww()) &&
@@ -509,14 +516,11 @@ public class Client extends EditorPanelable{
         getDocuments().clear();
         getDocuments().addAll(other.getDocuments());
         
-//        this.countryCode.set(other.countryCodeProperty().get().cloneWithID());
-//        ClientStatus statusClone = new ClientStatus();
-//        statusClone.copyFrom(other.statusDescripProperty().get());
-//        status.set(statusClone);
         setStatusId(other.getStatusId());
         setStatusDescrip(other.getStatusDescrip());
         setCountryId(other.getCountryId());
         setCountryCode(other.getCountryCode());
+        setCountryDescrip(other.getCountryDescrip());
     }
 
     @Override

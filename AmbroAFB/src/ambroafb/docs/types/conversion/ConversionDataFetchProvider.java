@@ -5,6 +5,7 @@
  */
 package ambroafb.docs.types.conversion;
 
+import ambroafb.accounts.Account;
 import ambroafb.docs.Doc;
 import ambroafb.general.interfaces.DataFetchProvider;
 import ambroafb.general.interfaces.FilterModel;
@@ -50,12 +51,20 @@ public class ConversionDataFetchProvider extends DataFetchProvider {
         result.descripProperty().set(firstDoc.getDescrip());
        
         result.setSellCurrency(firstDoc.getIso());
-        result.setSellAccount(firstDoc.debitProperty().get());
         result.setSellAmount(firstDoc.getAmount());
+        Account debitAcc = new Account();
+        debitAcc.setRecId(firstDoc.getDebitId());
+        debitAcc.setAccount(firstDoc.getDebitAccount());
+        debitAcc.setDescrip(firstDoc.getDebitDescrip());
+        result.setSellAccount(debitAcc);
         
         result.setBuyingCurrency(secondDoc.getIso());
-        result.setBuyingAccount(secondDoc.creditProperty().get());
         result.setBuyingAmount(secondDoc.getAmount());
+        Account creditAcc = new Account();
+        creditAcc.setRecId(secondDoc.getRecId());
+        creditAcc.setAccount(secondDoc.getCreditAccount());
+        creditAcc.setDescrip(secondDoc.getCreditDescrip());
+        result.setBuyingAccount(creditAcc);
         return result;
     }
     
