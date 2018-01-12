@@ -5,6 +5,7 @@
  */
 package ambroafb.products.dialog;
 
+import ambroafb.currencies.Currency;
 import ambroafb.currencies.CurrencyComboBox;
 import ambroafb.general.editor_panel.EditorPanel;
 import ambroafb.general.interfaces.Annotations.ContentAmount;
@@ -20,9 +21,14 @@ import ambroafb.general.scene_components.number_fields.integer_field.IntegerFiel
 import ambroafb.products.Product;
 import ambroafb.products.ProductsSpecificsComboBox;
 import ambroafb.products.helpers.ProductDiscount;
+import ambroafb.products.helpers.ProductSpecific;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -30,6 +36,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -62,7 +69,7 @@ public class ProductDialogController extends DialogController {
     
     @Override
     protected void componentsInitialize(URL url, ResourceBundle rb) {
-        currencies.fillComboBoxWithoutALLAndWithBasicIso(null);
+        
     }
 
     @Override
@@ -77,9 +84,9 @@ public class ProductDialogController extends DialogController {
             abbreviation.textProperty().bindBidirectional(product.abbreviationProperty());
             former.textProperty().bindBidirectional(product.formerProperty());
             descrip.textProperty().bindBidirectional(product.descriptionProperty());
-            specifics.valueProperty().bindBidirectional(product.specificProperty());
+//            specifics.valueProperty().bindBidirectional(product.specificProperty());
             price.textProperty().bindBidirectional(product.priceProperty());
-            currencies.valueProperty().bindBidirectional(product.currencyProperty());
+//            currencies.valueProperty().bindBidirectional(product.currencyProperty());
             maxCount.textProperty().bindBidirectional(product.notJurMaxCountProperty());
             isAlive.selectedProperty().bindBidirectional(product.isAliveProperty());
             testingDays.textProperty().bindBidirectional(product.testingDaysProperty());
@@ -91,11 +98,26 @@ public class ProductDialogController extends DialogController {
         if (buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.VIEW) || buttonType.equals(EditorPanel.EDITOR_BUTTON_TYPE.DELETE)){
             discounts.changeState(true);
         }
-        List<ProductDiscount> productDiscounts = ((Product)sceneObj).getDiscounts();
+        Product product = ((Product)sceneObj);
+        List<ProductDiscount> productDiscounts = product.getDiscounts();
         productDiscounts.forEach((discount) -> {
             discounts.getItems().add(discount);
         });
         createListListener(discounts.getItems(), productDiscounts);
+        
+        Consumer<ObservableList<ProductSpecific>> selectSpecific = (currencyList) -> {
+            Integer specificId = product.getSpecific();
+            Bindings.bindBidirectional(product.specificIdProperty(), specifics.valueProperty(), new SpecificToIdBiConverter());
+            product.setSpecific(specificId);
+        };
+        specifics.fillComboBox(selectSpecific);
+        
+        Consumer<ObservableList<Currency>> selectCurrency = (currencyList) -> {
+            String currecyIso = product.getIso();
+            Bindings.bindBidirectional(product.isoProperty(), currencies.valueProperty(), new CurrencyToIsoBiConverter());
+            product.setIso(currecyIso);
+        };
+        currencies.fillComboBoxWithoutALLAndWithBasicIso(selectCurrency);
     }
 
 
@@ -128,4 +150,48 @@ public class ProductDialogController extends DialogController {
     }
 
     
+    private class SpecificToIdBiConverter extends StringConverter<ProductSpecific> {
+
+        @Override
+        public String toString(ProductSpecific prodSpecific) {
+            String id = null;
+            if (prodSpecific != null) {
+                id = "" + prodSpecific.getProductSpecificId();
+            }
+            return id;
+        }
+
+        @Override
+        public ProductSpecific fromString(String id) {
+            ProductSpecific prodSpec = null;
+            Optional<ProductSpecific> optProductSpec = specifics.getItems().stream().filter((spec) -> Objects.equals(id, "" + spec.getProductSpecificId())).findFirst();
+            if (optProductSpec.isPresent()){
+                prodSpec = optProductSpec.get();
+            }
+            return prodSpec;
+        }
+    }
+    
+    
+    private class CurrencyToIsoBiConverter extends StringConverter<Currency> {
+
+        @Override
+        public String toString(Currency currency) {
+            String iso = null;
+            if (currency != null) {
+                iso = currency.getIso();
+            }
+            return iso;
+        }
+
+        @Override
+        public Currency fromString(String iso) {
+            Currency currency = null;
+            Optional<Currency> optCurrency = currencies.getItems().stream().filter((curr) -> Objects.equals(iso, curr.getIso())).findFirst();
+            if (optCurrency.isPresent()) {
+                currency = optCurrency.get();
+            }
+            return currency;
+        }
+    }
 }

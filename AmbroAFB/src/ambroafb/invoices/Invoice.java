@@ -418,7 +418,7 @@ public class Invoice extends EditorPanelable {
         Currency currency = new Currency();
         currency.setIso(finance.isoOrigin);
         currency.setSymbol(finance.symbolOrigin);
-        p.currencyProperty().set(currency);
+        p.setIso(currency.getIso());
         ProductDiscount discount = new ProductDiscount();
         discount.setDays(finance.months);
         discount.setDiscountRate(Utils.getDoubleValueFor(finance.discountRate));

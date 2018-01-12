@@ -7,7 +7,6 @@ package ambroafb.products;
 
 import ambro.ANodeSlider;
 import ambro.AView;
-import ambroafb.currencies.Currency;
 import ambroafb.general.GeneralConfig;
 import ambroafb.general.NumberConverter;
 import ambroafb.general.Utils;
@@ -20,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -50,13 +50,13 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     private final SimpleStringProperty descrip;
     
 //    @AView.Column(title = "%product_specific", width = "200", cellFactory = SpecificCellFactory.class)
-    private final ObjectProperty<ProductSpecific> productSpecific; // ---
+    private final StringProperty specificId;
     
     @AView.Column(title = "%monthly_price", width = TableColumnFeatures.Width.MONEY, styleClass = TableColumnFeatures.Style.TEXT_RIGHT)
     private final SimpleStringProperty price;
     
-    @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = TableColumnFeatures.Style.TEXT_CENTER, cellFactory = IsoCellFactory.class)
-    private final ObjectProperty<Currency> currency;
+    @AView.Column(title = "%iso", width = TableColumnFeatures.Width.ISO, styleClass = TableColumnFeatures.Style.TEXT_CENTER)
+    private final StringProperty iso;
     
     @AView.Column(title = "%discounts", width = "90", cellFactory = DiscountCellFactory.class)
     private final ObjectProperty<ObservableList<ProductDiscount>> discountsObj; // List may is not Observable. The discounts runtime update result is the same.
@@ -80,9 +80,9 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         abbreviation = new SimpleStringProperty("");
         former = new SimpleStringProperty("");
         descrip = new SimpleStringProperty("");
-        productSpecific = new SimpleObjectProperty<>(new ProductSpecific());
+        specificId = new SimpleStringProperty();
         price = new SimpleStringProperty("");
-        currency = new SimpleObjectProperty<>(new Currency());
+        iso = new SimpleStringProperty();
         discountsObj = new SimpleObjectProperty<>(FXCollections.observableArrayList());
         isActive = new SimpleBooleanProperty();
         notJurMaxCount = new SimpleStringProperty("");
@@ -107,12 +107,12 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return price;
     }
     
-    public ObjectProperty<Currency> currencyProperty(){
-        return currency;
+    public StringProperty isoProperty(){
+        return iso;
     }
     
-    public ObjectProperty<ProductSpecific> specificProperty(){
-        return productSpecific;
+    public StringProperty specificIdProperty(){
+        return specificId;
     }
     
     public BooleanProperty isAliveProperty(){
@@ -142,21 +142,19 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return descrip.get();
     }
     
-    public int getSpecific(){
-        return productSpecific.get().getProductSpecificId();
+    /**
+     * @return The DB id of product specific.
+     */
+    public Integer getSpecific(){
+        return NumberConverter.stringToInteger(specificId.get(), null);
     }
-    
-//    @JsonIgnore
-//    public String getSpecificDescrip(){
-//        return productSpecific.get().getDescrip();
-//    }
     
     public Float getPrice() {
         return NumberConverter.stringToFloat(price.get(), 2, priceDefaultValue);
     }
     
     public String getIso(){
-        return this.currency.get().getIso();
+        return iso.get();
     }
     
     @JsonIgnore // Discounts must need "sets_separate_saving" parameter. So ProductDataChangeProvider provides to send accounts to DB.
@@ -169,11 +167,11 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
     }
     
     public Integer getNotJurMaxCount(){
-        return NumberConverter.stringToInteger(notJurMaxCount.get(), 0);
+        return NumberConverter.stringToInteger(notJurMaxCount.get(), null);
     }
     
     public Integer getTestingDays(){
-        return NumberConverter.stringToInteger(testingDays.get(), 0);
+        return NumberConverter.stringToInteger(testingDays.get(), null);
     }
     
     
@@ -190,21 +188,16 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         this.descrip.set(descrip);
     }
     
-    public void setSpecific(int specific){
-        this.productSpecific.get().setProductSpecificId(specific);
+    public void setSpecific(Integer specific){
+        this.specificId.set((specific == null) ? null : specific.toString());
     }
-    
-//    @JsonProperty
-//    public void setSpecificDescrip(String specificDescrip){
-//        this.productSpecific.get().setDescrip(specificDescrip);
-//    }
     
     public void setPrice(Float price) {
         this.price.set(NumberConverter.convertNumberToStringBySpecificFraction(price, 2));
     }
     
     public void setIso(String iso){
-        this.currency.get().setIso(iso);
+        this.iso.set(iso);
     }
     
     @JsonProperty
@@ -247,9 +240,7 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         setFormer(product.getFormer());
         setDescrip(product.getDescrip());
         
-        ProductSpecific clone = new ProductSpecific();
-        clone.copyFrom(product.specificProperty().get());
-        productSpecific.set(clone);
+        setSpecific(product.getSpecific());
         
         setPrice(product.getPrice());
         setIso(product.getIso());
@@ -295,12 +286,12 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         return  getAbbreviation().equals(productBackup.getAbbreviation()) &&
                 getFormer() == productBackup.getFormer() &&
                 getDescrip().equals(productBackup.getDescrip()) &&
-                specificProperty().get().compares(productBackup.specificProperty().get()) &&
+                Objects.equals(getSpecific(), productBackup.getSpecific()) &&
                 getPrice().equals(productBackup.getPrice()) &&
-                getIso().equals(productBackup.getIso()) &&
+                Objects.equals(getIso(), productBackup.getIso()) &&
                 getIsActive() == productBackup.getIsActive() &&
-                getNotJurMaxCount() == productBackup.getNotJurMaxCount() &&
-                getTestingDays() == productBackup.getTestingDays() &&
+                Objects.equals(getNotJurMaxCount(), productBackup.getNotJurMaxCount()) &&
+                Objects.equals(getTestingDays(), productBackup.getTestingDays()) &&
                 Utils.compareListsByElemOrder(getDiscounts(), productBackup.getDiscounts());
     }
 
@@ -382,21 +373,4 @@ public class Product extends EditorPanelable implements CountComboBoxItem {
         }
     }
     
-    /**
-     * The class provides to show iso in table appropriate cell.
-     */
-    public static class IsoCellFactory implements Callback<TableColumn<Product, Currency>, TableCell<Product, Currency>> {
-
-        @Override
-        public TableCell<Product, Currency> call(TableColumn<Product, Currency> param) {
-            return new TableCell<Product, Currency>() {
-                @Override
-                protected void updateItem(Currency item, boolean empty) {
-                    super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
-                    setText((item == null || empty) ? null : item.getIso());
-                }
-            };
-        }
-        
-    }
 }

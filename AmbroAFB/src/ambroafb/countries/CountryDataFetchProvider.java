@@ -21,7 +21,6 @@ public class CountryDataFetchProvider extends DataFetchProvider {
 
     private final String DB_TABLE_NAME = "countries";
     private final String ORDERED_PROCEDURE = "general_select_ordered";
-//    general_select_ordered('countries', 'ka', '{}', 'clients');
     
     public CountryDataFetchProvider(){
     
