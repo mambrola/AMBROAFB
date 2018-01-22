@@ -25,25 +25,13 @@ public class AccountComboBox extends ComboBox<Account> {
     private final Account accountALL = new Account();
     private final ObservableList<Account> items = FXCollections.observableArrayList();
     private final FilteredList<Account> filteredList = new FilteredList(items);
-    private final DataFetchProvider dataFetchProvider;
     
     public AccountComboBox(){
         super();
         this.setItems(filteredList);
         accountALL.setDescrip(categoryALL);
-        
-        dataFetchProvider = getConcreteProvider();
     }
     
-    
-    /**
-     * Gets concrete provider.
-     * Note: The method is useful for testing. When this class tests, the method will be override and returns appropriate DataFetchProvider for testing.
-     * @return The class object that is DataFetchProvider implementor.
-     */
-    protected DataFetchProvider getConcreteProvider(){
-        return new AccountDataFetchProvider();
-    }
     
     /**
      * The method fills comboBox by accounts and category ALL.
@@ -70,7 +58,17 @@ public class AccountComboBox extends ComboBox<Account> {
             items.setAll(accounts);
             if (extraAction != null) extraAction.accept(items);
         };
-        dataFetchProvider.filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, null);
+        getConcreteProvider().filteredBy(DataFetchProvider.PARAM_FOR_ALL, successAction, null);
+    }
+    
+    
+    /**
+     * Gets concrete provider.
+     * Note: The method is useful for testing. When this class tests, the method will be override and returns appropriate DataFetchProvider for testing.
+     * @return The class object that is DataFetchProvider implementor.
+     */
+    protected DataFetchProvider getConcreteProvider(){
+        return new AccountDataFetchProvider();
     }
     
     

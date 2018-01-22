@@ -21,6 +21,7 @@ import ambroafb.general.scene_components.number_fields.amount_field.AmountField;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
@@ -98,9 +99,6 @@ public class DocOrderComponent extends VBox {
     private void componentsInit(){
         focusTraversableNodes = Utils.getFocusTraversableBottomChildren(this);
         
-        debits.fillComboBoxWithoutALL(null);
-        credits.fillComboBoxWithoutALL(null);
-        
         spaceFiller = new VBox();
         spaceFiller.getStyleClass().add("couple");
         spaceFillerLabel = new Label("");
@@ -164,13 +162,19 @@ public class DocOrderComponent extends VBox {
             docCodes.valueProperty().bindBidirectional(doc.docCodeProperty());
             descrip.textProperty().bindBidirectional(doc.descripProperty());
             
-            Integer debitId = doc.getDebitId();
-            Bindings.bindBidirectional(doc.debitIdProperty(), debits.valueProperty(), new AccountToIdBiConverter(debits.getItems()));
-            if (debitId != null && debits.getValue() == null) doc.setDebitId(debitId);
+            Consumer<ObservableList<Account>> selectDebitAccount = (accountsList) -> {
+                Integer debitId = doc.getDebitId();
+                Bindings.bindBidirectional(doc.debitIdProperty(), debits.valueProperty(), new AccountToIdBiConverter(debits.getItems()));
+                doc.setDebitId(debitId);
+            };
+            debits.fillComboBoxWithoutALL(selectDebitAccount);
             
-            Integer creditId = doc.getCreditId();
-            Bindings.bindBidirectional(doc.creditIdProperty(), credits.valueProperty(), new AccountToIdBiConverter(credits.getItems()));
-            if (creditId != null && credits.getValue() == null) doc.setCreditId(creditId);
+            Consumer<ObservableList<Account>> selectCreditAccount = (accountsList) -> {
+                Integer creditId = doc.getCreditId();
+                Bindings.bindBidirectional(doc.creditIdProperty(), credits.valueProperty(), new AccountToIdBiConverter(credits.getItems()));
+                doc.setCreditId(creditId);
+            };
+            credits.fillComboBoxWithoutALL(selectCreditAccount);
         }
     }
 
