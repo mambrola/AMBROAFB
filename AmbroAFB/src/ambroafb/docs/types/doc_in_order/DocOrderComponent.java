@@ -119,7 +119,7 @@ public class DocOrderComponent extends VBox {
     }
     
     /**
-     * The method removes docDate whole pane  (with top label)  from scene.
+     * The method removes whole pane  of docDate from scene (It's title label also remove) .
      */
     public void removeDocDateComponent(){
         if (!isDocDateRemoved){
